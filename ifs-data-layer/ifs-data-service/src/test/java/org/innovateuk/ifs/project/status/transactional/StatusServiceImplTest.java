@@ -352,9 +352,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(organisationRepository.findById(organisations.get(2).getId())).thenReturn(Optional.of(organisations.get(2)));
 
         List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(Optional.of(applicationFinances.get(0)));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(Optional.of(applicationFinances.get(1)));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(Optional.of(applicationFinances.get(2)));
 
         ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).withOrganisation(organisations.get(0).getId()).build();
         when(applicationFinanceMapper.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);
@@ -884,5 +884,117 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         assertTrue(result.isSuccess() && LEAD_ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
         assertNull(project.getSpendProfileSubmittedDate());
+    }
+
+    @Test
+    public void internationalOrganisationRequiresActionGivenMissingInternationalLocation() {
+
+        organisation.setInternational(true);
+        partnerOrganisation.get(0).setInternationalLocation(null);
+        partnerOrganisation.get(0).setPostcode("POSTCODE");
+
+        when(projectRepository.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectUserRepository.findByProjectId(p.getId())).thenReturn(projectUsers);
+        when(projectUserMapper.mapToResource(projectUsers.get(0))).thenReturn(projectUserResources.get(0));
+        when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(partnerOrganisation.get(0));
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.of(bankDetails));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
+        when(viabilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(ViabilityState.APPROVED);
+        when(financeCheckService.isQueryActionRequired(p.getId(), organisation.getId())).thenReturn(serviceSuccess(false));
+        GrantOfferLetterStateResource unsentGrantOfferLetterState =
+                GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
+        when(golWorkflowHandler.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
+
+        assertTrue(result.isSuccess());
+        assertEquals(ACTION_REQUIRED, result.getSuccess().getPartnerStatusForOrganisation(organisation.getId()).get().getPartnerProjectLocationStatus());
+    }
+
+    @Test
+    public void internationalOrganisationCompleteGivenPresentInternationalLocation() {
+
+        organisation.setInternational(true);
+        partnerOrganisation.get(0).setInternationalLocation("Amsterdam");
+        partnerOrganisation.get(0).setPostcode(null);
+
+        when(projectRepository.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectUserRepository.findByProjectId(p.getId())).thenReturn(projectUsers);
+        when(projectUserMapper.mapToResource(projectUsers.get(0))).thenReturn(projectUserResources.get(0));
+        when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(partnerOrganisation.get(0));
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.of(bankDetails));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
+        when(viabilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(ViabilityState.APPROVED);
+        when(financeCheckService.isQueryActionRequired(p.getId(), organisation.getId())).thenReturn(serviceSuccess(false));
+        GrantOfferLetterStateResource unsentGrantOfferLetterState =
+                GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
+        when(golWorkflowHandler.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
+
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, result.getSuccess().getPartnerStatusForOrganisation(organisation.getId()).get().getPartnerProjectLocationStatus());
+    }
+
+    @Test
+    public void nonInternationalOrganisationRequiresActionGivenMissingPostcode() {
+
+        organisation.setInternational(false);
+        partnerOrganisation.get(0).setInternationalLocation("Amsterdam");
+        partnerOrganisation.get(0).setPostcode(null);
+
+        when(projectRepository.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectUserRepository.findByProjectId(p.getId())).thenReturn(projectUsers);
+        when(projectUserMapper.mapToResource(projectUsers.get(0))).thenReturn(projectUserResources.get(0));
+        when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(partnerOrganisation.get(0));
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.of(bankDetails));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
+        when(viabilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(ViabilityState.APPROVED);
+        when(financeCheckService.isQueryActionRequired(p.getId(), organisation.getId())).thenReturn(serviceSuccess(false));
+        GrantOfferLetterStateResource unsentGrantOfferLetterState =
+                GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
+        when(golWorkflowHandler.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
+
+        assertTrue(result.isSuccess());
+        assertEquals(ACTION_REQUIRED, result.getSuccess().getPartnerStatusForOrganisation(organisation.getId()).get().getPartnerProjectLocationStatus());
+    }
+
+    @Test
+    public void nonInternationalOrganisationCompleteGivenPresentPostcode() {
+
+        organisation.setInternational(false);
+        partnerOrganisation.get(0).setInternationalLocation(null);
+        partnerOrganisation.get(0).setPostcode("POSTCODE");
+
+        when(projectRepository.findById(p.getId())).thenReturn(Optional.of(p));
+        when(projectUserRepository.findByProjectId(p.getId())).thenReturn(projectUsers);
+        when(projectUserMapper.mapToResource(projectUsers.get(0))).thenReturn(projectUserResources.get(0));
+        when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(partnerOrganisation.get(0));
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.of(bankDetails));
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(p.getId(), organisation.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(monitoringOfficerService.findMonitoringOfficerForProject(p.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
+        when(viabilityWorkflowHandler.getState(partnerOrganisation.get(0))).thenReturn(ViabilityState.APPROVED);
+        when(financeCheckService.isQueryActionRequired(p.getId(), organisation.getId())).thenReturn(serviceSuccess(false));
+        GrantOfferLetterStateResource unsentGrantOfferLetterState =
+                GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
+        when(golWorkflowHandler.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(projectUsers.get(0).getId()));
+
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, result.getSuccess().getPartnerStatusForOrganisation(organisation.getId()).get().getPartnerProjectLocationStatus());
     }
 }

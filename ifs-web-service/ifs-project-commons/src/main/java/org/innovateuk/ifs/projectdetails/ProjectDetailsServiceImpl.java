@@ -1,6 +1,7 @@
  package org.innovateuk.ifs.projectdetails;
 
  import org.innovateuk.ifs.address.resource.AddressResource;
+ import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
  import org.innovateuk.ifs.commons.service.ServiceResult;
  import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
  import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
@@ -33,8 +34,8 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postcode) {
-        return projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcode).toServiceResult();
+    public ServiceResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, PostcodeAndTownResource postcodeAndTown) {
+        return projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown).toServiceResult();
     }
 
      @Override
@@ -48,7 +49,7 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address) {
-        return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, address).toServiceResult();
+    public ServiceResult<Void> updateAddress(Long projectId, AddressResource address) {
+        return projectDetailsRestService.updateProjectAddress(projectId, address).toServiceResult();
     }
 }

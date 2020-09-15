@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.repository;
 
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MonitoringOfficerRepository extends PagingAndSortingRepository<MonitoringOfficer, Long> {
 
@@ -18,7 +20,11 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
 
     List<MonitoringOfficer> findByUserId(long userId);
 
+    Optional<MonitoringOfficer> findOneByProjectIdAndRole(long projectId, ProjectParticipantRole role);
+
     boolean existsByProjectIdAndUserId(long projectId, long userId);
+
+    boolean existsByUserId(long userId);
 
     boolean existsByProjectApplicationIdAndUserId(long applicationId, long userId);
 
@@ -33,7 +39,8 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             ") " +
             "FROM Project project " +
             "LEFT JOIN MonitoringOfficer monitoringOfficer " +
-            "   ON monitoringOfficer.id = project.projectMonitoringOfficer.id " +
+            "   ON monitoringOfficer.project.id = project.id " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.id IS NULL " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES +
@@ -53,8 +60,11 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   AND processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
             "JOIN Organisation organisation " +
             "   ON organisation.id = processRole.organisationId " +
+            "JOIN MonitoringOfficer monitoringOfficer " +
+            "   ON monitoringOfficer.project.id = project.id " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
-            "   project.projectMonitoringOfficer.user.id = :userId " +
+            "   monitoringOfficer.user.id = :userId " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES +
             "ORDER BY project.application.id")
     List<MonitoringOfficerAssignedProjectResource> findAssignedProjects(Long userId);

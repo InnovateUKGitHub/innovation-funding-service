@@ -37,7 +37,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
     @Test
     public void addOrganisationForm() throws Exception {
-        long applicationId = 1L;
+        Long applicationId = 1L;
         long questionId = 2L;
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)

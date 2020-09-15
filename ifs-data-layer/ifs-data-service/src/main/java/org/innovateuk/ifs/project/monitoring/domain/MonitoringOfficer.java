@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -29,6 +30,10 @@ public class MonitoringOfficer extends ProjectParticipant {
         super(user, MONITORING_OFFICER);
         this.project = project;
     }
+    public MonitoringOfficer(User user, Project project, ProjectParticipantRole role) {
+        super(user, role);
+        this.project = project;
+    }
 
     @Override
     public Project getProcess() {
@@ -45,7 +50,6 @@ public class MonitoringOfficer extends ProjectParticipant {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(project, that.project)
                 .isEquals();
     }
 
@@ -53,7 +57,6 @@ public class MonitoringOfficer extends ProjectParticipant {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(project)
                 .toHashCode();
     }
 }

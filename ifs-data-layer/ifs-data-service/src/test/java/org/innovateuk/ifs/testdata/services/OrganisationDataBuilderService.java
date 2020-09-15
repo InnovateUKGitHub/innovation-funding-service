@@ -38,7 +38,11 @@ public class OrganisationDataBuilderService {
 
     public void createOrganisation(CsvUtils.OrganisationLine line) {
         OrganisationDataBuilder organisation =
-                organisationDataBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
+                organisationDataBuilder.createOrganisation(line.name,
+                        line.companyRegistrationNumber,
+                        lookupOrganisationType(line.organisationType),
+                        line.isInternational,
+                        line.internationalRegistrationNumber);
 
         organisation.build();
     }

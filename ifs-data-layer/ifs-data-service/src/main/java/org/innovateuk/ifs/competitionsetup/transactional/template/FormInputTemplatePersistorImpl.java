@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competitionsetup.transactional.template;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.template.BaseChainedTemplatePersistor;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.*;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +30,9 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     @Autowired
     private GuidanceRowTemplatePersistorImpl guidanceRowTemplateService;
 
+    @Autowired
+    private MultipleChoiceOptionTemplatePersistorImpl multipleChoiceOptionTemplatePersistor;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -46,6 +46,7 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
         List<FormInput> formInputs = question.getFormInputs();
 
         formInputs.forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
+        formInputs.forEach(formInput -> multipleChoiceOptionTemplatePersistor.cleanForParentEntity(formInput));
         formInputs.forEach(formInput -> entityManager.detach(formInput));
         formInputRepository.deleteAll(formInputs);
     }
@@ -58,6 +59,10 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
             List<GuidanceRow> guidanceRowsCopy = new ArrayList<>();
             if (formInput.getGuidanceRows() != null) {
                 guidanceRowsCopy.addAll(formInput.getGuidanceRows());
+            }
+            List<MultipleChoiceOption> multipleChoiceOptionsCopy = new ArrayList<>();
+            if (formInput.getGuidanceRows() != null) {
+                multipleChoiceOptionsCopy.addAll(formInput.getMultipleChoiceOptions());
             }
 
             final Set<FileTypeCategory> allowedFileTypesCopy;
@@ -76,12 +81,16 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
             formInput.setId(null);
             formInput.setFormValidators(formValidatorsCopy);
             formInput.setGuidanceRows(new ArrayList<>());
+            formInput.setMultipleChoiceOptions(new ArrayList<>());
             formInput.setActive(!isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput)
                     && formInput.getActive());
             formInputRepository.save(formInput);
 
             formInput.setGuidanceRows(guidanceRowsCopy);
             guidanceRowTemplateService.persistByParentEntity(formInput);
+
+            formInput.setMultipleChoiceOptions(multipleChoiceOptionsCopy);
+            multipleChoiceOptionTemplatePersistor.persistByParentEntity(formInput);
 
             return formInput;
         };

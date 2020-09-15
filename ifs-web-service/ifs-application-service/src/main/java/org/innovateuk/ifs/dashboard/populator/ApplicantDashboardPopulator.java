@@ -11,6 +11,7 @@ import org.innovateuk.ifs.dashboard.viewmodel.EuGrantTransferDashboardRowViewMod
 import org.innovateuk.ifs.dashboard.viewmodel.InProgressDashboardRowViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.InSetupDashboardRowViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.PreviousDashboardRowViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +28,8 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ApplicantDashboardPopulator {
 
+    @Autowired
     private ApplicantRestService applicantRestService;
-
-    public ApplicantDashboardPopulator(ApplicantRestService applicantRestService) {
-        this.applicantRestService = applicantRestService;
-    }
 
     public ApplicantDashboardViewModel populate(Long userId) {
         ApplicantDashboardResource applicantDashboardResource = applicantRestService.getApplicantDashboard(userId);

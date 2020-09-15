@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" th:with="pageTitle=${model.displayAssessorTitle ? 'Assessor details' : 'View user details'}">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org" th:with="pageTitle=${model.displayAssessorTitle ? 'Assessor details' : 'View user details'}">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
@@ -123,7 +123,7 @@
             </th:block>
             <th:block th:unless="${model.canEditUserDetails}">
                 <div class="table-overflow">
-                    <table class="govuk-table" id="application-list">
+                    <table class="govuk-table govuk-!-margin-bottom-0" id="application-list">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">Role profile</th>
@@ -146,7 +146,12 @@
                     </table>
                 </div>
             </th:block>
-            <dl class="govuk-list">
+
+            <p th:if="${model.linkVisibleToIfsAdmin}" class="govuk-body">
+                <a th:href="@{/admin/user/{userId}/external-role(userId=${model.user.id})}">Add a new external role profile</a>
+            </p>
+
+            <dl class="govuk-list govuk-!-margin-top-6">
                 <dt>Status</dt>
                 <dd th:text="${model.user.statusDisplay}">Active</dd>
             </dl>

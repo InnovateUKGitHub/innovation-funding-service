@@ -44,7 +44,7 @@ public class GrantAgreementViewModelPopulator {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(userId, applicationId).getSuccess();
         boolean complete = isComplete(application, organisation, questionId);
         boolean open = application.isOpen() && competition.isOpen();
-        return new GrantAgreementViewModel(application.getId(), application.getName(), questionId, file.map(FileEntryResource::getName).orElse(null),
+        return new GrantAgreementViewModel(application.getId(), competition.getName(), application.getName(), questionId, file.map(FileEntryResource::getName).orElse(null),
                 open, complete);
     }
 

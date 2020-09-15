@@ -19,7 +19,7 @@ import java.util.Optional;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_ELIGIBILITY;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -159,7 +159,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
     public void getSectionStatuses() {
         final long competitionId = 342L;
 
-        Map<CompetitionSetupSection, Optional<Boolean>> expectedResult = asMap(INITIAL_DETAILS, Optional.of(TRUE), ELIGIBILITY, Optional.empty());
+        Map<CompetitionSetupSection, Optional<Boolean>> expectedResult = asMap(INITIAL_DETAILS, Optional.of(TRUE), PROJECT_ELIGIBILITY, Optional.empty());
         setupGetWithRestResultExpectations(competitionSetupRestURL + "/section-status/" + competitionId, competitionSetupSectionStatusMap(), expectedResult, HttpStatus.OK);
 
         RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> result = service.getSectionStatuses(competitionId);

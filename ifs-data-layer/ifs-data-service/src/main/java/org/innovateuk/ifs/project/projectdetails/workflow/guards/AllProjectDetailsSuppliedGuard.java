@@ -33,6 +33,11 @@ public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState
         return !locationPerPartnerRequired
                 || project.getPartnerOrganisations()
                 .stream()
-                .noneMatch(partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostcode()));
+                .noneMatch(partnerOrganisation -> {
+                    if (partnerOrganisation.getOrganisation().isInternational()) {
+                        return StringUtils.isBlank(partnerOrganisation.getInternationalLocation());
+                    }
+                    return StringUtils.isBlank(partnerOrganisation.getPostcode());
+                });
     }
 }

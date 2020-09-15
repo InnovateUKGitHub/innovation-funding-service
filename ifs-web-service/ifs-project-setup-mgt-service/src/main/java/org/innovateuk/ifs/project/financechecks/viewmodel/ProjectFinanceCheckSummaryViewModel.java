@@ -12,15 +12,18 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean projectIsActive;
     private boolean collaborativeProject;
     private boolean hasOrganisationSizeChanged;
+    private boolean userHasExternalFinanceRole;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
                                                boolean collaborativeProject,
-                                               boolean hasOrganisationSizeChanged) {
+                                               boolean hasOrganisationSizeChanged,
+                                               boolean userHasExternalFinanceRole) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
         this.hasOrganisationSizeChanged = hasOrganisationSizeChanged;
+        this.userHasExternalFinanceRole = userHasExternalFinanceRole;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -67,4 +70,13 @@ public class ProjectFinanceCheckSummaryViewModel {
     public boolean isCollaborativeProject() {
         return collaborativeProject;
     }
+
+    public boolean isUserHasExternalFinanceRole() {
+        return userHasExternalFinanceRole;
+    }
+
+    public boolean canEditProjectDuration()  {
+        return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated();
+    }
+
 }

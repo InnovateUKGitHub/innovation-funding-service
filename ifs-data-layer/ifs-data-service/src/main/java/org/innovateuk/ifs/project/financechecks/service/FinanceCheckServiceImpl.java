@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -116,7 +117,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
                 spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, project), bankDetailsApproved,
-                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020(), competition.getFundingType()));
+                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId(), competition.isH2020(), competition.getFundingType(), competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE)));
     }
 
     @Override

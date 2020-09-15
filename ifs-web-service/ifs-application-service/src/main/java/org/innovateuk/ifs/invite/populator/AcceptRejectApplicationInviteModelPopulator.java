@@ -1,0 +1,27 @@
+package org.innovateuk.ifs.invite.populator;
+
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class AcceptRejectApplicationInviteModelPopulator {
+
+    public AcceptRejectApplicationInviteViewModel populateModel(ApplicationInviteResource invite,
+                                                                InviteOrganisationResource inviteOrganisation) {
+        long competitionId = invite.getCompetitionId();
+        String competitionName = invite.getCompetitionName();
+        String leadOrganisationName = invite.getLeadOrganisation();
+        String leadApplicantName = invite.getLeadApplicant();
+        String inviteOrganisationName = invite.getInviteOrganisationNameConfirmedSafe();
+        String leadApplicantEmail = invite.getLeadApplicantEmail();
+        boolean inviteOrganisationExists = inviteOrganisation.getOrganisation() != null;
+        boolean leadOrganisation = invite.getLeadOrganisationId().equals(inviteOrganisation.getOrganisation());
+
+        return new AcceptRejectApplicationInviteViewModel(invite.getApplication(), competitionId, competitionName, leadOrganisationName,
+                leadApplicantName, inviteOrganisationName, leadApplicantEmail, inviteOrganisationExists,
+                leadOrganisation);
+    }
+}

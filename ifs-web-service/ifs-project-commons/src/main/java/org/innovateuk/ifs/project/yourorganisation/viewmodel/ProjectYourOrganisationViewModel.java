@@ -13,8 +13,10 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     private final UserResource loggedInUser;
     private final boolean isAllEligibilityAndViabilityInReview;
 
-    public ProjectYourOrganisationViewModel(boolean showStateAidAgreement,
-                                            boolean fundingSectionComplete,
+    public ProjectYourOrganisationViewModel(long applicationId,
+                                            String competitionName,
+                                            boolean showStateAidAgreement,
+                                            boolean showOrganisationSizeAlert,
                                             boolean h2020,
                                             long projectId,
                                             String projectName,
@@ -24,7 +26,7 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
                                             boolean procurementCompetition,
                                             UserResource loggedInUser,
                                             boolean isAllEligibilityAndViabilityInReview) {
-        super(showStateAidAgreement, fundingSectionComplete, h2020, procurementCompetition);
+        super(applicationId, competitionName, showStateAidAgreement, showOrganisationSizeAlert, h2020, procurementCompetition);
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head"
               th:with="pageTitle=|Finance contact - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
@@ -30,18 +30,13 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
-        <p class="govuk-body" th:unless="${model.loanCompetition}">Select your finance contact. You can change your
-            finance contact up until your grant offer letter is generated.
-            <br/>They will:</p>
-
-        <p class="govuk-body" th:if="${model.loanCompetition}">Select your finance contact. You can change your finance
+        <p class="govuk-body">Select your finance contact. You can change your finance
             contact at any time until project setup is complete.
             <br/>They will:</p>
 
         <ul class="govuk-list govuk-list--bullet">
             <li>provide bank details for your organisation</li>
             <li>confirm any queries we have with your project costs</li>
-            <li>review the spend profile of your project costs</li>
         </ul>
 
         <form id="finance-contact-form" method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"

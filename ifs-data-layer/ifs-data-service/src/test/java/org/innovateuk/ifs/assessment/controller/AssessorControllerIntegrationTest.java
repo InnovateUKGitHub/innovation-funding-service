@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -78,14 +77,12 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
         userRes.setModifiedOn(user.getModifiedOn());
         userRes.setModifiedBy(userRepository.findByEmail(getCompAdmin().getEmail()).get().getName());
 
-        AddressResource address = new AddressResource();
 
         AssessorProfileResource expectedAssessorProfileResource = newAssessorProfileResource()
                 .withUser(userRes)
                 .withProfile(
                         newProfileResource()
                                 .withAffiliations(affiliationMapper.mapToResource(user.getAffiliations()))
-                                .withAddress(address)
                                 .build()
                 )
                 .build();
@@ -107,15 +104,5 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
 
         assertTrue(restResult.isFailure());
         assertEquals(notFoundError(User.class, 1000L), restResult.getErrors().get(0));
-    }
-
-    @Test
-    public void getAssessorProfile_wrongRole() throws Exception {
-        loginCompAdmin();
-
-        RestResult<AssessorProfileResource> restResult = controller.getAssessorProfile(1L);
-
-        assertTrue(restResult.isFailure());
-        assertEquals(notFoundError(User.class, 1L), restResult.getErrors().get(0));
     }
 }

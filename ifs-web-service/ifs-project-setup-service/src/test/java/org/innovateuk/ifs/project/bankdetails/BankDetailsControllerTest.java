@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
@@ -25,7 +24,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NEW;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -56,10 +54,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
     @Mock
     private BankDetailsRestService bankDetailsRestService;
 
-    @Mock
-    private OrganisationAddressRestService organisationAddressRestService;
-
-    @Mock
+        @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
@@ -129,8 +124,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         mockMvc.perform(post("/project/{id}/bank-details", projectResource.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param("sortCode", "123456").
-                param("accountNumber", "12345678").
-                param("addressType", ADD_NEW.name())).
+                param("accountNumber", "12345678")).
                 andExpect(model().attributeExists("readOnlyView")).
                 andExpect(model().attribute("readOnlyView", false)).
                 andExpect(view().name("project/bank-details"));

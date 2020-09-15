@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle='Lead organisations'"/>
+</head>
+<body class="govuk-template__body competition-management competition-setup">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to organisational eligibility',linkUrl=@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.getId()},sectionPath='organisational-eligibility')}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${leadInternationalOrganisationForm.*}')}" class="govuk-error-summary"
+             role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(leadInternationalOrganisationForm)"/>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Lead organisations',size='govuk-heading-xl'"/>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="post"
+              th:object="${leadInternationalOrganisationForm}"
+              novalidate="novalidate">
+
+            <th:block>
+                <div id="international-organisations-applicable" class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('leadInternationalOrganisationsApplicable')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                                id="leadInternationalOrganisationsApplicable">
+                            <h2 class="govuk-fieldset__heading">Can international organisations lead the
+                                competition?</h2>
+                        </legend>
+                        <span th:if="${#fields.hasErrors('leadInternationalOrganisationsApplicable')}"
+                              class="govuk-error-message"
+                              th:each="err : ${#fields.errors('leadInternationalOrganisationsApplicable')}"
+                              th:text="${err}"/>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       id="comp-leadInternationalOrganisationsApplicable-yes"
+                                       th:field="*{leadInternationalOrganisationsApplicable}"
+                                       value="true"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.leadinternationalorganisationform.leadInternationalOrganisationsApplicable.required}"/>
+                                <label class="govuk-radios__label"
+                                       for="comp-leadInternationalOrganisationsApplicable-yes">
+                                    Yes
+                                </label>
+                            </div>
+
+                            <div class="govuk-radios__item">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       id="comp-leadInternationalOrganisationsApplicable-no"
+                                       th:field="*{leadInternationalOrganisationsApplicable}"
+                                       value="false"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.leadinternationalorganisationform.leadInternationalOrganisationsApplicable.required}"/>
+                                <label class="govuk-radios__label"
+                                       for="comp-leadInternationalOrganisationsApplicable-no">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="govuk-button">Save and continue</button>
+            </th:block>
+
+        </form>
+        <ul class="govuk-list pagination">
+            <li class="prev">
+                <a rel="prev" title="Navigate to previous part"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.getId()},sectionPath='organisational-eligibility')}">
+                    <span class="pagination-label">Previous</span>
+                    <span class="pagination-part-title">Organisational eligibility</span>
+                </a>
+            </li>
+            <li class="next">
+                <a rel="next" title="Navigate to next part"
+                   th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.getId()},sectionPath='application')}">
+                    <span class="pagination-label">Next</span>
+                    <span class="pagination-part-title">Application</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="govuk-!-margin-top-6">
+            <a class="govuk-button govuk-button--secondary"
+               th:href="@{/competition/setup/{competitionId}/(competitionId=${model.competition.getId()})}">Return to setup overview</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+
+</body>
+</html>

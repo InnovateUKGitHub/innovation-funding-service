@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -295,6 +296,50 @@ public class FieldRequiredIfValidatorTest {
                 .andExpect(view().name("success"));
     }
 
+    @Test
+    public void isValid_localDateFieldNotKtpCompetitionAndNull() throws Exception {
+        TestLocalDateDTO testResource = new TestLocalDateDTO();
+        testResource.setKtpCompetition(false);
+
+        Set<ConstraintViolation<TestLocalDateDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(1, result.size());
+        assertEquals(result.stream().findFirst().get().getMessage(), "{validation.testform.startDate.required}");
+    }
+
+    @Test
+    public void isValid_localDateFieldNotKtpCompetitionAndNotPresent() throws Exception {
+        TestLocalDateDTO testResource = new TestLocalDateDTO();
+        testResource.setKtpCompetition(false);
+        testResource.setStartDate(LocalDate.MIN);
+
+        Set<ConstraintViolation<TestLocalDateDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(1, result.size());
+        assertEquals(result.stream().findFirst().get().getMessage(), "{validation.testform.startDate.required}");
+    }
+
+    @Test
+    public void isValid_localDateFieldNotKtpCompetitionAndPresent() throws Exception {
+        TestLocalDateDTO testResource = new TestLocalDateDTO();
+        testResource.setKtpCompetition(false);
+        testResource.setStartDate(LocalDate.now());
+
+        Set<ConstraintViolation<TestLocalDateDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void isValid_localDateFieldKtpCompetitionAndNull() throws Exception {
+        TestLocalDateDTO testResource = new TestLocalDateDTO();
+        testResource.setKtpCompetition(true);
+
+        Set<ConstraintViolation<TestLocalDateDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(0, result.size());
+    }
+
     @FieldRequiredIf(required = "foodAllergies", argument = "hasFoodAllergies", predicate = true,
             message = "{validation.testform.foodAllergies.required}")
     @FieldRequiredIf(required = "pleaseGiveFurtherDetails", argument = "anythingElseToDeclare", predicate = true,
@@ -320,7 +365,6 @@ public class FieldRequiredIfValidatorTest {
 
         private Boolean hasMoney;
         private BigDecimal cost;
-
 
         public TestForm() {
         }
@@ -419,6 +463,30 @@ public class FieldRequiredIfValidatorTest {
 
         public void setPossibleDogName(Optional<String> possibleDogName) {
             this.possibleDogName = possibleDogName;
+        }
+    }
+
+    @FieldRequiredIf(required = "startDate", argument = "ktpCompetition", predicate = false, message="{validation.testform.startDate.required}")
+    public static class TestLocalDateDTO {
+        public TestLocalDateDTO() {}
+
+        private Boolean ktpCompetition;
+        private LocalDate startDate;
+
+        public Boolean getKtpCompetition() {
+            return ktpCompetition;
+        }
+
+        public void setKtpCompetition(Boolean ktpCompetition) {
+            this.ktpCompetition = ktpCompetition;
+        }
+
+        public LocalDate getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(LocalDate startDate) {
+            this.startDate = startDate;
         }
     }
 

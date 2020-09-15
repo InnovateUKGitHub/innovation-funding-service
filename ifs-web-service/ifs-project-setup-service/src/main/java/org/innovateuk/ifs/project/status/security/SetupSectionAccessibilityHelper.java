@@ -155,6 +155,10 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
 
+        if (organisation.isInternational()) {
+            return NOT_ACCESSIBLE;
+        }
+
         if (setupProgressChecker.isOfflineOrWithdrawn()) {
             return NOT_ACCESSIBLE;
         }

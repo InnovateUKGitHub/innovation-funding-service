@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.repository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -28,4 +29,12 @@ public interface ProcessRoleRepository extends PagingAndSortingRepository<Proces
     boolean existsByUserIdAndApplicationId(long userId, long applicationId);
     boolean existsByUserIdAndApplicationIdAndRole(long id, long applicationId, Role role);
     void deleteByApplicationId(long applicationId);
+
+    boolean existsByUserIdAndOrganisationId(long userId, long organisationId);
+    boolean existsByOrganisationId(long organisationId);
+
+    @Query("SELECT other.organisationId FROM ProcessRole pr " +
+            "JOIN ProcessRole other on other.applicationId = pr.applicationId " +
+            "WHERE pr.user.id = :userId")
+    List<Long> findOrganisationIdsSharingApplicationsWithUser(long userId);
 }

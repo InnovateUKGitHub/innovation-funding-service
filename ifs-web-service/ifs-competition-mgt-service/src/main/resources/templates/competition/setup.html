@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:with="pageTitle=${model.general.currentSectionIsHome() ? 'Competition setup' : #messages.msg('ifs.competition.setup.' + model.general.currentSectionFragment)}">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head th:with="pageTitle=${model.general.currentSectionIsHome() ? 'Competition details' : #messages.msg('ifs.competition.setup.' + model.general.currentSectionFragment)}">
     <th:block th:if="${competitionSetupForm != null}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
     </th:block>
@@ -19,7 +19,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions', linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition', linkUrl=@{/competition/{competitionId}/(competitionId=${model.general.competition.id})}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition details',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:if="${currentSectionIsHome}">
@@ -31,7 +31,7 @@
                     </ul>
                 </div>
             </div>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition details',size='govuk-heading-xl'" />
         </th:block>
 
         <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(

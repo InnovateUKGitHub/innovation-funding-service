@@ -38,7 +38,10 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         return getWithRestResultAnonymous(USER_REST_URL + "/uid/" + uid, UserResource.class);
     }
-
+    @Override
+    public RestResult<UserResource> createUser(UserCreationResource user) {
+        return postWithRestResultAnonymous(USER_REST_URL, user, UserResource.class);
+    }
     @Override
     public Future<RestResult<Void>> sendPasswordResetNotification(String email) {
         return getWithRestResultAsyncAnonymous(USER_REST_URL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
@@ -94,6 +97,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<List<UserResource>> findByUserRole(Role role) {
         return getWithRestResult(USER_REST_URL + "/find-by-role/" + role, userListType());
+    }
+
+    @Override
+    public RestResult<List<UserResource>> findByUserRoleAndUserStatus(Role role, UserStatus userStatus) {
+        return getWithRestResult(USER_REST_URL + "/find-by-role-and-status/" + role + "/status/" + userStatus, userListType());
     }
 
     @Override
@@ -171,37 +179,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<Void> resendEmailVerificationNotification(String email) {
         return putWithRestResultAnonymous(String.format("%s/%s/%s/", USER_REST_URL, URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION, email), Void.class);
-    }
-
-    @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                        String phoneNumber, long organisationId, Long competitionId, Boolean allowMarketingEmails) {
-        UserResource user = new UserResource();
-
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPassword(password);
-        user.setEmail(email);
-        if(!isEmpty(title)) {
-            user.setTitle(Title.valueOf(title));
-        }
-        user.setPhoneNumber(phoneNumber);
-        user.setAllowMarketingEmails(allowMarketingEmails);
-
-        String url;
-        if (competitionId != null) {
-            url = USER_REST_URL + "/create-lead-applicant-for-organisation/" + organisationId +"/"+competitionId;
-        } else{
-            url = USER_REST_URL + "/create-lead-applicant-for-organisation/" + organisationId;
-        }
-
-        return postWithRestResultAnonymous(url, user, UserResource.class);
-    }
-
-    @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                       String phoneNumber, long organisationId, Boolean allowMarketingEmails) {
-        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null, allowMarketingEmails);
     }
 
     @Override

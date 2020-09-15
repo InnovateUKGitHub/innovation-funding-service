@@ -16,6 +16,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.getNonNullValue;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
@@ -75,6 +77,21 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     @Test
     public void viewYourProjectCosts() throws Exception {
+        YourProjectCostsViewModel viewModel = mockViewModel();
+
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
+
+        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
+                APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name(VIEW))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void viewYourProjectCostsAsKta() throws Exception {
+        setLoggedInUser(knowledgeTransferAdvisor);
+
         YourProjectCostsViewModel viewModel = mockViewModel();
 
         when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
@@ -235,7 +252,9 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     private YourProjectCostsViewModel mockViewModel() {
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser().isInternalUser())).thenReturn(viewModel);
+        boolean internalUser = getLoggedInUser().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER) || getLoggedInUser().isInternalUser();
+
+        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, internalUser)).thenReturn(viewModel);
         return viewModel;
     }
 }

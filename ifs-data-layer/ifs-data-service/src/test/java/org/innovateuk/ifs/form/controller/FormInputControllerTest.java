@@ -6,7 +6,6 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInputController> {
@@ -79,22 +77,6 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(formInputServiceMock, only()).findByCompetitionIdAndScope(competitionId, scope);
-    }
-
-    @Test
-    public void testSave() throws Exception {
-        FormInputResource expected = newFormInputResource()
-                .build();
-
-        Long competitionId = 1L;
-
-        when(formInputServiceMock.save(any(FormInputResource.class))).thenReturn(serviceSuccess(expected));
-
-        mockMvc.perform(put("/forminput/", competitionId)
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(objectMapper.writeValueAsString(expected)))
-                .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
     @Test

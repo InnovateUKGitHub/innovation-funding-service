@@ -20,6 +20,8 @@ items:
             - name: ldap-keys-volume
               secret:
                 secretName: ldap-keys-secrets
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - env:
                 - name: LDAP_PORT

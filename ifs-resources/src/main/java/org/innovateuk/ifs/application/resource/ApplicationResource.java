@@ -51,6 +51,8 @@ public class ApplicationResource {
     private CompetitionReferralSource competitionReferralSource;
     private CompanyAge companyAge;
     private CompanyPrimaryFocus companyPrimaryFocus;
+    private String event;
+    private ZonedDateTime lastStateChangeDate;
 
     public Long getId() {
         return id;
@@ -135,6 +137,11 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
+    public boolean canBeReopened() {
+        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED || applicationState == ApplicationState.SUBMITTED;
+    }
+
+    @JsonIgnore
     public boolean isApproved() {
         return applicationState == ApplicationState.APPROVED;
     }
@@ -197,6 +204,11 @@ public class ApplicationResource {
     @JsonIgnore
     public boolean isSubmitted() {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
+    }
+
+    @JsonIgnore
+    public boolean hasBeenReopened() {
+        return ApplicationEvent.REOPEN.getType().equals(event);
     }
 
     private boolean isInSubmittableCompetitionState() {
@@ -291,6 +303,22 @@ public class ApplicationResource {
         this.companyPrimaryFocus = companyPrimaryFocus;
     }
 
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public ZonedDateTime getLastStateChangeDate() {
+        return lastStateChangeDate;
+    }
+
+    public void setLastStateChangeDate(ZonedDateTime lastStateChangeDate) {
+        this.lastStateChangeDate = lastStateChangeDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -324,6 +352,8 @@ public class ApplicationResource {
                 .append(competitionReferralSource, that.competitionReferralSource)
                 .append(companyAge, that.companyAge)
                 .append(companyPrimaryFocus, that.companyPrimaryFocus)
+                .append(event, that.event)
+                .append(lastStateChangeDate, that.lastStateChangeDate)
                 .isEquals();
     }
 
@@ -354,6 +384,8 @@ public class ApplicationResource {
                 .append(competitionReferralSource)
                 .append(companyAge)
                 .append(companyPrimaryFocus)
+                .append(event)
+                .append(lastStateChangeDate)
                 .toHashCode();
     }
 }

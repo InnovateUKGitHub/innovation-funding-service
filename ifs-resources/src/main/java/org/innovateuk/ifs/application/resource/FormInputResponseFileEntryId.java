@@ -14,15 +14,17 @@ public class FormInputResponseFileEntryId implements Serializable {
     private long formInputId;
     private long applicationId;
     private long processRoleId;
+    private Long fileEntryId;
 
     public FormInputResponseFileEntryId() {
         // for JSON marshalling
     }
 
-    public FormInputResponseFileEntryId(long formInputId, long applicationId, long processRoleId) {
+    public FormInputResponseFileEntryId(long formInputId, long applicationId, long processRoleId, Long fileEntryId) {
         this.formInputId = formInputId;
         this.applicationId = applicationId;
         this.processRoleId = processRoleId;
+        this.fileEntryId = fileEntryId;
     }
 
     public long getFormInputId() {
@@ -35,6 +37,10 @@ public class FormInputResponseFileEntryId implements Serializable {
 
     public long getProcessRoleId() {
         return processRoleId;
+    }
+
+    public Long getFileEntryId() {
+        return fileEntryId;
     }
 
     @Override

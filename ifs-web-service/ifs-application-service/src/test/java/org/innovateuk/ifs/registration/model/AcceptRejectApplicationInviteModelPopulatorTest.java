@@ -3,8 +3,8 @@ package org.innovateuk.ifs.registration.model;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
-import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -27,6 +27,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
 
         ApplicationInviteResource invite = newApplicationInviteResource().
                 withLeadApplicant(leadApplicantName).
+                withApplication(1L).
                 withLeadApplicantEmail(leadApplicantEmail).
                 withLeadOrganisation(leadOrganisationName).
                 withLeadOrganisationId(leadOrganisationId).
@@ -69,6 +70,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
                 withLeadOrganisationId(leadOrganisationId).
                 withCompetitionId(competition.getId()).
                 withCompetitionName(competition.getName()).
+                withApplication(1L).
                 withInviteOrganisationNameConfirmed(inviteOrganisationNameConfirmed).
                 build();
 
@@ -100,6 +102,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
 
         ApplicationInviteResource invite = newApplicationInviteResource().
                 withLeadApplicant(leadApplicantName).
+                withApplication(1L).
                 withLeadApplicantEmail(leadApplicantEmail).
                 withLeadOrganisation(leadOrganisationName).
                 withLeadOrganisationId(leadOrganisationId).

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.core.domain;
 
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -35,6 +36,12 @@ public class PartnerOrganisation implements ProcessActivity, Serializable {
 
     private String postcode;
 
+    private String internationalLocation;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "international_address_id", referencedColumnName = "id")
+    private Address internationalAddress;
+
     public PartnerOrganisation() {
         // for ORM use
     }
@@ -67,6 +74,22 @@ public class PartnerOrganisation implements ProcessActivity, Serializable {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public String getInternationalLocation() {
+        return internationalLocation;
+    }
+
+    public void setInternationalLocation(String internationalLocation) {
+        this.internationalLocation = internationalLocation;
+    }
+
+    public Address getInternationalAddress() {
+        return internationalAddress;
+    }
+
+    public void setInternationalAddress(Address internationalAddress) {
+        this.internationalAddress = internationalAddress;
     }
 
     public PendingPartnerProgress getPendingPartnerProgress() {

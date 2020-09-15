@@ -3,18 +3,21 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.YourFundingFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -60,9 +63,18 @@ public class YourFundingController {
     @Autowired
     private YourFundingFormValidator yourFundingFormValidator;
 
+    @Autowired
+    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @GetMapping
-    @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users and kta can access the sections in the 'Your project finances'")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser')")
     public String viewYourFunding(@ModelAttribute("form") YourFundingPercentageForm bindingForm,
                                             Model model,
                                             UserResource user,
@@ -90,6 +102,17 @@ public class YourFundingController {
         return redirectToYourFinances(applicationId);
     }
 
+    @PostMapping(params = {"grantClaimPercentage", "previous"})
+    public String saveYourPreviousFunding(Model model,
+                                  UserResource user,
+                                  @PathVariable long applicationId,
+                                  @PathVariable long sectionId,
+                                  @PathVariable long organisationId,
+                                  @ModelAttribute("form") YourPreviousFundingPercentageForm form) {
+        saver.save(applicationId, organisationId, form);
+        return redirectToYourFinances(applicationId);
+    }
+
     @PostMapping(params = "amount")
     public String saveYourFunding(Model model,
                                   UserResource user,
@@ -97,6 +120,17 @@ public class YourFundingController {
                                   @PathVariable long sectionId,
                                   @PathVariable long organisationId,
                                   @ModelAttribute("form") YourFundingAmountForm form) {
+        saver.save(applicationId, organisationId, form);
+        return redirectToYourFinances(applicationId);
+    }
+
+    @PostMapping(params = {"amount", "previous"})
+    public String saveYourPreviousFunding(Model model,
+                                  UserResource user,
+                                  @PathVariable long applicationId,
+                                  @PathVariable long sectionId,
+                                  @PathVariable long organisationId,
+                                  @ModelAttribute("form") YourPreviousFundingAmountForm form) {
         saver.save(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
@@ -110,6 +144,28 @@ public class YourFundingController {
                            @ModelAttribute("form") YourFundingPercentageForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
+
+        return complete(model,
+                user,
+                applicationId,
+                sectionId,
+                organisationId,
+                form,
+                bindingResult,
+                validationHandler,
+                f -> saver.save(applicationId, organisationId, f));
+    }
+
+    @PostMapping(params = {"complete", "grantClaimPercentage", "previous"})
+    public String completePrevious(Model model,
+                           UserResource user,
+                           @PathVariable long applicationId,
+                           @PathVariable long sectionId,
+                           @PathVariable long organisationId,
+                           @ModelAttribute("form") YourPreviousFundingPercentageForm form,
+                           BindingResult bindingResult,
+                           ValidationHandler validationHandler) {
+
         return complete(model,
                 user,
                 applicationId,
@@ -142,6 +198,26 @@ public class YourFundingController {
                 f -> saver.save(applicationId, organisationId, f));
     }
 
+    @PostMapping(params = {"complete", "amount", "previous"})
+    public String completePrevious(Model model,
+                           UserResource user,
+                           @PathVariable long applicationId,
+                           @PathVariable long sectionId,
+                           @PathVariable long organisationId,
+                           @ModelAttribute("form") YourPreviousFundingAmountForm form,
+                           BindingResult bindingResult,
+                           ValidationHandler validationHandler) {
+        return complete(model,
+                user,
+                applicationId,
+                sectionId,
+                organisationId,
+                form,
+                bindingResult,
+                validationHandler,
+                f -> saver.save(applicationId, organisationId, f));
+    }
+
     private <FormType extends AbstractYourFundingForm> String complete(Model model,
                                                                        UserResource user,
                                                                        @PathVariable long applicationId,
@@ -153,6 +229,7 @@ public class YourFundingController {
                                                                        Function<FormType, ServiceResult<Void>> saveFunction) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, organisationId, user);
+
         yourFundingFormValidator.validate(form, bindingResult, user, applicationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFunction.apply(form));
@@ -184,6 +261,17 @@ public class YourFundingController {
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, organisationId, user);
     }
+    @PostMapping(params = {"add_cost", "grantClaimPercentage", "previous"})
+    public String addPreviousFundingRowFormPost(Model model,
+                                        UserResource user,
+                                        @PathVariable long applicationId,
+                                        @PathVariable long sectionId,
+                                        @PathVariable long organisationId,
+                                        @ModelAttribute("form") YourPreviousFundingPercentageForm form) {
+
+        saver.addOtherFundingRow(form);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
     @PostMapping(params = {"add_cost", "amount"})
     public String addFundingRowFormPost(Model model,
                                         UserResource user,
@@ -191,6 +279,17 @@ public class YourFundingController {
                                         @PathVariable long sectionId,
                                         @PathVariable long organisationId,
                                         @ModelAttribute("form") YourFundingAmountForm form) {
+
+        saver.addOtherFundingRow(form);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
+    @PostMapping(params = {"add_cost", "amount", "previous"})
+    public String addPreviousFundingRowFormPost(Model model,
+                                        UserResource user,
+                                        @PathVariable long applicationId,
+                                        @PathVariable long sectionId,
+                                        @PathVariable long organisationId,
+                                        @ModelAttribute("form") YourPreviousFundingAmountForm form) {
 
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, applicationId, sectionId, organisationId, user);
@@ -208,6 +307,18 @@ public class YourFundingController {
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, applicationId, sectionId, organisationId, user);
     }
+    @PostMapping(params = {"remove_cost", "grantClaimPercentage", "previous"})
+    public String removePreviousFundingRowFormPost(Model model,
+                                           UserResource user,
+                                           @PathVariable long applicationId,
+                                           @PathVariable long sectionId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("form") YourPreviousFundingPercentageForm form,
+                                           @RequestParam("remove_cost") String costId) {
+
+        saver.removeOtherFundingRowForm(form, costId);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
 
     @PostMapping(params = {"remove_cost", "amount"})
     public String removeFundingRowFormPost(Model model,
@@ -216,6 +327,18 @@ public class YourFundingController {
                                            @PathVariable long sectionId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingAmountForm form,
+                                           @RequestParam("remove_cost") String costId) {
+
+        saver.removeOtherFundingRowForm(form, costId);
+        return viewYourFunding(model, applicationId, sectionId, organisationId, user);
+    }
+    @PostMapping(params = {"remove_cost", "amount", "previous"})
+    public String removePreviousFundingRowFormPost(Model model,
+                                           UserResource user,
+                                           @PathVariable long applicationId,
+                                           @PathVariable long sectionId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("form") YourPreviousFundingAmountForm form,
                                            @RequestParam("remove_cost") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
@@ -243,11 +366,20 @@ public class YourFundingController {
     }
 
     @PostMapping("add-row")
-    public String ajaxAddRow(Model model) {
-        YourFundingPercentageForm form = new YourFundingPercentageForm();
+    public String ajaxAddRow(Model model,
+                             @PathVariable long applicationId) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+
+        AbstractYourFundingPercentageForm form;
+        if (competitionResource.isKtp()) {
+            form = new YourPreviousFundingPercentageForm();
+        } else {
+            form = new YourFundingPercentageForm();
+        }
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
-        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
+        Map.Entry row = (Map.Entry) form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());

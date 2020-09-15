@@ -33,7 +33,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
@@ -228,32 +228,25 @@ Lead is able to resend invitation
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     [Tags]
-    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to contribute in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
-    And the user should see the element                    jQuery = h1:contains("Invitation to contribute")
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user should see the element                    jQuery = h1:contains("Confirm your organisation")
-    And the user should see the element                    link = email the lead applicant
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
-    And the invited user fills the create account form     Roger  Axe
-    And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
+    Given team member accepts the invite to join organisation     ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com  ${openCompetitionBusinessRTO_name}  Roger  Axe
 
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
     [Tags]
-    Given the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
-    And Logging in and Error Checking           &{lead_applicant_credentials}
-    When the user clicks the button/link        link = Invite robot test application
-    And the user clicks the button/link         link = Application team
-    Then the user should see the element        jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
-    And The user should not see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link                     jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    And Logging in and Error Checking                         &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = Invite robot test application
+    And the user clicks the button/link                       link = Application team
+    Then the user should see the element                      jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And The user should not see the element                   jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
     Then the user creates an account and signs in
 
 New Lead Applicant invites new user as collaborator on his application
@@ -261,18 +254,13 @@ New Lead Applicant invites new user as collaborator on his application
     [Tags]
     # Business organisation type for the collaborator as well.
     Given the lead applicant invites the collaborator
-    Then the collaborator accepts the invite and is able to see the application without any errors
+    Then partner organisation accepts the invite to collaborate     ${newCollaborator}  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${BUSINESS_TYPE_ID}
     And the lead applicant is no longer directed to the team page
 
 *** Keywords ***
-The lead applicant should have the correct status
-    the user should see the element  jQuery = h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
-
 The lead applicant should have the correct org status
-    the user should see the element  jQuery = h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element  jQuery = h2:contains("org2")
+    the user should see the element  jQuery = td:contains("Type")+td:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
 the status of the people should be correct in the Manage contributors page
@@ -289,11 +277,12 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     When the user clicks the button/link  link = Application team
-    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")+h3:contains("Organisation type")+p:contains("Business")
+    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")
+    And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
-    the user should see the text in the element  css = tr:nth-of-type(1) td:nth-of-type(3)    Lead
-    the user should not see the element          jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
+    the user should see the element         jQuery = td:contains("Lead applicant")
+    the user should not see the element     jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
 
 the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
@@ -303,21 +292,13 @@ the user creates an account and signs in
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
-    The user clicks the button/link  link = Untitled application (start here)
+    The user clicks the button/link  link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user fills in the inviting steps no Edit  ${newCollaborator}
     The user logs out if they are logged in
 
-the collaborator accepts the invite and is able to see the application without any errors
-    The user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
-    The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
-    The user should see the element               jQuery = h1:contains("Choose organisation type")
-    The user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
-    The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
-    The user should not see an error in the page
-
 the lead applicant is no longer directed to the team page
     Log in as a different user       ${newLeadApplicant}  ${correct_password}
-    The user clicks the button/link  jQuery = .progress-list a:contains("Untitled application (start here)")
+    The user clicks the button/link  jQuery = .progress-list a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     The user should see the element  jQuery = h1:contains("Application overview")
     # Added the above check, to see that the user doesn't get directed to the team page (since he has not clicked on the Begin application button)
 
@@ -331,11 +312,12 @@ Custom suite teardown
 
 the user accepts invitation
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 
 the user still sees pending user
-    the user clicks the button/link    link = Invite robot test application
-    the user clicks the button/link    link = Application team
-    the user should see the element    jQuery = td:contains("Adrian Booth (pending for")
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = Invite robot test application
+    the user clicks the button/link                       link = Application team
+    the user should see the element                       jQuery = td:contains("Adrian Booth (pending for")

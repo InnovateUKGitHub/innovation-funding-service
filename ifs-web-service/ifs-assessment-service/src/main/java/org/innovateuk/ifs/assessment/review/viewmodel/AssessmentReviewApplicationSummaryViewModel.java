@@ -15,12 +15,15 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     private final AssessmentResource assessment;
 
-    public AssessmentReviewApplicationSummaryViewModel(long applicationId, String applicationName, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, CompetitionResource currentCompetition, AssessmentResource assessment) {
+    private final String termsAndConditionsTerminology;
+
+    public AssessmentReviewApplicationSummaryViewModel(long applicationId, String applicationName, ApplicationReadOnlyViewModel applicationReadOnlyViewModel, CompetitionResource currentCompetition, AssessmentResource assessment, String termsAndConditionsTerminology) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.currentCompetition = currentCompetition;
         this.assessment = assessment;
+        this.termsAndConditionsTerminology = termsAndConditionsTerminology;
     }
 
     public long getApplicationId() {
@@ -41,5 +44,9 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     public AssessmentResource getAssessment() {
         return assessment;
+    }
+
+    public String getTermsAndConditionsTerminology() {
+        return termsAndConditionsTerminology;
     }
 }

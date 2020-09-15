@@ -10,6 +10,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
@@ -30,14 +32,12 @@ import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
-import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -58,13 +58,14 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -86,12 +87,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
-
-    @Mock
-    private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
-
-    @Mock
-    private FinanceChecksGenerator financeChecksGeneratorMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -183,7 +178,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
         List<ApplicationFinance> applicationFinances = singletonList(applicationFinance);
 
-        competition = newCompetition().build();
+        competition = newCompetition()
+                .withSections(newSection().withSectionType(SectionType.FINANCE).build(1))
+                .build();
 
         application = newApplication().
                 withId(applicationId).
@@ -265,12 +262,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                         build()).
                 build();
 
-        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
-                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
-
-        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
-        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess());
-
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -284,10 +275,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccess());
         assertNotNull(competition.getProjectSetupStarted());
-
-        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
-        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
-        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
@@ -314,9 +301,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectRepositoryMock).findOneByApplicationId(applicationId);
         verify(projectMapperMock).mapToResource(existingProject);
 
-        verify(costCategoryTypeStrategyMock, never()).getOrCreateCostCategoryTypeForSpendProfile(any(Long.class), any(Long.class));
-        verify(financeChecksGeneratorMock, never()).createMvpFinanceChecksFigures(any(Project.class), any(Organisation.class), any(CostCategoryType.class));
-        verify(financeChecksGeneratorMock, never()).createFinanceChecksFigures(any(Project.class), any(Organisation.class));
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
@@ -441,12 +425,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                         build()).
                 build();
 
-        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
-                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
-
-        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
-        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess());
-
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -462,9 +440,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertNotNull(competition.getProjectSetupStarted());
 
-        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
-        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
-        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
@@ -488,6 +463,20 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         } catch (Exception e) {
             assertEquals(e.getCause().getCause().getMessage(),"dummy constraint violation");
         }
+    }
+
+    @Test
+    public void createProjectsFromFundingDecisions_noFinanceFails() throws Exception {
+        createProjectExpectationsFromOriginalApplication();
+        List<Section> oldSections = competition.getSections();
+        competition.setSections(emptyList());
+
+        Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
+        fundingDecisions.put(applicationId, FundingDecision.FUNDED);
+        ServiceResult<Void> result = service.createProjectsFromFundingDecisions(fundingDecisions);
+        assertTrue(result.isFailure());
+        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), "CREATE_PROJECT_FROM_APPLICATION_FAILS");
+        competition.setSections(oldSections);
     }
 
     @Test

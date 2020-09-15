@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.security;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
@@ -14,6 +16,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -27,6 +31,9 @@ public class QuestionStatusRules extends BasePermissionRules {
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @PermissionRule(value = "READ", description = "Users can only read statuses of applications they are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         return userIsConnected(questionStatusResource.getApplication(), user);
@@ -35,6 +42,12 @@ public class QuestionStatusRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Innovation lead users can read statuses of all questions")
     public boolean internalUserCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Competition finance user can read statuses of all questions")
+    public boolean competitionFinanceUserCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
+        Optional<Application> app = applicationRepository.findById(questionStatusResource.getApplication());
+        return userIsExternalFinanceInCompetition(app.get().getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="project-user-row(model, organisation, user)">
         <td class="govuk-table__cell"
@@ -8,7 +8,7 @@
             th:text="${user.email}"></td>
         <td class="govuk-table__cell"
             th:classappend="${!user.hasRole} ? 'alignright'">
-            <th:block th:if="${user.removeable}">
+            <th:block th:if="${user.removeable && !model.readOnly}">
                 <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
                 <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
                    th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
@@ -77,8 +77,10 @@
         </tr>
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-                <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrganisation.id})}"
+                <a th:unless="${model.readOnly}"
+                   th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrganisation.id})}"
                    class="govuk-link">Your finance contact</a>
+                <th:block th:if="${model.readOnly}">Your finance contact</th:block>
             </td>
             <td class="govuk-table__cell"
                 th:text="${model.loggedInUserOrganisation.getFinanceContact() != null ? model.loggedInUserOrganisation.getFinanceContact().name : '-'}">
@@ -164,6 +166,7 @@
         </tr>
         </tbody>
     </table>
+    <th:block th:if="${!model.readOnly}">
         <button name="add-team-member"
                 th:value="${organisation.id}"
                 class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"

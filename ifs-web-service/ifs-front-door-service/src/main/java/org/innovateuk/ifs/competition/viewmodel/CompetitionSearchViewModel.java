@@ -21,7 +21,6 @@ public class CompetitionSearchViewModel {
     private String nextPageLink;
     private String previousPageLink;
 
-
     public List<PublicContentItemViewModel> getPublicContentItems() {
         return publicContentItems;
     }
@@ -119,4 +118,5 @@ public class CompetitionSearchViewModel {
     public void setSearchKeywords(String searchKeywords) {
         this.searchKeywords = searchKeywords;
     }
+
 }

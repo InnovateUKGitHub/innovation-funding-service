@@ -7,7 +7,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -207,32 +206,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withList(projectSetupStages, (projectSetupStage, section) -> section.setProjectSetupStages(projectSetupStages));
     }
 
-    public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
-        return withArraySetFieldByReflection("assessorCount", assessorCount);
-    }
-
-    public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
-        return withArraySetFieldByReflection("assessorPay", assessorPay);
-    }
-
     public CompetitionResourceBuilder withNonIfs(Boolean... nonIfs) {
         return withArraySetFieldByReflection("nonIfs", nonIfs);
     }
 
     public CompetitionResourceBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
-    }
-
-    public CompetitionResourceBuilder withHasAssessmentPanel(Boolean... hasAssessmentPanel) {
-        return withArraySetFieldByReflection("hasAssessmentPanel", hasAssessmentPanel);
-    }
-
-    public CompetitionResourceBuilder withHasInterviewStage(Boolean... hasInterviewStage) {
-        return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
-    }
-
-    public CompetitionResourceBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
-        return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
     public CompetitionResourceBuilder withTermsAndConditions(GrantTermsAndConditionsResource... value) {
@@ -288,12 +267,16 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     @SafeVarargs
-    public final CompetitionResourceBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
+    public final CompetitionResourceBuilder withFinanceRowTypes(List<FinanceRowType>... financeRowTypes) {
         return withArray((financeRowType, competitionResource) -> competitionResource.setFinanceRowTypes(financeRowType), financeRowTypes);
     }
 
     public CompetitionResourceBuilder withCompetitionTerms(FileEntryResource... competitionTermsItems) {
         return withArray((competitionTerms, competitionResource) -> competitionResource.setCompetitionTerms(competitionTerms), competitionTermsItems);
+    }
+
+    public CompetitionResourceBuilder withHasAssessmentStage(Boolean... hasAssessmentStages) {
+        return withArray((hasAssessmentStage, competitionResource) -> competitionResource.setHasAssessmentStage(hasAssessmentStage), hasAssessmentStages);
     }
 
     @SafeVarargs

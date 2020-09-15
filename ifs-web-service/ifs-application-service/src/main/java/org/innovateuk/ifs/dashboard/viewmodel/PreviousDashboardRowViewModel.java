@@ -2,6 +2,7 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 
 import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     private final Long projectId;
     private final boolean leadApplicant;
     private final boolean collaborationLevelSingle;
+    private final CompetitionCompletionStage competitionCompletionStage;
 
     public PreviousDashboardRowViewModel(String title,
                                          long applicationId,
@@ -34,7 +36,8 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
                                          ProjectState projectState,
                                          LocalDate startDate,
                                          boolean leadApplicant,
-                                         boolean collaborationLevelSingle) {
+                                         boolean collaborationLevelSingle,
+                                         CompetitionCompletionStage competitionCompletionStage) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
         this.projectState = projectState;
@@ -42,6 +45,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         this.startDate = startDate;
         this.leadApplicant = leadApplicant;
         this.collaborationLevelSingle = collaborationLevelSingle;
+        this.competitionCompletionStage = competitionCompletionStage;
     }
 
     public PreviousDashboardRowViewModel(DashboardPreviousRowResource resource){
@@ -52,6 +56,11 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         this.startDate = resource.getStartDate();
         this.leadApplicant = resource.isLeadApplicant();
         this.collaborationLevelSingle = resource.isCollaborationLevelSingle();
+        this.competitionCompletionStage = resource.getCompetitionCompletionStage();
+    }
+
+    public CompetitionCompletionStage getCompetitionCompletionStage() {
+        return competitionCompletionStage;
     }
 
     public ApplicationState getApplicationState() {
@@ -71,6 +80,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     }
 
     /* View logic */
+
     public boolean isRejected() {
         return REJECTED.equals(applicationState);
     }
@@ -98,6 +108,10 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     public boolean isUnsuccessful() {
         return hasProject() && projectState.isUnsuccessful();
+    }
+
+    public boolean isSubmitted() {
+        return SUBMITTED.equals(applicationState) && CompetitionCompletionStage.COMPETITION_CLOSE.equals(this.competitionCompletionStage);
     }
 
     public boolean canHideApplication() {

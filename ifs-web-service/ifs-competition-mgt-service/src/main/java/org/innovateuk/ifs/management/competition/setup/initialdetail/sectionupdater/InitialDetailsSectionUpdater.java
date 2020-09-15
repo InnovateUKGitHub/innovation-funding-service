@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.sectionupdater;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -16,16 +15,13 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionSpecialSectors;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
-import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,34 +47,34 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class InitialDetailsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-	private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
+    private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
 
-	@Autowired
+    @Autowired
     private CompetitionSetupService competitionSetupService;
 
-	@Autowired
+    @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private MilestoneRestService milestoneRestService;
 
-	@Autowired
-	private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
-	@Autowired
-	private CategoryRestService categoryRestService;
+    @Autowired
+    private CategoryRestService categoryRestService;
 
-	@Autowired
+    @Autowired
     private UserService userService;
 
-	@Override
-	public CompetitionSetupSection sectionToSave() {
-		return CompetitionSetupSection.INITIAL_DETAILS;
-	}
+    @Override
+    public CompetitionSetupSection sectionToSave() {
+        return CompetitionSetupSection.INITIAL_DETAILS;
+    }
 
     @Override
-	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+        InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
             List<Error> errors = saveAssignedUsers(competition, initialDetailsForm);
 
@@ -115,23 +111,33 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setStateAid(initialDetailsForm.getStateAid());
         competition.setFundingType(initialDetailsForm.getFundingType());
 
-        errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
+        errors.addAll(attemptOpeningDateSave(initialDetailsForm, competition));
         errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));
 
         return errors;
     }
 
-    private List<Error> attemptOpeningMilestoneSave(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
-        List<Error> errors = new ArrayList<>();
+    private List<Error> attemptOpeningDateSave(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
 
         if (shouldTryToSaveStartDate(initialDetailsForm)) {
             ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
-            competition.setStartDate(startDate);
+            List<Error> errors = validateOpeningDate(startDate);
 
-            errors.addAll(saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction()));
+            if (!errors.isEmpty()) {
+                return errors;
+            }
+
+            MilestoneResource milestone = milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
+                    .getOrElse(new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId()));
+
+            milestone.setDate(startDate);
+
+            RestResult<Void> result = milestoneRestService.updateMilestone(milestone);
+
+            return result.getErrors();
         }
 
-        return errors;
+        return emptyList();
     }
 
     private List<Error> attemptAddingInnovationAreasToCompetition(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
@@ -144,7 +150,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
             List<Long> allInnovationAreasIds = getAllInnovationAreaIdsExcludingNone(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
-            if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
+            if (CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
                     && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 innovationAreas = allInnovationAreasIds;
             }
@@ -164,8 +170,8 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                                                 List<InnovationAreaResource> allInnovationAreas,
                                                 List<Long> allInnovationAreasIds,
                                                 List<Long> innovationAreaIds, boolean isMarkAsComplete) {
-        if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())) {
-            if(!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+        if (CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())) {
+            if (!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
 
                 if (foundNotMatchingId && isMarkAsComplete) {
@@ -218,14 +224,14 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     }
 
     private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
-       return initialDetailsForm.isMarkAsCompleteAction() ||
-               (initialDetailsForm.getOpeningDateYear() != null &&
-               initialDetailsForm.getOpeningDateMonth() != null &&
-               initialDetailsForm.getOpeningDateDay() != null);
-   }
+        return initialDetailsForm.isMarkAsCompleteAction() ||
+                (initialDetailsForm.getOpeningDateYear() != null &&
+                        initialDetailsForm.getOpeningDateMonth() != null &&
+                        initialDetailsForm.getOpeningDateDay() != null);
+    }
 
-	private List<Error> validateOpeningDate(ZonedDateTime openingDate) {
-	    if(openingDate.getYear() > 9999) {
+    private List<Error> validateOpeningDate(ZonedDateTime openingDate) {
+        if (openingDate.getYear() > 9999) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
         }
 
@@ -234,42 +240,6 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         }
 
         return Collections.emptyList();
-    }
-
-	private List<Error> saveOpeningDateAsMilestone(ZonedDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
-		if (isMarkAsCompleteAction) {
-			List<Error> errors = validateOpeningDate(openingDate);
-			if (!errors.isEmpty()) {
-				return errors;
-			}
-		}
-
-	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
-
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
-        if(milestones.isEmpty()) {
-            milestones = competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionId).getSuccess();
-        }
-        milestones.sort(Comparator.comparing(MilestoneResource::getType));
-
-		LinkedMap<String, GenericMilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
-		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
-
-        ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
-        if(result.isFailure()) {
-            return result.getErrors();
-        }
-		return emptyList();
-	}
-
-    private ZonedDateTime parseDate(String value) {
-        String[] dateParts = value.split("-");
-        ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
-                Integer.parseInt(dateParts[2]),
-                Integer.parseInt(dateParts[1]),
-                Integer.parseInt(dateParts[0]));
-
-        return startDate;
     }
 
     private Set<Long> parseInnovationAreaIds(String commaSeparatedIds) {
@@ -289,15 +259,15 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
 
         boolean allInnovationAreaIsSelected = innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS);
 
-        if(allInnovationAreaIsSelected) {
+        if (allInnovationAreaIsSelected) {
             innovationAreaIds = getAllInnovationAreaIdsExcludingNone();
         }
 
         competitionResource.setInnovationAreas(innovationAreaIds);
     }
 
-	@Override
-	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return InitialDetailsForm.class.equals(clazz);
-	}
+    @Override
+    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
+        return InitialDetailsForm.class.equals(clazz);
+    }
 }

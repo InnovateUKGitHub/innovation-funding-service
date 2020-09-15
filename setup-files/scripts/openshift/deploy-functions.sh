@@ -184,21 +184,94 @@ function substituteMandatoryEnvVariable() {
     find $(getBuildLocation) -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
 }
 
+function setMinimumNumberOfReplicas() {
+
+    echo "Setting application replicas"
+    CURRENT_REPLICAS=$(oc describe dc/application-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/4-application-service.yml
+
+    echo "Setting front door replicas"
+    CURRENT_REPLICAS=$(oc describe dc/front-door-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
+
+    echo "Setting data replicas"
+    CURRENT_REPLICAS=$(oc describe dc/data-service ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/31-data-service.yml
+
+    echo "Setting finance data replicas"
+    CURRENT_REPLICAS=$(oc describe dc/finance-data-service ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/32-finance-data-service.yml
+
+    echo "Setting assessment replicas"
+    CURRENT_REPLICAS=$(oc describe dc/assessment-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/41-assessment-svc.yml
+
+    echo "Setting competition replicas"
+    CURRENT_REPLICAS=$(oc describe dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/42-competition-mgt-svc.yml
+
+    echo "Setting idp replicas"
+    CURRENT_REPLICAS=$(oc describe dc/idp ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/shib/56-idp.yml
+
+    echo "Setting shib replicas"
+    CURRENT_REPLICAS=$(oc describe dc/shib ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/shib/5-shib.yml
+
+    echo "Setting project management replicas"
+    CURRENT_REPLICAS=$(oc describe dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/43-project-setup-mgt-svc.yml
+
+    echo "Setting project setup replicas"
+    CURRENT_REPLICAS=$(oc describe dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/44-project-setup-svc.yml
+
+    echo "Setting registration replicas"
+    CURRENT_REPLICAS=$(oc describe dc/registration-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/ifs-services/45-registration-svc.yml
+
+    echo "Setting survey data replicas"
+    CURRENT_REPLICAS=$(oc describe dc/survey-data-service ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/survey/survey-data-service.yml
+
+    echo "Setting survey replicas"
+    CURRENT_REPLICAS=$(oc describe dc/survey-svc ${SVC_ACCOUNT_CLAUSE} | grep -m1 Replicas: | awk '{ print $2}')
+    sed -i.bak "s/replicas: 1/replicas: ${CURRENT_REPLICAS}/g" $(getBuildLocation)/survey/survey-service.yml
+}
+
 function tailorAppInstance() {
     if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf" ]]
     then
-        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/4*.yml
-        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/ifs-services/5-front-door-service.yml
-        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/shib/5-shib.yml
+        setMinimumNumberOfReplicas
     fi
 }
 
 function useContainerRegistry() {
+    sed -i.bak '/imagePullSecrets/{N;d;}' $(getBuildLocation)/**/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 
+function useNexusRegistry() {
+
+    NEXUS_VERSION=$1
+
+    sed -i.bak "s/imagePullSecretsName/ifs-external-registry/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/release/#g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s#service\:.*#service\:${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
+}
+
+function addAbilityToPullFromNexus() {
+    oc secrets new-dockercfg ifs-external-registry \
+        --docker-username=${NEXUS_USER} \
+        --docker-password=${NEXUS_PASS} \
+        --docker-email=${NEXUS_EMAIL} \
+        --docker-server=${NEXUS_REGISTRY}
+
+    oc secrets add serviceaccount/builder secrets/ifs-external-registry ${SVC_ACCOUNT_CLAUSE}
+}
 
 function pushDBResetImages() {
     docker tag innovateuk/dbreset:latest \
@@ -234,6 +307,17 @@ function pushAnonymisedDatabaseDumpImages() {
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
+}
+
+function shibInit() {
+    echo "Shib init.."
+    LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
+    echo "Ldap pod: ${LDAP_POD}"
+
+     while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
+        echo "Shibinit failed. Retrying.."
+        sleep 10
+    done
 }
 
 function blockUntilServiceIsUp() {
@@ -303,19 +387,6 @@ function blockUntilServiceIsUp() {
     oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
-
-function scaleDataService() {
-    oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
-}
-
-function scaleFinanceDataService() {
-    oc scale dc finance-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
-}
-
-function scaleSurveyDataService() {
-    oc scale dc survey-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
-}
-
 function createProject() {
     until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
     do
@@ -330,4 +401,8 @@ function getClusterAddress() {
 
 function getRemoteRegistryUrl() {
   echo "docker-registry.default.svc:5000"
+}
+
+function getNexusRegistryUrl() {
+  echo "docker-ifs.devops.innovateuk.org"
 }

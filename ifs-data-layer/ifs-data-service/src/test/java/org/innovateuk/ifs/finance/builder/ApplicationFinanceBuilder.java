@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 
@@ -32,6 +33,10 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
 
     public ApplicationFinanceBuilder withWorkPostcode(String workPostcode) {
         return with(finance -> finance.setWorkPostcode(workPostcode));
+    }
+
+    public ApplicationFinanceBuilder withEmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
+        return with(finance -> finance.setEmployeesAndTurnover(employeesAndTurnover));
     }
 
     private ApplicationFinanceBuilder(List<BiConsumer<Integer, ApplicationFinance>> newMultiActions) {

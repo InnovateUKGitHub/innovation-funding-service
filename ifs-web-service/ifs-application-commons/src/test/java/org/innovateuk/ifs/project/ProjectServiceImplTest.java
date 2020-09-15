@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -19,10 +18,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -32,6 +31,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -192,6 +192,41 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void isProjectFinanceContact() {
+        final long projectId = 123;
+        final long projectFinanceContactId = 987;
+
+        List<ProjectUserResource> projectFinanceContacts = Arrays.asList(
+                newProjectUserResource().withUser(projectFinanceContactId).build(),
+                newProjectUserResource().withUser(anyLong()).build()
+        );
+
+        when(projectRestService.getProjectFinanceContacts(projectId)).thenReturn(restSuccess(projectFinanceContacts));
+        assertTrue(service.isProjectFinanceContact(projectFinanceContactId, projectId));
+    }
+
+    @Test
+    public void isProjectFinanceContact_emptyResults() {
+        final long projectId = 123;
+
+        when(projectRestService.getProjectFinanceContacts(projectId)).thenReturn(restSuccess(Collections.emptyList()));
+
+        assertFalse(service.isProjectFinanceContact(anyLong(), projectId));
+    }
+
+    @Test
+    public void isProjectFinanceContact_notUser() {
+        final long projectId = 123;
+        final long projectFinanceContactId = 987;
+        final long loggedInUserId = 742;
+
+        when(projectRestService.getProjectFinanceContacts(projectId))
+                .thenReturn(restSuccess(Collections.singletonList(newProjectUserResource().withUser(projectFinanceContactId).build())));
+
+        assertFalse(service.isProjectFinanceContact(loggedInUserId, projectId));
+    }
+
+    @Test
     public void userIsPartnerInOrganisationForProject(){
         long projectId = 1;
         long userId = 2;
@@ -241,19 +276,4 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertEquals(expectedOrgId, organisationId);
     }
 
-    @Test(expected = ForbiddenActionException.class)
-    public void getOrganisationIdFromUser_noProjects() {
-        long projectId = 1L;
-        long userId = 2L;
-        long expectedOrgId = 3L;
-        UserResource userResource = newUserResource().withId(userId).build();
-
-        setLoggedInUser(userResource);
-
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(emptyList());
-
-        long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
-
-        assertEquals(expectedOrgId, organisationId);
-    }
 }

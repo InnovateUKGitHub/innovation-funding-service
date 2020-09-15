@@ -169,7 +169,7 @@ public class PasswordPolicyValidator {
                 return emptyList();
             }
         }
-        return organisationRepository.findDistinctByUsersId(user.getId()).stream()
+        return organisationRepository.findDistinctByProcessRolesUserId(user.getId()).stream()
                 .filter(organisation -> organisation.getName() != null)
                 .map(Organisation::getName)
                 .collect(Collectors.toList());

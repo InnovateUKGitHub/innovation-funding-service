@@ -52,10 +52,13 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
 ...
 ...               IFS-6731 Enable new partners to enter their location when joining a project & MO has been assigned
+...
+...               IFS-7531 Ability to remove annex upload through remove link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 
 *** Test Cases ***
@@ -96,7 +99,6 @@ GOL not generated before spend profiles have been approved
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
-    [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok       # Project details
@@ -130,7 +132,6 @@ Non lead should not be able to see GOL until it is sent by IUK
 
 Comp Admin cannot upload big or non-pdf grant offer letter
     [Documentation]  INFUND-7049
-    [Tags]
     [Setup]  log in as a different user                 &{Comp_admin1_credentials}
     Given the user navigates to the page                ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     When the user uploads a file                        grantOfferLetter  ${too_large_pdf}
@@ -141,29 +142,45 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
     Given the user navigates to the page         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
-    When the user clicks the button/link         link = View the grant offer letter page
+    When the user clicks the button/link         jQuery = a:contains("View the grant offer letter page")
     Then the user is able to see the Grant Offer letter page
 
 Validating GOL page error message
     [Documentation]  IFS-5865
     [Setup]  the user navigates to the page              ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     Given the user uploads a file                        grantOfferLetter  ${valid_pdf}
-    When the user clicks the button/link                 jQuery = button:contains("Send to project team")
-    And the user clicks the button/link                  jQuery = button:contains("Publish to project team")
+    When the user clicks the button/link                 jQuery = button:contains("Send letter to project team")
+    And the user clicks the button/link                  jQuery = button:contains("Send grant offer letter")
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
+    And the user should see the element                  name = removeGrantOfferLetterClicked
+
+Comp admin user uploads new annex file and can see remove link for annex file
+    [Documentation]  IFS-7531
+    When the user uploads a file             annex  ${5mb_pdf}
+    Then the user should see the element     jQuery = a:contains("${5mb_pdf}")
+    And the user should see the element      name = removeAdditionalContractFileClicked
+
+Comp admin can not upload a new file without removing the previous annex file
+    [Documentation]  IFS-7531
+    Then the user should not see the element     jQuery = label:contains("Upload")
+
+Comp admin can remove the annex file
+    [Documentation]  IFS-7531
+    When the user clicks the button/link        name = removeAdditionalContractFileClicked
+    Then the user should see the element        jQuery = label:contains("Upload")
+    And the user should not see the element     jQuery = a:contains("${5mb_pdf}")
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
     [Tags]  HappyPath
-    And the user should see the element         jQuery = button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
     And the user selects the checkbox           confirmation
     And the user clicks the button/link         id = send-gol
-    And the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
+    And the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Send grant offer letter")
     Then the user should not see the element    css = [name = "removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the element        jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.waiting   # GOL
-    And the user reads his email                ${Elbow_Grease_Lead_PM_Email}  ${PROJECT_SETUP_COMPETITION_NAME}: Your grant offer letter is available for project ${Elbow_Grease_Application_No}  We are pleased to inform you that your grant offer letter is now ready for you to sign
+    And the user reads his email                ${Elbow_Grease_Lead_PM_Email}  Your grant offer letter is available for project ${Elbow_Grease_Application_No}  We are pleased to inform you that your grant offer letter is now ready for you to sign
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
@@ -172,7 +189,7 @@ PM can view the grant offer letter page
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
-    Then the user should see the element             jQuery = p:contains("The grant offer letter has been provided by Innovate UK.")
+    Then the user should see the element             jQuery = p:contains("We have provided the grant offer letter")
     And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
@@ -215,7 +232,7 @@ PM should be able upload a file and then access the Send button
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     And the user clicks the button/link              link = Grant offer letter
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
-    Then the user should see the element             link = ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf} (opens in a new window)
     When the user reloads the page
     Then the user should see the element             css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     And the user clicks the button/link              link = Set up your project
@@ -427,21 +444,21 @@ Internal user accepts signed grant offer letter
     [Teardown]   Sleep   60s
 
 Project manager's status should be updated
-    [Documentation]   INFUND-5998, INFUND-6377  IFS-6021
+    [Documentation]   INFUND-5998, INFUND-6377  IFS-6021  IFS-7017
     [Tags]
-    [Setup]    log in as a different user      ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+    [Setup]    log in as a different user                                      ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user should see live project on dashboard
-    When the user clicks the button/link       link = ${Elbow_Grease_Title}
-    Then the user should see the element       jQuery = .success-alert:contains("The project is live, you can review progress at")
-    And the user should see the element        link = _connect
+    When the user clicks the button/link                                       link = ${Elbow_Grease_Title}
+    Then the user should see project is live with review its progress link
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
     [Tags]
-    [Setup]    log in as a different user    ${Elbow_Grease_Partner_Email}  ${short_password}
-    Given the user navigates to the page     ${server}/project-setup/project/${Elbow_Grease_Project_Id}
-    And the user should see the element      css = li.complete:nth-child(7)
-    And the user should see the element      link = _connect
+    [Setup]    log in as a different user                                      ${Elbow_Grease_Partner_Email}  ${short_password}
+    Given the user navigates to the page                                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}
+    And the user should see the element                                        css = li.complete:nth-child(7)
+    #And the user should see the element      link = review its progress
+    Then the user should see project is live with review its progress link
 
 Non lead can see the GOL approved
     [Documentation]  INFUND-6377
@@ -462,22 +479,22 @@ Non lead cannot see the signed GOL
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
     Then the user should not see the element     jQUery = h2:contains("Signed grant offer letter")
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/signed-grant-offer-letter    ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/signed-download    ${403_error_message}
 
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Lead_PM_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Lead_PM_Email}    Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Partner_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Partner_Email}    Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Academic_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Academic_Email}    Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Internal user should see completed project in previous tab
     [Documentation]  IFS-6054
@@ -561,4 +578,4 @@ the user should see live project on dashboard
 Custom suite setup
     Connect to database  @{database}
     the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`id`, `competition_id`, `send_by_default`) VALUES ('1', '${PROJECT_SETUP_COMPETITION}', '1');
+    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`competition_id`, `send_by_default`) VALUES ('${PROJECT_SETUP_COMPETITION}', '1');

@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -21,7 +21,9 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -42,9 +44,11 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private UserResource collaborator;
     private UserResource compAdmin;
     private UserResource stakeholderResource;
+    private UserResource kta;
 
     private ApplicationFinanceResource otherApplicationFinance;
     private UserResource otherLeadApplicant;
+    private UserResource otherKta;
 
     @Override
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
@@ -68,8 +72,14 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             final long applicationId = 1L;
             final long organisationId = 2L;
 
+            CompetitionAssessmentConfig competitionAssessmentConfig = newCompetitionAssessmentConfig()
+                    .withAssessorFinanceView(DETAILED)
+                    .build();
+
             Competition competition = newCompetition()
-                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+                    .withCompetitionAssessmentConfig(competitionAssessmentConfig)
+                    .build();
+
             application = newApplication().with(id(applicationId)).withCompetition(competition).build();
 
             OrganisationResource organisation = newOrganisationResource().with(id(organisationId)).build();
@@ -78,6 +88,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             assessor = newUserResource().build();
             collaborator = newUserResource().build();
             stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
+            kta = ktaUser();
 
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
@@ -90,6 +101,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationId, Role.COLLABORATOR)).thenReturn(true);
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), applicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
             when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
             when(competitionRepository.findById(application.getCompetition().getId())).thenReturn(Optional.of(competition));
@@ -99,12 +111,21 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             final long otherApplicationId = 3L;
             final long otherOrganisationId = 4L;
             OrganisationResource otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
-            Competition otherCompetition = newCompetition().withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+
+            CompetitionAssessmentConfig competitionAssessmentConfig = newCompetitionAssessmentConfig()
+                    .withAssessorFinanceView(DETAILED)
+                    .build();
+
+            Competition otherCompetition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
             Application otherApplication = newApplication().with(id(otherApplicationId)).withCompetition(otherCompetition).build();
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();
+            otherKta = ktaUser();
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherKta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
+
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(false);
         }
     }
 
@@ -121,6 +142,12 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
         assertTrue(rules.assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, assessor));
         assertFalse(rules.assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, assessor));
+    }
+
+    @Test
+    public void ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
+        assertTrue(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, kta));
+        assertFalse(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, kta));
     }
 
     @Test

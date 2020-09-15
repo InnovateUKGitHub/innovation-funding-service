@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -94,6 +96,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {
         return new ProjectSpendProfileController();
@@ -125,6 +130,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).
                 thenThrow(new ObjectNotFoundException("SpendProfile not found", null));
 
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isNotFound())
@@ -157,10 +163,52 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
-        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable, competition);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("project/spend-profile"));
+
+        assertTrue(expectedViewModel.isIncludeFinancialYearTable());
+
+    }
+
+    @Test
+    public void viewSpendProfileSuccessfulViewModelPopulationForKtpCompetition() throws Exception {
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .withFundingType(FundingType.KTP)
+                .build();
+
+        SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable, competition);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -200,7 +248,45 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
-        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable, competition);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm", projectResource.getId(), organisationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("project/spend-profile-confirm"));
+
+    }
+
+    @Test
+    public void viewSpendProfileConfirmForKtpCompetition() throws Exception {
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .withFundingType(FundingType.KTP)
+                .build();
+
+        SpendProfileTableResource expectedTable = buildSpendProfileTableResource(projectResource);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable, competition);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -357,7 +443,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
-        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table, competition);
 
         expectedViewModel.setObjectErrors(singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
 
@@ -434,7 +520,57 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
-        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table, competition);
+
+        SpendProfileForm expectedForm = new SpendProfileForm();
+        expectedForm.setTable(table);
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectResource.getId(), organisationId)
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(view().name("project/spend-profile"));
+
+        verify(projectService).getLeadPartners(eq(projectResource.getId()));
+    }
+
+    @Test
+    public void editSpendProfileSuccessForKtpCompetition() throws Exception {
+        long organisationId = 1L;
+        long projectId = 1L;
+        long competitionId = 1L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withName("projectName1")
+                .withTargetStartDate(LocalDate.of(2018, 3, 1))
+                .withDuration(3L)
+                .withId(projectId)
+                .withCompetition(competitionId)
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withIncludeJesForm(true)
+                .withFundingType(FundingType.KTP)
+                .build();
+
+        SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
+        ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
+
+        PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
+        partnerOrganisationResource.setOrganisation(organisationId);
+        partnerOrganisationResource.setLeadOrganisation(false);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
+
+        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
+
+        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(table);
+        when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
+        when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table, competition);
 
         SpendProfileForm expectedForm = new SpendProfileForm();
         expectedForm.setTable(table);
@@ -630,6 +766,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
@@ -698,6 +835,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
+
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
@@ -746,10 +885,11 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
-        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable);
+        ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, expectedTable, competition);
         expectedViewModel.setLeadPartner(false);
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
@@ -807,7 +947,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 false);
     }
 
-    private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource, SpendProfileTableResource expectedTable) {
+    private ProjectSpendProfileViewModel buildExpectedProjectSpendProfileViewModel(Long organisationId, ProjectResource projectResource,
+                                                                                   SpendProfileTableResource expectedTable, CompetitionResource competitionResource) {
 
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId)
@@ -845,7 +986,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         // Assert that the view model is populated with the correct values
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, expectedTable,
                 summary, false, expectedCategoryToActualTotal, expectedTotalForEachMonth,
-                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null, null ,false, true, false, false, false);
+                expectedTotalOfAllActualTotals, expectedTotalOfAllEligibleTotals, false, null,
+                null ,false, true, false,
+                false, false, competitionResource.isKtp());
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

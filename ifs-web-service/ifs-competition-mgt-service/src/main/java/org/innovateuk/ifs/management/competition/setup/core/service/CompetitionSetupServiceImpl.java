@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.Compe
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.*;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -95,13 +96,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     @Override
     public CompetitionSetupViewModel populateCompetitionSectionModelAttributes(
             CompetitionResource competitionResource,
+            UserResource userResource,
             CompetitionSetupSection section
     ) {
         CompetitionSetupViewModel viewModel = null;
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
         if (populator != null) {
-            viewModel = populator.populateModel(competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, section), competitionResource);
+            viewModel = populator.populateModel(competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, userResource, section), competitionResource);
         }
 
         return viewModel;
@@ -280,22 +282,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                 });
     }
 
-    @Override
-    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
-        return competitionRestService.addInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
-        return competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
-    }
-
     private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
         List<CompetitionSetupSection> requiredSections = new ArrayList<>();
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
         requiredSections.add(CompetitionSetupSection.TERMS_AND_CONDITIONS);
         requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
-        requiredSections.add(ELIGIBILITY);
+        requiredSections.add(PROJECT_ELIGIBILITY);
+        requiredSections.add(ORGANISATIONAL_ELIGIBILITY);
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);

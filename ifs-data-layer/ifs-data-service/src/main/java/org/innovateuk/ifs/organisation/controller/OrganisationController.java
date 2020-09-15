@@ -53,6 +53,11 @@ public class OrganisationController {
         return organisationService.getAllByUserId(userId).toGetResponse();
     }
 
+    @GetMapping()
+    public RestResult<List<OrganisationResource>> getOrganisations(@RequestParam final long userId, @RequestParam final boolean international) {
+        return organisationService.getOrganisations(userId, international).toGetResponse();
+    }
+
     @PostMapping("/create-or-match")
     public RestResult<OrganisationResource> createOrMatch(@RequestBody OrganisationResource organisation) {
         return organisationCreationService.createOrMatch(organisation).toPostCreateResponse();

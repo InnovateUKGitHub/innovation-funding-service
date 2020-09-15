@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -44,5 +45,9 @@ public class InnovationLeadBuilder extends BaseBuilder<InnovationLead, Innovatio
 
     public InnovationLeadBuilder withUser(User... users) {
         return withArray((user, u) -> setField("user", user, u), users);
+    }
+
+    public InnovationLeadBuilder withRole(CompetitionParticipantRole... roles) {
+        return withArray((role, r) -> setField("role", role, r), roles);
     }
 }

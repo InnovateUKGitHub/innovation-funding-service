@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
@@ -55,8 +56,32 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setMaxWords(maxWords));
     }
 
+    public CompetitionSetupQuestionResourceBuilder withTextArea(Boolean textArea) {
+        return with(competition -> competition.setTextArea(textArea));
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withTemplateDocument(Boolean templateDocument) {
+        return with(competition -> competition.setTemplateDocument(templateDocument));
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withTemplateTitle(String templateTitle) {
+        return with(competition -> competition.setTemplateTitle(templateTitle));
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withMultipleChoice(Boolean multipleChoice) {
+        return with(competition -> competition.setMultipleChoice(multipleChoice));
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withMultipleChoiceOptions(List<MultipleChoiceOptionResource> choices) {
+        return with(competition -> competition.setChoices(choices));
+    }
+
     public CompetitionSetupQuestionResourceBuilder withAppendix(Boolean appendix) {
         return with(competition -> competition.setAppendix(appendix));
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withNumberOfUploads(Integer numberOfUploads) {
+        return with(competition -> competition.setNumberOfUploads(numberOfUploads));
     }
 
     public CompetitionSetupQuestionResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {

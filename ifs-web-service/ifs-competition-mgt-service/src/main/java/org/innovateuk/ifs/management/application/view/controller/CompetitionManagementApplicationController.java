@@ -6,22 +6,21 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +37,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
@@ -51,20 +48,22 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ProcessRoleService processRoleService;
     @Autowired
-    private UserRestService userRestService;
-    @Autowired
     private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
     @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    @Autowired
+    private InterviewResponseRestService interviewResponseRestService;
+    @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Autowired
     private ManagementApplicationPopulator managementApplicationPopulator;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}")
     @AsyncMethod
     public String newApplicationSummary(@PathVariable("applicationId") final Long applicationId,
@@ -73,8 +72,7 @@ public class CompetitionManagementApplicationController {
                                         BindingResult bindingResult,
                                         UserResource user,
                                         Model model) {
-        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user);
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", managementApplicationPopulator.populate(applicationId, user));
         return "competition-mgt-application-overview";
     }
 
@@ -134,23 +132,21 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-    @GetMapping("/{applicationId}/forminput/{formInputId}/download")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
+    @GetMapping("/{applicationId}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (hasProcessRole(user)) {
-            processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-        } else {
-            long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
-            processRole = processRoleService.getById(processRoleId).get();
-        }
 
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
+        long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
+        processRole = processRoleService.getById(processRoleId).get();
+
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
@@ -173,7 +169,24 @@ public class CompetitionManagementApplicationController {
         return "application/reinstate-ineligible-application-confirm";
     }
 
-    private boolean hasProcessRole(UserResource user) {
-        return !(isInternal(user) || user.hasRole(STAKEHOLDER));
+    @GetMapping("/{applicationId}/download-response")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadResponse(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+
+        return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
+                interviewResponseRestService.findResponse(applicationId).getSuccess());
+    }
+
+    @GetMapping("/{applicationId}/download-feedback")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
+                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
     }
 }

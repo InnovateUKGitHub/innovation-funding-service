@@ -1,19 +1,23 @@
 package org.innovateuk.ifs.application.forms.questions.generic.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
-public class GenericQuestionApplicationViewModel {
+public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewModel {
 
-    private final long applicationId;
     private final long questionId;
     private final long currentUser;
+    private final long applicationId;
+    private final String competitionName;
 
     private final String applicationName;
     private final String questionName;
@@ -31,12 +35,14 @@ public class GenericQuestionApplicationViewModel {
     private final Long appendixFormInputId;
     private final String appendixGuidance;
     private final Set<FileTypeCategory> appendixAllowedFileTypes;
-    private final String appendixFilename;
+    private final List<GenericQuestionAppendix> appendices;
+    private final Integer maximumAppendices;
 
     private final Long templateDocumentFormInputId;
     private final String templateDocumentTitle;
     private final String templateDocumentFilename;
     private final String templateDocumentResponseFilename;
+    private final Long templateDocumentResponseFileEntryId;
 
     private final ZonedDateTime lastUpdated;
     private final String lastUpdatedByName;
@@ -48,8 +54,23 @@ public class GenericQuestionApplicationViewModel {
 
     private final AssignButtonsViewModel assignButtonsViewModel;
 
-    public GenericQuestionApplicationViewModel(long applicationId, long questionId, long currentUser, String applicationName, String questionName, String questionNumber, String questionSubtitle, String questionDescription, String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType, Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, String appendixFilename, Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename, String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel) {
+    private final Long multipleChoiceFormInputId;
+    private final List<MultipleChoiceOptionResource> multipleChoiceOptions;
+    private final MultipleChoiceOptionResource selectedMultipleChoiceOption;
+
+    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser,
+                                               String applicationName, String questionName, String questionNumber, String questionSubtitle,
+                                               String questionDescription, String questionGuidanceTitle, String questionGuidance,
+                                               QuestionSetupType questionType, Long textAreaFormInputId,
+                                               Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance,
+                                               Set<FileTypeCategory> appendixAllowedFileTypes, List<GenericQuestionAppendix> appendices,
+                                               Integer maximumAppendices, Long templateDocumentFormInputId, String templateDocumentTitle,
+                                               String templateDocumentFilename, String templateDocumentResponseFilename, Long templateDocumentResponseFileEntryId,
+                                               ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open,
+                                               boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel,
+                                               Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions, MultipleChoiceOptionResource selectedMultipleChoiceOption) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.questionId = questionId;
         this.currentUser = currentUser;
         this.applicationName = applicationName;
@@ -66,11 +87,13 @@ public class GenericQuestionApplicationViewModel {
         this.appendixFormInputId = appendixFormInputId;
         this.appendixGuidance = appendixGuidance;
         this.appendixAllowedFileTypes = appendixAllowedFileTypes;
-        this.appendixFilename = appendixFilename;
+        this.appendices = appendices;
+        this.maximumAppendices = maximumAppendices;
         this.templateDocumentFormInputId = templateDocumentFormInputId;
         this.templateDocumentTitle = templateDocumentTitle;
         this.templateDocumentFilename = templateDocumentFilename;
         this.templateDocumentResponseFilename = templateDocumentResponseFilename;
+        this.templateDocumentResponseFileEntryId = templateDocumentResponseFileEntryId;
         this.lastUpdated = lastUpdated;
         this.lastUpdatedByName = lastUpdatedByName;
         this.lastUpdatedBy = lastUpdatedBy;
@@ -78,10 +101,19 @@ public class GenericQuestionApplicationViewModel {
         this.complete = complete;
         this.leadApplicant = leadApplicant;
         this.assignButtonsViewModel = assignButtonsViewModel;
+        this.multipleChoiceFormInputId = multipleChoiceFormInputId;
+        this.multipleChoiceOptions = multipleChoiceOptions;
+        this.selectedMultipleChoiceOption = selectedMultipleChoiceOption;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public long getQuestionId() {
@@ -148,8 +180,12 @@ public class GenericQuestionApplicationViewModel {
         return appendixAllowedFileTypes;
     }
 
-    public String getAppendixFilename() {
-        return appendixFilename;
+    public List<GenericQuestionAppendix> getAppendices() {
+        return appendices;
+    }
+
+    public Integer getMaximumAppendices() {
+        return maximumAppendices;
     }
 
     public Long getTemplateDocumentFormInputId() {
@@ -166,6 +202,10 @@ public class GenericQuestionApplicationViewModel {
 
     public String getTemplateDocumentResponseFilename() {
         return templateDocumentResponseFilename;
+    }
+
+    public Long getTemplateDocumentResponseFileEntryId() {
+        return templateDocumentResponseFileEntryId;
     }
 
     public ZonedDateTime getLastUpdated() {
@@ -194,6 +234,18 @@ public class GenericQuestionApplicationViewModel {
 
     public AssignButtonsViewModel getAssignButtonsViewModel() {
         return assignButtonsViewModel;
+    }
+
+    public Long getMultipleChoiceFormInputId() {
+        return multipleChoiceFormInputId;
+    }
+
+    public List<MultipleChoiceOptionResource> getMultipleChoiceOptions() {
+        return multipleChoiceOptions;
+    }
+
+    public MultipleChoiceOptionResource getSelectedMultipleChoiceOption() {
+        return selectedMultipleChoiceOption;
     }
 
     /* view logic */
@@ -234,10 +286,15 @@ public class GenericQuestionApplicationViewModel {
         return templateDocumentFormInputId != null;
     }
 
+    public boolean isMultipleChoiceOptionsActive() {
+        return multipleChoiceFormInputId != null;
+    }
+
     public static final class GenericQuestionApplicationViewModelBuilder {
-        private long applicationId;
         private long questionId;
         private long currentUser;
+        private long applicationId;
+        private String competitionName;
         private String applicationName;
         private String questionName;
         private String questionNumber;
@@ -252,11 +309,13 @@ public class GenericQuestionApplicationViewModel {
         private Long appendixFormInputId;
         private String appendixGuidance;
         private Set<FileTypeCategory> appendixAllowedFileTypes;
-        private String appendixFilename;
+        private List<GenericQuestionAppendix> appendices;
+        private Integer maximumAppendices;
         private Long templateDocumentFormInputId;
         private String templateDocumentTitle;
         private String templateDocumentFilename;
         private String templateDocumentResponseFilename;
+        private Long templateDocumentResponseFileEntryId;
         private ZonedDateTime lastUpdated;
         private String lastUpdatedByName;
         private Long lastUpdatedBy;
@@ -264,17 +323,15 @@ public class GenericQuestionApplicationViewModel {
         private boolean complete;
         private boolean leadApplicant;
         private AssignButtonsViewModel assignButtonsViewModel;
+        private Long multipleChoiceFormInputId;
+        private List<MultipleChoiceOptionResource> multipleChoiceOptions;
+        private MultipleChoiceOptionResource selectedMultipleChoiceOption;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
 
         public static GenericQuestionApplicationViewModelBuilder aGenericQuestionApplicationViewModel() {
             return new GenericQuestionApplicationViewModelBuilder();
-        }
-
-        public GenericQuestionApplicationViewModelBuilder withApplicationId(long applicationId) {
-            this.applicationId = applicationId;
-            return this;
         }
 
         public GenericQuestionApplicationViewModelBuilder withQuestionId(long questionId) {
@@ -284,6 +341,16 @@ public class GenericQuestionApplicationViewModel {
 
         public GenericQuestionApplicationViewModelBuilder withCurrentUser(long currentUser) {
             this.currentUser = currentUser;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withApplicationId(long applicationId) {
+            this.applicationId = applicationId;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withCompetitionName(String competitionName) {
+            this.competitionName = competitionName;
             return this;
         }
 
@@ -327,11 +394,6 @@ public class GenericQuestionApplicationViewModel {
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withTextAreaFormInputId(Long textAreaFormInputId) {
-            this.textAreaFormInputId = textAreaFormInputId;
-            return this;
-        }
-
         public GenericQuestionApplicationViewModelBuilder withWordCount(Integer wordCount) {
             this.wordCount = wordCount;
             return this;
@@ -357,8 +419,13 @@ public class GenericQuestionApplicationViewModel {
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withAppendixFilename(String appendixFilename) {
-            this.appendixFilename = appendixFilename;
+        public GenericQuestionApplicationViewModelBuilder withAppendices(List<GenericQuestionAppendix> appendices) {
+            this.appendices = appendices;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMaximumAppendices(Integer maximumAppendices) {
+            this.maximumAppendices = maximumAppendices;
             return this;
         }
 
@@ -379,6 +446,11 @@ public class GenericQuestionApplicationViewModel {
 
         public GenericQuestionApplicationViewModelBuilder withTemplateDocumentResponseFilename(String templateDocumentResponseFilename) {
             this.templateDocumentResponseFilename = templateDocumentResponseFilename;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withTemplateDocumentResponseFileEntryId(Long templateDocumentResponseFileEntryId) {
+            this.templateDocumentResponseFileEntryId = templateDocumentResponseFileEntryId;
             return this;
         }
 
@@ -417,8 +489,33 @@ public class GenericQuestionApplicationViewModel {
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withTextAreaFormInputId(Long textAreaFormInputId) {
+            this.textAreaFormInputId = textAreaFormInputId;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMultipleChoiceFormInputId(Long multipleChoiceFormInputId) {
+            this.multipleChoiceFormInputId = multipleChoiceFormInputId;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMultipleChoiceOptions(List<MultipleChoiceOptionResource> multipleChoiceOptions) {
+            this.multipleChoiceOptions = multipleChoiceOptions;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withSelectedMultipleChoiceOption(MultipleChoiceOptionResource selectedMultipleChoiceOption) {
+            this.selectedMultipleChoiceOption = selectedMultipleChoiceOption;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
-            return new GenericQuestionApplicationViewModel(applicationId, questionId, currentUser, applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename, templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant, assignButtonsViewModel);
+            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName,
+                    questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance,
+                    questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes,
+                    appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
+                    templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy,
+                    open, complete, leadApplicant, assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, selectedMultipleChoiceOption);
         }
     }
 }

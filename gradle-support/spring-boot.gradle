@@ -3,12 +3,15 @@ apply from: rootProject.file("gradle-support/java.gradle")
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
-jacocoTestReport {
-    afterEvaluate {
-        getClassDirectories().setFrom(
-                fileTree(dir: it,
-                        exclude: ['**/*Mapper**']))
+jacocoTestReport{
+    additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
+    reports {
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+        html.destination file("build/reports/jacoco/html")
     }
+    executionData.from = files('build/jacoco/test.exec')
 }
 
 dependencies {

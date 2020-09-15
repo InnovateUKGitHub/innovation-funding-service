@@ -16,10 +16,12 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -34,9 +36,9 @@ import static org.innovateuk.ifs.application.resource.CompetitionReferralSource.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,6 +57,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     private CompetitionRestService competitionRestService;
     @Mock
     private Validator validator;
+
+    private ArgumentCaptor<ApplicationResource> applicationArgumentCaptor = ArgumentCaptor.forClass(ApplicationResource.class);
 
     @Override
     protected ApplicationDetailsController supplyControllerUnderTest() {
@@ -82,6 +86,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     public void saveAndReturn() throws Exception {
         long questionId = 1L;
         long applicationId = 2L;
+        long competitionId = 3L;
+
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
         applicationDetailsForm.setName("name");
         applicationDetailsForm.setResubmission(FALSE);
@@ -90,8 +96,17 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT);
         applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS);
         applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE);
+        applicationDetailsForm.setKtpCompetition(false);
 
-        ApplicationResource application = newApplicationResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
@@ -107,6 +122,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                         .param("competitionReferralSource", valueOf(applicationDetailsForm.getCompetitionReferralSource()))
                         .param("companyAge", valueOf(applicationDetailsForm.getCompanyAge()))
                         .param("companyPrimaryFocus", valueOf(applicationDetailsForm.getCompanyPrimaryFocus()))
+                        .param("ktpCompetition", valueOf(applicationDetailsForm.isKtpCompetition()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%d", applicationId)))
@@ -114,9 +130,60 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void saveAndReturnKtpCompetition() throws Exception {
+        long questionId = 1L;
+        long applicationId = 2L;
+        long competitionId = 3L;
+        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        LocalDate ktpProjectStartDate = competitionEndDate.plusMonths(12).toLocalDate();
+
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setName("name");
+        applicationDetailsForm.setResubmission(FALSE);
+        applicationDetailsForm.setDurationInMonths(3L);
+        applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT);
+        applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS);
+        applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE);
+        applicationDetailsForm.setKtpCompetition(true);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.KTP)
+                .withEndDate(competitionEndDate)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
+
+        mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
+                        .param("name", valueOf(applicationDetailsForm.getName()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
+                        .param("competitionReferralSource", valueOf(applicationDetailsForm.getCompetitionReferralSource()))
+                        .param("companyAge", valueOf(applicationDetailsForm.getCompanyAge()))
+                        .param("companyPrimaryFocus", valueOf(applicationDetailsForm.getCompanyPrimaryFocus()))
+                        .param("ktpCompetition", valueOf(applicationDetailsForm.isKtpCompetition()))
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/application/%d", applicationId)))
+                .andReturn();
+
+        verify(applicationRestService).saveApplication(applicationArgumentCaptor.capture());
+        ApplicationResource applicationResourceToSave = applicationArgumentCaptor.getValue();
+
+        assertEquals(ktpProjectStartDate, applicationResourceToSave.getStartDate());
+    }
+
+    @Test
     public void markAsComplete() throws Exception {
         long questionId = 1L;
         long applicationId = 2L;
+        long competitionId = 3L;
+
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
         applicationDetailsForm.setName("name");
         applicationDetailsForm.setResubmission(FALSE);
@@ -125,8 +192,11 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT);
         applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS);
         applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE);
+        applicationDetailsForm.setKtpCompetition(false);
 
         CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
                 .withInnovationAreas(singleton(1L))
                 .build();
         ApplicationResource application = newApplicationResource()
@@ -149,10 +219,62 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                         .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
                         .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
                         .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
+                        .param("ktpCompetition", valueOf(applicationDetailsForm.isKtpCompetition()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%d/form/question/%d/application-details", applicationId, questionId)))
                 .andReturn();
+    }
+
+    @Test
+    public void markAsCompleteKtpCompetition() throws Exception {
+        long questionId = 1L;
+        long applicationId = 2L;
+        long competitionId = 3L;
+        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        LocalDate ktpProjectStartDate = competitionEndDate.plusMonths(12).toLocalDate();
+
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setName("name");
+        applicationDetailsForm.setResubmission(FALSE);
+        applicationDetailsForm.setDurationInMonths(3L);
+        applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT);
+        applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS);
+        applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE);
+        applicationDetailsForm.setKtpCompetition(true);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.KTP)
+                .withEndDate(competitionEndDate)
+                .withInnovationAreas(singleton(1L))
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().build();
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
+                        .param("complete", valueOf(TRUE))
+                        .param("name", valueOf(applicationDetailsForm.getName()))
+                        .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
+                        .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
+                        .param("ktpCompetition", valueOf(applicationDetailsForm.isKtpCompetition()))
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/application/%d/form/question/%d/application-details", applicationId, questionId)))
+                .andReturn();
+
+        verify(applicationRestService).saveApplication(applicationArgumentCaptor.capture());
+        ApplicationResource applicationResourceToSave = applicationArgumentCaptor.getValue();
+
+        assertEquals(ktpProjectStartDate, applicationResourceToSave.getStartDate());
     }
 
     @Test

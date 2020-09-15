@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.registration.populator;
 
+import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionChoiceViewModel;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -19,8 +20,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +32,6 @@ public class OrganisationSelectionViewModelPopulatorTest {
 
     @Mock
     private OrganisationRestService organisationRestService;
-
     @Mock
     private RegistrationCookieService registrationCookieService;
 
@@ -44,9 +43,10 @@ public class OrganisationSelectionViewModelPopulatorTest {
         List<OrganisationResource> organisations = newOrganisationResource()
                 .withName("Organisation 1", "Organisation 2")
                 .withOrganisationTypeName("Type 1", "Type 2")
+                .withIsInternational(false)
                 .build(2);
 
-        when(organisationRestService.getAllByUserId(user.getId())).thenReturn(restSuccess(organisations));
+        when(organisationRestService.getOrganisations(user.getId(), false)).thenReturn(restSuccess(organisations));
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
 
         OrganisationSelectionViewModel viewModel = populator.populate(user, request, url);
@@ -59,7 +59,7 @@ public class OrganisationSelectionViewModelPopulatorTest {
         });
 
         assertEquals(viewModel.getNewOrganisationUrl(), url);
-        assertEquals(viewModel.isCollaboratorJourney(), false);
+        assertFalse(viewModel.isCollaboratorJourney());
     }
 
 

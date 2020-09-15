@@ -27,4 +27,11 @@ public class StaticContentControllerTest extends BaseControllerMockMVCTest<Stati
                 .andExpect(status().isOk())
                 .andExpect(view().name("content/cookies"));
     }
+
+    @Test
+    public void accessibility() throws Exception {
+        mockMvc.perform(get("/info/accessibility"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("content/accessibility"));
+    }
 }

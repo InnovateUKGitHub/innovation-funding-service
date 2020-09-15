@@ -6,11 +6,11 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.junit.Test;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static org.innovateuk.ifs.activitylog.resource.ActivityLogResourceBuilder.newActivityLogResource;
-import static org.innovateuk.ifs.activitylog.resource.ActivityType.NONE;
+import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 import static org.junit.Assert.assertNotNull;
 
 public class ActivityLogUrlHelperTest {
@@ -37,9 +37,14 @@ public class ActivityLogUrlHelperTest {
 
         //Test all enum entries have a URL.
         stream(ActivityType.values())
-                .filter(negate(NONE::equals))
+                .filter(type -> !asList(NONE,
+                        GRANTS_FINANCE_CONTACT_INVITED,
+                        GRANTS_MONITORING_OFFICER_INVITED,
+                        GRANTS_PROJECT_MANAGER_INVITED)
+                        .contains(type))
                 .forEach((type) ->
-                    assertNotNull(ActivityLogUrlHelper.url(activity.withActivityType(type).build(), project))
+                    assertNotNull("Expected not null " + type, ActivityLogUrlHelper.
+                            url(activity.withActivityType(type).build(), project))
                 );
     }
 }

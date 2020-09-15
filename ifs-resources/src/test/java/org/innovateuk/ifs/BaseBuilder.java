@@ -63,6 +63,15 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         });
     }
 
+
+    public S withArray(BiConsumer<Boolean, T> amendFunction, boolean[] values) {
+        return with((i, t) -> {
+            boolean nextValue = values != null && values.length > 0 ? values[Math.min(values.length - 1, i)] : null;
+            amendFunction.accept(nextValue, t);
+        });
+    }
+
+
     public <R> S withArraySetFieldByReflection(String fieldName, R[] values) {
         return withArray((value, t) -> ReflectionTestUtils.setField(t, fieldName, value), values);
     }

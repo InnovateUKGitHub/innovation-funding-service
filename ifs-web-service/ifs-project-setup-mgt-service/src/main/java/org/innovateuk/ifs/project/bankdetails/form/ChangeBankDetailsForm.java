@@ -2,15 +2,12 @@ package org.innovateuk.ifs.project.bankdetails.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import javax.validation.constraints.NotBlank;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.address.form.AddressForm;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 
 public class ChangeBankDetailsForm {
 
@@ -32,8 +29,6 @@ public class ChangeBankDetailsForm {
 
     @Valid
     private AddressForm addressForm = new AddressForm();
-
-    private final OrganisationAddressType addressType = BANK_DETAILS;
 
     public String getSortCode() {
         return sortCode;
@@ -111,9 +106,5 @@ public class ChangeBankDetailsForm {
                 .append(accountNumber)
                 .append(addressForm)
                 .toHashCode();
-    }
-
-    public OrganisationAddressType getAddressType() {
-        return addressType;
     }
 }

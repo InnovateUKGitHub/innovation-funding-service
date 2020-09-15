@@ -62,6 +62,6 @@ public class ApplicationTermsPartnerModelPopulator {
                 .sorted((o1, o2) -> o1.isLead() ? -1 : 1)
                 .collect(toList());
 
-        return new ApplicationTermsPartnerViewModel(application.getId(), questionId, partners);
+        return new ApplicationTermsPartnerViewModel(application.getId(), application.getCompetitionName(), questionId, partners);
     }
 }

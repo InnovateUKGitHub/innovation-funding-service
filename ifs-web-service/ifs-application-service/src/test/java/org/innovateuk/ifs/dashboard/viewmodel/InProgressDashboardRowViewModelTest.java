@@ -21,7 +21,7 @@ public class InProgressDashboardRowViewModelTest {
         ZonedDateTime end = ZonedDateTime.now().plusHours(2).minusMinutes(1);
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel("Application", 1L,
                 "Competition", true, OPENED, true,
-                end, 0, 50 , false, YESTERDAY);
+                end, 0, 50 , false, YESTERDAY, true, true);
 
         assertEquals("/application/1", viewModel.getLinkUrl());
         assertEquals("Application", viewModel.getTitle());
@@ -40,7 +40,7 @@ public class InProgressDashboardRowViewModelTest {
     public void constructSubmitted() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12, 100 , false, YESTERDAY);
+                ZonedDateTime.now().plusDays(12), 12, 100 , false, YESTERDAY, true, true);
 
         assertEquals("/application/1/track", viewModel.getLinkUrl());
         assertEquals("Untitled application", viewModel.getTitle());
@@ -52,7 +52,7 @@ public class InProgressDashboardRowViewModelTest {
     public void constructInterview() {
         InProgressDashboardRowViewModel viewModel = new InProgressDashboardRowViewModel(null, 1L,
                 "Competition", true, SUBMITTED, true,
-                ZonedDateTime.now().plusDays(12), 12, 100 , true, YESTERDAY);
+                ZonedDateTime.now().plusDays(12), 12, 100 , true, YESTERDAY, true, true);
 
         assertEquals("/application/1/summary", viewModel.getLinkUrl());
         assertTrue(viewModel.isApplicationComplete());

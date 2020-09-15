@@ -16,11 +16,15 @@ public interface UserRestService {
 
     RestResult<UserResource> retrieveUserById(long id);
 
+    RestResult<UserResource> createUser(UserCreationResource user);
+
     RestResult<List<UserResource>> findAll();
 
     RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory);
 
     RestResult<List<UserResource>> findByUserRole(Role role);
+
+    RestResult<List<UserResource>> findByUserRoleAndUserStatus(Role role, UserStatus userStatus);
 
     RestResult<ManageUserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize);
 
@@ -55,13 +59,6 @@ public interface UserRestService {
     RestResult<Void> checkPasswordResetHash(String hash);
 
     RestResult<Void> resetPassword(String hash, String password);
-
-    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                 String phoneNumber, long organisationId,
-                                                                                 Long competitionId, Boolean allowMarketingEmails);
-
-    RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                String phoneNumber, long organisationId, Boolean allowMarketingEmails);
 
     RestResult<UserResource> updateDetails(long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails);
 

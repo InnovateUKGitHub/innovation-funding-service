@@ -44,6 +44,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(PROJECT_FINANCE);
     }
 
+    protected UserResource competitionFinanceUser() {
+        return getUserWithRole(EXTERNAL_FINANCE);
+    }
+
     protected UserResource supportUser() {
         return getUserWithRole(SUPPORT);
     }
@@ -78,6 +82,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource ifsAdminUser() {
         return getUserWithRole(IFS_ADMINISTRATOR);
+    }
+
+    protected UserResource ktaUser() {
+        return getUserWithRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @Before

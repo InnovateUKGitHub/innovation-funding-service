@@ -47,11 +47,19 @@ public final class SecurityRuleUtil {
         return user.hasRole(STAKEHOLDER);
     }
 
+    public static boolean isExternalFinanceUser(UserResource user) {
+        return user.hasRole(EXTERNAL_FINANCE);
+    }
+
     public static boolean isMonitoringOfficer(UserResource user) {
         return user.hasRole(MONITORING_OFFICER);
     }
 
     public static boolean isIFSAdmin(UserResource user) {
         return user.hasRole(IFS_ADMINISTRATOR);
+    }
+
+    public static boolean isKta(UserResource user) {
+        return user.hasRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 }

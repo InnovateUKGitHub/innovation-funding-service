@@ -48,7 +48,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Tear Down
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
-Resource          ../07__Assessor/Assessor_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${ASSESSMENT_PANEL_COMP_NAME}     Smart monitoring in high-pressure engineering systems
@@ -312,12 +312,13 @@ get the initial milestone value
     set suite variable  ${assessmentPanelDate}
 
 enable assessment panel for the competition
-    the user clicks the button/link    link = View and update competition setup
+    the user clicks the button/link    link = View and update competition details
     the user clicks the button/link    link = Assessors
     the user clicks the button/link    jQuery = button:contains("Edit")
     the user selects the radio button  hasAssessmentPanel  hasAssessmentPanel-0
+    the user selects the radio button  averageAssessorScore    0
     the user clicks the button/link    jQuery = button:contains("Done")
-    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Competition details
     the user clicks the button/link    link = Competition
     the user clicks the button/link    link = All competitions
     the user clicks the button/link    link = ${ASSESSMENT_PANEL_COMP_NAME}

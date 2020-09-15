@@ -32,10 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class QuestionSetupCompetitionControllerDocumentation extends BaseFileControllerMockMVCTest<QuestionSetupCompetitionController> {
 
-    private static String baseUrl = "/question-setup";
+    private static final String baseUrl = "/question-setup";
 
     @Mock
-    private QuestionSetupCompetitionService questionSetupCompetitionServiceMock;
+    private QuestionSetupCompetitionService questionSetupCompetitionService;
 
     @Mock
     private QuestionFileSetupCompetitionService questionFileSetupCompetitionService;
@@ -47,8 +47,8 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
     @Test
     public void getByQuestionId() throws Exception {
-        final Long questionId = 1L;
-        when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
+        final long questionId = 1L;
+        when(questionSetupCompetitionService.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
 
         mockMvc.perform(get(baseUrl + "/get-by-id/{id}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -64,7 +64,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
     @Test
     public void save() throws Exception {
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
-        when(questionSetupCompetitionServiceMock.update(resource)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionService.update(resource)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(put(baseUrl + "/save")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -78,9 +78,9 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
 
     @Test
     public void addDefaultToCompetition() throws Exception {
-        final Long competitionId = 1L;
+        final long competitionId = 1L;
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
-        when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionService.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(post(baseUrl + "/add-default-to-competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -96,7 +96,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
     @Test
     public void deleteById() throws Exception {
         final long questionId = 1L;
-        when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionService.delete(questionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete(baseUrl + "/delete-by-id/{id}", questionId)
                 .header("IFS_AUTH_TOKEN", "123abc")).
@@ -112,7 +112,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseFileCon
     public void addResearchCategoryQuestionToCompetition() throws Exception {
         final long competitionId = 1L;
 
-        when(questionSetupCompetitionServiceMock.addResearchCategoryQuestionToCompetition(competitionId)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionService.addResearchCategoryQuestionToCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(baseUrl + "/add-research-category-question-to-competition/{id}", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))

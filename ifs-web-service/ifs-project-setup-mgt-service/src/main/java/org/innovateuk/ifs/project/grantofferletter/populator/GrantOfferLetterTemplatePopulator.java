@@ -110,7 +110,8 @@ public class GrantOfferLetterTemplatePopulator {
                                                      competitionResource.getTermsAndConditions().getTemplate(),
                                                      industrialFinanceTableModel,
                                                      academicFinanceTableModel,
-                                                     summaryFinanceTableModel);
+                                                     summaryFinanceTableModel,
+                                                     competitionResource.isProcurement());
     }
 
     private List<String> getAddressLines(ProjectResource project) {
@@ -121,6 +122,7 @@ public class GrantOfferLetterTemplatePopulator {
             addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "");
             addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : ""));
             addressLines.add(address.getTown() != null ? address.getTown() : "");
+            addressLines.add(address.getCountry() != null ? address.getCountry() : "");
             addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
         }
         return addressLines;

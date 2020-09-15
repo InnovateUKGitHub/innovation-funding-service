@@ -18,6 +18,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -165,10 +166,11 @@ public class ApplicationNotificationServiceImplTest {
                 .build();
 
         List<User> users = newUser()
-                .withFirstName("John", "Jane", "Bob")
-                .withLastName("Smith", "Jones", "Davies")
-                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
-                .build(3);
+                .withFirstName("John", "Jane", "Bob", "innactive")
+                .withLastName("Smith", "Jones", "Davies", "gone")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com", "nolongeron@ifs.com")
+                .withStatus(UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.INACTIVE)
+                .build(4);
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)

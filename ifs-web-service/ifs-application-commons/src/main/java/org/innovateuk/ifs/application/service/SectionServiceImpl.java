@@ -3,7 +3,8 @@ package org.innovateuk.ifs.application.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.SectionType.ORGANISATION_FINANCES;
 import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -69,11 +69,6 @@ public class SectionServiceImpl implements SectionService {
         return sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
     }
 
-    @Override
-    public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return sectionStatusRestService.allSectionsMarkedAsComplete(applicationId).getSuccess();
-    }
-
     /**
      * Get Sections that have no parent section.
      *
@@ -119,37 +114,6 @@ public class SectionServiceImpl implements SectionService {
 
     public List<SectionResource> findResourceByIdInList(final List<Long> ids, final List<SectionResource> list) {
         return simpleFilter(list, item -> ids.contains(item.getId()));
-    }
-
-    @Override
-    public void removeSectionsQuestionsWithType(SectionResource section, FormInputType type) {
-        List<QuestionResource> questions = questionRestService.findByCompetition(section.getCompetition()).getSuccess();
-        List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
-        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(section.getCompetition(), APPLICATION).getSuccess();
-        filterByIdList(section.getChildSections(), sections).stream()
-                .forEach(
-                        s -> s.setQuestions(
-                                getQuestionsBySection(s.getQuestions(), questions)
-                                        .stream()
-                                        .filter(
-                                                q -> q != null &&
-                                                        !q.getFormInputs().stream()
-                                                                .anyMatch(
-                                                                        input -> type == simpleFilter(formInputResources, i -> input.equals(i.getId())).get(0).getType()
-                                                                )
-                                        )
-                                        .map(QuestionResource::getId)
-                                        .collect(toList())
-                        )
-                );
-    }
-
-    private List<SectionResource> filterByIdList(final List<Long> ids, final List<SectionResource> list) {
-        return simpleFilter(list, section -> ids.contains(section.getId()));
-    }
-
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
     @Override

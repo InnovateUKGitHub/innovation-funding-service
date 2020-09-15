@@ -20,6 +20,7 @@ public class ApplicationFinance extends Finance {
     private Application application;
 
     private String workPostcode;
+    private String internationalLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
@@ -56,5 +57,13 @@ public class ApplicationFinance extends Finance {
 
     public void setWorkPostcode(String workPostcode) {
         this.workPostcode = workPostcode;
+    }
+
+    public String getInternationalLocation() {
+        return internationalLocation;
+    }
+
+    public void setInternationalLocation(String internationalLocation) {
+        this.internationalLocation = internationalLocation;
     }
 }

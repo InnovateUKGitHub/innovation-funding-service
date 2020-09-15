@@ -5,9 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,17 +24,8 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
     @Mock
     private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
-    @Mock
-    private ApplicationSummaryRestService applicationSummaryRestService;
-
-    @Before
-    public void setUp() {
-        super.setup();
-    }
-
     protected ApplicationFundingDecisionServiceImpl supplyServiceUnderTest() {
-        return new ApplicationFundingDecisionServiceImpl(applicationFundingDecisionRestService,
-                applicationSummaryRestService);
+        return new ApplicationFundingDecisionServiceImpl();
     }
 
     @Test
@@ -50,7 +39,6 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
         applicationSummaryPageResource.setContent(applicationSummaryResources);
 
         when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-        when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
 
         service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
@@ -59,7 +47,6 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
         expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
 
         verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-        when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
     }
 
     @Test
@@ -77,51 +64,6 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
         assertTrue(result.isFailure());
 
         verifyZeroInteractions(applicationFundingDecisionRestService);
-        verifyZeroInteractions(applicationSummaryRestService);
-    }
-
-    @Test
-    public void saveFundingDecision_unsubmittedApplicationsShouldNotReceiveFundingDecision() throws Exception {
-        List<Long> applicationIds = new ArrayList<>();
-        applicationIds.add(8L);
-        applicationIds.add(9L);
-
-        ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
-        List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(10L, 11L).build(2);
-        applicationSummaryPageResource.setContent(applicationSummaryResources);
-
-        when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-        when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
-
-        service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
-
-        Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
-
-        verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-        when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
-    }
-
-    @Test
-    public void saveFundingDecision_onlySubmittedApplicationsShouldNotReceiveFundingDecision() throws Exception {
-        List<Long> applicationIds = new ArrayList<>();
-        applicationIds.add(8L);
-        applicationIds.add(9L);
-
-        ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
-        List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(1L, 2L, 7L, 8L, 9L).build(5);
-        applicationSummaryPageResource.setContent(applicationSummaryResources);
-
-        when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-        when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
-
-        service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
-
-        Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
-        expectedDecisionMap.put(8L, FundingDecision.ON_HOLD);
-        expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
-
-        verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-        when(applicationSummaryRestService.getSubmittedApplications(1L, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())).thenReturn(restSuccess(applicationSummaryPageResource));
     }
 
     @Test

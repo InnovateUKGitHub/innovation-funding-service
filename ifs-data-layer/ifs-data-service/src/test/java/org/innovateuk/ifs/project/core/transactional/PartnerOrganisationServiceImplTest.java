@@ -179,7 +179,7 @@ public class PartnerOrganisationServiceImplTest extends BaseServiceUnitTest<Part
 
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectOrganisationCompositeId.getProjectId(), projectOrganisationCompositeId.getOrganisationId())).thenReturn(partnerOrganisations.get(1));
         when(pendingPartnerProgressRepository.findByOrganisationIdAndProjectId(organisations.get(1).getId(), projectId)).thenReturn(Optional.of(pendingPartnerProgress));
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(projectFinance.get(1));
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(Optional.of(projectFinance.get(1)));
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisations.get(1).getId())).thenReturn(Optional.of(bankDetails.get(1)));
         when(projectUserRepository.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(Optional.of(projectUsers.get(0)));
 

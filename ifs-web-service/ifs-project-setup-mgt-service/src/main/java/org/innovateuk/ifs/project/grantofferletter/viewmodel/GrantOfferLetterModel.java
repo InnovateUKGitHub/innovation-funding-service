@@ -13,6 +13,8 @@ import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
  */
 public class GrantOfferLetterModel {
 
+    private final String title;
+    private final String shortTitle;
     private final long competitionId;
     private final boolean h2020;
     private final FileDetailsViewModel grantOfferLetterFile;
@@ -26,8 +28,11 @@ public class GrantOfferLetterModel {
     private final GrantOfferLetterStateResource grantOfferState;
     private final String grantOfferLetterRejectionReason;
     private final ProjectState projectState;
+    private final boolean useDocusignForGrantOfferLetter;
 
-    public GrantOfferLetterModel(long competitionId,
+    public GrantOfferLetterModel(String title,
+                                 String shortTitle,
+                                 long competitionId,
                                  boolean h2020,
                                  FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel additionalContractFile,
@@ -39,7 +44,10 @@ public class GrantOfferLetterModel {
                                  FileDetailsViewModel signedGrantOfferLetterFile,
                                  GrantOfferLetterStateResource grantOfferState,
                                  String grantOfferLetterRejectionReason,
-                                 ProjectState projectState) {
+                                 ProjectState projectState,
+                                 boolean useDocusignForGrantOfferLetter) {
+        this.title = title;
+        this.shortTitle = shortTitle;
         this.competitionId = competitionId;
         this.h2020 = h2020;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -53,6 +61,15 @@ public class GrantOfferLetterModel {
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
         this.projectState = projectState;
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
     }
 
     public long getCompetitionId() {
@@ -115,6 +132,10 @@ public class GrantOfferLetterModel {
 
     public boolean isProjectIsActive() {
         return projectState.isActive();
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
     }
 
     @Override

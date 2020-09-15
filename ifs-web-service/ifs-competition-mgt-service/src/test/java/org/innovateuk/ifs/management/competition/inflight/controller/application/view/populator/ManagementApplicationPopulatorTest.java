@@ -8,15 +8,16 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -68,6 +69,12 @@ public class ManagementApplicationPopulatorTest {
     @Mock
     private FileEntryRestService fileEntryRestService;
 
+    @Mock
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Mock
+    private ProjectService projectService;
+
     @Test
     public void populate() {
         CompetitionResource competition = newCompetitionResource()
@@ -86,25 +93,27 @@ public class ManagementApplicationPopulatorTest {
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(applicationReadOnlyViewModelPopulator.populate(application, competition, user, defaultSettings())).thenReturn(mock(ApplicationReadOnlyViewModel.class));
         when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
+        when(projectService.getByApplicationId(application.getId())).thenReturn(null);
+        when(interviewAssignmentRestService.isAssignedToInterview(application.getId())).thenReturn(restSuccess(false));
 
         FormInputResource appendix = newFormInputResource().build();
-        FileEntryResource file = newFileEntryResource()
-                .withName("My file")
-                .build();
         FormInputResponseResource response = newFormInputResponseResource()
                 .withFormInputs(singletonList(appendix.getId()))
-                .withFileEntry(file.getId())
+                .withFileEntries(newFileEntryResource()
+                .withName("Appendix1.pdf", "Appendix2.pdf")
+                .withFilesizeBytes(1024L)
+                .build(2))
                 .build();
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
         when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));
-        when(fileEntryRestService.findOne(file.getId())).thenReturn(restSuccess(file));
 
         ManagementApplicationViewModel actual = target.populate(application.getId(), user);
 
         assertEquals(application, actual.getApplication());
         assertEquals(competition, actual.getCompetition());
-        assertEquals(1, actual.getAppendices().size());
-        assertEquals("My file", actual.getAppendices().get(0).getName());
+        assertEquals(2, actual.getAppendices().size());
+        assertEquals("Appendix1.pdf", actual.getAppendices().get(0).getName());
+        assertEquals("Appendix2.pdf", actual.getAppendices().get(1).getName());
 
         assertTrue(actual.isCanMarkAsIneligible());
         assertTrue(actual.isCanReinstate());

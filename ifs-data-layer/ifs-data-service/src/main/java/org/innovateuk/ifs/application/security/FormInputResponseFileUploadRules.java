@@ -64,6 +64,12 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "A external Finance can can download a file for an answer for applications they're assigned to")
+    public boolean externalFinanceCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
+        return userIsExternalFinanceInCompetition(application.getCompetition().getId(), user.getId());
+    }
+
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return userIsApplicantOnThisApplication(fileEntry.getCompoundId().getApplicationId(), user);
     }

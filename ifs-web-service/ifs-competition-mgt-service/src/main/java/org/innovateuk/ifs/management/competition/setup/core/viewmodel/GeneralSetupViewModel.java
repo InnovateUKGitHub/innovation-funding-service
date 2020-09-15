@@ -18,7 +18,8 @@ public class GeneralSetupViewModel {
     private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS = asList(
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
             CompetitionSetupSection.ADDITIONAL_INFO,
-            CompetitionSetupSection.ELIGIBILITY,
+            CompetitionSetupSection.PROJECT_ELIGIBILITY,
+            CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY,
             CompetitionSetupSection.APPLICATION_FORM);
 
     private static final List<CompetitionSetupSection> ASSESSMENT_SECTIONS = singletonList(
@@ -31,15 +32,17 @@ public class GeneralSetupViewModel {
     private CompetitionSetupSection[] allSections;
     private boolean isInitialComplete;
     private CompetitionStateSetupViewModel state;
+    private boolean ifsAdmin;
 
     public GeneralSetupViewModel(boolean editable, CompetitionResource competition,
                                  CompetitionSetupSection section,
-                                 CompetitionSetupSection[] allSections, boolean isInitialComplete) {
+                                 CompetitionSetupSection[] allSections, boolean isInitialComplete, boolean ifsAdmin) {
         this.editable = editable;
         this.competition = competition;
         this.currentSection = section;
         this.allSections = allSections;
         this.isInitialComplete = isInitialComplete;
+        this.ifsAdmin = ifsAdmin;
     }
 
     public void setCurrentSectionFragment(String currentSectionFragment) {
@@ -80,6 +83,10 @@ public class GeneralSetupViewModel {
 
     public boolean currentSectionIsHome() {
         return currentSection.equals(CompetitionSetupSection.HOME);
+    }
+
+    public boolean isIfsAdmin() {
+        return ifsAdmin;
     }
 
     public static List<CompetitionSetupSection> getPublishSections() {

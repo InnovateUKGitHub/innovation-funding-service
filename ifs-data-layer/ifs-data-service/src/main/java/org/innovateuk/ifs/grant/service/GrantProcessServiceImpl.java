@@ -26,12 +26,19 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<GrantProcess> findByApplicationId(Long applicationId) {
+        return Optional.ofNullable(grantProcessRepository.findOneByApplicationId(applicationId));
+    }
+
     @Override
     public void createGrantProcess(long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
         application.ifPresent((a) -> {
             Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(a.getCompetition().getId());
-            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElse(false);
+            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElse(true);
             grantProcessRepository.save(new GrantProcess(applicationId, sendByDefault));
         });
     }

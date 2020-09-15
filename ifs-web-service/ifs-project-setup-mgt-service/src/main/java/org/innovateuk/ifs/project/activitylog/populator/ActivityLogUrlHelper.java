@@ -11,6 +11,7 @@ public class ActivityLogUrlHelper {
     public static String url(ActivityLogResource log, ProjectResource project) {
         switch (log.getActivityType()) {
             case APPLICATION_SUBMITTED:
+            case APPLICATION_REOPENED:
                 return format("/management/competition/%d/application/%d", project.getCompetition(), project.getApplication());
             case APPLICATION_INTO_PROJECT_SETUP:
                 return format("/project-setup-management/competition/%d/status/all?applicationSearchString=%d", project.getCompetition(), project.getApplication());

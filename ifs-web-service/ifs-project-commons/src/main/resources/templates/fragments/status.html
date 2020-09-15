@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="status-table(model)">
     <th:block th:if="${#lists.isEmpty(model.rows) && param.applicationSearchString == null}">
@@ -13,7 +13,12 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project</th>
                     <th:block th:each="column : ${model.columns}">
-                        <th class="govuk-table__header status" scope="col" th:text="${column.shortName}">column name</th>
+                        <th class="govuk-table__header status" scope="col">
+                            <th:block th:if="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}">Contract</th:block>
+                            <th:block th:unless="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}"
+                                      th:text="${column.shortName}"></th:block>
+
+                        </th>
                     </th:block>
                 </tr>
                 </thead>
@@ -21,10 +26,10 @@
                 <tr class="govuk-table__row" th:each="row : ${model.rows}">
                     <th class="govuk-table__header" scope="row">
                         <div class="govuk-grid-row govuk-!-padding-right-0">
-                            <div class="govuk-grid-column-one-half">
+                            <div class="govuk-grid-column-two-thirds">
                                 <div class="govuk-heading-s govuk-!-margin-0" th:text="${row.projectName}" />
                             </div>
-                            <div class="govuk-grid-column-one-half alignright">
+                            <div class="govuk-grid-column-one-third alignright">
                                 <th:block th:if="${row.projectState.withdrawn}">
                                     <strong class="ifs-project-status-withdrawn">Withdrawn</strong>
                                 </th:block>
@@ -49,8 +54,12 @@
                         <small>
                             <th:block th:text="${row.numberOfPartners > 1 ? row.numberOfPartners+' partners' : row.numberOfPartners+' partner'}" /><br/>
                             <th:block th:text="${'Lead: '+row.projectLeadOrganisationName}" />
-                            <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
+                            <a th:unless="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
                             class="govuk-link">View activity log</a>
+                        </small>
+                        <small th:if="${model.isProjectFinanceUser() && row.grantOfferLetterComplete && row.sentToIfsPa}">
+                            <p><a th:href="@{~/project-setup-management/project/{projectId}/grants/invite(projectId=${row.projectId})}"
+                                  class="govuk-link">Manage invitations to external users</a></p>
                         </small>
                     </th>
 

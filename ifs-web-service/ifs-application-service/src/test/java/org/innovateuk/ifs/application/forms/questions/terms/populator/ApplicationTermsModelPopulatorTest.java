@@ -111,7 +111,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
         assertTrue(actual.isShowHeaderAndFooter());
@@ -176,7 +176,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertFalse(actual.isCollaborativeApplication());
         assertFalse(actual.getTermsAccepted().get());
@@ -247,7 +247,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
         assertTrue(actual.getTermsAccepted().get());
@@ -318,7 +318,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
 
@@ -392,7 +392,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
         assertTrue(actual.isShowHeaderAndFooter());
@@ -464,7 +464,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
         assertTrue(actual.isShowHeaderAndFooter());
@@ -533,7 +533,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(otherUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
         assertFalse(actual.isShowHeaderAndFooter());
@@ -594,7 +594,7 @@ public class ApplicationTermsModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTermsViewModel actual = populator.populate(currentUser, application.getId(), questionId, false);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(termsTemplate, actual.getCompetitionTermsTemplate());
         assertTrue(actual.isCollaborativeApplication());
         assertFalse(actual.isShowHeaderAndFooter());

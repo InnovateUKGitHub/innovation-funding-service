@@ -3,9 +3,12 @@ package org.innovateuk.ifs.project.core.repository;
 import org.innovateuk.ifs.config.repository.RefreshableCrudRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface ProjectRepository extends RefreshableCrudRepository<Project, Long> {
@@ -17,6 +20,7 @@ public interface ProjectRepository extends RefreshableCrudRepository<Project, Lo
     @Override
     List<Project> findAll();
     Project findOneByApplicationId(long applicationId);
+    Optional<Project> findByApplicationId(long applicationId);
     List<Project> findByApplicationCompetitionId(long competitionId);
 
     int countByApplicationCompetitionId(long competitionId);
@@ -25,5 +29,5 @@ public interface ProjectRepository extends RefreshableCrudRepository<Project, Lo
     List<Project> findByApplicationCompetitionIdAndProjectProcessActivityStateIn(long competitionId, Set<ProjectState> states);
 
     @Query(PROJECTS_BY_APP_ID_LIKE_AND_COMP_ID)
-    List<Project> searchByCompetitionIdAndApplicationIdLike(long competitionId, String applicationSearchString);
+    Page<Project> searchByCompetitionIdAndApplicationIdLike(long competitionId, String applicationSearchString, Pageable pageable);
 }

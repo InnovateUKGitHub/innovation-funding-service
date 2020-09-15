@@ -19,7 +19,6 @@ public class ProjectFinanceThreadsTestData {
 
     public static ProjectFinance projectFinanceWithUserAsFinanceContact(UserResource user) {
         Organisation organisation = newOrganisation().withId(3L).build();
-        organisation.addUser(newUser().withId(user.getId()).build());
         ProjectUser projectUser = newProjectUser().withUser(newUser().withId(user.getId()).build())
                 .withRole(PROJECT_FINANCE_CONTACT)
                 .withRole(PROJECT_PARTNER)

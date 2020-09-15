@@ -64,4 +64,4 @@ the user should see travel and subsistence rates
 
 the user opens assessor agreement in new window
     the user clicks the button/link             jQuery = a:contains("your assessor agreement")
-    open pdf link                               link = Download assessor agreement
+    open pdf link                               link = Download assessor agreement (opens in a new window)

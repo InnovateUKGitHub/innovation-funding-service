@@ -4,24 +4,18 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionApplicationConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
-import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
-import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
@@ -62,19 +54,16 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     private OrganisationService organisationService;
 
     @Autowired
-    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
-
-    @Autowired
-    private GrowthTableRepository growthTableRepository;
+    private CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
 
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(long applicationId, long organisationId) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if (finance == null) {
+        Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (!finance.isPresent()) {
             return createApplicationFinance(applicationId, organisationId);
         }
-        return serviceSuccess(applicationFinanceMapper.mapToResource(finance));
+        return serviceSuccess(applicationFinanceMapper.mapToResource(finance.get()));
     }
 
     @Override
@@ -106,8 +95,8 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> financeDetails(long applicationId, long organisationId) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if (finance == null) {
+        Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (!finance.isPresent()) {
             ServiceResult<ApplicationFinanceResource> result = createApplicationFinance(applicationId, organisationId);
             if (result.isFailure()) {
                 return result;
@@ -127,13 +116,8 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             return getOpenApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
                         ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
-                        if (TRUE.equals(application.getCompetition().getIncludeProjectGrowthTable())) {
-                            applicationFinance.setGrowthTable(new GrowthTable());
-                            growthTableRepository.save(applicationFinance.getGrowthTable());
-                        } else {
-                            applicationFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
-                            employeesAndTurnoverRepository.save(applicationFinance.getEmployeesAndTurnover());
-                        }
+                        initialiseFinancialYearData(applicationFinance);
+
                         initialize(applicationFinance);
                         return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
                     })
@@ -155,9 +139,12 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         return getOpenApplication(applicationFinance.getApplication()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                    updateFinanceDetails(dbFinance, applicationFinance);
+                    updateFinancialYearData(dbFinance, applicationFinance);
                     if (applicationFinance.getWorkPostcode() != null) {
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
+                    }
+                    if (applicationFinance.getInternationalLocation() != null) {
+                        dbFinance.setInternationalLocation(applicationFinance.getInternationalLocation());
                     }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
@@ -195,6 +182,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     public ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Competition competition = application.getCompetition();
+            if (competition.isNonFinanceType()) {
+                return serviceSuccess(true);
+            }
             if (competition.getCollaborationLevel() == COLLABORATIVE) {
                 return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
                     long numberSeekingFunding = financeTotals
@@ -207,6 +197,23 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             } else {
                 return serviceSuccess(true);
             }
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> fundingSoughtValid(long applicationId) {
+        return getApplication(applicationId).andOnSuccess(application -> {
+            BigDecimal maximumFundingSought = application.getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+            if (maximumFundingSought != null) {
+                return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
+                    BigDecimal applicationTotalFundingSought = financeTotals.stream()
+                            .map(ApplicationFinanceResource::getTotalFundingSought)
+                            .reduce(BigDecimal::add)
+                            .orElse(BigDecimal.ZERO);
+                    return applicationTotalFundingSought.compareTo(maximumFundingSought) <= 0;
+                });
+            }
+            return serviceSuccess(true);
         });
     }
 
@@ -224,17 +231,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     private Supplier<ServiceResult<ApplicationFinance>> applicationFinance(Long applicationFinanceId) {
         return () -> getApplicationFinance(applicationFinanceId);
-    }
-
-
-    private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId() == type.getId();
-    }
-
-    private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource, Competition competition) {
-        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(competition.getId(), organisationType.getId());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
-        applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {

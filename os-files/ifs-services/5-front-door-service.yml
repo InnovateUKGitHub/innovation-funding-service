@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: front-door-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/front-door-service:${frontDoorServiceVersion}
               name: front-door-svc

@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: registration-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           volumes:
             - name: registration-keys-volume
               secret:

@@ -10,7 +10,7 @@ Suite Setup      Custom suite setup
 Suite Teardown   Custom suite teardown
 Force Tags       Applicant
 Resource         ../../../resources/defaultResources.robot
-Resource         ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource         ../../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Guest user navigates to Front Door

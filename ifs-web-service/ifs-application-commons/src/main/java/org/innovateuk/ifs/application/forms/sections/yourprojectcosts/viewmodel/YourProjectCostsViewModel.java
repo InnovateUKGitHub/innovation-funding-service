@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class YourProjectCostsViewModel {
+public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     private final Long applicationId;
+
+    private final String competitionName;
 
     private final Long sectionId;
 
@@ -29,9 +33,16 @@ public class YourProjectCostsViewModel {
 
     private final boolean procurementCompetition;
 
-    private final Set<FinanceRowType> financeRowTypes;
+    private final boolean ktpCompetition;
+
+    private final List<FinanceRowType> financeRowTypes;
+
+    private final boolean overheadAlwaysTwenty;
+
+    private final boolean showCovidGuidance;
 
     public YourProjectCostsViewModel(long applicationId,
+                                     String competitionName,
                                      long sectionId,
                                      long competitionId,
                                      long organisationId,
@@ -42,10 +53,14 @@ public class YourProjectCostsViewModel {
                                      String organisationName,
                                      String financesUrl,
                                      boolean procurementCompetition,
-                                     Set<FinanceRowType> financeRowTypes) {
+                                     boolean ktpCompetition,
+                                     List<FinanceRowType> financeRowTypes,
+                                     boolean overheadAlwaysTwenty,
+                                     boolean showCovidGuidance) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
         this.complete = complete;
@@ -55,28 +70,41 @@ public class YourProjectCostsViewModel {
         this.organisationName = organisationName;
         this.financesUrl = financesUrl;
         this.procurementCompetition = procurementCompetition;
+        this.ktpCompetition = ktpCompetition;
         this.financeRowTypes = financeRowTypes;
+        this.overheadAlwaysTwenty = overheadAlwaysTwenty;
+        this.showCovidGuidance = showCovidGuidance;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
+        this.ktpCompetition = ktpCompetition;
         this.financeRowTypes = financeRowTypes;
+        this.competitionName = competitionName;
+        this.applicationId = applicationId;
+        this.overheadAlwaysTwenty = overheadAlwaysTwenty;
 
-        this.applicationId = null;
-        this.sectionId = null;
         this.competitionId = null;
+        this.sectionId = null;
         this.organisationId = null;
         this.complete = false;
         this.applicationName = null;
         this.organisationName = null;
         this.financesUrl = null;
         this.includeVat = false;
+        this.showCovidGuidance = false;
     }
 
+    @Override
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public Long getSectionId() {
@@ -119,8 +147,24 @@ public class YourProjectCostsViewModel {
         return includeVat;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
+    public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
+    }
+
+    public boolean isOverheadAlwaysTwenty() {
+        return overheadAlwaysTwenty;
+    }
+
+    public boolean isShowCovidGuidance() {
+        return showCovidGuidance;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     /* view logic */
@@ -132,7 +176,7 @@ public class YourProjectCostsViewModel {
         return isReadOnly();
     }
 
-    public boolean isProcurementCompetition() {
-        return procurementCompetition;
+    public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
+        return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
     }
 }

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.address.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.persistence.Entity;
@@ -22,15 +21,19 @@ public class Address {
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
-
+    
     private String town;
     private String county;
+    private String country;
 
-    @Length(max = 9)
     private String postcode;
 
     public Address() {
         // no-arg constructor
+    }
+
+    public Address(Address address) {
+        this(address.getAddressLine1(), address.getAddressLine2(), address.getAddressLine3(), address.getTown(), address.getCounty(), address.getPostcode(), address.getCountry());
     }
 
     public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
@@ -40,6 +43,11 @@ public class Address {
         this.town = town;
         this.county = county;
         this.postcode = postcode;
+    }
+
+    public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode, String country) {
+        this(addressLine1, addressLine2, addressLine3, town, county, postcode);
+        this.country = country;
     }
 
     public String getAddressLine1() {
@@ -90,6 +98,14 @@ public class Address {
         this.postcode = postCode;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public Long getId() {
         return id;
     }
@@ -105,6 +121,7 @@ public class Address {
         this.town = other.getTown();
         this.county = other.getCounty();
         this.postcode = other.getPostcode();
+        this.country = other.getCountry();
     }
 
     @Override
@@ -122,6 +139,7 @@ public class Address {
                 .append(town, address.town)
                 .append(county, address.county)
                 .append(postcode, address.postcode)
+                .append(country, address.country)
                 .isEquals();
     }
 
@@ -134,6 +152,17 @@ public class Address {
                 .append(town)
                 .append(county)
                 .append(postcode)
+                .append(country)
                 .toHashCode();
+    }
+
+    public void copyFrom(AddressResource address) {
+        this.addressLine1 = address.getAddressLine1();
+        this.addressLine2 = address.getAddressLine2();
+        this.addressLine3 = address.getAddressLine3();
+        this.town = address.getTown();
+        this.county = address.getCounty();
+        this.postcode = address.getPostcode();
+        this.country = address.getCountry();
     }
 }

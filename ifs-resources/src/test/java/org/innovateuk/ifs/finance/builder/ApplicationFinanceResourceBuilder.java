@@ -29,6 +29,10 @@ public class ApplicationFinanceResourceBuilder extends BaseFinanceResourceBuilde
         return withArray((workPostcode, applicationFinanceResource) -> applicationFinanceResource.setWorkPostcode(workPostcode), workPostcodes);
     }
 
+    public ApplicationFinanceResourceBuilder withInternationalLocation(String... internationalLocations) {
+        return withArray((internationalLocation, applicationFinanceResource) -> applicationFinanceResource.setInternationalLocation(internationalLocation), internationalLocations);
+    }
+
     private ApplicationFinanceResourceBuilder(List<BiConsumer<Integer, ApplicationFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

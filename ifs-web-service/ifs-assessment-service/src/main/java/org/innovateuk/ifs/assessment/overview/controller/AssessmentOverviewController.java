@@ -94,10 +94,11 @@ public class AssessmentOverviewController {
         return "assessment/application-detailed-finances";
     }
 
-    @GetMapping("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download")
+    @GetMapping("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
+            @PathVariable("fileEntryId") Long fileEntryId,
             UserResource loggedInUser) {
         ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> loggedInUser.getId().equals(role.getUser()))
@@ -105,10 +106,10 @@ public class AssessmentOverviewController {
                 .orElseThrow(ObjectNotFoundException::new);
 
         final ByteArrayResource resource = formInputResponseRestService
-                .getFile(formInputId, applicationId, processRole.getId()).getSuccess();
+                .getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
 
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService
-                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
+                .getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
 
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }

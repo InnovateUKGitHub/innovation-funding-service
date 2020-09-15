@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Before;
@@ -48,6 +49,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
 
         competition = competitionRepository.save(newCompetition()
                 .with(id(null))
+                .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build());
 
         milestoneRepository.saveAll(newMilestone()

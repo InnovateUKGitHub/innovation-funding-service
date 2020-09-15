@@ -20,7 +20,7 @@ public class ProjectFinanceLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ProjectFinanceResource getProjectFinance(final ProjectFinanceResourceId id) {
-        final ProjectFinanceResource projectFinanceResource = projectMapper.mapToResource(projectFinanceRepository.findByProjectIdAndOrganisationId(id.getProjectId(), id.getOrganisationId()));
+        final ProjectFinanceResource projectFinanceResource = projectMapper.mapToResource(projectFinanceRepository.findByProjectIdAndOrganisationId(id.getProjectId(), id.getOrganisationId()).get());
         // If its new then this could be empty so fill in the fields we can
         projectFinanceResource.setProject(id.getProjectId());
         projectFinanceResource.setOrganisation(id.getOrganisationId());

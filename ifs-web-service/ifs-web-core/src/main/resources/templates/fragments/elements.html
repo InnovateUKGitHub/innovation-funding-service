@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <!-- ===========================Element: Skip-content=========================== -->
 
@@ -134,6 +134,9 @@
     </div>
     <div th:if="${emailSent}" class="event-alert">
         <p class="govuk-body"><span>The email has been sent successfully</span></p>
+    </div>
+    <div th:if="${deleteInvite}" class="event-alert">
+        <p class="govuk-body"><span>The invite has been cancelled successfully</span></p>
     </div>
 </th:block>
 

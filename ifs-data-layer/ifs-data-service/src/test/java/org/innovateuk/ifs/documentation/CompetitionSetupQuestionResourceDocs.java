@@ -16,8 +16,12 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("subTitle").description("Sub title of the question"),
             fieldWithPath("guidanceTitle").description("The title of the guidance for the question"),
             fieldWithPath("guidance").description("The content of the guidance for the question"),
+            fieldWithPath("textArea").description("Does this question include the textarea section"),
             fieldWithPath("maxWords").description("The maximum words allowed for the question response"),
+            fieldWithPath("multipleChoice").description("Does this question contain the multiple choice section"),
+            fieldWithPath("choices").description("The choices for a multiple choice section"),
             fieldWithPath("appendix").description("Does the question include an appendix section"),
+            fieldWithPath("numberOfUploads").description("The number of appendix uploads allowed"),
             fieldWithPath("allowedAppendixResponseFileTypes").description("Specifies types of files that will be allowed to be uploaded for appendix"),
             fieldWithPath("appendixGuidance").description("Guidance for the file upload field"),
             fieldWithPath("templateDocument").description("Does the question include a template document section"),
@@ -38,13 +42,13 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidanceRows[].id").description("The id of the guidance row in the database"),
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),
             fieldWithPath("guidanceRows[].justification").description("The justification of the guidance"),
-            fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to"),
             fieldWithPath("guidanceRows[].priority").description("The priority of the form input the guidance is linked to")
     };
 
     public static final CompetitionSetupQuestionResourceBuilder competitionSetupQuestionResourceBuilder = newCompetitionSetupQuestionResource()
             .withQuestionId(1L)
             .withAppendix(false)
+            .withNumberOfUploads(0)
             .withScored(false)
             .withWrittenFeedback(false)
             .withGuidance("guidance")
@@ -60,7 +64,6 @@ public class CompetitionSetupQuestionResourceDocs {
             .withScoreTotal(1)
             .withGuidanceRows(
                     newFormInputGuidanceRowResourceBuilder()
-                        .withFormInput(1L)
                         .withSubject("Subject")
                         .withJustification("justi")
                         .withId(2L)

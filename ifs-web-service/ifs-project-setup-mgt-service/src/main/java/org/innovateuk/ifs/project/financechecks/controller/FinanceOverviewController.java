@@ -56,7 +56,7 @@ public class FinanceOverviewController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
     public String view(@PathVariable("projectId") Long projectId,
                        Model model) {
         model.addAttribute("model", buildFinanceCheckOverviewViewModel(projectId));
@@ -74,15 +74,17 @@ public class FinanceOverviewController {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean canChangeFundingSought =
                 competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT) && !financeCheckSummary.isSpendProfilesGenerated();
-        return
-                new FinanceCheckOverviewViewModel(
+        boolean canChangeFundingLevel =
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE) && financeCheckSummary.isAllEligibilityAndViabilityInReview();
+        return new FinanceCheckOverviewViewModel(
                         getProjectFinanceOverviewViewModel(projectId),
                         getProjectFinanceSummaries(project, sortedOrganisations, competition),
                         getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition),
                         applicationId,
                         canChangeFundingSought,
                         competition.isLoan(),
-                        !competition.isLoan() && financeCheckSummary.isAllEligibilityAndViabilityInReview());
+                        canChangeFundingLevel,
+                        competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE));
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {

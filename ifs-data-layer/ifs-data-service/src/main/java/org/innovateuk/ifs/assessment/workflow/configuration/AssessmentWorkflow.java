@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.workflow.actions.FundingDecisionAction;
 import org.innovateuk.ifs.assessment.workflow.actions.RejectAction;
+import org.innovateuk.ifs.assessment.workflow.actions.SubmitAction;
 import org.innovateuk.ifs.assessment.workflow.actions.WithdrawCreatedAction;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentFundingDecisionOutcomeGuard;
@@ -52,6 +53,9 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
 
     @Autowired
     private CompetitionInAssessmentGuard competitionInAssessmentGuard;
+
+    @Autowired
+    private SubmitAction submitAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<AssessmentState, AssessmentEvent> config) throws Exception {
@@ -182,7 +186,8 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
                 .withExternal()
                 .source(READY_TO_SUBMIT).target(SUBMITTED)
                 .event(SUBMIT)
-                .guard(competitionInAssessmentGuard);
+                .guard(competitionInAssessmentGuard)
+                .action(submitAction);
     }
 
     private void configureChoice(StateMachineTransitionConfigurer<AssessmentState, AssessmentEvent> transitions) throws Exception {

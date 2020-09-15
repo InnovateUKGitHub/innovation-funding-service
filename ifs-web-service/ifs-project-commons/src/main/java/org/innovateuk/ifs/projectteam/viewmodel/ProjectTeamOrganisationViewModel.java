@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.projectteam.viewmodel;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+
 import java.util.List;
 
 /**
@@ -12,6 +14,7 @@ public class ProjectTeamOrganisationViewModel implements Comparable<ProjectTeamO
     private final boolean lead;
     private final boolean canAddUsers;
     private final Long partnerInviteId;
+    private final AddressResource address;
 
     private boolean openAddTeamMemberForm;
 
@@ -20,13 +23,15 @@ public class ProjectTeamOrganisationViewModel implements Comparable<ProjectTeamO
                                             long id,
                                             boolean lead,
                                             boolean canAddUsers,
-                                            Long partnerInviteId) {
+                                            Long partnerInviteId,
+                                            AddressResource address) {
         this.users = users;
         this.name = name;
         this.lead = lead;
         this.id = id;
         this.canAddUsers = canAddUsers;
         this.partnerInviteId = partnerInviteId;
+        this.address = address;
         this.openAddTeamMemberForm = false;
     }
 
@@ -74,6 +79,10 @@ public class ProjectTeamOrganisationViewModel implements Comparable<ProjectTeamO
 
     public Long getPartnerInviteId() {
         return partnerInviteId;
+    }
+
+    public AddressResource getAddress() {
+        return address;
     }
 
     public void setOpenAddTeamMemberForm(boolean openAddTeamMemberForm) {

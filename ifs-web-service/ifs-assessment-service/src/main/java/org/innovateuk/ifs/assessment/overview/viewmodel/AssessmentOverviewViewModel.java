@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class AssessmentOverviewViewModel {
     private final long daysLeft;
     private final List<AssessmentOverviewSectionViewModel> sections;
     private final List<AssessmentOverviewAppendixViewModel> appendices;
+    private final String termsAndConditionsTerminology;
 
     public AssessmentOverviewViewModel(long assessmentId,
                                        long applicationId,
@@ -28,7 +30,8 @@ public class AssessmentOverviewViewModel {
                                        long daysLeftPercentage,
                                        long daysLeft,
                                        List<AssessmentOverviewSectionViewModel> sections,
-                                       List<AssessmentOverviewAppendixViewModel> appendices) {
+                                       List<AssessmentOverviewAppendixViewModel> appendices,
+                                       String termsAndConditionsTerminology) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -38,6 +41,7 @@ public class AssessmentOverviewViewModel {
         this.daysLeft = daysLeft;
         this.sections = sections;
         this.appendices = appendices;
+        this.termsAndConditionsTerminology = termsAndConditionsTerminology;
     }
 
     public long getAssessmentId() {
@@ -74,6 +78,10 @@ public class AssessmentOverviewViewModel {
 
     public List<AssessmentOverviewAppendixViewModel> getAppendices() {
         return appendices;
+    }
+
+    public String getTermsAndConditionsTerminology() {
+        return termsAndConditionsTerminology;
     }
 
     @Override

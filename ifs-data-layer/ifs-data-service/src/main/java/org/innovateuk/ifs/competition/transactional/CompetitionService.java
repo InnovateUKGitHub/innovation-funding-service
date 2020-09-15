@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -8,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,14 +22,11 @@ public interface CompetitionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final long id);
 
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<List<UserResource>> findInnovationLeads(final long competitionId);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);
 
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<Void> addInnovationLead(final long competitionId, final long innovationLeadUserId);
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<Void> removeInnovationLead(final long competitionId, final long innovationLeadUserId);
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<CompetitionResource> getCompetitionByProjectId(long projectId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
@@ -77,4 +74,6 @@ public interface CompetitionService {
 
     @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
     ServiceResult<FileAndContents> downloadTerms(long competitionId);
+
+
 }

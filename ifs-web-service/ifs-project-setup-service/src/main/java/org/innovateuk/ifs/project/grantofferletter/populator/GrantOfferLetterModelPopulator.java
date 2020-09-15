@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
@@ -22,8 +24,12 @@ public class GrantOfferLetterModelPopulator {
     @Autowired
     public GrantOfferLetterService grantOfferLetterService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     public GrantOfferLetterModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
         Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
@@ -32,12 +38,16 @@ public class GrantOfferLetterModelPopulator {
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
         GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        return new GrantOfferLetterModel(projectId, project.getName(),
+        return new GrantOfferLetterModel(
+                competition.isProcurement() ? "Contract" : "Grant offer letter",
+                projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectManager,
-                state);
+                state,
+                project.isUseDocusignForGrantOfferLetter(),
+                competition.isProcurement());
     }
 }

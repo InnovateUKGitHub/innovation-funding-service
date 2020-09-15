@@ -49,9 +49,13 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
         final GoogleAnalyticsDataLayer dl = getOrCreateDataLayer(modelAndView);
 
-        setCompetitionName(dl, request);
+        if (modelAndView.getViewName() != null && modelAndView.getViewName().startsWith("redirect:")) {
+            return;
+        }
+
+        setCompetitionName(dl, request, modelAndView);
         setUserRoles(dl, request);
-        setApplicationId(dl, request);
+        setApplicationId(dl, request, modelAndView);
     }
 
     private static GoogleAnalyticsDataLayer getOrCreateDataLayer(ModelAndView modelAndView) {
@@ -62,8 +66,16 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         return (GoogleAnalyticsDataLayer) model.get(ANALYTICS_DATA_LAYER_NAME);
     }
 
-    private void setCompetitionName(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
+    private void setCompetitionName(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request, ModelAndView modelAndView) {
         final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        if (modelAndView.getModel().get("model") instanceof BaseAnalyticsViewModel) {
+            String competitionName = ((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getCompetitionName();
+            if (competitionName != null) {
+                dataLayer.setCompetitionName(((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getCompetitionName());
+                return;
+            }
+        }
 
         if (pathVariables.containsKey(COMPETITION_ID)) {
             setCompetitionNameFromRestService(dataLayer,
@@ -121,7 +133,16 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         }
     }
 
-    private void setApplicationId(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request) {
+    private void setApplicationId(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request, ModelAndView modelAndView) {
+
+        if (modelAndView.getModel().get("model") instanceof BaseAnalyticsViewModel) {
+            Long applicationId = ((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getApplicationId();
+            if (applicationId != null) {
+                dataLayer.setApplicationId(((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getApplicationId());
+                return;
+            }
+        }
+
         final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (pathVariables.containsKey(APPLICATION_ID)) {

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
@@ -25,6 +26,9 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
     @Autowired
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
+    @Autowired
+    private CompetitionAssessmentConfigRepository competitionAssessmentConfigRepository;
+
     @Override
     public ServiceResult<CompetitionOpenKeyApplicationStatisticsResource> getOpenKeyStatisticsByCompetition(
             long competitionId) {
@@ -32,7 +36,7 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
 
         CompetitionOpenKeyApplicationStatisticsResource competitionOpenKeyApplicationStatisticsResource = new
                 CompetitionOpenKeyApplicationStatisticsResource();
-        competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById
+        competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findOneByCompetitionId
                 (competitionId).get().getAssessorCount());
         competitionOpenKeyApplicationStatisticsResource.setApplicationsStarted(applicationRepository
                 .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
@@ -51,7 +55,7 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
             long competitionId) {
         CompetitionClosedKeyApplicationStatisticsResource competitionClosedKeyApplicationStatisticsResource = new
                 CompetitionClosedKeyApplicationStatisticsResource();
-        competitionClosedKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById
+        competitionClosedKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findOneByCompetitionId
                 (competitionId).get().getAssessorCount());
         competitionClosedKeyApplicationStatisticsResource.setApplicationsRequiringAssessors
                 (applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId,
@@ -73,15 +77,13 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
             long competitionId) {
         CompetitionFundedKeyApplicationStatisticsResource competitionFundedKeyApplicationStatisticsResource = new
                 CompetitionFundedKeyApplicationStatisticsResource();
-        List<Application> applications = applicationRepository
-                .findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES);
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsSubmitted(applications.size());
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(getFundingDecisionCount(applications,
-                FundingDecisionStatus.FUNDED));
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(getFundingDecisionCount
-                (applications, FundingDecisionStatus.UNFUNDED));
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(getFundingDecisionCount(applications,
-                FundingDecisionStatus.ON_HOLD));
+
+
+        competitionFundedKeyApplicationStatisticsResource
+                .setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.FUNDED));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.UNFUNDED));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.ON_HOLD));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsNotifiedOfDecision(applicationRepository
                 .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsAwaitingDecision(applicationRepository

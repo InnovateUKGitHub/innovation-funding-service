@@ -39,7 +39,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
@@ -126,10 +126,9 @@ Links to other sections in Project setup dependent on project details (applicabl
 Existing Monitoring Officer can sign in and see projects that they are assigned to
     [Documentation]    IFS-3977  IFS-3978
     [Tags]  HappyPath
-    Given log in as a different user          &{monitoring_officer_one_credentials}
-    ${STATUS}    ${VALUE} =    Run Keyword And Ignore Error Without Screenshots    the user should see the element    id = dashboard-link-MONITORING_OFFICER
-    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link    id = dashboard-link-MONITORING_OFFICER
-    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
+    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    Then the user should see the element                        jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209  IFS-5859
@@ -138,9 +137,9 @@ Monitoring officer see the project setup veiw for assigned project
     Then the MO user is able to access all of the links
 
 MO sees the application feedback
-    [Documentation]  IFS-5298
+    [Documentation]  IFS-5298  IFS-8066
     Given the user clicks the button/link  link = view application feedback
-    Then the user should see the element   jQuery = h1:contains("Feedback overview")
+    Then the user should see the element   jQuery = h1:contains("Application overview")
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
@@ -216,9 +215,20 @@ New MO see the project setup view for assigned project
     Then the user should see the project set view
 
 Mo is able to view application feedback on a competition which as been through assessment and interview panels
-    [Documentation]  IFS-7230
+    [Documentation]  IFS-7230  IFS-8066
+    [Setup]  release feedback on inform comp
     Given the user clicks the button/link   link = view application feedback
-    Then the user should see the element    jQuery = h1:contains("Feedback overview")
+    Then the user should see the element    jQuery = h1:contains("Application overview")
+
+MO is able to download the appendix file
+    [Documentation]  IFS-7230
+    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link                         link = ${PS_LP_Application_Title}
+    When the user clicks the button/link                        link = view application feedback
+    And the user clicks the button/link                         jQuery = button:contains("Technical approach")
+    Then the user downloads the file                            ${monitoring_officer_one_credentials["email"]}    ${server}/application/${PS_LP_Application_No}/form/question/442/forminput/1266/file/298/download   ${DOWNLOAD_FOLDER}/super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
+    [Teardown]    remove the file from the operating system     super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
 
 Assign MO role to existing IFS user
     [Documentation]  IFS-5104
@@ -407,3 +417,11 @@ The user should see assigned MO details
 Custom suite teardown
     the user closes the browser
     Disconnect from database
+
+release feedback on inform comp
+    log in as a different user    &{Comp_admin1_credentials}
+    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  link = ${INFORM_COMPETITION_NAME}
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords   the user clicks the button/link  link = ${INFORM_COMPETITION_NAME}
+    ...                              AND    the user clicks the button/link  jQuery = button:contains("Release feedback")
+    log in as a different user     tom@poly.io   ${short_password}
+    the user clicks the button/link  link = ${Assign_Project2}

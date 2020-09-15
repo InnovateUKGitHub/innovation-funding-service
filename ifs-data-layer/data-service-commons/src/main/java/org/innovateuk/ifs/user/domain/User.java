@@ -253,4 +253,8 @@ public class User extends AuditableEntity implements Serializable {
     public void setRoleProfileStatuses(Set<RoleProfileStatus> roleProfileStatuses) {
         this.roleProfileStatuses = roleProfileStatuses;
     }
+
+    public boolean isActive() {
+        return status == UserStatus.ACTIVE;
+    }
 }

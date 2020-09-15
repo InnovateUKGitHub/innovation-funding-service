@@ -224,6 +224,31 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
                 true, true, true, true, false, NOT_ACCESSIBLE);
     }
 
+    @Test
+    public void canAccessBankDetailsSection() {
+        when(setupProgressChecker.isOfflineOrWithdrawn()).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isOrganisationRequiringFunding(organisation)).thenReturn(true);
+        when(setupProgressChecker.isFinanceContactSubmitted(organisation)).thenReturn(true);
+
+        SectionAccess access = helper.canAccessBankDetailsSection(organisation);
+
+        assertEquals(SectionAccess.ACCESSIBLE, access);
+    }
+
+    @Test
+    public void internationalCannotAccessBankDetailsSection() {
+        organisation.setInternational(true);
+        when(setupProgressChecker.isOfflineOrWithdrawn()).thenReturn(false);
+        when(setupProgressChecker.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressChecker.isOrganisationRequiringFunding(organisation)).thenReturn(true);
+        when(setupProgressChecker.isFinanceContactSubmitted(organisation)).thenReturn(true);
+
+        SectionAccess access = helper.canAccessBankDetailsSection(organisation);
+
+        assertEquals(NOT_ACCESSIBLE, access);
+    }
+
     private void doTest(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall,
                         boolean spendProfileApproved, boolean docsApproved, boolean bankDetailsApproved, boolean golAvailable, boolean golSent,
                         SectionAccess expectedAccess) {

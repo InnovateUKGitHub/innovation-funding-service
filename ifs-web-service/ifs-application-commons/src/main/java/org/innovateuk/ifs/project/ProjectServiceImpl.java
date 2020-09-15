@@ -8,19 +8,19 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -37,17 +37,16 @@ public class ProjectServiceImpl implements ProjectService {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ProjectService projectService;
 
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(long projectId) {
         return projectRestService.getProjectUsersForProject(projectId).getSuccess();
+    }
+
+    @Override
+    public List<ProjectUserResource> getDisplayProjectUsersForProject(long projectId) {
+        return projectRestService.getDisplayProjectUsersForProject(projectId).getSuccess();
     }
 
     @Override
@@ -119,19 +118,31 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Boolean isProjectFinanceContact(long userId, long projectId) {
+        List<ProjectUserResource> projectFinanceContacts = projectRestService.getProjectFinanceContacts(projectId).getSuccess();
+        return projectFinanceContacts.stream().anyMatch(pu -> pu.isUser(userId));
+    }
+
+    @Override
     public boolean userIsPartnerInOrganisationForProject(long projectId, long organisationId, long userId) {
         List<ProjectUserResource> thisProjectUsers = getProjectUsersForProject(projectId);
         List<ProjectUserResource> projectUsersForOrganisation = simpleFilter(thisProjectUsers, user -> user.getOrganisation().equals(organisationId));
         List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
 
         return !projectUsersForUserAndOrganisation.isEmpty();
+
     }
 
     @Override
     public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
-                user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());
-        return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
+
+        RestResult<OrganisationResource> organisationResource = organisationRestService.getByUserAndProjectId(user.getId(), projectId);
+
+        if (organisationResource.toServiceResult().isFailure()) {
+            throw new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), Collections.singletonList(projectId));
+        }
+
+        return organisationResource.getSuccess().getId();
     }
+
 }

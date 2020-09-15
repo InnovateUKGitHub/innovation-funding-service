@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
@@ -13,7 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -51,16 +50,6 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         setupGetWithRestResultExpectations(String.format("%s/find-by-competition-id/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
         List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccess();
         assertSame(expected, response);
-    }
-
-    @Test
-    public void testSave() throws Exception {
-        FormInputResource expected = new FormInputResource();
-
-        setupPutWithRestResultExpectations(formInputRestUrl + "/", FormInputResource.class, expected, expected);
-        RestResult<FormInputResource> result = service.save(expected);
-        assertTrue(result.isSuccess());
-        Assert.assertEquals(expected, result.getSuccess());
     }
 
     @Test

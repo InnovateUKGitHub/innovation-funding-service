@@ -26,6 +26,7 @@ public class ProjectStatusResource {
     private ProjectActivityStates projectSetupCompleteStatus;
     private boolean grantOfferLetterSent;
     private ProjectState projectState;
+    private boolean sentToIfsPa;
 
     public ProjectStatusResource(String projectTitle,
                                  Long projectNumber,
@@ -44,7 +45,8 @@ public class ProjectStatusResource {
                                  ProjectActivityStates grantOfferLetterStatus,
                                  ProjectActivityStates projectSetupCompleteStatus,
                                  boolean grantOfferLetterSent,
-                                 ProjectState projectState) {
+                                 ProjectState projectState,
+                                 boolean sentToIfsPa) {
         this.projectTitle = projectTitle;
         this.projectNumber = projectNumber;
         this.formattedProjectNumber = formattedProjectNumber;
@@ -63,6 +65,7 @@ public class ProjectStatusResource {
         this.projectSetupCompleteStatus = projectSetupCompleteStatus;
         this.grantOfferLetterSent = grantOfferLetterSent;
         this.projectState = projectState;
+        this.sentToIfsPa = sentToIfsPa;
     }
 
     // Required for JSON mapping
@@ -209,6 +212,14 @@ public class ProjectStatusResource {
         this.projectState = projectState;
     }
 
+    public boolean isSentToIfsPa() {
+        return sentToIfsPa;
+    }
+
+    public void setSentToIfsPa(boolean sentToIfsPa) {
+        this.sentToIfsPa = sentToIfsPa;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -236,6 +247,7 @@ public class ProjectStatusResource {
                 .append(grantOfferLetterStatus, that.grantOfferLetterStatus)
                 .append(projectSetupCompleteStatus, that.projectSetupCompleteStatus)
                 .append(projectState, that.projectState)
+                .append(sentToIfsPa, that.sentToIfsPa)
                 .isEquals();
     }
 
@@ -260,6 +272,7 @@ public class ProjectStatusResource {
                 .append(projectSetupCompleteStatus)
                 .append(grantOfferLetterSent)
                 .append(projectState)
+                .append(sentToIfsPa)
                 .toHashCode();
     }
 
@@ -284,6 +297,7 @@ public class ProjectStatusResource {
                 .append("projectSetupCompleteStatus", projectSetupCompleteStatus)
                 .append("grantOfferLetterSent", grantOfferLetterSent)
                 .append("projectState", projectState)
+                .append("sentToIfsPa", sentToIfsPa)
                 .toString();
     }
 }

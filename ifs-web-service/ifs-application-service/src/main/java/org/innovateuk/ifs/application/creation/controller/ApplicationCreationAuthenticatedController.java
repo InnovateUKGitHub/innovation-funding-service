@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -24,10 +26,11 @@ import java.util.function.Supplier;
 @Controller
 @RequestMapping("/application/create-authenticated")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
 public class ApplicationCreationAuthenticatedController {
-    public static final String COMPETITION_ID = "competitionId";
-    public static final String FORM_NAME = "form";
+
+    private static final String COMPETITION_ID = "competitionId";
+    private static final String FORM_NAME = "form";
 
     @Autowired
     private UserService userService;
@@ -35,12 +38,16 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     private RegistrationCookieService registrationCookieService;
 
+    @Autowired
+    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) long competitionId,
                        UserResource user,
                        HttpServletResponse response) {
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
+
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
             model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
@@ -71,6 +78,12 @@ public class ApplicationCreationAuthenticatedController {
     private String redirectToOrganisationCreation(long competitionId, HttpServletResponse response) {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
+
+        CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
+
+        if (organisationConfig.areInternationalApplicantsAllowed()) {
+            return "redirect:/organisation/create/international-organisation";
+        }
         return "redirect:/organisation/select";
     }
 }

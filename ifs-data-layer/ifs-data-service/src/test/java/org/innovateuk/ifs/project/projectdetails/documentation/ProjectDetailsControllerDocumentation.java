@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -153,25 +154,24 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         Long projectId = 1L;
         Long organisationId = 2L;
-        String postcode = "TW14 9QG";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postcode)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postcodeAndTown)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode)
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(postcodeAndTown))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the Project"),
                                 parameterWithName("organisationId").description("Id of the Organisation")
-                        ),
-                        requestParameters(
-                                parameterWithName("postcode").description("The project location which is being set for the given Project and Organisation")
                         ))
                 );
 
-        verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postcode);
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postcodeAndTown);
     }
 
     @Test
@@ -240,9 +240,9 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         AddressResource address = newAddressResource().build();
 
-        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, address)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateProjectAddress(projectId, address)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}", projectId, leadOrganisationId)
+        mockMvc.perform(post("/project/{projectId}/address", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(address)))
@@ -250,9 +250,6 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of project that the project address is being set on")
-                        ),
-                        requestParameters(
-                                parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project")
                         )
                 ));
     }

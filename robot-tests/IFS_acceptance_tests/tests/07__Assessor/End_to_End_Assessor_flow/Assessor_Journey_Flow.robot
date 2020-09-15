@@ -5,8 +5,8 @@ Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
-Resource          ../../04__Applicant/Applicant_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${Assessment_Comp__Id}  ${competition_ids['${Assessment_Comp_title}']}
@@ -167,7 +167,7 @@ Invited user accept the invitation and navigate to registration form
     the user selects the radio button       acceptInvitation  true
     the user clicks the button/link         jQuery = button:contains("Confirm")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create account")
-    the user should see the element         jQuery = p strong:contains("${Assessor_e2e["email"]}")
+    the user should see the element         jQuery = strong:contains("${Assessor_e2e["email"]}")
 
 comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = tr:nth-child(1) a:contains("View progress")

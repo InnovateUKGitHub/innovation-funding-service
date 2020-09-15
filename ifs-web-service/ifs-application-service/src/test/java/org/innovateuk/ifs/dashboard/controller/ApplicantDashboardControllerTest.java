@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.dashboard.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.dashboard.populator.ApplicantDashboardPopulator;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
@@ -37,7 +36,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testDashboard() throws Exception {
+    public void dashboard() throws Exception {
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
         when(populator.populate(loggedInUser.getId())).thenReturn(viewModel);
 
@@ -47,16 +46,12 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
                 .andExpect(model().attribute("model", viewModel));
     }
 
-    /**
-     * Leadapplicant
-     */
     @Test
-    public void testDashboardApplicant() throws Exception {
+    public void dashboardApplicant() throws Exception {
         setLoggedInUser(applicant);
 
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
         when(populator.populate(applicant.getId())).thenReturn(viewModel);
-
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -64,16 +59,13 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
                 .andExpect(model().attribute("model", viewModel));
     }
 
-    /**
-     * Collaborator
-     */
     @Test
-    public void testDashboardCollaborator() throws Exception {
-        UserResource collabUsers = collaborator;
-        setLoggedInUser(collabUsers);
+    public void dashboardCollaborator() throws Exception {
+        UserResource collaborator = this.collaborator;
+        setLoggedInUser(collaborator);
 
         ApplicantDashboardViewModel viewModel = mock(ApplicantDashboardViewModel.class);
-        when(populator.populate(collabUsers.getId())).thenReturn(viewModel);
+        when(populator.populate(collaborator.getId())).thenReturn(viewModel);
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -83,10 +75,10 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
 
     @Test
     public void hideApplication() throws Exception {
-        UserResource collabUsers = collaborator;
-        setLoggedInUser(collabUsers);
-        long applicationId = 1l;
-        long userId = 1l;
+        UserResource collaborator = this.collaborator;
+        setLoggedInUser(collaborator);
+        long applicationId = 1L;
+        long userId = 1L;
 
         when(applicationRestService.hideApplication(applicationId, userId)).thenReturn(RestResult.restSuccess());
 
@@ -98,7 +90,7 @@ public class ApplicantDashboardControllerTest extends AbstractApplicationMockMVC
     @Test
     public void deleteApplication() throws Exception {
         setLoggedInUser(applicant);
-        long applicationId = 1l;
+        long applicationId = 1L;
 
         when(applicationRestService.deleteApplication(applicationId)).thenReturn(RestResult.restSuccess());
 

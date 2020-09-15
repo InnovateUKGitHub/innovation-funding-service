@@ -14,7 +14,7 @@ Academic organisations search
     Given invite a registered user                       ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     When the user reads his email and clicks the link     ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Yes, accept invitation")
-    When the user selects the radio button                organisationType    2
+    When the user selects the radio button                organisationTypeId    2
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Save and continue")
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
     Then the user should see a field error                Please enter an organisation name to search.

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -20,12 +21,14 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
@@ -98,11 +101,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 String pafCode,
                                                 String code,
                                                 String activityCode,
-                                                Integer assessorCount,
-                                                BigDecimal assessorPay,
-                                                Boolean hasAssessmentPanel,
-                                                Boolean hasInterviewStage,
-                                                AssessorFinanceView assessorFinanceView,
                                                 Boolean multiStream,
                                                 String collaborationLevelCode,
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
@@ -159,11 +157,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
-                competition.setAssessorPay(assessorPay);
-                competition.setAssessorCount(assessorCount);
-                competition.setHasAssessmentPanel(hasAssessmentPanel);
-                competition.setHasInterviewStage(hasInterviewStage);
-                competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
                 competition.setIncludeJesForm(includeJesForm);
                 competition.setApplicationFinanceType(applicationFinanceType);
@@ -220,7 +213,47 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 question.setDescription("Generic question description");
                 questionRepository.save(question);
             }
+
+            if (data.getCompetition().getName().contains("Multiple choice")) {
+                CompetitionSetupQuestionResource yesNoQuestion = addMultipleChoiceQuestion(data.getCompetition().getId());
+                yesNoQuestion.setShortTitle("Can you answer this question?");
+                yesNoQuestion.setTitle("Answer this.");
+                yesNoQuestion.setSubTitle("<strong>Try picking an answer</strong>");
+                yesNoQuestion.setChoices(newArrayList(new MultipleChoiceOptionResource("Yes"), new MultipleChoiceOptionResource("No")));
+                questionSetupCompetitionService.update(yesNoQuestion);
+                CompetitionSetupQuestionResource surveyQuestion = addMultipleChoiceQuestion(data.getCompetition().getId());
+                surveyQuestion.setShortTitle("IFS is the best govuk sevice.");
+                surveyQuestion.setTitle("Do you agree?");
+                surveyQuestion.setSubTitle("<strong>You do...</strong>");
+                surveyQuestion.setChoices(newArrayList(new MultipleChoiceOptionResource("Strongly agree"), new MultipleChoiceOptionResource("Agree"),
+                        new MultipleChoiceOptionResource("Don't care"), new MultipleChoiceOptionResource("Disagree"), new MultipleChoiceOptionResource("Strongly disagree")));
+                questionSetupCompetitionService.update(surveyQuestion);
+                CompetitionSetupQuestionResource manyAnswers = addMultipleChoiceQuestion(data.getCompetition().getId());
+                manyAnswers.setShortTitle("This question has loads of answers");
+                manyAnswers.setTitle("so many answers.");
+                manyAnswers.setSubTitle("<strong>Best letter?</strong>");
+                manyAnswers.setChoices(newArrayList(new MultipleChoiceOptionResource("A"), new MultipleChoiceOptionResource("B"),
+                        new MultipleChoiceOptionResource("C"), new MultipleChoiceOptionResource("D"), new MultipleChoiceOptionResource("E"),
+                        new MultipleChoiceOptionResource("F"), new MultipleChoiceOptionResource("G"), new MultipleChoiceOptionResource("H"),
+                        new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
+                questionSetupCompetitionService.update(manyAnswers);
+            }
         });
+    }
+
+    private CompetitionSetupQuestionResource addMultipleChoiceQuestion(long competitionId) {
+        CompetitionSetupQuestionResource question = questionSetupCompetitionService.createByCompetitionId(competitionId).getSuccess();
+        question.setTextArea(false);
+        question.setMultipleChoice(true);
+        question.setTemplateDocument(false);
+        question.setScored(true);
+        question.setWrittenFeedback(true);
+        question.setScope(false);
+        question.setResearchCategoryQuestion(false);
+        question.setAssessmentGuidance("Assess this");
+        question.setScoreTotal(10);
+        question.setAssessmentMaxWords(500);
+        return question;
     }
 
     public CompetitionDataBuilder withSetupComplete() {
@@ -231,7 +264,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private void markSetupSectionsAndSubsectionsAsComplete(CompetitionData data) {
-        asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+        Arrays.stream(CompetitionSetupSection.values())
+                .filter(section -> section != CompetitionSetupSection.PROJECT_DOCUMENT)
+                .forEach(competitionSetupSection -> {
             competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
             competitionSetupSection.getSubsections().forEach(subsection -> {
                 competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
@@ -330,10 +365,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones() {
+    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage) {
         return asCompAdmin(data ->
             Stream.of(MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
+                    .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                     .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
@@ -465,6 +501,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
             competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
+    }
+
+    public CompetitionDataBuilder withAssessmentConfig(Integer assessorCount,
+                                                       BigDecimal assessorPay,
+                                                       Boolean hasAssessmentPanel,
+                                                       Boolean hasInterviewStage,
+                                                       AssessorFinanceView assessorFinanceView) {
+        return asCompAdmin(data -> {
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
+        competitionAssessmentConfigResource.setAssessorCount(assessorCount);
+        competitionAssessmentConfigResource.setAssessorPay(assessorPay);
+        competitionAssessmentConfigResource.setHasAssessmentPanel(hasAssessmentPanel);
+        competitionAssessmentConfigResource.setHasInterviewStage(hasInterviewStage);
+        competitionAssessmentConfigResource.setAssessorFinanceView(assessorFinanceView);
+        competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }
 

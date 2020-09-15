@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -48,6 +49,9 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
@@ -132,6 +136,8 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
         ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
         processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
+
+        applicationService.linkAddressesToOrganisation(organisation.getId(), application.getId()).getSuccess();
 
         applicationProgressService.updateApplicationProgress(application.getId());
     }

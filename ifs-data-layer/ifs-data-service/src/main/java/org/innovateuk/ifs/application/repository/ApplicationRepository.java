@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -14,6 +15,8 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -29,7 +32,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.applicationProcess.activityState NOT IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
-    String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
+    String APPLICATION_SELECT = "SELECT a FROM Application a ";
+
+    String APPLICATION_ID_SELECT = "SELECT a.id FROM Application a ";
+
+    String COMP_STATUS_FILTER_WHERE = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.applicationProcess.activityState IN :states) " +
             "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
@@ -40,7 +47,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
-    String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
+    String COMP_FUNDING_FILTER = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.fundingDecision IS NOT NULL) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
@@ -99,9 +106,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(long competitionId);
 
-    Application findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
+    Optional<Application> findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
-    @Query(COMP_STATUS_FILTER)
+    @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     Page<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
@@ -109,8 +116,15 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
                                                                Pageable pageable);
 
-    @Query(COMP_STATUS_FILTER)
+    @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+
+    @Query(APPLICATION_ID_SELECT + COMP_STATUS_FILTER_WHERE)
+    List<Long> findApplicationIdsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
@@ -133,20 +147,27 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                  @Param("states") Collection<ApplicationState> applicationStates,
                                                                                  @Param("filter") String filter);
 
-    @Query(COMP_FUNDING_FILTER)
+    @Query("SELECT a FROM Application a " + COMP_FUNDING_FILTER)
     Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding,
                                                                      Pageable pageable);
 
-    @Query(COMP_FUNDING_FILTER)
+    @Query("SELECT a FROM Application a " +COMP_FUNDING_FILTER)
     List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
+                                                                     @Param("filter") String filter,
+                                                                     @Param("sent") Boolean sent,
+                                                                     @Param("funding") FundingDecisionStatus funding);
+    @Query("SELECT a.id FROM Application a " + COMP_FUNDING_FILTER + " AND NOT (a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED)")
+    List<Long> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding);
 
     int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(long competitionId);
+
+    int countByCompetitionIdAndFundingDecision(long competitionId, FundingDecisionStatus fundingDecision);
 
     int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(long competitionId);
 
@@ -213,7 +234,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            " LEFT JOIN ProcessRole pr " +
            "    ON app.id = pr.applicationId " +
            "        AND pr.user.id=:userId " +
-           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR) " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR, org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER) " +
            " LEFT JOIN Project proj " +
            "    ON proj.application.id = app.id " +
            " LEFT JOIN ProjectUser pu " +
@@ -226,4 +247,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
+
+    @Query("select a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
+            "where a.id in :ids" +
+            " and  a.competition.id = :competitionId " +
+            " and (a.submittedDate is not null " +
+            " or (a.fundingDecision != org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is null))")
+    List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
+
 }

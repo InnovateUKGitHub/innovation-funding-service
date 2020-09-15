@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
+import org.innovateuk.ifs.invite.controller.AcceptInviteAuthenticatedController;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
+import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -37,10 +39,13 @@ public class AcceptInviteAuthenticatedControllerTest extends AbstractApplication
     @Mock
     private RegistrationCookieService registrationCookieService;
 
+    @Mock
+    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+
     @Override
     protected AcceptInviteAuthenticatedController supplyControllerUnderTest() {
         return new AcceptInviteAuthenticatedController(inviteRestService, organisationRestService,
-                confirmOrganisationInviteModelPopulator, userRestService, cookieUtil);
+                confirmOrganisationInviteModelPopulator, userRestService, cookieUtil, competitionOrganisationConfigRestService);
     }
 
     @Test

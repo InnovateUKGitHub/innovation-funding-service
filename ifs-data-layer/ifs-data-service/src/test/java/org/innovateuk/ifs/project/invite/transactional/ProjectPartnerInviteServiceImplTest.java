@@ -1,32 +1,5 @@
 package org.innovateuk.ifs.project.invite.transactional;
 
-import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-
-
-import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -35,11 +8,7 @@ import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationMedium;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -63,6 +32,28 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectPartnerInviteServiceImplTest {
@@ -171,7 +162,8 @@ public class ProjectPartnerInviteServiceImplTest {
     public void getPartnerInvites() {
         long projectId = 1L;
         long inviteId = 2L;
-        long applicationId =3L;
+        long applicationId = 3L;
+        long competitionId = 4L;
         String email = "Partner@gmail.com";
         String userName = "Partner";
         String organisationName = "Partners Ltd.";
@@ -185,6 +177,7 @@ public class ProjectPartnerInviteServiceImplTest {
                 .withName("project")
                 .withApplication(newApplication()
                         .withId(applicationId)
+                        .withCompetition(newCompetition().withId(competitionId).build())
                         .build())
                 .build());
         setField(invite, "status", InviteStatus.SENT);
@@ -204,6 +197,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(sentOn, resource.getSentOn());
         assertEquals("project", resource.getProjectName());
         assertEquals(applicationId, resource.getApplicationId());
+        assertEquals(competitionId, resource.getCompetitionId());
     }
 
     @Test
@@ -267,7 +261,8 @@ public class ProjectPartnerInviteServiceImplTest {
         String email = "Partner@gmail.com";
         String userName = "Partner";
         String organisationName = "Partners Ltd.";
-        long applicationId =3L;
+        long applicationId = 3L;
+        long competitionId = 4L;
         ZonedDateTime sentOn = now();
         ProjectPartnerInvite invite = new ProjectPartnerInvite();
         InviteOrganisation inviteOrganisation = new InviteOrganisation();
@@ -278,6 +273,7 @@ public class ProjectPartnerInviteServiceImplTest {
                 .withName("project")
                 .withApplication(newApplication()
                         .withId(applicationId)
+                        .withCompetition(newCompetition().withId(competitionId).build())
                         .build())
                 .build());
         setField(invite, "status", InviteStatus.SENT);
@@ -296,6 +292,7 @@ public class ProjectPartnerInviteServiceImplTest {
         assertEquals(sentOn, resource.getSentOn());
         assertEquals("project", resource.getProjectName());
         assertEquals(applicationId, resource.getApplicationId());
+        assertEquals(competitionId, resource.getCompetitionId());
     }
 
     @Test

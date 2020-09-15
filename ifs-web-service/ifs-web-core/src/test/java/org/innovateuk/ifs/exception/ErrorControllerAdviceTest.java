@@ -204,4 +204,30 @@ public class ErrorControllerAdviceTest extends BaseUnitTest {
         assertEquals(ExceptionUtils.getStackTrace(exception), modelMap.get("stacktrace"));
         assertEquals("sample error message", modelMap.get("message"));
     }
+
+    @Test
+    public void shouldNotIncludeGoogleAnalyticsTagIfVariableNotPresent() {
+
+        Exception exception = new IFSRuntimeException();
+        List<Object> arguments = asList("arg 1", "arg 2");
+
+        ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithUrlTitleMessageAndView(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR, "sample.title.key", "sample.message.key", "other-error-view");
+
+        ModelMap modelMap = mav.getModelMap();
+
+        assertNull(modelMap.get("GoogleAnalyticsTrackingID"));
+    }
+
+    @Test
+    public void shouldIncludeGoogleAnalyticsTagIfVariablePresent() {
+        ReflectionTestUtils.setField(errorControllerAdvice, "googleAnalyticsKeys", "testkey");
+        Exception exception = new IFSRuntimeException();
+        List<Object> arguments = asList("arg 1", "arg 2");
+
+        ModelAndView mav = errorControllerAdvice.createErrorModelAndViewWithUrlTitleMessageAndView(exception, httpServletRequest, arguments, INTERNAL_SERVER_ERROR, "sample.title.key", "sample.message.key", "other-error-view");
+
+        ModelMap modelMap = mav.getModelMap();
+
+        assertEquals("testkey", modelMap.get("GoogleAnalyticsTrackingID"));
+    }
 }

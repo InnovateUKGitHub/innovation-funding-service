@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Set;
 
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Component
@@ -28,7 +29,7 @@ public class UserProfilePopulator {
         } else {
             name = user.getName();
         }
-        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.getAllowMarketingEmails(), organisationViewModels);
+        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.getAllowMarketingEmails(), organisationViewModels, user.hasAnyRoles(MONITORING_OFFICER));
     }
 
     private OrganisationProfileViewModel toOrganisationViewModel(OrganisationResource organisation) {

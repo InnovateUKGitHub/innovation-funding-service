@@ -3,11 +3,11 @@ package org.innovateuk.ifs.project.financechecks.viewmodel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
-import java.util.Set;
+import java.util.List;
 
-public class FinanceChecksProjectCostsViewModel  extends YourProjectCostsViewModel {
+public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-    public FinanceChecksProjectCostsViewModel(Set<FinanceRowType> financeRowTypes) {
-        super(false, false, false, financeRowTypes);
+    public FinanceChecksProjectCostsViewModel(long applicationId, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, boolean ktpCompetition) {
+        super(false, false, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
     }
 }

@@ -1,28 +1,30 @@
 package org.innovateuk.ifs.management.competition.setup.application.sectionupdater;
 
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
-import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
-import org.springframework.http.HttpStatus;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Competition setup section saver for the application form section.
  */
 @Service
-public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater implements CompetitionSetupSubsectionUpdater {
+public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater<QuestionForm> implements CompetitionSetupSubsectionUpdater {
 
-	@Override
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+
+    @Override
 	public CompetitionSetupSubsection subsectionToSave() {
 		return CompetitionSetupSubsection.QUESTIONS;
 	}
@@ -33,8 +35,17 @@ public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater im
 	}
 
     @Override
-    protected void mapGuidanceRows(AbstractQuestionForm abstractQuestionForm) {
-        QuestionForm form = (QuestionForm) abstractQuestionForm;
+    protected void mapAppendix(QuestionForm questionForm) {
+        questionForm.getQuestion().setNumberOfUploads(questionForm.getNumberOfUploads());
+        if (questionForm.getNumberOfUploads() == 0) {
+            questionForm.getQuestion().setAppendix(false);
+        } else {
+            questionForm.getQuestion().setAppendix(true);
+        }
+    }
+
+    @Override
+    protected void mapGuidanceRows(QuestionForm form) {
         form.getQuestion().setGuidanceRows(new ArrayList<>());
         form.getGuidanceRows().forEach(guidanceRow -> {
             GuidanceRowResource guidanceRowResource = new GuidanceRowResource();
@@ -42,19 +53,6 @@ public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater im
             guidanceRowResource.setSubject(guidanceRow.getScoreFrom() + "," + guidanceRow.getScoreTo());
             form.getQuestion().getGuidanceRows().add(guidanceRowResource);
         });
-    }
-
-    private String modifySubject(String subject, String value1, String value2) {
-        // Initialise subject for newly created guidance rows as will be null
-        if (subject == null) {
-            subject = "";
-        }
-        String[] splitSubject = subject.split(",");
-        if (value2 == null) {
-            return value1 + "," + (splitSubject.length > 1 ? splitSubject[1] : 0);
-        } else {
-            return (splitSubject.length > 1 ? splitSubject[0] : 0) + "," + value2;
-        }
     }
 
 }

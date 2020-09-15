@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.fundingdecision.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,7 +15,6 @@ import org.springframework.http.MediaType;
 
 import java.util.Map;
 
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -34,9 +31,6 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
 
     @Mock
     private ApplicationFundingService applicationFundingServiceMock;
-
-    @Mock
-    private ApplicationService applicationServiceMock;
 
     @Mock
     private CompetitionService competitionServiceMock;
@@ -71,14 +65,11 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
-        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
-
         CompetitionResource competition = newCompetitionResource()
                 .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
-        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
-        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
+        when(competitionServiceMock.getCompetitionByApplicationId(1L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
@@ -98,14 +89,11 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
-        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
-
         CompetitionResource competition = newCompetitionResource()
                 .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
                 .build();
 
-        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
-        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
+        when(competitionServiceMock.getCompetitionByApplicationId(1L)).thenReturn(serviceSuccess(competition));
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/send-notifications")
@@ -124,14 +112,11 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
-        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
-
         CompetitionResource competition = newCompetitionResource()
                 .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
-        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
-        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
+        when(competitionServiceMock.getCompetitionByApplicationId(1L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceFailure(internalServerErrorError()));
 
         mockMvc.perform(post("/applicationfunding/send-notifications")
@@ -150,14 +135,11 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
-        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
-
         CompetitionResource competition = newCompetitionResource()
                 .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
-        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
-        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
+        when(competitionServiceMock.getCompetitionByApplicationId(1L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));
 

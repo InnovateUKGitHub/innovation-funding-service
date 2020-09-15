@@ -144,7 +144,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(projectFinanceRepositoryMock.findById(projectFinanceId)).thenReturn(Optional.of(newFinance));
 
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newFinance);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newFinance));
     }
 
     @Test

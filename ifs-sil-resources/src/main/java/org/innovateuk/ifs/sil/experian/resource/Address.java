@@ -13,6 +13,7 @@ public class Address {
     private String locality;
     private String town;
     private String postcode;
+    private String country;
 
     public Address() {}
 
@@ -23,6 +24,16 @@ public class Address {
         this.locality = locality == null ? "" : locality;
         this.town = town == null ? "" : town;
         this.postcode = postcode == null ? "" : postcode;
+    }
+
+    public Address(String organisation, String buildingName, String street, String locality, String town, String postcode, String country) {
+        this.organisation = organisation == null ? "" : organisation;
+        this.buildingName = buildingName == null ? "" : buildingName;
+        this.street = street == null ? "" : street;
+        this.locality = locality == null ? "" : locality;
+        this.town = town == null ? "" : town;
+        this.postcode = postcode == null ? "" : postcode;
+        this.country = country == null ? "" : country;
     }
 
     public String getOrganisation() {
@@ -73,6 +84,14 @@ public class Address {
         this.postcode = postcode == null ? "" : postcode;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country == null? "": country;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -88,6 +107,7 @@ public class Address {
                 .append(locality, address.locality)
                 .append(town, address.town)
                 .append(postcode, address.postcode)
+                .append(country, address.country)
                 .isEquals();
     }
 
@@ -100,6 +120,7 @@ public class Address {
                 .append(locality)
                 .append(town)
                 .append(postcode)
+                .append(country)
                 .toHashCode();
     }
 
@@ -112,6 +133,7 @@ public class Address {
                 ", locality='" + locality + '\'' +
                 ", town='" + town + '\'' +
                 ", postcode='" + postcode + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
 }

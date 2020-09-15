@@ -56,7 +56,7 @@ public class GrantTransferDetailsViewModelPopulatorTest {
 
     @Test
     public void populate() throws ExecutionException, InterruptedException {
-        long applicationId = 1L;
+        Long applicationId = 1L;
         long questionId = 2L;
         long userId = 3L;
         long competitionId = 4L;

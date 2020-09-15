@@ -120,7 +120,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "SUBMIT_GRANT_OFFER_LETTER",
-            description = "Project manager can submit the grant offer letter")
+            description = "Project manager can submit the grant offer letter, or get details to do so with DocuSign")
     public boolean projectManagerSubmitGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectManager(projectCompositeId.id(), user.getId()) && isProjectActive(projectCompositeId.id());
     }

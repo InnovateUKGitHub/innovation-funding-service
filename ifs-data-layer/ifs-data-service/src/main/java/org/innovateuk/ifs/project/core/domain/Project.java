@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -63,8 +64,8 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = MonitoringOfficer.class, mappedBy = "project", fetch = FetchType.LAZY)
-    private MonitoringOfficer projectMonitoringOfficer = null;
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = MonitoringOfficer.class)
+    private List<MonitoringOfficer> monitoringOfficers = new ArrayList<>();;
 
     @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
             mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
@@ -98,6 +99,12 @@ public class Project implements ProcessActivity {
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true, fetch = FetchType.LAZY)
     private ProjectProcess projectProcess;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="signed_gol_docusign_document_id", referencedColumnName = "id")
+    private DocusignDocument signedGolDocusignDocument;
+
+    private boolean useDocusignForGrantOfferLetter;
+
     public Project() {}
 
     public Project(Application application, LocalDate targetStartDate, Address address,
@@ -117,7 +124,8 @@ public class Project implements ProcessActivity {
     }
 
     public void setProjectMonitoringOfficer(MonitoringOfficer projectMonitoringOfficer) {
-        this.projectMonitoringOfficer = projectMonitoringOfficer;
+        monitoringOfficers.removeIf(mo -> mo.getRole().equals(ProjectParticipantRole.MONITORING_OFFICER));
+        monitoringOfficers.add(projectMonitoringOfficer);
     }
 
     public FinanceReviewer getFinanceReviewer() {
@@ -233,10 +241,6 @@ public class Project implements ProcessActivity {
         this.projectUsers.addAll(projectUsers);
     }
 
-    public void removeProjectMonitoringOfficer() {
-        this.projectMonitoringOfficer = null;
-    }
-
     public void setPartnerOrganisations(List<PartnerOrganisation> partnerOrganisations) {
         this.partnerOrganisations.clear();
         this.partnerOrganisations.addAll(partnerOrganisations);
@@ -338,7 +342,9 @@ public class Project implements ProcessActivity {
     }
 
     public Optional<MonitoringOfficer> getProjectMonitoringOfficer() {
-        return Optional.ofNullable(projectMonitoringOfficer);
+        return monitoringOfficers.stream()
+                .filter(mo -> mo.getRole().equals(ProjectParticipantRole.MONITORING_OFFICER))
+                .findFirst();
     }
 
     public MonitoringOfficer getProjectMonitoringOfficerOrElseNull() {
@@ -357,5 +363,25 @@ public class Project implements ProcessActivity {
 
     public ProjectState getProjectState() {
         return getProjectProcess().getProcessState();
+    }
+
+    public DocusignDocument getSignedGolDocusignDocument() {
+        return signedGolDocusignDocument;
+    }
+
+    public void setSignedGolDocusignDocument(DocusignDocument signedGolDocusignDocument) {
+        this.signedGolDocusignDocument = signedGolDocusignDocument;
+    }
+
+    public void setProjectProcess(ProjectProcess projectProcess) {
+        this.projectProcess = projectProcess;
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
+    }
+
+    public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
 }

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsVi
  **/
 public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
+    private String title;
     private final Long projectId;
     private final String projectName;
     private final boolean leadPartner;
@@ -17,11 +18,14 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
     private GrantOfferLetterStateResource golState;
+    private boolean useDocusign;
+    private boolean procurement;
 
-    public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
+    public GrantOfferLetterModel(String title, Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 boolean projectManager, GrantOfferLetterStateResource golState) {
-
+                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign,
+                                 boolean procurement) {
+        this.title = title;
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -30,6 +34,8 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.additionalContractFile = additionalContractFile;
         this.projectManager = projectManager;
         this.golState = golState;
+        this.useDocusign = useDocusign;
+        this.procurement = procurement;
     }
 
     @Override
@@ -44,6 +50,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isLeadPartner() {
         return leadPartner;
+    }
+
+    public GrantOfferLetterStateResource getGolState() {
+        return golState;
     }
 
     public boolean isSubmitted() {
@@ -70,21 +80,20 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return signedGrantOfferLetterFile;
     }
 
-    public boolean isShowSubmitButton() {
-        return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
+    public boolean isUseDocusign() {
+        return useDocusign;
     }
 
-    public boolean isShowDisabledSubmitButton() {
+    public String getTitle() {
+        return title;
+    }
 
-        if (!projectManager) {
-            return false;
-        }
+    public boolean isProcurement() {
+        return procurement;
+    }
 
-        if (isSubmitted()) {
-            return false;
-        }
-
-        return !isOfferSigned();
+    public boolean isShowSubmitButton() {
+        return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
     }
 
     public boolean isProjectManager() {
@@ -158,4 +167,5 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
         return isGrantOfferLetterApproved();
     }
+
 }

@@ -36,11 +36,12 @@ public class InternalUserProjectStatusServiceSecurityTest extends BaseServiceSec
 
         when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competition);
 
-        assertAccessDenied(() -> classUnderTest.getCompetitionStatus(competitionId, "12"), () -> {
+        assertAccessDenied(() -> classUnderTest.getCompetitionStatus(competitionId, "12", 0, 1), () -> {
             verify(statusPermissionRules).internalAdminTeamCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).supportCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).assignedInnovationLeadCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).assignedStakeholderCanViewCompetitionStatus(competition, getLoggedInUser());
+            verify(statusPermissionRules).assignedCompetitionFinanceCanViewCompetitionStatus(competition, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.Arrays.asList;
 
 /**
  * A view model to back the Completion stage selection page.  Contains a list of milestones to show on that page
@@ -20,11 +20,19 @@ public class CompletionStageViewModel extends CompetitionSetupViewModel {
 
     }
 
+    public List<CompetitionCompletionStage> getCompetitionCompletionStages() {
+        return asList(CompetitionCompletionStage.values());
+    }
+
     public CompetitionCompletionStage getReleaseFeedbackCompletionStage() {
         return CompetitionCompletionStage.RELEASE_FEEDBACK;
     }
 
     public CompetitionCompletionStage getProjectSetupCompletionStage() {
         return CompetitionCompletionStage.PROJECT_SETUP;
+    }
+
+    public CompetitionCompletionStage getCompetitionCloseCompletionStage() {
+        return CompetitionCompletionStage.COMPETITION_CLOSE;
     }
 }

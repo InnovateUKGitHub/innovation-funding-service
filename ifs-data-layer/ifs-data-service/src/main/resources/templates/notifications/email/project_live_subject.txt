@@ -1,1 +1,1 @@
-${competitionName}: Grant offer letter approval for project ${applicationId?c}
+${titleUpper} approved for project ${applicationId}

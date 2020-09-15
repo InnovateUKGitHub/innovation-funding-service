@@ -37,7 +37,8 @@ public class ProjectDocs {
             fieldWithPath("projectState").description("The current state of the project in its workflow."),
             fieldWithPath("processLastModifiedDate").description("The last date the project state was modified"),
             fieldWithPath("spendProfileGenerated").description("Has the spend profile been generated."),
-            fieldWithPath("collaborativeProject").description("Does the project have collaboration")
+            fieldWithPath("collaborativeProject").description("Does the project have collaboration"),
+            fieldWithPath("useDocusignForGrantOfferLetter").description("Docusign will we be used for signing the grant offer letter")
     };
 
     public static final FieldDescriptor[] projectStatusResourceFields = {
@@ -58,7 +59,8 @@ public class ProjectDocs {
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
             fieldWithPath("projectSetupCompleteStatus").description("Status of the project setup complete section"),
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent"),
-            fieldWithPath("projectState").description("State of the project")
+            fieldWithPath("projectState").description("State of the project"),
+            fieldWithPath("sentToIfsPa").description("Indicates if project has been sent to IFSPA")
     };
 
     public static final FieldDescriptor[] grantOfferLetterStateResourceFields = {

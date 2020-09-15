@@ -741,7 +741,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withProfileId(existingProfile.getId())
                 .build();
 
-        AddressResource addressResource = newAddressResource().withId(1L).build();
+        AddressResource addressResource = newAddressResource().build();
 
         when(profileRepositoryMock.findById(existingProfile.getId())).thenReturn(Optional.of(existingProfile));
         when(userRepositoryMock.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));

@@ -10,14 +10,19 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,14 +52,20 @@ public class YourFundingViewModelPopulator {
     private ApplicantRestService applicantRestService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
     private QuestionService questionService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        if (user.isInternalUser()) {
-            return populateManagement(applicationId, sectionId, organisationId);
+        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE) || user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)) {
+            return populateManagement(applicationId, sectionId, organisationId, user);
         }
         return populate(applicationId, sectionId, user);
     }
@@ -79,6 +90,7 @@ public class YourFundingViewModelPopulator {
         boolean overridingFundingRules = isMaximumFundingLevelOverridden(section);
 
         return new YourFundingViewModel(applicationId,
+                section.getCompetition().getName(),
                 section.getSection().getId(),
                 section.getCurrentApplicant().getOrganisation().getId(),
                 section.getCompetition().getId(),
@@ -94,13 +106,18 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
                 format("/application/%d/form/FINANCE", applicationId),
-                overridingFundingRules);
+                overridingFundingRules,
+                section.getCompetition().getFundingType(),
+                section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum());
     }
 
-    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
+    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        return new ManagementYourFundingViewModel(applicationId, sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum());
 
     }
 

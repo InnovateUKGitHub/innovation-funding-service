@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.internal;
 
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.util.Set;
@@ -14,8 +16,13 @@ public class InternalProjectSetupRow {
     private String projectLeadOrganisationName;
     private Long projectId;
     private Set<InternalProjectSetupCell> states;
+    private boolean grantOfferLetterComplete;
+    private boolean sentToIfsPa;
 
-    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners, long competitionId, String projectLeadOrganisationName, Long projectId, Set<InternalProjectSetupCell> states) {
+    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners,
+                                   long competitionId, String projectLeadOrganisationName, Long projectId,
+                                   Set<InternalProjectSetupCell> states, boolean grantOfferLetterComplete,
+                                   boolean sentToIfsPa) {
         this.projectName = projectName;
         this.applicationNumber = applicationNumber;
         this.projectState = projectState;
@@ -24,6 +31,8 @@ public class InternalProjectSetupRow {
         this.projectLeadOrganisationName = projectLeadOrganisationName;
         this.projectId = projectId;
         this.states = states;
+        this.grantOfferLetterComplete = grantOfferLetterComplete;
+        this.sentToIfsPa = sentToIfsPa;
     }
 
     public String getProjectName() {
@@ -56,5 +65,13 @@ public class InternalProjectSetupRow {
 
     public Set<InternalProjectSetupCell> getStates() {
         return states;
+    }
+
+    public boolean isGrantOfferLetterComplete() {
+        return grantOfferLetterComplete;
+    }
+
+    public boolean isSentToIfsPa() {
+        return sentToIfsPa;
     }
 }

@@ -24,6 +24,8 @@ public interface InviteRepository<T extends Invite> extends PagingAndSortingRepo
 
     T getByHash(String hash);
 
+    Boolean existsByHash(String hash);
+
     List<T> findByEmail(String email);
 
     Page<T> findByStatus(InviteStatus status, Pageable pageable);

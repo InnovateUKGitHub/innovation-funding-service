@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * ApplicationFinanceHandlerImpl handles the finance information on application
@@ -40,13 +41,13 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
+        Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
         ApplicationFinanceResource applicationFinanceResource = null;
 
-        if (applicationFinance != null) {
-            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setApplicationFinanceDetails(applicationFinanceResource, applicationFinance.getApplication().getCompetition());
+        if (applicationFinance.isPresent()) {
+            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance.get());
+            setApplicationFinanceDetails(applicationFinanceResource, applicationFinance.get().getApplication().getCompetition());
         }
 
         return applicationFinanceResource;

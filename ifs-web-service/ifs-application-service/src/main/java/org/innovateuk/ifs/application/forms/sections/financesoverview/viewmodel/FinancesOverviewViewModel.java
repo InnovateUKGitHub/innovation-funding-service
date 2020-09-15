@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.financesoverview.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -7,10 +8,11 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 
-public class FinancesOverviewViewModel {
+public class FinancesOverviewViewModel implements BaseAnalyticsViewModel {
 
     private final long applicationId;
     private final String applicationName;
+    private final String competitionName;
     private final Double researchParticipationPercentage;
     private final Integer maxResearchRatio;
     private final FundingType fundingType;
@@ -19,9 +21,10 @@ public class FinancesOverviewViewModel {
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
 
-    public FinancesOverviewViewModel(long applicationId, String applicationName, Double researchParticipationPercentage, Integer maxResearchRatio, FundingType fundingType, String hint, String fundingRules, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
+    public FinancesOverviewViewModel(long applicationId, String competitionName, String applicationName, Double researchParticipationPercentage, Integer maxResearchRatio, FundingType fundingType, String hint, String fundingRules, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
+        this.competitionName = competitionName;
         this.researchParticipationPercentage = researchParticipationPercentage;
         this.maxResearchRatio = maxResearchRatio;
         this.fundingType = fundingType;
@@ -31,8 +34,14 @@ public class FinancesOverviewViewModel {
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getApplicationName() {

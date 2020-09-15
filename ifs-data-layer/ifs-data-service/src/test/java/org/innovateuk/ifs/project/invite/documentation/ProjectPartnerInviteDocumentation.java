@@ -44,6 +44,7 @@ public class ProjectPartnerInviteDocumentation extends BaseControllerMockMVCTest
                 fieldWithPath("status").description("The status of the invite"),
                 fieldWithPath("projectName").description("The name of the project the invite is to"),
                 fieldWithPath("applicationId").description("Id of the application"),
+                fieldWithPath("competitionId").description("Id of the competition")
     };
 
     @Test

@@ -58,6 +58,7 @@ public class AcademicCostViewModelPopulator {
         return new AcademicCostViewModel(
                 getYourFinancesUrl(applicationId, organisationId, applicant),
                 application.getName(),
+                competition.getName(),
                 organisation.getName(),
                 applicationId,
                 sectionId,

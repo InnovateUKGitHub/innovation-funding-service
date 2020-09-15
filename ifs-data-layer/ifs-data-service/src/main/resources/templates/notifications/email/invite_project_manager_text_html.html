@@ -3,7 +3,7 @@
     <@layout.default>
     <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
     <p style="margin: 0 0 1em 0;">You have been invited to join the project <b>${projectName}</b> as the Project Manager.</p>
-    <p style="margin: 0 0 1em 0;">You will be managing the project on behalf of <b>${leadOrganisation}</b> who is the lead organisation.</p>
+    <p style="margin: 0 0 1em 0;">You will be managing the project on behalf of <b>${leadOrganisation}</b><#if procurement> who is the lead organisation.</#if></p>
     <p style="margin: 0 0 1em 0;">Please sign in to accept this invitation. If you haven't used this service before you must create an account.</p>
     <@layout.button href="${inviteUrl}" text="Accept invitation" />
     <p style="margin: 0 0 1em 0;">Yours sincerely,</p>

@@ -25,8 +25,8 @@ Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../Applicant_Commons.robot
-Resource          ../../../10__Project_setup/PS_Common.robot
+Resource          ../../../../resources/common/Applicant_Commons.robot
+Resource          ../../../../resources/common/PS_Common.robot
 # For the testing of those Testing cases, the application that has been used is:
 # CLOSED_COMPETITION_APPLICATION_NAME that is A new innovative solution
 # of the Competition: Connected digital additive manufacturing
@@ -41,8 +41,9 @@ ${allApplicationsForRTOComp}  ${SERVER}/management/competition/${openCompetition
 Calculations for Lead applicant
     [Documentation]    INFUND-524
     [Tags]
-    Given the user clicks the button/link    link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    When the user clicks the button/link     link = Finances overview
+    Given the user clicks the application tile if displayed
+    And the user clicks the button/link                                  link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    When the user clicks the button/link                                 link = Finances overview
     Then the finance summary calculations should be correct
     And the finance Funding breakdown calculations should be correct
 
@@ -116,9 +117,10 @@ Collaborator marks finances as complete
 Finances overview shows as complete once all collaborators have marked as complete
     [Documentation]  IFS-3820
     Given the academic user marks finances as complete
-    And log in as a different user          &{lead_applicant_credentials}
-    When the user clicks the button/link    link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the user should see the element    jQuery = li:contains("Finances overview") .task-status-complete
+    And log in as a different user                            &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    Then the user should see the element                      jQuery = li:contains("Finances overview") .task-status-complete
 
 Finance summary has total marked as complete
     [Documentation]  IFS-3821
@@ -128,21 +130,22 @@ Finance summary has total marked as complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]
-    Given Log in as a different user               &{collaborator2_credentials}
-    Then the user navigates to Your-finances page  Performance Application 7
-    And The user clicks the button/link            link = Your project costs
-    And the user clicks the button/link            jQuery = button:contains("Open all")
-    When the user enters text to a text field      id = incurredStaff  1000000
-    And The user clicks the button/link            id = mark-all-as-complete
-    And The user should see the element            jQuery = h1:contains("Your project finances")
-    And log in as a different user                 &{lead_applicant_credentials}
+    Given Log in as a different user                          &{collaborator2_credentials}
+    And the user navigates to Your-finances page              Performance Application 7
+    And The user clicks the button/link                       link = Your project costs
+    And the user clicks the button/link                       jQuery = button:contains("Open all")
+    When the user enters text to a text field                 css = [name$="incurredStaff"]  1000000
+        And The user clicks the button/link            id = mark-all-as-complete
+        And The user should see the element            jQuery = h1:contains("Your project finances")
+    And log in as a different user                            &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
     And the user navigates to the finance overview of the academic  Performance Application 7
     Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link            link = Performance Application 7
-    And the user clicks the button/link            link = Review and submit
-    And the user expands the section               Finances summary
-    Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
+    And the user clicks the button/link                       link = Review and submit
+    And the user expands the section                          Finances summary
+    Then the user should see the element                      jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
@@ -240,13 +243,13 @@ Innovation lead can see read only view of Your organisation
     Then the user should see the element           jQuery = p:contains("Please complete your project finances.")
     When the user clicks the button/link           jQuery = a:contains("Your organisation")
     Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
-    And the user should see the element            jQuery = #financialYearEndMonthValue[value=1]
-    And the user should see the element            jQuery = #financialYearEndYearValue[value=2020]
-    And the user should see the element            jQuery = td:contains("Annual turnover") + td input[value=100000]
-    And the user should see the element            jQuery = td:contains("Annual profits") + td input[value=200000]
-    And the user should see the element            jQuery = td:contains("Annual export") + td input[value=300000]
-    And the user should see the element            jQuery = td:contains("Research and development spend") + td input[value=400000]
-    And the user should see the element            jQuery = dt:contains("employees") + dd:contains("60")
+    And the user should see the element            jQuery = strong:contains("1")
+    And the user should see the element            jQuery = strong:contains("2020")
+    And the user should see the element            jQuery = td:contains("Annual turnover") + td:contains("100,000")
+    And the user should see the element            jQuery = td:contains("Annual profits") + td:contains("200,000")
+    And the user should see the element            jQuery = td:contains("Annual export") + td:contains("300,000")
+    And the user should see the element            jQuery = td:contains("Research and development spend") + td:contains("400,000")
+    And the user should see the element            jQuery = dt:contains("Full time employees") + dd:contains("60")
 
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802

@@ -4,10 +4,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -374,7 +371,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     }
 
     private SendNotificationsViewModel emptyViewModel() {
-        List<ApplicationSummaryResource> resourceList = singletonList(new ApplicationSummaryResource());
-        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName", false);
+        List<FundingDecisionToSendApplicationResource> resourceList = singletonList(new FundingDecisionToSendApplicationResource(1L, "", "", UNFUNDED));
+        return new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName", false, false);
     }
 }

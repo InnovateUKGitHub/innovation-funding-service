@@ -2,9 +2,6 @@ package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.identity.IdentifiableEnum;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 /**
@@ -19,7 +16,8 @@ public enum FormInputType implements IdentifiableEnum {
     ASSESSOR_RESEARCH_CATEGORY(21),
     ASSESSOR_APPLICATION_IN_SCOPE(22),
     ASSESSOR_SCORE(23),
-    TEMPLATE_DOCUMENT(29);
+    TEMPLATE_DOCUMENT(29),
+    MULTIPLE_CHOICE(30);
 
     private long id;
 

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -29,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
@@ -65,9 +66,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationSummaryPageMapper applicationSummaryPageMapper;
-
-    @Mock
-    private OrganisationAddressMapper organisationAddressMapper;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -532,18 +530,14 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void findWithFundingDecisionIsNotChangeableApplicationIdsByCompetitionId() {
 
-        List<Application> applications = newApplication()
-                .withFundingDecision(ON_HOLD)
-                .build(2);
+        List<Long> longs = newArrayList(1L, 2L, 3L);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(applications);
+        when(applicationRepositoryMock.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(longs);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccess().size());
-        assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
-        assertEquals(applications.get(1).getId(), result.getSuccess().get(1));
+        assertEquals(longs, result.getSuccess());
     }
 
     @Test
@@ -552,8 +546,10 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .withFundingDecision(UNFUNDED)
                 .build(2);
 
-        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
-                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(applications);
+        List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
+
+        when(applicationRepositoryMock.findApplicationIdsByApplicationStateAndFundingDecision(
+                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(ids);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
         assertTrue(result.isSuccess());

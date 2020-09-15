@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -26,6 +27,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionFinanceBuilder.newCompetitionFinance;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -45,7 +47,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -104,6 +107,32 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
 
         allInternalUsers.forEach(internalUser -> assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
+    }
+
+    @Test
+    public void competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo() {
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ExternalFinance externalFinance = newCompetitionFinance().withCompetition(competition).build();
+        UserResource competitionFinanceResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
+        User user = newUser().withId(userResource.getId()).build();
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(user)
+                .build(2);
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(2);
+
+        when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
+        when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
+        when(externalFinanceRepository.findByCompetitionFinanceId(competitionFinanceResource.getId())).thenReturn(singletonList(externalFinance));
+
+        assertTrue(rules.competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, competitionFinanceResource));
+
+        allInternalUsers.forEach(internalUser -> assertFalse(rules.competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
     }
 
     @Test
@@ -615,7 +644,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         final long userId = 11L;
         final long applicationId = 1L;
 
-        ProjectParticipantRole.PROJECT_USER_ROLES
+        ProjectParticipantRole.DISPLAY_PROJECT_TEAM_ROLES
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();
@@ -875,6 +904,28 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
 
+    }
+
+    @Test
+    public void stakeholderCanRequestApplicantRole() {
+        UserResource otherStakeholder = newUserResource().withRolesGlobal(singletonList(STAKEHOLDER)).build();
+
+        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(otherStakeholder.getId(), APPLICANT), stakeholderUser()));
+        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+
+        assertTrue(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
+    }
+
+    @Test
+    public void monitoringOfficerCanRequestApplicantRole() {
+        UserResource otherMonitoringOfficer = newUserResource().withRolesGlobal(singletonList(MONITORING_OFFICER)).build();
+
+        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(otherMonitoringOfficer.getId(), APPLICANT), monitoringOfficerUser()));
+        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+
+        assertTrue(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
     }
 
     @Test

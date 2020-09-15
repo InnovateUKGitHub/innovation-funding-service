@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionServiceImpl;
@@ -84,51 +83,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
             verifyNoMoreInteractions(rules);
         });
     }
-
-    @Test
-    public void findInnovationLeads() {
-
-        Long competitionId = 1L;
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
-
-        assertAccessDenied(
-                () -> classUnderTest.findInnovationLeads(1L),
-                () -> {
-                    verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
-                    verifyNoMoreInteractions(rules);
-                });
-    }
-
-    @Test
-    public void addInnovationLead() {
-        Long competitionId = 1L;
-        Long innovationLeadUserId = 2L;
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
-
-        assertAccessDenied(() -> classUnderTest.addInnovationLead(competitionId, innovationLeadUserId), () -> {
-            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
-    public void removeInnovationLead() {
-        Long competitionId = 1L;
-        Long innovationLeadUserId = 2L;
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(competitionResource);
-
-        assertAccessDenied(() -> classUnderTest.removeInnovationLead(competitionId, innovationLeadUserId), () -> {
-            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
 
     @Test
     public void getCompetitionOrganisationTypesById() {

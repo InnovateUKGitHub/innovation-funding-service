@@ -440,10 +440,10 @@
                 <th:block th:if="${model.hasAttachment(contentGroup.id)}">
                     <p class="govuk-body">
                         <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
-                           th:text="${model.fileName(contentGroup.id)}"
+                           th:text="|${model.fileName(contentGroup.id)} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank"
-                           aria-describedby="appendix-hint">Filename.pdf</a> <span id="">(opens in a new window)</span></p>
+                           target="_blank">Filename.pdf</a>
+                    </p>
                 </th:block>
             </div>
         </div>

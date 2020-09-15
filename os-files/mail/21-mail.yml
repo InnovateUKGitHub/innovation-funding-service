@@ -18,6 +18,8 @@ items:
         labels:
           deploymentconfig: mail
       spec:
+        imagePullSecrets:
+          - name: imagePullSecretsName
         containers:
         - image: innovateuk/mail-sink:${mailSinkVersion}
           name: mail

@@ -3,10 +3,10 @@ package org.innovateuk.ifs.project.status.transactional;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
-import org.innovateuk.ifs.competitionsetup.domain.DocumentConfig;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.grant.domain.GrantProcess;
+import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
@@ -23,17 +23,20 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -76,10 +79,20 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     @Autowired
     private MonitoringOfficerService monitoringOfficerService;
 
+    @Autowired
+    private GrantProcessService grantProcessService;
+
     @Override
-    public ServiceResult<List<ProjectStatusResource>> getCompetitionStatus(long competitionId, String applicationSearchString) {
-        return serviceSuccess(getProjectStatuses(() -> projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)));
+    @Transactional //Write transaction for first time creation of project finances.
+    public ServiceResult<ProjectStatusPageResource> getCompetitionStatus(long competitionId,
+                                                                         String applicationSearchString,
+                                                                         int page,
+                                                                         int size) {
+        Page<Project> result = projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString, PageRequest.of(page, size));
+        return serviceSuccess(new ProjectStatusPageResource(result.getTotalElements(), result.getTotalPages(),
+                getProjectStatuses(result::getContent), result.getNumber(), result.getSize()));
     }
+
 
     @Override
     public ServiceResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(long competitionId) {
@@ -116,6 +129,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project);
         ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus);
         ProjectActivityStates documentsStatus = documentsState(project);
+        boolean sentToIfsPa = sentToIfsPa(project);
 
         return new ProjectStatusResource(
                 project.getName(),
@@ -130,12 +144,13 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 bankDetailsStatus,
                 financeChecksStatus,
                 spendProfileStatus,
-                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus),
+                getMonitoringOfficerStatus(project, projectDetailsStatus, locationPerPartnerRequired, partnerProjectLocationStatus),
                 documentsStatus,
                 getGrantOfferLetterState(project, bankDetailsStatus, spendProfileStatus, documentsStatus),
                 getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
                 golWorkflowHandler.isSent(project),
-                project.getProjectState());
+                project.getProjectState(),
+                sentToIfsPa);
     }
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectActivityStates partnerProjectLocationStatus) {
         if (locationPerPartnerRequired && PENDING.equals(partnerProjectLocationStatus)) {
@@ -159,7 +174,12 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
         return simpleAnyMatch(project.getPartnerOrganisations(),
-                              partnerOrganisation -> isBlank(partnerOrganisation.getPostcode())) ?
+                              partnerOrganisation -> {
+                                    if (partnerOrganisation.getOrganisation().isInternational()) {
+                                        return isBlank(partnerOrganisation.getInternationalLocation());
+                                    }
+                                  return isBlank(partnerOrganisation.getPostcode());
+                              }) ?
                 PENDING : COMPLETE;
     }
 
@@ -175,24 +195,29 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project) {
+        List<Organisation> organisationsRequiringBankDetails = project.getOrganisations()
+                .stream()
+                .filter(org -> areBankDetailsRequired(project, org))
+                .collect(toList());
+        if (organisationsRequiringBankDetails.isEmpty()) {
+            return COMPLETE;
+        }
 
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
         boolean started = false;
-        for (Organisation organisation : project.getOrganisations()) {
-            if (isOrganisationSeekingFunding(project.getId(), organisation.getId())) {
-                Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-                ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-                ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
-                if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
-                    incomplete = true;
-                }
-                if (bankDetails.isPresent()) {
-                    started = true;
-                    if (organisationBankDetailsStatus.equals(PENDING)) {
-                        return project.getProjectState().isActive() ?
-                                ACTION_REQUIRED : PENDING;
-                    }
+        for (Organisation organisation : organisationsRequiringBankDetails) {
+            Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
+            if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
+                incomplete = true;
+            }
+            if (bankDetails.isPresent()) {
+                started = true;
+                if (organisationBankDetailsStatus.equals(PENDING)) {
+                    return project.getProjectState().isActive() ?
+                            ACTION_REQUIRED : PENDING;
                 }
             }
         }
@@ -203,6 +228,10 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         } else {
             return COMPLETE;
         }
+    }
+
+    private boolean areBankDetailsRequired(Project project, Organisation organisation) {
+        return !organisation.isInternational() && isOrganisationSeekingFunding(project.getId(), organisation.getId());
     }
 
     private boolean isOrganisationSeekingFunding(long projectId, long organisationId) {
@@ -375,11 +404,14 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return getDocumentsStatus(project);
     }
 
+    private boolean sentToIfsPa(Project project) {
+        Optional<GrantProcess> grantProcess = grantProcessService.findByApplicationId(project.getApplication().getId());
+        return grantProcess.isPresent() && (grantProcess.get().getSentSucceeded() != null);
+    }
+
     private boolean projectContainsStage(Project project, ProjectSetupStage projectSetupStage) {
         return project.getApplication().getCompetition().getProjectStages().stream()
-                .filter(stage -> stage.getProjectSetupStage().equals(projectSetupStage))
-                .findFirst()
-                .isPresent();
+                .anyMatch(stage -> stage.getProjectSetupStage().equals(projectSetupStage));
     }
 
     private ProjectActivityStates actionRequiredIfProjectActive(ProjectState projectState) {
@@ -399,13 +431,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return getFinanceContact(project, partnerOrganisation).isPresent() ?
                 COMPLETE :
                 ACTION_REQUIRED;
-    }
-
-    private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        boolean projectDetailsComplete = project.getAddress() != null
-                && project.getTargetStartDate() != null
-                && projectLocationsCompletedIfNecessary(project);
-        return projectDetailsComplete ? COMPLETE : ACTION_REQUIRED;
     }
 
     private boolean projectLocationsCompletedIfNecessary(final Project project) {

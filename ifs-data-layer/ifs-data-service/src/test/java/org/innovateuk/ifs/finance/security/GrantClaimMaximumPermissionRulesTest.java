@@ -53,21 +53,21 @@ public class GrantClaimMaximumPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void internalAdminCanCheckMaxFundingLevelOverridden_compAdminUser() {
+    public void internalUserCanCheckMaxFundingLevelOverridden_compAdminUser() {
         CompetitionResource competition = newCompetitionResource().build();
         UserResource user = newUserResource().withRoleGlobal(COMP_ADMIN).build();
 
-        assertTrue(rules.internalAdminCanCheckMaxFundingLevelOverridden(competition, user));
+        assertTrue(rules.internalUserCanCheckMaxFundingLevelOverridden(competition, user));
 
         verify(usersRolesService, never()).userHasApplicationForCompetition(isA(Long.class), isA(Long.class));
     }
 
     @Test
-    public void internalAdminCanCheckMaxFundingLevelOverridden_projectFinanceUser() {
+    public void internalUsercanCheckMaxFundingLevelOverridden_projectFinanceUser() {
         CompetitionResource competition = newCompetitionResource().build();
         UserResource user = newUserResource().withRoleGlobal(PROJECT_FINANCE).build();
 
-        assertTrue(rules.internalAdminCanCheckMaxFundingLevelOverridden(competition, user));
+        assertTrue(rules.internalUserCanCheckMaxFundingLevelOverridden(competition, user));
 
         verify(usersRolesService, never()).userHasApplicationForCompetition(isA(Long.class), isA(Long.class));
     }

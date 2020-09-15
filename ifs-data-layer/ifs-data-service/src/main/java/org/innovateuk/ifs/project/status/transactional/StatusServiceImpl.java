@@ -39,6 +39,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +94,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private FinanceCheckService financeCheckService;
 
     @Override
+    @Transactional //Write transaction for first time creation of project finances.
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findById(projectId).get();
         PartnerOrganisation lead = project.getLeadOrganisation().get();
@@ -176,7 +178,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
         ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, organisation);
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), organisation.getId(), bankDetails, financeContactStatus);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), organisation, bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, organisation, isQueryActionRequired);
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : partnerProjectLocationStatus;
         ProjectActivityStates projectTeamStatus = isLead? createProjectTeamStatus(project) : financeContactStatus;
@@ -256,7 +258,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         boolean locationPresent = project.getPartnerOrganisations().stream()
                 .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().getId().equals(organisation.getId()))
                 .findFirst()
-                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostcode()))
+                .map(partnerOrganisation -> {
+                    if (organisation.isInternational()) {
+                        return StringUtils.isNotBlank(partnerOrganisation.getInternationalLocation());
+                    }
+                    return StringUtils.isNotBlank(partnerOrganisation.getPostcode());
+                })
                 .orElse(false);
 
         return locationPresent ? COMPLETE : ACTION_REQUIRED;
@@ -291,7 +298,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
         return project.getPartnerOrganisations()
                 .stream()
-                .noneMatch(org -> org.getPostcode() == null);
+                .noneMatch(org -> {
+                    if (org.getOrganisation().isInternational()) {
+                        return org.getInternationalLocation() == null;
+                    }
+                    return org.getPostcode() == null;
+                });
     }
 
     private ProjectActivityStates createProjectTeamStatus(Project project) {
@@ -308,10 +320,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private ProjectActivityStates createBankDetailStatus(long projectId, long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
+    private ProjectActivityStates createBankDetailStatus(long projectId, Organisation organisation, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        } else if (!isOrganisationSeekingFunding(projectId, organisationId)) {
+        } else if (organisation.isInternational() || !isOrganisationSeekingFunding(projectId, organisation.getId())) {
             return NOT_REQUIRED;
         } else if (COMPLETE.equals(financeContactStatus)) {
             return ACTION_REQUIRED;

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.review.populator;
 
+import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
+import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.viewmodel.ReviewAndSubmitViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyViewModelPopulator;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;

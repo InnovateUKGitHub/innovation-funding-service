@@ -19,6 +19,7 @@ public class ProjectSpendProfileSummaryControllerSecurityTest extends BaseProjec
 
     private ProjectLookupStrategy projectLookupStrategy;
     private ProjectCompositeId projectCompositeId;
+    private UserResource userResource;
 
     @Override
     @Before
@@ -36,12 +37,12 @@ public class ProjectSpendProfileSummaryControllerSecurityTest extends BaseProjec
 
     @Test
     public void testGenerateSpendProfile() {
-        assertSecured(() -> classUnderTest.generateSpendProfile(projectCompositeId.id(), null, null, null, null));
+        assertSecured(() -> classUnderTest.generateSpendProfile(projectCompositeId.id(), null, null, null, null, userResource));
     }
 
     @Test
     public void testViewSpendProfileSummary() {
-        assertSecured(() -> classUnderTest.viewFinanceCheckSummary(projectCompositeId.id(), null, null));
+        assertSecured(() -> classUnderTest.viewFinanceCheckSummary(projectCompositeId.id(), null, null, userResource));
     }
 
     @Override

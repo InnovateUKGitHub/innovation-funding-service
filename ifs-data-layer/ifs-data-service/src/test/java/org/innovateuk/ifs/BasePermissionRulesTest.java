@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -26,8 +28,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.mockito.Mockito.when;
@@ -57,6 +58,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected StakeholderRepository stakeholderRepository;
+
+    @Mock
+    protected ExternalFinanceRepository externalFinanceRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
@@ -115,16 +119,26 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         user.setRoles(projectFinanceUser);
     }
 
+    protected void setUpUserAsSupport(ProjectResource project, UserResource user) {
+        List<Role> supportUser = singletonList(Role.SUPPORT);
+        user.setRoles(supportUser);
+    }
+
+    protected void setUpUserNotAsSupport(ProjectResource project, UserResource user) {
+        List<Role> supportUser = emptyList();
+        user.setRoles(supportUser);
+    }
+
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, OrganisationResource organisation, boolean userIsPartner) {
         ProjectUser partnerProjectUser = newProjectUser().build();
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisation.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
     protected void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.activitylog.resource;
 public enum ActivityType {
 
     APPLICATION_SUBMITTED,
+    APPLICATION_REOPENED,
     APPLICATION_INTO_PROJECT_SETUP,
     PROJECT_DETAILS_COMPLETE,
     PROJECT_MANAGER_NOMINATED,
@@ -38,7 +39,9 @@ public enum ActivityType {
     MARKED_PROJECT_AS_UNSUCCESSFUL,
     ORGANISATION_REMOVED,
     ORGANISATION_ADDED,
-
+    GRANTS_PROJECT_MANAGER_INVITED,
+    GRANTS_FINANCE_CONTACT_INVITED,
+    GRANTS_MONITORING_OFFICER_INVITED,
 
     NONE //Will not be persisted to database. Only gives default value to annotation.
 

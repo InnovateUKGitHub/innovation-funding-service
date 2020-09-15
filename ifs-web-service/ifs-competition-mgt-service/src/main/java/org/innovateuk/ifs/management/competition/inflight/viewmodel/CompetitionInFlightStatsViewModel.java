@@ -4,10 +4,7 @@ import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStat
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 
 /**
  * Holder of key statistics for the in-flight dashboard
@@ -23,17 +20,19 @@ public class CompetitionInFlightStatsViewModel {
     private boolean canManageFundingNotifications = true;
     private CompetitionStatus status;
     private boolean canReleaseFeedback = true;
+    private boolean displayAssessorStats;
 
     public CompetitionInFlightStatsViewModel() {
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionReadyToOpenKeyAssessmentStatisticsResource
-                                                     keyStatisticsResource, CompetitionStatus competitionStatus) {
+                                                     keyStatisticsResource, CompetitionStatus competitionStatus, CompetitionCompletionStage completionStage) {
         this.statOne = keyStatisticsResource.getAssessorsInvited();
         this.statTwo = keyStatisticsResource.getAssessorsAccepted();
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
+        this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionOpenKeyApplicationStatisticsResource
@@ -41,7 +40,8 @@ public class CompetitionInFlightStatsViewModel {
                                              CompetitionOpenKeyAssessmentStatisticsResource
                                                      competitionOpenKeyAssessmentStatisticsResource,
                                              CompetitionStatus competitionStatus,
-                                             CompetitionFundedKeyApplicationStatisticsResource fundedKeyApplicationStatisticsResource) {
+                                             CompetitionFundedKeyApplicationStatisticsResource fundedKeyApplicationStatisticsResource,
+                                                     CompetitionCompletionStage completionStage) {
         this.statOne = competitionOpenKeyAssessmentStatisticsResource.getAssessorsInvited();
         this.statTwo = competitionOpenKeyAssessmentStatisticsResource.getAssessorsAccepted();
         this.statThree = competitionOpenKeyApplicationStatisticsResource.getApplicationsPerAssessor();
@@ -51,13 +51,15 @@ public class CompetitionInFlightStatsViewModel {
         this.canManageFundingNotifications = fundedKeyApplicationStatisticsResource.isCanManageFundingNotifications();
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
+        this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionOpenKeyApplicationStatisticsResource
                                                      competitionOpenKeyApplicationStatisticsResource,
                                              CompetitionOpenKeyAssessmentStatisticsResource
                                                      competitionOpenKeyAssessmentStatisticsResource,
-                                             CompetitionStatus competitionStatus) {
+                                             CompetitionStatus competitionStatus,
+                                             CompetitionCompletionStage completionStage) {
         this.statOne = competitionOpenKeyAssessmentStatisticsResource.getAssessorsInvited();
         this.statTwo = competitionOpenKeyAssessmentStatisticsResource.getAssessorsAccepted();
         this.statThree = competitionOpenKeyApplicationStatisticsResource.getApplicationsPerAssessor();
@@ -67,13 +69,15 @@ public class CompetitionInFlightStatsViewModel {
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
+        this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionClosedKeyApplicationStatisticsResource
                                                      competitionClosedKeyApplicationStatisticsResource,
                                              CompetitionClosedKeyAssessmentStatisticsResource
                                                      competitionClosedKeyAssessmentStatisticsResource,
-                                             CompetitionStatus competitionStatus) {
+                                             CompetitionStatus competitionStatus,
+                                             CompetitionCompletionStage completionStage) {
         this.statOne = competitionClosedKeyApplicationStatisticsResource.getApplicationsRequiringAssessors();
         this.statTwo = competitionClosedKeyApplicationStatisticsResource.getAssignmentCount();
         this.statThree = competitionClosedKeyAssessmentStatisticsResource.getAssessorsWithoutApplications();
@@ -83,11 +87,13 @@ public class CompetitionInFlightStatsViewModel {
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
+        this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionInAssessmentKeyAssessmentStatisticsResource
                                                      keyStatisticsResource,
-                                             CompetitionStatus competitionStatus) {
+                                             CompetitionStatus competitionStatus,
+                                             CompetitionCompletionStage completionStage) {
         this.statOne = keyStatisticsResource.getAssignmentCount();
         this.statTwo = keyStatisticsResource.getAssignmentsWaiting();
         this.statThree = keyStatisticsResource.getAssignmentsAccepted();
@@ -96,10 +102,12 @@ public class CompetitionInFlightStatsViewModel {
         this.canManageFundingNotifications = false;
         this.status = competitionStatus;
         this.canReleaseFeedback = false;
+        this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionFundedKeyApplicationStatisticsResource keyStatisticsResource,
-                                             CompetitionStatus competitionStatus) {
+                                             CompetitionStatus competitionStatus,
+                                             CompetitionCompletionStage completionStage) {
         this.statOne = keyStatisticsResource.getApplicationsSubmitted();
         this.statTwo = keyStatisticsResource.getApplicationsFunded();
         this.statThree = keyStatisticsResource.getApplicationsNotFunded();
@@ -109,6 +117,7 @@ public class CompetitionInFlightStatsViewModel {
         this.canManageFundingNotifications = keyStatisticsResource.isCanManageFundingNotifications();
         this.canReleaseFeedback = keyStatisticsResource.isCanReleaseFeedback();
         this.status = competitionStatus;
+        this.displayAssessorStats = CompetitionCompletionStage.COMPETITION_CLOSE.equals(completionStage);
     }
 
     public CompetitionStatus getStatus() {
@@ -145,5 +154,9 @@ public class CompetitionInFlightStatsViewModel {
 
     public boolean isCanReleaseFeedback() {
         return canReleaseFeedback;
+    }
+
+    public boolean isDisplayAssessorStats() {
+        return displayAssessorStats;
     }
 }

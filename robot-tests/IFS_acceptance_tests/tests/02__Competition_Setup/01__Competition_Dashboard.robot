@@ -16,8 +16,8 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../10__Project_setup/PS_Common.robot
-Resource          CompAdmin_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Sections of Live Competitions

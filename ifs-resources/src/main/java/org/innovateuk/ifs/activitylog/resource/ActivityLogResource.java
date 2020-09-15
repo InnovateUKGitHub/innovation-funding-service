@@ -97,6 +97,11 @@ public class ActivityLogResource {
     }
 
     @JsonIgnore
+    public boolean isExternalFinanceUser() {
+        return getAuthoredByRoles().stream().anyMatch(role -> Role.EXTERNAL_FINANCE.equals(role));
+    }
+
+    @JsonIgnore
     public boolean isIfsAdmin() {
         return getAuthoredByRoles().contains(IFS_ADMINISTRATOR);
     }

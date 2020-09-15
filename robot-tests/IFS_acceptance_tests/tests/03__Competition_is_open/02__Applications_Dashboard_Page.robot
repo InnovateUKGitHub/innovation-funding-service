@@ -14,9 +14,9 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../10__Project_setup/PS_Common.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${quarantine_warning}    This file has been found to be unsafe
@@ -112,7 +112,7 @@ Comp admin should be able to view but not edit the finances for every partner
     When Log in as a different user                  &{collaborator1_credentials}
     Then the user navigates to Your-finances page    ${newOpenComp}
     And the applicant edits the Subcontracting costs section
-    And the user reloads the page
+    And the user should see the element              jQuery = h1:contains("Your project finances")
     When Log in as a different user                  &{Comp_admin1_credentials}
     And the user navigates to the page               ${COMP_MANAGEMENT_APPLICATION_2_OVERVIEW}
     Then the user should see the correct finances change
@@ -251,18 +251,22 @@ The totals in the Key statistics should be correct
     #TODO ADD Check for the beyond 50% counts when we will have test data
 
 the user should should see lead and partners details
-    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("Empire Ltd")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("Empire Ltd")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Business")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Steve Smith")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${lead_applicant}")
-    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("EGGS")+h3:contains("Organisation type")+p:contains("Research")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("46439359578")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("EGGS")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Research")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Pete Tom")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("81877706440")
-    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Business")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Ewan Cormack")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("36267829240")
-    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${organisationLudlowName}")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${organisationLudlowName}")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Jessica Doe")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("15247172589")

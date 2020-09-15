@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
@@ -28,7 +29,10 @@ public class ManagementApplicationViewModel {
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
     private final Long projectId;
-
+    private final boolean externalFinanceUser;
+    private final boolean ktpCompetition;
+    private final boolean projectWithdrawn;
+    private final InterviewFeedbackViewModel interviewFeedbackViewModel;
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
@@ -38,7 +42,10 @@ public class ManagementApplicationViewModel {
                                           boolean canMarkAsIneligible,
                                           boolean canReinstate,
                                           boolean support,
-                                          Long projectId) {
+                                          Long projectId,
+                                          boolean externalFinanceUser,
+                                          boolean projectWithdrawn,
+                                          InterviewFeedbackViewModel interviewFeedbackViewModel) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -48,6 +55,9 @@ public class ManagementApplicationViewModel {
         this.canReinstate = canReinstate;
         this.support = support;
         this.projectId = projectId;
+        this.externalFinanceUser = externalFinanceUser;
+        this.projectWithdrawn = projectWithdrawn;
+        this.interviewFeedbackViewModel = interviewFeedbackViewModel;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -58,7 +68,14 @@ public class ManagementApplicationViewModel {
         this.innovationAreaName = application.getInnovationArea().getName();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.ktpCompetition = competition.isKtp();
     }
+
+    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
+        return interviewFeedbackViewModel;
+    }
+
+    public boolean isProjectWithdrawn() { return projectWithdrawn; }
 
     public ApplicationResource getApplication() {
         return application;
@@ -108,6 +125,9 @@ public class ManagementApplicationViewModel {
         return projectId != null;
     }
 
+    public boolean canViewActivityLog() {
+        return projectId != null && !isExternalFinanceUser();
+    }
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -134,5 +154,13 @@ public class ManagementApplicationViewModel {
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
+    }
+
+    public boolean isExternalFinanceUser() {
+        return externalFinanceUser;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }

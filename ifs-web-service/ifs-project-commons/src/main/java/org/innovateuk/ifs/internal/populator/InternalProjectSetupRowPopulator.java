@@ -33,7 +33,9 @@ public class InternalProjectSetupRowPopulator {
                         competition.getId(),
                         status.getProjectLeadOrganisationName(),
                         status.getProjectNumber(),
-                        getProjectCells(status, competition.getProjectSetupStages(), user, competition.getId())
+                        getProjectCells(status, competition.getProjectSetupStages(), user, competition.getId()),
+                        ProjectActivityStates.COMPLETE == status.getGrantOfferLetterStatus(),
+                        status.isSentToIfsPa()
                 )).collect(Collectors.toList());
     }
 

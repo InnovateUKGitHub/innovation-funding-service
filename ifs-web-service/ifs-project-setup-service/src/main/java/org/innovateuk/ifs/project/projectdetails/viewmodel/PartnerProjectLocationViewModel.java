@@ -10,11 +10,13 @@ public class PartnerProjectLocationViewModel {
     private long projectId;
     private String projectName;
     private long organisationId;
+    private boolean international;
 
-    public PartnerProjectLocationViewModel(long projectId, String projectName, long organisationId) {
+    public PartnerProjectLocationViewModel(long projectId, String projectName, long organisationId, boolean international) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
+        this.international = international;
     }
 
     public long getProjectId() {
@@ -41,6 +43,14 @@ public class PartnerProjectLocationViewModel {
         this.organisationId = organisationId;
     }
 
+    public boolean isInternational() {
+        return international;
+    }
+
+    public void setInternational(boolean international) {
+        this.international = international;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,6 +63,7 @@ public class PartnerProjectLocationViewModel {
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
                 .append(organisationId, that.organisationId)
+                .append(international, that.international)
                 .isEquals();
     }
 
@@ -62,6 +73,7 @@ public class PartnerProjectLocationViewModel {
                 .append(projectId)
                 .append(projectName)
                 .append(organisationId)
+                .append(international)
                 .toHashCode();
     }
 }

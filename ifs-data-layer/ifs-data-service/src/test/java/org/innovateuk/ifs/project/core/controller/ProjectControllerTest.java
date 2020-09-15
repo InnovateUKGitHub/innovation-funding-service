@@ -2,19 +2,23 @@ package org.innovateuk.ifs.project.core.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -64,7 +68,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     public void getProjectUsers() throws Exception {
         List<ProjectUserResource> projectUsers = newProjectUserResource().build(3);
 
-        when(projectServiceMock.getProjectUsers(123)).thenReturn(serviceSuccess(projectUsers));
+        when(projectServiceMock.getProjectUsersByProjectIdAndRoleIn(123L, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(serviceSuccess(projectUsers));
 
         mockMvc.perform(get("/project/{projectId}/project-users", 123))
                 .andExpect(status().isOk())
@@ -97,5 +101,35 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(content().json(toJson(organisationResource)));
 
         verify(projectServiceMock, only()).getLeadOrganisation(projectId);
+    }
+
+    @Test
+    public void getProjectFinanceContacts() throws Exception {
+        Long project1Id = 1L;
+        List<ProjectParticipantRole> projectParticipantRoles = Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+        List<ProjectUserResource> projectFinanceContacts = Collections.singletonList(newProjectUserResource().withId(project1Id).build());
+
+        when(projectServiceMock.getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles)).thenReturn(serviceSuccess(projectFinanceContacts));
+
+        mockMvc.perform(get("/project/{id}/project-finance-contacts", project1Id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectFinanceContacts)));
+
+        verify(projectServiceMock).getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles);
+    }
+
+    @Test
+    public void getProjectFinanceContactsEmptyResults() throws Exception {
+        Long project1Id = -1L;
+        List<ProjectParticipantRole> projectParticipantRoles = Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+        List<ProjectUserResource> projectFinanceContacts = Collections.emptyList();
+
+        when(projectServiceMock.getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles)).thenReturn(serviceSuccess(projectFinanceContacts));
+
+        mockMvc.perform(get("/project/{id}/project-finance-contacts", project1Id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectFinanceContacts)));
+
+        verify(projectServiceMock).getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles);
     }
 }

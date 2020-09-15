@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: competition-mgt-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/competition-mgt-service:${competitionMgtServiceVersion}
               name: competition-mgt-svc
@@ -45,6 +47,8 @@ items:
                 failureThreshold: 1
               imagePullPolicy: Always
               env:
+                - name: IFS_EXTERNAL_ROLE_ENABLED
+                  value: "${IFS_EXTERNAL_ROLE_ENABLED}"
                 - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                   valueFrom:
                     configMapKeyRef:

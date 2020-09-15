@@ -30,8 +30,7 @@ import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceB
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -86,7 +85,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
 
         assertEquals(expectedOrgSizeOptions, actual.getOrganisationSizeOptions());
         assertTrue(actual.isH2020());
-        assertTrue(actual.isShowOrganisationSizeAlert());
+        assertFalse(actual.isShowOrganisationSizeAlert());
         assertTrue(actual.isShowStateAidAgreement());
         assertTrue(actual.isShowHints());
         assertEquals(organisationId, actual.getOrganisationId());

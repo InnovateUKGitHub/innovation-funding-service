@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: survey-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/survey-service:${surveyServiceVersion}
               name: survey-svc

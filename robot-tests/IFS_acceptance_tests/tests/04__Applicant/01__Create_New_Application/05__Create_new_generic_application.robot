@@ -6,8 +6,8 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${competitionName}  Generic competition for TsnCs
@@ -25,7 +25,7 @@ CompAdmin creates a new Generic competition
     [Documentation]  IFS-3261
     [Tags]  HappyPath
     [Setup]  log in as a different user                  &{Comp_admin1_credentials}
-    Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  project-setup-completion-stage  no  1  true  collaborative
+    Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  PROJECT_SETUP  no  1  true  collaborative
     Then get competition id and set open date to yesterday  ${competitionName}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs

@@ -26,8 +26,8 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Submit button disabled when application is incomplete
@@ -72,7 +72,7 @@ Application overview complete status
 
 Applicant dashboard shows correct status
     [Documentation]  IFS-4265
-    Given the user clicks the button/link   link = Applications
+    Given the user clicks the button/link   link = Back to applications
     Then the user should see the element    jQuery = .task:contains("${application_rto_name}") ~ .status:contains("Ready to review and submit")
     [Teardown]  the user clicks the button/link  link = ${application_rto_name}
 
@@ -125,7 +125,6 @@ Status of the submitted application
 *** Keywords ***
 the applicant clicks Yes in the submit modal
     the user clicks the button/link    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link    jQuery = .govuk-button:contains("Yes, I want to submit my application")
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled Without Screenshots    jQuery = .govuk-button:contains("Submit application")
@@ -190,10 +189,11 @@ create new application for submitting
 
 the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}
-    the user navigates to the page    ${server}
-    the user clicks the button/link    link=${application_name}
+    the user navigates to the page                        ${server}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link=${application_name}
     the applicant completes Application Team
-    the user selects Research category  ${rescat}
+    the user selects Research category                    ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
 Your Project costs section is read-only once application is marked as complete

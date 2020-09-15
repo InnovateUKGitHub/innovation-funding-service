@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -32,8 +33,8 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, AddressResource address) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/address?leadOrganisationId=" + leadOrganisationId, address, Void.class);
+    public RestResult<Void> updateProjectAddress(long projectId, AddressResource address) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/address", address, Void.class);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postcode) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postcode=" + postcode, Void.class);
+    public RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, PostcodeAndTownResource postcodeAndTown) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location", postcodeAndTown, Void.class);
     }
 }

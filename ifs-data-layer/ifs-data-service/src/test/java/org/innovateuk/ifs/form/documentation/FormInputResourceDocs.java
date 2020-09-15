@@ -16,7 +16,6 @@ public class FormInputResourceDocs {
             fieldWithPath("wordCount").description("amount of words in the response"),
             fieldWithPath("type").description("type of the form input"),
             fieldWithPath("question").description("id of the question this input belongs to"),
-            fieldWithPath("competition").description("id of the competition the form input belongs to"),
             fieldWithPath("inputValidators").description("list of inputValidator ids"),
             fieldWithPath("description").description("description"),
             fieldWithPath("includedInApplicationSummary")
@@ -28,6 +27,7 @@ public class FormInputResourceDocs {
             fieldWithPath("priority").description("priority of the input, used for rendering purposes only"),
             fieldWithPath("scope").description("the scope for which the input should be rendered"),
             fieldWithPath("allowedFileTypes").description("a set of allowed file types"),
+            fieldWithPath("multipleChoiceOptions").description("choices for multiple choice form input."),
             fieldWithPath("file").description("The file attached to this form input")
     };
 

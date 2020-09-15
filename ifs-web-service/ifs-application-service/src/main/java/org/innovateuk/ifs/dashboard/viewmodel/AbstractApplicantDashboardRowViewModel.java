@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
 /**
  * Applicant dashboard row view model
  */
-public abstract class AbstractApplicantDashboardRowViewModel {
+public abstract class AbstractApplicantDashboardRowViewModel implements BaseAnalyticsViewModel {
 
     protected final String title;
     private final long applicationNumber;
@@ -13,6 +15,16 @@ public abstract class AbstractApplicantDashboardRowViewModel {
         this.title = title;
         this.applicationNumber = applicationNumber;
         this.competitionTitle = competitionTitle;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return applicationNumber;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionTitle;
     }
 
     public long getApplicationNumber() {

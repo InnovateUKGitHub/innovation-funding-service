@@ -111,12 +111,10 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
-    private ThreadViewModelPopulator threadViewModelPopulator;
-
     @Before
     public void setUpData() {
 
-        threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
+        ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationRestService);
         spy(threadViewModelPopulator);
         controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
@@ -144,7 +142,16 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(applicationService.getById(application.getId())).thenReturn(application);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(industrialOrganisation).build();
-        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(), simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId())).thenReturn(newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser).build());
+        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(),
+                simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId()))
+                .thenReturn(newApplicantSectionResource()
+                        .withApplication(application)
+                        .withCompetition(competitionResource)
+                        .withCurrentApplicant(applicant).withApplicants(asList(applicant))
+                        .withSection(newSectionResource()
+                                .withType(SectionType.FINANCE)
+                                .build()).withCurrentUser(loggedInUser)
+                        .build());
         when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -155,9 +162,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(loggedInUser);
     }
 
-
     @Test
-    public void testViewFinanceChecksLandingPage() throws Exception {
+    public void viewFinanceChecksLandingPage() throws Exception {
 
         long projectId = 123L;
         long organisationId = 234L;
@@ -194,7 +200,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     }
 
     @Test
-    public void testViewFinanceChecksLandingPageApproved() throws Exception {
+    public void viewFinanceChecksLandingPageApproved() throws Exception {
 
         long projectId = 123L;
         long organisationId = 234L;
@@ -227,7 +233,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     }
 
     @Test
-    public void testViewExternalEligibilityPage() throws Exception {
+    public void viewExternalEligibilityPage() throws Exception {
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
@@ -265,7 +271,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     }
 
     @Test
-    public void testEligibilityChanges() throws Exception {
+    public void eligibilityChanges() throws Exception {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);

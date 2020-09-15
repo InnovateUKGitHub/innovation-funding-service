@@ -12,7 +12,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -32,10 +32,13 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
@@ -97,27 +100,31 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<QuestionStatusResource>> questionStatusesFuture = async(() -> getQuestionStatuses(application, user, settings));
         Future<List<SectionResource>> sectionsFuture = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
         Future<Optional<ProcessRoleResource>> processRoleFuture = async(() -> getProcessRole(application, user, settings));
-        Future<List<AssessorFormInputResponseResource>> assessorResponseFuture = async(() -> getAssessmentResponses(settings));
+        Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
+
+        if(settings.isIncludeAllAssessorFeedback()) {
+            settings.setIncludeAllAssessorFeedback(data.getAssessmentToApplicationAssessment().size() > 0);
+        }
 
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .map(section -> async(() -> sectionView(section, settings, data)))
+                .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationReadOnlyViewModel(settings, sectionViews);
+        return new ApplicationReadOnlyViewModel(settings, sectionViews, settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO, settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
     }
 
-    private ApplicationSectionReadOnlyViewModel sectionView(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
+    private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         if (!section.getChildSections().isEmpty()) {
             return sectionWithChildren(section, settings, data);
         }
         Set<ApplicationQuestionReadOnlyViewModel> questionViews = section.getQuestions()
                 .stream()
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
-                .map(question ->  populateQuestionViewModel(question, data, settings))
+                .map(question ->  populateQuestionViewModel(competition, question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
         return new ApplicationSectionReadOnlyViewModel(section.getName(), false, questionViews);
     }
@@ -128,9 +135,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationSectionReadOnlyViewModel(section.getName(), true, asSet(finance));
     }
 
-    private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         if (populatorMap.containsKey(question.getQuestionSetupType())) {
-            return populatorMap.get(question.getQuestionSetupType()).populate(question, data, settings);
+            return populatorMap.get(question.getQuestionSetupType()).populate(competition, question, data, settings);
         } else {
             throw new IFSRuntimeException("Populator not found for question type: " + question.getQuestionSetupType().name());
         }
@@ -153,10 +160,18 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisationId).getSuccess();
     }
 
-    private List<AssessorFormInputResponseResource> getAssessmentResponses(ApplicationReadOnlySettings settings) {
+    private List<ApplicationAssessmentResource> getAssessmentResponses(ApplicationResource application, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeAssessment()) {
             return emptyList();
         }
-        return assessorFormInputResponseRestService.getAllAssessorFormInputResponses(settings.getAssessmentId()).getSuccess();
+        if (settings.getAssessmentId() != null) {
+            return singletonList(
+                    assessorFormInputResponseRestService.getApplicationAssessment(application.getId(), settings.getAssessmentId()).getSuccess()
+            );
+        }
+        if (settings.isIncludeAllAssessorFeedback()) {
+            return assessorFormInputResponseRestService.getApplicationAssessments(application.getId()).getSuccess().getAssessments();
+        }
+        return emptyList();
     }
 }

@@ -100,9 +100,9 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
-                ProjectUserInvite projectInvite = projectUserInviteRepository.save(invite.open());
-                return projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
-                    pu.setInvite(projectInvite);
+                invite.open();
+                return projectService.addPartner(invite.getTarget().getId(), user.getId(), invite.getOrganisation().getId()).andOnSuccess(pu -> {
+                    pu.setInvite(invite);
                     projectUserRepository.save(pu.accept());
                     return serviceSuccess();
                 });

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("applicationId", applicationId);
         jsonObj.put("formInputId", formInputId);
         jsonObj.put("value", inputValue);
+        jsonObj.put("multipleChoiceOptionId", JSONObject.NULL.toString());
 
         RestResult<ValidationMessages> result = controller.saveQuestionResponse(jsonObj);
         assertTrue(result.isFailure());
@@ -85,6 +87,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("applicationId", 1);
         jsonObj.put("formInputId", 1);
         jsonObj.put("value", "");
+        jsonObj.put("multipleChoiceOptionId", JSONObject.NULL.toString());
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccess();
         assertThat(errors.getErrors(), hasSize(1));
@@ -99,6 +102,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("userId", 1);
         jsonObj.put("applicationId", 1);
         jsonObj.put("formInputId", 1);
+        jsonObj.put("multipleChoiceOptionId", JSONObject.NULL.toString());
 
         String value = String.join(" ", nCopies(501, "word"));
 
@@ -119,6 +123,26 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("formInputId", 1);
         jsonObj.put("markedAsComplete", 1);
         jsonObj.put("value", "Some text value...");
+        jsonObj.put("multipleChoiceOptionId", JSONObject.NULL.toString());
+
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccess();
+        assertThat(errors.getErrors(), hasSize(0));
+    }
+
+    @Test
+    public void test_saveMultipleChoiceQuestionResponse() {
+
+        Long multipleChoiceOptionId = 1L;
+        String multipleChoiceOptionText = "Yes";
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode jsonObj = mapper.createObjectNode();
+        jsonObj.put("userId", 1);
+        jsonObj.put("applicationId", 1);
+        jsonObj.put("formInputId", 1);
+        jsonObj.put("markedAsComplete", 1);
+        jsonObj.put("value", "Yes");
+        jsonObj.put("multipleChoiceOptionId", multipleChoiceOptionId);
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccess();
         assertThat(errors.getErrors(), hasSize(0));

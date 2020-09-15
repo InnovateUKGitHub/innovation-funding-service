@@ -10,6 +10,7 @@ import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessme
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAs
 import static org.innovateuk.ifs.assessment.builder.CompetitionOpenKeyAssessmentStatisticsResourceBuilder.newCompetitionOpenKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionReadyToOpenKeyAssessmentStatisticsResourceBuilder.newCompetitionReadyToOpenKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -58,7 +60,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
 
     @Test
     public void getReadyToOpenKeyStatisticsByCompetition() {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         CompetitionReadyToOpenKeyAssessmentStatisticsResource keyStatisticsResource =
                 newCompetitionReadyToOpenKeyAssessmentStatisticsResource()
                         .withAssessorsAccepted(1)
@@ -77,15 +79,19 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
 
     @Test
     public void getOpenKeyStatisticsByCompetition() {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         CompetitionOpenKeyAssessmentStatisticsResource keyStatisticsResource =
                 newCompetitionOpenKeyAssessmentStatisticsResource()
                         .withAssessorsAccepted(1)
                         .withAssessorsInvited(2)
                         .build();
 
-        Competition competition = newCompetition()
+        CompetitionAssessmentConfig competitionAssessmentConfig = newCompetitionAssessmentConfig()
                 .withAssessorCount(4)
+                .build();
+
+        Competition competition = newCompetition()
+                .withCompetitionAssessmentConfig(competitionAssessmentConfig)
                 .build();
 
         when(assessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)))

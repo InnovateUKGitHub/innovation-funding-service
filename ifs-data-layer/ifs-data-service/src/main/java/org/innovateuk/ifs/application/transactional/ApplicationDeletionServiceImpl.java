@@ -12,7 +12,6 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -101,6 +99,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         List<NotificationTarget> notificationTargets = processRoles.stream()
                 .filter(ProcessRole::isCollaborator)
                 .map(ProcessRole::getUser)
+                .filter(User::isActive)
                 .map(applicant -> new UserNotificationTarget(applicant.getName(), applicant.getEmail()))
                 .collect(Collectors.toList());
 

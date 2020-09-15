@@ -14,6 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.stream.Collectors;
+
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -21,7 +23,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -76,11 +78,11 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
                 .withActivityState(ProjectState.SETUP)
                 .build();
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), PROJECT_PARTNER)).thenReturn(singletonList(projectUserForUserOnOrganisationOne));
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationTwo.getId(), PROJECT_PARTNER)).thenReturn(singletonList(projectUserForUserOnOrganisationTwo));
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), userNotOnProject.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), PROJECT_PARTNER)).thenReturn(projectUserForUserOnOrganisationOne);
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), PROJECT_PARTNER)).thenReturn(projectUserForUserOnOrganisationTwo);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), userOnProjectForOrganisationOne.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(singletonList(projectUserForUserOnOrganisationOne));
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), userOnProjectForOrganisationTwo.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(singletonList(projectUserForUserOnOrganisationTwo));
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), userNotOnProject.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(emptyList());
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUserForUserOnOrganisationOne);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUserForUserOnOrganisationTwo);
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
     }
 

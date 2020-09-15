@@ -26,11 +26,22 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     private OrganisationPatternMatcher organisationPatternMatcher;
 
     public Optional<Organisation> findOrganisationMatch(OrganisationResource submittedOrganisationResource) {
-        if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
-            return findFirstResearchMatch(submittedOrganisationResource);
+        if (submittedOrganisationResource.isInternational()) {
+            return findFirstInternationalMatch(submittedOrganisationResource);
         } else {
-            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
+            if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
+                return findFirstResearchMatch(submittedOrganisationResource);
+            } else if (OrganisationTypeEnum.isKnowledgeBase(submittedOrganisationResource.getOrganisationTypeEnum())) {
+                return findFirstKnowledgeBaseMatch(submittedOrganisationResource);
+            } else {
+                return findFirstCompaniesHouseMatch(submittedOrganisationResource);
+            }
         }
+    }
+
+    private Optional<Organisation> findFirstInternationalMatch(OrganisationResource submittedOrganisationResource) {
+        return organisationRepository.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(submittedOrganisationResource.getInternationalRegistrationNumber(), submittedOrganisationResource.getName())
+                .filter(found -> organisationPatternMatcher.organisationTypeMatches(found, submittedOrganisationResource));
     }
 
     private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
@@ -49,6 +60,14 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
         return findOrganisationByName(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
                 .findFirst();
+    }
+
+    private Optional<Organisation> findFirstKnowledgeBaseMatch(OrganisationResource submittedOrganisationResource) {
+        return findOrganisationByName(submittedOrganisationResource).stream()
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(
+                        foundOrganisation,
+                        submittedOrganisationResource
+                )).findFirst();
     }
 
     private List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {

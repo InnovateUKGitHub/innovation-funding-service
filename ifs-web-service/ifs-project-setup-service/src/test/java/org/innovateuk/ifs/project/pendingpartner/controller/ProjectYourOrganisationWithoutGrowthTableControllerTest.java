@@ -1,22 +1,24 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormSaver;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.pendingpartner.populator.YourOrganisationViewModelPopulator;
-import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
+import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -61,13 +63,16 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     @Mock
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
+    @Spy
+    private YourOrganisationWithoutGrowthTableFormSaver saver;
+
     @Captor
     ArgumentCaptor<OrganisationFinancesWithoutGrowthTableResource> argCaptor;
 
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource;
-    private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation-without-growth-table";
+    private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation";
 
 
     @Override
@@ -108,7 +113,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     public void updateWithoutGrowthTable() throws Exception {
         returnSuccessForUpdateWithoutGrowthTable();
 
-        mockMvc.perform(postAllFormParameters(new Pair("ignoredParameter","")))
+        mockMvc.perform(postAllFormParameters(Pair.of("ignoredParameter","")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -121,7 +126,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         returnSuccessForUpdateWithoutGrowthTable();
         when(pendingPartnerProgressRestService.markYourOrganisationComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        mockMvc.perform(postAllFormParameters(new Pair("mark-as-complete", "")))
+        mockMvc.perform(postAllFormParameters(Pair.of("mark-as-complete", "")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -161,7 +166,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         verify(pendingPartnerProgressRestService).markYourOrganisationIncomplete(projectId, organisationId);
     }
 
-    private RequestBuilder postAllFormParameters(Pair<String, String> param) {
+    private RequestBuilder postAllFormParameters(Pair<String, String> pair) {
         setupResource();
         return post(viewPageUrl())
             .param("organisationSize", organisationFinancesWithoutGrowthTableResource.getOrganisationSize().toString())
@@ -169,7 +174,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
                 organisationFinancesWithoutGrowthTableResource.getHeadCount().toString())
             .param("turnover",
                 organisationFinancesWithoutGrowthTableResource.getTurnover().toString())
-            .param(param.getKey(), param.getValue());
+            .param(pair.getKey(), pair.getValue());
     }
 
     private void returnSuccessForUpdateWithoutGrowthTable() {

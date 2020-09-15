@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.model;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
  * View model for application details.
  */
-public class ApplicationDetailsViewModel {
+public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     private ApplicationResource application;
 
@@ -25,6 +27,8 @@ public class ApplicationDetailsViewModel {
     private boolean open;
     private boolean complete;
 
+    private boolean ktpCompetition;
+
     public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete) {
         this.application = application;
         this.competitionIsClosingSoon = competition.isClosingSoon();
@@ -35,6 +39,17 @@ public class ApplicationDetailsViewModel {
         this.procurementCompetition = competition.isProcurement();
         this.open = open;
         this.complete = complete;
+        this.ktpCompetition = competition.isKtp();
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return application.getCompetitionName();
     }
 
     public ApplicationResource getApplication() {
@@ -94,4 +109,7 @@ public class ApplicationDetailsViewModel {
         return application.getNoInnovationAreaApplicable();
     }
 
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
 }

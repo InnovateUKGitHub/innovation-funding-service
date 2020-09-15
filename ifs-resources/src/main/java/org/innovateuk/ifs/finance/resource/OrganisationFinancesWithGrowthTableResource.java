@@ -9,9 +9,8 @@ import java.time.YearMonth;
 /**
  * A class used to capture "Your organisation" information including a growth table
  */
-public class OrganisationFinancesWithGrowthTableResource {
+public class OrganisationFinancesWithGrowthTableResource extends AbstractOrganisationFinanceResource {
 
-    private OrganisationSize organisationSize;
     private YearMonth financialYearEnd;
     private Long headCountAtLastFinancialYear;
     private BigDecimal annualTurnoverAtLastFinancialYear;
@@ -29,21 +28,13 @@ public class OrganisationFinancesWithGrowthTableResource {
                                                        BigDecimal annualProfitsAtLastFinancialYear,
                                                        BigDecimal annualExportAtLastFinancialYear,
                                                        BigDecimal researchAndDevelopmentSpendAtLastFinancialYear) {
-        this.organisationSize = organisationSize;
+        super(organisationSize);
         this.financialYearEnd = financialYearEnd;
         this.headCountAtLastFinancialYear = headCountAtLastFinancialYear;
         this.annualTurnoverAtLastFinancialYear = annualTurnoverAtLastFinancialYear;
         this.annualProfitsAtLastFinancialYear = annualProfitsAtLastFinancialYear;
         this.annualExportAtLastFinancialYear = annualExportAtLastFinancialYear;
         this.researchAndDevelopmentSpendAtLastFinancialYear = researchAndDevelopmentSpendAtLastFinancialYear;
-    }
-
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
     }
 
     public YearMonth getFinancialYearEnd() {
@@ -103,7 +94,6 @@ public class OrganisationFinancesWithGrowthTableResource {
         OrganisationFinancesWithGrowthTableResource that = (OrganisationFinancesWithGrowthTableResource) o;
 
         return new EqualsBuilder()
-                .append(organisationSize, that.organisationSize)
                 .append(financialYearEnd, that.financialYearEnd)
                 .append(headCountAtLastFinancialYear, that.headCountAtLastFinancialYear)
                 .append(annualTurnoverAtLastFinancialYear, that.annualTurnoverAtLastFinancialYear)
@@ -116,7 +106,6 @@ public class OrganisationFinancesWithGrowthTableResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(organisationSize)
                 .append(financialYearEnd)
                 .append(headCountAtLastFinancialYear)
                 .append(annualTurnoverAtLastFinancialYear)

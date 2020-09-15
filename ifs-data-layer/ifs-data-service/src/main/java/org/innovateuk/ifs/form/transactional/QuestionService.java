@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.form.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface QuestionService {
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.form.resource.QuestionResource', 'READ')")
     ServiceResult<QuestionResource> getQuestionById(final Long id);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @NotSecured(value = "Everyone can see questions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -46,7 +46,7 @@ public interface QuestionService {
     ServiceResult<QuestionResource> getQuestionByCompetitionIdAndQuestionSetupType(long competitionId,
                                                                                    QuestionSetupType questionSetupType);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @NotSecured(value = "Everyone can see questions", mustBeSecuredByOtherServices = false)
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update a question")

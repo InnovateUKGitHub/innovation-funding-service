@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.populator;
 
-import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
-import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
+import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -48,7 +48,7 @@ public class InterviewFeedbackViewModelPopulatorTest {
         when(interviewAssignmentRestService.findFeedback(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("feedback").build()));
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(role));
 
-        InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, user, true);
+        InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, "CompetitionName", user, true);
 
         assertThat(viewModel.getResponseFilename(), is(equalTo("response")));
         assertThat(viewModel.getFeedbackFilename(), is(equalTo("feedback")));

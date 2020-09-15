@@ -23,13 +23,11 @@ public class AssessorDashboardController {
     @Autowired
     private AssessorDashboardModelPopulator assessorDashboardModelPopulator;
 
-    @PreAuthorize("hasAuthority('assessor')")
-    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/dashboard")
     @NavigationRoot
     public String dashboard(Model model, UserResource loggedInUser) {
 
-        model.addAttribute("model", assessorDashboardModelPopulator.populateModel(loggedInUser.getId()));
+        model.addAttribute("model", assessorDashboardModelPopulator.populateModel(loggedInUser));
         return "assessor-dashboard";
     }
 

@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.application.forms.academiccosts.viewmodel;
 
-public class AcademicCostViewModel {
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
+public class AcademicCostViewModel implements BaseAnalyticsViewModel {
 
     private final String financesUrl;
     private final String applicationName;
+    private final String competitionName;
     private final String organisationName;
     private final long applicationId;
     private final long sectionId;
@@ -14,10 +17,11 @@ public class AcademicCostViewModel {
     private final boolean open;
     private final boolean complete;
 
-    public AcademicCostViewModel(String financesUrl, String applicationName, String organisationName, long applicationId, long sectionId, long organisationId, long applicationFinanceId, boolean applicant, boolean includeVat, boolean open, boolean complete) {
+    public AcademicCostViewModel(String financesUrl, String applicationName, String competitionName, String organisationName, long applicationId, long sectionId, long organisationId, long applicationFinanceId, boolean applicant, boolean includeVat, boolean open, boolean complete) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.organisationName = organisationName;
+        this.competitionName = competitionName;
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.organisationId = organisationId;
@@ -26,6 +30,16 @@ public class AcademicCostViewModel {
         this.includeVat = includeVat;
         this.open = open;
         this.complete = complete;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getFinancesUrl() {
@@ -42,10 +56,6 @@ public class AcademicCostViewModel {
 
     public String getOrganisationName() {
         return organisationName;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
     }
 
     public long getSectionId() {

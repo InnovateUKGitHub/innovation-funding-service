@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
@@ -31,6 +30,7 @@ import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStake
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertFalse;
@@ -45,6 +45,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     private ProjectResource projectResource1;
     private UserResource innovationLeadUserResourceOnProject1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private UserResource competitionFinanceUserResourceOnCompetition;
     private Competition competition;
 
     @Mock
@@ -63,13 +64,15 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();
 
+        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
+        competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRoleGlobal(EXTERNAL_FINANCE).build();
+
         competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
-        projectResource1 = newProjectResource().withApplication(applicationResource1).build();
+        projectResource1 = newProjectResource().withCompetition(competition.getId()).withApplication(applicationResource1).build();
 
-        when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList(innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
@@ -171,6 +174,14 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     }
 
     @Test
+    public void assignedCompetitionFinanceUserCanViewCompetitionStatus() {
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.assignedCompetitionFinanceCanViewCompetitionStatus(competitionResource, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.assignedCompetitionFinanceCanViewCompetitionStatus(competitionResource, competitionFinanceUser()));
+    }
+
+    @Test
     public void internalAdminTeamCanViewProjectStatus() {
         allGlobalRoleUsers.forEach(user -> {
             if (isInternalAdmin(user)) {
@@ -204,5 +215,13 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
         assertTrue(rules.assignedStakeholderCanViewProjectStatus(projectResource1, stakeholderUserResourceOnCompetition));
         assertFalse(rules.assignedStakeholderCanViewProjectStatus(projectResource1, stakeholderUser()));
+    }
+
+    @Test
+    public void assignedCompetitionFinanceUsersCanViewProjectStatus() {
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.assignedCompetitionFinanceUsersCanViewProjectStatus(projectResource1, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.assignedCompetitionFinanceUsersCanViewProjectStatus(projectResource1, competitionFinanceUser()));
     }
 }

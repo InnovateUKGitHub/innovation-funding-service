@@ -27,6 +27,9 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.interviewStage.required}")
     private Boolean hasInterviewStage;
 
+    @NotNull(message = "{validation.assessorsform.averageAssessorScore.required}")
+    private Boolean averageAssessorScore;
+
     @NotNull(message = "{validation.assessorsform.assessorFinanceView.required}")
     private AssessorFinanceView assessorFinanceView;
 
@@ -60,6 +63,14 @@ public class AssessorsForm extends CompetitionSetupForm {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public Boolean getAverageAssessorScore() {
+        return averageAssessorScore;
+    }
+
+    public void setAverageAssessorScore(Boolean averageAssessorScore) {
+        this.averageAssessorScore = averageAssessorScore;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {

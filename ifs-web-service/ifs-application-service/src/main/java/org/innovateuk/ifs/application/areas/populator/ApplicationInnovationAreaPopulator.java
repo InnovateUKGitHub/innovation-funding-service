@@ -21,6 +21,7 @@ public class ApplicationInnovationAreaPopulator {
         innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationResource.getId()).getSuccess());
         innovationAreaViewModel.setQuestionId(questionId);
         innovationAreaViewModel.setApplicationId(applicationResource.getId());
+        innovationAreaViewModel.setCompetitionName(applicationResource.getCompetitionName());
         innovationAreaViewModel.setApplicationName(applicationResource.getName());
 
         setInnovationAreaChoice(applicationResource, innovationAreaViewModel);

@@ -41,7 +41,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     @Value("${ifs.data.companies.house.url}")
     private String companiesHouseUrl = null;
 
-    private static final int SEARCH_ITEMS_MAX = 10;
+    private static final int SEARCH_ITEMS_MAX = 20;
 
     private static final String COMPANIES_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
 

@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: assessment-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/assessment-service:${assessmentServiceVersion}
               name: assessment-svc

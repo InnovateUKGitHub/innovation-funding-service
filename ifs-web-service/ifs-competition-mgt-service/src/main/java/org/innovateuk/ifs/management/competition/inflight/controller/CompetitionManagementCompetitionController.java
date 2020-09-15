@@ -58,9 +58,13 @@ public class CompetitionManagementCompetitionController {
         if (competition.getCompetitionStatus().isInFlight()) {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition, user));
             return "competition/competition-in-flight";
-        } if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
+        }
+        if (competition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP)) {
             String url = format("project-setup-management/competition/%s/status/all", competition.getId());
             return navigationUtils.getRedirectToSameDomainUrl(request, url);
+        }
+        if (competition.getCompletionStage().equals(CompetitionCompletionStage.COMPETITION_CLOSE)) {
+            return String.format("redirect:/competition/%d/previous", competitionId);
         } else {
             throw new IncorrectStateForPageException("Unexpected competition state for competition: " + competitionId);
         }

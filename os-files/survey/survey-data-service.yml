@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: survey-data-service
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/survey-data-service:${surveyDataServiceVersion}
               name: survey-data-service

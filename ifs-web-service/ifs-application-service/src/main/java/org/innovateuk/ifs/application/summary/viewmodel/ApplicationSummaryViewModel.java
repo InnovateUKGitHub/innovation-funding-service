@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
 
-public class ApplicationSummaryViewModel {
+public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
     private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
     private final ApplicationResource application;
     private final CompetitionResource competition;
@@ -21,8 +22,10 @@ public class ApplicationSummaryViewModel {
     private final String innovationAreaName;
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
+    private final boolean ktpCompetition;
+    private final InterviewFeedbackViewModel interviewFeedbackViewModel;
 
-    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn) {
+    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, InterviewFeedbackViewModel interviewFeedbackViewModel) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.application = application;
         this.competition = competition;
@@ -36,6 +39,15 @@ public class ApplicationSummaryViewModel {
         this.innovationAreaName = application.getInnovationArea().getName();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
+        this.ktpCompetition = competition.isKtp();
+        this.interviewFeedbackViewModel = interviewFeedbackViewModel;
+    }
+
+    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() { return interviewFeedbackViewModel; }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
     }
 
     public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {
@@ -90,4 +102,7 @@ public class ApplicationSummaryViewModel {
         return previousApplicationTitle;
     }
 
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
 }

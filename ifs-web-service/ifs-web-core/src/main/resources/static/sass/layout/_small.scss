@@ -139,6 +139,10 @@ th {
   text-align:center;
 }
 
+.verticalalignmiddle {
+  vertical-align:middle;
+}
+
 col {
   &.border {
     border-right: 1px solid $govuk-border-colour;

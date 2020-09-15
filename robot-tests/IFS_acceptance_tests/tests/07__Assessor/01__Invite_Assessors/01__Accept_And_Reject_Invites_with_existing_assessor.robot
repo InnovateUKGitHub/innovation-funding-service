@@ -32,7 +32,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}           ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
@@ -57,7 +57,7 @@ Assessor dashboard contains the correct competitions
 User can view the competition brief
     [Documentation]    INFUND-5494
     Given the user clicks the button/link        link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    When the user clicks the button/link         link = View competition brief
+    When the user clicks the button/link         link = View competition brief (opens in a new window)
     Then The user should get a competition brief window
     And the user should see competition details
     And The user closes the competition brief

@@ -1,27 +1,12 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
-import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.project.security.ProjectApplicationPermissionRules;
-import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
-
-    private ApplicationPermissionRules applicationRules;
-    private ProjectApplicationPermissionRules projectApplicationPermissionRules;
-    private ApplicationLookupStrategy applicationLookupStrategy;
-
-    @Before
-    public void lookupPermissionRules() {
-        applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
-        projectApplicationPermissionRules = getMockPermissionRulesBean(ProjectApplicationPermissionRules.class);
-        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
-    }
 
     @Test
     public void test_getApplicationSummariesByCompetitionId() {

@@ -24,7 +24,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${public_content_competition_name}      Public content competition
@@ -473,7 +473,7 @@ User creates a new competition
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
     When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
     And the user selects the Terms and Conditions
-    And the user fills in the CS Milestones     project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Milestones     PROJECT_SETUP   ${month}   ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css = .editor  This is a Summary description

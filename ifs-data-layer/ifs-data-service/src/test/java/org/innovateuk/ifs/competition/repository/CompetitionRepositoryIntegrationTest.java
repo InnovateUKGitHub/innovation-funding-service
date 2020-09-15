@@ -560,7 +560,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long projectId = results.get(0).getProjectId();
         Long organisationId = results.get(0).getOrganisationId();
         ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                organisationId);
+                organisationId).get();
 
         // get all of the open queries and close them
         List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(),
@@ -622,7 +622,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long organisationId = results.get(0).getOrganisationId();
 
         ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                organisationId);
+                organisationId).get();
 
         // get all of the open queries and close them
         List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(),
@@ -655,7 +655,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long organisationId = results.get(0).getOrganisationId();
 
         ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                organisationId);
+                organisationId).get();
 
         // get all of the open queries and close them
         List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(),
@@ -703,7 +703,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long projectId = results.get(0).getProjectId();
         Long organisationId = results.get(0).getOrganisationId();
         ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                organisationId);
+                organisationId).get();
 
         // get all of the open queries and close them
         List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(),
@@ -758,7 +758,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long projectId = results.get(0).getProjectId();
         Long organisationId = results.get(0).getOrganisationId();
         ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                organisationId);
+                organisationId).get();
 
         // get all of the open queries and close them
         List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(),
@@ -857,9 +857,9 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .getOrganisation().getId().equals(organisationId)).get();
 
         ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                organisationId);
+                organisationId).get();
         ProjectFinance otherPartnerFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId,
-                otherPartnerOrganisation.getOrganisation().getId());
+                otherPartnerOrganisation.getOrganisation().getId()).get();
 
         // now assign one of the queries to the other partner so that they are both coming from the same partner
         List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(),

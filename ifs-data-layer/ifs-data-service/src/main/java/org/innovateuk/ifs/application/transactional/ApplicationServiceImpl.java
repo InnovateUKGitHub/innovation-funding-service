@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.google.common.collect.Sets;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
@@ -12,7 +14,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -27,9 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -59,6 +63,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationValidationUtil applicationValidationUtil;
+
+    @Autowired
+    private ApplicationNotificationService applicationNotificationService;
+
+    @Autowired
+    private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
+
+    @Autowired
+    private OrganisationAddressRepository organisationAddressRepository;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -104,6 +117,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application = applicationRepository.save(application);
         generateProcessRolesForApplication(user, Role.LEADAPPLICANT, application, organisationId);
 
+        linkAddressesToOrganisation(organisationId, application.getId());
+
         return serviceSuccess(applicationMapper.mapToResource(application));
     }
 
@@ -118,7 +133,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ValidationMessages> saveApplicationDetails(final Long applicationId,
-                                                                     ApplicationResource applicationResource) {
+                                                                    ApplicationResource applicationResource) {
         return find(() -> getApplication(applicationId)).andOnSuccessReturn(foundApplication
                 -> saveApplication(foundApplication, applicationResource));
     }
@@ -132,9 +147,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ValidationMessages validateApplication(Application application) {
-       return applicationValidationUtil.isApplicationDetailsValid(application)
-               .stream()
-               .reduce(ValidationMessages.noErrors(), (vm1, vm2) -> {vm1.addAll(vm2); return vm1;});
+        return applicationValidationUtil.isApplicationDetailsValid(application)
+                .stream()
+                .reduce(ValidationMessages.noErrors(), (vm1, vm2) -> {
+                    vm1.addAll(vm2);
+                    return vm1;
+                });
     }
 
     private void saveApplicationDetails(Application application, ApplicationResource resource) {
@@ -153,7 +171,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long applicationId,
                                                                             ZonedDateTime date) {
-        return getOpenApplication(applicationId).andOnSuccessReturn(existingApplication -> {
+        return getApplication(applicationId).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
@@ -184,6 +202,35 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> reopenApplication(long applicationId) {
+        return find(application(applicationId)).andOnSuccess((application) -> {
+            return validateCompetitionIsOpen(application).andOnSuccess(() -> {
+                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
+                    validateApplicationIsSubmitted(application).andOnSuccess(() -> {
+                        applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
+                        application.setSubmittedDate(null);
+                        applicationRepository.save(application);
+                        return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
+                    });
+                });
+            });
+        });
+    }
+
+    private ServiceResult<Void> validateCompetitionIsOpen(Application application) {
+        return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) ? serviceSuccess() : serviceFailure(COMPETITION_NOT_OPEN);
+    }
+
+    private ServiceResult<Void> validateApplicationIsSubmitted(Application application) {
+        return application.isSubmitted() ? serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+    }
+
+    private ServiceResult<Void> validateFundingDecisionHasNotBeSent(Application application) {
+        return application.getFundingDecision() == null ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_REOPENED);
     }
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,
@@ -292,55 +339,42 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 competitionMapper.mapToResource(application.getCompetition()));
     }
 
+    @Override
+    public ServiceResult<Void> linkAddressesToOrganisation(long organisationId, long applicationId) {
+        return find(application(applicationId), organisation(organisationId)).andOnSuccessReturnVoid((application, organisation) -> {
+            if (organisation.isInternational()) {
+                Optional<ApplicationOrganisationAddress> existingApplicationAddress = applicationOrganisationAddressRepository.findByApplicationIdAndOrganisationAddressOrganisationIdAndOrganisationAddressAddressTypeId(applicationId, organisationId, INTERNATIONAL.getId());
+                if (existingApplicationAddress.isPresent()) {
+                    // organisation already has an address on this application.
+                    return;
+                }
+                Optional<OrganisationAddress> organisationAddress = organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId());
+                if (organisationAddress.isPresent()) {
+                    OrganisationAddress organisationAddressToLinkToApplication;
+
+                    //if the organisation has an unlinked international address then this will be their first application and this is the address created first.
+                    if (organisationAddress.get().getApplicationAddresses().isEmpty()) {
+                        organisationAddressToLinkToApplication = organisationAddress.get();
+                    } else {
+                        organisationAddressToLinkToApplication = organisationAddressRepository.save(copyNewOrganisationAddress(organisationAddress.get()));
+                    }
+
+                    ApplicationOrganisationAddress applicationOrganisationAddress = new ApplicationOrganisationAddress(organisationAddressToLinkToApplication, application);
+                    applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
+                }
+            }
+        });
+    }
+
+    private OrganisationAddress copyNewOrganisationAddress(OrganisationAddress organisationAddress) {
+        return new OrganisationAddress(organisationAddress.getOrganisation(),
+                new Address(organisationAddress.getAddress()),
+                organisationAddress.getAddressType());
+    }
+
     private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {
         List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
-    private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
-
-        Collection<ApplicationState> applicationStates;
-
-        switch (filter.toUpperCase()) {
-            case "INELIGIBLE":
-                applicationStates = ApplicationState.ineligibleStates;
-                break;
-
-            case "REJECTED":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
-                break;
-
-            case "SUCCESSFUL":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.APPROVED);
-                break;
-
-            case "ALL":
-            default:
-                applicationStates = ApplicationState.previousStates;
-                break;
-        }
-
-        return applicationStates;
-
-    }
-
-    private Sort getApplicationSortField(String sortBy) {
-        Sort result = APPLICATION_SORT_FIELD_MAP.get(sortBy);
-        return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
-    }
-
-    private PreviousApplicationResource convertToPreviousApplicationResource(Application application) {
-
-        ApplicationResource applicationResource = applicationMapper.mapToResource(application);
-        Organisation leadOrganisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
-
-        return new PreviousApplicationResource(
-                applicationResource.getId(),
-                applicationResource.getName(),
-                leadOrganisation.getName(),
-                applicationResource.getApplicationState(),
-                applicationResource.getCompetition()
-        );
-
-    }
 }

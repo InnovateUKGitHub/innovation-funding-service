@@ -34,8 +34,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6492 - Accept Terms & Conditions for New Partners in Project Setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 
 *** Variables ***
@@ -326,7 +326,7 @@ lead able to submit only exploitation plan when all partners removed from projec
 the same organisation isnt able to join the project
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
-    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
     the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
@@ -335,7 +335,7 @@ the same organisation isnt able to join the project
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
-    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
     the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
@@ -353,7 +353,7 @@ A new organisation logs in and sees the project
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
@@ -401,17 +401,18 @@ Non lead partners complete the Project team section
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 Lead partner completes the Project team section
-    log in as a different user               &{lead_applicant_credentials}
-    the user clicks the button/link          link = ${PS_PD_Application_Title}
-    the user should see the element          jQuery = ul li:contains("Project team") span:contains("To be completed")
-    the user clicks the button/link          link = Project team
-    the user selects their finance contact   financeContact2
-    the user clicks the button/link          link = Project manager
+    log in as a different user                                         &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                                    link = ${PS_PD_Application_Title}
+    the user should see the element                                    jQuery = ul li:contains("Project team") span:contains("To be completed")
+    the user clicks the button/link                                    link = Project team
+    the user selects their finance contact                             financeContact2
+    the user clicks the button/link                                    link = Project manager
     the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
-    the user selects the radio button        projectManager   projectManager2
-    the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Set up your project
-    the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+    the user selects the radio button                                  projectManager   projectManager2
+    the user clicks the button/link                                    jQuery = button:contains("Save project manager")
+    the user clicks the button/link                                    link = Set up your project
+    the user should see the element                                    jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user
     log in as a different user        &{internal_finance_credentials}

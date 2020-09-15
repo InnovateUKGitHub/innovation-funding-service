@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -35,17 +32,20 @@ public class CompetitionInFlightViewModel {
     private boolean interviewPanelEnabled;
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
+    private CompetitionCompletionStage competitionCompletionStage;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
+                                        CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
                                         boolean readOnly) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
+        this.competitionCompletionStage = competitionResource.getCompletionStage();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
-        this.fundingDecisionAllowedBeforeAssessment = !competitionResource.hasAssessmentStage();
+        this.fundingDecisionAllowedBeforeAssessment = !competitionResource.isHasAssessmentStage();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
@@ -55,10 +55,10 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
-        this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel() != null ? competitionResource.isHasAssessmentPanel() : false;
-        this.interviewPanelEnabled = competitionResource.isHasInterviewStage() != null ? competitionResource.isHasInterviewStage() : false;
-        this.assessorFinanceView = competitionResource.getAssessorFinanceView();
-        this.competitionHasAssessmentStage = competitionResource.hasAssessmentStage();
+        this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
+        this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
+        this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
+        this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
     }
 
     public Long getCompetitionId() {
@@ -115,6 +115,10 @@ public class CompetitionInFlightViewModel {
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public CompetitionCompletionStage getCompetitionCompletionStage() {
+        return competitionCompletionStage;
     }
 
     public boolean isAssessmentPanelEnabled() {

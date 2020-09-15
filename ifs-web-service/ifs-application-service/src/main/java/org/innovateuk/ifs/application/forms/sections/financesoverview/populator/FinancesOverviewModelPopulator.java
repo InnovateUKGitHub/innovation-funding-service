@@ -63,6 +63,7 @@ public class FinancesOverviewModelPopulator {
         Double researchParticipationPercentage = applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess();
         return new FinancesOverviewViewModel(
                 applicationId,
+                competition.getName(),
                 application.getName(),
                 researchParticipationPercentage,
                 competition.getMaxResearchRatio(),

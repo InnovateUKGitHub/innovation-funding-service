@@ -45,7 +45,7 @@ public class GrantTransferDetailsViewModelPopulator {
 
         boolean complete = isComplete(application, organisation, questionId);
         boolean open = application.isOpen() && competition.isOpen();
-        return new GrantTransferDetailsViewModel(application.getId(), application.getName(), questionId,
+        return new GrantTransferDetailsViewModel(application.getId(), application.getCompetitionName(), application.getName(), questionId,
                 open, complete, actionTypes);
     }
 

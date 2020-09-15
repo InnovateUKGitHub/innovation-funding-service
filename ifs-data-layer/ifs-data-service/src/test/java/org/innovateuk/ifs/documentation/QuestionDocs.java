@@ -16,7 +16,6 @@ public class QuestionDocs {
             fieldWithPath("assignEnabled").description("boolean to indicate if the question can be assigned").optional(),
             fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses").optional(),
             fieldWithPath("priority").description("priority of the question, used for rendering purposes only").optional(),
-            fieldWithPath("formInputs").description("list of the inputs used to answer the question").optional(),
             fieldWithPath("questionNumber").description("number of the question").optional(),
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
             fieldWithPath("competition").description("Id of the competition").optional(),
@@ -31,7 +30,6 @@ public class QuestionDocs {
             .withShortName("name")
             .withDescription("description")
             .withPriority(1)
-            .withCompetition(1L)
             .withSection(1L)
             .withQuestionNumber("1")
             .withAssessorMaximumScore(10);

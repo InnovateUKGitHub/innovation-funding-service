@@ -21,7 +21,7 @@ class SpendProfileCalculations {
 
     private BigDecimal getTotalOverhead() {
         return spendProfile.getSpendProfileFigures().getCosts().stream()
-                .filter(cost -> FinanceRowType.OVERHEADS.getName().equals(cost.getCostCategory().getName()))
+                .filter(cost -> FinanceRowType.OVERHEADS.getDisplayName().equals(cost.getCostCategory().getName()))
                 .map(Cost::getValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

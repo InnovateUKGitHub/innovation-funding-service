@@ -1,14 +1,18 @@
 package org.innovateuk.ifs.file.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.MediaType;
+
+import java.io.Serializable;
 
 /**
  * A Resource representation of a FileEntry.  Subclasses of this class will be the representations
  * of subclasses of FileEntry.
  */
-public class FileEntryResource {
+public class FileEntryResource implements Serializable {
 
     private Long id;
     private String name;
@@ -66,6 +70,10 @@ public class FileEntryResource {
         this.filesizeBytes = filesizeBytes;
     }
 
+    @JsonIgnore
+    public String getHumanReadableFileSize() {
+        return FileUtils.byteCountToDisplaySize(getFilesizeBytes());
+    }
 
     @Override
     public boolean equals(Object o) {

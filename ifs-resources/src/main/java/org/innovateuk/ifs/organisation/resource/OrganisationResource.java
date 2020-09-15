@@ -14,13 +14,13 @@ public class  OrganisationResource {
     private Long id;
     private String name;
     private String companiesHouseNumber;
-    private List<Long> processRoles = new ArrayList<>();
-    private List<Long> applicationFinances = new ArrayList<>();
-    private List<OrganisationAddressResource> addresses = new ArrayList<>();
-    private List<Long> users = new ArrayList<>();
     private Long organisationType;
     private String organisationTypeName;
     private String organisationTypeDescription;
+    private boolean isInternational;
+    private String internationalRegistrationNumber;
+    private String registrationNumber;
+    private List<OrganisationAddressResource> addresses = new ArrayList<>();
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
@@ -48,44 +48,12 @@ public class  OrganisationResource {
         this.companiesHouseNumber = companiesHouseNumber;
     }
 
-    public List<Long> getProcessRoles() {
-        return processRoles;
-    }
-
-    public void setProcessRoles(List<Long> processRoles) {
-        this.processRoles = processRoles;
-    }
-
-    public List<Long> getApplicationFinances() {
-        return applicationFinances;
-    }
-
-    public void setApplicationFinances(List<Long> applicationFinances) {
-        this.applicationFinances = applicationFinances;
-    }
-
-    public List<OrganisationAddressResource> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<OrganisationAddressResource> addresses) {
-        this.addresses = addresses;
-    }
-
     public Long getOrganisationType() {
         return organisationType;
     }
 
     public void setOrganisationType(Long organisationType) {
         this.organisationType = organisationType;
-    }
-
-    public List<Long> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<Long> users) {
-        this.users = users;
     }
 
     public String getOrganisationTypeName() {
@@ -102,6 +70,38 @@ public class  OrganisationResource {
 
     public void setOrganisationTypeDescription(String organisationTypeDescription) {
         this.organisationTypeDescription = organisationTypeDescription;
+    }
+
+    public boolean isInternational() {
+        return isInternational;
+    }
+
+    public void setInternational(boolean international) {
+        isInternational = international;
+    }
+
+    public String getInternationalRegistrationNumber() {
+        return internationalRegistrationNumber;
+    }
+
+    public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
+        this.internationalRegistrationNumber = internationalRegistrationNumber;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    public List<OrganisationAddressResource> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<OrganisationAddressResource> addresses) {
+        this.addresses = addresses;
     }
 
     @JsonIgnore

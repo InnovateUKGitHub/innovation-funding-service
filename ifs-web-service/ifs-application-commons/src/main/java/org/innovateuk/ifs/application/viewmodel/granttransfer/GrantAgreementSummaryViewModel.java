@@ -6,8 +6,8 @@ public class GrantAgreementSummaryViewModel extends AbstractLeadOnlyViewModel {
 
     private final String filename;
 
-    public GrantAgreementSummaryViewModel(Long questionId, Long applicationId, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly, String filename) {
-        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadOnly);
+    public GrantAgreementSummaryViewModel(Long questionId, Long applicationId, String competitionName, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly, String filename) {
+        super(questionId, applicationId, competitionName, closed, complete, canMarkAsComplete, allReadOnly);
         this.filename = filename;
     }
 

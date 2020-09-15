@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -42,9 +42,7 @@
                         <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
                            class="govuk-link"
                            target="_blank"
-                           rel="external noopener noreferrer"
-                           aria-describedby="competition-brief-hint">See competition brief</a>
-                        <span id="competition-brief-hint">(opens in a new window)</span>.
+                           rel="external noopener noreferrer">See competition brief (opens in a new window)</a>.
                     </p>
 
                     <h3 class="govuk-heading-s">You should reject this invitation if:</h3>

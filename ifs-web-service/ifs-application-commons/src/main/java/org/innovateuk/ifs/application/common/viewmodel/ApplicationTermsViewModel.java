@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
  * Model attributes for the application terms view. Optionally in the context of an organisation.
  */
-public class ApplicationTermsViewModel {
-    private final long applicationId;
+public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final long competitionId;
     private final long questionId;
+    private final String competitionName;
+    private final long applicationId;
     private final String competitionTermsTemplate;
     private final boolean collaborativeApplication;
     private final Boolean termsAccepted;
@@ -20,6 +23,7 @@ public class ApplicationTermsViewModel {
     private final boolean additionalTerms;
 
     public ApplicationTermsViewModel(long applicationId,
+                                     String competitionName,
                                      long competitionId,
                                      long questionId,
                                      String competitionTermsTemplate,
@@ -30,6 +34,7 @@ public class ApplicationTermsViewModel {
                                      boolean termsAcceptedByAllOrganisations,
                                      boolean additionalTerms) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.competitionId = competitionId;
         this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
@@ -43,6 +48,7 @@ public class ApplicationTermsViewModel {
     }
 
     public ApplicationTermsViewModel(long applicationId,
+                                     String competitionName,
                                      long competitionId,
                                      long questionId,
                                      String competitionTermsTemplate,
@@ -50,6 +56,7 @@ public class ApplicationTermsViewModel {
                                      boolean termsAcceptedByAllOrganisation,
                                      boolean additionalTerms) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.competitionId = competitionId;
         this.questionId = questionId;
         this.competitionTermsTemplate = competitionTermsTemplate;
@@ -62,8 +69,14 @@ public class ApplicationTermsViewModel {
         this.showHeaderAndFooter = false;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public long getCompetitionId() {

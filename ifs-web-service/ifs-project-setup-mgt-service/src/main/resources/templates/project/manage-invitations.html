@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Manage invitations to external users|"/>
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Project details',linkUrl=@{/competition/{competitionId}/status/all(competitionId=${model.competitionId})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage invitations to external users',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+
+        <p class="govuk-body">You can invite people to create a new external user account, so they can be added to this live project.</p>
+
+        <p class="govuk-body">
+            <a class="govuk-link" th:href="@{/project/{projectId}/grants/invite/send(projectId=${model.projectId})}">Invite a new external user</a>
+        </p>
+
+        <p class="govuk-body">
+            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.totalGrants}">9</span>
+            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Pending invitations</span>
+        </p>
+
+        <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header width-100">Name</th>
+                            <th class="govuk-table__header width-150">Role</th>
+                            <th class="govuk-table__header width-200">Email address</th>
+                            <th class="govuk-table__header"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="grant : ${model.grants}">
+                            <td class="govuk-table__cell verticalaligntop" th:text="${grant.userName}"></td>
+                            <td class="govuk-table__cell verticalaligntop" th:text="${grant.grantsInviteRole.displayName}"></td>
+                            <td class="govuk-table__cell verticalaligntop ifs-table__email" th:text="${grant.email}"></td>
+                            <td class="govuk-table__cell buttoncolumn alignright">
+                                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                <button name="resend-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Resend invitation</button>
+                                    <span class="vertical-line"></span>
+                                <button name="delete-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-left-1" type="submit">Cancel invitation</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

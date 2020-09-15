@@ -4,17 +4,18 @@ Documentation   IFS-984 Innovation Leads user journey navigation
 ...             IFS-191 Innovation Lead Stakeholder view filtered dashboard
 ...
 ...             IFS-1308 Innovation Leads: Project Setup
+...
+...             IFS-7429 Innovation lead has access to Project Details after Finance reviewer is assigned
 Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
 Suite Teardown  the user closes the browser
 Force Tags      InnovationLead  HappyPath
 Resource        ../../resources/defaultResources.robot
-Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource        ../10__Project_setup/PS_Common.robot
+Resource        ../../resources/common/Competition_Commons.robot
+Resource        ../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Innovation Lead should see Submitted and Ineligible Applications
     [Documentation]  IFS-984
-    [Tags]
     Given the user navigates to submitted application page
     And the user navigates to ineligible application page
     When the user clicks the button/link       jQuery = a:contains("Back")
@@ -27,7 +28,13 @@ Innovation lead can see competitions assigned to him only
     When The Competition Admin assigns the Innovation Lead to a competition
     Then Innovation lead see the assigned competitions
     And the total calculation in dashboard should be correct    Project setup  //section[1]/ul/li
-    [Teardown]  The user clicks the button/link  link = Dashboard
+
+Innovation lead is able to access Project details once a finance contact is assigned
+    [Documentation]  IFS-7429
+    Given finance reviewer is added to the project    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    When log in as a different user                   &{innovation_lead_two}
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    [Teardown]  The user clicks the button/link       link = Dashboard
 
 Innovation lead can only search for applications assigned to them
     [Documentation]  IFS-4564
@@ -70,7 +77,7 @@ the user navigates to submitted application page
     the user navigates to the page             ${CA_Live}
     the user should see all live competitions
     the user navigates to the page             ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}
-    the user should not see the element        jQuery = a:contains("View and update competition setup")
+    the user should not see the element        jQuery = a:contains("View and update competition details")
     the user clicks the button/link            link = Applications: Submitted, ineligible
     the user clicks the button/link            link = Submitted applications
     the user should see the element            jQuery = td:contains("${IN_ASSESSMENT_APPLICATION_4_TITLE}") ~ td:contains("57,803")

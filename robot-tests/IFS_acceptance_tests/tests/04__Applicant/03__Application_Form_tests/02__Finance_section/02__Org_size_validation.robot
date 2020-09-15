@@ -10,7 +10,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../Applicant_Commons.robot
+Resource          ../../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Before org size is selected, your funding link is not available

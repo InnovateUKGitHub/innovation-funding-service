@@ -17,23 +17,22 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
     private final String fundingBody;
     private final ZonedDateTime applicationDeadline;
     private final String innovationSector;
-    private final boolean ifsAdmin;
     private final boolean competitionCanHaveProjects;
     private final List<PreviousApplicationResource> applications;
 
     public PreviousCompetitionViewModel(CompetitionResource competition,
-                                            List<PreviousApplicationResource> applications,
-                                            List<InternalProjectSetupRow> rows,
-                                            boolean hasProjectFinanceRole,
-                                            boolean ifsAdmin) {
-        super(competition, rows, hasProjectFinanceRole);
+                                        List<PreviousApplicationResource> applications,
+                                        List<InternalProjectSetupRow> rows,
+                                        boolean hasProjectFinanceRole,
+                                        boolean ifsAdmin,
+                                        boolean externalFinanceUser) {
+        super(competition, rows, hasProjectFinanceRole, externalFinanceUser, ifsAdmin);
         this.competitionType = competition.getCompetitionTypeName();
         this.fundingBody = "Innovate UK";
         this.applicationDeadline = toUkTimeZone(competition.getEndDate());
         this.innovationSector = competition.getInnovationSectorName();
         this.competitionCanHaveProjects = CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
         this.applications = applications;
-        this.ifsAdmin = ifsAdmin;
     }
 
     @Override
@@ -59,10 +58,6 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
 
     public List<PreviousApplicationResource> getApplications() {
         return applications;
-    }
-
-    public boolean isIfsAdmin() {
-        return ifsAdmin;
     }
 
     public boolean isCompetitionCanHaveProjects() {

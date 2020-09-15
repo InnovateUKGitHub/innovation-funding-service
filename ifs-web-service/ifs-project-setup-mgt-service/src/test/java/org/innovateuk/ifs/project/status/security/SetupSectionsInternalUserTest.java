@@ -161,7 +161,8 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void checkAccessToFinanceChecksSectionAsNonFinanceTeamMembers() {
         stream(Role.values()).forEach(role -> {
-            if (role != PROJECT_FINANCE) {
+            if (role != PROJECT_FINANCE && role != EXTERNAL_FINANCE) {
+                System.out.println(role.getDisplayName());
                 List<Role> roles = singletonList(Role.getByName(role.getName()));
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessFinanceChecksSection(nonFinanceTeam));

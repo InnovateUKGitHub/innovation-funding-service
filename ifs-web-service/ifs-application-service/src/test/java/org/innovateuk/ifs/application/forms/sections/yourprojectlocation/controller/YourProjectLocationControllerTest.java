@@ -8,7 +8,9 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.Yo
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -47,6 +49,9 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     @Mock
     private UserRestService userRestServiceMock;
 
+    @Mock
+    private OrganisationRestService organisationRestServiceMock;
+
     private long applicationId = 123L;
     private long sectionId = 456L;
     private long organisationId = 789L;
@@ -62,7 +67,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     private CommonYourProjectFinancesViewModel commonFinancesViewModel =
-            new CommonYourProjectFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true, false);
+            new CommonYourProjectFinancesViewModel("/finances", "Competition name", "Application name", 1L, 2L, false, false, true, false, false);
 
     @Test
     public void viewPage() throws Exception {
@@ -75,9 +80,15 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         assertViewPageSuccessful(true);
     }
 
+    @Test
+    public void viewPageKta() throws Exception {
+        setLoggedInUser(kta);
+        assertViewPageSuccessful(true);
+    }
+
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
-        YourProjectLocationForm form = new YourProjectLocationForm("S2 5AB");
+        YourProjectLocationForm form = new YourProjectLocationForm("S2 5AB", null);
 
         when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, internalUser)).thenReturn(commonFinancesViewModel);
         when(formPopulatorMock.populate(applicationId, organisationId)).thenReturn(form);
@@ -90,7 +101,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        assertThat(model.get("commonFinancesModel")).matches(futureMatcher(commonFinancesViewModel));
+        assertThat(model.get("model")).matches(futureMatcher(commonFinancesViewModel));
         assertThat(model.get("form")).matches(futureMatcher(form));
 
         verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
@@ -100,26 +111,46 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     @Test
-    public void update() throws Exception {
-        assertUpdateSuccessful(postcode);
+    public void updatePostcode() throws Exception {
+        assertUpdatePostcodeSuccessful(postcode);
     }
 
     @Test
     public void updatePostcodeTooShortButNoValidationYet() throws Exception {
-        assertUpdateSuccessful(postcodeTooShort);
+        assertUpdatePostcodeSuccessful(postcodeTooShort);
     }
 
     @Test
     public void updatePostcodeTooLongButNoValidationYet() throws Exception {
-        assertUpdateSuccessful(postcodeTooLong);
+        assertUpdatePostcodeSuccessful(postcodeTooLong);
     }
 
     @Test
     public void updatePostcodeWithTrimming() throws Exception {
-        assertUpdateSuccessful(postcodeNeedsTrimming);
+        assertUpdatePostcodeSuccessful(postcodeNeedsTrimming);
     }
 
-    private void assertUpdateSuccessful(String postcode) throws Exception {
+    @Test
+    public void updateInternationalTown() throws Exception {
+        assertUpdateInternationalTownSuccessful("Amsterdam", "Amsterdam");
+    }
+
+    @Test
+    public void updateInternationalTownWithTrimming() throws Exception {
+        assertUpdateInternationalTownSuccessful("Amsterdam", "      Amsterdam  ");
+    }
+
+    @Test
+    public void updateInternationalTownFixingCasing() throws Exception {
+        assertUpdateInternationalTownSuccessful("Amsterdam", "aMsTeRdAm");
+    }
+
+    @Test
+    public void updateInternationalTownFixingCasingForMultipleWords() throws Exception {
+        assertUpdateInternationalTownSuccessful("The Hague", "the hague");
+    }
+
+    private void assertUpdatePostcodeSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -128,6 +159,8 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
                 restSuccess(applicationFinance));
+
+        when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(restSuccess(OrganisationResourceBuilder.newOrganisationResource().build()));
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
@@ -145,27 +178,55 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         verifyNoMoreInteractionsWithMocks();
     }
 
+    private void assertUpdateInternationalTownSuccessful(String persistedTown, String givenTown) throws Exception {
+
+        when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
+                restSuccess(applicationFinance));
+
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
+
+        when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
+                restSuccess(applicationFinance));
+
+        when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(restSuccess(OrganisationResourceBuilder.newOrganisationResource().build()));
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
+                .param("town", givenTown))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(yourFinancesRedirectUrl))
+                .andReturn();
+
+        ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
+        assertThat(applicationFinanceBeingUpdated.getInternationalLocation()).isEqualTo(persistedTown);
+
+        verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
+        verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+
+        verifyNoMoreInteractionsWithMocks();
+    }
+
     @Test
     public void autosave() throws Exception {
-        assertAutosaveSuccessful(postcode);
+        assertAutosavePostcodeSuccessful(postcode);
     }
 
     @Test
     public void autosavePostcodeTooShortButNoValidationYet() throws Exception {
-        assertAutosaveSuccessful(postcodeTooShort);
+        assertAutosavePostcodeSuccessful(postcodeTooShort);
     }
 
     @Test
     public void autosavePostcodeTooLongButNoValidationYet() throws Exception {
-        assertAutosaveSuccessful(postcodeTooLong);
+        assertAutosavePostcodeSuccessful(postcodeTooLong);
     }
 
     @Test
     public void autosaveWithTrimming() throws Exception {
-        assertAutosaveSuccessful(postcodeNeedsTrimming);
+        assertAutosavePostcodeSuccessful(postcodeNeedsTrimming);
     }
 
-    private void assertAutosaveSuccessful(String postcode) throws Exception {
+    private void assertAutosavePostcodeSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -201,6 +262,9 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     private void assertMarkAsCompleteSuccessful(String postcode) throws Exception {
+
+        when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(
+                restSuccess(OrganisationResourceBuilder.newOrganisationResource().build()));
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -251,7 +315,10 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
     private void assertPostcodeValidationErrorsWhenMarkingAsComplete(String invalidPostcode) throws Exception {
         
-        YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim());
+        YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim(), null);
+
+        when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(
+                restSuccess(OrganisationResourceBuilder.newOrganisationResource().build()));
 
         when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(commonFinancesViewModel);
 
@@ -261,7 +328,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 .param("mark-as-complete", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("application/sections/your-project-location/your-project-location"))
-                .andExpect(model().attribute("commonFinancesModel", commonFinancesViewModel))
+                .andExpect(model().attribute("model", commonFinancesViewModel))
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
 
@@ -322,6 +389,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 formPopulatorMock,
                 applicationFinanceRestServiceMock,
                 sectionServiceMock,
-                userRestServiceMock);
+                userRestServiceMock,
+                organisationRestServiceMock);
     }
 }

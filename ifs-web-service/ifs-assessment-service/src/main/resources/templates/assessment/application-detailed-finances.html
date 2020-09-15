@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding'" />
     </head>
@@ -74,7 +74,7 @@
                 </th:block>
 
                 <th:block th:if="${model.academic}" th:with="model=${costsViewModel}" th:object="${form}">
-                    <th:block th:insert="application/academic-costs-fragments :: costs" />
+                    <th:block th:insert="application/academic-costs-fragments :: costs (form=${form}, readOnly=${true}, internal=${true})" />
                 </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

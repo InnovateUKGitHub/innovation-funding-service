@@ -13,14 +13,17 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -30,6 +33,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Component
 public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
@@ -42,7 +48,14 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     @Autowired
     private OrganisationRepository organisationRepository;
 
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private FinanceChecksGenerator financeChecksGenerator;
+
     @Override
+    @Transactional
     public BigDecimal getResearchParticipationPercentageFromProject(long projectId){
         List<ProjectFinanceResource> applicationFinanceResources = this.getFinanceChecksTotals(projectId);
 
@@ -68,8 +81,9 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectFinanceResource> getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId) {
-        return find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId()), notFoundError(ProjectFinance.class)).
+        return getProjectFinanceForOrganisation(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId()).
                 andOnSuccessReturn(
                         projectFinance -> {
                             ProjectFinanceResource projectFinanceResource = null;
@@ -82,21 +96,32 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
                 );
     }
 
-    @Override
-    public List<ProjectFinanceResource> getFinanceChecksTotals(long projectId) {
-        List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
-        List<ProjectFinanceResource> financeResources = new ArrayList<>();
+    private ServiceResult<ProjectFinance> getProjectFinanceForOrganisation(Long projectId, long organisationId) {
+        Optional<ProjectFinance> maybeProjectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        return maybeProjectFinance
+                .map(ServiceResult::serviceSuccess)
+                .orElseGet(() -> generateFinanceCheckEntitiesForProjectOrganisation(projectId, organisationId));
+    }
 
-        finances.forEach(finance -> {
-            ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
-            OrganisationTypeFinanceHandler organisationFinanceHandler =
-                    organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getProject().getApplication().getCompetition().getId(), finance.getOrganisation().getOrganisationType().getId());
-            EnumMap<FinanceRowType, FinanceRowCostCategory> costs =
-                    new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinances(financeResource.getId()));
-            financeResource.setFinanceOrganisationDetails(costs);
-            financeResources.add(financeResource);
-        });
-        return financeResources;
+    @Override
+    @Transactional
+    public List<ProjectFinanceResource> getFinanceChecksTotals(long projectId) {
+        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccessReturn(project -> {
+            List<ProjectFinanceResource> financeResources = new ArrayList<>();
+            project.getPartnerOrganisations().stream()
+                    .map(PartnerOrganisation::getOrganisation)
+                    .map(organisation -> getProjectFinanceForOrganisation(projectId, organisation.getId()).getSuccess())
+                    .forEach(finance -> {
+                        ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
+                        OrganisationTypeFinanceHandler organisationFinanceHandler =
+                                organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getProject().getApplication().getCompetition().getId(), finance.getOrganisation().getOrganisationType().getId());
+                        EnumMap<FinanceRowType, FinanceRowCostCategory> costs =
+                                new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinances(financeResource.getId()));
+                        financeResource.setFinanceOrganisationDetails(costs);
+                        financeResources.add(financeResource);
+                    });
+            return financeResources;
+        }).getSuccess();
     }
 
     private void setProjectFinanceDetails(ProjectFinanceResource projectFinanceResource, Competition competition) {
@@ -108,5 +133,14 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges =
                 organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
         projectFinanceResource.setCostChanges(costChanges);
+    }
+
+    private ServiceResult<ProjectFinance> generateFinanceCheckEntitiesForProjectOrganisation(long projectId, long organisationId) {
+        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project ->
+            find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccess(organisation ->
+                financeChecksGenerator.createFinanceChecksFigures(project, organisation).andOnSuccess((projectFinance) ->
+                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+                                financeChecksGenerator.createMvpFinanceChecksFigures(project, organisation, costCategoryType)
+                                        .andOnSuccessReturn(() -> projectFinance)))));
     }
 }

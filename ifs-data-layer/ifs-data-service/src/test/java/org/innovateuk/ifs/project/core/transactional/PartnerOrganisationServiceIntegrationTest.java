@@ -128,8 +128,9 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .withOrganisation(empire, ludlow)
                 .withStatus(ACCEPTED, PENDING)
                 .build(2);
-        project = newProject()
+        project = projectRepository.save(newProject()
                 .with(id(null))
+                .withProjectProcess(null)
                 .withApplication(application)
                 .withDateSubmitted(ZonedDateTime.now())
                 .withDuration(6L)
@@ -144,41 +145,40 @@ public class PartnerOrganisationServiceIntegrationTest extends BaseAuthenticatio
                 .withTargetStartDate(now())
                 .withProjectUsers(projectUsers)
                 .withSpendProfileSubmittedDate(ZonedDateTime.now())
-                .build();
-        Project savedProject = projectRepository.save(project);
+                .build());
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
                 .with(id(null))
-                .withProject(savedProject)
+                .withProject(project)
                 .withOrganisation(empire, ludlow)
                 .withLeadOrganisation(true, false)
                 .build(2);
         partnerOrganisationRepository.save(partnerOrganisations.get(0));
         partnerOrganisationRepository.save(partnerOrganisations.get(1));
 
-        projectProcessRepository.save(newProjectProcess()
+        project.setProjectProcess(projectProcessRepository.save(newProjectProcess()
                 .with(id(null))
-                .withProject(savedProject)
+                .withProject(project)
                 .withProjectUser(projectUsers.get(0))
                 .withActivityState(ProjectState.SETUP)
-                .build());
+                .build()));
         eligibilityProcessRepository.save(new EligibilityProcess(projectUsers.get(0), partnerOrganisations.get(0), EligibilityState.REVIEW));
         viabilityProcessRepository.save(new ViabilityProcess(projectUsers.get(0), partnerOrganisations.get(0), ViabilityState.REVIEW));
-        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(0), savedProject, ProjectDetailsState.PENDING));
-        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(0), savedProject, SpendProfileState.PENDING));
-        GOLProcessRepository.save(new GOLProcess(projectUsers.get(0), savedProject, GrantOfferLetterState.PENDING));
+        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(0), project, ProjectDetailsState.PENDING));
+        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(0), project, SpendProfileState.PENDING));
+        GOLProcessRepository.save(new GOLProcess(projectUsers.get(0), project, GrantOfferLetterState.PENDING));
 
         projectProcessRepository.save(newProjectProcess()
                 .with(id(null))
-                .withProject(savedProject)
+                .withProject(project)
                 .withProjectUser(projectUsers.get(1))
                 .withActivityState(ProjectState.SETUP)
                 .build());
         eligibilityProcessRepository.save(new EligibilityProcess(projectUsers.get(1), partnerOrganisations.get(1), EligibilityState.REVIEW));
         viabilityProcessRepository.save(new ViabilityProcess(projectUsers.get(1), partnerOrganisations.get(1), ViabilityState.REVIEW));
-        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(1), savedProject, ProjectDetailsState.PENDING));
-        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(1), savedProject, SpendProfileState.PENDING));
-        GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), savedProject, GrantOfferLetterState.PENDING));
+        projectDetailsProcessRepository.save(new ProjectDetailsProcess(projectUsers.get(1), project, ProjectDetailsState.PENDING));
+        spendProfileProcessRepository.save(new SpendProfileProcess(projectUsers.get(1), project, SpendProfileState.PENDING));
+        GOLProcessRepository.save(new GOLProcess(projectUsers.get(1), project, GrantOfferLetterState.PENDING));
     }
 
     @Rollback

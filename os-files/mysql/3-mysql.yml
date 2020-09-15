@@ -18,6 +18,8 @@ items:
         labels:
           deploymentconfig: mysql
       spec:
+        imagePullSecrets:
+          - name: imagePullSecretsName
         containers:
         - env:
           - name: MYSQL_DATABASE

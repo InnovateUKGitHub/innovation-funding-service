@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+
 /**
  * Question defines database relations and a model to use client side and server side.
  */
@@ -198,5 +200,9 @@ public class Question {
 
     public boolean isScope() {
         return this.questionSetupType == QuestionSetupType.SCOPE;
+    }
+
+    public boolean isCompetitionOpen() {
+        return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
     }
 }

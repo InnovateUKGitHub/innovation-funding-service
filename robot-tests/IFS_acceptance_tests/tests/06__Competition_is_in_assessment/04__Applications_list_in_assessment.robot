@@ -20,7 +20,7 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${Social_media}   ${application_ids["Living with Social Media"]}

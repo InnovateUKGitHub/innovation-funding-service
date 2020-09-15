@@ -1,14 +1,18 @@
 package org.innovateuk.ifs.registration.form;
 
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+import org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 
 /**
  * This object is used for the account registration form. When the form is submitted the data is
@@ -17,7 +21,8 @@ import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_P
  */
 
 public class RegistrationForm extends BaseBindingResultTarget {
-
+    public interface PhoneNumberValidationGroup {}
+    public interface TermsValidationGroup {}
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotBlank(message = "{validation.standard.email.required}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
@@ -29,7 +34,8 @@ public class RegistrationForm extends BaseBindingResultTarget {
     })
     private String password;
 
-    private String title;
+    @Valid
+    private AddressForm addressForm;
 
     @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
@@ -47,14 +53,23 @@ public class RegistrationForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
+    @NotBlank(message = "{validation.standard.phonenumber.required}", groups = PhoneNumberValidationGroup.class)
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}", groups = PhoneNumberValidationGroup.class)
     private String phoneNumber;
 
-    @NotBlank(message = "{validation.account.termsandconditions.required}")
+    @NotBlank(message = "{validation.account.termsandconditions.required}", groups = TermsValidationGroup.class)
     private String termsAndConditions;
 
     private Boolean allowMarketingEmails;
+
+    public RegistrationForm() {
+    }
+
+    public RegistrationForm(String firstName, String lastName, String password) {
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public String getPassword() {
         return password;
@@ -75,10 +90,6 @@ public class RegistrationForm extends BaseBindingResultTarget {
     public RegistrationForm withEmail(String email) {
         this.email = email;
         return this;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public String getFirstName() {
@@ -119,5 +130,24 @@ public class RegistrationForm extends BaseBindingResultTarget {
 
     public void setAllowMarketingEmails(Boolean allowMarketingEmails) {
         this.allowMarketingEmails = allowMarketingEmails;
+    }
+
+    public AddressForm getAddressForm() {
+        return addressForm;
+    }
+
+    public void setAddressForm(AddressForm addressForm) {
+        this.addressForm = addressForm;
+    }
+
+    public UserCreationResourceBuilder constructUserCreationResource() {
+        return anUserCreationResource()
+                .withEmail(email)
+                .withPassword(password)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withPhoneNumber(phoneNumber)
+                .withAllowMarketingEmails(allowMarketingEmails == null ? false : allowMarketingEmails)
+                .withAgreedTerms("1".equals(termsAndConditions)); // this is weird.
     }
 }

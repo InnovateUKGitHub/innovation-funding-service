@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -8,6 +11,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectteam.viewmodel.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +37,19 @@ public class ProjectTeamViewModelPopulator {
     private ProjectInviteRestService projectInviteRestService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
+        List<ProjectUserResource> projectUsers = projectService.getDisplayProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
@@ -52,7 +62,8 @@ public class ProjectTeamViewModelPopulator {
         boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) || projectIsNotActive;
 
         List<ProjectTeamOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
-                .map(org -> mapToProjectOrganisationViewModel(projectUsers,
+                .map(org -> mapToProjectOrganisationViewModel(projectId,
+                        projectUsers,
                         invitedUsers,
                         org,
                         org.equals(leadOrganisation),
@@ -87,13 +98,17 @@ public class ProjectTeamViewModelPopulator {
                         invite.getId(),
                         false,
                         false,
-                        invite.getId()
+                        invite.getId(),
+                        null
                 ))
                 .collect(toList());
     }
 
     private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
-        return user.hasRole(PROJECT_FINANCE)
+        boolean isSingle = competitionRestService.getCompetitionById(project.getCompetition())
+                .getSuccess()
+                .getCollaborationLevel() == CollaborationLevel.SINGLE;
+        return !isSingle && user.hasRole(PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }
@@ -109,12 +124,16 @@ public class ProjectTeamViewModelPopulator {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
-    private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean userCanAddAndResend) {
+    private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(long projectId, List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, boolean isLead, boolean userCanAddAndResend) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
                 user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                 invite -> invite.getOrganisation().equals(organisation.getId()));
-        return new ProjectTeamOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation, userCanAddAndResend), organisation.getName(), organisation.getId(), isLead, userCanAddAndResend, null);
+        AddressResource address = null;
+        if (organisation.isInternational()) {
+            address = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisation.getId()).getSuccess().getInternationalAddress();
+        }
+        return new ProjectTeamOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation, userCanAddAndResend), organisation.getName(), organisation.getId(), isLead, userCanAddAndResend, null, address);
     }
 
     private List<AbstractProjectTeamRowViewModel> mapUsersToViewModelRows(List<ProjectUserResource> users, List<ProjectUserInviteResource> invites, boolean userCanAddAndResend) {

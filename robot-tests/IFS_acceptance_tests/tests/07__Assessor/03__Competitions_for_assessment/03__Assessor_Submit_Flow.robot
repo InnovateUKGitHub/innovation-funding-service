@@ -26,7 +26,7 @@ Suite Setup       The user logs-in in new browser  apc-assessor-user1@example.co
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../07__Assessor/Assessor_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Test Cases ***
 Summary:All the sections are present

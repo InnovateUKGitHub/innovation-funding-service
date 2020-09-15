@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.security.ApplicationInvitePermissionRules;
@@ -13,13 +14,13 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.application.transactional.ApplicationServiceSecurityTest.verifyApplicationRead;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Testing how the secured methods in ApplicationInviteService interact with Spring Security
@@ -30,11 +31,15 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     ApplicationInvitePermissionRules invitePermissionRules;
     InviteOrganisationPermissionRules inviteOrganisationPermissionRules;
+    ApplicationPermissionRules applicationPermissionRules;
+    ApplicationLookupStrategy applicationLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         invitePermissionRules = getMockPermissionRulesBean(ApplicationInvitePermissionRules.class);
         inviteOrganisationPermissionRules = getMockPermissionRulesBean(InviteOrganisationPermissionRules.class);
+        applicationPermissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 
     @Test
@@ -52,18 +57,8 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getInvitesByApplication() {
-        long applicationId = 1L;
-
-        when(classUnderTestMock.getInvitesByApplication(applicationId))
-                .thenReturn(serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
-
-        final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication
-                (applicationId);
-
-        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
-
-        assertTrue(results.getSuccess().isEmpty());
+        verifyApplicationRead(applicationLookupStrategy, applicationPermissionRules,
+                (applicationId) -> classUnderTest.getInvitesByApplication(applicationId));
     }
 
     @Test

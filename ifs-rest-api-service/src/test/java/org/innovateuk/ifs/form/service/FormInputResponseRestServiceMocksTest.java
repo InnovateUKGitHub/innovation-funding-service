@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,14 +52,36 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
                 put("userId", 123L).put("applicationId", 456L).
                 put("formInputId", 789L).
                 put("value", "Very good answer!").
-                put("ignoreEmpty", false);
+                put("ignoreEmpty", false).
+                put("multipleChoiceOptionId", Long.getLong(null));
 
         List<Error> returnedResponses = asList(new Error("A returned string", BAD_REQUEST), new Error("A returned string 2", BAD_REQUEST));
         ValidationMessages validationMessages = new ValidationMessages(returnedResponses);
 
         setupPostWithRestResultExpectations(formInputResponseRestURL + "/save-question-response/", ValidationMessages.class, entityUpdates, validationMessages, OK);
 
-        ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccess();
+        ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", null,false).getSuccess();
+        Assert.assertEquals(returnedResponses, responses.getErrors());
+    }
+
+    @Test
+    public void saveMultipleChoiceQuestionResponse() {
+
+        long multipleChoiceOptionId = 1L;
+
+        ObjectNode entityUpdates = new ObjectMapper().createObjectNode().
+                put("userId", 123L).put("applicationId", 456L).
+                put("formInputId", 789L).
+                put("value", "Yes").
+                put("ignoreEmpty", false).
+                put("multipleChoiceOptionId", multipleChoiceOptionId);
+
+        List<Error> returnedResponses = asList(new Error("A returned string", BAD_REQUEST), new Error("A returned string 2", BAD_REQUEST));
+        ValidationMessages validationMessages = new ValidationMessages(returnedResponses);
+
+        setupPostWithRestResultExpectations(formInputResponseRestURL + "/save-question-response/", ValidationMessages.class, entityUpdates, validationMessages, OK);
+
+        ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Yes", multipleChoiceOptionId,false).getSuccess();
         Assert.assertEquals(returnedResponses, responses.getErrors());
     }
 

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
-import org.innovateuk.ifs.registration.controller.AcceptProjectInviteController;
+import org.innovateuk.ifs.registration.projectinvite.controller.AcceptProjectInviteController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.registration.controller.AcceptProjectInviteController.*;
+import static org.innovateuk.ifs.registration.projectinvite.controller.AcceptProjectInviteController.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;

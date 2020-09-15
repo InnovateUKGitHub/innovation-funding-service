@@ -8,7 +8,11 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +22,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * ApplicationFinancePermissionRules are applying rules for seeing / updating the application
@@ -33,9 +37,28 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @PermissionRule(value = "READ", description = "The consortium can see the application finances of their own organisation")
     public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplication(applicationFinanceResource, user);
+    }
+
+    @PermissionRule(value = "READ", description = "The projectUsers can see the application finances of their own organisation")
+    public boolean projectUsersCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isAProjectUserForApplication(applicationFinanceResource, user);
+    }
+
+    @PermissionRule(value = "READ", description = "The projectUsers can see the application finances of their own organisation")
+    public boolean externalFinanceUsersCanSeeTheApplicationFinancesForApplicationsTheyAreAssignedTo(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        Optional<Project> project = projectRepository.findByApplicationId(applicationFinanceResource.getApplication());
+
+        if (project.isPresent()) {
+            return userIsExternalFinanceOnCompetitionForProject(project.get().getId(), user.getId());
+        }
+
+        return false;
     }
 
     @PermissionRule(value = "READ", description = "An assessor can see the application finances for organisations in the applications they assess")
@@ -57,6 +80,11 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     public boolean stakeholdersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         Application application = applicationRepository.findById(applicationFinanceResource.getApplication()).get();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "A kta can see the application finances for organisations in the applications they assess")
+    public boolean ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isKta(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
@@ -128,6 +156,22 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return isLeadApplicant || isCollaborator;
     }
 
+    private boolean isAProjectUserForApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        Optional<Project> project = projectRepository.findByApplicationId(applicationFinanceResource.getApplication());
+
+        if (project.isPresent()) {
+
+            return project.get().getProjectUsers().stream()
+                    .map(ProjectUser::getUser)
+                    .map(User::getId)
+                    .filter(id -> id.equals(user.getId()))
+                    .findAny()
+                    .isPresent();
+        }
+
+        return false;
+    }
+
     private boolean isAConsortiumMemberOnApplication(final Long applicationId, final UserResource user) {
         final boolean isLeadApplicant = checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository);
@@ -144,9 +188,9 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     private boolean hasDetailedView(long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
-        if (application.isPresent()){
+        if (application.isPresent()) {
             Competition competition = competitionRepository.findById(application.get().getCompetition().getId()).get();
-            return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
+            return competition.getCompetitionAssessmentConfig().getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
         }
         return false;
     }

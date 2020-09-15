@@ -7,8 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableCircuitBreaker
@@ -19,6 +22,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class Application extends SpringBootServletInitializer {
 
     private static final Log LOG = LogFactory.getLog(Application.class);
+
+    @Bean
+    public static ConversionService conversionService() {
+        return new DefaultFormattingConversionService();
+    }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

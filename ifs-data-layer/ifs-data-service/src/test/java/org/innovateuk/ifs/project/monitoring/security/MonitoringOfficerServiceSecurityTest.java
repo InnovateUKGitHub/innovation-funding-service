@@ -81,9 +81,22 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
             verify(rules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verify(rules).stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verify(rules).monitoringOfficersCanViewThemselves(project, getLoggedInUser());
+            verify(rules).competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
+
+    @Test
+    public void isMonitoringOfficer() {
+        UserResource user = newUserResource().build();
+        when(lookup.findById(user.getId())).thenReturn(user);
+
+        assertAccessDenied(() -> classUnderTest.isMonitoringOfficer(user.getId()), () -> {
+            verify(rules).usersCanSeeIfTheyAreMonitoringOfficerOnProjects(user, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
     @Override
     protected Class<? extends MonitoringOfficerService> getClassUnderTest() {
         return MonitoringOfficerServiceImpl.class;

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 
@@ -43,4 +44,12 @@ public class OrganisationAddressBuilder extends BaseBuilder<OrganisationAddress,
     public OrganisationAddressBuilder withOrganisation(Organisation organisation){
         return with(orgAddress -> orgAddress.setOrganisation(organisation));
     }
+
+    public OrganisationAddressBuilder withApplicationAddresses(List<ApplicationOrganisationAddress>... applicationAddresseses){
+        return withArray((applicationAddresses, organisationAddress) -> {
+            organisationAddress.setApplicationAddresses(applicationAddresses);
+            applicationAddresses.forEach(address -> address.setOrganisationAddress(organisationAddress));
+        }, applicationAddresseses);
+    }
+
 }

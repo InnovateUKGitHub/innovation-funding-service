@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Documents - ${model.projectName}|" />
 </head>
@@ -17,11 +17,11 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:if="${model.projectManager}">
-	       <p class="govuk-body govuk-!-margin-top-6">As Project Manager, you can upload and submit additional documents to support your application.</p>
+	       <p class="govuk-body govuk-!-margin-top-6">You can upload and submit additional documents to support your application.</p>
         </th:block>
 
         <th:block th:unless="${model.projectManager}">
-            <p class="govuk-body govuk-!-margin-top-6">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
+            <p class="govuk-body govuk-!-margin-top-6"> Only the project manager can upload and submit additional documents to support your<th:block th:text="${model.IsProcurement() ? ' ' : ' grant '}"></th:block>application.</p>
         </th:block>
 
         <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject()}">These documents should be reviewed by all partners in the project team.</p>

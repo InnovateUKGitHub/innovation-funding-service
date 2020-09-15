@@ -2,8 +2,10 @@ package org.innovateuk.ifs.management.competition.inflight.populator;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionInFlightStatsViewModel;
@@ -32,6 +34,9 @@ public class CompetitionInFlightModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
+    @Autowired
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     @Autowired
@@ -45,11 +50,13 @@ public class CompetitionInFlightModelPopulator {
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition, UserResource user) {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccess();
         CompetitionInFlightStatsViewModel statsViewModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competition);
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
         long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, competition.getId()).getSuccess();
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
         return new CompetitionInFlightViewModel(
                 competition,
+                competitionAssessmentConfigResource,
                 simpleMap(milestones, MilestonesRowViewModel::new),
                 changesSinceLastNotify,
                 statsViewModel,

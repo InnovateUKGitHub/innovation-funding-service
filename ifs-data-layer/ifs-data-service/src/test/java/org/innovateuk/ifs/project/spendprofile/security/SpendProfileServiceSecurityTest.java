@@ -48,32 +48,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
+            if (role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
                     classUnderTest.generateSpendProfile(123L);
                     fail();
-                } catch (AccessDeniedException e) {
-                    // expected behaviour
-                }
-            }
-        });
-    }
-
-    @Test
-    public void generateSpendProfileForPartnerOrganisation() {
-
-        asList(Role.values()).forEach(role -> {
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
-            setLoggedInUser(userWithRole);
-
-            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
-                classUnderTest.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
-            } else {
-                try {
-                    classUnderTest.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
-                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
                 } catch (AccessDeniedException e) {
                     // expected behaviour
                 }

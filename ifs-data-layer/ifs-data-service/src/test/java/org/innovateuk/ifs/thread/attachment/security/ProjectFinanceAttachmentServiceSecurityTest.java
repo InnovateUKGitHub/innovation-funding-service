@@ -15,7 +15,6 @@ import org.junit.Test;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecurityTest<ProjectFinanceAttachmentService> {
@@ -37,7 +36,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     }
 
     @Test
-    public void test_upload() throws Exception {
+    public void upload() throws Exception {
         when(projectLookupStrategy.getProjectResource(77L))
                 .thenReturn(newProjectResource().withId(77L).build());
 
@@ -48,13 +47,15 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
                             .projectFinanceCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
                     verify(attachmentPermissionsRules)
                             .projectPartnersCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(attachmentPermissionsRules)
+                            .competitionFinanceCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
 
                     verifyNoMoreInteractions(attachmentPermissionsRules);
                 });
     }
 
     @Test
-    public void test_findOne() throws Exception {
+    public void findOne() throws Exception {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -68,12 +69,14 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
                     .projectFinanceUsersCanFetchAnyAttachment(isA(AttachmentResource.class), eq(user));
             verify(attachmentPermissionsRules)
                     .financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
+            verify(attachmentPermissionsRules)
+                    .competitionFinanceUsersCanFetchAnyAttachment(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
     }
 
     @Test
-    public void test_downloadAttachment() throws Exception {
+    public void downloadAttachment() throws Exception {
         UserResource user = new UserResource();
         setLoggedInUser(user);
         when(attachmentLookupStrategy.findById(3L))
@@ -84,13 +87,15 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
                     .projectFinanceUsersCanDownloadAnyAttachment(isA(AttachmentResource.class), eq(user));
             verify(attachmentPermissionsRules)
                     .financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
+            verify(attachmentPermissionsRules)
+                    .competitionFinanceUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), eq(user));
             verifyNoMoreInteractions(attachmentPermissionsRules);
         });
 
     }
 
     @Test
-    public void test_deleteAttachment() throws Exception {
+    public void deleteAttachment() throws Exception {
         UserResource user = new UserResource();
         setLoggedInUser(user);
         when(attachmentLookupStrategy.findById(3L))

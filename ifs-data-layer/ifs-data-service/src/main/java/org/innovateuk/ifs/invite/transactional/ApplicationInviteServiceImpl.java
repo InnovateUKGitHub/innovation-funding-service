@@ -54,7 +54,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     private static final String EDIT_EMAIL_FIELD = "stagedInvite.email";
 
     enum Notifications {
-        INVITE_COLLABORATOR
+        INVITE_COLLABORATOR,
+        INVITE_KTA,
+        REMOVE_KTA
     }
 
     @Autowired
@@ -231,23 +233,23 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             return false;
         }
 
-        return !simpleAnyMatch(
-                application.getProcessRoles(),
-                processRole -> processRole.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId())
-        );
+        return !application.getProcessRoles()
+                .stream()
+                .filter(p -> p.getOrganisationId() != null)
+                .anyMatch(p -> p.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId()));
     }
 
     private void deleteOrganisationFinanceData(Organisation organisation, Application application) {
         if (organisation != null) {
-            ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-            if (finance != null) {
-                if (finance.getGrowthTable() != null) {
-                    growthTableRepository.delete(finance.getGrowthTable());
+            Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            if (finance.isPresent()) {
+                if (finance.get().getGrowthTable() != null) {
+                    growthTableRepository.delete(finance.get().getGrowthTable());
                 }
-                if (finance.getEmployeesAndTurnover() != null) {
-                    employeesAndTurnoverRepository.delete(finance.getEmployeesAndTurnover());
+                if (finance.get().getEmployeesAndTurnover() != null) {
+                    employeesAndTurnoverRepository.delete(finance.get().getEmployeesAndTurnover());
                 }
-                applicationFinanceRepository.delete(finance);
+                applicationFinanceRepository.delete(finance.get());
             }
         }
         applicationProgressService.updateApplicationProgress(application.getId());
@@ -287,6 +289,8 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         }
         return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
+
+
 
     private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {
         if (inviteOrganisationResource.getOrganisation() != null || StringUtils.isNotBlank(inviteOrganisationResource.getOrganisationName())

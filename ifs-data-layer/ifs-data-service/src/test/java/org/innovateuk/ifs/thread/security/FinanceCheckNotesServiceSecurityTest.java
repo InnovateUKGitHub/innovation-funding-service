@@ -39,19 +39,20 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void test_create() {
+    public void create() {
         final NoteResource noteResource = new NoteResource(null, null, null, null, null);
 
         assertAccessDenied(
                 () -> classUnderTest.create(noteResource),
                 () -> {
                     verify(noteRules).onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(isA(NoteResource.class), isA(UserResource.class));
+                    verify(noteRules).externalFinanceUsersCanCreateQueries(isA(NoteResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(noteRules);
                 });
     }
 
     @Test
-    public void test_findOne() {
+    public void findOne() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -65,7 +66,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void test_findAll() {
+    public void findAll() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -79,11 +80,13 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         assertEquals(0, results.getSuccess().size());
 
         verify(noteRules, times(2)).onlyInternalUsersCanViewNotes(isA(NoteResource.class), eq(user));
+        verify(noteRules, times(2)).compFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
+        verify(noteRules, times(2)).externalFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verifyNoMoreInteractions(noteRules);
     }
 
     @Test
-    public void test_addPost()  {
+    public void addPost()  {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -92,6 +95,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
             verify(noteRules).onlyProjectFinanceUsersCanAddPosts(isA(NoteResource.class), eq(user));
+            verify(noteRules).externalFinanceUsersCanAddPosts(isA(NoteResource.class), eq(user));
             verifyNoMoreInteractions(noteRules);
         });
     }

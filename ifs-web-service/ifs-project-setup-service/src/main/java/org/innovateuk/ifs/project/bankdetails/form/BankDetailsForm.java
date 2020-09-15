@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.bankdetails.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
+import org.innovateuk.ifs.project.correspondenceaddress.form.ProjectDetailsAddressForm;
 
 import javax.validation.constraints.Pattern;
 

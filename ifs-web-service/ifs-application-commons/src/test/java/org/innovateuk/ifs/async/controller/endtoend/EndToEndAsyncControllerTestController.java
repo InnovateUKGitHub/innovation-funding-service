@@ -7,7 +7,9 @@ import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ManageUserPageResource;
+import org.innovateuk.ifs.user.resource.ManageUserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -27,6 +30,9 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -107,8 +113,8 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
         CompletableFuture<ApplicationResource> applicationResult = async(() ->
                 applicationService.getById(applicationId));
 
-        CompletableFuture<OrganisationResource> leadOrganisationResult = async(() ->
-                applicationService.getLeadOrganisation(applicationId));
+        CompletableFuture<ManageUserPageResource> userResult = async(() ->
+                userRestService.getActiveUsers("", 1, 10).getSuccess());
 
         CompletableFuture<CompetitionResource> competitionResult = awaitAll(applicationResult).thenApply(application ->
                 competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
@@ -121,16 +127,17 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
             model.addAttribute("applicationSectorAndCompetitionCode", applicationSector + "-" + competitionActivityCode);
         });
 
-        awaitAll(leadOrganisationResult).thenAccept(organisation -> {
+        awaitAll(userResult).thenAccept(userPage -> {
 
-            model.addAttribute("leadOrganisationUsers", organisation.getUsers());
+            List<Long> users = userPage.getContent().stream().map(ManageUserResource::getId).collect(Collectors.toList());
+            model.addAttribute("users", users);
 
-            testService.doSomeHiddenAsyncActivities(model, organisation.getUsers());
+            testService.doSomeHiddenAsyncActivities(model, users);
 
-            testService.doSomeHiddenButSafeBlockingAsyncActivities(model, organisation.getUsers());
+            testService.doSomeHiddenButSafeBlockingAsyncActivities(model, users);
 
             CompletableFuture<List<String>> explicitlyAsyncResults =
-                    testService.doExplicitAsyncActivities(organisation.getUsers());
+                    testService.doExplicitAsyncActivities(users);
 
             model.addAttribute("explicitlyAsyncResultsAddedAsAFutureToTheModel", explicitlyAsyncResults);
 

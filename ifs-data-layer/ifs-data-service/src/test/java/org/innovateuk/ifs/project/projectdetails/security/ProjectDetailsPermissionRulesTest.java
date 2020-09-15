@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
@@ -97,7 +99,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(new ProjectUser());
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisation.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(new ProjectUser());
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
@@ -109,7 +111,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
         UserResource user = newUserResource().build();
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(emptyList());
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }
@@ -135,7 +137,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         UserResource user = newUserResource().build();
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(null);
 
         assertFalse(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
     }
@@ -148,7 +150,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         UserResource user = newUserResource().build();
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(new ProjectUser());
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(new ProjectUser());
 
         assertTrue(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
     }

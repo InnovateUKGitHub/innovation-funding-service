@@ -110,6 +110,31 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
     }
 
     @Test
+    public void createGrantProcessWhenNoConfig() {
+        long applicationId = 7L;
+        long competitionId = 1L;
+        Competition competition = CompetitionBuilder.newCompetition().withId(competitionId).build();
+        Application application = ApplicationBuilder.newApplication().withId(applicationId).withCompetition(competition).build();
+
+        GrantProcess grantProcess = new GrantProcess(applicationId);
+
+        when(grantProcessRepository.save(grantProcess)).thenReturn(grantProcess);
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+
+        service.createGrantProcess(applicationId);
+
+        verify(grantProcessRepository)
+                .save(createLambdaMatcher(g -> {
+                    assertEquals(applicationId, g.getApplicationId());
+                    assertTrue(g.isPending());
+                    assertNull(g.getMessage());
+                    assertNull(g.getSentRequested());
+                    assertNull(g.getSentSucceeded());
+                    assertNull(g.getLastProcessed());
+                }));
+    }
+
+    @Test
     public void sendSucceeded() {
         ZonedDateTime now = ZonedDateTime.now();
         long applicationId = 7L;
@@ -152,6 +177,34 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
             assertNull(g.getSentSucceeded());
             assertNotNull(g.getLastProcessed());
         }));
+    }
+
+    @Test
+    public void getByApplicationIdNotPresent() {
+        // given
+        long applicationId = 7L;
+        when(grantProcessRepository.findOneByApplicationId(applicationId)).thenReturn(null);
+
+        // when
+        Optional<GrantProcess> result = service.findByApplicationId(applicationId);
+
+        // then
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void getByApplicationIdPresent() {
+        // given
+        long applicationId = 7L;
+        GrantProcess grantProcess = new GrantProcess(applicationId);
+        when(grantProcessRepository.findOneByApplicationId(applicationId)).thenReturn(grantProcess);
+
+        // when
+        Optional<GrantProcess> result = service.findByApplicationId(applicationId);
+
+        // then
+        assertTrue(result.isPresent());
+        assertEquals(grantProcess, result.get());
     }
 
     private GrantProcessConfiguration createGrantProcessConfiguration(Competition competition, boolean sendToAcc) {

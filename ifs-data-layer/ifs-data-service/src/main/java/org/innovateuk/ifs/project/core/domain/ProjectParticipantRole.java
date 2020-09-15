@@ -17,12 +17,18 @@ public enum ProjectParticipantRole implements ParticipantRole {
     PROJECT_MANAGER(11, "project_manager"),
     PROJECT_FINANCE_CONTACT(9, "finance_contact"),
     MONITORING_OFFICER(19, "monitoring_officer"),
-    FINANCE_REVIEWER(20, "finance_reviewer");
+    FINANCE_REVIEWER(20, "finance_reviewer"),
+    GRANTS_PROJECT_MANAGER(22, "grants_project_manager"),
+    GRANTS_PROJECT_FINANCE_CONTACT(23, "grants_finance_contact"),
+    GRANTS_MONITORING_OFFICER(24, "grants_monitoring_officer");
 
     public static final EnumSet<ProjectParticipantRole> PROJECT_USER_ROLES =
-            EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT);
+            EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT, GRANTS_PROJECT_MANAGER, GRANTS_PROJECT_FINANCE_CONTACT);
+
+    public static final EnumSet<ProjectParticipantRole> DISPLAY_PROJECT_TEAM_ROLES = EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT);
+
     public static final EnumSet<ProjectParticipantRole> PROJECT_MONITORING_OFFICER_ROLES =
-            EnumSet.of(MONITORING_OFFICER);
+            EnumSet.of(MONITORING_OFFICER, GRANTS_MONITORING_OFFICER);
 
     private final long id;
     private final String name;

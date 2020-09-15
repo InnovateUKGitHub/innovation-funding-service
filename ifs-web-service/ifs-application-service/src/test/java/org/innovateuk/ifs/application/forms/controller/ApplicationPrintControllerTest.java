@@ -49,7 +49,7 @@ public class ApplicationPrintControllerTest extends AbstractApplicationMockMVCTe
     }
 
     @Test
-    public void testApplicationPrint() throws Exception {
+    public void applicationPrint() throws Exception {
         ApplicationResource app = applications.get(0);
 
         when(applicationPrintPopulator.print(eq(1L), any(Model.class), any(UserResource.class))).thenReturn("uri");

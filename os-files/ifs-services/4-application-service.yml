@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: application-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/application-service:${applicationServiceVersion}
               name: application-svc

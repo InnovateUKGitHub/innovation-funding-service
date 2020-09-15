@@ -10,7 +10,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../Applicant_Commons.robot
+Resource          ../../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Your funding: client and server side validations

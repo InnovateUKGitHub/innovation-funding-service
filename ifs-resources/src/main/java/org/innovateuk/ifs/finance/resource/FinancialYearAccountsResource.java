@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = EmployeesAndTurnoverResource.class, name = "EmployeesAndTurnover"),
-        @JsonSubTypes.Type(value = GrowthTableResource.class, name = "GrowthTable")
+        @JsonSubTypes.Type(value = GrowthTableResource.class, name = "GrowthTable"),
+        @JsonSubTypes.Type(value = KtpYearsResource.class, name = "KtpYears")
 })
 public abstract class FinancialYearAccountsResource {
 

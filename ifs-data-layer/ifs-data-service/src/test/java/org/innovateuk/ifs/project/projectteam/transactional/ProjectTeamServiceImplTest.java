@@ -236,7 +236,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         projectResource.setName("Project 1");
         projectResource.setApplication(application.getId());
 
-        when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUser(any(User.class))).thenReturn(singletonList(organisation));
         when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         when(projectUserInviteRepositoryMock.findByProjectId(projectInDB.getId())).thenReturn(singletonList(projectInvite));

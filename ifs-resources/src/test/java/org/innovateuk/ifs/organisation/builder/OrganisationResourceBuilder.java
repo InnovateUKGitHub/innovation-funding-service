@@ -51,19 +51,18 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
         return withArray((organisationTypeId, organisation) -> setField("organisationType", organisationTypeId, organisation), organisationTypeIds);
     }
 
-    public OrganisationResourceBuilder withUsers(List<Long>... users) {
-        return withArray((user, organisation) -> setField("users", user, organisation), users);
-    }
-
-    public OrganisationResourceBuilder withProcessRoles(List<Long>... processRoles) {
-        return withArray((processRoleList, organisation) -> organisation.setProcessRoles(processRoleList), processRoles);
-    }
-
-    public OrganisationResourceBuilder withAddress(List<OrganisationAddressResource>... organisationAddressResource) {
-    	return withArray((orgAddress, organisation) -> setField("addresses", orgAddress, organisation), organisationAddressResource);
-    }
-
     public OrganisationResourceBuilder withOrganisationTypeName(String... organisationTypeNames) {
         return withArray((organisationTypeName, organisation) -> setField("organisationTypeName", organisationTypeName, organisation), organisationTypeNames);
+    }
+
+    public OrganisationResourceBuilder withIsInternational(Boolean... isInternationals) {
+        return withArraySetFieldByReflection("isInternational", isInternationals);
+    }
+
+    public OrganisationResourceBuilder withInternationalRegistrationNumber(String... internationalRegistrationNumbers) {
+        return  withArraySetFieldByReflection("internationalRegistrationNumber", internationalRegistrationNumbers);
+    }
+    public OrganisationResourceBuilder withAddresses(List<OrganisationAddressResource>... addresses) {
+        return  withArraySetFieldByReflection("addresses", addresses);
     }
 }

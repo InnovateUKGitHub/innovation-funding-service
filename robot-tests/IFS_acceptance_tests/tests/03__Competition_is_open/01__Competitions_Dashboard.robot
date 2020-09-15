@@ -12,7 +12,7 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Competition dashboard Open competition
@@ -23,7 +23,7 @@ Competition dashboard Open competition
     And the user should see the element    jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery = dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery = dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
-    And the user should see the element    link = View and update competition setup
+    And the user should see the element    link = View and update competition details
     And the user should see the element    jQuery = a:contains("Invite assessors to assess the competition")
     And the user should see the element    jQuery = a:contains("Applications: All, submitted, ineligible")
     #The following checks test if the correct buttons are disabled
@@ -53,7 +53,7 @@ Competition dashboard ready to Open competition
     And the user should see the element     jQuery = dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element     jQuery = dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element     jQuery = dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
-    And the user should see the element     link = View and update competition setup
+    And the user should see the element     link = View and update competition details
     And The user should not see the text in the element  css = #main-content p  Once you complete, this competition will be ready to open.
     And the user should see the element     jQuery = a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled

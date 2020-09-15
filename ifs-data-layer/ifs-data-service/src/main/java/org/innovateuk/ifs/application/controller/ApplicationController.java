@@ -105,6 +105,11 @@ public class ApplicationController {
         return updateStatusResult.toPutResponse();
     }
 
+    @PutMapping("/{applicationId}/reopen-application")
+    public RestResult<Void> reopenApplication(@PathVariable("applicationId") final Long applicationId) {
+        return applicationService.reopenApplication(applicationId).toPutResponse();
+    }
+
     @GetMapping("/application-ready-for-submit/{applicationId}")
     public RestResult<Boolean> applicationReadyForSubmit(@PathVariable("applicationId") final Long applicationId) {
         return RestResult.toGetResponse(applicationProgressService.applicationReadyForSubmit(applicationId));

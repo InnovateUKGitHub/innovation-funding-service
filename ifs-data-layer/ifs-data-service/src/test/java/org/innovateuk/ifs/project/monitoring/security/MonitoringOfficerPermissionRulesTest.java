@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTest<MonitoringOfficerPermissionRules> {
-
     @Override
     protected MonitoringOfficerPermissionRules supplyPermissionRulesUnderTest() {
         return new MonitoringOfficerPermissionRules();
@@ -47,6 +46,21 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.internalUsersCanSeeMonitoringOfficerProjects(monitoringOfficer, internal));
 
         assertFalse(rules.internalUsersCanSeeMonitoringOfficerProjects(monitoringOfficer, nonInternal));
+    }
+
+    @Test
+    public void usersCanSeeIfTheyAreMonitoringOfficerOnProjects() {
+        long id = 1l;
+
+        UserResource monitoringOfficer = newUserResource()
+                .withId(id)
+                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+
+        UserResource userToView = newUserResource()
+                .withId(id)
+                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+
+        assertTrue(rules.usersCanSeeIfTheyAreMonitoringOfficerOnProjects(monitoringOfficer, userToView));
     }
 
     @Test
@@ -79,6 +93,24 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, stakeholderUserResourceOnCompetition));
 
         allInternalUsers.forEach(user -> assertFalse(rules.stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(newProjectResource().build(), user)));
+    }
+
+    @Test
+    public void competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions() {
+
+        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        Competition competition = newCompetition().build();
+
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, competitionFinanceUserResourceOnCompetition));
+
+        allInternalUsers.forEach(user -> assertFalse(rules.competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(newProjectResource().build(), user)));
     }
 
     @Test

@@ -28,13 +28,19 @@ public class NavigationUtils {
                     IFS_ADMINISTRATOR, "management/dashboard",
                     SUPPORT, "management/dashboard",
                     MONITORING_OFFICER, "project-setup/monitoring-officer/dashboard",
-                    STAKEHOLDER, "management/dashboard"
+                    STAKEHOLDER, "management/dashboard",
+                    EXTERNAL_FINANCE, "management/dashboard",
+                    KNOWLEDGE_TRANSFER_ADVISER, "assessment/assessor/dashboard"
             );
 
     @Value("${ifs.live.projects.landing.page.url}")
     private String liveProjectsLandingPageUrl;
 
     private NavigationUtils() {}
+
+    public String getLiveProjectsLandingPageUrl() {
+        return liveProjectsLandingPageUrl;
+    }
 
     public String getRedirectToDashboardUrlForRole(Role role) {
 

@@ -53,11 +53,6 @@ public class FormInputRestServiceImpl extends BaseRestService implements FormInp
     }
 
     @Override
-    public RestResult<FormInputResource> save(FormInputResource formInputResource) {
-        return putWithRestResult(formInputRestURL + "/", formInputResource, FormInputResource.class);
-    }
-
-    @Override
     public RestResult<ByteArrayResource> downloadFile(long formInputId) {
         String url = format("%s/%s/%s", formInputRestURL, "file", formInputId);
         return getWithRestResult(url, ByteArrayResource.class);

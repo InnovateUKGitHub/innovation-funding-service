@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -62,13 +64,16 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     @Mock
     private AsyncFuturesGenerator asyncFuturesGenerator;
 
+    @Spy
+    private YourOrganisationWithGrowthTableFormSaver saver;
+
     @Captor
     ArgumentCaptor<OrganisationFinancesWithGrowthTableResource> argCaptor;
 
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
-    private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation-with-growth-table";
+    private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/pending-partner-progress/your-organisation";
 
     @Override
     protected ProjectYourOrganisationWithGrowthTableController supplyControllerUnderTest() {
@@ -112,7 +117,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
     public void updateGrowthTable() throws Exception {
         returnSuccessForUpdateGrowthTable();
 
-        mockMvc.perform(postAllFormParameters(new Pair("ignoredParameter","")))
+        mockMvc.perform(postAllFormParameters(Pair.of("ignoredParameter","")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -125,7 +130,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
         returnSuccessForUpdateGrowthTable();
         when(pendingPartnerProgressRestService.markYourOrganisationComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        mockMvc.perform(postAllFormParameters(new Pair("mark-as-complete", "")))
+        mockMvc.perform(postAllFormParameters(Pair.of("mark-as-complete", "")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();

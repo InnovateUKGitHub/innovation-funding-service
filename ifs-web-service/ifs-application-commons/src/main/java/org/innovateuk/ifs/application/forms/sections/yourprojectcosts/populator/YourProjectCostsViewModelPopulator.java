@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -51,9 +52,8 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
-        boolean procurementCompetition = FundingType.PROCUREMENT == competition.getFundingType();
-
         return new YourProjectCostsViewModel(applicationId,
+                competition.getName(),
                 sectionId,
                 competition.getId(),
                 organisationId,
@@ -63,8 +63,11 @@ public class YourProjectCostsViewModelPopulator {
                 application.getName(),
                 organisation.getName(),
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
-                procurementCompetition,
-                competition.getFinanceRowTypes());
+                FundingType.PROCUREMENT == competition.getFundingType(),
+                FundingType.KTP == competition.getFundingType(),
+                competition.getFinanceRowTypes(),
+                competition.isOverheadsAlwaysTwenty(),
+                CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()));
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

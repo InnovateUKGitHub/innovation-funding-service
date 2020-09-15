@@ -4,8 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
-import org.innovateuk.ifs.management.registration.form.InternalUserRegistrationForm;
-import org.innovateuk.ifs.management.registration.service.InternalUserServiceImpl;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -27,7 +26,7 @@ public class InternalUserServiceImplTest extends BaseServiceUnitTest<InternalUse
 
     @Test
     public void testCreateInternalUser(){
-        InternalUserRegistrationForm registrationForm = new InternalUserRegistrationForm("Arden", "Pimenta", "Passw0rd");
+        RegistrationForm registrationForm = new RegistrationForm("Arden", "Pimenta", "Passw0rd");
         InternalUserRegistrationResource internalUserRegistrationResource =
                 newInternalUserRegistrationResource()
                         .withFirstName(registrationForm.getFirstName())

@@ -72,6 +72,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
+
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
         Stakeholder stakeholder = newStakeholder().withUser(stakeholderUserOnCompetition).build();

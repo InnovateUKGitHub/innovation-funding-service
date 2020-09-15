@@ -10,6 +10,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
+
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
  */
@@ -18,11 +20,13 @@ public class ViewUserViewModel {
     private final UserResource user;
     private final UserResource loggedInUser;
     private final List<RoleProfileStatusResource> roleProfiles;
+    private final boolean externalRoleLinkEnabled;
 
-    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles) {
+    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean externalRoleLinkEnabled) {
         this.user = user;
         this.loggedInUser = loggedInUser;
         this.roleProfiles = roleProfiles;
+        this.externalRoleLinkEnabled = externalRoleLinkEnabled;
     }
 
     public UserResource getUser() {
@@ -37,6 +41,10 @@ public class ViewUserViewModel {
         return loggedInUser.hasRole(Role.SUPPORT);
     }
 
+    public boolean isExternalRoleLinkEnabled() {
+        return externalRoleLinkEnabled;
+    }
+
     public boolean isDisplayAssessorTitle() {
         return !(isSupport() || isIfsAdmin());
     }
@@ -45,6 +53,10 @@ public class ViewUserViewModel {
         boolean editable = isIfsAdmin()
                 || loggedInUser.hasRole(Role.SUPPORT) && user.isExternalUser();
         return !editable;
+    }
+
+    public boolean isLinkVisibleToIfsAdmin() {
+        return isIfsAdmin() && !user.hasRole(KNOWLEDGE_TRANSFER_ADVISER) && isExternalRoleLinkEnabled();
     }
 
     public boolean isCanEditUserDetails() {

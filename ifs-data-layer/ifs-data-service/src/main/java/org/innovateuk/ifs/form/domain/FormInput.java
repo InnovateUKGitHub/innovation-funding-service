@@ -9,9 +9,12 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 
 /**
  * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Recommendation Feedback etc).
@@ -69,6 +72,9 @@ public class FormInput {
     private List<GuidanceRow> guidanceRows;
 
     private boolean active = true;
+
+    @OneToMany(mappedBy = "formInput", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MultipleChoiceOption> multipleChoiceOptions = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "appendix_file_types")
@@ -228,5 +234,17 @@ public class FormInput {
 
     public void setFile(FileEntry file) {
         this.file = file;
+    }
+
+    public List<MultipleChoiceOption> getMultipleChoiceOptions() {
+        return multipleChoiceOptions;
+    }
+
+    public void setMultipleChoiceOptions(List<MultipleChoiceOption> multipleChoiceOptions) {
+        this.multipleChoiceOptions = multipleChoiceOptions;
+    }
+
+    public boolean isCompetitionOpen() {
+        return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
     }
 }

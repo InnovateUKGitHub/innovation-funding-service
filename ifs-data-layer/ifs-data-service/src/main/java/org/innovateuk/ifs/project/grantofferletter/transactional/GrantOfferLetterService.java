@@ -11,8 +11,9 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterAppr
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.springframework.security.core.parameters.P;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -52,6 +53,10 @@ public interface GrantOfferLetterService {
     @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )
     ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )
+    ServiceResult<Void> removeAdditionalContractFileEntry(Long projectId);
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_SIGNED_GRANT_OFFER')")
     ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId);
 
@@ -83,4 +88,14 @@ public interface GrantOfferLetterService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
     ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
+
+
+    @PreAuthorize("hasPermission(#projectId,'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SUBMIT_GRANT_OFFER_LETTER')")
+    ServiceResult<StringResource> getDocusignUrl(long projectId);
+
+    @PreAuthorize("hasPermission(#projectId,'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SUBMIT_GRANT_OFFER_LETTER')")
+    @SecuredBySpring(value = "IMPORT_DOCUMENT", description = "Applicants can request their signed documents" )
+    @Activity(projectId = "projectId", type = ActivityType.GRANT_OFFER_LETTER_SIGNED)
+    ServiceResult<Void> importGrantOfferLetter(long projectId);
+
 }

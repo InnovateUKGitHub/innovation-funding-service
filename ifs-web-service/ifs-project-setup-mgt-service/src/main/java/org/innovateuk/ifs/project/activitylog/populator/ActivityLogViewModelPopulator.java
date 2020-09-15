@@ -62,16 +62,18 @@ public class ActivityLogViewModelPopulator {
         List<ActivityLogResource> activities = activityLogRestService.findByApplicationId(project.getApplication()).getSuccess();
 
         List<ActivityLogEntryViewModel> views = activities.stream()
-                .map(activity -> new ActivityLogEntryViewModel(
-                        title(activity),
-                        activity.getOrganisationName(),
-                        userText(activity, projectUserResources, partnerOrganisationResources),
-                        activity.getCreatedOn(),
-                        linkText(activity),
-                        url(activity, project),
-                        userCanSeeLink(activity, user),
-                        activity.getActivityType()
-                ))
+                .map(activity -> {
+                    String url = url(activity, project);
+                    return new ActivityLogEntryViewModel(
+                            title(activity),
+                            activity.getOrganisationName(),
+                            userText(activity, projectUserResources, partnerOrganisationResources),
+                            activity.getCreatedOn(),
+                            linkText(activity),
+                            url,
+                            url != null && userCanSeeLink(activity, user),
+                            activity.getActivityType());
+                })
                 .collect(toList());
 
         return new ActivityLogViewModel(
@@ -93,7 +95,7 @@ public class ActivityLogViewModelPopulator {
     private boolean userCanSeeLink(ActivityLogResource activity, UserResource user) {
         if (activity.isOrganisationRemoved() && ActivityLogUrlHelper.linkInvalidIfOrganisationRemoved(activity)) {
             return false;
-        } else  if (user.hasRole(PROJECT_FINANCE)) {
+        } else if (user.hasRole(PROJECT_FINANCE)) {
             return true;
         } else if (user.hasRole(COMP_ADMIN)) {
             return COMP_ADMIN_TYPES.contains(activity.getActivityType());
@@ -128,9 +130,15 @@ public class ActivityLogViewModelPopulator {
     private String userText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
         if (log.isInternalUser()) {
             return internalUserText(log);
+        } else if (log.isExternalFinanceUser()) {
+            return externalFinanceUserText(log);
         } else {
             return externalUserText(log, projectUserResources, partnerOrganisationResources);
         }
+    }
+
+    private String externalFinanceUserText(ActivityLogResource log) {
+        return log.getAuthoredByName() + ", " + EXTERNAL_FINANCE.getDisplayName();
     }
 
     private String internalUserText(ActivityLogResource log) {

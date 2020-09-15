@@ -52,6 +52,16 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
+${ktpCompetitionName}     KTP Competition
+
+
+${ukLeadInternationalCompetition}                        UK based Lead International Competition
+${internationalLeadInternationalCompetition}             International Lead International Competition
+${openCompetitionPerformance_name}                       Performance testing competition
+${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
+${projectEligibilityLink}                                Project eligibility
+${organisationalEligibilityTitle}                        Organisational eligibility
+
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 
@@ -72,8 +82,9 @@ ${OPEN_COMPETITION_APPLICATION_6_NUMBER}  ${application_ids['${OPEN_COMPETITION_
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
 
-${createApplicationOpenCompetition}             Home and industrial efficiency programme
-${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetition}                  Home and industrial efficiency programme
+${createApplicationOpenCompetitionId}                ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenInternationalCompetition}     International Competition
 ${createApplicationOpenCompetitionApplication1Name}  Networking home IOT devices
 ${createApplicationOpenCompetitionApplication1Number}  ${application_ids['${createApplicationOpenCompetitionApplication1Name}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
@@ -144,6 +155,7 @@ ${NON_IFS_COMPETITION}          ${competition_ids['${NON_IFS_COMPETITION_NAME}']
 ${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
 
 ${APPLICANT_DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICANT_ADDITIONAL_FUNDING_QUERIES_URL}   ${SERVER}/covid-19/questionnaire
 ${APPLICANT_DASHBOARD_TITLE}  Applications
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
@@ -180,15 +192,22 @@ ${MEDIUM_ORGANISATION_SIZE}    MEDIUM
 ${LARGE_ORGANISATION_SIZE}     LARGE
 
 # File related variables
-${UPLOAD_FOLDER}    uploaded_files
-${DOWNLOAD_FOLDER}    download_files
-${valid_pdf}      testing.pdf
-${5mb_pdf}        testing_5MB.pdf
-${too_large_pdf}    large.pdf
-${text_file}      testing.txt
-${excel_file}     testing.xlsx
+${UPLOAD_FOLDER}        uploaded_files
+${DOWNLOAD_FOLDER}      download_files
+${valid_pdf}            testing.pdf
+${gol_pdf}              GOL_template.pdf
+${contract_pdf}         Contract.pdf
+${valid_xls}            testing.xls
+${valid_odt}            testing.odt
+${valid_doc}            testing.doc
+${valid_docx}           testing.docx
+${valid_jpeg}           testing.jpeg
+${5mb_pdf}              testing_5MB.pdf
+${too_large_pdf}        large.pdf
+${text_file}            testing.txt
+${excel_file}           testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${ods_file}      file_example_ODS.ods
+${ods_file}             file_example_ODS.ods
 
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
@@ -211,6 +230,8 @@ ${403_error_message}                               You do not have the necessary
 ${404_error_message}                               Please check the web address or search term you entered for any errors
 ${500_error_message}                               something went wrong
 ${wrong_filetype_validation_error}                 Your upload must be a PDF.
+${finance_query_notes_filetype_error}              Your file must be a PDF or an open source document
+${applicant_query_response_filetype_error}         Your upload must be a PDF, document or a spreadsheet
 ${too_large_5MB_validation_error}                  Please upload a file less than 5MB in size.
 ${too_large_10MB_validation_error}                 Please upload a file less than 10MB in size.
 ${unsuccessful_login_message}                      Your sign in was unsuccessful because of the following issues
@@ -224,8 +245,10 @@ ${enter_a_valid_date}                              Please enter a valid date.
 ${enter_a_phone_number}                            Please enter a phone number.
 ${enter_a_valid_phone_number}                      Please enter a valid phone number.
 ${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
+${search_a_valid_postcode}                         Search using a valid postcode or enter the address manually.
 ${only_accept_whole_numbers_message}               This field can only accept whole numbers.
 ${field_should_be_1_or_higher}                     This field should be 1 or higher.
+${estate_Error_Message}                            You should enter less than £10,000 for estate costs
 
 # Database variables
 ${database_name}    ifs
@@ -252,23 +275,28 @@ ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}  ${getSimpleMile
 ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables
-${EMPIRE_LTD_NAME}         Empire Ltd
-${EMPIRE_LTD_ID}            ${organisation_ids["${EMPIRE_LTD_NAME}"]}
-${organisationLudlowName}   Ludlow
-${organisationLudlowId}     ${organisation_ids["${organisationLudlowName}"]}
-${organisationEggsName}     EGGS
-${organisationEggsId}       ${organisation_ids["${organisationEggsName}"]}
-${organisationRedName}      Red Planet
-${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
-${organisationSmithName}    SmithZone
-${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
-
+${EMPIRE_LTD_NAME}                    Empire Ltd
+${EMPIRE_LTD_ID}                      ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}             Ludlow
+${organisationLudlowId}               ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}               EGGS
+${organisationEggsId}                 ${organisation_ids["${organisationEggsName}"]}
+${organisationRedName}                Red Planet
+${organisationRedId}                  ${organisation_ids["${organisationRedName}"]}
+${organisationSmithName}              SmithZone
+${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
+${organisationWardName}               Ward Ltd
+${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
+${existingAcademicPartnerOrgName}     WORTH IT LTD
+${newPartnerOrgName}                  INNOVATE LTD
+${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1
 ${ACADEMIC_TYPE_ID}       2
 ${RTO_TYPE_ID}            3
 ${PUBLIC_SECTOR_TYPE_ID}  4
+${KTP_TYPE_ID}            5
 
 # Competition template type
 ${compType_Programme}  Programme
@@ -280,12 +308,20 @@ ${compType_ATI}        Aerospace Technology Institute
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
-@{milestones}             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
-@{programme_questions}    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
-@{sector_questions}       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
-@{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
-@{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{project_details}        Project summary  Public description  Scope
+@{milestones}                             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
+@{programme_questions}                    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
+@{programme_questions_procurement_ati}    Business opportunity  Potential market  Project exploitation  Economic benefit  Innovation  Risks  Funding  Adding value
+@{other_questions_procurement_ati}        Technical approach  Project team
+@{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
+@{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
+@{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
+@{project_details}                        Project summary  Public description  Scope
+
+#SBRI Type 1 competition milestones
+@{sbriType1Milestones}     Open date  Briefing event  Submission date
+
+#answer choices in application questions while creating a competition
+@{multiple_answer_choice}     answer2  answer3  answer4  answer5  answer6  answer7  answer8  answer9  answer10
 
 #Project Setup
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
@@ -300,3 +336,16 @@ ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}
+
+#OrganisationTypes and Info text
+${businessOrganisationName}              Business
+${researchOrganisationName}              Research
+${rtoOrganisationName}                   Research and technology organisation (RTO)
+${nonProfitOrganisationName}             Public sector, charity or non Je-S registered research organisation
+${bussinessOrgInfoText}                  A person or organisation that provides goods or services in exchange for something of value, usually money.
+${nonJe-s/Public/CharityOrgInfoText}     A not-for-profit organisation focusing on innovation.
+${researchOrgInfoText}                   Higher education and organisations registered with Je-S.
+${rtoOrgInfoText}                        Organisations which solely promote and conduct collaborative research and innovation.
+
+#invalid organisation validation message
+${invalidOrganisationValidationMessage}     You are not eligible to start an application

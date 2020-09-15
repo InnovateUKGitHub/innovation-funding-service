@@ -18,7 +18,7 @@ Suite Setup       the guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Your details: Server-side validations

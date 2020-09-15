@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -26,9 +27,6 @@ public class Section implements Comparable<Section> {
     private Long id;
 
     private String name;
-
-    @Column( length = 5000 )
-    private String description;
 
     @Column( length = 5000 )
     private String assessorGuidanceDescription;
@@ -124,10 +122,6 @@ public class Section implements Comparable<Section> {
         this.parentSection = parentSection;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public int compareTo(Section o) {
         return this.getId().compareTo(o.getId());
@@ -187,10 +181,6 @@ public class Section implements Comparable<Section> {
         this.priority = priority;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -205,5 +195,9 @@ public class Section implements Comparable<Section> {
     
     public SectionType getType() {
         return type;
+    }
+
+    public boolean isCompetitionOpen() {
+        return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
     }
 }

@@ -75,6 +75,7 @@ public class ApplicationTermsModelPopulator {
 
                 return new ApplicationTermsViewModel(
                         applicationId,
+                        competition.getName(),
                         competition.getId(),
                         termsQuestionId,
                         competition.getTermsAndConditions().getTemplate(),
@@ -89,6 +90,7 @@ public class ApplicationTermsModelPopulator {
 
         return new ApplicationTermsViewModel(
                 applicationId,
+                competition.getName(),
                 competition.getId(),
                 termsQuestionId,
                 competition.getTermsAndConditions().getTemplate(),

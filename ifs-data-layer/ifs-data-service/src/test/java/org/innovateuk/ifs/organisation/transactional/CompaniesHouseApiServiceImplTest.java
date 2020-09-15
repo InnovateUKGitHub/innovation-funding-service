@@ -48,7 +48,7 @@ public class CompaniesHouseApiServiceImplTest {
 
 		// should override these values in specific test if necessary.
 		searchVariables = new HashMap<>();
-		searchVariables.put("items_per_page", 10);
+		searchVariables.put("items_per_page", 20);
 		searchVariables.put("q", defaultSearchString);
 
 	}

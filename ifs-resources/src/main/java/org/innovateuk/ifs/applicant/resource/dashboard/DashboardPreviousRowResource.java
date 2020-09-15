@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
@@ -27,10 +28,15 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
     private boolean assignedToInterview;
     private LocalDate startDate;
     private boolean collaborationLevelSingle;
+    private CompetitionCompletionStage competitionCompletionStage;
 
     // Private constructor to enforce immutability
     private DashboardPreviousRowResource() {
         this.dashboardSection = PREVIOUS;
+    }
+
+    public CompetitionCompletionStage getCompetitionCompletionStage() {
+        return competitionCompletionStage;
     }
 
     public boolean isAssignedToMe() {
@@ -103,6 +109,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
                 .append(dashboardSection, that.dashboardSection)
                 .append(startDate, that.startDate)
                 .append(collaborationLevelSingle, that.collaborationLevelSingle)
+                .append(competitionCompletionStage, that.competitionCompletionStage)
                 .isEquals();
     }
 
@@ -124,6 +131,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
                 .append(dashboardSection)
                 .append(startDate)
                 .append(collaborationLevelSingle)
+                .append(competitionCompletionStage)
                 .toHashCode();
     }
 
@@ -143,6 +151,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
         private boolean assignedToInterview;
         private LocalDate startDate;
         private boolean collaborationLevelSingle;
+        private CompetitionCompletionStage competitionCompletionStage;
 
         public DashboardPreviousApplicationResourceBuilder withTitle(String title) {
             this.title = title;
@@ -214,6 +223,11 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             return this;
         }
 
+        public DashboardPreviousApplicationResourceBuilder withCompetitionCompletionStage(CompetitionCompletionStage competitionCompletionStage) {
+            this.competitionCompletionStage = competitionCompletionStage;
+            return this;
+        }
+
         public DashboardPreviousRowResource build(){
             DashboardPreviousRowResource result = new DashboardPreviousRowResource();
             result.title = this.title;
@@ -230,6 +244,7 @@ public class DashboardPreviousRowResource extends DashboardRowResource {
             result.assignedToInterview = this.assignedToInterview;
             result.startDate = startDate;
             result.collaborationLevelSingle = this.collaborationLevelSingle;
+            result.competitionCompletionStage = this.competitionCompletionStage;
 
             return result;
         }

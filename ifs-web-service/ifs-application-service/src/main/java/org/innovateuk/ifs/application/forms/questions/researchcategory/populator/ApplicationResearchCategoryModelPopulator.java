@@ -60,6 +60,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
 
         return new ResearchCategoryViewModel(applicationResource.getName(),
                 applicationResource.getId(),
+                applicationResource.getCompetitionName(),
                 questionId,
                 getResearchCategories(applicationResource.getCompetition()),
                 hasApplicationFinances,

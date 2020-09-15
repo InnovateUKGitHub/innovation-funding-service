@@ -38,7 +38,7 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
@@ -274,9 +274,6 @@ CompAdmin can see uploaded files
     [Documentation]    INFUND-4621, IFS-1881
     [Tags]  HappyPath
     [Setup]    Log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page     ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user clicks the button/link     jQuery = button:contains("Next")
-    And the user clicks the button/link     link = ${PS_Competition_Name}
     When the user navigates to the page     ${SERVER}/project-setup-management/project/${Grade_Crossing_Project_Id}/document/all
     And the user clicks the button/link     link = Collaboration agreement
     And open pdf link                       jQuery = a:contains("${valid_pdf} (opens in a new window)")
@@ -481,9 +478,7 @@ compAdmin approves all documents
     the user navigates to the page        ${SERVER}/project-setup-management/competition/${PS_Competition_Id}/project/${Grade_Crossing_Project_Id}/team
 
 the user navigates to the competition
-    the user navigates to the page      ${COMP_MANAGEMENT_PROJECT_SETUP}
-    the user clicks the button/link     jQuery = button:contains("Next")
-    the user clicks the button/link     link = ${PS_Competition_Name}
+    the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
 
 compAdmin reject uploaded documents
     the user selects the radio button           approved   false

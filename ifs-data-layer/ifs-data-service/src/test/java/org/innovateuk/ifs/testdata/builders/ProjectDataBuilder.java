@@ -83,7 +83,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         return with(data -> doAs(data.getLeadApplicant(), () -> {
             Long leadApplicantId = data.getLeadApplicant().getId();
             OrganisationResource leadOrganisation = organisationService.getByUserAndApplicationId(leadApplicantId, data.getApplication().getId()).getSuccess();
-            projectDetailsService.updateProjectAddress(leadOrganisation.getId(), data.getProject().getId(), getAddress(leadOrganisation, organisationLines)).getSuccess();
+            projectDetailsService.updateProjectAddress(data.getProject().getId(), getAddress(leadOrganisation, organisationLines)).getSuccess();
         }));
     }
 
@@ -103,12 +103,17 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             Set<OrganisationResource> organisations = organisationService.findByApplicationId(data.getApplication().getId()).getSuccess();
             for (OrganisationResource org : organisations) {
+                intialiseFinances(data.getProject().getId(), org.getId());
                 updateFinanceChecks(data.getProject().getId(), org.getId());
             }
             if (generateSpendProfile) {
                 spendProfileService.generateSpendProfile(data.getProject().getId()).getSuccess();
             }
         }));
+    }
+
+    private void intialiseFinances(Long projectId, Long organisationId) {
+        projectFinanceService.financeChecksDetails(projectId, organisationId).getSuccess();
     }
 
     public ProjectDataBuilder withSpendProfile(Boolean approveSpendProfile) {
@@ -292,7 +297,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     private AddressResource getAddress(OrganisationResource organisationResource, List<CsvUtils.OrganisationLine> organisationLines) {
         CsvUtils.OrganisationLine organisationLine = organisationLines.stream().filter(line -> line.name.equals(organisationResource.getName())).findFirst().get();
         return newAddressResource().
-                withId().
                 withAddressLine1(organisationLine.addressLine1).
                 withAddressLine2(organisationLine.addressLine2).
                 withAddressLine3(organisationLine.addressLine3).

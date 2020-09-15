@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 public abstract class AbstractEditOrganisationDetailsController<F> {
-
+    private static final String TEMPLATE = "project/organisationdetails/edit-organisation-size";
     @Autowired
     private ProjectRestService projectRestService;
 
@@ -47,8 +47,9 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form(projectId, organisationId));
+        model.addAttribute("formFragment", formFragment());
 
-        return view();
+        return TEMPLATE;
     }
 
     @PostMapping
@@ -64,7 +65,8 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
         Supplier<String> failureHandler = () -> {
             model.addAttribute("model", getViewModel(projectId, organisationId));
-            return view();
+            model.addAttribute("formFragment", formFragment());
+            return TEMPLATE;
         };
         Supplier<String> successHandler = () -> redirectToOrganisationDetails(projectId, organisationId);
 
@@ -90,7 +92,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
     protected abstract String redirectToOrganisationDetails(long projectId, long organisationId);
 
-    protected abstract String view();
+    protected abstract String formFragment();
 
     protected abstract F form(long projectId, long organisationId);
 

@@ -1,13 +1,9 @@
 package org.innovateuk.ifs.project.invite.controller;
 
-import static java.lang.String.format;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
@@ -23,6 +19,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import static java.lang.String.format;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+
 @Controller
 @RequestMapping("/project/{projectId}/partner-invite")
 @SecuredBySpring(value = "Controller",
@@ -33,15 +35,14 @@ public class AcceptProjectPartnerInviteController {
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
-
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
-
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     @Autowired
     private NavigationUtils navigationUtils;
+    @Autowired
+    private CompetitionOrganisationConfigRestService organisationConfigRestService;
 
     @GetMapping("/{hash}/accept")
     public String inviteEntryPage(
@@ -75,7 +76,11 @@ public class AcceptProjectPartnerInviteController {
                                     Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
+                    boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
+
                     model.addAttribute("projectName", invite.getProjectName());
+                    model.addAttribute("international", international);
                     return "project/partner-invite/new-user";
             }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
@@ -88,9 +93,11 @@ public class AcceptProjectPartnerInviteController {
                                     Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+
                     model.addAttribute("projectName", invite.getProjectName());
                     model.addAttribute("loggedIn", user != null);
                     model.addAttribute("projectId", projectId);
+
                     return "project/partner-invite/existing-user";
                 }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
@@ -106,10 +113,18 @@ public class AcceptProjectPartnerInviteController {
                                    Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+                    //Force user to be logged in.
                     if (loggedInAsNonInviteUser(invite, user)) {
                         return "registration/logged-in-with-another-user-failure";
                     }
-                    //Force user to be logged in.
+
+                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
+                    boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
+
+                    if (international) {
+                        return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/create/international-organisation");
+                    }
+
                     return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/select");
                 }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);

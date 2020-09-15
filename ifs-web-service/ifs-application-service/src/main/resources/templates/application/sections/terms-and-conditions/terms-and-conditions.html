@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: head/th:block[0] "/>
 </head>
@@ -44,7 +44,7 @@
             </div>
         </th:block>
 
-        <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content "/>
+        <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content"/>
 
         <th:block th:if="${model.showHeaderAndFooter}">
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>

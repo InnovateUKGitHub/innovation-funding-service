@@ -16,6 +16,8 @@ public interface ProjectService {
 
     List<ProjectUserResource> getProjectUsersForProject(long projectId);
 
+    List<ProjectUserResource> getDisplayProjectUsersForProject(long projectId);
+
     List<OrganisationResource> getPartnerOrganisationsForProject(long projectId);
 
     ProjectResource getById(long projectId);
@@ -35,6 +37,8 @@ public interface ProjectService {
     Optional<ProjectUserResource> getProjectManager(long projectId);
 
     Boolean isProjectManager(long userId, long projectId);
+
+    Boolean isProjectFinanceContact(long userId, long projectId);
 
     boolean userIsPartnerInOrganisationForProject(long projectId, long organisationId, long userId);
 

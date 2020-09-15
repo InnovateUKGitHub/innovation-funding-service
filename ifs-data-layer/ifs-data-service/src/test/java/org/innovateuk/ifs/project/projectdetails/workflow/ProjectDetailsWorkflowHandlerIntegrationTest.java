@@ -131,16 +131,14 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
      * 'Submitted' state because all the mandatory values are now provided
      */
     private void assertAddMandatoryValueAndNowSubmitted(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
-        List<Organisation> partnerOrgs = newOrganisation().build(2);
-
         Project project = newProject().
                 withApplication(newApplication().withCompetition(newCompetition().withLocationPerPartner(true).build()).build()).
                 withTargetStartDate(LocalDate.of(2016, 11, 01)).
-                withPartnerOrganisations(newPartnerOrganisation().withPostcode("POSTCODE").build(1)).
+                withPartnerOrganisations(newPartnerOrganisation().withOrganisation(newOrganisation().build()).withPostcode("POSTCODE").build(1)).
                 withAddress(newAddress().build()).
                 build();
 
-        ProjectUser projectUser = newProjectUser().build();
+        ProjectUser projectUser = newProjectUser().withOrganisation(newOrganisation().build()).build();
 
         ProjectDetailsProcess originalProcess = new ProjectDetailsProcess(projectUser, project, originalState);
         ProjectDetailsProcess updatedProcess = new ProjectDetailsProcess(projectUser, project, originalState);

@@ -4,10 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.*;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
@@ -107,5 +104,9 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withFile(FileEntry... files) {
         return withArray((file, input) -> input.setFile(file), files);
+    }
+
+    public FormInputBuilder withMultipleChoiceOptions(List<MultipleChoiceOption>... value) {
+        return withArraySetFieldByReflection("multipleChoiceOptions", value);
     }
 }

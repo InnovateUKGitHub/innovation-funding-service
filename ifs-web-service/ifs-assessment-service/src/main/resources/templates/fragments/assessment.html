@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 
 <!-- ======== Assessment - pagination ======= -->
@@ -43,7 +43,7 @@
 
 
 <!-- =================== Application details ============================== -->
-<th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)">
+<th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation, ktpCompetition)">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-s">Project title</h2>
@@ -63,9 +63,11 @@
         </div>
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-s">Project timescales</h2>
-            <p class="govuk-body">Project start date:<br/>
-            <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
-            </p>
+            <th:block th:unless="${ktpCompetition}">
+                <p class="govuk-body">Project start date:<br/>
+                    <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
+                </p>
+            </th:block>
             <p class="govuk-body">Duration:<br/><th:block th:text="${applicationDurationInMonths}" /> months</p>
         </div>
     </div>

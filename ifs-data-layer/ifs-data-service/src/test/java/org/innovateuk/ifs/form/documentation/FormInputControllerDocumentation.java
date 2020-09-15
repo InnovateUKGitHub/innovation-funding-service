@@ -19,12 +19,11 @@ import static org.innovateuk.ifs.documentation.FileEntryDocs.fileEntryResourceFi
 import static org.innovateuk.ifs.form.documentation.FormInputResourceDocs.formInputResourceBuilder;
 import static org.innovateuk.ifs.form.documentation.FormInputResourceDocs.formInputResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -96,20 +95,6 @@ public class FormInputControllerDocumentation extends BaseFileControllerMockMVCT
                                 "[].", formInputResourceFields)
                         )
                 );
-    }
-
-    @Test
-    public void documentSave() throws Exception {
-        FormInputResource testResource = formInputResourceBuilder.build();
-        when(formInputServiceMock.save(any())).thenReturn(serviceSuccess(testResource));
-
-        mockMvc.perform(put(baseURI + "/")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testResource))
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("forminput/{method-name}",
-                        responseFields(formInputResourceFields)
-                ));
     }
 
     @Test

@@ -24,6 +24,7 @@ public class YourProjectLocationFormPopulator {
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         String postcode = applicationFinance.getWorkPostcode();
-        return new YourProjectLocationForm(postcode);
+        String town = applicationFinance.getInternationalLocation();
+        return new YourProjectLocationForm(postcode, town);
     }
 }

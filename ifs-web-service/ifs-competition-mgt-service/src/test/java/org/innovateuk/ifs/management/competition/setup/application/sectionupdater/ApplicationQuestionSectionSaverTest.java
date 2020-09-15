@@ -35,7 +35,9 @@ public class ApplicationQuestionSectionSaverTest {
     @Test
     public void saveSection() {
         QuestionForm competitionSetupForm = new QuestionForm();
+        competitionSetupForm.setNumberOfUploads(0);
         CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+
         question.setQuestionId(1L);
         competitionSetupForm.setQuestion(question);
 

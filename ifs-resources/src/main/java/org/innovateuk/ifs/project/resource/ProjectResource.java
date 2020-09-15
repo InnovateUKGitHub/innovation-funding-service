@@ -41,6 +41,7 @@ public class ProjectResource {
     private boolean collaborativeProject;
     private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
     private boolean spendProfileGenerated;
+    private boolean useDocusignForGrantOfferLetter;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -256,6 +257,14 @@ public class ProjectResource {
 
     public void setCollaborativeProject(boolean collaborativeProject) {
         this.collaborativeProject = collaborativeProject;
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
+    }
+
+    public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
 
     @Override
