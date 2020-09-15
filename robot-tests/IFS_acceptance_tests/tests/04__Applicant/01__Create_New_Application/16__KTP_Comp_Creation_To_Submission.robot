@@ -247,7 +247,7 @@ New lead applicant invites a new partner organisation user and fills in project 
     [Documentation]  IFS-7812  IFS-7814
     Given the user clicks the button/link                            link = Return to finances
     And the user clicks the button/link                              link = Back to application overview
-    When the lead invites a partner and accepeted the invitation
+    When the lead invites a partner and accepted the invitation
     Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
 
 Partner applicant can declare any other government funding received
@@ -395,7 +395,8 @@ Partner can also see the KTA in Application team
 
 new lead applicant can uploads an appendix file in KTP Application
     [Documentation]  IFS-7958
-    Given the user clicks the button/link     link = Application overview
+    Given log in as a different user          &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link       link = ${ktpApplicationTitle}
     When the user clicks the button/link      link = 6. Innovation
     And the user clicks the button/link       id = edit
     Then the user uploads the file            css = input[name="appendix"]    ${valid_pdf}
