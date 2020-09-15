@@ -6,12 +6,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigReso
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +44,8 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     public static final String COMPETITION_ID = "competitionId";
 
     protected static final String NOT_ELIGIBLE = "not-eligible";
+    protected static final String NOT_ELIGIBLE_LEAD = TEMPLATE_PATH + "/" + "not-eligible-lead";
+    protected static final String NOT_ELIGIBLE_COLLABORATOR = TEMPLATE_PATH + "/" + "not-eligible-collaborator";
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -125,7 +127,9 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
     @GetMapping(NOT_ELIGIBLE)
     public String showNotEligible(Model model, HttpServletRequest request) {
-        return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
+        boolean isLead = registrationCookieService.isLeadJourney(request);
+
+        return isLead ? NOT_ELIGIBLE_LEAD : NOT_ELIGIBLE_COLLABORATOR;
     }
 
     private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
@@ -142,7 +146,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
             List<OrganisationTypeResource> organisationTypesAllowed = competitionRestService.getCompetitionOrganisationType(competitionIdOpt.get()).getSuccess();
             return organisationTypesAllowed.stream()
-                    .map(organisationTypeResource -> organisationTypeResource.getId())
+                    .map(OrganisationTypeResource::getId)
                     .anyMatch(aLong -> aLong.equals(organisationTypeId));
         }
 

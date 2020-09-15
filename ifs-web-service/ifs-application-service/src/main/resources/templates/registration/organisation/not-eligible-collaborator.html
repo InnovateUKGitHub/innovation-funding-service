@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+</head>
+<body class="govuk-template__body create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You cannot join this application',size='govuk-heading-l'" />
+
+        <p class="govuk-body">Your organisation type is not eligible to join this application.</p>
+        <p class="govuk-body">Please check the
+            <a th:href="@{~/competition/{cid}/overview(cid=${competitionId})}"
+               class="govuk-link"
+               target="_blank"
+               rel="external noopener noreferrer">competition brief</a> for more information.
+        </p>
+        <p class="govuk-body">
+            You can also <a th:href="@{/competition/search}" class="govuk-link">view all competitions</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk" class="govuk-link">Innovate UK homepage</a>.
+        </p>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

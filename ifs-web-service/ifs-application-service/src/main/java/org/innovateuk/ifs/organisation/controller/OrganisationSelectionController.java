@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -27,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 
 @RequestMapping("/organisation/select")
 @SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
@@ -62,11 +62,13 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                                             BindingResult bindingResult,
                                             UserResource user,
                                             Model model) {
-        if (cannotSelectOrganisation(user, request)) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+
+        if (cannotSelectOrganisation(user, request, competition)) {
             return "redirect:" + nextPageInFlow();
         }
         model.addAttribute("model", organisationSelectionViewModelPopulator.populate(user,
-                request,
+                request, competition,
                 nextPageInFlow()));
         addPageSubtitleToModel(request, user, model);
         return "registration/organisation/select-organisation";
@@ -85,14 +87,23 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     }
 
-    private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request) {
+    private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request, CompetitionResource competitionResource) {
         return user == null
                 || !user.hasRole(Role.APPLICANT)
-                || isLinkedToPreviousOrganisations(user.getId(), request);
+                || isLinkedToPreviousOrganisations(user.getId(), request, competitionResource);
     }
 
-    private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request) {
+    private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request, CompetitionResource competitionResource) {
         final boolean international = registrationCookieService.isInternationalJourney(request);
+
+        List<OrganisationResource> organisations = organisationRestService.getOrganisations(userId, international).getSuccess();
+
+        if (!competitionResource.isKtp()) {
+            if (organisations.size() == 1) {
+                return Boolean.TRUE.equals(organisations.stream().anyMatch(o -> o.getOrganisationTypeEnum().equals(KNOWLEDGE_BASE)));
+            }
+        }
+
         return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
     }
 
@@ -108,9 +119,8 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
             }
 
             if (registrationCookieService.isCollaboratorJourney(request)) {
-                if (isKnowledgeBaseCompetition(request)) {
-                    if (!validateCollaborator(form))
-                        return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+                if (!validateCollaborator(request, form)) {
+                    return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
                 }
             }
 
@@ -118,15 +128,16 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         };
     }
 
-    private boolean validateCollaborator(OrganisationSelectionForm form) {
+    private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
 
-        return OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
-    }
+        if (competition.isKtp()) {
+            return isValidKtpCollaborator(organisation.getOrganisationType());
+        } else {
+            return isValidCollaborator(organisation.getOrganisationType());
+        }
 
-    private boolean isKnowledgeBaseCompetition(HttpServletRequest request) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
-        return competition.getFundingType().equals(FundingType.KTP);
     }
 
     private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {
