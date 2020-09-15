@@ -782,7 +782,7 @@ the user invites a KTA to application
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
 
-the lead invites a partner and accepeted the invitation
+the lead invites a partner and accepted the invitation
     the lead invites a non-registered user     ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
     the user clicks the button/link            link = Sign in
     Logging in and Error Checking              &{ktpNewPartnerCredentials}
