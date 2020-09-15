@@ -28,7 +28,9 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-7983  KTP Your Project Finances - KTA view
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
-
+...
+...            IFS-8154 KTP Project Costs - consumables
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -224,7 +226,7 @@ New lead applicant confirms the knowledge based organisation details and creates
     Then the user creates an account and verifies email     Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 New lead applicant completes the KTP application
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
