@@ -31,7 +31,8 @@
     </section>
 </th:block>
 
-<th:block th:fragment="accordion(model)">
+<th:block th:fragment="accordion(model)" th:with="parentModel=${parentModel} ?: null, feedbackFragment=${feedbackFragment} ?: null">
+
     <th:block th:each="section, sectionIter : ${model.sections}">
         <section>
             <h2 th:text="${section.name}"
@@ -101,25 +102,15 @@
                     <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
                 </div>
 
-                <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}"
-                    th:insert="application/readonly/application-read-only :: additional_feedback (${model})" ></th:block>
+                <th:block th:if="${feedbackFragment != null}">
+                    <th:block th:include="${feedbackFragment}" />
+                </th:block>
             </th:block>
 
         </section>
     </th:block>
 
     <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
-</th:block>
-
-<th:block th:fragment="additional_feedback(model)">
-    <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
-    <div class="govuk-form-group download">
-        <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
-        <a target="_blank"
-           th:href="@{{downloadBaseURL}/download-feedback(downloadBaseURL=${model.downloadBaseURL})}"
-           th:text="|${model.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
-           class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
-    </div>
 </th:block>
 
 <th:block th:fragment="assessor_feedback(model)">

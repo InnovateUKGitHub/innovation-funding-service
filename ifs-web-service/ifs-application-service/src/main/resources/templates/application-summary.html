@@ -129,7 +129,18 @@
                     </th:block>
                 </th:block>
 
-                <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+                <th:block th:insert="application/readonly/application-read-only :: accordion (model=${model.applicationReadOnlyViewModel}, feedbackFragment=~{ :: .feedbackFragment}, parentModel=${model})">
+                    <div class="feedbackFragment" th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">
+                        <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
+                        <div class="govuk-form-group download">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
+                            <a target="_blank"
+                               th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${parentModel.application.id})}"
+                               th:text="|${parentModel.applicationReadOnlyViewModel.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
+                               class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
+                        </div>
+                    </div>
+                </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>
