@@ -47,7 +47,7 @@ public class SpendProfileCostFilterTest {
                         FinanceRowType.ESTATE_COSTS,
                         FinanceRowType.KTP_TRAVEL
                 )
-                .build(15);
+                .build(16);
 
         assertThat(financeCostTotalResourceResult)
                 .usingRecursiveFieldByFieldElementComparator()
