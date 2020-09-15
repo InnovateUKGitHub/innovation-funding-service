@@ -3,6 +3,8 @@ Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-7959  KTP Your Project Finances - Links for Detailed Finances
 ...
+...               IFS-8154 KTP Project Costs - consumables
+...
 ...               IFS-8157  KTP Project costs - Subcontracting costs
 ...
 Suite Setup       Custom Suite Setup
@@ -119,18 +121,18 @@ Consumables calculations
     Then the user should see the right values    2,000    Consumables    7369
 
 Additional company cost estimation validations
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790  IFS-8154
     Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimation")
     When the user fills additional company costs     ${EMPTY}  ${EMPTY}
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790  IFS-8154
     Given the user fills additional company costs       description  100
-    Then the user should see the element                jQuery = h4:contains("Total additional company cost estimations"):contains("£500")
+    Then the user should see the element                jQuery = h4:contains("Total additional company cost estimations"):contains("£600")
 
 Mark as complete and check read only view
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790  IFS-8154
     Given the user clicks the button/link    jQuery = button:contains("Mark as complete")
     When the user clicks the button/link     link = Your project costs
     Then the user should see the read only view of KTP
@@ -161,10 +163,12 @@ the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="otherStaff.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="capitalEquipment.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="otherCosts.description"]
+    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ textarea[id$="consumables.description"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="associateSalary.cost"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="managementSupervision.cost"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="otherStaff.cost"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="capitalEquipment.cost"]
+    the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="consumables.cost"]
     the user should see the element       jQuery = span:contains(${empty_field_warning_message}) ~ input[id$="otherCosts.cost"]
 
 the user should see the read only view of KTP
@@ -176,7 +180,7 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total estates costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
-    the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£500")
+    the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£600")
 
 the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")

@@ -663,10 +663,12 @@ the user fills additional company costs
     the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
     the user enters text to a text field  css = textarea[id$="capitalEquipment.description"]  ${description}
     the user enters text to a text field  css = textarea[id$="otherCosts.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="consumables.description"]  ${description}
     the user enters text to a text field  css = input[id$="associateSalary.cost"]  ${value}
     the user enters text to a text field  css = input[id$="managementSupervision.cost"]  ${value}
     the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
     the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="consumables.cost"]  ${value}
     the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
 
 the user selects organisation type as business
