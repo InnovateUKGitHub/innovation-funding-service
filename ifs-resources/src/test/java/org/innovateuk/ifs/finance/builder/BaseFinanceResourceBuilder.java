@@ -224,10 +224,10 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                 FinanceRowType.ADDITIONAL_COMPANY_COSTS, newAdditionalCompanyCostCategory().withCosts(
                         newAdditionalCompanyCost().
                                 withId(1L, 2L).
-                                withType(AdditionalCompanyCostType.ASSOCIATE_SALARY, AdditionalCompanyCostType.MANAGEMENT_SUPERVISION, AdditionalCompanyCostType.OTHER_STAFF, AdditionalCompanyCostType.CAPITAL_EQUIPMENT, AdditionalCompanyCostType.OTHER_COSTS).
+                                withType(AdditionalCompanyCostType.ASSOCIATE_SALARY, AdditionalCompanyCostType.MANAGEMENT_SUPERVISION, AdditionalCompanyCostType.OTHER_STAFF, AdditionalCompanyCostType.CAPITAL_EQUIPMENT, AdditionalCompanyCostType.OTHER_COSTS, AdditionalCompanyCostType.CONSUMABLES).
                                 withCost(new BigInteger("123")).
                                 withDescription("Something").
-                                build(5))
+                                build(6))
                         .build())
         );
     }
