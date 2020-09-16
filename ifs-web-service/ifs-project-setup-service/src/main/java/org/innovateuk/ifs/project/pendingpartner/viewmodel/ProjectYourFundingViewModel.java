@@ -97,4 +97,8 @@ public class ProjectYourFundingViewModel {
     public boolean hideAreYouRequestingFunding() {
         return isKtpFundingType() && !leadOrganisation;
     }
+
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
+    }
 }
