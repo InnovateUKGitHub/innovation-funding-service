@@ -12,6 +12,8 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
@@ -51,6 +53,10 @@ public class CompetitionManagementApplicationController {
     private ApplicationRestService applicationRestService;
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    @Autowired
+    private InterviewResponseRestService interviewResponseRestService;
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Autowired
@@ -161,5 +167,26 @@ public class CompetitionManagementApplicationController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
+    }
+
+    @GetMapping("/{applicationId}/download-response")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadResponse(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+
+        return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
+                interviewResponseRestService.findResponse(applicationId).getSuccess());
+    }
+
+    @GetMapping("/{applicationId}/download-feedback")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
+                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
     }
 }

@@ -31,7 +31,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
     private final CompetitionResource competition;
     private final ApplicationResource application;
     private final UserResource user;
-    private final Optional<ProcessRoleResource> applicantProcessRole;
+    private final Optional<ProcessRoleResource> usersProcessRole;
 
     private final Map<Long, QuestionResource> questionIdToQuestion;
     private final Multimap<Long, FormInputResource> questionIdToApplicationFormInputs;
@@ -44,7 +44,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
 
 
     public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
-                                   UserResource user, Optional<ProcessRoleResource> applicantProcessRole,
+                                   UserResource user, List<ProcessRoleResource> processRoles,
                                    List<QuestionResource> questions, List<FormInputResource> formInputs,
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
@@ -52,7 +52,9 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         this.application = application;
         this.competition = competition;
         this.user = user;
-        this.applicantProcessRole = applicantProcessRole;
+        this.usersProcessRole = processRoles.stream().
+                filter(pr -> pr.getUser().equals(user.getId()))
+                .findAny();
 
         this.questionIdToQuestion = questions.stream()
                 .collect(toMap(QuestionResource::getId, Function.identity()));
@@ -124,8 +126,8 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return questionToQuestionStatus;
     }
 
-    public Optional<ProcessRoleResource> getApplicantProcessRole() {
-        return applicantProcessRole;
+    public Optional<ProcessRoleResource> getUsersProcessRole() {
+        return usersProcessRole;
     }
 
     public Map<Long, ApplicationAssessmentResource> getAssessmentToApplicationAssessment() {
@@ -144,7 +146,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(competition, that.competition)
                 .append(application, that.application)
                 .append(user, that.user)
-                .append(applicantProcessRole, that.applicantProcessRole)
+                .append(usersProcessRole, that.usersProcessRole)
                 .append(questionIdToQuestion, that.questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses, that.formInputIdToFormInputResponses)
@@ -159,7 +161,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(competition)
                 .append(application)
                 .append(user)
-                .append(applicantProcessRole)
+                .append(usersProcessRole)
                 .append(questionIdToQuestion)
                 .append(questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses)

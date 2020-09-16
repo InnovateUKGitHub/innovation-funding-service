@@ -166,7 +166,6 @@ Applicant can see the feedback given
 Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253  IFS-3571
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link         link = Feedback overview
     Given the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf (opens in a new window)
     Then the compAdmin checks the status for response uploaded applicantion
     And the comp admin see the response uploaded by lead applicant
@@ -437,9 +436,9 @@ an assessor checks for email and invite on his dashboard
 an applicant can see the feedback given by as assessor
     the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     the user should see the element      jQuery = h3:contains("Additional Innovate UK feedback") ~ a:contains("testing_5MB.pdf")
-    the user clicks the button/link      jQuery = a:contains("Business opportunity")
+    the user clicks the button/link      jQuery = button:contains("Business opportunity")
     the user should see the element      jQuery = p:contains("This is the business opportunity feedback")
-    the user should see the element      jQuery = h2:contains("Average score: 8.0/ 10")
+    the user should see the element      jQuery = span:contains("Average score 8.0 / 10")
 
 an applicant uploads response to an applicantion
     log in as a different user                 ${peter_styles_email}   ${short_password}
@@ -478,9 +477,9 @@ the comp admin notify remaining applications to an assessor
 an assessor can view feedback overview of an application
     [Arguments]   ${application}  ${message}
     the user clicks the button/link     link = ${application}
-    the user should see the element     jQuery = h1:contains("Feedback overview")
+    the user should see the element     jQuery = h1:contains("Application overview")
     the user should see the element     jQuery = .message-alert p:contains("${message}")
-    assessor should see the competition terms and conditions     Back to feedback overview
+    assessor should see the competition terms and conditions     Back to application overview
 
 Custom suite teardown
     Disconnect from database

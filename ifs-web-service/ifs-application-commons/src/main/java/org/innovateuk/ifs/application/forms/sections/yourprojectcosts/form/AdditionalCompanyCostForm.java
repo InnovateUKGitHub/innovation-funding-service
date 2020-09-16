@@ -18,6 +18,8 @@ public class AdditionalCompanyCostForm {
     @Valid
     private AdditionalCostAndDescription capitalEquipment;
     @Valid
+    private AdditionalCostAndDescription consumables;
+    @Valid
     private AdditionalCostAndDescription otherCosts;
 
     public AdditionalCompanyCostForm() {
@@ -28,6 +30,7 @@ public class AdditionalCompanyCostForm {
         managementSupervision = new AdditionalCostAndDescription(costCategory.getManagementSupervision());
         otherStaff = new AdditionalCostAndDescription(costCategory.getOtherStaff());
         capitalEquipment = new AdditionalCostAndDescription(costCategory.getCapitalEquipment());
+        consumables = new AdditionalCostAndDescription(costCategory.getConsumables());
         otherCosts = new AdditionalCostAndDescription(costCategory.getOtherCosts());
     }
 
@@ -63,6 +66,15 @@ public class AdditionalCompanyCostForm {
         this.capitalEquipment = capitalEquipment;
     }
 
+
+    public AdditionalCostAndDescription getConsumables() {
+        return consumables;
+    }
+
+    public void setConsumables(AdditionalCostAndDescription consumables) {
+        this.consumables = consumables;
+    }
+
     public AdditionalCostAndDescription getOtherCosts() {
         return otherCosts;
     }
@@ -77,6 +89,7 @@ public class AdditionalCompanyCostForm {
                 .add(zeroIfNull(managementSupervision))
                 .add(zeroIfNull(otherStaff))
                 .add(zeroIfNull(capitalEquipment))
+                .add(zeroIfNull(consumables))
                 .add(zeroIfNull(otherCosts));
     }
 
