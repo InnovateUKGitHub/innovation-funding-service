@@ -66,25 +66,24 @@ public class CompetitionInitialiser {
             default:
                 throw new IllegalArgumentException("Unrecognised funding type when initialising competition.");
         }
-        IntStream.range(0, types.size()).forEach(i -> {
+        IntStream.range(0, types.size()).forEach(i ->
             competition.getCompetitionFinanceRowTypes().add(
                     competitionFinanceRowsTypesRepository.save(
-                            new CompetitionFinanceRowTypes(competition, types.get(i), i)));
-
-        });
+                            new CompetitionFinanceRowTypes(competition, types.get(i), i)))
+        );
         return competition;
     }
 
     private List<FinanceRowType> ktpFinanceTypes() {
-        return newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, SUBCONTRACTING_COSTS, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, YOUR_FINANCE);
+        return newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING);
     }
 
     private List<FinanceRowType> loanFinanceTypes() {
-        return newArrayList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, GRANT_CLAIM_AMOUNT, OTHER_FUNDING, YOUR_FINANCE);
+        return newArrayList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, GRANT_CLAIM_AMOUNT, OTHER_FUNDING);
     }
 
     private List<FinanceRowType> procurementFinanceTypes() {
-        return newArrayList(LABOUR, PROCUREMENT_OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, FINANCE, OTHER_FUNDING, YOUR_FINANCE, VAT);
+        return newArrayList(LABOUR, PROCUREMENT_OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, FINANCE, OTHER_FUNDING, VAT);
     }
 
     private List<FinanceRowType> defaultFinanceTypes() {

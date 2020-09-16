@@ -419,7 +419,7 @@ the user should see that the funding depends on the research area
     the user clicks the button/link  link = Your project finances
 
 the user should see his finances empty
-    the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
+    the user should see the element  jQuery = thead:contains("Total costs") ~ *:contains("0")
 
 the user enters value to field
     [Arguments]  ${field}  ${value}

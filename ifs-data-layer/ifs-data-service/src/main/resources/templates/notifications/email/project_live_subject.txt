@@ -1,1 +1,1 @@
-Grant offer letter approved for project ${applicationId}
+${titleUpper} approved for project ${applicationId}
