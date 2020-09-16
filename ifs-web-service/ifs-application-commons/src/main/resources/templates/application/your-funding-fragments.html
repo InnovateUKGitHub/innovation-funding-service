@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, hideOtherFundingLegend, ktpOtherFundingGuidance)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, leadApplicant)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -80,21 +80,24 @@
         <div class="govuk-form-group govuk-!-margin-bottom-9"
              th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
-                <th:block th:unless="${hideOtherFundingLegend}">
+                <th:block th:unless="${ktpFundingType}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h1 class="govuk-fieldset__heading">Other funding</h1>
                     </legend>
                 </th:block>
-                <th:block th:if="${hideOtherFundingLegend}">
+                <th:block th:if="${ktpFundingType}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                        <h1 class="govuk-fieldset__heading">Have you received any funding for a similar project?</h1>
+                        <h1 class="govuk-fieldset__heading">
+                            <th:block th:unless="${leadApplicant}">Have you received any other public sector funding for this project?</th:block>
+                            <th:block th:if="${leadApplicant}">Have you received any funding for a similar project?</th:block>
+                        </h1>
                     </legend>
                 </th:block>
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
-                <th:block th:unless="${hideOtherFundingLegend}">
+                <th:block th:unless="${ktpFundingType}">
                     <span class="govuk-hint">Have you received any other public sector funding for this project?
-                        <th:block th:unless="${ktpOtherFundingGuidance}">This is important as other public sector support counts as part of the funding you can receive.</th:block>
+                        This is important as other public sector support counts as part of the funding you can receive.
                     </span>
                 </th:block>
                 <div id="otherFunding" class="govuk-radios">

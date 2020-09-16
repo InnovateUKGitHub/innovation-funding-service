@@ -185,20 +185,4 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
     public boolean hideAreYouRequestingFunding() {
         return isKtpFundingType() && !leadApplicant;
     }
-
-    /*
-     * Hide other funding legend on a ktp competition for lead applicant (KB)
-     *
-     * */
-    public boolean hideOtherFundingLegend() {
-        return isKtpFundingType() && leadApplicant;
-    }
-
-    /*
-     * Other funding guidance on a ktp competition for partner applicant (Business)
-     *
-     * */
-    public boolean ktpOtherFundingGuidance() {
-        return isKtpFundingType() && !leadApplicant;
-    }
 }
