@@ -29,7 +29,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
 
     /* Procurement */
-    VAT("vat", "Total VAT", COST),
+    VAT("vat", "Total VAT", INCLUDE_IN_SPEND_PROFILE, COST),
     PROCUREMENT_OVERHEADS("procurement_overheads", "Overheads", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
 
     /* KTP */
@@ -39,7 +39,9 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ASSOCIATE_SUPPORT("associate_support", "Additional associate support", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     KNOWLEDGE_BASE("knowledge_base", "Knowledge base supervisor", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     ESTATE_COSTS("estate_costs", "Estate", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
-    ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs");
+    ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs"),
+    PREVIOUS_FUNDING("previous_funding", "Other funding", COST);
+
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,

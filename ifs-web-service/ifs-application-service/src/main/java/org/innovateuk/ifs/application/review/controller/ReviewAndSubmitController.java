@@ -242,8 +242,8 @@ public class ReviewAndSubmitController {
                 .failNowOrSucceedWith(failureView, successView);
     }
 
-    @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")
-    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants and kta can track their application after submitting.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
                                    @PathVariable long applicationId,

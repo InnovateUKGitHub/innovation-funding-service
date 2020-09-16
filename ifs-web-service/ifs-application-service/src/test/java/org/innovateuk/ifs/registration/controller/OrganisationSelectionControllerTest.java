@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -124,6 +125,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
                 .withLeadApplicantType(asList(5L))
+                .withFundingType(FundingType.KTP)
                 .build();
         ApplicationInviteResource applicationInviteResource = newApplicationInviteResource()
                 .withCompetitionId(competitionId)

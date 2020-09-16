@@ -90,19 +90,19 @@ Non-registered assessor: Reject invitation
 
 The internal user invites an applicant as an assessor
     Given the comp admin logs in and navigate to invite tab   ${openCompetitionRTO_name}
-    When The internal user invites a user as an assessor      Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    When The internal user invites a user as an assessor      Abby Gallagher   ${abby_gallagher_credentials["email"]}
     Then the internal user send invite
     [Teardown]    Logout as user
 
 The invited applicant accepts the invitation
-    Given the user reads his email and clicks the link    ${RTO_lead_applicant_credentials["email"]}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
+    Given the user reads his email and clicks the link    ${abby_gallagher_credentials["email"]}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
     When the user selects the radio button                acceptInvitation  true
     And the user clicks the button/link                   css = button[type = "Submit"]
     Then the user should see the element                  jQuery = p:contains("Your email address is linked to an existing account.")
 
 The internal user invites the applicant to assess another competition
     Given the comp admin logs in and navigate to invite tab  ${openCompetitionAPC}
-    When The internal user invites a user as an assessor     Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    When The internal user invites a user as an assessor     Abby Gallagher  ${abby_gallagher_credentials["email"]}
     Then the user should see a field and summary error       ${email_already_in_use}
     [Teardown]    Logout as user
 

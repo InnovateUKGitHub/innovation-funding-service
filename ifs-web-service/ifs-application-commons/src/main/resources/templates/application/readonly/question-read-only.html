@@ -33,20 +33,17 @@
             </p>
         </div>
 
-        <th:block th:if="${model.hasAssessorResponse()}">
-            <div class="clear-floats">
-                <div class="govuk-grid-row govuk-!-margin-top-6">
-                    <div class="govuk-grid-column-one-half">
-                        <h3 class="govuk-heading-s">Feedback</h3>
-                    </div>
-                    <div class="govuk-grid-column-one-half alignright govuk-heading-s">
-                        Score <span th:text="${model.score}">Feedback score</span>/10
-                    </div>
-                </div>
-            </div>
+        <th:block th:if="${model.hasFeedback()}">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <p class="govuk-body" th:text="${model.feedback}">Feedback text</p>
+                    <th:block th:each="feedback, iteration : ${model.feedback}">
+                        <div class="govuk-!-padding-3 bordered govuk-!-margin-top-2">
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-1" th:text="|Assessor ${iteration.count}|">Assessor</h3>
+                            <p class="govuk-body" th:text="${feedback}">Feedback text</p>
+                        </div>
+                    </th:block>
                 </div>
             </div>
         </th:block>
@@ -187,11 +184,32 @@
             </tr>
             </tbody>
         </table>
-    </th:block>
+        </th:block>
+        <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge transfer adviser</h2>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
+                    <th th:if="${model.internal}" scope="col" class="govuk-table__header govuk-!-width-one-third">Phone number</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"
+                        th:text="${model.ktaProcessRole.get().userName}"></td>
+                    <td class="govuk-table__cell"
+                        th:if="${model.internal}"
+                        th:text="${model.ktaPhoneNumber}"></td>
+                    <td class="govuk-table__cell ifs-table__email"
+                        th:text="${model.ktaProcessRole.get().userEmail}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
 </th:block>
-
-
-<th:block th:fragment="grant-transfer-details(model)">
+<th:block th:fragment="grant-transfer-details (model)">
     <dl class="govuk-list">
         <dt>Project name</dt>
         <dd th:text="${model.projectName}">My EU project name</dd>
@@ -225,7 +243,7 @@
     </dl>
 </th:block>
 
-<th:block th:fragment="grant-agreement(model)">
+<th:block th:fragment="grant-agreement (model)">
     <th:block th:if="${model.filename != null}">
         <!--/* don't use @{...} so that URL is always pointing to application service */-->
         <a th:href="${'/application/' + model.applicationId +'/grant-agreement'}" th:text="${model.filename}"
@@ -237,7 +255,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions(model)">
+<th:block th:fragment="terms-and-conditions (model)">
     <th:block th:unless="${model.complete}">
         <div class="warning-alert">
             <p class="govuk-body">The following organisations have not yet accepted:</p>

@@ -157,7 +157,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         partnerProjectLocationRequired);
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
-                                : "The proposed start date and location of the project.",
+                                : competition.isProcurement() ? "The start date and location of this project." : "The proposed start date and location of the project.",
                         projectComplete ? format("/project/%d/details/readonly", project.getId())
                                 : format("/project/%d/details", project.getId()),
                         sectionStatus.projectDetailsSectionStatus(
@@ -207,7 +207,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
             case BANK_DETAILS:
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        "We need bank details for those partners eligible for funding.",
+                        "We need your organisation's bank details.",
                         projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
                                 : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
@@ -236,8 +236,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
                 );
             case GRANT_OFFER_LETTER:
-                return new SetupStatusStageViewModel(stage, "Grant offer letter",
-                        "Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.",
+                String title = competition.isProcurement() ? "Contract" : "Grant offer letter";
+                return new SetupStatusStageViewModel(stage, title,
+                        "Once all tasks are complete the Project Manager can review, sign and submit the " + title.toLowerCase() + " to us.",
                         format("/project/%d/offer", project.getId()),
                         sectionStatus.grantOfferLetterSectionStatus(
                                 ownOrganisation.getGrantOfferLetterStatus(),
