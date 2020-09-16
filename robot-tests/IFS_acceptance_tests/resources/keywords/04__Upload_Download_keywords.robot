@@ -19,10 +19,10 @@ the user can remove the uploaded file
 
 the user can remove file with multiple uploads
     [Arguments]  ${name}  ${file_name}
-    Click Button    name=${name}
-    Wait Until Page Does Not Contain Without Screenshots    Removing
-    Page Should Contain    Upload
-    Page Should Not Contain    ${file_name}
+    Click Button                                             name=${name}
+    Wait Until Page Does Not Contain Without Screenshots     Removing
+    Page Should Contain                                      Upload
+    Page Should Not Contain                                  ${file_name}
 
 #Download
 The user downloads the file
