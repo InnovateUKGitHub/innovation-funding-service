@@ -92,14 +92,16 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withType(SectionType.FUNDING_FINANCES).build();
         UserResource user = newUserResource().build();
 
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+
         ApplicantResource applicant = newApplicantResource()
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
                         .withRoleName("leadapplicant")
                         .build())
-                .withOrganisation(newOrganisationResource()
-                        .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
+                .withOrganisation(organisation)
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -145,7 +147,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
         assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisation.getId()), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
     }
 
