@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -33,6 +35,9 @@ public class ProjectTeamViewModelPopulator {
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
@@ -100,7 +105,10 @@ public class ProjectTeamViewModelPopulator {
     }
 
     private boolean canInvitePartnerOrganisation(ProjectResource project, UserResource user) {
-        return user.hasRole(PROJECT_FINANCE)
+        boolean isSingle = competitionRestService.getCompetitionById(project.getCompetition())
+                .getSuccess()
+                .getCollaborationLevel() == CollaborationLevel.SINGLE;
+        return !isSingle && user.hasRole(PROJECT_FINANCE)
                 && !project.isSpendProfileGenerated()
                 && project.getProjectState().isActive();
     }

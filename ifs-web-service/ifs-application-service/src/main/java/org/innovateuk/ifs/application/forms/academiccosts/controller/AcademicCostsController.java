@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -60,9 +59,6 @@ public class AcademicCostsController {
     private UserRestService userRestService;
 
     @Autowired
-    private YourProjectCostsCompleter completeSectionAction;
-
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @GetMapping
@@ -107,7 +103,7 @@ public class AcademicCostsController {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())),
+                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()).getSuccess(),
                         mappingErrorKeyToField("validation.application.jes.upload.required", "jesFile"), defaultConverters());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
