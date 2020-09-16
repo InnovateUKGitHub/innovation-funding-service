@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationA
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -58,9 +57,6 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
     @Mock
     private UserRestService userRestService;
 
-    @Mock
-    private YourProjectCostsCompleter completeSectionAction;
-
     @Test
     public void viewAcademicCosts() throws Exception {
         AcademicCostViewModel viewModel = mockViewModel();
@@ -108,7 +104,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
         when(saver.save(any(AcademicCostForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
-        when(completeSectionAction.markAsComplete(SECTION_ID, APPLICATION_ID, processRole)).thenReturn(new ValidationMessages());
+        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -118,7 +114,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
         verify(saver).save(any(AcademicCostForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
-        verify(completeSectionAction).markAsComplete(SECTION_ID, APPLICATION_ID, processRole);
+        verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId());
     }
 
     @Test

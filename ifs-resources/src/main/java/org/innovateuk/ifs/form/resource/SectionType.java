@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.form.resource;
 
+import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+
 import java.util.Optional;
 
 /**
@@ -30,5 +33,22 @@ public enum SectionType {
 
     public String getNameLower() {
         return this.name().toLowerCase();
+    }
+
+    public boolean isSectionTypeNotRequiredForOrganisationAndCompetition(ApplicationConfiguration competition, OrganisationTypeEnum organisationType, boolean lead) {
+        if (competition.isKtp()) {
+            if (lead) {
+                return this == ORGANISATION_FINANCES;
+            } else {
+                return this == PROJECT_COST_FINANCES;
+            }
+        }
+        if (this == SectionType.TERMS_AND_CONDITIONS) {
+            return competition.isExpressionOfInterest();
+        }
+        if (this == SectionType.ORGANISATION_FINANCES) {
+            return !competition.applicantShouldSeeYourOrganisationSection(organisationType);
+        }
+        return this == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
     }
 }

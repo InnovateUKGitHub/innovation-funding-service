@@ -40,7 +40,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     KNOWLEDGE_BASE("knowledge_base", "Knowledge base supervisor", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     ESTATE_COSTS("estate_costs", "Estate", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs"),
-    PREVIOUS_FUNDING("previous_funding", "Other funding", COST);
+    PREVIOUS_FUNDING("previous_funding", "Other funding");
 
 
     enum FinanceRowOptions {
