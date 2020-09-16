@@ -16,6 +16,7 @@ public class AdditionalCompanyCost extends AbstractFinanceRowItem {
         MANAGEMENT_SUPERVISION,
         OTHER_STAFF,
         CAPITAL_EQUIPMENT,
+        CONSUMABLES,
         OTHER_COSTS
     }
 

@@ -21,14 +21,18 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
-...            IFS-8104  KTP application overview content review 
+...            IFS-8147 Partners have the visibility of KTA on application
+...
+...            IFS-8104  KTP application overview content review
 ...
 ...            IFS-7960  KTA Deashboard
 ...
 ...            IFS-7983  KTP Your Project Finances - KTA view
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
-
+...
+...            IFS-8154 KTP Project Costs - consumables
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -119,9 +123,9 @@ KTP application shows the correct guidance text
     When the user should see the element                       jQuery = h1:contains("Application overview")
     Then the user should see the element                       jQuery = p:contains("This section contains the background information we need for your project.")
     And the user should not see the element                    jQuery = p:contains("These are the questions which will be marked by the assessors.")
-    
+
 Existing/new partner can only see business Or non profit organisation types
-    [Documentation]  IFS-7841    
+    [Documentation]  IFS-7841
     Given the lead invites already registered user             ${existing_partner_ktp_email}  ${ktpCompetitionName}
     When logging in and error checking                         &{ktpExistingPartnerCredentials}
     Then the user clicks the button/link                       link = Join with a different organisation
@@ -224,7 +228,7 @@ New lead applicant confirms the knowledge based organisation details and creates
     Then the user creates an account and verifies email     Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 New lead applicant completes the KTP application
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
@@ -302,7 +306,14 @@ The applicant invites the KTA again
     Given the user enters text to a text field      id = ktaEmail   ${ktaEmail}
     When the user clicks the button/link            name = invite-kta
     Then the user should see the element            jQuery = td:contains("pending for 0 days")
-    [Teardown]  Logout as user
+
+Partner can see the invited KTA in Application team
+    [Documentation]  IFS-8147
+    [Setup]  log in as a different user       &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link     link = ${ktpApplicationTitle}
+    When the user clicks the button/link      link = Application team
+    Then the user should see the element      jQuery = td:contains("pending for 0 days")
+    [Teardown]  logout as user
 
 The KTA can see application name, organisation and lead applicant details in the invite
     [Documentation]  IFS-7806  IFS-8001
@@ -348,12 +359,22 @@ Lead applicant verifies the inviation is accepted.
     When log in as a different user              &{ktpLeadApplicantCredentials}
     And the user navigates to the page           ${server}/application/${ApplicationID}/form/question/1994/team
     Then the user should not see the element     name = resend-kta
+    And the user should see the element          name = remove-kta
+
+Partner can also see the KTA in Application team
+    [Documentation]  IFS-8147
+    [Setup]  log in as a different user          &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link        link = ${ktpApplicationTitle}
+    When the user clicks the button/link         link = Application team
+    Then the user should not see the element     name = resend-kta
+    And the user should see the element          jQuery = td:contains("${ktaEmail}")
 
 New lead applicant submits the application
-   [Documentation]  IFS-7812  IFS-7814
-   When the user clicks the button/link             link = Application overview
-   And the applicant completes Application Team
-   Then the applicant submits the application
+    [Documentation]  IFS-7812  IFS-7814
+    [Setup]  log in as a different user               &{ktpLeadApplicantCredentials}
+    Given the user clicks the button/link             link = ${ktpApplicationTitle}
+    When the applicant completes Application Team
+    Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148

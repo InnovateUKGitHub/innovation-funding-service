@@ -27,6 +27,3 @@ public class AdditionalCompanyCostCategoryBuilder extends AbstractFinanceRowCost
         return new AdditionalCompanyCostCategory();
     }
 }
-
-    
-
