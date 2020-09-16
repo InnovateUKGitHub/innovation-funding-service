@@ -635,11 +635,10 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
-    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP project costs, location and organisation information as complete     ${application_title}   Calculate  52,214
-    ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
-    ...  ELSE                              Run keywords    the user marks the finances as complete                                                     ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
-
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
+    ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
     the user clicks the button/link       link = Apply with a different organisation
@@ -664,10 +663,12 @@ the user fills additional company costs
     the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
     the user enters text to a text field  css = textarea[id$="capitalEquipment.description"]  ${description}
     the user enters text to a text field  css = textarea[id$="otherCosts.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="consumables.description"]  ${description}
     the user enters text to a text field  css = input[id$="associateSalary.cost"]  ${value}
     the user enters text to a text field  css = input[id$="managementSupervision.cost"]  ${value}
     the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
     the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="consumables.cost"]  ${value}
     the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
 
 the user selects organisation type as business
