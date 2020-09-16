@@ -86,7 +86,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         if (academic) {
             addAcademicFinance(model, applicationId, costSection.getId(), organisationId);
         } else {
-            addIndustrialFinance(model, applicationId, costSection.getId(), organisation);
+            addIndustrialFinance(model, applicationId, costSection.getId(), organisationId);
         }
 
         addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competitionAssessmentConfigResource.getAssessorFinanceView());
@@ -105,10 +105,10 @@ public class AssessmentDetailedFinancesModelPopulator {
         model.addAttribute("form", form);
     }
 
-    private void addIndustrialFinance(Model model, long applicationId, long sectionId, OrganisationResource organisation) {
-        YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, sectionId, organisation.getId(), true);
+    private void addIndustrialFinance(Model model, long applicationId, long sectionId, long organisationId) {
+        YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, sectionId, organisationId, true);
 
-        YourProjectCostsForm form = yourProjectCostsFormPopulator.populateForm(applicationId, organisation);
+        YourProjectCostsForm form = yourProjectCostsFormPopulator.populateForm(applicationId, organisationId);
         model.addAttribute("costsViewModel", viewModel);
         model.addAttribute("form", form);
     }

@@ -10,8 +10,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +109,7 @@ public class YourProjectCostsFormValidator {
             validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.exceedAllowedLimit", null, "validation.ktp.project.costs.exceeded.required")));
         }
         if (justificationForm.getExceedAllowedLimit() == Boolean.TRUE && StringUtils.isEmpty(justificationForm.getJustification())) {
-            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.justification", null, "validation.ktp.project.costs.justification.required")));
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justification-text", null, "validation.ktp.project.costs.justification.required")));
         }
     }
 
@@ -157,11 +155,10 @@ public class YourProjectCostsFormValidator {
         // both having 1 blank row, or both having 0 blank rows is valid.
     }
 
-    public void validate(long applicationId, long organisationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
+    public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
         CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         competition.getFinanceRowTypes().forEach(type -> validateType(form, type, validationHandler));
-        if (organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
+        if (competition.isKtp()) {
             validateJustification(form.getJustificationForm(), validationHandler);
         }
     }

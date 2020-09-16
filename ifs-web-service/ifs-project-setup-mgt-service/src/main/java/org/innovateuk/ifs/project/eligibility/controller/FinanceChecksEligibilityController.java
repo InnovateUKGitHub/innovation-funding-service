@@ -128,7 +128,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             if (!isUsingJesFinances) {
                 model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), !eligibilityApproved, rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
                 if (form == null) {
-                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get())));
+                    future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
             } else {
                 if (academicCostForm == null) {

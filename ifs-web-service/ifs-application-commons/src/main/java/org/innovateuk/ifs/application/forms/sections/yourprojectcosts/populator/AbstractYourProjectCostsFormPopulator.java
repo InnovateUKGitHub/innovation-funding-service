@@ -9,6 +9,8 @@ import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,9 +26,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
 
-    public YourProjectCostsForm populateForm(long targetId, OrganisationResource organisation) {
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    public YourProjectCostsForm populateForm(long targetId, long organisationId) {
         YourProjectCostsForm form = new YourProjectCostsForm();
-        BaseFinanceResource finance = getFinanceResource(targetId, organisation.getId());
+        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
         form.setOverhead(overhead(finance));
         form.setLabour(labour(finance));
@@ -57,6 +62,9 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setEstateCostRows(toRows(finance, FinanceRowType.ESTATE_COSTS,
                 EstateCostRowForm.class, EstateCost.class));
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
+
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
         if (ApplicationFinanceResource.class.equals(finance.getClass()) && organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
             form.setJustificationForm(justificationForm(finance));
         }
