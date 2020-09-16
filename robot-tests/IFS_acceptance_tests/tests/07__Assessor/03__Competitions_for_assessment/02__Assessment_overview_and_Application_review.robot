@@ -195,7 +195,7 @@ the user clicks previous and goes to the page
     the user should see the element           jQuery = h1:contains("${page_content}")
 
 the finance summary total should be correct
-    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
+    Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(2)    200,903
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(3)    30.00%
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
     Element Should Contain    css = .finance-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
