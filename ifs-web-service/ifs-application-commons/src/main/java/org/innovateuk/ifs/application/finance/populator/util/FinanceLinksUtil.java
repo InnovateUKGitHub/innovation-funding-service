@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestSer
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.HttpServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +39,25 @@ public class FinanceLinksUtil {
         if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
             if (!application.isSubmitted()) {
                 if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
-                    return Optional.of(internalLink(application.getId(), organisation));
+                    return Optional.of(organisationIdInLink(application.getId(), organisation));
                 }
             } else {
-                return Optional.of(internalLink(application.getId(), organisation));
+                return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
         }
 
         if (currentUserRole.isPresent()) {
-            if (applicantProcessRoles().contains(currentUserRole.get().getRole())
-                    && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
-                return Optional.of(applicantLink(application.getId()));
+            if (applicantProcessRoles().contains(currentUserRole.get().getRole())) {
+                if (competition.isKtp()) {
+                    //All KTP users can see each others finances.
+                    return Optional.of(organisationIdInLink(application.getId(), organisation));
+                } else if (currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
+                    return Optional.of(applicantsOrganisationLink(application.getId()));
+                }
             }
 
             if (currentUserRole.get().getRole().isKta()) {
-                return Optional.of(internalLink(application.getId(), organisation));
+                return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
@@ -72,11 +75,11 @@ public class FinanceLinksUtil {
         return format("/assessment/application/%d/detailed-finances/organisation/%d", application.getId(), organisation.getId());
     }
 
-    private String internalLink(long applicationId, OrganisationResource organisation) {
+    private String organisationIdInLink(long applicationId, OrganisationResource organisation) {
         return format("/application/%d/form/%s/%d", applicationId, SectionType.FINANCE.name(), organisation.getId());
     }
 
-    private String applicantLink(long applicationId) {
+    private String applicantsOrganisationLink(long applicationId) {
         return format("/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
