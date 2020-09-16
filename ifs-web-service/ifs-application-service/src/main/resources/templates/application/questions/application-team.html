@@ -263,7 +263,7 @@
                 <th:block th:if="${model.ktpCompetition} ">
                     <h2 class="govuk-heading-m">Knowledge transfer adviser</h2>
                     <p class="govuk-body" th:unless="${model.readOnly}">Enter the knowledge transfer adviser's details below to invite them to the application. They will only be able to view the application after accepting their invitation.</p>
-                    <p class="govuk-body" th:unless="${model.readOnly}">The lead applicant cannot mark the page as complete until a knowledge transfer adviser has accepted their invitation.</p>
+                    <p class="govuk-body" th:unless="${model.readOnly}">The knowledge base partner cannot mark the page as complete until a knowledge transfer adviser has accepted their invitation.</p>
 
                     <div th:if="${model.hasNoKta()}" class="govuk-form-group">
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
