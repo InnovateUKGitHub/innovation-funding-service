@@ -147,8 +147,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
-        assertFalse(viewModel.hideOtherFundingLegend());
-        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
     @Test
@@ -176,8 +174,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
-        assertFalse(viewModel.hideOtherFundingLegend());
-        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
     @Test
@@ -208,8 +204,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
-        assertFalse(viewModel.hideOtherFundingLegend());
-        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
     @Test
@@ -279,8 +273,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
-        assertTrue(viewModel.hideOtherFundingLegend());
-        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
     @Test
@@ -349,7 +341,5 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
-        assertFalse(viewModel.hideOtherFundingLegend());
-        assertTrue(viewModel.ktpOtherFundingGuidance());
     }
 }
