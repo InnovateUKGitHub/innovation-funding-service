@@ -47,8 +47,7 @@ public class CompetitionInitialiserTest {
                 TRAVEL,
                 OTHER_COSTS,
                 GRANT_CLAIM_AMOUNT,
-                OTHER_FUNDING,
-                YOUR_FINANCE
+                OTHER_FUNDING
         )));
     }
     @Test
