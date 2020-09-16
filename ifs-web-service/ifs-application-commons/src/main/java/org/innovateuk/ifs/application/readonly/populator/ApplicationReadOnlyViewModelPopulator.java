@@ -23,7 +23,6 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -57,9 +56,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
-    private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
     private SectionRestService sectionRestService;
