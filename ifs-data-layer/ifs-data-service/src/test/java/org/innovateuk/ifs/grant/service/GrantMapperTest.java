@@ -92,7 +92,7 @@ public class GrantMapperTest {
     private ProjectFinanceHandler projectFinanceHandler;
 
     @InjectMocks
-    protected GrantMapper grantMapper = new GrantMapper();
+    protected GrantMapper grantMapper;
 
     @Before
     public void setupMockInjection() {
@@ -155,7 +155,7 @@ public class GrantMapperTest {
         assertThat(grant.getSourceSystem(), equalTo("IFS"));
 
         // expect 1 Project Manager record, one Finance Contact record for each Organisation and 1 innovation lead record and 1 monitoring officer
-        int expectedNumberOfParticipantRecords = 1 + (parameter.partnerOrganisationCount) + 1 + 1;
+        int expectedNumberOfParticipantRecords = 1 + (parameter.participantCount()) + 1 + 1;
 
         assertThat(grant.getParticipants(), hasSize(expectedNumberOfParticipantRecords));
 
@@ -178,7 +178,9 @@ public class GrantMapperTest {
 
         forEachWithIndex(financeContactParticipants, (i, participant) -> {
 
-            assertThat(participant.getForecasts().size(), equalTo(parameter.costCategoryCount()));
+            int expectedForecasts = parameter.includeSubcontracting ? parameter.costCategoryCount() : parameter.costCategoryCount() + 1;
+            assertThat(participant.getForecasts().size(), equalTo(expectedForecasts));
+
             Forecast overheads = participant.getForecasts().stream()
                     .filter(forecast -> OVERHEADS.equals(forecast.getCostCategory()))
                     .findFirst()
@@ -192,6 +194,7 @@ public class GrantMapperTest {
             if (parameter.expectedOverheadRates().size() > i) {
                 assertThat(participant.getOverheadRate().longValue(), equalTo(parameter.expectedOverheadRates().get(i)));
             }
+            assertTrue(participant.getForecasts().stream().anyMatch(f -> "Subcontracting".equals(f.getCostCategory())));
         });
 
     }
@@ -200,8 +203,8 @@ public class GrantMapperTest {
     public static Collection<Parameter> parameters() {
         return asList(
                 newParameter("basic", newProject()),
-                newParameter("single", newProject()).duration(1).expectedOverheads(10L)
-
+                newParameter("single", newProject()).duration(1).expectedOverheads(10L),
+                newParameter("no subcontracting", newProject()).withoutSubcontracting()
         );
     }
 
@@ -211,13 +214,11 @@ public class GrantMapperTest {
 
     private static class Parameter {
         private ProjectBuilder projectBuilder;
+        private boolean includeSubcontracting = true;
         private String name;
-        private List<FormInputResponse> formInputResponses = new ArrayList<>();
         private long competitionId = 2L;
         private long applicationId = 1L;
         private long projectId = 1L;
-        private String projectSummary;
-        private String publicDescription;
         private int duration = 12;
         private int partnerOrganisationCount = 3;
         private int costCategoryCount = 2;
@@ -231,22 +232,8 @@ public class GrantMapperTest {
             return this;
         }
 
-        private ProjectBuilder projectBuilder() {
-            return projectBuilder;
-        }
-
-        private Parameter applicationId(long applicationId) {
-            this.applicationId = applicationId;
-            return this;
-        }
-
         private long applicationId() {
             return applicationId;
-        }
-
-        private Parameter competitionId(long competitionId) {
-            this.competitionId = competitionId;
-            return this;
         }
 
         private long competitionId() {
@@ -262,18 +249,8 @@ public class GrantMapperTest {
             return name;
         }
 
-        private Parameter participantCount(int participantCount) {
-            this.partnerOrganisationCount = participantCount;
-            return this;
-        }
-
         private int participantCount() {
             return partnerOrganisationCount;
-        }
-
-        private Parameter costCategoryCount(int costCategoryCount) {
-            this.costCategoryCount = costCategoryCount;
-            return this;
         }
 
         private int costCategoryCount() {
@@ -294,6 +271,11 @@ public class GrantMapperTest {
             return this;
         }
 
+        private Parameter withoutSubcontracting() {
+            this.includeSubcontracting = false;
+            return this;
+        }
+
         private List<Long> expectedOverheads() {
             return expectedOverheads;
         }
@@ -302,18 +284,12 @@ public class GrantMapperTest {
             return expectedOverheadRates;
         }
 
-        private Parameter expectedOverheadRates(Long... expectedOverheadRates) {
-            this.expectedOverheadRates = asList(expectedOverheadRates);
-            return this;
-        }
-
-
         private String publicDescription() {
-            return publicDescription == null ? name + " public description" : publicDescription;
+            return name + " public description";
         }
 
         private String projectSummary() {
-            return publicDescription == null ? name + " project summary" : projectSummary;
+            return name + " project summary";
         }
 
         private FormInputResponse projectSummaryResponse() {
@@ -346,10 +322,19 @@ public class GrantMapperTest {
             List<Cost> spendProfileFigures = new ArrayList<>();
             for (int costCategoryIndex = 0 ; costCategoryIndex < costCategoryCount ; costCategoryIndex++ ) {
                 for (int durationIndex = 0 ; durationIndex < duration ; durationIndex++ ) {
+
+                    String costCategoryName;
+                    if (costCategoryIndex == 0) {
+                        costCategoryName = OVERHEADS;
+                    } else if (costCategoryIndex == 1 && includeSubcontracting) {
+                        costCategoryName = "Subcontracting";
+                    } else {
+                        costCategoryName = "cost-" + costCategoryIndex;
+                    }
+
                     spendProfileFigures.add(new Cost(BigDecimal.valueOf(value))
                             .withTimePeriod(durationIndex, null, null, null)
-                            .withCategory(new CostCategory(costCategoryIndex == 0
-                                    ? OVERHEADS : "cost-" + costCategoryIndex)));
+                            .withCategory(new CostCategory(costCategoryName)));
                 }
             }
             return new SpendProfile(null, null, null, eligibleCosts, spendProfileFigures, null, null, true);
