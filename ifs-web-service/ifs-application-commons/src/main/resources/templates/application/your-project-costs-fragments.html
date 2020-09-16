@@ -3017,7 +3017,7 @@
             <select class="govuk-select"
                     required="required"
                     th:attr="data-required-errormessage=#{validation.ktp.travel.type.required}"
-                    th:errorclass="govuk-select--error"
+                    th:errorclass="govuk-input--error"
                     th:name="__${path}__.type">
                 <option disabled="disabled" value="" th:selected="${row.type == null}">Select</option>
                 <option
