@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -25,11 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidCollaborator;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
 
 @RequestMapping("/organisation/select")
 @SecuredBySpring(value = "Controller", description = "An existing applicant can pick a previous organisation." +
@@ -64,13 +65,21 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                                             Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
 
-        if (cannotSelectOrganisation(user, request, competition)) {
+        if (cannotSelectOrganisation(user, request)) {
             return "redirect:" + nextPageInFlow();
         }
-        model.addAttribute("model", organisationSelectionViewModelPopulator.populate(user,
+
+        OrganisationSelectionViewModel viewModel = organisationSelectionViewModelPopulator.populate(user,
                 request, competition,
-                nextPageInFlow()));
+                nextPageInFlow());
+
+        if (viewModel.getChoices().isEmpty()) {
+            return "redirect:" + nextPageInFlow();
+        }
+
+        model.addAttribute("model", viewModel);
         addPageSubtitleToModel(request, user, model);
+
         return "registration/organisation/select-organisation";
     }
 
@@ -87,22 +96,9 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     }
 
-    private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request, CompetitionResource competitionResource) {
+    private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request) {
         return user == null
-                || !user.hasRole(Role.APPLICANT)
-                || isLinkedToPreviousOrganisations(user.getId(), request, competitionResource);
-    }
-
-    private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request, CompetitionResource competitionResource) {
-        final boolean international = registrationCookieService.isInternationalJourney(request);
-
-        List<OrganisationResource> organisations = organisationRestService.getOrganisations(userId, international).getSuccess();
-
-        if (!competitionResource.isKtp() && organisations.size() == 1) {
-            return Boolean.TRUE.equals(organisations.stream().anyMatch(o -> o.getOrganisationTypeEnum().equals(KNOWLEDGE_BASE)));
-        }
-
-        return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
+                || !user.hasRole(Role.APPLICANT);
     }
 
     private String nextPageInFlow() {

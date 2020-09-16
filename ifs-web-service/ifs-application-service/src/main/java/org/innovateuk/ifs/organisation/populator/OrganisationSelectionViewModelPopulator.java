@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,10 +39,18 @@ public class OrganisationSelectionViewModelPopulator {
 
     public OrganisationSelectionViewModel populate(UserResource userResource, HttpServletRequest request, CompetitionResource competitionResource, String newOrganisationUrl) {
 
-        EnumSet<OrganisationTypeEnum> allowedTypes = EnumSet.allOf(OrganisationTypeEnum.class);
+        boolean isCollaboratorJourney = registrationCookieService.isCollaboratorJourney(request);
+
+        Set<OrganisationTypeEnum> allowedTypes = EnumSet.allOf(OrganisationTypeEnum.class);
 
         if (!competitionResource.isKtp()) {
             allowedTypes.remove(KNOWLEDGE_BASE);
+        } else {
+            if (isCollaboratorJourney) {
+                allowedTypes.removeIf(CollectionFunctions.negate(OrganisationTypeEnum::isKtpCollaborator));
+            } else {
+                allowedTypes.removeIf(CollectionFunctions.negate(OrganisationTypeEnum::isKnowledgeBase));
+            }
         }
 
         Set<OrganisationSelectionChoiceViewModel> choices = getOrganisationResources(userResource.getId(), request)
