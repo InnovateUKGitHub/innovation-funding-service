@@ -658,18 +658,6 @@ the user sets max available funding
 
 the user fills additional company costs
     [Arguments]  ${description}  ${value}
-#<<<<<<< HEAD
-#    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.associateSalary.description"]  ${description}
-#    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.managementSupervision.description"]  ${description}
-#    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.otherStaff.description"]  ${description}
-#    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.capitalEquipment.description"]  ${description}
-#    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.otherCosts.description"]  ${description}
-#    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.associateSalary.cost"]  ${value}
-#    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.managementSupervision.cost"]  ${value}
-#    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.otherStaff.cost"]  ${value}
-#    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.capitalEquipment.cost"]  ${value}
-#    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.otherCosts.cost"]  ${value}
-#=======
     the user enters text to a text field  css = textarea[id$="associateSalary.description"]  ${description}
     the user enters text to a text field  css = textarea[id$="managementSupervision.description"]  ${description}
     the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
@@ -682,7 +670,6 @@ the user fills additional company costs
     the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
     the user enters text to a text field  css = input[id$="consumables.cost"]  ${value}
     the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
-#>>>>>>> development
 
 the user selects organisation type as business
     [Arguments]  ${organisationTypeId}

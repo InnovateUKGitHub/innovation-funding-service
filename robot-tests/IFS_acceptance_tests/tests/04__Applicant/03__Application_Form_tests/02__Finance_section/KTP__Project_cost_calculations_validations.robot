@@ -124,14 +124,14 @@ Consumables calculations
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
-    Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimation")
+    Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
     When the user fills additional company costs     ${EMPTY}  ${EMPTY}
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
     [Documentation]  IFS-7790  IFS-8154
     Given the user fills additional company costs       description  100
-    Then the user should see the element                jQuery = h4:contains("Total additional company cost estimations"):contains("£600")
+    Then the user should see the element                jQuery = h4:contains("Total additional company cost estimates"):contains("£600")
 
 Mark as complete and check read only view
     [Documentation]  IFS-7790  IFS-8154
@@ -189,7 +189,7 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total associates estates costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
-    the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£600")
+    the user should see the element       jQuery = th:contains("Total additional company cost estimates") ~ td:contains("£600")
 
 the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")
