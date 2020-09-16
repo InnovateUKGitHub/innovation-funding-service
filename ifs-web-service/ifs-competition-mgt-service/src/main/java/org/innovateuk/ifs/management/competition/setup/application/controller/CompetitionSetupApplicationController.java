@@ -291,7 +291,7 @@ public class CompetitionSetupApplicationController {
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, KTP_ASSESSMENT));
     }
 
 
