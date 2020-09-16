@@ -9,6 +9,4 @@ public interface ScheduleStatusService {
 
     @NotSecured(value = "Used by @Scheduled methods", mustBeSecuredByOtherServices = false)
     void endJob(String jobName);
-
-
 }
