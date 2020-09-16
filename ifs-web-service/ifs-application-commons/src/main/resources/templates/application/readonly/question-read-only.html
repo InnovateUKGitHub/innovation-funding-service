@@ -111,13 +111,11 @@
 </th:block>
 
 <th:block th:fragment="finance-summary (model)">
-    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
-        provided by all partners in this project.</p>
+    <p class="govuk-body" th:unless="${model.fullyFunded}">The finances of all project partners are included in this summary.</p>
 
     <p class="govuk-body" th:if="${model.open}">
-        To make changes to your organisations' finances, go back to the
         <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your project finances</a> section.
+           class="govuk-link">Return to your project finances</a> to make changes to your organisation's financial information.
     </p>
 
     <div>
