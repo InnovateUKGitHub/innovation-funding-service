@@ -210,6 +210,8 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
     @Test
     public void populateForKtpLead() {
+        long organisationId = 3L;
+
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.KTP).build();
         SectionResource sectionResource = newSectionResource()
@@ -225,6 +227,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                         .withRole(Role.LEADAPPLICANT)
                         .build())
                 .withOrganisation(newOrganisationResource()
+                        .withId(organisationId)
                         .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
                         .build())
                 .build();
@@ -273,12 +276,14 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
         assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
     }
 
     @Test
     public void populateForKtpPartner() {
+        long organisationId = 3L;
+
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.KTP).build();
         SectionResource sectionResource = newSectionResource()
@@ -294,6 +299,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                         .withRole(Role.PARTNER)
                         .build())
                 .withOrganisation(newOrganisationResource()
+                        .withId(organisationId)
                         .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                         .build())
                 .build();
@@ -341,7 +347,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
         assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
     }
 }

@@ -143,13 +143,14 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .withCompetition(competition.getId())
                 .withName("Name")
                 .build();
+        UserResource user = newUserResource().build();
 
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
 
-        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, false);
+        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
         assertTrue(viewModel.isKtpCompetition());
         assertEquals("ktp_state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
