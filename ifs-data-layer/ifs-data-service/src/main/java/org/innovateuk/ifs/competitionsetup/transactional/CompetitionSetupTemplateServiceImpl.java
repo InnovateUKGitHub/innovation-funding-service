@@ -133,6 +133,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
 
+//    Move to Investor Partnership Builder
     private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(FundingType fundingType, List<SectionBuilder> sections) {
         if (FundingType.INVESTOR_PARTNERSHIPS == fundingType) {
             Optional<SectionBuilder> termsSection = sections.stream()
@@ -203,6 +204,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 false, competition.isGrant(), fileTypes));
     }
 
+//    Move to builders
     private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
         if (populatedCompetition.getFundingType() != FundingType.GRANT) {
             GrantTermsAndConditions grantTermsAndConditions =

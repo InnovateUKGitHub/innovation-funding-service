@@ -1,7 +1,9 @@
-package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
+package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.FundingTypeTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,11 +25,6 @@ public class KtpBuilder implements FundingTypeTemplate {
                 ktpAssessmentQuestions()
                         .withQuestions(ktpDefaultQuestions())
         );
-    }
-
-    @Override
-    public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        return competition;
     }
 
     public static List<QuestionBuilder> ktpDefaultQuestions() {
