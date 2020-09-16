@@ -28,7 +28,10 @@ public class GrantProcessor {
         } catch (Exception e) {
             return;
         }
-        service.sendReadyProjects();
-        scheduleStatusService.endJob(JOB_NAME);
+        try {
+            service.sendReadyProjects();
+        } finally {
+            scheduleStatusService.endJob(JOB_NAME);
+        }
     }
 }
