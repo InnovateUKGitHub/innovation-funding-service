@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, leadApplicant)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, lead)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -88,8 +88,8 @@
                 <th:block th:if="${ktpFundingType}">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h1 class="govuk-fieldset__heading">
-                            <th:block th:unless="${leadApplicant}">Have you received any other public sector funding for this project?</th:block>
-                            <th:block th:if="${leadApplicant}">Have you received any funding for a similar project?</th:block>
+                            <th:block th:unless="${lead}">Have you received any other public sector funding for this project?</th:block>
+                            <th:block th:if="${lead}">Have you received any funding for a similar project?</th:block>
                         </h1>
                     </legend>
                 </th:block>
