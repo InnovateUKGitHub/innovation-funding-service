@@ -145,6 +145,9 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
                 .build();
         UserResource user = newUserResource().build();
 
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
