@@ -9,7 +9,11 @@ import java.util.regex.Pattern;
 
 public class EmailAddressValidator {
 
-    public static Pattern pattern = Pattern.compile(ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX);
+    private static boolean validateEmail(String emailAddress) {
+        Pattern pattern = Pattern.compile(ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX);
+        Matcher matcher = pattern.matcher(emailAddress);
+        return matcher.matches();
+    }
 
     public static class KtpPredicateProvider implements BiPredicateProvider<String, Boolean> {
         public BiPredicate<String, Boolean> predicate() {
@@ -18,8 +22,7 @@ public class EmailAddressValidator {
 
         private boolean isValidEmailAddress(String emailAddress, Boolean ktpRole) {
             if (ktpRole) {
-                Matcher matcher = pattern.matcher(emailAddress);
-                return matcher.matches();
+                return validateEmail(emailAddress);
             }
             return true;
         }
@@ -32,8 +35,7 @@ public class EmailAddressValidator {
 
         private boolean isValidEmailAddress(String emailAddress, Boolean ktpRole) {
             if (!ktpRole) {
-                Matcher matcher = pattern.matcher(emailAddress);
-                return matcher.matches();
+                return validateEmail(emailAddress);
             }
             return true;
         }
