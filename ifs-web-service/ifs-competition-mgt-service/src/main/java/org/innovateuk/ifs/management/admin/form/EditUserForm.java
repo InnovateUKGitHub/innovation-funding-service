@@ -36,7 +36,7 @@ public class EditUserForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.emailinternal.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @Size(max = 254, message = "{validation.standard.email.length.max}")
+    @Size(max = 254, message = "{validation.invite.email.length.max}")
     private String email;
 
     private Role role;

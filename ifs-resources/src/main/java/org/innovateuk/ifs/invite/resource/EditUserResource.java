@@ -16,7 +16,7 @@ public class EditUserResource {
     private Long userId;
 
     @NotBlank(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
             @Size(min=2, message="{validation.invite.firstname.length.min}"),
             @Size(max=70, message="{validation.invite.firstname.length.max}"),
@@ -24,7 +24,7 @@ public class EditUserResource {
     private String firstName;
 
     @NotBlank(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
             @Size(min=2, message="{validation.invite.lastname.length.min}"),
             @Size(max=70, message="{validation.invite.lastname.length.max}"),
