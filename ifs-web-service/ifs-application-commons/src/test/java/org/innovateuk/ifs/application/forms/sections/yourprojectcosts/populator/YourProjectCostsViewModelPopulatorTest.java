@@ -93,6 +93,7 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         assertFalse(viewModel.isInternal());
         assertTrue(viewModel.isReadOnly());
         assertTrue(viewModel.isProcurementCompetition());
+        assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
     }
 
     @Test
@@ -124,5 +125,37 @@ public class YourProjectCostsViewModelPopulatorTest extends BaseServiceUnitTest<
         YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
 
         assertFalse(viewModel.isProcurementCompetition());
+        assertEquals("state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
+    }
+
+    @Test
+    public void populate_ktp() {
+        CompetitionResource competition = newCompetitionResource()
+                .withApplicationFinanceType(ApplicationFinanceType.STANDARD_WITH_VAT)
+                .withFundingType(FundingType.KTP)
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withName("orgname")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withCompetition(competition.getId())
+                .withName("Name")
+                .build();
+        UserResource user = newUserResource().build();
+
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource()
+                .withOrganisation(organisation.getId())
+                .build()));
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
+        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
+        when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(singletonList(SECTION_ID));
+
+        YourProjectCostsViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, user);
+
+        assertTrue(viewModel.isKtpCompetition());
+        assertEquals("ktp_state_aid_checkbox_label", viewModel.getStateAidCheckboxLabelFragment());
     }
 }
