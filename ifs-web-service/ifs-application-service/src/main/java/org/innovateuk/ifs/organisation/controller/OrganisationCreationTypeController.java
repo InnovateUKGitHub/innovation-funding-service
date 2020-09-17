@@ -44,8 +44,6 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     public static final String COMPETITION_ID = "competitionId";
 
     protected static final String NOT_ELIGIBLE = "not-eligible";
-    protected static final String NOT_ELIGIBLE_LEAD = TEMPLATE_PATH + "/" + "not-eligible-lead";
-    protected static final String NOT_ELIGIBLE_COLLABORATOR = TEMPLATE_PATH + "/" + "not-eligible-collaborator";
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -127,9 +125,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
     @GetMapping(NOT_ELIGIBLE)
     public String showNotEligible(Model model, HttpServletRequest request) {
-        boolean isLead = registrationCookieService.isLeadJourney(request);
-
-        return isLead ? NOT_ELIGIBLE_LEAD : NOT_ELIGIBLE_COLLABORATOR;
+        return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
     }
 
     private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
