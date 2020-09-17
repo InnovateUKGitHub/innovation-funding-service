@@ -43,7 +43,9 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
     }
 
-    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() { return interviewFeedbackViewModel; }
+    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
+        return interviewFeedbackViewModel;
+    }
 
     @Override
     public Long getApplicationId() {
