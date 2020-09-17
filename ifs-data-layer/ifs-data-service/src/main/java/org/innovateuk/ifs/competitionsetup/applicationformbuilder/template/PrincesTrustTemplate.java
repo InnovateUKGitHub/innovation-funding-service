@@ -1,8 +1,10 @@
-package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
+package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,29 +14,24 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 
 @Component
-public class GenericTemplate implements CompetitionTemplate {
+public class PrincesTrustTemplate implements CompetitionTemplate {
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
-    @Autowired
-    private CommonBuilders commonBuilders;
-
     @Override
     public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.GENERIC;
+        return CompetitionTypeEnum.THE_PRINCES_TRUST;
     }
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Innovate UK"));
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("The Prince's Trust"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(36);
         return competition;
     }
-
 
     @Override
     public List<SectionBuilder> sections() {
@@ -44,18 +41,16 @@ public class GenericTemplate implements CompetitionTemplate {
                                 applicationTeam(),
                                 applicationDetails(),
                                 researchCategory(),
-                                equalityDiversityAndInclusion(),
-                                projectSummary(),
-                                publicDescription(),
-                                scope()
+                                equalityDiversityAndInclusion()
                         )),
                 applicationQuestions()
-                        .withQuestions(newArrayList(
-                                genericQuestion()
-                        )),
-                finances(),
+                        .withQuestions(princesTrustDefaultQuestions()),
                 termsAndConditions()
         );
 
+    }
+
+    private static List<QuestionBuilder> princesTrustDefaultQuestions() {
+        return EoiTemplate.eoiDefaultQuestions();
     }
 }

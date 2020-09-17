@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
+package org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;

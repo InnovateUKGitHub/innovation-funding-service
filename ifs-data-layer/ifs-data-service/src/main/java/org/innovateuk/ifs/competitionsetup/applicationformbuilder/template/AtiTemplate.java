@@ -1,8 +1,11 @@
-package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
+package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +15,23 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 
 @Component
-public class PrincesTrustTemplate implements CompetitionTemplate {
+public class AtiTemplate implements CompetitionTemplate {
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
+    @Autowired
+    private CommonBuilders commonBuilders;
+
     @Override
     public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.THE_PRINCES_TRUST;
+        return CompetitionTypeEnum.AEROSPACE_TECHNOLOGY_INSTITUTE;
     }
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("The Prince's Trust"));
+        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI)"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(36);
@@ -39,16 +46,19 @@ public class PrincesTrustTemplate implements CompetitionTemplate {
                                 applicationTeam(),
                                 applicationDetails(),
                                 researchCategory(),
-                                equalityDiversityAndInclusion()
+                                equalityDiversityAndInclusion(),
+                                projectSummary(),
+                                publicDescription(),
+                                scope()
                         )),
                 applicationQuestions()
-                        .withQuestions(princesTrustDefaultQuestions()),
+                        .withQuestions(atiDefaultQuestions()),
+                finances(),
                 termsAndConditions()
         );
-
     }
 
-    private static List<QuestionBuilder> princesTrustDefaultQuestions() {
-        return EoiTemplate.eoiDefaultQuestions();
+    private static List<QuestionBuilder> atiDefaultQuestions() {
+        return ApcTemplate.apcDefaultQuestions();
     }
 }
