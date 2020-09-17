@@ -501,14 +501,14 @@ The applicants should not see knowledge based organisations when joining a non-k
     And the lead invites already registered user             ${lead_ktp_email}  ${nonKTPCompettitionName}
     When partner login to see your organisation details
     Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
-#
-#The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
-#    [Documentation]  IFS-8035
-#    Given log in as a different user                                        &{ifs_admin_user_credentials}
-#    And the user clicks the button/link                                     jQuery = a:contains("Project setup")
-#    When admin adds a partner to non-ktp application from project setup
-#    And log in as a different user                                          ${lead_ktp_email}   ${short_password}
-#    Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
+
+The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
+    [Documentation]  IFS-8035
+    Given log in as a different user                                        &{ifs_admin_user_credentials}
+    And the user clicks the button/link                                     jQuery = a:contains("Project setup")
+    When admin adds a partner to non-ktp application from project setup
+    And logging in and error checking                                       ${lead_ktp_email}   ${short_password}
+    Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 *** Keywords ***
 the user marks the KTP project costs, location and organisation information as complete
@@ -653,7 +653,7 @@ Requesting IDs of this application
 
 Requesting IDs of this non-ktp application
     ${nonKTPApplicationID} =  get application id by name   ${noKTPApplicationName}
-    Set suite variable    ${ApplicationID}
+    Set suite variable    ${nonKTPApplicationID}
 
 Custom suite teardown
     Close browser and delete emails
@@ -776,15 +776,15 @@ the user should see KTP finance sections are complete
     the user should see the element     css = li:nth-of-type(4) .task-status-complete
 
 partner login to see your organisation details
-    #the user clicks the button/link       link = Sign in
     Logging in and Error Checking         &{ktpLeadApplicantCredentials}
     the user selects the radio button     international   false
     the user clicks the button/link       id = international-organisation-cta
 
 admin adds a partner to non-ktp application from project setup
+    Requesting IDs of this non-ktp application
     the user clicks the button/link                    link = Project Setup Comp 8
     the user clicks the button/link                    jQuery = tr:contains("PSC application 8") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
     the user adds a new partner organisation           ${ktpOrgName}  Indi Gardiner  ${lead_ktp_email}
-    organisation is able to accept project invite      Indi  Gardiner  ${lead_ktp_email}  ${ApplicationID}  ${noKTPApplicationName}
-    the user clicks the button/link                    link = Continue, confirm organisation
+    organisation is able to accept project invite      Indi  Gardiner  ${lead_ktp_email}   ${nonKTPApplicationID}   ${noKTPApplicationName}
+    the user clicks the button/link                    link = Continue, sign in
