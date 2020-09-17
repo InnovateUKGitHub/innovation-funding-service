@@ -84,6 +84,16 @@
                         <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles" />
                     </div>
                 </th:block>
+
+                <div th:if="${!responseRequired && model.appendixExists}">
+                    <th:block th:each="appendix : ${model.appendixDetails}">
+                        <div th:replace="question-type/form-elements :: readonly-file-download
+                            (filename=${appendix.filename},
+                            filesizeKbytes=${appendix.filesizeKbytes},
+                            fileDescription=${model.appendixFileDescription}+':',
+                            downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})})" />
+                    </th:block>
+                </div>
                 <input type="hidden" id="cacheTest" value="" />
 
                 <th:block th:insert="fragments/assessment :: assessment-pagination" />
