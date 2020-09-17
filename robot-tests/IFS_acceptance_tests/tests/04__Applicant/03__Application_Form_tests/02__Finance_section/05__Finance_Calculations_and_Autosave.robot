@@ -85,7 +85,7 @@ Subcontracting costs
     [Tags]  HappyPath
     When the applicant edits the Subcontracting costs section
     Then Wait Until Element Contains Without Screenshots    jQuery = [data-mirror^="#section-total-subcontracting"]  £200
-    [Teardown]    the user clicks the button/link           jQuery = button:contains("Subcontracting costs")
+    [Teardown]    the user clicks the button/link           jQuery = button:contains("Subcontracting")
 
 Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
@@ -147,7 +147,7 @@ the Applicant fills the Materials fields
     Set Focus To Element                  jQuery = button:contains("Materials")
 
 the applicant edits the Subcontracting costs section
-    the user clicks the button/link             jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link             jQuery = button:contains("Subcontracting")
     the user should see the element             jQuery = label:contains("Subcontractor name")
     the user enters text to a text field        css = #accordion-finances-content-5 .form-row:nth-child(1) [name$=".cost"]   100
     the user enters text to a text field        css = #accordion-finances-content-5 .form-row:nth-child(1) [name$=".name"]    test1
@@ -159,7 +159,7 @@ the applicant edits the Subcontracting costs section
     the user enters text to a text field        css = .form-row:nth-child(2) [name$=".role"]    test3
     the user enters text to a text field        css = #accordion-finances-content-5 .form-row:nth-child(2) [name$=".cost"]   100
     the user enters text to a text field        css = #accordion-finances-content-5 .form-row:nth-child(1) [name$=".name"]    test
-    Set Focus To Element                        jQuery = button:contains("Subcontracting costs")
+    Set Focus To Element                        jQuery = button:contains("Subcontracting")
 
 the applicant fills the 'capital usage' field
     the user clicks the button/link         jQuery = button:contains("Capital usage")
