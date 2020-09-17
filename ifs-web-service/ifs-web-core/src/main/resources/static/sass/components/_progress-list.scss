@@ -306,6 +306,18 @@
 
   .status-2-col{
 
+    @include media-down(mobile) {
+      flex-direction: column-reverse;
+
+      .task {
+        width:100%;
+      }
+
+      .status {
+        width:100%;
+      }
+    }
+
     .task{
       width: 58%;
     }
