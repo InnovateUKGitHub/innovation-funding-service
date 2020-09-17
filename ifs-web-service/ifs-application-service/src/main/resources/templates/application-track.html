@@ -32,7 +32,7 @@
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View application</a>
-                    <a th:if="${model.reopenLinkVisible && !model.currentCompetition.ktp}" th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
+                    <a th:if="${model.reopenLinkVisible}" th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">Reopen application</a>
                     <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
                        class="govuk-link">Print application</a>
@@ -100,7 +100,7 @@
                             <p class="govuk-body">Sometimes your application will have scored well and will receive positive comments from the assessors. The average score however, will not be above the funding threshold for the competition.</p>
                         </th:block>
                         <th:block th:if="${model.currentCompetition.ktp}">
-                            <p class="govuk-body">You will receive feedback from your knowledge transfer adviser.</p>
+                            <p class="govuk-body">You will receive feedback from your knowledge transfer adviser (KTA).</p>
                             <p class="govuk-body">Please note that some unsuccessful proposals may appear to have been favourably assessed, based on the assessors’ comments.</p>
                             <p class="govuk-body">In these cases, a proposal may have failed to meet certain programme rules or simply fell below the funding threshold, while others achieved a higher score overall.</p>
                         </th:block>
@@ -108,11 +108,15 @@
                 </div>
 
                 <h3 class="govuk-heading-m">Application feedback</h3>
-                <p class="govuk-body">Application feedback will be provided by
-                    <strong th:if="${model.currentCompetition.releaseFeedbackDate}" th:text="${#temporals.format(model.currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
-                    <br />We will email you when this becomes available.
-                </p>
-            </th:block>
+                <th:block th:unless="${model.currentCompetition.ktp}">
+                    <p class="govuk-body">Application feedback will be provided by
+                        <strong th:if="${model.currentCompetition.releaseFeedbackDate}" th:text="${#temporals.format(model.currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
+                        <br />We will email you when this becomes available.
+                    </p>
+                </th:block>
+                <th:block th:if="${model.currentCompetition.ktp}">
+                    <p class="govuk-body">Your KTA will give you feedback soon after your funding decision has been made.</p>
+                </th:block>
             <th:block th:if="${displayAdditionalInformation}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
