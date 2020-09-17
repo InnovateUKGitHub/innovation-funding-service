@@ -90,14 +90,16 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withType(SectionType.FUNDING_FINANCES).build();
         UserResource user = newUserResource().build();
 
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+
         ApplicantResource applicant = newApplicantResource()
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
                         .withRoleName("leadapplicant")
                         .build())
-                .withOrganisation(newOrganisationResource()
-                        .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
+                .withOrganisation(organisation)
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -143,7 +145,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
         assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisation.getId()), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
     }
 
@@ -173,4 +175,35 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
     }
+
+    @Test
+    public void populateManagementForKta() {
+        long organisationId = 3L;
+        long competitionId = 4L;
+        CompetitionResource competition = newCompetitionResource().build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withName("name")
+                .withCompetition(competitionId)
+                .build()));
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource()
+                .withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER).build());
+
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals("name", viewModel.getApplicationName());
+        assertEquals(OrganisationTypeEnum.BUSINESS, viewModel.getOrganisationType());
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
+    }
+
 }

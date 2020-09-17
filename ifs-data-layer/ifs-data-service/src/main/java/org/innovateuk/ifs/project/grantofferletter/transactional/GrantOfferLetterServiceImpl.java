@@ -363,7 +363,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 Map<String, Object> notificationArguments = new HashMap<>();
                 notificationArguments.put("dashboardUrl", webBaseUrl);
                 notificationArguments.put("applicationId", project.getApplication().getId());
-                notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
+                String title = project.getApplication().getCompetition().isProcurement() ? "contract" : "grant offer letter";
+                String shortTitle = project.getApplication().getCompetition().isProcurement() ? "contract" : "letter";
+                notificationArguments.put("title", title);
+                notificationArguments.put("shortTitle", shortTitle);
 
                 return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
                     Notification notification = new Notification(systemNotificationSource,
@@ -535,6 +538,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationArguments.put("projectName", project.getName());
         notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
         notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
+        String title = project.getApplication().getCompetition().isProcurement() ? "contract" : "grant offer letter";
+        String titleUpper = project.getApplication().getCompetition().isProcurement() ? "Contract" : "Grant offer letter";
+        notificationArguments.put("title", title);
+        notificationArguments.put("titleUpper", titleUpper);
 
         Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 

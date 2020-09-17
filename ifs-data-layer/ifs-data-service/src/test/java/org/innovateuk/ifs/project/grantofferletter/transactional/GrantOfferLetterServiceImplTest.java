@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.docusign.resource.DocusignType;
@@ -548,6 +549,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Application application = newApplication()
@@ -577,7 +579,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
                 "applicationId", application.getId(),
-                "competitionName", "Competition 1"
+                "title", "grant offer letter",
+                "shortTitle", "letter"
         );
 
         Notification notification = new Notification(systemNotificationSource, to, GRANT_OFFER_LETTER_PROJECT_MANAGER, expectedNotificationArguments);
@@ -613,6 +616,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Application application = newApplication()
@@ -638,7 +642,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard",
                 "applicationId", application.getId(),
-                "competitionName", "Competition 1"
+                "title", "grant offer letter",
+                "shortTitle", "letter"
         );
 
         Notification notification = new Notification(systemNotificationSource, to, GRANT_OFFER_LETTER_PROJECT_MANAGER, expectedNotificationArguments);
@@ -839,6 +844,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Application application = newApplication()
@@ -870,7 +876,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 "applicationId", project.getApplication().getId(),
                 "projectName", project.getName(),
                 "projectStartDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
-                "projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId()
+                "projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId(),
+                "title", "grant offer letter",
+                "titleUpper", "Grant offer letter"
         );
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
@@ -916,6 +924,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition competition = newCompetition()
                 .withName("Competition 1")
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Application application = newApplication()
@@ -942,7 +951,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 "applicationId", project.getApplication().getId(),
                 "projectName", project.getName(),
                 "projectStartDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
-                "projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId()
+                "projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId(),
+                "title", "grant offer letter",
+                "titleUpper", "Grant offer letter"
         );
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));

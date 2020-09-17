@@ -111,13 +111,11 @@
 </th:block>
 
 <th:block th:fragment="finance-summary (model)">
-    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
-        provided by all partners in this project.</p>
+    <p class="govuk-body" th:unless="${model.fullyFunded}">The finances of all project partners are included in this summary.</p>
 
     <p class="govuk-body" th:if="${model.open}">
-        To make changes to your organisations' finances, go back to the
         <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your project finances</a> section.
+           class="govuk-link">Return to your project finances</a> to make changes to your organisation's financial information.
     </p>
 
     <div>
@@ -186,7 +184,7 @@
         </table>
         </th:block>
         <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge Transfer Adviser</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge transfer adviser</h2>
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -209,7 +207,7 @@
             </table>
         </th:block>
 </th:block>
-<th:block th:fragment="grant-transfer-details(model)">
+<th:block th:fragment="grant-transfer-details (model)">
     <dl class="govuk-list">
         <dt>Project name</dt>
         <dd th:text="${model.projectName}">My EU project name</dd>
@@ -243,7 +241,7 @@
     </dl>
 </th:block>
 
-<th:block th:fragment="grant-agreement(model)">
+<th:block th:fragment="grant-agreement (model)">
     <th:block th:if="${model.filename != null}">
         <!--/* don't use @{...} so that URL is always pointing to application service */-->
         <a th:href="${'/application/' + model.applicationId +'/grant-agreement'}" th:text="${model.filename}"
@@ -255,7 +253,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions(model)">
+<th:block th:fragment="terms-and-conditions (model)">
     <th:block th:unless="${model.complete}">
         <div class="warning-alert">
             <p class="govuk-body">The following organisations have not yet accepted:</p>

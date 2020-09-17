@@ -15,7 +15,7 @@ ${continuityLoanCompId}              ${competition_ids["${continuityLoanCompName
 ${continuityLoanPSCompId}            ${competition_ids["${continuityLoanPSCompName}"]}
 ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplication}"]}
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
-${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/feedback
+${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
 ${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
 ${continuityLoanT&C'sTitle}          Loans terms and conditions
 ${continuityLoanT&CLink}             Innovation Continuity Loan

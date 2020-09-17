@@ -19,7 +19,8 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
-        <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
+        <p class="govuk-body" th:if="${model.userLeadPartner}"
+           th:text="${model.procurementCompetition ? 'You must complete these details.' : 'As the lead you must complete these details on behalf of the overall project.'}">..you</p>
         <p class="govuk-body" th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
         <p class="govuk-body"></p>
         <table class="govuk-table">
