@@ -17,6 +17,13 @@ the user can remove the uploaded file
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
+the user can remove file with multiple uploads
+    [Arguments]  ${name}  ${file_name}
+    Click Button                                             name=${name}
+    Wait Until Page Does Not Contain Without Screenshots     Removing
+    Page Should Contain                                      Upload
+    Page Should Not Contain                                  ${file_name}
+
 #Download
 The user downloads the file
     [Documentation]    Makes use of a download script that logs in, grabs a cookie and downloads

@@ -53,7 +53,7 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
         YourOrganisationViewModel yourOrganisationViewModel = mock(YourOrganisationViewModel.class);
         YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
 
-        when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, true)).thenReturn(commonYourProjectFinancesViewModel);
+        when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
         when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
         when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);

@@ -13,7 +13,6 @@ import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.innovateuk.ifs.competition.viewmodel.PublicContentItemViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -39,9 +38,6 @@ public class CompetitionSearchPopulator {
     @Autowired
     private PublicContentItemViewModelMapper publicContentItemViewModelMapper;
 
-    @Value("${ifs.show.covid.questionnaire.links}")
-    private boolean showCovidQuestionnaireLink;
-
     public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
         viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccess());
@@ -66,7 +62,6 @@ public class CompetitionSearchPopulator {
         viewModel.setTotalResults(pageResource.getTotalElements());
         viewModel.setNextPageLink(createPageLink(innovationAreaId, keywords, pageNumber, 1));
         viewModel.setPreviousPageLink(createPageLink(innovationAreaId, keywords, pageNumber, -1));
-        viewModel.setShowCovidQuestionnaireLink(showCovidQuestionnaireLink);
 
         return viewModel;
     }

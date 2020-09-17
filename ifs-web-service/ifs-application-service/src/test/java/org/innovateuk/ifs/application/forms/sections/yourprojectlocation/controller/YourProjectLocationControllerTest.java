@@ -10,6 +10,8 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -27,6 +29,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -90,7 +93,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         YourProjectLocationForm form = new YourProjectLocationForm("S2 5AB", null);
 
-        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, internalUser)).thenReturn(commonFinancesViewModel);
+        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonFinancesViewModel);
         when(formPopulatorMock.populate(applicationId, organisationId)).thenReturn(form);
 
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/your-project-location/" +
@@ -104,7 +107,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         assertThat(model.get("model")).matches(futureMatcher(commonFinancesViewModel));
         assertThat(model.get("form")).matches(futureMatcher(form));
 
-        verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
+        verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, getLoggedInUser());
         verify(formPopulatorMock, times(1)).populate(applicationId, organisationId);
 
         verifyNoMoreInteractionsWithMocks();
@@ -314,13 +317,17 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     private void assertPostcodeValidationErrorsWhenMarkingAsComplete(String invalidPostcode) throws Exception {
-        
+        UserResource user = newUserResource()
+                    .withRoleGlobal(Role.APPLICANT)
+                    .build();
+        setLoggedInUser(user);
+
         YourProjectLocationForm form = new YourProjectLocationForm(invalidPostcode.trim(), null);
 
         when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(
                 restSuccess(OrganisationResourceBuilder.newOrganisationResource().build()));
 
-        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, false)).thenReturn(commonFinancesViewModel);
+        when(commonYourFinancesViewModelPopulatorMock.populate(organisationId, applicationId, sectionId, user)).thenReturn(commonFinancesViewModel);
 
         mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
                 "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
@@ -332,7 +339,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
 
-        verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, false);
+        verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, user);
         verifyNoMoreInteractionsWithMocks();
     }
 

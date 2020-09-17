@@ -1414,7 +1414,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-5">
-                    Subcontracting costs
+                    Subcontracting
                 </span>
                 <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -1433,6 +1433,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block th:unless="${model.internal}">
+                    <th:block th:if="${model.isKtpCompetition()}"
+                              th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
+                    </th:block>
+                </th:block>
                 <p class="govuk-body" th:unless="${model.internal}">Please provide details of any work that you
                     expect
                     to subcontract for your
@@ -1465,36 +1470,40 @@
                        th:value="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"/>
 
                 <th:block th:unless="${model.internal}">
-                    <div class="govuk-body"><p>You can subcontract work if you don’t have the expertise in your
-                        project
-                        team.
-                        You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>Subcontracting costs relate to work carried out by third party organisations. These
-                                organisations are not part of your project.</p>
-                            <p>Subcontracting is eligible providing it is justified<span
-                                th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
-                            </p>
-                            <p>Subcontracting associate companies should be charged at cost.</p>
-                            <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                                should name the subcontractor (<span
-                                    th:if="${!model.isProcurementCompetition()}">where</span><span
-                                    th:if="${model.isProcurementCompetition()}">if</span> known) and describe what
-                                they
-                                will be doing. You should also state where the work will be undertaken.<span
-                                    th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
-                            </p>
-                        </div>
-                    </details>
-                </th:block>
+                    <th:block th:unless="${model.isKtpCompetition()}"
+                              th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
+                    </th:block>                </th:block>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
         </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="subcontracting_guidance">
+    <div class="govuk-body">
+        <p>You can subcontract work if you don’t have the expertise in your
+            project
+            team.
+            You can also subcontract if it is cheaper than developing your skills in-house.</p>
+        <details class="govuk-details" role="group">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>Subcontracting costs relate to work carried out by third party organisations. These
+                    organisations are not part of your project.</p>
+                <p>Subcontracting is eligible providing it is justified
+                    <span th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
+                </p>
+                <p>Subcontracting associate companies should be charged at cost.</p>
+                <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
+                    should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
+                    <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
+                    <span th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                </p>
+            </div>
+        </details>
     </div>
 </th:block>
 
@@ -1677,6 +1686,7 @@
                         </div>
                     </details>
                 </th:block>
+
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="travel-costs-table">
                         <thead class="govuk-table__head">
@@ -1899,11 +1909,12 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal || model.isProcurementCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
+                <p class="govuk-body" th:unless="${model.internal || model.isProcurementCompetition() || model.isKtpCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
                     should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                     limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
                     within any other cost headings.</p>
                 <p class="govuk-body" th:if="${model.isProcurementCompetition()}">Provide estimates of other costs that do not fall under our standard cost headings.</p>
+                <p class="govuk-body" th:if="${model.isKtpCompetition()}">Do not complete this section unless your request has been approved by the programme manager.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="other-costs-table">
                         <thead class="govuk-table__head">
@@ -2201,6 +2212,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These are the associate's total employment costs for all projects listed in the partnership proposal, for example: salary, redundancy payments, NI and pension contributions.</p>
+                    <p class="govuk-body">The business partner is solely responsible for any salary and additional employment costs that exceed the amounts recorded in this section.</p>
+                    <p class="govuk-body">The only reason you may exceed this limit is if you have added a London weighting allowance.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-salary-costs-table">
                         <thead class="govuk-table__head">
@@ -2373,6 +2389,10 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These costs are for any development training the associate needs for this project and for their all-round development.</p>
+                    <p class="govuk-body">You cannot exceed the allowable limit.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-development-costs-table">
                         <thead class="govuk-table__head">
@@ -2537,6 +2557,9 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These are the costs of managing the associate, such as computing, personnel admin, learning resources and secretariat support to the local management committee (LMC).</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-support-table">
                         <thead class="govuk-table__head">
@@ -2693,7 +2716,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Estates
+                    Associates estates costs
                 </span>
                 <span class="finance-total" data-mirror="#section-total-estate-costs"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2712,6 +2735,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">This is usually zero because the associate is normally located at the knowledge base partner’s premises.</p>
+                    <p class="govuk-body">A knowledge base partner may request additional funding, which is capped at £10,000 per project.</p>
+                    <p class="govuk-body">We rarely allow the allowable limit to be exceeded, but if you have an exceptional reason for doing so, please provide a detailed explanation.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow" id="estateCostRows">
                     <table class="govuk-table" id="estate-costs-table">
                         <thead class="govuk-table__head">
@@ -2745,7 +2773,7 @@
                     </p>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total estates costs
+                    Total associates estates costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-estate-costs"
                           th:text="'£' + ${#numbers.formatInteger(form.totalEstateCosts, 0,'DEFAULT')}"></span>
@@ -2847,10 +2875,314 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">Total estates costs</th>
+                <th class="govuk-table__header" scope="row">Total associates estates costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-estate-costs"
                     th:attr="data-calculation-rawvalue=${form.totalEstateCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalEstateCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            KTP TRAVEL COSTS
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="ktp_travel"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).KTP_TRAVEL}">
+    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-9" th:text="${financeRowType.displayName}">
+                    Travel
+                </span>
+                <span class="finance-total" data-mirror="#section-total-ktp-travel"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-ktp-travel"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalKtpTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'ktpTravelCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
+             aria-labelledby="accordion-finances-heading-9">
+            <th:block
+                th:if="${model.isReadOnly(financeRowType)}">
+                <th:block th:insert="application/your-project-costs-fragments :: ktp_travel_read_only"/>
+            </th:block>
+            <th:block
+                th:unless="${model.isReadOnly(financeRowType)}">
+
+                <th:block th:unless="${model.internal}">
+                <p class="govuk-body">Please enter separate costs for the associate and the knowledge base supervisor.
+                    Include all travel and subsistence costs needed for the proposed projects.
+                    Be specific and add each item separately.</p>
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">You can claim reasonable travel and subsistence costs for the associate and knowledge base supervisor only. Costs must be necessary and only for the proposed projects.</p>
+                            <p class="govuk-body">Travel costs should be at economy or pre-agreed rates only. Please consider the environmental impact of your choices.</p>
+                            <p class="govuk-body">State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
+                            <p class="govuk-body">Provide the full details and purpose of any subsistence expenses, including the number of people.</p>
+                            <p class="govuk-body">The business partner’s travel and subsistence costs are not eligible costs.</p>
+                        </div>
+                    </details>
+                </th:block>
+                <div class="govuk-form-group table-overflow" id="ktpTravelCostRows">
+                    <table class="govuk-table" id="ktp-travel-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header table-header-width-15-percent" id="ktp-travel-type" scope="col">Type of cost</th>
+                            <th class="govuk-table__header table-header-width-40-percent" id="ktp-travel-description" scope="col">Purpose of journey or description of subsistence cost</th>
+                            <th id="ktp-travel-quantity" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
+                                Number of trips
+                            </th><th id="ktp-travel-cost" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
+                                Cost (&pound;)
+                            </th>
+                            <th id="ktp-travel-cost" scope="col"
+                                     class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
+                            Total
+                            </th>
+                            <th class="govuk-table__header table-header-width-10-percent alignright" scope="col"><span
+                                class="govuk-visually-hidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="entry : *{ktpTravelCostRows}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: ktp_travel_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                        </tbody>
+                    </table>
+                    <p class="alignright">
+                        <button type="submit"
+                                name="add_cost"
+                                th:value="${financeRowType}"
+                                class="button-clear"
+                                data-repeatable-rowcontainer="#ktp-travel-table tbody">Add another cost
+                        </button>
+                    </p>
+                </div>
+
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row strong-border">
+                            <th class="govuk-table__header table-header-width-80-percent" scope="col">Travel and subsistence summary</th>
+                            <th class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric table-header-width-80-percent" scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Total knowledge base supervisor costs</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                data-calculation-fields="#ktp-travel-table tr:has(select option[value='SUPERVISOR']:selected) .ktp-travel-totals"
+                                data-calculation-operations="+"
+                                data-calculation-triggers="#ktp-travel-table select"
+                                th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0,'DEFAULT')}"></td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Total associate travel costs</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                data-calculation-fields="#ktp-travel-table tr:has(select option[value='ASSOCIATE']:selected) .ktp-travel-totals"
+                                data-calculation-operations="+"
+                                data-calculation-triggers="#ktp-travel-table select"
+                                th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0,'DEFAULT')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total travel and subsistence costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-ktp-travel"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalKtpTravelCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".ktp-travel-totals"
+                       data-calculation-operations="+"
+                       id="section-total-ktp-travel"
+                       th:attr="data-calculation-rawvalue=${form.totalKtpTravelCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalKtpTravelCosts, 0,'DEFAULT')}"/>
+            </th:block>
+            <th:block th:if="${model.internal}"
+                      th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="ajax_ktp_travel_row">
+    <th:block th:object="${form}">
+        <th:block th:insert="application/your-project-costs-fragments :: ktp_travel_row (${id}, ${row})"/>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="ktp_travel_row (id, row)">
+    <tr class="form-group-row-validated" th:with="path=${'ktpTravelCostRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}"
+        th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.type">
+                <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.type)"/>
+            <select class="govuk-select"
+                    required="required"
+                    th:attr="data-required-errormessage=#{validation.ktp.travel.type.required}"
+                    th:errorclass="govuk-input--error"
+                    th:name="__${path}__.type">
+                <option disabled="disabled" value="" th:selected="${row.type == null}">Select</option>
+                <option
+                    th:each="type : ${T(org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType).values()}"
+                    th:text="${type.text}" th:value="${type}" th:selected="${row.type == type}"></option>
+            </select>
+        </td>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.description">
+                <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost.</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
+            <textarea
+                class="govuk-textarea"
+                th:id="__${path}__.description"
+                th:field="*{__${path}__.description}"
+                th:errorclass="govuk-input--error"
+                maxlength="255"
+                rows="4"
+                required="required">
+                            </textarea>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+            <label th:for="__${path}__.times">
+                <span class="govuk-visually-hidden">Number of times</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.times)"/>
+            <input th:id="__${path}__.times"
+                   th:field="*{__${path}__.times}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input"
+                   placeholder="0"
+                   min="1"
+                   max="999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"/>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+            <label th:for="__${path}__.eachCost">
+                <span class="govuk-visually-hidden">Cost each (&pound;)</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.eachCost)"/>
+            <input th:id="__${path}__.eachCost"
+                   th:field="*{__${path}__.eachCost}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input"
+                   placeholder="0"
+                   min="1"
+                   max="9999999999999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric">
+            <label th:for="__${path}__.cost">
+                <span class="govuk-visually-hidden">Total</span>
+            </label>
+            <input type="text"
+                   th:id="__${path}__.cost"
+                   class="alignright govuk-input ktp-travel-totals"
+                   readonly="readonly"
+                   th:attr="data-calculation-fields=|[id='__${path}__.times'],[id='__${path}__.eachCost']|,
+                                                    data-calculation-rawValue=${row.total}"
+                   data-calculation-operations="*"
+                   th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"/>
+        </td>
+        <td class="govuk-table__cell alignright">
+            <button type="submit"
+                    th:name="remove_cost"
+                    th:value="${id}"
+                    class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
+            </button>
+        </td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="ktp_travel_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="ktp-travel-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header table-header-width-15-percent" scope="col">Type of cost</th>
+                <th class="govuk-table__header table-header-width-40-percent" scope="col">Purpose of journey or description of subsistence cost</th>
+                <th scope="col"
+                    class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
+                    Number of trips
+                </th>
+                <th scope="col"
+                         class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
+                Cost (&pound;)
+                </th>
+                <th id="ktp-travel-cost" scope="col"
+                    class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
+                    Total
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{ktpTravelCostRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.type?.text}"></td>
+                    <td class="govuk-table__cell" th:text="${cost.description}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"  th:text="${cost.times != null ? #numbers.formatInteger(cost.times,0,'DEFAULT') : '0'}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.eachCost != null ? #numbers.formatInteger(cost.eachCost,0,'DEFAULT') : '0'}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block
+                            th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}">
+                            1500
+                        </th:block>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" scope="row" colspan="4">Total knowledge base supervisor costs</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            <tr class="govuk-table__row standard-border">
+                <td class="govuk-table__cell" scope="row" colspan="4">Total associate travel costs</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row" colspan="4">Total travel and subsistence costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-ktp-travel"
+                    th:attr="data-calculation-rawvalue=${form.totalKtpTravelCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelCosts, 0, 'DEFAULT')}"/>
                 </td>
             </tr>
             </tfoot>
@@ -2890,27 +3222,28 @@
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
-                <p class="govuk-body">Please provide a breakdown of the consumables you
-                    expect to use during the
-                    project</p>
-                <p class="govuk-body">You can claim the costs of consumables used on your project
-                    providing:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>they are not already purchased or included in the overheads</li>
-                    <li>they are purchased from third parties</li>
-                    <li>they won’t have a residual/resale value at the end of your project. If they do you
-                        can
-                        claim
-                        the
-                        costs minus this value
-                    </li>
-                </ul>
+                <p class="govuk-body">Please provide a breakdown of the consumables you expect to use for the proposed projects.</p>
+                <details class="govuk-details" role="group">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">Consumables costs guidance</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">The consumables budget is a standard contribution towards the consumable items needed to complete these projects.</p>
+                        <p class="govuk-body">They can include the associate’s personal computer, but not capital items that the business partner will use after the project has been completed.</p>
+                        <p class="govuk-body">You also need to allocate each item to the relevant section in the project plan in the ‘Item description and project plan section’ boxes below.</p>
+                        <p class="govuk-body govuk-!-margin-0">You can claim the costs of materials used on the projects providing:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>they are not already purchased or included in the overheads</li>
+                            <li>they are purchased from third parties</li>
+                        </ul>
+                    </div>
+                </details>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="material-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th id="consumables-item" scope="col" class="govuk-table__header">Item</th>
+                            <th id="consumables-item" scope="col" class="govuk-table__header">Item description and project plan section</th>
                             <th id="consumables-quantity" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric width-150">Quantity
                             </th>
@@ -3121,6 +3454,9 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">This is the cost of the knowledge base supervisor in the partnership and their indirect cost element.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="knowledge-base-table">
                         <thead class="govuk-table__head">
@@ -3276,13 +3612,13 @@
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
     <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Additional costs</h2>
-        <p class="govuk-body">These costs are not part of your overall project costs.</p>
+        <p class="govuk-body">These are not part of the proposed projects’ eligible costs.</p>
         <div class="govuk-accordion" data-module="govuk-accordion">
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
                     <h3 class="govuk-accordion__section-heading">
                         <span class="govuk-accordion__section-button" id="accordion-finances-heading-additional-company-costs">
-                            Additional company cost estimation
+                            Additional company cost estimates
                         </span>
                         <span class="finance-total" data-mirror="#additional-company-costs-total"></span>
                         <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'additionalCompanyCostForm')}"
@@ -3306,7 +3642,7 @@
                         </tbody>
                         <tfoot class="govuk-table__body">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" colspan="2" scope="row">Total additional company cost estimations</th>
+                            <th class="govuk-table__header" colspan="2" scope="row">Total additional company cost estimates</th>
                             <td class="govuk-table__cell govuk-table__cell--numeric"
                                 id="additional-company-costs-total"
                                 th:attr="data-calculation-rawvalue=${form.additionalCompanyCostForm.total}">
@@ -3317,7 +3653,7 @@
                     </table>
                     <th:block th:unless="${model.isReadOnly(financeRowType)}" >
                         <h4 class="govuk-heading-s alignright section-total-summary">
-                            Total additional company cost estimations
+                            Total additional company cost estimates
                             <span class="govuk-heading-s"
                                   data-mirror="#additional-company-costs-total"
                                   th:text="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"></span>
@@ -3338,23 +3674,32 @@
 <th:block th:fragment="additional_cost_rows">
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.associateSalary',
-                      label=${'Associate salary ''top up'''})"/>
+                      label=${'Associate salary ''top up'''},
+                      guidance=${'<p>The business partner is responsible for all employment costs that exceed the set limit.</p><p>These ''top-ups'' may be useful to the business partner to attract an associate with specific qualifications and experience.</p>'})"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.managementSupervision',
-                      label='Management supervision')"/>
+                      label='Management supervision',
+                      guidance=${'<p>The business partner is responsible for the full cost of any supervision and support it gives the associate.</p>'})"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.otherStaff',
-                      label='Other staff (incl. training)')"/>
+                      label='Other staff costs',
+                      guidance='')"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.capitalEquipment',
-                      label='Capital equipment')"/>
+                      label='Capital equipment',
+                      guidance='')"/>
+    <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
+                      fieldName='additionalCompanyCostForm.consumables',
+                      label='Consumables',
+                      guidance='')"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.otherCosts',
-                      label='Other costs')"/>
+                      label='Other costs',
+                      guidance='')"/>
 </th:block>
 <!--/*@thymesVar id="fieldName" type="java.lang.String"*/-->
 <!--/*@thymesVar id="label" type="java.lang.String"*/-->
-<th:block th:fragment="additional_cost_field (fieldName, label)">
+<th:block th:fragment="additional_cost_field (fieldName, label, guidance)">
     <th:block th:if="${model.isReadOnly(financeRowType)}"
               th:with="value = *{__${fieldName}__.cost}">
         <tr class="govuk-table__row">
@@ -3365,6 +3710,11 @@
     </th:block>
     <th:block th:unless="${model.isReadOnly(financeRowType)}">
         <h2 class="govuk-heading-s" th:text="${label}"></h2>
+        <th:block  th:unless="${model.internal}">
+            <div th:unless="${#strings.isEmpty(guidance)}" class="govuk-body"
+                 ifs:utext="${guidance}">Guidance
+            </div>
+        </th:block>
         <div class="govuk-form-group table-overflow">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
@@ -3428,4 +3778,41 @@
         </button>
     </div>
 </th:block>
+
+<!--/***************************
+
+            STATE AID CHECKBOX LABEL
+
+*********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="state_aid_checkbox_label">
+    <label th:for="stateAidAgreed" class="govuk-label govuk-checkboxes__label">
+        By ticking this box you are accepting that the project costs for your organisation are
+        eligible as defined in the
+        <th:block th:unless="${model.procurementCompetition or model.showCovidGuidance}"><a target="_blank"
+                                                                                href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance"
+                                                                                class="govuk-link"
+                                                                                aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
+        <th:block th:if="${model.showCovidGuidance}"><a target="_blank"
+                                                  th:href="@{/competition/{competitionId}/overview#how-to-apply(competitionId=${model.competitionId})}"
+                                                  class="govuk-link"
+                                                  aria-describedby="project-costs-hint">competition brief (opens in a new window)</a>.</th:block>
+        <th:block th:if="${model.procurementCompetition}"><a target="_blank"
+                                                       href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance"
+                                                       class="govuk-link"
+                                                       aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
+    </label>
+</th:block>
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="ktp_state_aid_checkbox_label">
+    <label th:for="stateAidAgreed" class="govuk-label govuk-checkboxes__label">
+        Tick this box to confirm that the project costs you’re submitting with this application are eligible for funding, as defined in the
+        <a target="_blank"
+           href="https://www.gov.uk/guidance/knowledge-transfer-partnerships"
+           class="govuk-link"
+           aria-describedby="project-costs-hint">KTP project costs guidance (opens in a new window)</a>.
+    </label>
+</th:block>
+
 </html>

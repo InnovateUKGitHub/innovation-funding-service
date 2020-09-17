@@ -58,7 +58,7 @@
   .govuk-heading-m,
   .govuk-heading-s,
   .govuk-heading-l,
-  .govuk-body {
+  .govuk-body:not(.standard-color) {
     color: $govuk-error-colour;
   }
 

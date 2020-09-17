@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewMod
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -90,6 +91,9 @@ public class ManagementApplicationPopulator {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
+    @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
 
     public ManagementApplicationViewModel populate(long applicationId,
                                                    UserResource user) {
@@ -136,7 +140,8 @@ public class ManagementApplicationPopulator {
     }
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, Long applicationId) {
-        return user.hasRole(Role.PROJECT_FINANCE) && (competition.isProcurement() || (competition.isHasInterviewStage() && interviewAssigned(applicationId)) );
+        return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement())
+                || interviewAssigned(applicationId);
     }
 
     private boolean interviewAssigned(Long applicationId) {
