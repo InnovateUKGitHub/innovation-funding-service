@@ -110,26 +110,31 @@
     </div>
 </th:block>
 
-<th:block th:fragment="finance-summary (model)">
-    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
-        provided by all partners in this project.</p>
+<th:block th:fragment="finance-summary (model)" th:with="print=${print} ?: false">
 
-    <p class="govuk-body" th:if="${model.open}">
-        To make changes to your organisations' finances, go back to the
-        <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your project finances</a> section.
-    </p>
+    <section class="portrait"
+        th:remove="${print} ? tag : none">
+        <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
+            provided by all partners in this project.</p>
 
-    <div>
+        <p class="govuk-body" th:if="${model.open}">
+            To make changes to your organisations' finances, go back to the
+            <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
+               class="govuk-link">your project finances</a> section.
+        </p>
+
         <th:block th:unless="${model.fullyFunded}">
             <th:block th:replace="finance/finance-summary :: application-finances-summary (${model.applicationFinanceSummaryViewModel})" />
             <th:block th:replace="finance/finance-summary :: research-participation-alert (${model.applicationResearchParticipationViewModel})"
                       th:if="${model.open}"/>
         </th:block>
+    </section>
 
-        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
+    <section class="landscape"
+        th:remove="${print} ? tag : none">
+        <h2 class="govuk-heading-s print-break-before" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
-    </div>
+    </section>
 </th:block>
 
 <th:block th:fragment="application-team (model)">

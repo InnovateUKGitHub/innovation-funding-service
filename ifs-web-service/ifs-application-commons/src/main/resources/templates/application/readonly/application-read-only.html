@@ -3,7 +3,7 @@
 
 <th:block th:fragment="print(model)">
     <th:block th:each="section, sectionIter : ${model.sections}">
-        <section th:classappend="${section.finances ? 'landscape' : 'portrait'}">
+        <section  th:unless="${section.finances}" class="portrait">
             <h2 th:unless="${section.finances}" th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
 
@@ -24,6 +24,11 @@
                 </div>
             </th:block>
         </section>
+
+        <th:block th:if="${section.finances}" th:with="question=${section.questions.iterator().next()}">
+            <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
+        </th:block>
+
     </th:block>
 
     <section class="portrait">
