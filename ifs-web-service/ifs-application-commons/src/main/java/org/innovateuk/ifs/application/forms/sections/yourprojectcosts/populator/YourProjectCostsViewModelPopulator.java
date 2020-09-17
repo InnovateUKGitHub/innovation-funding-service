@@ -9,7 +9,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,33 +23,29 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STA
 @Component
 public class YourProjectCostsViewModelPopulator {
 
-    private CompetitionRestService competitionRestService;
-    private OrganisationRestService organisationRestService;
-    private ApplicationRestService applicationRestService;
-    private SectionService sectionService;
-
-    YourProjectCostsViewModelPopulator() {
-    }
-
     @Autowired
-    public YourProjectCostsViewModelPopulator(CompetitionRestService competitionRestService,
-                                              OrganisationRestService organisationRestService,
-                                              ApplicationRestService applicationRestService,
-                                              SectionService sectionService) {
-        this.competitionRestService = competitionRestService;
-        this.organisationRestService = organisationRestService;
-        this.applicationRestService = applicationRestService;
-        this.sectionService = sectionService;
-    }
+    private CompetitionRestService competitionRestService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+    @Autowired
+    private ApplicationRestService applicationRestService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private UserRestService userRestService;
 
-    public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, boolean internalUser) {
+
+    public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
-        boolean open = !internalUser && competition.isOpen() && application.isOpen();
+        boolean userCanEdit = !(user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+                .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
+                .orElse(false);
+        boolean open = userCanEdit && application.isOpen() && competition.isOpen();
 
         boolean complete = completedSectionIds.contains(sectionId);
 
@@ -62,7 +61,7 @@ public class YourProjectCostsViewModelPopulator {
                 includeVat,
                 application.getName(),
                 organisation.getName(),
-                getYourFinancesUrl(applicationId, organisationId, internalUser),
+                getYourFinancesUrl(applicationId, organisationId),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
                 competition.getFinanceRowTypes(),
@@ -70,10 +69,7 @@ public class YourProjectCostsViewModelPopulator {
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()));
     }
 
-    private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
-        // IFS-4848 - we're constructing this URL in a few places - maybe a NavigationUtil?
-        return internalUser ?
-                String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId) :
-                String.format("/application/%d/form/FINANCE", applicationId);
+    private String getYourFinancesUrl(long applicationId, long organisationId) {
+        return String.format("/application/%d/form/FINANCE/%d", applicationId, organisationId);
     }
 }

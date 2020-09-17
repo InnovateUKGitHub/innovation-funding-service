@@ -63,6 +63,16 @@ public class AbstractYourProjectCostsFormPopulatorTest {
         Assert.assertEquals(3, form.getSubcontractingRows().size());
         Assert.assertEquals(3, form.getTravelRows().size());
         Assert.assertEquals(3, form.getOtherRows().size());
+        Assert.assertEquals(3, form.getProcurementOverheadRows().size());
+        Assert.assertEquals(false, form.getVatForm().getRegistered());
+        Assert.assertEquals(2, form.getAssociateSalaryCostRows().size());
+        Assert.assertEquals(2, form.getAssociateDevelopmentCostRows().size());
+        Assert.assertEquals(3, form.getConsumableCostRows().size());
+        Assert.assertEquals(2, form.getKnowledgeBaseCostRows().size());
+        Assert.assertEquals(3, form.getAssociateSupportCostRows().size());
+        Assert.assertEquals(3, form.getEstateCostRows().size());
+        Assert.assertEquals(3, form.getTravelRows().size());
+        Assert.assertEquals(3, form.getKtpTravelCostRows().size());
+        Assert.assertNotNull(form.getAdditionalCompanyCostForm().getAssociateSalary());
     }
-
 }

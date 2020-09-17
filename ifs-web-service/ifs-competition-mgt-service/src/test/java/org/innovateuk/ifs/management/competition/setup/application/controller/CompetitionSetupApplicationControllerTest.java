@@ -195,7 +195,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("financesRequired", String.valueOf(true))
                 .param("growthTableRequired", String.valueOf(true)))
                 .andExpect(status().isOk())
-                .andExpect(model().errorCount(5))
+                .andExpect(model().errorCount(4))
                 .andExpect(model().attributeExists("competitionSetupForm"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
                         "NotNull"))
@@ -204,8 +204,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
                         "FieldRequiredIf"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
-                        "FieldRequiredIf"))
-                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
                         "FieldRequiredIf"));
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),
@@ -226,15 +224,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("financesRequired", String.valueOf(true))
                 .param("growthTableRequired", String.valueOf(false)))
                 .andExpect(status().isOk())
-                .andExpect(model().errorCount(4))
+                .andExpect(model().errorCount(3))
                 .andExpect(model().attributeExists("competitionSetupForm"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
                         "NotNull"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
                         "FieldRequiredIf"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
-                        "FieldRequiredIf"))
-                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
                         "FieldRequiredIf"));
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),

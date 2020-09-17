@@ -110,9 +110,15 @@ public class ProcessRole {
 
     @Override
     public int hashCode() {
+        Long userId;
+        if (user == null) {
+            userId = null;
+        } else {
+            userId = user.getId();
+        }
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(user.getId())
+                .append(userId)
                 .append(applicationId)
                 .append(role)
                 .append(organisationId)
