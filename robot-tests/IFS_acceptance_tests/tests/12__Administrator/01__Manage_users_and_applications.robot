@@ -175,7 +175,7 @@ Admin cannot change email to an email when there is a pending team member invita
     Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
     And the external user removes the pending parter invitation  ${server}/project-setup/project/1/team
 
-Admin cannot change email to an email which is a pending invitation to an organisation in the application   #This test is a duplicate
+Admin cannot change email to an email which is a pending invitation to an organisation in the application
     [Documentation]   IFS-7160
     [Setup]  log in as a different user                                                      &{ifs_admin_user_credentials}
     Given the user adds an organisation                                                      ${server}/project-setup-management/competition/${ConnectedCompId}/project/${MobileProjectId}/team
@@ -475,7 +475,6 @@ the KTA user enters the details to create account
     the user selects the checkbox                           termsAndConditions
 
 the KTA user checks for all validations
-    #here
     the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${newFirstNameInvalidCharacterMessage}
     the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${newLastNameInvalidCharacterMessage}
     the user enters the text and checks for validation message     phoneNumber  12  ${enter_a_valid_phone_number}  ${enter_a_phone_number_between_8_and_20_digits}
