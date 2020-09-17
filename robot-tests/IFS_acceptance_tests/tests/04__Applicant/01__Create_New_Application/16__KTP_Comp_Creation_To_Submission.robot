@@ -31,15 +31,12 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
 ...
-<<<<<<< HEAD
-...            IFS-8095 Content improvement for KTA journey
-
-=======
 ...            IFS-7983  KTP Your Project Finances - KTA view
 ...
 ...            IFS-8154 KTP Project Costs - consumables
 ...
->>>>>>> development
+...            IFS-8095 Content improvement for KTA journey
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
