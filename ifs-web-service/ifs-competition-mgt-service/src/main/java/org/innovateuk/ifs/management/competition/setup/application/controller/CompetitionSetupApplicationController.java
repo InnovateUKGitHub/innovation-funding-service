@@ -483,11 +483,15 @@ public class CompetitionSetupApplicationController {
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {
-        return (!competitionResource.isKtp() && isAssessedQuestion(questionResource)) || questionResource.getType().equals(QuestionSetupType.KTP_ASSESSMENT);
+        return (!competitionResource.isKtp() && isAssessedQuestion(questionResource)) || isKtpAssessmentQuestion(questionResource);
     }
 
     private boolean isAssessedQuestion(CompetitionSetupQuestionResource questionResource) {
         return questionResource != null && (questionResource.getScored() != null || questionResource.getResearchCategoryQuestion() != null || questionResource.getScope() != null);
+    }
+
+    private boolean isKtpAssessmentQuestion(CompetitionSetupQuestionResource questionResource) {
+        return questionResource != null && questionResource.getType().equals(QuestionSetupType.KTP_ASSESSMENT);
     }
 
     private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {
