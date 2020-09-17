@@ -56,11 +56,15 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
         CompetitionResource competitionResource = newCompetitionResource().build();
 
+
+        when(competitionRestService.getCompetitionById(any())).thenReturn(restSuccess(competitionResource));
         when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionResource.getId()));
         when(populator.populate(eq(loggedInUser), any(), eq(competitionResource), eq("/organisation/create/organisation-type"))).thenReturn(model);
         when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(newOrganisationResource().build(1)));
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+
+        // .andExpect(status().isOk()) appears to be the issue -- returns 200 though
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().isOk())
