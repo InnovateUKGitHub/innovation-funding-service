@@ -54,7 +54,11 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
     public void viewPreviousOrganisations() throws Exception {
         OrganisationSelectionViewModel model = mock(OrganisationSelectionViewModel.class);
 
-        when(populator.populate(eq(loggedInUser), any(), any(), eq("/organisation/create/organisation-type"))).thenReturn(model);
+        CompetitionResource competitionResource = newCompetitionResource().build();
+
+        when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionResource.getId()));
+        when(populator.populate(eq(loggedInUser), any(), eq(competitionResource), eq("/organisation/create/organisation-type"))).thenReturn(model);
         when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(newOrganisationResource().build(1)));
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
 
@@ -63,7 +67,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .andExpect(view().name("registration/organisation/select-organisation"))
                 .andExpect(model().attribute("model", model));
 
-        verify(populator).populate(eq(loggedInUser), any(), any(), eq("/organisation/create/organisation-type"));
+        verify(populator).populate(eq(loggedInUser), any(), eq(competitionResource), eq("/organisation/create/organisation-type"));
     }
 
     @Test
