@@ -63,11 +63,12 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                                             BindingResult bindingResult,
                                             UserResource user,
                                             Model model) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
 
         if (cannotSelectOrganisation(user, request)) {
             return "redirect:" + nextPageInFlow();
         }
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
 
         OrganisationSelectionViewModel viewModel = organisationSelectionViewModelPopulator.populate(user,
                 request, competition,

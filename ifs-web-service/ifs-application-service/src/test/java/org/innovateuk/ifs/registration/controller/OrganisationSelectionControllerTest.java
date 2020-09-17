@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.controller.OrganisationSelectionController;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -18,10 +19,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -52,19 +55,20 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void viewPreviousOrganisations() throws Exception {
-        OrganisationSelectionViewModel model = mock(OrganisationSelectionViewModel.class);
+
+        OrganisationSelectionChoiceViewModel organisationSelectionChoiceViewModel = new OrganisationSelectionChoiceViewModel(1L, "", "");
+        Set<OrganisationSelectionChoiceViewModel> models = new HashSet<>(singletonList(organisationSelectionChoiceViewModel));
+
+        OrganisationSelectionViewModel model = new OrganisationSelectionViewModel(models, false, false, false, "");
 
         CompetitionResource competitionResource = newCompetitionResource().build();
 
-
-        when(competitionRestService.getCompetitionById(any())).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
         when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionResource.getId()));
         when(populator.populate(eq(loggedInUser), any(), eq(competitionResource), eq("/organisation/create/organisation-type"))).thenReturn(model);
         when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(newOrganisationResource().build(1)));
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
-
-        // .andExpect(status().isOk()) appears to be the issue -- returns 200 though
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().isOk())
@@ -76,7 +80,19 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void viewPreviousOrganisations_redirectIfNoAttachedOrganisations() throws Exception {
+        OrganisationSelectionViewModel model = new OrganisationSelectionViewModel(emptySet(), false, false, false, "");
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationInviteResource applicationInviteResource = newApplicationInviteResource()
+                .withCompetitionId(1L)
+                .build();
+
         when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(emptyList()));
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(competitionResource.getId()));
+        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(""));
+        when(inviteRestService.getInviteByHash(any())).thenReturn(restSuccess(applicationInviteResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
+        when(populator.populate(eq(loggedInUser), any(), eq(competitionResource), eq("/organisation/create/organisation-type"))).thenReturn(model);
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())
@@ -85,7 +101,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void viewPreviousOrganisations_redirectIfNotApplicant() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build());
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())
