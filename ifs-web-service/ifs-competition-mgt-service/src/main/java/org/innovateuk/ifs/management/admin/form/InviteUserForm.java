@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
@@ -17,6 +18,18 @@ import javax.validation.constraints.Size;
  */
 @FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = true, message = "{validation.kta.invite.email.required}")
 @FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = false, message = "{validation.invite.email.required}")
+@FieldComparison(
+        firstField = "emailAddress",
+        secondField = "ktpRole",
+        message = "{validation.kta.invite.email.invalid}",
+        predicate = EmailAddressValidator.KtpPredicateProvider.class
+)
+@FieldComparison(
+        firstField = "emailAddress",
+        secondField = "ktpRole",
+        message = "{validation.standard.email.format}",
+        predicate = EmailAddressValidator.NonKtpPredicateProvider.class
+)
 public class InviteUserForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.firstname.required}")
@@ -36,7 +49,6 @@ public class InviteUserForm extends BaseBindingResultTarget {
     private String lastName;
 
     @Size(max = 254, message = "{validation.invite.email.length.max}")
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     private String emailAddress;
 
     private Role role;
