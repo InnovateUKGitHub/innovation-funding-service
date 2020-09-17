@@ -694,11 +694,6 @@ the user sign in and apply for international comp
     the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
     Logging in and Error Checking                               ${user}  ${password}
 
-organisation is able to accept project invite
-    [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
-    logout as user
-    the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
-
 partner user provide organisation detail and create account
     [Arguments]  ${email}
     the user clicks the button/link                                   jQuery = .govuk-button:contains("Yes, create an account")
