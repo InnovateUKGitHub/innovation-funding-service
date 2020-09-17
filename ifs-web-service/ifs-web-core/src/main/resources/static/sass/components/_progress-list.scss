@@ -306,30 +306,36 @@
 
   .status-2-col{
 
-    @include media-down(mobile) {
-      flex-direction: column-reverse;
-
-      .task {
-        width:100%;
-      }
-
-      .status {
-        width:100%;
-      }
-    }
-
     .task{
       width: 58%;
     }
 
     .status{
       width: 42%;
+
+      @include media-down(mobile) {
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     .status-msg{
 
       &:first-child{
         border-right: 1px dashed $govuk-border-colour;
+
+        @include media-down(mobile) {
+          border-bottom: 1px dashed $govuk-border-colour;
+          border-right: none;
+          padding-bottom: 10px;
+          text-align: right;
+        }
+      }
+
+      &:nth-child(2){
+        @include media-down(mobile) {
+          margin-top:10px;
+        }
       }
     }
   }
