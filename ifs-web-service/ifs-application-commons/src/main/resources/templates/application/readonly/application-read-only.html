@@ -101,7 +101,7 @@
                 <div class="govuk-!-margin-bottom-3">
                     <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
                 </div>
-                <th:block th:if="${feedbackFragment != null}">
+                <th:block th:if="${feedbackFragment != null && parentModel.interviewFeedbackViewModel != null && parentModel.interviewFeedbackViewModel.hasFeedback()}">
                     <th:block th:include="${feedbackFragment}" />
                 </th:block>
             </th:block>

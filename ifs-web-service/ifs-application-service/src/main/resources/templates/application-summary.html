@@ -130,7 +130,7 @@
                 </th:block>
 
                 <th:block th:insert="application/readonly/application-read-only :: accordion (model=${model.applicationReadOnlyViewModel}, feedbackFragment=~{ :: .feedbackFragment}, parentModel=${model})">
-                    <div class="feedbackFragment" th:if="${parentModel.interviewFeedbackViewModel != null && parentModel.interviewFeedbackViewModel.hasFeedback()}">
+                    <div class="feedbackFragment">
                         <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
                         <div class="govuk-form-group download">
                             <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
