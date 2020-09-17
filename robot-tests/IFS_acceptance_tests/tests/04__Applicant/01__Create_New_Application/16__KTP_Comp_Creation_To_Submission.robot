@@ -21,14 +21,20 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
-...            IFS-8104  KTP application overview content review 
+...            IFS-8147 Partners have the visibility of KTA on application
+...
+...            IFS-8104  KTP application overview content review
 ...
 ...            IFS-7960  KTA Deashboard
 ...
-...            IFS-7983  KTP Your Project Finances - KTA view
+...            IFS-7958  KTP Your Project Finances - Funding Breakdown
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
-
+...
+...            IFS-7983  KTP Your Project Finances - KTA view
+...
+...            IFS-8154 KTP Project Costs - consumables
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -78,6 +84,7 @@ ${acceptInvitationTitle}              You have been invited to be a knowledge tr
 ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
+${financeBanerText}                   Only members from your organisation will be able to see a breakdown
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -119,9 +126,9 @@ KTP application shows the correct guidance text
     When the user should see the element                       jQuery = h1:contains("Application overview")
     Then the user should see the element                       jQuery = p:contains("This section contains the background information we need for your project.")
     And the user should not see the element                    jQuery = p:contains("These are the questions which will be marked by the assessors.")
-    
+
 Existing/new partner can only see business Or non profit organisation types
-    [Documentation]  IFS-7841    
+    [Documentation]  IFS-7841
     Given the lead invites already registered user             ${existing_partner_ktp_email}  ${ktpCompetitionName}
     When logging in and error checking                         &{ktpExistingPartnerCredentials}
     Then the user clicks the button/link                       link = Join with a different organisation
@@ -224,40 +231,64 @@ New lead applicant confirms the knowledge based organisation details and creates
     Then the user creates an account and verifies email     Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 New lead applicant completes the KTP application
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
-    When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
+    When Logging in and Error Checking                                                       &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
 New lead applicant can declare any other government funding received
-    [Documentation]  IFS-7956
+    [Documentation]  IFS-7956  IFS-7958
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Your funding
     Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
     And the user should see the readonly view of other funding received
-    And the user should see KTP finance sections are complete
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
-    Given the user clicks the button/link                link = Back to application overview
-    And the lead invites a non-registered user           ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
-    When the user clicks the button/link                 link = Sign in
-    And Logging in and Error Checking                    &{ktpNewPartnerCredentials}
-    And the user clicks the button/link                  link = ${ktpApplicationTitle}
-    Then the user completes partner project finances     ${ktpApplicationTitle}  yes
+    Given the user clicks the button/link                            link = Return to finances
+    And the user clicks the button/link                              link = Back to application overview
+    When the lead invites a partner and accepted the invitation
+    Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Other funding
     Then the user should see the readonly view of other funding received
-    And the user should see KTP finance sections are complete
+
+Organisations(KB plus business) can see each other's finance summary calculation
+    [Documentation]  IFS-7958
+    Given the user clicks the button/link                                       link = Return to finances
+    Then the user should see KTP finance sections are complete
+    And the user can view lead and partner finance summary calculations
+    And the user should not see the element                                     jQuery = p:contains("${financeBanerText}")
+
+Partner organisation can see lead project cost summary and finance summary of each other's (KB and businesses) in finance overview section
+    [Documentation]  IFS-7958
+    Given the user clicks the button/link                                     link = Back to application overview
+    When the user clicks the button/link                                      link = Finances overview
+    Then the user can view lead and partner finance summary calculations
+    And the user can see project cost breakdown of lead organisation
+
+Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
+    [Documentation]  IFS-7958
+    Given Log in as a different user                                          &{ktpLeadApplicantCredentials}
+    When the user clicks the button/link                                      link = ${ktpApplicationTitle}
+    And the user clicks the button/link                                       link = Your project finances
+    Then the user can view lead and partner finance summary calculations
+    And the user should not see the element                                   jQuery = p:contains("${financeBanerText}")
+
+Lead organisation can see lead project cost summary and finance summary of each other's (KB and businesses) in finance overview section
+    [Documentation]  IFS-7958
+    Given the user clicks the button/link                                     link = Back to application overview
+    When the user clicks the button/link                                      link = Finances overview
+    Then the user can view lead and partner finance summary calculations
+    And the user can see project cost breakdown of lead organisation
 
 System should display a validation if no email address entered while inviting the KTA
     [Documentation]  IFS-7806
-    Given Log in as a different user                       &{ktpLeadApplicantCredentials}
-    When the user clicks the button/link                   link = ${ktpApplicationTitle}
-    And the user clicks the button/link                    link = Application team
+    Given the user clicks the button/link                  link = Application overview
+    When the user clicks the button/link                   link = Application team
     And the user clicks the button/link                    name = invite-kta
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
@@ -302,7 +333,14 @@ The applicant invites the KTA again
     Given the user enters text to a text field      id = ktaEmail   ${ktaEmail}
     When the user clicks the button/link            name = invite-kta
     Then the user should see the element            jQuery = td:contains("pending for 0 days")
-    [Teardown]  Logout as user
+
+Partner can see the invited KTA in Application team
+    [Documentation]  IFS-8147
+    [Setup]  log in as a different user       &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link     link = ${ktpApplicationTitle}
+    When the user clicks the button/link      link = Application team
+    Then the user should see the element      jQuery = td:contains("pending for 0 days")
+    [Teardown]  logout as user
 
 The KTA can see application name, organisation and lead applicant details in the invite
     [Documentation]  IFS-7806  IFS-8001
@@ -329,31 +367,56 @@ The KTA cannot edit any application section
     Then the user should see the element        jQuery = span:contains("${applicationQuestion}")
     And the user should not see the element     jQuery = p:contains("${questionTextGuidance}")
 
-The KTA is able to see lead applicant's project finances
-    #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
-    [Documentation]  IFS-7983
-    Given the user clicks the button/link     id = accordion-questions-heading-3-1
-    When the user clicks the button/link      jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
-    Then the user should see the element      jQuery = h2:contains("Finance summary")
+The KTA is able to see lead and non lead applicant's project finances
+    [Documentation]  IFS-7983  IFS-7958
+    Given the user clicks the button/link                                    id = accordion-questions-heading-3-1
+    When the user clicks the button/link                                     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    Then the user can view lead and partner finance summary calculations
 
-The KTA is able to see non-lead applicant's project finances
-     #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
-     [Documentation]  IFS-7983
-     Given the user clicks the button/link     link = Back to application overview
-     When the user clicks the button/link      jQuery = div:contains("${newPartnerOrgName}") ~ a:contains("View finances")
-     Then the user should see the element      jQuery = h2:contains("Finance summary")
+The KTA is able to see lead applicant's project costs summary
+    [Documentation]  IFS-7983  IFS-7958
+    Given the user clicks the button/link                                 link = Back to application overview
+    Then the user can see project cost breakdown of lead organisation
 
-Lead applicant verifies the inviation is accepted.
+Lead applicant verifies the KTA inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
     When log in as a different user              &{ktpLeadApplicantCredentials}
     And the user navigates to the page           ${server}/application/${ApplicationID}/form/question/1994/team
     Then the user should not see the element     name = resend-kta
+    And the user should see the element          name = remove-kta
+
+Partner can also see the KTA in Application team
+    [Documentation]  IFS-8147
+    [Setup]  log in as a different user          &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link        link = ${ktpApplicationTitle}
+    When the user clicks the button/link         link = Application team
+    Then the user should not see the element     name = resend-kta
+    And the user should see the element          jQuery = td:contains("${ktaEmail}")
+
+new lead applicant can uploads an appendix file in KTP Application
+    [Documentation]  IFS-7958
+    Given log in as a different user          &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link       link = ${ktpApplicationTitle}
+    When the user clicks the button/link      link = 6. Innovation
+    And the user clicks the button/link       id = edit
+    Then the user uploads the file            css = input[name="appendix"]    ${valid_pdf}
+
+KTA can download the appendix file uploaded by lead
+    [Documentation]  IFS-7958
+    [Setup]  the user clicks the button/link                  id = application-question-complete
+    Given Log in as a different user                          ${ktaEmail}   ${short_password}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = ${ktpApplicationTitle}
+    And the user clicks the button/link                       id = accordion-questions-heading-2-6
+    Then the user downloads the file                          ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
+    [Teardown]  remove the file from the operating system     ${valid_pdf}
 
 New lead applicant submits the application
-   [Documentation]  IFS-7812  IFS-7814
-   When the user clicks the button/link             link = Application overview
-   And the applicant completes Application Team
-   Then the applicant submits the application
+    [Documentation]  IFS-7812  IFS-7814
+    Given Log in as a different user                 &{ktpLeadApplicantCredentials}
+    When the user clicks the button/link              link = ${ktpApplicationTitle}
+    And the applicant completes Application Team
+    Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -487,24 +550,28 @@ Internal user is able to approve the GOL and the project is now Live
     Then the user should see project is live with review its progress link
 
 *** Keywords ***
-the user marks the KTP project costs, location and organisation information as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+the lead applicant marks the KTP project costs & project location as complete
     the user fills in ktp project costs
+    the user enters the project location
+    the user clicks the button/link          link = Back to application overview
+
+the partner applicant marks the KTP project location & organisation information as complete
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user clicks the button/link                          link = Back to application overview
 
 the user fills in the KTP organisation information
     [Arguments]  ${Application}  ${org_size}
-    the user navigates to Your-finances page                    ${Application}
-    the user clicks the button/link                             link = Your organisation
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery = button:contains("Edit")
-    Run Keyword If    '${status}' == 'PASS'      the user clicks the button/link  jQuery = button:contains("Edit")
-    the user selects the radio button                           organisationSize  ${org_size}
-    the user enters text to a text field                        name = financialYearEndMonthValue  04
-    the user enters text to a text field                        name = financialYearEndYearValue   2020
+    the user navigates to Your-finances page                                       ${Application}
+    the user clicks the button/link                                                link = Your organisation
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots     page should contain element  jQuery = button:contains("Edit")
+    Run Keyword If    '${status}' == 'PASS'                                        the user clicks the button/link  jQuery = button:contains("Edit")
+    the user selects the radio button                                              organisationSize  ${org_size}
+    the user enters text to a text field                                           name = financialYearEndMonthValue  04
+    the user enters text to a text field                                           name = financialYearEndYearValue   2020
     the user fills financial overview section
-    the user clicks the button/link                             jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                                                jQuery = button:contains("Mark as complete")
     the user checks the read only view for KTP Organisation
 
 the user checks the read only view for KTP Organisation
@@ -593,7 +660,7 @@ the user completes the KTP application except application team and your funding
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
-    the user marks the KTP project costs, location and organisation information as complete     ${ktpApplicationTitle}   Calculate  52,214
+    the lead applicant marks the KTP project costs & project location as complete
     the user accept the competition terms and conditions                                        Return to application overview
 
 the user fills in the KTP Application details
@@ -636,7 +703,7 @@ the user fills in ktp project costs
     the user fills in Associate employment
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
-    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimation")
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimates")
     the user fills additional company costs     description  100
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
@@ -736,6 +803,12 @@ the user invites a KTA to application
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
 
+the lead invites a partner and accepted the invitation
+    the lead invites a non-registered user     ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
+    the user clicks the button/link            link = Sign in
+    Logging in and Error Checking              &{ktpNewPartnerCredentials}
+    the user clicks the button/link            link = ${ktpApplicationTitle}
+
 the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding")
     the user should see the element     jQuery = td:contains("12-${nextyear}")
@@ -743,8 +816,31 @@ the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
 the user should see KTP finance sections are complete
-    the user clicks the button/link     link = Return to finances
     the user should see the element     css = li:nth-of-type(1) .task-status-complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
-    the user should see the element     css = li:nth-of-type(4) .task-status-complete
+
+the user can see project cost breakdown of lead organisation
+    the user should see the element     jQuery = td:contains("Associate Employment")+td:contains("123")
+    the user should see the element     jQuery = td:contains("Associate development")+td:contains("123")
+    the user should see the element     jQuery = td:contains("Travel and subsistence")+td:contains("0")
+    the user should see the element     jQuery = td:contains("Consumables")+td:contains("0")
+    the user should see the element     jQuery = td:contains("Knowledge base supervisor")+td:contains("0")
+    the user should see the element     jQuery = td:contains("Estate")+td:contains("0")
+    the user should see the element     jQuery = td:contains("Additional associate support")+td:contains("0")
+    the user should see the element     jQuery = td:contains("Other costs")+td:contains("0")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
+
+the user can view lead and partner finance summary calculations
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("246")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("25")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")

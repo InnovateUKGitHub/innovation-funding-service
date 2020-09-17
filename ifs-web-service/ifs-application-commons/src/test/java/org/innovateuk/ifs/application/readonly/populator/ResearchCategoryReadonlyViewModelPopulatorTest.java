@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
@@ -42,7 +41,7 @@ public class ResearchCategoryReadonlyViewModelPopulatorTest {
         QuestionResource question = newQuestionResource()
                 .withShortName("Research category")
                 .build();
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         ResearchCategoryReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 

@@ -25,7 +25,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();
-        this.lead = data.getApplicantProcessRole().map(role -> Role.LEADAPPLICANT == role.getRole()).orElse(false);
+        this.lead = data.getUsersProcessRole().map(role -> Role.LEADAPPLICANT == role.getRole()).orElse(false);
         Optional<QuestionStatusResource> completeStatus = data.getQuestionToQuestionStatus()
                 .get(question.getId())
                 .stream()
@@ -38,13 +38,13 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
                 .filter(status -> status.getAssignee() != null)
                 .findFirst();
         boolean assignedToUser = assignedStatus
-                .map(isAssignedToProcessRole(data.getApplicantProcessRole()))
+                .map(isAssignedToProcessRole(data.getUsersProcessRole()))
                 .orElse(false);
         this.displayActions = lead || assignedToUser;
     }
 
     private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
-        return status ->  processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
+        return status -> processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
     }
 
     @Override
