@@ -54,8 +54,6 @@ class GrantMapper {
             MONITORING_OFFICER.name(), "Monitoring officer"
     );
 
-    private static final Forecast EMPTY_SUBCONTRACTING_FORECAST = subcontractingForecast();
-
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
 
@@ -190,17 +188,20 @@ class GrantMapper {
             return forecasts;
         }
 
-        forecasts.add(EMPTY_SUBCONTRACTING_FORECAST);
+        long months = spendProfile.getProject().getDurationInMonths();
+        Forecast subcontractingForecast = subcontractingForecast(months);
+
+        forecasts.add(subcontractingForecast);
         return forecasts;
     }
 
-    private static Forecast subcontractingForecast() {
+    private static Forecast subcontractingForecast(long months) {
         Forecast subcontracting = new Forecast();
         subcontracting.setCost(0);
         subcontracting.setCostCategory(SUBCONTRACTING);
 
         List<Period> periods = new ArrayList<>();
-        for(int i = 0; i < 12; i++) {
+        for(int i = 0; i < months; i++) {
             Period p = new Period();
             p.setMonth(i);
             p.setValue(0L);

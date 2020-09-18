@@ -113,7 +113,7 @@ public class GrantMapperTest {
         when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Public description"))
                 .thenReturn(parameter.publicDescriptionResponse());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
-                .thenAnswer(i -> Optional.of(parameter.createSpendProfile()));
+                .thenAnswer(i -> Optional.of(parameter.createSpendProfile(project)));
 
         Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
                 FinanceRowType.FINANCE, newExcludedCostCategory().withCosts(
@@ -317,7 +317,7 @@ public class GrantMapperTest {
             return formInputResponse;
         }
 
-        private SpendProfile createSpendProfile() {
+        private SpendProfile createSpendProfile(Project project) {
             List<Cost> eligibleCosts = new ArrayList<>();
             List<Cost> spendProfileFigures = new ArrayList<>();
             for (int costCategoryIndex = 0 ; costCategoryIndex < costCategoryCount ; costCategoryIndex++ ) {
@@ -337,7 +337,7 @@ public class GrantMapperTest {
                             .withCategory(new CostCategory(costCategoryName)));
                 }
             }
-            return new SpendProfile(null, null, null, eligibleCosts, spendProfileFigures, null, null, true);
+            return new SpendProfile(null, project, null, eligibleCosts, spendProfileFigures, null, null, true);
         }
 
         private Project createProject() {
