@@ -41,7 +41,7 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${nonKTPCompettitionName}             International Competition
-${noKTPApplicationName}               PSC application 8
+${noKTPApplicationName}               PSC application 5
 &{ktpLeadApplicantCredentials}        email=${lead_ktp_email}  password=${short_password}
 &{ktpNewPartnerCredentials}           email=${new_partner_ktp_email}  password=${correct_password}
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
@@ -782,8 +782,8 @@ partner login to see your organisation details
 
 admin adds a partner to non-ktp application from project setup
     Requesting IDs of this non-ktp application
-    the user clicks the button/link                    link = Project Setup Comp 8
-    the user clicks the button/link                    jQuery = tr:contains("PSC application 8") .waiting:nth-child(3)
+    the user clicks the button/link                    link = Project Setup Comp 5
+    the user clicks the button/link                    jQuery = tr:contains("${noKTPApplicationName}") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
     the user adds a new partner organisation           ${ktpOrgName}  Indi Gardiner  ${lead_ktp_email}
     organisation is able to accept project invite      Indi  Gardiner  ${lead_ktp_email}   ${nonKTPApplicationID}   ${noKTPApplicationName}
