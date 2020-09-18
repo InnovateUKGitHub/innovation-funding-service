@@ -7,6 +7,8 @@ Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-8157  KTP Project costs - Subcontracting costs
 ...
+...               IFS-8158  KTP project costs justification
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -124,13 +126,9 @@ Consumables calculations
 Limit justification validation
     [Documentation]  IFS-8158
     Given the user clicks the button/link                 exceed-limit-yes
-    #When the user clicks the button/link                  css = label[for="stateAidAgreed"]
     Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     And the user should see a field and summary error     ${limitFieldValidationMessage}
-    #Then the user enters text to a text field             justification   Test text    #id = name  ${appTitle} 
-    #Then the user enters text to a text field             justification-text  Test text
-    Then the user enters text to a text field            [id^="justification-text"]   Test Text
-    #Then the user clicks the button/link                       jQuery = button:contains("Mark as complete")
+    Input Text    css = .textarea-wrapped .editor         This is some random text
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
