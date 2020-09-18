@@ -55,11 +55,15 @@ public enum OrganisationTypeEnum {
         return isResearchParticipationType(getFromId(organisationTypeId));
     }
 
-    public static boolean isKnowledgeBaseCollaborator(OrganisationTypeEnum organisationType) {
+    public static boolean isKtpCollaborator(OrganisationTypeEnum organisationType) {
         return ktpCollaboratorTypes.contains(organisationType);
     }
 
-    public static boolean isValidKnowledgeBaseCollaborator(long organisationTypeId) {
-        return isKnowledgeBaseCollaborator(getFromId(organisationTypeId));
+    public static boolean isValidKtpCollaborator(long organisationTypeId) {
+        return isKtpCollaborator(getFromId(organisationTypeId));
+    }
+
+    public static boolean isValidCollaborator(long organisationTypeId) {
+        return !getFromId(organisationTypeId).equals(KNOWLEDGE_BASE);
     }
 }
