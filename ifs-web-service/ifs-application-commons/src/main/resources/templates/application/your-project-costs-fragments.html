@@ -3314,8 +3314,8 @@
                         </th:block>
                         <div class="textarea-wrapped word-count"
                              th:classappend="${#fields.hasErrors('justificationForm.justification')} ? 'govuk-form-group--error'">
-                                    <textarea data-editor="md"
-                                              required="required"
+                                    <textarea required="required"
+                                              data-editor="html"
                                               th:field="*{justificationForm.justification}"
                                               id="justification"
                                               name="justification"
@@ -3350,8 +3350,8 @@
             </th:block>
             <th:block th:if="${model.complete}">
                 <div class="govuk-body">
-                    <p th:text="*{justificationForm.exceedAllowedLimit != null ? 'yes' : 'false'}">yes</p>
-                    <p th:text="*{justificationForm.justification}">I am very bad with money</p>
+                    <p th:text="*{justificationForm.exceedAllowedLimit != null ? 'yes' : 'no'}">yes</p>
+                    <div class="govuk-body wysiwyg-styles" ifs:utext="*{justificationForm.justification}">I am very bad with money</div>
                 </div>
             </th:block>
         </fieldset>
