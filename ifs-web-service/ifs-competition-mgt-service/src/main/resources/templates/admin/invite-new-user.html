@@ -77,8 +77,8 @@
                        th:field="*{emailAddress}"
                        maxlength="256"
                        required="required"
-                       invite-user="true"
-                       th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                       th:attr="external-user=${model.external},
+                                data-maxlength-errormessage=#{validation.invite.email.length.max(null, 254)},
                                 data-required-errormessage=${model.internal} ? #{validation.invite.email.required} : #{validation.kta.invite.email.required}" />
             </div>
             <div class="govuk-form-group govuk-!-width-one-third" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">

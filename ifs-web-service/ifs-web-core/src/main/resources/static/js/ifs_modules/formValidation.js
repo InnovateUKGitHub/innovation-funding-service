@@ -40,9 +40,10 @@ IFS.core.formValidation = (function () {
         messageInvalid: 'Password must contain at least one number.'
       },
       email: {
-        fields: '[type="email"]:not([invite-user], [readonly])',
+        fields: '[type="email"]:not([readonly])',
         messageInvalid: {
           invalid: 'Please enter a valid email address.',
+          ktpInvalid: 'You must enter a valid Knowledge Transfer Network email address.',
           duplicate: 'The email address is already registered with us. Please sign into your account.'
         }
       },
@@ -255,10 +256,14 @@ IFS.core.formValidation = (function () {
     checkEmail: function (field) {
       // checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
       var email = field.val()
+      var external = (field.attr('external-user') == null) ? 'false' : field.attr('external-user')
+      console.log(external)
       var invalidEmailAttribute = 'email-invalid'
+      var invalidKtpEmailAttribute = 'email-ktpInvalid'
       var duplicateEmailAttribute = 'email-duplicate'
       // disabled escape js-standard message, we might want to solve this in the future by cleaning up the regex
       var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(field, invalidEmailAttribute)
+      var invalidKtpErrorMessage = IFS.core.formValidation.getErrorMessage(field, invalidKtpEmailAttribute)
       var duplicateErrorMessage = IFS.core.formValidation.getErrorMessage(field, duplicateEmailAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, 'email')
       var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
@@ -269,16 +274,16 @@ IFS.core.formValidation = (function () {
 
         // check if email address is invalid
         if (!validEmail) {
-          IFS.core.formValidation.setInvalid(field, invalidErrorMessage, displayValidationMessages)
+          IFS.core.formValidation.setInvalid(field, (external === 'true') ? invalidKtpErrorMessage : invalidErrorMessage, displayValidationMessages)
           return false
         } else {
-          IFS.core.formValidation.setValid(field, invalidErrorMessage, displayValidationMessages)
+          IFS.core.formValidation.setValid(field, (external === 'true') ? invalidKtpErrorMessage : invalidErrorMessage, displayValidationMessages)
           // also set the duplicate email field to valid
           IFS.core.formValidation.setValid(field, duplicateErrorMessage, displayValidationMessages)
           return true
         }
       } else {
-        IFS.core.formValidation.setValid(field, invalidErrorMessage, displayValidationMessages)
+        IFS.core.formValidation.setValid(field, (external === 'true') ? invalidKtpErrorMessage : invalidErrorMessage, displayValidationMessages)
         // also set the duplicate email field to valid
         IFS.core.formValidation.setValid(field, duplicateErrorMessage, displayValidationMessages)
         return true

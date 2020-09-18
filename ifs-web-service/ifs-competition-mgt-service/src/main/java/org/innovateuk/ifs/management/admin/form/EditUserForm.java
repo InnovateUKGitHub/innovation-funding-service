@@ -16,13 +16,13 @@ import javax.validation.constraints.Size;
  * Form to capture details of the edited User
  */
 @FieldComparison(
-        firstField = "emailAddress",
+        firstField = "email",
         secondField = "ktpRole",
         message = "{validation.kta.invite.email.invalid}",
         predicate = EmailAddressValidator.KtpPredicateProvider.class
 )
 @FieldComparison(
-        firstField = "emailAddress",
+        firstField = "email",
         secondField = "ktpRole",
         message = "{validation.standard.email.format}",
         predicate = EmailAddressValidator.NonKtpPredicateProvider.class
