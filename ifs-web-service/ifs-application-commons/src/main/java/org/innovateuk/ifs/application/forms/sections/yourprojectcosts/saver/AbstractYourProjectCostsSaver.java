@@ -230,6 +230,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             capitalEquipment.setDescription(additionalCompanyCostForm.getCapitalEquipment().getDescription());
             messages.addAll(getFinanceRowService().update(capitalEquipment).getSuccess());
 
+            AdditionalCompanyCost consumables = costCategory.getConsumables();
+            consumables.setCost(additionalCompanyCostForm.getConsumables().getCost());
+            consumables.setDescription(additionalCompanyCostForm.getConsumables().getDescription());
+            messages.addAll(getFinanceRowService().update(consumables).getSuccess());
+
             AdditionalCompanyCost otherCosts = costCategory.getOtherCosts();
             otherCosts.setCost(additionalCompanyCostForm.getOtherCosts().getCost());
             otherCosts.setDescription(additionalCompanyCostForm.getOtherCosts().getDescription());
