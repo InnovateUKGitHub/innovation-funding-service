@@ -5,7 +5,10 @@ import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.repository.ApplicationProcessRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.transactional.AutoCompleteSectionsUtil;
+import org.innovateuk.ifs.application.workflow.actions.AutoCompleteSectionsAction;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.junit.Test;
@@ -19,20 +22,26 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandlerIntegrationTest<ApplicationWorkflowHandler, ApplicationProcessRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
 
+    @Autowired
+    private AutoCompleteSectionsAction autoCompleteSectionsAction;
+
     private ApplicationProcessRepository applicationProcessRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
         applicationProcessRepositoryMock = (ApplicationProcessRepository) mockSupplier.apply(ApplicationProcessRepository.class);
+        setField(autoCompleteSectionsAction, "autoCompleteSectionsUtil", mock(AutoCompleteSectionsUtil.class));
     }
 
     @Test
@@ -102,6 +111,7 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod, Consumer<ApplicationProcess> additionalVerifications) {
         Application application = newApplication()
                 .withCompetition(newCompetition().withCompetitionType(newCompetitionType().build()).build())
+                .withProcessRoles(newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(100L).build())
                 .withApplicationState(initialApplicationState).build();
         ApplicationProcess applicationProcess = application.getApplicationProcess();
         when(applicationProcessRepositoryMock.findOneByTargetId(application.getId())).thenReturn(applicationProcess);

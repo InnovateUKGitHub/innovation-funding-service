@@ -6,12 +6,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigReso
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,7 +142,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
             List<OrganisationTypeResource> organisationTypesAllowed = competitionRestService.getCompetitionOrganisationType(competitionIdOpt.get()).getSuccess();
             return organisationTypesAllowed.stream()
-                    .map(organisationTypeResource -> organisationTypeResource.getId())
+                    .map(OrganisationTypeResource::getId)
                     .anyMatch(aLong -> aLong.equals(organisationTypeId));
         }
 

@@ -99,9 +99,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<FormInputResponseResource>> formInputResponsesFuture = async(() -> formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess());
         Future<List<QuestionStatusResource>> questionStatusesFuture = async(() -> getQuestionStatuses(application, user, settings));
         Future<List<SectionResource>> sectionsFuture = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
-        Future<Optional<ProcessRoleResource>> processRoleFuture = async(() -> getProcessRole(application, user, settings));
+        Future<List<ProcessRoleResource>> processRolesFuture = async(() -> getProcessRoles(application));
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRolesFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
 
         if(settings.isIncludeAllAssessorFeedback()) {
             settings.setIncludeAllAssessorFeedback(data.getAssessmentToApplicationAssessment().size() > 0);
@@ -114,7 +114,10 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationReadOnlyViewModel(settings, sectionViews, settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO, settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
+        return new ApplicationReadOnlyViewModel(settings,
+                sectionViews,
+                settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
+                settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
@@ -143,8 +146,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private Optional<ProcessRoleResource> getProcessRole(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
-        return userRestService.findProcessRole(user.getId(), application.getId()).getOptionalSuccessObject();
+    private List<ProcessRoleResource> getProcessRoles(ApplicationResource application) {
+        return userRestService.findProcessRole(application.getId()).getSuccess();
     }
 
     private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
