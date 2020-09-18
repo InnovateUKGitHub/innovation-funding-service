@@ -67,6 +67,7 @@ ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
 ${invalidKTNDomainValidationMessage}     You must enter a valid Knowledge Transfer Network email address.
+${blankKTNDomainValidationMessage}       You must enter a Knowledge Transfer Network email address.
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
@@ -716,7 +717,7 @@ the user should see invite a new external user field validation message
     The user should see a field and summary error     ${firstNameValidationMessage}
     The user should see a field and summary error     ${lastNameValidationMessage}
     The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
-    The user should see a field and summary error     ${invalidKTNDomainValidationMessage}
+    The user should see a field and summary error     ${blankKTNDomainValidationMessage}
 
 the user fills invite a new external user fields
     [Arguments]  ${firstName}  ${lastName}  ${emailAddress}
