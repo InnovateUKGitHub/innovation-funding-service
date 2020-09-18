@@ -84,18 +84,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Set<Long> researchCategories;
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private Integer assessorCount;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private BigDecimal assessorPay;
     private String activityCode;
     private boolean setupComplete = false;
     private Boolean useResubmissionQuestion;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private Boolean hasAssessmentPanel;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private Boolean hasInterviewStage;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -607,22 +598,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public Integer getAssessorCount() {
-        return assessorCount;
-    }
-
-    public void setAssessorCount(Integer assessorCount) {
-        this.assessorCount = assessorCount;
-    }
-
-    public BigDecimal getAssessorPay() {
-        return assessorPay;
-    }
-
-    public void setAssessorPay(BigDecimal assessorPay) {
-        this.assessorPay = assessorPay;
-    }
-
     public boolean getSetupComplete() {
         return setupComplete;
     }
@@ -645,22 +620,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
-    }
-
-    public Boolean isHasAssessmentPanel() {
-        return hasAssessmentPanel;
-    }
-
-    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
-        this.hasAssessmentPanel = hasAssessmentPanel;
-    }
-
-    public Boolean isHasInterviewStage() {
-        return hasInterviewStage;
-    }
-
-    public void setHasInterviewStage(Boolean hasInterviewStage) {
-        this.hasInterviewStage = hasInterviewStage;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {

@@ -98,4 +98,7 @@ public class ProjectYourFundingViewModel {
         return isKtpFundingType() && !leadOrganisation;
     }
 
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
+    }
 }

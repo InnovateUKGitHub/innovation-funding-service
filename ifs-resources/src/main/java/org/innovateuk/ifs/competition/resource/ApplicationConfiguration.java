@@ -24,6 +24,8 @@ public interface ApplicationConfiguration {
 
     boolean isKtp();
 
+    boolean isExpressionOfInterest();
+
     Boolean getIncludeJesForm();
 
     Boolean getIncludeYourOrganisationSection();

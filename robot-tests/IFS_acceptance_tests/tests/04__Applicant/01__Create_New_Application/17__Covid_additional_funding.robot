@@ -129,8 +129,6 @@ External project finance can see Project team
 
 External project finance can see the application finances
     [Documentation]  IFS-7357
-    [Tags]    Pending
-    #Test case commented out until bug IFS-8242 is fixed
     Given the user clicks the button/link    link = ${application_id}
     And the user clicks the button/link      id = accordion-questions-heading-3-1
     When the user clicks the button/link     jQuery = tr:contains("Empire") a:contains("View finances")
@@ -139,8 +137,6 @@ External project finance can see the application finances
 
 External finance can access appendix
     [Documentation]  IFS-7552
-    [Tags]    Pending
-    #Test case commented out until bug IFS-8242 is fixed
     Given the user navigates to the page   ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     When the user clicks the button/link   link = ${application_id}
     Then open pdf link                     link = ${5mb_pdf}, 4 MB (opens in a new window)

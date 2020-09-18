@@ -87,6 +87,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 case CONSUMABLES:
                     messages.addAll(saveRows(form.getConsumableCostRows(), finance).get());
                     break;
+                case KTP_TRAVEL:
+                    messages.addAll(saveRows(form.getKtpTravelCostRows(), finance).get());
+                    break;
                 case ADDITIONAL_COMPANY_COSTS:
                     messages.addAll(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance).get());
                     break;
@@ -151,9 +154,13 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.CONSUMABLES)) {
             futures.add(saveRows(form.getConsumableCostRows(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.KTP_TRAVEL)) {
+            futures.add(saveRows(form.getKtpTravelCostRows(), finance));
+        }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
+
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -234,6 +241,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             capitalEquipment.setCost(additionalCompanyCostForm.getCapitalEquipment().getCost());
             capitalEquipment.setDescription(additionalCompanyCostForm.getCapitalEquipment().getDescription());
             messages.addAll(getFinanceRowService().update(capitalEquipment).getSuccess());
+
+            AdditionalCompanyCost consumables = costCategory.getConsumables();
+            consumables.setCost(additionalCompanyCostForm.getConsumables().getCost());
+            consumables.setDescription(additionalCompanyCostForm.getConsumables().getDescription());
+            messages.addAll(getFinanceRowService().update(consumables).getSuccess());
 
             AdditionalCompanyCost otherCosts = costCategory.getOtherCosts();
             otherCosts.setCost(additionalCompanyCostForm.getOtherCosts().getCost());
@@ -343,6 +355,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case CONSUMABLES:
                 map = form.getConsumableCostRows();
                 break;
+            case KTP_TRAVEL:
+                map = form.getKtpTravelCostRows();
+                break;
             default:
                 throw new RuntimeException("Unknown row type");
         }
@@ -384,6 +399,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case CONSUMABLES:
                 clazz = ConsumablesRowForm.class;
+                break;
+            case KTP_TRAVEL:
+                clazz = KtpTravelRowForm.class;
                 break;
             default:
                 throw new RuntimeException("Unknown row type");
