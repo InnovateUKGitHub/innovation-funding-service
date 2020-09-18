@@ -703,7 +703,7 @@ the user fills in ktp project costs
     the user fills in Associate employment
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
-    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimation")
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimates")
     the user fills additional company costs     description  100
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
