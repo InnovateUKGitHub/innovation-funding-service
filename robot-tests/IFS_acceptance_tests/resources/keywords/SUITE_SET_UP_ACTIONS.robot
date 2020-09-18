@@ -105,6 +105,7 @@ the user marks the section as complete procurement
     [Arguments]  ${question_link}
     the user enters text to a text field     css=.textarea-wrapped .editor             Entering text to allow valid mark as complete
     the user uploads the file                css = input[name="templateDocument"]      ${valid_pdf}
+    open pdf link                            link = ${valid_pdf} (opens in a new window)
     the user can remove the uploaded file    removeTemplateDocument                    ${valid_pdf}
     the user uploads the file                css = input[name="templateDocument"]      ${valid_pdf}
     Run Keyword If  '${question_link}' == 'Innovation'   the user uploads the file     css = input[name="appendix"]    ${valid_pdf}

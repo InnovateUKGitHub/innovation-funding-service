@@ -99,7 +99,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
-                showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer),
+                showApplicationSummaryLink(project, loggedInUser, monitoringOfficer),
                 isInvestorPartnership,
                 isProjectManager,
                 isProjectFinanceContact,
@@ -127,7 +127,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return true;
     }
 
-    private boolean showApplicationFeedbackLink(ProjectResource project,
+    private boolean showApplicationSummaryLink(ProjectResource project,
                                                 UserResource loggedInUser,
                                                 boolean isMonitoringOfficer){
 

@@ -188,4 +188,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
         return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
     }
+
+    public String getStateAidCheckboxLabelFragment() {
+        return isKtpCompetition() ? "ktp_state_aid_checkbox_label" : "state_aid_checkbox_label";
+    }
 }

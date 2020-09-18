@@ -24,6 +24,6 @@ public class AdditionalCompanyCostCategoryBuilder extends AbstractFinanceRowCost
 
     @Override
     protected AdditionalCompanyCostCategory createInitial() {
-        return newInstance(AdditionalCompanyCostCategory.class);
+        return new AdditionalCompanyCostCategory();
     }
 }
