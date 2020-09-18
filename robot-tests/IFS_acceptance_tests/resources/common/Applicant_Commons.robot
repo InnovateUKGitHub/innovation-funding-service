@@ -688,8 +688,8 @@ Existing user starts a new application
     the user select the competition and starts application     ${competitionName}
     the user selects the radio button                          createNewApplication  true
     the user clicks the button/link                            jQuery = button:contains("Continue")
-    the user selected organisation if available                 ${organisationID}    ${pageText}
-    the user clicks the button/link                             id = save-organisation-button
+    the user selected organisation if available                ${organisationID}    ${pageText}
+    the user clicks the button/link                            id = save-organisation-button
 
 the user clicks the application tile if displayed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-APPLICANT

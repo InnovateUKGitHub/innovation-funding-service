@@ -152,7 +152,7 @@ Existing/new partner can not apply to KTP competition with academic/research org
     When the user clicks the button/link               link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the lead invites already registered user       ${existing_academic_email}   ${ktpCompetitionName}
     When logging in and error checking                 &{ktpExistingAcademicCredentials}
-    Then the user should not see the element            jQuery = dt:contains("Aberystwyth University") +dd:contains("Research")
+    Then the user should not see the element           jQuery = dt:contains("Aberystwyth University") +dd:contains("Research")
 
 Existing/new partner can apply to KTP competition with non profit organisations
     [Documentation]  IFS-7841  IFS-8035
@@ -569,7 +569,6 @@ The applicants should not see knowledge based organisations when joining a non-k
 The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
     [Documentation]  IFS-8035
     Given log in as a different user                                        &{ifs_admin_user_credentials}
-    #And the user clicks the button/link                                     jQuery = a:contains("Project setup")
     And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
     When admin adds a partner to non-ktp application from project setup
     And logging in and error checking                                       ${lead_ktp_email}   ${short_password}
@@ -855,7 +854,6 @@ partner login to see your organisation details
 
 admin adds a partner to non-ktp application from project setup
     Requesting IDs of this non-ktp application
-    #the user clicks the button/link                    link = Project Setup Comp 5
     the user clicks the button/link                    jQuery = tr:contains("${noKTPApplicationName}") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
     the user adds a new partner organisation           ${ktpOrgName}  Indi Gardiner  ${lead_ktp_email}
