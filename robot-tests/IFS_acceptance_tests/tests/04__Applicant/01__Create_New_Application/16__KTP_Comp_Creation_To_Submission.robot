@@ -47,7 +47,8 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${nonKTPCompettitionName}             International Competition
-${noKTPApplicationName}               PSC application 5
+${noKTPApplicationName}               PSC application 8
+${nonKTPCompettittionInPS}            Project Setup Comp 8
 &{ktpLeadApplicantCredentials}        email=${lead_ktp_email}  password=${short_password}
 &{ktpNewPartnerCredentials}           email=${new_partner_ktp_email}  password=${correct_password}
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
@@ -568,7 +569,8 @@ The applicants should not see knowledge based organisations when joining a non-k
 The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
     [Documentation]  IFS-8035
     Given log in as a different user                                        &{ifs_admin_user_credentials}
-    And the user clicks the button/link                                     jQuery = a:contains("Project setup")
+    #And the user clicks the button/link                                     jQuery = a:contains("Project setup")
+    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
     When admin adds a partner to non-ktp application from project setup
     And logging in and error checking                                       ${lead_ktp_email}   ${short_password}
     Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
@@ -853,7 +855,7 @@ partner login to see your organisation details
 
 admin adds a partner to non-ktp application from project setup
     Requesting IDs of this non-ktp application
-    the user clicks the button/link                    link = Project Setup Comp 5
+    #the user clicks the button/link                    link = Project Setup Comp 5
     the user clicks the button/link                    jQuery = tr:contains("${noKTPApplicationName}") .waiting:nth-child(3)
     the user clicks the button/link                    link = Add a partner organisation
     the user adds a new partner organisation           ${ktpOrgName}  Indi Gardiner  ${lead_ktp_email}
