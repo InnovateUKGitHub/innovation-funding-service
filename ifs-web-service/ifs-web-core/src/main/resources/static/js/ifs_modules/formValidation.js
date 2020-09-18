@@ -40,7 +40,7 @@ IFS.core.formValidation = (function () {
         messageInvalid: 'Password must contain at least one number.'
       },
       email: {
-        fields: '[type="email"]:not([readonly])',
+        fields: '[type="email"]:not([invite-user], [readonly])',
         messageInvalid: {
           invalid: 'Please enter a valid email address.',
           duplicate: 'The email address is already registered with us. Please sign into your account.'

@@ -77,8 +77,9 @@
                        th:field="*{emailAddress}"
                        maxlength="256"
                        required="required"
+                       invite-user="true"
                        th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                        data-required-errormessage=#{validation.invite.email.required}" />
+                                data-required-errormessage=${model.internal} ? #{validation.invite.email.required} : #{validation.kta.invite.email.required}" />
             </div>
             <div class="govuk-form-group govuk-!-width-one-third" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="role">
