@@ -42,8 +42,7 @@
 
         <h2 class="govuk-heading-l">What happens next?</h2>
 
-        <th:block th:with="displayAdditionalInformation=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT
-                            OR model.currentCompetition.completionStage == T(org.innovateuk.ifs.competition.resource.CompetitionCompletionStage).COMPETITION_CLOSE}">
+        <th:block th:with="displayAdditionalInformation=${model.displayAdditionalInformation}">
             <th:block th:unless="${displayAdditionalInformation}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
@@ -117,6 +116,7 @@
                 <th:block th:if="${model.currentCompetition.ktp}">
                     <p class="govuk-body">Your KTA will give you feedback soon after your funding decision has been made.</p>
                 </th:block>
+            </th:block>
             <th:block th:if="${displayAdditionalInformation}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>

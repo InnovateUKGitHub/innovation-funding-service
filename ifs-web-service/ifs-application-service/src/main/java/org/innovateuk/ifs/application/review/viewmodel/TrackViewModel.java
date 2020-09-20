@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.review.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.math.BigDecimal;
@@ -66,5 +67,11 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
 
     public boolean isReopenLinkVisible() {
         return reopenLinkVisible;
+    }
+
+    public boolean isDisplayAdditionalInformation() {
+        return currentCompetition.isProcurement() ||
+                (currentCompetition.getCompletionStage() == CompetitionCompletionStage.COMPETITION_CLOSE
+                        && !currentCompetition.isKtp());
     }
 }
