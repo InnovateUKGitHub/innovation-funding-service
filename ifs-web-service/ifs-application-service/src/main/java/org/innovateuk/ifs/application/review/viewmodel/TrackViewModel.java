@@ -69,7 +69,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
         return reopenLinkVisible;
     }
 
-    public boolean isDisplayAdditionalInformation() {
+    public boolean isDisplayIfsAssessmentInformation() {
         return currentCompetition.isProcurement() ||
                 (currentCompetition.getCompletionStage() == CompetitionCompletionStage.COMPETITION_CLOSE
                         && !currentCompetition.isKtp());

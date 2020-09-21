@@ -182,7 +182,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
 
-        assertFalse(model.isDisplayAdditionalInformation());
+        assertFalse(model.isDisplayIfsAssessmentInformation());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
 
-        assertFalse(model.isDisplayAdditionalInformation());
+        assertFalse(model.isDisplayIfsAssessmentInformation());
     }
 
 }
