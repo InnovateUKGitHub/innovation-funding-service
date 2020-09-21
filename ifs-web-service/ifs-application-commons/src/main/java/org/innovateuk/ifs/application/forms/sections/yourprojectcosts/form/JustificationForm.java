@@ -4,11 +4,9 @@ import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 
 import javax.validation.constraints.NotNull;
 
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.NOT_BLANK_MESSAGE;
-
 public class JustificationForm {
 
-    @NotNull(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = "{validation.ktp.project.costs.exceeded.required}")
     private Boolean exceedAllowedLimit;
 
     @WordCount(max = 750, message = "{validation.ktp.project.costs.justification.word.count.too.long}")

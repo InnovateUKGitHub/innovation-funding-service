@@ -108,9 +108,6 @@ public class YourProjectCostsFormValidator {
 
     private void validateJustification(JustificationForm justificationForm, ValidationHandler validationHandler) {
         validateForm(justificationForm, validationHandler, "justificationForm.");
-        if (justificationForm.getExceedAllowedLimit() == null) {
-            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.exceedAllowedLimit", null, "validation.ktp.project.costs.exceeded.required")));
-        }
         if (justificationForm.getExceedAllowedLimit() != null && justificationForm.getExceedAllowedLimit() == Boolean.TRUE && StringUtils.isEmpty(justificationForm.getJustification())) {
             validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.justification", null, "validation.ktp.project.costs.justification.required")));
         }
