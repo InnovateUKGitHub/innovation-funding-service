@@ -69,7 +69,6 @@ Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-8164
     Given Log in as a different user         &{troy_ward_crendentials}
     When The user navigates to the page      ${ktpAfricaFeedbackLink}
-    #And the user clicks the button/link      jQuery = button:contains("${ktpAfricatandcLink}")
     Then the user clicks the button/link     link = View award terms and conditions
     And the user should see the element      jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
 
