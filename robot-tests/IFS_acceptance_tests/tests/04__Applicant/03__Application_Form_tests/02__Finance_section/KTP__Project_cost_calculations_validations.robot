@@ -125,13 +125,6 @@ Consumables calculations
     Given the user fills in consumables
     Then the user should see the right values    2,000    Consumables    11519
 
-Limit justification validation
-    [Documentation]  IFS-8158
-    Given the user clicks the button/link                 exceed-limit-yes
-    Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
-    And the user should see a field and summary error     ${limitFieldValidationMessage}
-    Input Text    css = .textarea-wrapped .editor         This is some random text
-
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
     Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
@@ -142,6 +135,13 @@ Additional company cost estimation calculations
     [Documentation]  IFS-7790  IFS-8154
     Given the user fills additional company costs       description  100
     Then the user should see the element                jQuery = h4:contains("Total additional company cost estimates"):contains("£600")
+
+Limit justification validation
+    [Documentation]  IFS-8158
+    Given the user clicks the button/link                 exceed-limit-yes
+    Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
+    And the user should see a field and summary error     ${limitFieldValidationMessage}
+    And Input Text                                        css = .textarea-wrapped .editor  This is some random text
 
 Mark as complete and check read only view
     [Documentation]  IFS-7790  IFS-8154
