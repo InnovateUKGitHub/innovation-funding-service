@@ -33,8 +33,8 @@ public class AssignQuestionModelPopulator {
     public AssignQuestionViewModel populateModel(long questionId, long applicationId) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
-        processRoles.removeIf(p -> p.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER);
+        List<ProcessRoleResource> processRoles = userRestService.findAssignableProcessRoles(application.getId()).getSuccess();
+//        processRoles.removeIf(p -> p.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER);
         QuestionResource question = questionRestService.findById(questionId).getSuccess();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.put("applicationId", singletonList(valueOf(applicationId)));
