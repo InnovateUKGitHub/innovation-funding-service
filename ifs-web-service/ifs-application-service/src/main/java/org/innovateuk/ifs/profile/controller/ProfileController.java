@@ -35,7 +35,7 @@ import static java.util.Optional.ofNullable;
 @Controller
 @RequestMapping("/profile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
-@PreAuthorize("hasAnyAuthority('applicant, monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant, monitoring_officer, knowledge_transfer_adviser')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
