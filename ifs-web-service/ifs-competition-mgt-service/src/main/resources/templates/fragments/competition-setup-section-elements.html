@@ -614,7 +614,7 @@
                 <input th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}" type="hidden" name="competitionSetupForm.question.type"
                        th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"/>
 
-                <h2 th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}" class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
+                <h2 th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}" class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
 
@@ -755,7 +755,7 @@
 
                 <th:block th:if="${question.writtenFeedback != null or #fields.hasErrors('question.writtenFeedback')}">
 
-                    <div th:attr="aria-hidden=${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}" class="govuk-form-group"
+                    <div th:attr="aria-hidden=${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}" class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.writtenFeedback">
