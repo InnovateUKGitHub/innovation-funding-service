@@ -10,11 +10,9 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.FundingTypeTemplate;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
@@ -22,7 +20,6 @@ import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigR
 import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,15 +36,12 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * Service that can create Competition template copies
  */
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
-
-    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
 
     @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
@@ -119,36 +113,16 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
         FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
 
-        List<SectionBuilder> competitionTemplateSectionBuilders = template.sections();
-        List<SectionBuilder> fundingTypeSectionBuilders = fundingTypeTemplate.sections();
+        List<SectionBuilder> sectionBuilders = template.sections();
+        sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
 
-        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition.getFundingType(), competitionTemplateSectionBuilders);
-
-        competition.setSections(combineLists(competitionTemplateSectionBuilders, fundingTypeSectionBuilders)
-                .stream().map(SectionBuilder::build).collect(Collectors.toList()));
+        competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
 
         template.copyTemplatePropertiesToCompetition(competition);
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
-    }
-
-
-//    Move to Investor Partnership Builder
-    private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(FundingType fundingType, List<SectionBuilder> sections) {
-        if (FundingType.INVESTOR_PARTNERSHIPS == fundingType) {
-            Optional<SectionBuilder> termsSection = sections.stream()
-                    .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.TERMS_AND_CONDITIONS)
-                    .findFirst();
-
-            termsSection.ifPresent(sectionBuilder -> sectionBuilder.getQuestions().forEach(questionBuilder -> {
-                questionBuilder.withDescription(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS)
-                        .withName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS)
-                        .withShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
-            }));
-
-        }
     }
 
     private void setDefaultOrganisationConfig(Competition competition) {
@@ -206,7 +180,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 false, competition.isGrant(), fileTypes));
     }
 
-//    Move to builders
     private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
         if (populatedCompetition.getFundingType() != FundingType.GRANT) {
             GrantTermsAndConditions grantTermsAndConditions =
