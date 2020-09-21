@@ -49,13 +49,16 @@
                     </div>
 
                     <div th:if="${model.appendixExists}">
-                        <th:block th:each="appendix : ${model.appendixDetails}">
-                            <div th:replace="question-type/form-elements :: readonly-file-download
-                            (filename=${appendix.filename},
-                            filesizeKbytes=${appendix.filesizeKbytes},
-                            fileDescription=${model.appendixFileDescription}+':',
-                            downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})})" />
+                        <th:block th:fragment="appendix_block">
+                            <th:block th:each="appendix : ${model.appendixDetails}">
+                                <div th:replace="question-type/form-elements :: readonly-file-download
+                                (filename=${appendix.filename},
+                                filesizeKbytes=${appendix.filesizeKbytes},
+                                fileDescription=${model.appendixFileDescription}+':',
+                                downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})})" />
+                            </th:block>
                         </th:block>
+
                     </div>
 
                     <div th:if="${model.templateDocumentExists}">
@@ -86,13 +89,7 @@
                 </th:block>
 
                 <div th:if="${!responseRequired && model.appendixExists}">
-                    <th:block th:each="appendix : ${model.appendixDetails}">
-                        <div th:replace="question-type/form-elements :: readonly-file-download
-                            (filename=${appendix.filename},
-                            filesizeKbytes=${appendix.filesizeKbytes},
-                            fileDescription=${model.appendixFileDescription}+':',
-                            downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})})" />
-                    </th:block>
+                    <div th:include="::appendix_block">...</div>
                 </div>
                 <input type="hidden" id="cacheTest" value="" />
 
@@ -106,4 +103,5 @@
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
+
 </html>
