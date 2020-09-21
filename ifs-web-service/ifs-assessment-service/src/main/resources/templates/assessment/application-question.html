@@ -27,7 +27,7 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <form th:remove="${responseRequired} ? tag : none"
+                <form th:remove="${!responseRequired} ? tag : none"
                       th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
                       method="post"
                       enctype="multipart/form-data"
@@ -70,10 +70,12 @@
                         <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
                     </div>
 
-                    <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                    <th:block th:if="${responseRequired}">
+                        <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                        <button  type="submit" class="govuk-button govuk-button--secondary" name="submit-section">Save and return to assessment overview</button>
+                    </th:block>
 
-                    <button th:if="${responseRequired}" type="submit" class="govuk-button govuk-button--secondary" name="submit-section">Save and return to assessment overview</button>
-                </form>
+                    </form>
 
                 <input type="hidden" id="cacheTest" value="" />
 
