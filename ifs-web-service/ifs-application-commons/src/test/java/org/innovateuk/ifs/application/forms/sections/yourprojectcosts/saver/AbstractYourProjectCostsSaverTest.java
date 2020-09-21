@@ -95,6 +95,13 @@ public class AbstractYourProjectCostsSaverTest {
         vat.setRegistered(false);
         form.setVatForm(vat);
 
+        form.getAdditionalCompanyCostForm().setAssociateSalary(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setCapitalEquipment(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setConsumables(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setManagementSupervision(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setOtherCosts(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setOtherStaff(new AdditionalCostAndDescription());
+
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
@@ -119,6 +126,7 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService).create(isA(TravelCost.class));
         verify(financeRowRestService).create(isA(OtherCost.class));
         verify(financeRowRestService).update(isA(Vat.class));
+        verify(financeRowRestService, times(6)).update(isA(AdditionalCompanyCost.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);

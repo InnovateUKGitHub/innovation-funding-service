@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -79,6 +80,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveAdditionalCompanyCostForm(field, value, finance);
             } else if (field.startsWith("estateCostRows")) {
                 return autosaveEstateCost(field, value, finance);
+            } else if (field.startsWith("ktpTravelCostRows")) {
+                return autosaveKtpTravelCostRows(field, value, finance);
             } else if (field.startsWith("procurementOverheadRows")) {
                 return autosaveProcurementOverheadCost(field, value, finance);
             } else if (field.startsWith("vat")) {
@@ -272,6 +275,30 @@ public class YourProjectCostsAutosaver {
                 break;
             default:
                 throw new IFSRuntimeException(format("Auto save associate support field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveKtpTravelCostRows(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        KtpTravelCost cost = getCost(id, () -> new KtpTravelCost(finance.getId()));
+        switch (rowField) {
+            case "type":
+                cost.setType(KtpTravelCostType.valueOf(value));
+                break;
+            case "description":
+                cost.setDescription(value);
+                break;
+            case "times":
+                cost.setQuantity(Integer.valueOf(value));
+                break;
+            case "eachCost":
+                cost.setCost(new BigDecimal(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save ktp travel field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());

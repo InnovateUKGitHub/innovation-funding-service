@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.AutoCompleteSectionsUtil;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -52,6 +53,9 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private AutoCompleteSectionsUtil autoCompleteSectionsUtil;
 
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
@@ -133,12 +137,21 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
         Application application = invite.getTarget();
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
 
+        boolean firstOfOrganisation =
+                application.getProcessRoles().stream()
+                    .filter(pr -> pr.getOrganisationId() != null)
+                    .noneMatch(pr -> pr.getOrganisationId().equals(organisation.getId()));
+
         ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
-        processRoleRepository.save(processRole);
+        processRole = processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
 
         applicationService.linkAddressesToOrganisation(organisation.getId(), application.getId()).getSuccess();
 
         applicationProgressService.updateApplicationProgress(application.getId());
+
+        if (firstOfOrganisation) {
+            autoCompleteSectionsUtil.intitialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRole.getId());
+        }
     }
 }

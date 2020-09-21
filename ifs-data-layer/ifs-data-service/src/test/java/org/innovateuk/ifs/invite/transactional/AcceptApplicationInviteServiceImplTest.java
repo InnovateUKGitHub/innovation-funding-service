@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.AutoCompleteSectionsUtil;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Mockito.*;
 
@@ -50,6 +52,8 @@ public class AcceptApplicationInviteServiceImplTest {
     private OrganisationRepository organisationRepositoryMock;
     @Mock
     private ApplicationService applicationService;
+    @Mock
+    private AutoCompleteSectionsUtil autoCompleteSectionsUtil;
 
     @InjectMocks
     private AcceptApplicationInviteServiceImpl service = new AcceptApplicationInviteServiceImpl();
@@ -91,7 +95,11 @@ public class AcceptApplicationInviteServiceImplTest {
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
         when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
-
+        when(processRoleRepositoryMock.save(any())).thenAnswer(invocation -> {
+            ProcessRole role = invocation.getArgument(0);
+            role.setId(1L);
+            return role;
+        });
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
@@ -126,7 +134,11 @@ public class AcceptApplicationInviteServiceImplTest {
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
         when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
-
+        when(processRoleRepositoryMock.save(any())).thenAnswer(invocation -> {
+            ProcessRole role = invocation.getArgument(0);
+            role.setId(1L);
+            return role;
+        });
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
@@ -149,6 +161,11 @@ public class AcceptApplicationInviteServiceImplTest {
         ))
                 .thenReturn(Optional.empty());
         when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
+        when(processRoleRepositoryMock.save(any())).thenAnswer(invocation -> {
+            ProcessRole role = invocation.getArgument(0);
+            role.setId(1L);
+            return role;
+        });
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
@@ -178,13 +195,18 @@ public class AcceptApplicationInviteServiceImplTest {
                 usersCurrentOrganisation.getId()
         );
 
-        when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(expectedProcessRole);
+        when(processRoleRepositoryMock.save(expectedProcessRole)).thenAnswer(invocation -> {
+            expectedProcessRole.setId(100L);
+            return expectedProcessRole;
+        });
         when(applicationProgressService.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
         when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
+        verify(autoCompleteSectionsUtil).intitialiseCompleteSectionsForOrganisation(invite.getTarget(), usersCurrentOrganisation.getId(), expectedProcessRole.getId());
+        expectedProcessRole.setId(null);
         verify(processRoleRepositoryMock).save(expectedProcessRole);
         verify(applicationProgressService).updateApplicationProgress(invite.getTarget().getId());
         verify(applicationService).linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId());
@@ -208,7 +230,9 @@ public class AcceptApplicationInviteServiceImplTest {
     private ApplicationInvite createAndExpectInvite(InviteOrganisation inviteOrganisation) {
         ApplicationInvite invite = newApplicationInvite()
                 .withEmail("james@test.com")
-                .withApplication(newApplication().build())
+                .withApplication(newApplication()
+                        .withProcessRoles(newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(50L).build())
+                        .build())
                 .withInviteOrganisation(inviteOrganisation)
                 .build();
 

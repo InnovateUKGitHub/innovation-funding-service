@@ -87,8 +87,9 @@
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel},
                                hideAreYouRequestingFunding=${model.hideAreYouRequestingFunding()},
-                               ktpFundingType=${model.ktpFundingType}
-                                               )"/>
+                               ktpFundingType=${model.ktpFundingType},
+                               lead=${model.leadApplicant}
+                )"/>
 
                 <div class="form-footer" th:if="${model.open}">
                     <div class="form-footer__actions">

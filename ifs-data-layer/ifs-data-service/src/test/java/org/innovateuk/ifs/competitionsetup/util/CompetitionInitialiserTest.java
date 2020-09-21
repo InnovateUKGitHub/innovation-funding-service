@@ -47,8 +47,7 @@ public class CompetitionInitialiserTest {
                 TRAVEL,
                 OTHER_COSTS,
                 GRANT_CLAIM_AMOUNT,
-                OTHER_FUNDING,
-                YOUR_FINANCE
+                OTHER_FUNDING
         )));
     }
     @Test
@@ -178,11 +177,17 @@ public class CompetitionInitialiserTest {
         Competition competitionWithFinanceTypes = initialiser.initialiseFinanceTypes(competition);
 
         assertTrue(competitionWithFinanceTypes.getFinanceRowTypes().containsAll(EnumSet.of(
-                TRAVEL,
+                ASSOCIATE_SALARY_COSTS,
+                ASSOCIATE_DEVELOPMENT_COSTS,
+                KTP_TRAVEL,
+                CONSUMABLES,
+                KNOWLEDGE_BASE,
+                ESTATE_COSTS,
+                ASSOCIATE_SUPPORT,
                 OTHER_COSTS,
+                ADDITIONAL_COMPANY_COSTS,
                 FINANCE,
-                PREVIOUS_FUNDING,
-                YOUR_FINANCE
+                PREVIOUS_FUNDING
         )));
     }
 

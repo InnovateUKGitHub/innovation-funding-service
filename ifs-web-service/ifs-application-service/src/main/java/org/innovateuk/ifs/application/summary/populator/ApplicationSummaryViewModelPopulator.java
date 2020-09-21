@@ -46,7 +46,7 @@ public class ApplicationSummaryViewModelPopulator {
                                                application,
                                                competition,
                                                isProjectWithdrawn(application.getId()),
-                                                interviewFeedbackViewModel);
+                                               interviewFeedbackViewModel);
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {

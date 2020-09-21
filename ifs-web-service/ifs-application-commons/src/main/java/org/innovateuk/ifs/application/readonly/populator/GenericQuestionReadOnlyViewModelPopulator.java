@@ -22,6 +22,7 @@ import static java.util.Optional.ofNullable;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
 public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<GenericQuestionReadOnlyViewModel> {
@@ -158,9 +159,12 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     private String urlForFormInputDownload(long formInputId, long fileEntryId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
-        if (data.getApplicantProcessRole().isPresent() || data.getUser().hasRole(Role.MONITORING_OFFICER)) {
+        boolean isApplicant = data.getUsersProcessRole().map(pr -> applicantProcessRoles().contains(pr.getRole())).orElse(false);
+        boolean isKta = data.getUsersProcessRole().map(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER).orElse(false);
+        boolean isAssessor = data.getUsersProcessRole().map(pr -> pr.getRole() == ASSESSOR).orElse(false);
+        if (isApplicant || isKta || data.getUser().hasRole(Role.MONITORING_OFFICER)) {
             return String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", data.getApplication().getId(), question.getId(), formInputId, fileEntryId);
-        } else if (data.getUser().hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
+        } else if (isAssessor && settings.isIncludeAssessment()) {
             return String.format("/assessment/%d/application/%d/formInput/%d/file/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId, fileEntryId);
         } else {
             return String.format("/management/competition/%d/application/%d/forminput/%d/file/%d/download", data.getCompetition().getId(), data.getApplication().getId(), formInputId, fileEntryId);

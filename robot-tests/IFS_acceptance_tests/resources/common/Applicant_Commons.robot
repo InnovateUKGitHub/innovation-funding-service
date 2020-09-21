@@ -220,12 +220,12 @@ the user fills in Capital usage
     the user expands the section          Capital usage
 
 the user fills in Subcontracting costs
-    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting")
     the user enters text to a text field  css = .form-finances-subcontracting-company  SomeName
     the user enters text to a text field  css = input.govuk-input[name$=country]  Netherlands
     the user enters text to a text field  css = textarea.govuk-textarea[name$=role]  Quality Assurance
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting][name$=cost]  1000
-    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting")
 
 the user fills in Travel and subsistence
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
@@ -635,11 +635,10 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
-    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP project costs, location and organisation information as complete     ${application_title}   Calculate  52,214
-    ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
-    ...  ELSE                              Run keywords    the user marks the finances as complete                                                     ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
-
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
+    ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
     the user clicks the button/link       link = Apply with a different organisation
@@ -685,11 +684,11 @@ the user provides uk based organisation details
     the user clicks the button/link                    link = ${org}
 
 Existing user starts a new application
-    [Arguments]  ${competitionName}   ${organisationID}
+    [Arguments]  ${competitionName}   ${organisationID}   ${pageText}
     the user select the competition and starts application     ${competitionName}
     the user selects the radio button                          createNewApplication  true
     the user clicks the button/link                            jQuery = button:contains("Continue")
-    the user selects the radio button                          selectedOrganisationId  ${organisationID}
+    the user selected organisation if available                ${organisationID}    ${pageText}
     the user clicks the button/link                            id = save-organisation-button
 
 the user clicks the application tile if displayed
@@ -699,3 +698,8 @@ the user clicks the application tile if displayed
 the user clicks the project setup tile if displayed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-MONITORING_OFFICER
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-MONITORING_OFFICER
+
+the user selected organisation if available
+    [Arguments]   ${organisationID}   ${pageText}
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain     ${pageText}
+    Run Keyword If   '${status}' == 'PASS'     the user selects the radio button     selectedOrganisationId   ${organisationID}

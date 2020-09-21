@@ -72,7 +72,7 @@ Your Finance includes Finance summary table for lead applicant
     [Tags]
     [Setup]  log in as a different user            &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your project Finances has correct values for lead  £72,611  21.21%  0  8,000,000  0
+    Then the finance summary table in Your project Finances has correct values for lead  72,611  21.21%  0  8,000,000  0
     And the user clicks the button/link            link = Return to application overview
 
 Your Finance includes Finance summary table for collaborator
@@ -80,7 +80,7 @@ Your Finance includes Finance summary table for collaborator
     [Tags]
     [Setup]  log in as a different user            &{collaborator2_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your project Finances has correct values for collaborator  £990  0%  990  0  0
+    Then the finance summary table in Your project Finances has correct values for collaborator  990  0%  990  0  0
     And The user clicks the button/link            link = Return to application overview
 
 Red warning should show when the finances are incomplete
@@ -167,7 +167,7 @@ Support User can see the read only finance summary
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
     And The user clicks the button/link       link = View finances
-    Then The finance summary table in Your project Finances has correct values for lead  £6,260,941,968  21.21%  1,319,945,791  8,000,000  4,932,996,176
+    Then The finance summary table in Your project Finances has correct values for lead  6,260,941,968  21.21%  1,319,945,791  8,000,000  4,932,996,176
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
@@ -211,7 +211,7 @@ Innovation lead can see read only summary for lead
     [Tags]  InnovationLead  HappyPath
     [Setup]  The user clicks the button/link          css = .project-cost-breakdown tbody tr:nth-of-type(1) th a
     When the user should see the element              jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your project Finances has correct values for lead  £200,903  30.00%  57,803  2,468  140,632
+    Then the finance summary table in Your project Finances has correct values for lead  200,903  30.00%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
@@ -221,7 +221,7 @@ Innovation lead can see read only summary for collaborator
     And the user expands the section                Finances summary
     When the user clicks the button/link            jQuery = .project-cost-breakdown tbody tr:contains("EGGS") th a
     And the user should see the element             jQuery = p:contains("Please complete your project finances.")
-    Then the finance summary table in Your project Finances has correct values for collaborator  £990  100  990  0  0
+    Then the finance summary table in Your project Finances has correct values for collaborator  990  100  990  0  0
 
 Innovation lead can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-802
@@ -266,7 +266,7 @@ IFS Admin views the finance summary
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances
-    Then the finance summary table in Your project Finances has correct values for lead    £6,260,941,968  21.21%  1,319,945,791  8,000,000  4,932,996,176
+    Then the finance summary table in Your project Finances has correct values for lead    6,260,941,968  21.21%  1,319,945,791  8,000,000  4,932,996,176
 
 A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
     [Documentation]  IFS-3609
@@ -294,7 +294,7 @@ the finance Funding breakdown calculations should be correct
 
 the finance summary table in Your project Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total costs (£)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
@@ -307,7 +307,7 @@ the finance summary table in Your project Finances has correct values for lead
 
 the finance summary table in Your project Finances has correct values for collaborator
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}
-    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total project costs
+    the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(1)  Total costs (£)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(1)  ${project_costs}
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) th:nth-of-type(2)  Funding level (%)
     the user sees the text in the element  css = .govuk-form-group tr:nth-of-type(1) td:nth-of-type(2)  ${grant}
@@ -377,9 +377,9 @@ User verifies captial usage, subcontracting, travel and other costs for innovati
     the user should see the element  jQuery = #capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2,120")
     the user should see the element  jQuery = #capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1,200") + td:contains("60") + td:contains("£552")
     the user collapses the section   Capital usage
-    the user expands the section     Subcontracting costs
+    the user expands the section     Subcontracting
     the user should see the element  jQuery = #subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£90,000")
-    the user collapses the section   Subcontracting costs
+    the user collapses the section   Subcontracting
     the user expands the section     Travel and subsistence
     the user should see the element  jQuery = #travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£5,970")
     the user collapses the section   Travel and subsistence
@@ -404,9 +404,9 @@ the user verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
     the user should see the element  jQuery = #capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5,000")
     the user collapses the section   Capital usage
-    the user expands the section     Subcontracting costs
+    the user expands the section     Subcontracting
     the user should see the element  jQuery = #subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£1,000")
-    the user collapses the section   Subcontracting costs
+    the user collapses the section   Subcontracting
     the user expands the section     Travel and subsistence
     the user should see the element  jQuery = #travel-costs-table td:contains("test") + td:contains("10") + td:contains("10") + td:contains("£1,000")
     the user collapses the section   Travel and subsistence
