@@ -278,7 +278,7 @@ Partner organisation can see lead organisation funding level information
     [Documentation]   IFS-8313
     Given the user clicks the button/link     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
     When the user clicks the button/link      link = Your funding
-    Then the user should see the element      jQuery = h1:contains("Other funding")
+    Then the user should see the element      jQuery = h1:contains("Your funding")
     And the user should see the element       jQuery = dt:contains("Funding level") ~ dd:contains("10.00%")
 
 Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
