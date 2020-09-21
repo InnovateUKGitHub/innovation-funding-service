@@ -25,7 +25,7 @@
             <div class="govuk-body wysiwyg-styles" ifs:utext="${model.fundingRules}"></div>
         </th:block>
 
-        <div th:unless="${model.loan}" class="govuk-!-margin-bottom-6 govuk-!-padding-top-2 govuk-!-padding-bottom-0"
+        <div th:unless="${model.loan or model.maxResearchRatio == 100}" class="govuk-!-margin-bottom-6 govuk-!-padding-top-2 govuk-!-padding-bottom-0"
              th:classappend="${model.researchParticipationPercentage &gt; model.maxResearchRatio} ? 'eligibility warning' : 'eligibility'">
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>

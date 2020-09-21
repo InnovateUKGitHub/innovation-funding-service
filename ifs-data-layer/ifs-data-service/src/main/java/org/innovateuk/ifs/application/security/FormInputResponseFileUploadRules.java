@@ -48,6 +48,11 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
         return userIsApplicantOnThisApplication(fileEntry, user);
     }
 
+    @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
+    public boolean ktaCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        return isKta(fileEntry.getCompoundId().getApplicationId(), user);
+    }
+
     @PermissionRule(value = "READ", description = "An internal user can download a file for an answer")
     public boolean internalUserCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return isInternal(user);

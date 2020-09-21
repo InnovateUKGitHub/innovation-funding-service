@@ -275,7 +275,7 @@ public class UserResource implements Serializable {
      * See IFS-656.
      */
     @JsonIgnore
-    public String getRolesString(){
+    public String getRolesString() {
         //TODO: Replace and simplify this once IFS-656 is implemented
         if (hasRole(IFS_ADMINISTRATOR)) {
             return IFS_ADMINISTRATOR.getDisplayName();

@@ -13,6 +13,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;

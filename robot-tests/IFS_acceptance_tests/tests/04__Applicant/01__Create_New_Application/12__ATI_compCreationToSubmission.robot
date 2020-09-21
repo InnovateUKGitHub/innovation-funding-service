@@ -238,11 +238,12 @@ the user completes the application
     the finance overview is marked as incomplete
 
 the partner selects new answer choice
-     input text                          id = multipleChoiceOptionId  ${answerToSelect}
-     the user clicks the button/link     jQuery = ul li:contains("${answerToSelect}")
-     the user clicks the button/link     name = removeAppendix
-     the user clicks the button/link     jQuery = button:contains("Assign to lead for review")
-     the user should see the element     jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
+     input text                                         id = multipleChoiceOptionId  ${answerToSelect}
+     the user clicks the button/link                    jQuery = ul li:contains("${answerToSelect}")
+     the user clicks the button/link                    name = removeAppendix
+     the user can remove file with multiple uploads     removeAppendix    ${valid_pdf}
+     the user clicks the button/link                    jQuery = button:contains("Assign to lead for review")
+     the user should see the element                    jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
 
 User fills in funding overide
     the user clicks the button/link                      link = ${ATIcompetitionTitle}

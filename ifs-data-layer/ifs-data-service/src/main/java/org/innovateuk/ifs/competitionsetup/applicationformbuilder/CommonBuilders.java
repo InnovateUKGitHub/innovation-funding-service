@@ -2,6 +2,9 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -16,12 +19,12 @@ import java.util.List;
 import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.FormInputBuilder.aFormInput;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.GuidanceRowBuilder.aGuidanceRow;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.*;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder.aSection;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder.aSubSection;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.*;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSubSection;
 
 @Component
 public class CommonBuilders {

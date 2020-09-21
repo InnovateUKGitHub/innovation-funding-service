@@ -1002,6 +1002,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isExpressionOfInterest() {
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
+    }
+
+    @Override
     public boolean isSbriPilot() {
         return SBRI_PILOT.equals(name);
     }

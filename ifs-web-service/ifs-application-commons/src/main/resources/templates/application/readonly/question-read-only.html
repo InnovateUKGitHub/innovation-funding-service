@@ -73,7 +73,7 @@
                     <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                 </th:block>
                 <th:block th:unless="${model.resubmission == null}">
-                    <dt>Is this application a resubmission?</dt>
+                    <dt>Has this application been previously submitted to Innovate UK?</dt>
                     <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${model.resubmission == true}">
                         <dt>Previous application number</dt>
@@ -111,13 +111,11 @@
 </th:block>
 
 <th:block th:fragment="finance-summary (model)">
-    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
-        provided by all partners in this project.</p>
+    <p class="govuk-body" th:unless="${model.fullyFunded}">The finances of all project partners are included in this summary.</p>
 
     <p class="govuk-body" th:if="${model.open}">
-        To make changes to your organisations' finances, go back to the
         <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your project finances</a> section.
+           class="govuk-link">Return to your project finances</a> to make changes to your organisation's financial information.
     </p>
 
     <div>
@@ -186,7 +184,7 @@
         </table>
         </th:block>
         <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge Transfer Adviser</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge transfer adviser</h2>
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
