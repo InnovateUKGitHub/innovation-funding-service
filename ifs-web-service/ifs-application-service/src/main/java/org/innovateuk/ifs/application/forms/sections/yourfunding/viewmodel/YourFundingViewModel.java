@@ -183,6 +183,6 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
     *
     * */
     public boolean hideAreYouRequestingFunding() {
-        return isKtpFundingType() && !leadApplicant;
+        return isKtpFundingType() && organisationType != OrganisationTypeEnum.KNOWLEDGE_BASE;
     }
 }
