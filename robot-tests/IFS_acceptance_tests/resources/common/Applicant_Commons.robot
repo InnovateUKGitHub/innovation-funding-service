@@ -42,8 +42,8 @@ Mark application details as incomplete
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = button:contains("Edit")
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link   jQuery = button:contains("Edit")
     #the user clicks the button/link                       jQuery = button:contains("Edit")
-    the user clicks the button/link                        jQuery = button:contains("Save and return to application overview")
-    the user should see the element                        jQuery = li:contains("Application details") > .task-status-incomplete
+    the user clicks the button/link                       jQuery = button:contains("Save and return to application overview")
+    the user should see the element                       jQuery = li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  css = li:contains("Application details") > .task-status-complete
@@ -635,10 +635,10 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
-    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP project costs, location and organisation information as complete     ${application_title}   Calculate  52,214  FALSE
-    ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
-    ...  ELSE                              Run keywords    the user marks the finances as complete                                                     ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
+    ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions                                           Return to application overview
 
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
