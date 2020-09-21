@@ -812,3 +812,8 @@ the internal user approve the contract
     the user clicks the button/link     id = submit-button
     the user clicks the button/link     id = accept-signed-gol
     the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+
+organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
+    logout as user
+    the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
