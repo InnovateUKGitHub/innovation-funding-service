@@ -58,6 +58,22 @@
     }
   }
 
+  .project-cost-breakdown {
+    table {
+      td,
+      th {
+        padding: 2px 4px 2px 0;
+      }
+
+      td,
+      th,
+      small {
+        font-size: 10px;
+        line-height: 12px;
+      }
+    }
+  }
+
   table {
     th,
     small{
@@ -163,21 +179,17 @@
 
     .project-cost-breakdown {
       table {
-        page-break-after:auto;
-      }
-      tr {
-        page-break-inside:avoid;
-        page-break-after:auto;
-      }
-      td {
-        page-break-inside:avoid;
-        page-break-after:auto;
-      }
-      thead {
-        display:table-header-group;
-      }
-      tfoot {
-        display:table-footer-group;
+        td,
+        th {
+          padding: 2px 4px 2px 0;
+        }
+
+        td,
+        th,
+        small {
+          font-size: 10px;
+          line-height: 12px;
+        }
       }
     }
 
