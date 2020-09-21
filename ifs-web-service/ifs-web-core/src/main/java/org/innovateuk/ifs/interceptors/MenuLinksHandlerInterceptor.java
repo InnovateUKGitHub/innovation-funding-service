@@ -75,9 +75,9 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         if (authentication != null) {
             UserResource user = authentication.getDetails();
 
-            if (user.hasRole(ASSESSOR)) {
+            if (user.hasAnyRoles(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER)) {
                 return Optional.of(ASSESSOR_PROFILE_URL);
-            } else if (user.hasAnyRoles(APPLICANT, MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER)) {
+            } else if (user.hasAnyRoles(APPLICANT, MONITORING_OFFICER)) {
                 return Optional.of(USER_PROFILE_URL);
             } else {
                 return Optional.empty();
