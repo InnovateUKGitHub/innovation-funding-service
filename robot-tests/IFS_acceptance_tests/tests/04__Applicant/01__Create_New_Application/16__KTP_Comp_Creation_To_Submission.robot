@@ -37,6 +37,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8154 KTP Project Costs - consumables
 ...
+...            IFS-8313 Other funding (Team member of KB)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -271,6 +273,13 @@ Partner organisation can see lead project cost summary and finance summary of ea
     When the user clicks the button/link                                      link = Finances overview
     Then the user can view lead and partner finance summary calculations
     And the user can see project cost breakdown of lead organisation
+
+Partner organisation can see lead organisation funding level information
+    [Documentation]   IFS-8313
+    Given the user clicks the button/link     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    When the user clicks the button/link      link = Your funding
+    Then the user should see the element      jQuery = h1:contains("Other funding")
+    And the user should see the element       jQuery = dt:contains("Funding level") ~ dd:contains("10.00%")
 
 Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
     [Documentation]  IFS-7958
