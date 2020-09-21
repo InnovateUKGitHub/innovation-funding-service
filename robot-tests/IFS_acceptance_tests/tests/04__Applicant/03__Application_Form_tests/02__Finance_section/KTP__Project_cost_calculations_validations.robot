@@ -130,7 +130,7 @@ Limit justification validation
     Given the user clicks the button/link                 exceed-limit-yes
     Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
     And the user should see a field and summary error     ${limitFieldValidationMessage}
-    Input Text    css = .textarea-wrapped .editor         This is some random text
+    And Input Text                                        css = .textarea-wrapped .editor  This is some random text
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
