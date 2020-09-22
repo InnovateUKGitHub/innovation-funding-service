@@ -3611,7 +3611,7 @@
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="justification" th:if="${model.showJustificationForm}">
     <div class="govuk-form-group"
-         th:classappend="${#fields.hasErrors('justificationForm.exceedAllowedLimit')} ? 'govuk-form-group--error'">
+         th:classappend="${#fields.hasErrors('justificationForm.*')} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
             <legend id="justificationForm.exceedAllowedLimit" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 Do your project costs exceed the allowed limit?
