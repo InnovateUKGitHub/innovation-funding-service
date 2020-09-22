@@ -43,6 +43,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8154 KTP Project Costs - consumables
 ...
+...            IFS-8311 KTP - ISE when assigning a Q to a KTA
+...
 ...            IFS-8095 Content improvement for KTA journey
 ...
 Suite Setup       Custom Suite Setup
@@ -423,13 +425,21 @@ Partner can also see the KTA in Application team
     Then the user should not see the element     name = resend-kta
     And the user should see the element          jQuery = td:contains("${ktaEmail}")
 
+lead applicant can not assign application question to KTA user
+    [Documentation]  IFS-8311
+    Given log in as a different user              &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link           link = ${ktpApplicationTitle}
+    When the user clicks the button/link          link = 3. Project exploitation
+    And the user clicks the button/link           id = edit
+    And the user clicks the button/link           link = Assign to someone else.
+    Then the user should not see the element      jQuery = label:contains("Simon Smith")
+
 new lead applicant can uploads an appendix file in KTP Application
     [Documentation]  IFS-7958
-    Given log in as a different user          &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link       link = ${ktpApplicationTitle}
-    When the user clicks the button/link      link = 6. Innovation
-    And the user clicks the button/link       id = edit
-    Then the user uploads the file            css = input[name="appendix"]    ${valid_pdf}
+    [Setup]  the user marks the questions as complete
+    When the user clicks the button/link              link = 6. Innovation
+    And the user clicks the button/link               id = edit
+    Then the user uploads the file                    css = input[name="appendix"]    ${valid_pdf}
 
 KTA can download the appendix file uploaded by lead
     [Documentation]  IFS-7958
@@ -443,7 +453,7 @@ KTA can download the appendix file uploaded by lead
 
 New lead applicant submits the application
     [Documentation]  IFS-7812  IFS-7814
-    Given Log in as a different user                 &{ktpLeadApplicantCredentials}
+    Given Log in as a different user                  &{ktpLeadApplicantCredentials}
     When the user clicks the button/link              link = ${ktpApplicationTitle}
     And the applicant completes Application Team
     Then the applicant submits the application
@@ -919,3 +929,8 @@ the user can view lead and partner finance summary calculations
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
+
+the user marks the questions as complete
+    the user clicks the button/link     link = Back to project exploitation
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
