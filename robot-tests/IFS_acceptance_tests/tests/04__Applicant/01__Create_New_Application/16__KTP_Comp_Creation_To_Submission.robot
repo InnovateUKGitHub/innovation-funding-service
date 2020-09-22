@@ -410,7 +410,7 @@ lead applicant can not assign application question to KTA user
 
 new lead applicant can uploads an appendix file in KTP Application
     [Documentation]  IFS-7958
-    [Setup]  the user marks the questions a complete
+    [Setup]  the user marks the questions as complete
     When the user clicks the button/link              link = 6. Innovation
     And the user clicks the button/link               id = edit
     Then the user uploads the file                    css = input[name="appendix"]    ${valid_pdf}
@@ -897,7 +897,7 @@ the user can view lead and partner finance summary calculations
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
 
-the user marks the questions a complete
+the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
