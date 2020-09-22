@@ -31,6 +31,12 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
 ...
+...            IFS-7983 KTP Your Project Finances - KTA view
+...
+...            IFS-8154 KTP Project Costs - consumables
+...
+...            IFS-7894 KTP terms & conditions
+...
 ...            IFS-8035 KTP ineligible screen for non-lead applicant
 ...
 ...            IFS-7983  KTP Your Project Finances - KTA view
@@ -92,6 +98,7 @@ ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
 ${financeBanerText}                   Only members from your organisation will be able to see a breakdown
+${ktpTandC}                           Terms and conditions of a Knowledge Transfer Partnership award
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -107,10 +114,29 @@ Comp Admin is able to see KTP funding type has been selected
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
     [Teardown]  the user clicks the button/link     link = Competition details
 
-Comp Admin is able to see KTP T&C's have been selected
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user clicks the button/link     link = Terms and conditions
-    Then the user should see the element      link = Knowledge Transfer Partnership (KTP)
+Creating a new investor comp points to the correct T&C
+    [Documentation]  IFS-7894
+    When the user clicks the button/link                     link = Terms and conditions
+    And the user clicks the button/link                      jQuery = button:contains("Edit")
+    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
+
+The Investor partnership t&c's are correct
+    [Documentation]  IFS-7894
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
+    Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+    [Teardown]   the user goes back to the previous page
+
+T&c's can be confirmed
+    [Documentation]  IFS-7213
+    Given the user clicks the button/link    jQuery = button:contains("Done")
+    When the user clicks the button/link     link = Competition details
+    Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
+
+Admin user completes the KTP competition setup
+    [Documentation]  IFS-7213
+    Then the user clicks the button/link     jQuery = a:contains("Complete")
+    And the user clicks the button/link      jQuery = button:contains('Done')
 
 Existing lead applicant can not apply to KTP compettition if organisation type is not knowledge base
     [Documentation]  IFS-7841  IFS-7146  IFS-7147  IFS-7148  IFS-8035
@@ -236,8 +262,8 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When Logging in and Error Checking                                                       &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
 New lead applicant can declare any other government funding received
@@ -540,6 +566,11 @@ Internal user is able to approve Spend profile and generates the GOL
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
     And internal user generates the GOL                ${ProjectID}
 
+Internal user sees correct label for T&C's
+    [Documentation]  IFS-7894
+    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
+    Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+
 Applicant is able to upload the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given log in as a different user         &{ktpLeadApplicantCredentials}
@@ -735,6 +766,8 @@ the user fills in ktp project costs
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimates")
+    the user clicks the button/link             exceed-limit-yes
+    And Input Text                              css = .textarea-wrapped .editor  This is some random text
     the user fills additional company costs     description  100
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")

@@ -3604,6 +3604,98 @@
 
 <!--/***************************
 
+            JUSTIFICATION
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="justification" th:if="${model.showJustificationForm}">
+    <div class="govuk-form-group"
+         th:classappend="${#fields.hasErrors('justificationForm.*')} ? 'govuk-form-group--error'">
+        <fieldset class="govuk-fieldset">
+            <legend id="justificationForm.exceedAllowedLimit" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                Do your project costs exceed the allowed limit?
+            </legend>
+            <th:block th:unless="${model.complete}">
+                <span class="govuk-hint">Provide detailed explanations for all costs that exceed the allowable limits.
+                    Please read the specific guidance for justifications in the Associate employment, Associate development and Associate estates cost sections.</span>
+
+                <th:block th:if="${#fields.hasErrors('justificationForm.exceedAllowedLimit')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('justificationForm.exceedAllowedLimit')}"
+                                      th:text="${err}">
+                                </span>
+                </th:block>
+
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item" data-target="justification-text"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="exceed-limit-yes"
+                               type="radio"
+                               th:checked="${justificationForm == null ? false : justificationForm.exceedAllowedLimit}"
+                               th:field="*{justificationForm.exceedAllowedLimit}"
+                               value="true"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.ktp.project.costs.exceeded.required}"/>
+                        <label class="govuk-label govuk-radios__label" for="exceed-limit-yes">
+                            Yes
+                        </label>
+                    </div>
+
+                    <div id="justification-text" class="panel">
+                        <th:block th:if="${#fields.hasErrors('justificationForm.justification')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('justificationForm.justification')}"
+                                      th:text="${err}">
+                                </span>
+                        </th:block>
+                        <div id="justificationForm.justification" class="textarea-wrapped word-count"
+                             th:classappend="${#fields.hasErrors('justificationForm.justification')} ? 'govuk-form-group--error'">
+                                    <textarea required="required"
+                                              data-editor="html"
+                                              th:field="*{justificationForm.justification}"
+                                              name="justificationForm.justification"
+                                              class="govuk-textarea"
+                                              th:attr="data-max_words=750,
+                                               data-maxwordslength=750,
+                                               data-maxwordslength-errormessage=#{validation.field.max.word.count(null,750)},
+                                               data-required-errormessage=#{validation.ktp.project.costs.justification.required}"
+                                              th:errorclass="govuk-textarea--error"></textarea>
+                            <div class="textarea-footer" th:with="justification=*{justificationForm.justification}" aria-live="polite" aria-atomic="true" role="status">
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=750, currentWordsLeft=${#ifsUtil.wordsRemaining(750, justification)})" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-radios__item"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="exceed-limit-no"
+                               th:checked="${justificationForm == null ? false : justificationForm.exceedAllowedLimit}"
+                               type="radio"
+                               th:field="*{justificationForm.exceedAllowedLimit}"
+                               value="false"
+                               required="required"
+                               th:attr=
+                                   "data-required-errormessage=#{validation.ktp.project.costs.exceeded.required}">
+                        <label class="govuk-label govuk-radios__label" for="exceed-limit-no">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${model.complete}">
+                <div class="govuk-body">
+                    <p th:text="*{justificationForm.exceedAllowedLimit != null ? 'Yes' : 'No'}">yes</p>
+                    <div class="govuk-body wysiwyg-styles" ifs:utext="*{justificationForm.justification}">I am very bad with money</div>
+                </div>
+            </th:block>
+        </fieldset>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
             ADDITIONAL_COMPANY_COSTS
 
 *********************************/-->
