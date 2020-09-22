@@ -37,6 +37,8 @@
 &{triple_user_credentials}                        email=carolyn.reed@example.com    password=Passw0rd
 &{PS_EF_Application_Partner_Email_credentials}    email= ${test_mailbox_one}+karen@gmail.com   password=Passw0rd
 &{troy_ward_crendentials}                         email=troy.ward@gmail.com  password=Passw0rd
+&{becky_mason_credentials}                        email=becky.mason@gmail.com  password=Passw0rd
+&{abby_gallagher_credentials}                     email=abby.gallagher@example.com	password=Passw0rd
 ##### DO NOT USE THIS USER FOR ANYTHING ELSE ######
 &{terms_and_conditions_login_credentials}         email=laura.jackson@example.com  password=Passw0rd
 ###################################################

@@ -50,7 +50,7 @@
                                    th:value="${choice.id}"
                                    type="radio"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.role.required}" />
+                                   th:attr="data-required-errormessage=#{validation.standard.organisation.required}" />
                             <label class="govuk-label govuk-radios__label" th:for="${#ids.prev('selectedOrganisationId')}">
                                 <span class="govuk-label--s" th:text="${choice.name}" />
                                 <span class="govuk-hint" th:text="${choice.type}" />

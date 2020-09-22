@@ -25,8 +25,10 @@
         </form>
         <div class="centralise">
             <dl class="standard-definition-list">
-                <dt>Project start date</dt>
-                <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+                <th:block th:unless="${model.ktpCompetition}">
+                    <dt>Project start date</dt>
+                    <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+                </th:block>
                 <dt>Duration</dt>
                 <dd th:text="${project.durationInMonths + ' months'}"></dd>
             </dl>

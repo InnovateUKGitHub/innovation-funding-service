@@ -39,8 +39,8 @@
                          th:errorclass="govuk-input--error"
                          th:field="*{firstName}"
                          pattern="\D{2,}"
-                         th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
-                                  data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                         th:attr="data-minlength-errormessage=#{validation.invite.firstname.length.min(null,null,2)},
+                                  data-maxlength-errormessage=#{validation.invite.firstname.length.max},
                                   data-pattern-errormessage=#{validation.standard.firstname.invalid},
                                   data-required-errormessage=#{validation.standard.firstname.required}" />
                 </div>
@@ -60,8 +60,8 @@
                          th:errorclass="govuk-input--error"
                          th:field="*{lastName}"
                          pattern="\D{2,}"
-                         th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                  data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                         th:attr="data-minlength-errormessage=#{validation.invite.lastname.length.min(null,null,2)},
+                                  data-maxlength-errormessage=#{validation.invite.lastname.length.max},
                                   data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                   data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
@@ -123,7 +123,7 @@
             </th:block>
             <th:block th:unless="${model.canEditUserDetails}">
                 <div class="table-overflow">
-                    <table class="govuk-table" id="application-list">
+                    <table class="govuk-table govuk-!-margin-bottom-0" id="application-list">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">Role profile</th>
@@ -146,7 +146,12 @@
                     </table>
                 </div>
             </th:block>
-            <dl class="govuk-list">
+
+            <p th:if="${model.linkVisibleToIfsAdmin}" class="govuk-body">
+                <a th:href="@{/admin/user/{userId}/external-role(userId=${model.user.id})}">Add a new external role profile</a>
+            </p>
+
+            <dl class="govuk-list govuk-!-margin-top-6">
                 <dt>Status</dt>
                 <dd th:text="${model.user.statusDisplay}">Active</dd>
             </dl>

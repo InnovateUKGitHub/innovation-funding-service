@@ -23,6 +23,7 @@ import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -113,7 +114,8 @@ public class ProjectDetailsController {
                 organisations,
                 financeReviewer.map(SimpleUserResource::getName).orElse(null),
                 financeReviewer.map(SimpleUserResource::getEmail).orElse(null),
-                isSpendProfileGenerated));
+                isSpendProfileGenerated,
+                competitionResource.isKtp()));
 
         return "project/detail";
     }
@@ -126,9 +128,10 @@ public class ProjectDetailsController {
                                 UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
-        return doViewProjectStartDate(model, projectResource, form);
+        return doViewProjectStartDate(model, projectResource, form, competitionResource);
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
@@ -141,7 +144,15 @@ public class ProjectDetailsController {
                                   Model model,
                                   UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
+        ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+
+        if (competitionResource.isKtp()) {
+            LocalDate defaultKtpStartDate = TimeZoneUtil.toUkTimeZone(competitionResource.getEndDate()).plusMonths(12).toLocalDate();
+            form.setProjectStartDate(defaultKtpStartDate.withDayOfMonth(1));
+        }
+
+        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectResource, form, competitionResource);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
@@ -151,8 +162,9 @@ public class ProjectDetailsController {
         });
     }
 
-    private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+    private String doViewProjectStartDate(Model model, ProjectResource projectResource,
+                                          ProjectDetailsStartDateForm form, CompetitionResource competitionResource) {
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource, competitionResource));
         model.addAttribute(FORM_ATTR_NAME, form);
         return "project/details-start-date";
     }
@@ -171,12 +183,12 @@ public class ProjectDetailsController {
     private String doViewEditProjectDuration(long projectId, Model model, ProjectDurationForm form) {
 
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project));
+        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project, competitionResource.isKtp()));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
-
     }
 
     @PreAuthorize("hasAuthority('project_finance')")

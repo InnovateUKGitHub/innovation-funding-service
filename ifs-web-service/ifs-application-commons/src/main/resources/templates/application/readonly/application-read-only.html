@@ -6,18 +6,44 @@
         <section th:classappend="${section.finances ? 'landscape' : 'portrait'}">
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
+
             <div class="question" th:each="question, questionIter : ${section.questions}">
+                <h2 class="govuk-heading-m govuk-!-display-block" th:id="|print-questions-heading-${sectionIter.count}-${questionIter.count}|">
+                    <span th:text="${question.name}"></span>
+                    <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                        <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId})"/>
+                    </th:block>
+                </h2>
+
                 <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
             </div>
+
+            <th:block th:if="${model.settings.includeAllAssessorFeedback && section.name == 'Application questions'}">
+                <div class="govuk-!-margin-bottom-3">
+                    <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
+                </div>
+            </th:block>
         </section>
     </th:block>
+
+    <section class="portrait">
+        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
+    </section>
 </th:block>
 
-<th:block th:fragment="accordion(model)">
+<th:block th:fragment="accordion(model)" th:with="parentModel=${parentModel} ?: null, feedbackFragment=${feedbackFragment} ?: null">
+
     <th:block th:each="section, sectionIter : ${model.sections}">
         <section>
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
+
+            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                <p th:if="${section.name.equals('Project details')}" class="govuk-body govuk-hint">This section is not scored but will provide background to the project.</p>
+                <p th:if="${section.name.equals('Application questions')}" class="govuk-body govuk-hint">Each question has been assessed by several independent assessors.<br>They have given a score and feedback for each.</p>
+
+            </th:block>
+
             <!--/* Show the accordion sections */-->
             <div class="govuk-accordion" data-module="govuk-accordion" th:id="|accordion-questions-${sectionIter.count}|">
                 <div class="govuk-accordion__section"  th:each="question, questionIter : ${section.questions}">
@@ -26,6 +52,9 @@
                             <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
+                            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                                <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId})"/>
+                            </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
                                 <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
@@ -33,8 +62,9 @@
                         </h2>
                     </div>
                     <div th:id="|accordion-questions-content-${sectionIter.count}-${questionIter.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
-                        <th:block
-                            th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
+
+                        <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
+
 
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
                               method="post"
@@ -66,9 +96,31 @@
                     </div>
                 </div>
             </div>
+
+            <th:block th:if="${model.settings.includeAllAssessorFeedback && section.name == 'Application questions'}">
+                <div class="govuk-!-margin-bottom-3">
+                    <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
+                </div>
+                <th:block th:if="${feedbackFragment != null && parentModel.interviewFeedbackViewModel != null && parentModel.interviewFeedbackViewModel.hasFeedback()}">
+                    <th:block th:include="${feedbackFragment}" />
+                </th:block>
+            </th:block>
         </section>
     </th:block>
+
+    <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
 </th:block>
 
+<th:block th:fragment="assessor_feedback(model)">
+    <div th:if="!${#lists.isEmpty(model.overallFeedbacks)}">
+        <h2 class="govuk-heading-m govuk-!-margin-top-9">Assessor feedback</h2>
+        <ul class="govuk-list boxed-list">
+            <li th:each="item, iterStat : ${model.overallFeedbacks}">
+                <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+                <div th:text="${item}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+            </li>
+        </ul>
+    </div>
+</th:block>
 
 </html>

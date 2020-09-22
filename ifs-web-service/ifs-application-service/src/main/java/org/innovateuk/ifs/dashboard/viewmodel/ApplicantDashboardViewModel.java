@@ -11,18 +11,15 @@ public class ApplicantDashboardViewModel {
     private final List<EuGrantTransferDashboardRowViewModel> euGrantTransfers;
     private final List<InProgressDashboardRowViewModel> inProgress;
     private final List<PreviousDashboardRowViewModel> previous;
-    private final boolean showCovidQuestionnaireLink;
 
     public ApplicantDashboardViewModel(List<InSetupDashboardRowViewModel> inSetup,
                                        List<EuGrantTransferDashboardRowViewModel> euGrantTransfers,
                                        List<InProgressDashboardRowViewModel> inProgress,
-                                       List<PreviousDashboardRowViewModel> previous,
-                                       boolean showCovidQuestionnaireLink) {
+                                       List<PreviousDashboardRowViewModel> previous) {
         this.inSetup = inSetup;
         this.inProgress = inProgress;
         this.euGrantTransfers = euGrantTransfers;
         this.previous = previous;
-        this.showCovidQuestionnaireLink = showCovidQuestionnaireLink;
     }
 
     public List<InSetupDashboardRowViewModel> getProjects() {
@@ -39,10 +36,6 @@ public class ApplicantDashboardViewModel {
 
     public List<PreviousDashboardRowViewModel> getPrevious() {
         return previous;
-    }
-
-    public boolean isShowCovidQuestionnaireLink() {
-        return showCovidQuestionnaireLink;
     }
 
     /* View logic */

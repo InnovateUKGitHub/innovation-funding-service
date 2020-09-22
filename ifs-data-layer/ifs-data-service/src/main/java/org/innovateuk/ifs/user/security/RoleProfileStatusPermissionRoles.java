@@ -23,4 +23,9 @@ public class RoleProfileStatusPermissionRoles {
     public boolean usersCanRetrieveTheirOwnUserRoleProfile(UserResource userToCheck, UserResource user) {
         return userToCheck.equals(user);
     }
+
+    @PermissionRule(value = "RETRIEVE_USER_ROLE_PROFILE", description = "kta can retrieve a users status")
+    public boolean ktaCanRetrieveUserRoleProfile(UserResource userToCheck, UserResource user) {
+        return isKta(user);
+    }
 }

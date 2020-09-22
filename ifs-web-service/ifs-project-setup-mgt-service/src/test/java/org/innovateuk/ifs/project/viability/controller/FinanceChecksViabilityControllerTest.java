@@ -86,7 +86,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
     private CompetitionResource competitionResource = newCompetitionResource()
             .withName("Competition")
-            .withFinanceRowTypes(Collections.singleton(FinanceRowType.FINANCE))
+            .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
             .build();
 
     private ApplicationResource app = newApplicationResource()

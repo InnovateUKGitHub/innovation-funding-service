@@ -319,7 +319,7 @@ public class ProjectSpendProfileController {
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
                 spendProfileTableResource.getCostCategoryResourceMap(), isUsingJesFinances, isUserPartOfThisOrganisation,
                 projectService.isProjectManager(loggedInUser.getId(), projectResource.getId()),
-                isApproved(projectResource.getId()), leadPartner);
+                isApproved(projectResource.getId()), leadPartner, competition.isKtp());
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(final Long projectId, final Long organisationId, final UserResource loggedInUser) {

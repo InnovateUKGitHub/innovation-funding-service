@@ -21,10 +21,11 @@ IFS Admin marks a project as offline
 
 Applicant sees the project is being managed offline
     [Documentation]  IFS-5110
-    Given Log in as a different user       &{lead_applicant_credentials}
-    When the user clicks the button/link   link = ${MARKOFFLINE_APPLICATION_1_TITLE}
-    Then the user should see the element   jQuery = .message-alert:contains("Innovate UK is managing this project's setup offline. For help call 0300 321 4357.")
-    And the user should see the element    jQuery = .progress-list .read-only + .read-only +.waiting +.read-only + .read-only + .read-only + .read-only
+    Given Log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = ${MARKOFFLINE_APPLICATION_1_TITLE}
+    Then the user should see the element                      jQuery = .message-alert:contains("Innovate UK is managing this project's setup offline. For help call 0300 321 4357.")
+    And the user should see the element                       jQuery = .progress-list .read-only + .read-only +.waiting +.read-only + .read-only + .read-only + .read-only
 
 IFS Admin marks a project as completed offline
     [Documentation]  IFS-5110  IFS-6054

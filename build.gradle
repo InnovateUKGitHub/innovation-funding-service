@@ -91,3 +91,98 @@ wrapper {
 }
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
+
+apply plugin: 'maven-publish'
+
+def osFileMap = [
+        [name:'cache-config', type: 'config-maps'],
+        [name:'data-service-config', type: 'config-maps'],
+        [name:'db-config', type: 'config-maps'],
+        [name:'docusign-config', type: 'config-maps'],
+        [name:'finance-db-config', type: 'config-maps'],
+        [name:'flyway-config', type: 'config-maps'],
+        [name:'idp-config', type: 'config-maps'],
+        [name:'ldap-config', type: 'config-maps'],
+        [name:'new-relic-config', type: 'config-maps'],
+        [name:'performance-config', type: 'config-maps'],
+        [name:'shibboleth-config', type: 'config-maps'],
+        [name:'survey-db-config', type: 'config-maps'],
+        [name:'web-config', type: 'config-maps'],
+
+        [name:'67-db-anonymised-data', type: 'db-anonymised-data'],
+
+        [name:'66-dbbaseline', type: 'db-baseline'],
+
+        [name:'66-dbreset', type: 'db-reset'],
+
+        [name:'92-finance-data-service-sync', type: 'finance-data-service-sync'],
+
+        [name:'10-gluster-svc', type: 'gluster'],
+        [name:'11-gluster-endpoints', type: 'gluster'],
+        [name:'12-file-upload-claim', type: 'gluster'],
+
+        [name:'4-application-service', type: 'ifs-services'],
+        [name:'5-front-door-service', type: 'ifs-services'],
+        [name:'31-data-service', type: 'ifs-services'],
+        [name:'32-finance-data-service', type: 'ifs-services'],
+        [name:'41-assessment-svc', type: 'ifs-services'],
+        [name:'42-competition-mgt-svc', type: 'ifs-services'],
+        [name:'43-project-setup-mgt-svc', type: 'ifs-services'],
+        [name:'44-project-setup-svc', type: 'ifs-services'],
+        [name:'45-registration-svc', type: 'ifs-services'],
+
+        [name:'21-mail', type: 'mail'],
+
+        [name:'3-finance-totals-mysql', type: 'mysql'],
+        [name:'3-mysql', type: 'mysql'],
+        [name:'3-zipkin-mysql', type: 'mysql'],
+        [name:'survey-mysql', type: 'mysql'],
+
+        [name:'91-mysql-client', type: 'mysql-client'],
+
+        [name:'cache-provider', type: 'redis'],
+
+        [name:'7-chrome', type: 'robot-tests'],
+        [name:'8-robot', type: 'robot-tests'],
+
+        [name:'idp-route', type: 'routes'],
+        [name:'mail-route', type: 'routes'],
+        [name:'shib-route', type: 'routes'],
+
+        [name:'5-shib', type: 'shib'],
+        [name:'55-ldap', type: 'shib'],
+        [name:'56-idp', type: 'shib'],
+
+        [name:'80-sil-stub', type: 'sil-stub'],
+
+        [name:'survey-data-service', type: 'survey'],
+        [name:'survey-service', type: 'survey']
+]
+
+publishing {
+    publications {
+        osFileMap.each {
+            osFile ->
+                "$osFile.name"(MavenPublication) {
+                    groupId "org.innovateuk.ifs."+osFile.type
+                    if (project.hasProperty('ifs.version')) {
+                        version = project.findProperty('ifs.version')
+                    }
+                    artifactId = osFile.name
+
+                    artifact("os-files/${osFile.type}/${osFile.name}.yml")
+
+                }
+        }
+    }
+
+    repositories {
+        maven {
+            credentials {
+                username project.findProperty("nexus_username")
+                password project.findProperty("nexus_password")
+            }
+            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"
+        }
+    }
+}

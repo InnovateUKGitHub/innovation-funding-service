@@ -49,23 +49,19 @@ public class ApplicationAssessmentAggregateResource {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        final ApplicationAssessmentAggregateResource that = (ApplicationAssessmentAggregateResource) o;
+        ApplicationAssessmentAggregateResource that = (ApplicationAssessmentAggregateResource) o;
 
         return new EqualsBuilder()
                 .append(scopeAssessed, that.scopeAssessed)
                 .append(totalScope, that.totalScope)
                 .append(inScope, that.inScope)
-                .append(averagePercentage, that.averagePercentage)
                 .append(scores, that.scores)
+                .append(averagePercentage, that.averagePercentage)
                 .isEquals();
     }
 

@@ -19,7 +19,8 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
-        <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
+        <p class="govuk-body" th:if="${model.userLeadPartner}"
+           th:text="${model.procurementCompetition ? 'You must complete these details.' : 'As the lead you must complete these details on behalf of the overall project.'}">..you</p>
         <p class="govuk-body" th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
         <p class="govuk-body"></p>
         <table class="govuk-table">
@@ -37,8 +38,10 @@
                     <th:block th:unless="${model.userLeadPartner and !model.isProjectLive()}">Target start date</th:block>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
-                    <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
-                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
+                        <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                    </th:block>
                 </td>
                 <td class="govuk-table__cell alignright"></td>
             </tr>

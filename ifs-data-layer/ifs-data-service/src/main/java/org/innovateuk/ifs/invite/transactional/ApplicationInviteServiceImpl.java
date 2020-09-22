@@ -54,7 +54,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     private static final String EDIT_EMAIL_FIELD = "stagedInvite.email";
 
     enum Notifications {
-        INVITE_COLLABORATOR
+        INVITE_COLLABORATOR,
+        INVITE_KTA,
+        REMOVE_KTA
     }
 
     @Autowired
@@ -231,10 +233,10 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             return false;
         }
 
-        return !simpleAnyMatch(
-                application.getProcessRoles(),
-                processRole -> processRole.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId())
-        );
+        return !application.getProcessRoles()
+                .stream()
+                .filter(p -> p.getOrganisationId() != null)
+                .anyMatch(p -> p.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId()));
     }
 
     private void deleteOrganisationFinanceData(Organisation organisation, Application application) {
@@ -287,6 +289,8 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         }
         return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
+
+
 
     private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {
         if (inviteOrganisationResource.getOrganisation() != null || StringUtils.isNotBlank(inviteOrganisationResource.getOrganisationName())

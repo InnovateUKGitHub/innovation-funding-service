@@ -112,6 +112,10 @@ public class IndustrialCostFinanceHandler extends AbstractOrganisationFinanceHan
                 return new ExcludedCostCategory();
             case VAT:
                 return new VatCostCategory();
+            case ADDITIONAL_COMPANY_COSTS:
+                return new AdditionalCompanyCostCategory();
+            case PREVIOUS_FUNDING:
+                return new PreviousFundingCostCategory();
             default:
                 return new DefaultCostCategory();
         }

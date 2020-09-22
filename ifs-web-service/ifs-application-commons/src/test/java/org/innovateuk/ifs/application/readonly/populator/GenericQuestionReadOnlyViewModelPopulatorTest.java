@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -18,11 +20,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -38,6 +46,9 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @InjectMocks
     private GenericQuestionReadOnlyViewModelPopulator populator;
+
+    @Mock
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     private ApplicationResource application;
 
@@ -64,6 +75,11 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @Test
     public void populate() {
+        Map<Long, BigDecimal> scores = new HashMap<>();
+        scores.put(question.getId(), new BigDecimal("1"));
+        Map<Long, String> feedbackStrings = new HashMap<>();
+        feedbackStrings.put(question.getId(), "Feedback");
+
         FormInputResource textarea = newFormInputResource()
                 .withType(FormInputType.TEXTAREA)
                 .withScope(FormInputScope.APPLICATION)
@@ -117,12 +133,20 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withValue("1")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
+        ApplicationAssessmentResource assessorResponseFuture = newApplicationAssessmentResource()
+                .withApplicationId(application.getId())
+                .withTestId(3L)
+                .withAveragePercentage(new BigDecimal("50.0"))
+                .withScores(scores)
+                .withFeedback(feedbackStrings)
+                .build();
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
                 asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
-                templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
+                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture));
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
-                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
 
         assertEquals("Some text", viewModel.getAnswer());
         assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());
@@ -138,8 +162,8 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertFalse(viewModel.isLead());
 
         assertTrue(viewModel.hasAssessorResponse());
-        assertEquals("Feedback", viewModel.getFeedback());
-        assertEquals("1", viewModel.getScore());
+        assertEquals("Feedback", viewModel.getFeedback().get(0));
+        assertEquals(new BigDecimal("1"), viewModel.getScores().get(0));
     }
 
     @Test
@@ -155,7 +179,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withMultipleChoiceOptionText("Some text")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
                 asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,

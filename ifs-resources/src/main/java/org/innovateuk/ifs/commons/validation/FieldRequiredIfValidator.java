@@ -10,6 +10,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -80,6 +82,10 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
             return false;
         }
 
+        if (requiredFieldValue instanceof BigInteger) {
+            return false;
+        }
+
         if (requiredFieldValue instanceof String) {
             return StringUtils.isBlank((String) requiredFieldValue);
         }
@@ -90,6 +96,10 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
 
         if (requiredFieldValue instanceof Optional) {
             return !((Optional) requiredFieldValue).isPresent();
+        }
+
+        if (requiredFieldValue instanceof LocalDate) {
+            return ((LocalDate) requiredFieldValue).equals(LocalDate.MIN);
         }
 
         throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName

@@ -90,7 +90,7 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
-                spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
+                spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false, competitionResource));
 
         return "project/details";
     }
@@ -120,7 +120,7 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
-                spendProfileGenerated, true, true));
+                spendProfileGenerated, true, true, competitionResource));
 
         return "project/details";
     }
@@ -130,8 +130,9 @@ public class ProjectDetailsController {
     public String viewStartDate(@PathVariable("projectId") final long projectId, Model model,
                                 UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource, competitionResource));
         return "project/details-start-date";
     }
 

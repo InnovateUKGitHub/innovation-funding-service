@@ -12,7 +12,8 @@ log in and create new application if there is not one already
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
     [Tags]  Email
-    Logging in and Error Checking  &{lead_applicant_credentials}
+    Logging in and Error Checking                         &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
     ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain  Academic robot test application
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application  1
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
@@ -104,6 +105,7 @@ the user marks the section as complete procurement
     [Arguments]  ${question_link}
     the user enters text to a text field     css=.textarea-wrapped .editor             Entering text to allow valid mark as complete
     the user uploads the file                css = input[name="templateDocument"]      ${valid_pdf}
+    open pdf link                            link = ${valid_pdf} (opens in a new window)
     the user can remove the uploaded file    removeTemplateDocument                    ${valid_pdf}
     the user uploads the file                css = input[name="templateDocument"]      ${valid_pdf}
     Run Keyword If  '${question_link}' == 'Innovation'   the user uploads the file     css = input[name="appendix"]    ${valid_pdf}
@@ -159,7 +161,8 @@ the user fills in the inviting steps no edit
 the user fills in the inviting steps
     [Arguments]  ${email}
     the user clicks the button/link       link=Application team
-    the user clicks the button/link       jQuery=button:contains("Edit")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    page should contain element    jQuery=button:contains("Edit")
+    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link    jQuery=button:contains("Edit")
     the user clicks the button/link       link=Add a partner organisation
     the user enters text to a text field  id = organisationName  New Organisation's Name
     the user enters text to a text field  id = name  Partner's name

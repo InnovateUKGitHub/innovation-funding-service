@@ -73,7 +73,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         return findApplicationById(applicationId).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccess(
                         openApplication -> {
-                            LOG.info("[FileLogging] Creating a new file for application id " + openApplication +
+                            LOG.info("[FileLogging] Creating a new file for application id " + openApplication.getId() +
                                     " processRoleId " + processRoleId +
                                     " formInputId " + formInputId);
 
@@ -173,7 +173,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         return findFormInputById(id.getFormInputId()).andOnSuccess(
                 formInput -> getFormInputResponseFileEntryResource(id, formInput)
                         .andOnSuccess(formInputResponseFileEntryResource -> {
-                            LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " +
+                            LOG.info("[FileLogging] Deleting existing FileEntryResource with id " +
                                     formInputResponseFileEntryResource.getFileEntryResource().getId() +
                                     " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() +
                                     " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() +
@@ -220,7 +220,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId()));
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
         LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() +
-                " and application " + formInputResponse.getApplication());
+                " and application " + formInputResponse.getApplication().getId());
         if (formInputResponse.getFileEntries().isEmpty()) {
             formInputResponseRepository.delete(formInputResponse);
             LOG.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");

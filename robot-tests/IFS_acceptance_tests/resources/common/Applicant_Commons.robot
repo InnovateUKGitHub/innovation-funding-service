@@ -4,6 +4,7 @@ Resource    ../../resources/defaultResources.robot
 *** Variables ***
 ${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 ${bannerMessageForLead}     Your application was reopened on
+${yourFundingSubTitle}      Are you requesting funding?
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -14,9 +15,10 @@ the user should see all the Your-Finances Sections
 
 the user navigates to Your-finances page
     [Arguments]  ${Application}
-    the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  jQuery = h3:contains("${Application}") a
-    the user clicks the button/link  link = Your project finances
+    the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       jQuery = h3:contains("${Application}") a
+    the user clicks the button/link                       link = Your project finances
 
 Applicant navigates to the finances of the Robot application
     the user navigates to Your-finances page  Robot test application
@@ -33,12 +35,15 @@ Mark application details as incomplete and the user closes the browser
 
 Mark application details as incomplete
     [Arguments]  ${applicationTitle}
-    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  link = ${applicationTitle}
-    the user clicks the button/link  link = Application details
-    the user clicks the button/link  jQuery = button:contains("Edit")
-    the user clicks the button/link  jQuery = button:contains("Save and return to application overview")
-    the user should see the element  jQuery = li:contains("Application details") > .task-status-incomplete
+    the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${applicationTitle}
+    the user clicks the button/link                       link = Application details
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = button:contains("Edit")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link   jQuery = button:contains("Edit")
+    #the user clicks the button/link                       jQuery = button:contains("Edit")
+    the user clicks the button/link                       jQuery = button:contains("Save and return to application overview")
+    the user should see the element                       jQuery = li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  css = li:contains("Application details") > .task-status-complete
@@ -215,12 +220,12 @@ the user fills in Capital usage
     the user expands the section          Capital usage
 
 the user fills in Subcontracting costs
-    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting")
     the user enters text to a text field  css = .form-finances-subcontracting-company  SomeName
     the user enters text to a text field  css = input.govuk-input[name$=country]  Netherlands
     the user enters text to a text field  css = textarea.govuk-textarea[name$=role]  Quality Assurance
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting][name$=cost]  1000
-    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting")
 
 the user fills in Travel and subsistence
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
@@ -300,7 +305,7 @@ the user checks Your Funding section
     the user clicks the button/link  link = Your funding
     ${Research_category_selected} =   run keyword and return status without screenshots    Element Should Not Be Visible   jQuery = a:contains("research category")
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
-    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
+    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}   no
 
 the user checks for funding level guidance at application level
     the user clicks the button/link     link = Your funding
@@ -322,20 +327,31 @@ the user checks for funding level guidance at PS level
 the user selects research area
     [Arguments]  ${Application}
     the user selects Research category from funding  Feasibility studies
-    the user fills in the funding information        ${Application}
+    the user fills in the funding information        ${Application}   no
 
 the user fills in the funding information
-    [Arguments]  ${Application}
+    [Arguments]  ${Application}   ${otherFunding}
     the user navigates to Your-finances page                        ${Application}
-    the user clicks the button/link                                 link = Your funding
-    the user selects the radio button                               requestingFunding   true
-    Run Keyword if    "${Application}" == "KTP Application"         the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
-    ...         ELSE                                                the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
-    the user selects the radio button                               otherFunding   false
+    the user selects funding section in project finances
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
+    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP New Application"    run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...         ELSE IF   "${Application}" != "KTP New Application"     run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
+    run keyword if  '${otherFunding}' == 'yes'   run keywords         the user selects the radio button        otherFunding   true
+    ...                                                AND     the user enters text to a text field     css = [name*=source]  Lottery funding
+    ...                                                AND     the user enters text to a text field     css = [name*=date]  12-${nextyear}
+    ...                                                AND     the user enters text to a text field     css = [name*=fundingAmount]  20000
+    ...              ELSE              run keyword    the user selects the radio button     otherFunding   false
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
-    the user clicks the button/link                                 link = Your funding
+    the user selects funding section in project finances
     the user should see the element                                 jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
+
+the user selects funding section in project finances
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  link = Other funding
+    Run Keyword If  '${status}' == 'PASS'     the user clicks the button/link     link = Other funding
+    ...         ELSE                          the user clicks the button/link     link = Your funding
 
 the user should see all finance subsections complete
     the user should see the element  css = li:nth-of-type(1) .task-status-complete
@@ -587,23 +603,42 @@ the user can submit the application
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
-    [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
-    the user fills in the inviting steps                     ${partner_email}
+    [Arguments]   ${partner_email}  ${competition_title}
+    the user fills in the inviting steps                 ${partner_email}
     Logout as user
-    the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                        link = Continue
-    logging in and error checking                          &{collaborator1_credentials}
-    the user clicks the button/link                        css = .govuk-button[type="submit"]    #Save and continue
-    the user clicks the button/link                        link = Your project finances
-    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP finances as complete              ${application_title}   Calculate  52,214
-    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
-    ...                                             AND    Log in as a different user                               &{ktpLeadApplicantCredentials}
-    ...  ELSE                              Run keywords    the user marks the finances as complete                  ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
-    ...                                             AND    Log in as a different user                               &{lead_applicant_credentials}
-    the user clicks the button/link                        link = ${application_title}
+    the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                      link = Continue
+
+partner applicant completes the project finances
+    [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
+    logging in and error checking                    ${collaboratorEmail}  ${collaboratorPassword}
+    the user clicks the button/link                  css = .govuk-button[type="submit"]    #Save and continue
+    the user completes partner project finances      ${application_title}  ${is_KTP}
+
+lead applicant completes the application team
+    [Arguments]   ${email}   ${password}   ${application_title}
+    Log in as a different user                   ${email}   ${password}
+    the user clicks the button/link              link = ${application_title}
     the applicant completes Application Team
 
+the lead invites a non-registered user
+    [Arguments]   ${partner_email}  ${competition_title}   ${application_title}  ${is_KTP}  ${fName}  ${lName}
+    the user fills in the inviting steps                   ${partner_email}
+    Logout as user
+    the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user clicks the button/link                     jQuery = .govuk-button:contains("Yes, accept invitation")
+    ...                                             AND    the user provides uk based organisation details     Innovate   INNOVATE LTD
+    ...                                             AND    the user clicks the button/link                     name = save-organisation
+    ...                                             AND    the invited user fills the create account form      ${fName}  ${lName}
+    ...                                             AND    the user reads his email and clicks the link        ${partner_email}    Please verify your email address    Once verified you can sign into your account
+
+the user completes partner project finances
+    [Arguments]   ${application_title}  ${is_KTP}
+    the user clicks the button/link                        link = Your project finances
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
+    ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
     the user clicks the button/link       link = Apply with a different organisation
@@ -620,3 +655,51 @@ the user sets max available funding
     [Arguments]  ${amount}  ${compId}
     ${id} =  User gets competition config id for max funding  ${compId}
     User sets a max funding level for a competition           ${id}  ${amount}
+
+the user fills additional company costs
+    [Arguments]  ${description}  ${value}
+    the user enters text to a text field  css = textarea[id$="associateSalary.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="managementSupervision.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="capitalEquipment.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="otherCosts.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="consumables.description"]  ${description}
+    the user enters text to a text field  css = input[id$="associateSalary.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="managementSupervision.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="consumables.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
+
+the user selects organisation type as business
+    [Arguments]  ${organisationTypeId}
+    the user selects the radio button     organisationTypeId  ${organisationTypeId}
+    the user clicks the button/link       name = select-company-type
+
+the user provides uk based organisation details
+    [Arguments]  ${org_search_name}  ${org}
+    the user selects organisation type as business     radio-1
+    the user enters text to a text field               name = organisationSearchName  ${org_search_name}
+    the user clicks the button/link                    name = search-organisation
+    the user clicks the button/link                    link = ${org}
+
+Existing user starts a new application
+    [Arguments]  ${competitionName}   ${organisationID}   ${pageText}
+    the user select the competition and starts application     ${competitionName}
+    the user selects the radio button                          createNewApplication  true
+    the user clicks the button/link                            jQuery = button:contains("Continue")
+    the user selected organisation if available                ${organisationID}    ${pageText}
+    the user clicks the button/link                            id = save-organisation-button
+
+the user clicks the application tile if displayed
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-APPLICANT
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-APPLICANT
+
+the user clicks the project setup tile if displayed
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-MONITORING_OFFICER
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-MONITORING_OFFICER
+
+the user selected organisation if available
+    [Arguments]   ${organisationID}   ${pageText}
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain     ${pageText}
+    Run Keyword If   '${status}' == 'PASS'     the user selects the radio button     selectedOrganisationId   ${organisationID}
