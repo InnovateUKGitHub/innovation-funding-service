@@ -89,6 +89,8 @@
 
             <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
+            <th:block th:insert="application/your-project-costs-fragments :: justification"/>
+
             <th:block th:insert="application/your-project-costs-fragments :: additional_company_costs"/>
 
             <div th:unless="${model.readOnly}" class="govuk-form-group"
