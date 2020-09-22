@@ -10,6 +10,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.GrantBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.LoanBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.ProgrammeTemplate;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
@@ -30,6 +32,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.PROGRA
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,12 +67,21 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     private ProgrammeTemplate programmeTemplate;
 
     @Mock
+    private LoanBuilder loanBuilder;
+
+    @Mock
+    private GrantBuilder grantBuilder;
+
+    @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     @Before
     public void setup() {
         when(programmeTemplate.type()).thenReturn(PROGRAMME);
+        when(loanBuilder.type()).thenReturn(FundingType.LOAN);
+        when(grantBuilder.type()).thenReturn(FundingType.GRANT);
         service.setCompetitionTemplates(newArrayList(programmeTemplate));
+        service.setFundingTypeTemplates(newArrayList(loanBuilder, grantBuilder));
     }
 
     @Test
@@ -131,6 +143,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .build();
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
+        when(grantBuilder.sections(any())).thenReturn(newArrayList(aSection()));
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
@@ -159,6 +172,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
+        when(loanBuilder.sections(any())).thenReturn(newArrayList(aSection()));
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
