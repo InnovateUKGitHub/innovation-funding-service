@@ -31,11 +31,19 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
 ...
+...            IFS-7983 KTP Your Project Finances - KTA view
+...
+...            IFS-8154 KTP Project Costs - consumables
+...
+...            IFS-7894 KTP terms & conditions
+...
 ...            IFS-8035 KTP ineligible screen for non-lead applicant
 ...
 ...            IFS-7983  KTP Your Project Finances - KTA view
 ...
 ...            IFS-8154 KTP Project Costs - consumables
+...
+...            IFS-8095 Content improvement for KTA journey
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -74,13 +82,13 @@ ${kbOrgNameTextBoxValidation}         Please enter a knowledge base organisation
 ${kbOrgTypeValidation}                Please select the type of knowledge base your organisation is.
 ${postcodeValidation}                 Search using a valid postcode or enter the address manually.
 ${selectOrgValidation}                Select your knowledge base organisation.
-${noKTAInApplicationValidation}       You cannot mark as complete until a Knowledge Transfer Adviser has been added to the application.
-${nonRegisteredUserValidation}        You cannot invite the Knowledge Transfer Adviser as their email address is not registered.
-${acceptInvitationValidation}         You cannot mark as complete until the Knowledge Transfer Adviser has accepted the invitation.
+${noKTAInApplicationValidation}       You cannot mark this page as complete until a knowledge transfer adviser has been invited and they have accepted their invitation.
+${nonRegisteredUserValidation}        You cannot invite the knowledge transfer adviser as their email address is not registered.
+${acceptInvitationValidation}         You cannot mark this page as complete until this invitation has either been accepted or removed.
 ${ktaEmail}                           simon.smith@ktn-uk.test
 ${nonKTAEmail}                        James.Smith@ktn-uk.test
-${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
-${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
+${invitedEmailPattern}                You have been invited to be the knowledge transfer adviser for the Innovation Funding Service application:
+${removedEmailPattern}                You have been removed as knowledge transfer adviser for the Innovation Funding Service application:
 ${invitationEmailSubject}             Invitation to be Knowledge Transfer Adviser
 ${applicationQuestion}                What is the business opportunity that your project addresses?
 ${questionTextGuidance}               Entering text to allow valid mark as complete
@@ -90,6 +98,7 @@ ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
 ${financeBanerText}                   Only members from your organisation will be able to see a breakdown
+${ktpTandC}                           Terms and conditions of a Knowledge Transfer Partnership award
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -105,10 +114,29 @@ Comp Admin is able to see KTP funding type has been selected
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
     [Teardown]  the user clicks the button/link     link = Competition details
 
-Comp Admin is able to see KTP T&C's have been selected
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user clicks the button/link     link = Terms and conditions
-    Then the user should see the element      link = Knowledge Transfer Partnership (KTP)
+Creating a new investor comp points to the correct T&C
+    [Documentation]  IFS-7894
+    When the user clicks the button/link                     link = Terms and conditions
+    And the user clicks the button/link                      jQuery = button:contains("Edit")
+    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
+
+The Investor partnership t&c's are correct
+    [Documentation]  IFS-7894
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
+    Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+    [Teardown]   the user goes back to the previous page
+
+T&c's can be confirmed
+    [Documentation]  IFS-7213
+    Given the user clicks the button/link    jQuery = button:contains("Done")
+    When the user clicks the button/link     link = Competition details
+    Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
+
+Admin user completes the KTP competition setup
+    [Documentation]  IFS-7213
+    Then the user clicks the button/link     jQuery = a:contains("Complete")
+    And the user clicks the button/link      jQuery = button:contains('Done')
 
 Existing lead applicant can not apply to KTP compettition if organisation type is not knowledge base
     [Documentation]  IFS-7841  IFS-7146  IFS-7147  IFS-7148  IFS-8035
@@ -234,8 +262,8 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When Logging in and Error Checking                                                       &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
 New lead applicant can declare any other government funding received
@@ -295,18 +323,18 @@ System should display a validation if no email address entered while inviting th
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
 The applicant should not be able to mark the application team section as complete until lead applicant adds a KTA to the application
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     When the user clicks the button/link                   id = application-question-complete
     Then the user should see a field and summary error     ${noKTAInApplicationValidation}
 
 System should not allow a KTA to be invited if they do not have a KTA account in IFS
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     Given the user enters text to a text field             id = ktaEmail   ${nonKTAEmail}
     When the user clicks the button/link                   name = invite-kta
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
 The applicant invites a KTA user to the application
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     [Setup]  Assign the KTA role to the user
     Given Log in as a different user               &{ktpLeadApplicantCredentials}
     When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
@@ -320,12 +348,12 @@ The applicant should not be able to mark the application team section as complet
     Then the user should see a field and summary error     ${acceptInvitationValidation}
 
 The applicant can resend the invite to the existing KTA
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     When the user clicks the button/link     name = resend-kta
     Then The user reads his email            ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
 
 The applicant can remove pending KTA from the application and send a notification to the KTA
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     When the user clicks the button/link         name = remove-kta
     Then the user should not see the element     name = remove-kta
     And The user reads his email                 ${ktaEmail}   ${removedEmailSubject}   ${removedEmailPattern}
@@ -538,6 +566,11 @@ Internal user is able to approve Spend profile and generates the GOL
     Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
     And internal user generates the GOL                ${ProjectID}
 
+Internal user sees correct label for T&C's
+    [Documentation]  IFS-7894
+    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
+    Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+
 Applicant is able to upload the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given log in as a different user         &{ktpLeadApplicantCredentials}
@@ -733,6 +766,8 @@ the user fills in ktp project costs
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimates")
+    the user clicks the button/link             exceed-limit-yes
+    And Input Text                              css = .textarea-wrapped .editor  This is some random text
     the user fills additional company costs     description  100
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
