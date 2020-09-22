@@ -3643,6 +3643,11 @@
                     </div>
 
                     <div id="justification-text" class="panel">
+                        <th:block th:if="${#fields.hasErrors('justificationForm.justification')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('justificationForm.justification')}"
+                                      th:text="${err}">
+                                </span>
+                        </th:block>
                         <div id="justificationForm.justification" class="textarea-wrapped word-count"
                              th:classappend="${#fields.hasErrors('justificationForm.justification')} ? 'govuk-form-group--error'">
                                     <textarea required="required"
