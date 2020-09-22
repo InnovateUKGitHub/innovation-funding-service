@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -27,6 +29,9 @@ public class AbstractYourProjectCostsFormPopulatorTest {
 
     @Mock
     private OverheadFileRestService overheadFileRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @InjectMocks
     private AbstractYourProjectCostsFormPopulator target = new AbstractYourProjectCostsFormPopulator() {
@@ -54,8 +59,9 @@ public class AbstractYourProjectCostsFormPopulatorTest {
                 .withId(2L)
                 .withOrganisationType(1L)
                 .build();
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
 
-        YourProjectCostsForm form = target.populateForm( 1L, organisationResource);
+        YourProjectCostsForm form = target.populateForm( 1L, organisationResource.getId());
 
         Assert.assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
         Assert.assertEquals(3, form.getLabour().getRows().size());
