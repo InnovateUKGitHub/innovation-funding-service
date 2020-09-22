@@ -262,8 +262,8 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814  IFS-8154
-    When Logging in and Error Checking                                                     &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    When Logging in and Error Checking                                                       &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
 New lead applicant can declare any other government funding received
@@ -766,8 +766,6 @@ the user fills in ktp project costs
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimates")
-    the user clicks the button/link             exceed-limit-yes
-    And Input Text                              css = .textarea-wrapped .editor  This is some random text
     the user fills additional company costs     description  100
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")

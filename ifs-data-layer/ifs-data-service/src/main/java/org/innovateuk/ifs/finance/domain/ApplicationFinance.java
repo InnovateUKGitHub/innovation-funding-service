@@ -26,8 +26,6 @@ public class ApplicationFinance extends Finance {
     @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
 
-    private String justification;
-
     public ApplicationFinance() {
     }
 
@@ -67,13 +65,5 @@ public class ApplicationFinance extends Finance {
 
     public void setInternationalLocation(String internationalLocation) {
         this.internationalLocation = internationalLocation;
-    }
-
-    public String getJustification() {
-        return justification;
-    }
-
-    public void setJustification(String justification) {
-        this.justification = justification;
     }
 }

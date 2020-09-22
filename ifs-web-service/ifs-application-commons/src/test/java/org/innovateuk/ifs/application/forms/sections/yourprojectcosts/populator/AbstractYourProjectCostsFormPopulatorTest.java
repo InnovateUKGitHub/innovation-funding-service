@@ -6,7 +6,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -50,12 +48,7 @@ public class AbstractYourProjectCostsFormPopulatorTest {
     public void populate() {
         when(overheadFileRestService.getOverheadFileDetails(any())).thenReturn(RestResult.restSuccess(newFileEntryResource().withName("filename").build()));
 
-        OrganisationResource organisationResource = newOrganisationResource()
-                .withId(2L)
-                .withOrganisationType(1L)
-                .build();
-
-        YourProjectCostsForm form = target.populateForm( 1L, organisationResource);
+        YourProjectCostsForm form = target.populateForm( 1L, 2L);
 
         Assert.assertEquals((Integer) 250, form.getLabour().getWorkingDaysPerYear());
         Assert.assertEquals(3, form.getLabour().getRows().size());
@@ -70,7 +63,6 @@ public class AbstractYourProjectCostsFormPopulatorTest {
         Assert.assertEquals(3, form.getSubcontractingRows().size());
         Assert.assertEquals(3, form.getTravelRows().size());
         Assert.assertEquals(3, form.getOtherRows().size());
-        Assert.assertNotNull(form.getJustificationForm());
         Assert.assertEquals(3, form.getProcurementOverheadRows().size());
         Assert.assertEquals(false, form.getVatForm().getRegistered());
         Assert.assertEquals(2, form.getAssociateSalaryCostRows().size());
