@@ -638,7 +638,8 @@ the user completes partner project finances
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
+    ...                                             AND    the user accept the competition terms and conditions                                           Return to application overview
+
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
     the user clicks the button/link       link = Apply with a different organisation
