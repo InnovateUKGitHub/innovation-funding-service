@@ -249,7 +249,7 @@ the external user removes the pending parter invitation
 the user removes the pending organisation invitation
     [Arguments]  ${pageToRemoveFrom}
     the user navigates to the page      ${pageToRemoveFrom}
-    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove organisation")
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove")
     the user clicks the button/link     jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
 
 the internal user isnt able to update an existing users email with a pending email
@@ -282,7 +282,7 @@ the user navigates to the View internal user details
     the user clicks the button/link          jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link     jQuery = button:contains("Resend invite")     #Resend invite
+    the user clicks the button/link     jQuery = button:contains("Resend invitation")     #Resend invite
     the user clicks the button/link     jQuery = button:contains("Resend")
     the user reads his email            ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -299,7 +299,7 @@ the IFS admin send invite to internal user
     the user enters text to a text field                    id = lastName  ${last_name}
     the user enters text to a text field                    id = emailAddress  ${email}
     the user selects the option from the drop-down menu     ${user_role}  id = role
-    the user clicks the button/link                         jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Send invitation")
 
 the IFS admin edit internal user details
     the user enters text to a text field                    id = firstName  Innovation
