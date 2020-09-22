@@ -14,10 +14,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +28,6 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -73,23 +69,11 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Mock
     private YourProjectCostsFormValidator yourFundingFormValidator;
 
-    @Mock
-    private YourProjectCostsCompleter completeSectionAction;
-
-    @Mock
-    private OrganisationRestService organisationRestService;
-
     @Test
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
 
-        OrganisationResource organisationResource = newOrganisationResource()
-                .withId(ORGANISATION_ID)
-                .build();
-
-        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisationResource));
-
-        when(formPopulator.populateForm(APPLICATION_ID, organisationResource)).thenReturn(new YourProjectCostsForm());
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
 
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
@@ -102,15 +86,9 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void viewYourProjectCostsAsKta() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
 
-        OrganisationResource organisationResource = newOrganisationResource()
-                .withId(ORGANISATION_ID)
-                .build();
-
-        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisationResource));
-
         YourProjectCostsViewModel viewModel = mockViewModel();
 
-        when(formPopulator.populateForm(APPLICATION_ID, organisationResource)).thenReturn(new YourProjectCostsForm());
+        when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
 
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
@@ -169,17 +147,10 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Test
     public void complete_error() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
-
-        OrganisationResource organisationResource = newOrganisationResource()
-                .withId(ORGANISATION_ID)
-                .build();
-
-        when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisationResource));
-
         doAnswer((invocationOnMock) -> {
-            ((ValidationHandler) invocationOnMock.getArguments()[3]).addAnyErrors(new ValidationMessages(fieldError("requestingFunding", "something", "error")));
+            ((ValidationHandler) invocationOnMock.getArguments()[2]).addAnyErrors(new ValidationMessages(fieldError("requestingFunding", "something", "error")));
             return Void.class;
-        }).when(yourFundingFormValidator).validate(eq(APPLICATION_ID), eq(ORGANISATION_ID), any(), any());
+        }).when(yourFundingFormValidator).validate(eq(APPLICATION_ID), any(), any());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
