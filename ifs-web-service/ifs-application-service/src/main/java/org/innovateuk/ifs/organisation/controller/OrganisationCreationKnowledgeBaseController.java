@@ -100,7 +100,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
             OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
             organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
             registrationCookieService.saveToKnowledgeBaseDetailsCookie(organisationForm, response);
-            registrationCookieService.saveToKnowledgeBaseAddressCookie(createAddressResource(Optional.of(organisationForm)), response);
+            registrationCookieService.saveToKnowledgeBaseAddressCookie(createAddressResource(organisationForm), response);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/knowledge-base/confirm";
         });
@@ -200,9 +200,9 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         return new OrganisationAddressResource(organisationResource, address, new AddressTypeResource(KNOWLEDGE_BASE.getId(), KNOWLEDGE_BASE.name()));
     }
 
-    private AddressResource createAddressResource(Optional<KnowledgeBaseCreateForm> form) {
-        if (form.isPresent() && form.get().getAddressForm() != null) {
-            AddressForm addressForm = form.get().getAddressForm();
+    private AddressResource createAddressResource(KnowledgeBaseCreateForm form) {
+        if (form.getAddressForm() != null) {
+            AddressForm addressForm = form.getAddressForm();
             if (addressForm.isManualAddressEntry()) {
                 return addressForm.getManualAddress();
             }
