@@ -377,9 +377,9 @@ User verifies captial usage, subcontracting, travel and other costs for innovati
     the user should see the element  jQuery = #capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2,120")
     the user should see the element  jQuery = #capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1,200") + td:contains("60") + td:contains("£552")
     the user collapses the section   Capital usage
-    the user expands the section     Subcontracting costs
+    the user expands the section     Subcontracting
     the user should see the element  jQuery = #subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£90,000")
-    the user collapses the section   Subcontracting costs
+    the user collapses the section   Subcontracting
     the user expands the section     Travel and subsistence
     the user should see the element  jQuery = #travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£5,970")
     the user collapses the section   Travel and subsistence
@@ -404,9 +404,9 @@ the user verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
     the user should see the element  jQuery = #capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5,000")
     the user collapses the section   Capital usage
-    the user expands the section     Subcontracting costs
+    the user expands the section     Subcontracting
     the user should see the element  jQuery = #subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£1,000")
-    the user collapses the section   Subcontracting costs
+    the user collapses the section   Subcontracting
     the user expands the section     Travel and subsistence
     the user should see the element  jQuery = #travel-costs-table td:contains("test") + td:contains("10") + td:contains("10") + td:contains("£1,000")
     the user collapses the section   Travel and subsistence

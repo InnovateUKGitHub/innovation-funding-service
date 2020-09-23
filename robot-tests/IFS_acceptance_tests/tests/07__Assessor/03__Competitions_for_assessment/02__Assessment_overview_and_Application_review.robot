@@ -228,7 +228,7 @@ The project costs are correct in the overview
     The user should see the element       jQuery = span:contains("£0") + button:contains("Overhead costs")
     The user should see the element       jQuery = span:contains("£100,200") + button:contains("Materials")
     The user should see the element       jQuery = span:contains("£552") + button:contains("Capital usage")
-    The user should see the element       jQuery = span:contains("£90,000") + button:contains("Subcontracting costs")
+    The user should see the element       jQuery = span:contains("£90,000") + button:contains("Subcontracting")
     The user should see the element       jQuery = span:contains("£5,970") + button:contains("Travel and subsistence")
     The user should see the element       jQuery = span:contains("£1,100") + button:contains("Other costs")
 

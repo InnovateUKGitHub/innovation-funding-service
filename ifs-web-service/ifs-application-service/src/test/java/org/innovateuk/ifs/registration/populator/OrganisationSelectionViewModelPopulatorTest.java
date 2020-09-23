@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.registration.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -43,13 +47,16 @@ public class OrganisationSelectionViewModelPopulatorTest {
         List<OrganisationResource> organisations = newOrganisationResource()
                 .withName("Organisation 1", "Organisation 2")
                 .withOrganisationTypeName("Type 1", "Type 2")
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId(), OrganisationTypeEnum.BUSINESS.getId())
                 .withIsInternational(false)
                 .build(2);
+
+        CompetitionResource competitionResource = newCompetitionResource().withFundingType(FundingType.GRANT).build();
 
         when(organisationRestService.getOrganisations(user.getId(), false)).thenReturn(restSuccess(organisations));
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
 
-        OrganisationSelectionViewModel viewModel = populator.populate(user, request, url);
+        OrganisationSelectionViewModel viewModel = populator.populate(user, request, competitionResource, url);
 
         organisations.forEach((organisation) -> {
             Optional<OrganisationSelectionChoiceViewModel> maybeChoice = viewModel.getChoices().stream().filter(choice -> choice.getName().equals(organisation.getName())).findAny();

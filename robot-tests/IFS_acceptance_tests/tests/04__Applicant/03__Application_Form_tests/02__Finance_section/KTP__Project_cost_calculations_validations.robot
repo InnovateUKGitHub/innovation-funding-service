@@ -9,6 +9,8 @@ Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-8157  KTP Project costs - Subcontracting costs
 ...
+...               IFS-8158  KTP project costs justification
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -16,14 +18,15 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	             KTP application
-${KTPapplicationId}              ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                 KTP new competition
-${KTPcompetitonId}               ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                       email=bob@knowledge.base    password=Passw0rd
-${estateValue}                   11000
-${associateSalaryTable}          associate-salary-costs-table
-${associateDevelopmentTable}     associate-development-costs-table
+${KTPapplication}  	               KTP application
+${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}                   KTP new competition
+${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
+&{KTPLead}                         email=bob@knowledge.base    password=Passw0rd
+${estateValue}                     11000
+${associateSalaryTable}            associate-salary-costs-table
+${associateDevelopmentTable}       associate-development-costs-table
+${limitFieldValidationMessage}     You must provide justifications for exceeding allowable cost limits.
 
 *** Test Cases ***
 Associate employment and development client side validation
@@ -84,7 +87,7 @@ Estate validations
 Estate calculations
     [Documentation]  IFS-7790
     Given the user enters text to a text field    css = input[id^="estate"][id$="cost"]  1000
-    Then the user should see the right values     1,000   Estates     1369
+    Then the user should see the right values     1,000   Associates estates cost     1369
 
 Additional associate support validations
    [Documentation]  IFS-7790
@@ -124,14 +127,21 @@ Consumables calculations
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790  IFS-8154
-    Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimation")
+    Given the user clicks the button/link            id = accordion-finances-heading-additional-company-costs
     When the user fills additional company costs     ${EMPTY}  ${EMPTY}
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
     [Documentation]  IFS-7790  IFS-8154
     Given the user fills additional company costs       description  100
-    Then the user should see the element                jQuery = h4:contains("Total additional company cost estimations"):contains("£600")
+    Then the user should see the element                jQuery = h4:contains("Total additional company cost estimates"):contains("£600")
+
+Limit justification validation
+    [Documentation]  IFS-8158
+    Given the user clicks the button/link                 exceed-limit-yes
+    Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
+    And the user should see a field and summary error     ${limitFieldValidationMessage}
+    And Input Text                                        css = .textarea-wrapped .editor  This is some random text
 
 Mark as complete and check read only view
     [Documentation]  IFS-7790  IFS-8154
@@ -186,10 +196,10 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total travel and subsistence costs") ~ td:contains("£6,150")
     the user should see the element       jQuery = th:contains("Total consumables costs") ~ td:contains("£2,000")
     the user should see the element       jQuery = th:contains("Total knowledge base supervisor costs") ~ td:contains("£123")
-    the user should see the element       jQuery = th:contains("Total estates costs") ~ td:contains("£1,000")
+    the user should see the element       jQuery = th:contains("Total associates estates costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
-    the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£600")
+    the user should see the element       jQuery = th:contains("Total additional company cost estimates") ~ td:contains("£600")
 
 the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")
