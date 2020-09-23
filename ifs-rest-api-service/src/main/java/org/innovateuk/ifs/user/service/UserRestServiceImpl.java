@@ -162,8 +162,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId){
-        return getWithRestResultAsync(PROCESS_ROLE_REST_URL + "/find-assignable/" + applicationId, ProcessRoleResource[].class);
+    public RestResult<List<ProcessRoleResource>> findAssignableProcessRoles(long applicationId){
+        return getWithRestResult(PROCESS_ROLE_REST_URL + "/find-assignable/" + applicationId, processRoleResourceListType());
     }
 
     @Override

@@ -3,8 +3,10 @@ package org.innovateuk.ifs.application.review.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +31,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<ReviewAndSubmitController> {
@@ -157,4 +161,51 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId()));
     }
+
+    @Test
+    public void ktpApplicationTrackForProjectSetupCompletion() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("application-track"))
+                .andReturn();
+
+        TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
+
+        assertFalse(model.isDisplayIfsAssessmentInformation());
+    }
+
+    @Test
+    public void ktpApplicationTrackForCompetitionCloseCompletion() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("application-track"))
+                .andReturn();
+
+        TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
+
+        assertFalse(model.isDisplayIfsAssessmentInformation());
+    }
+
 }
