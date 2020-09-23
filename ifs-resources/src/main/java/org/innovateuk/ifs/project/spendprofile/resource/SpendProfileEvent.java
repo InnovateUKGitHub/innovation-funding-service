@@ -7,7 +7,8 @@ public enum SpendProfileEvent implements ProcessEvent {
     SPEND_PROFILE_GENERATED("spend-profile-generated"),
     SPEND_PROFILE_SUBMITTED("spend-profile-submitted"),
     SPEND_PROFILE_APPROVED("spend-profile-approved"),
-    SPEND_PROFILE_REJECTED("spend-profile-rejected");
+    SPEND_PROFILE_REJECTED("spend-profile-rejected"),
+    SPEND_PROFILE_DELETED("spend-profile-deleted");
 
     String event;
 

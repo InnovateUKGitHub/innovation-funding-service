@@ -87,7 +87,15 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testViabilityApproved_guard() {
+    public void viabilityReset() {
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityReset(partnerOrganisation, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ViabilityState.APPROVED, ViabilityState.REVIEW, ViabilityEvent.VIABILITY_RESET, true);
+    }
+
+    @Test
+    public void ViabilityApproved_guard() {
         when(projectFinanceService.financeChecksTotals(anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource()
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .withMaximumFundingLevel(30)
