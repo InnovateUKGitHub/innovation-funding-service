@@ -590,7 +590,9 @@ lead assigns a question to partner organisation
      the user clicks the button/link       link = ${questionLink}
      the user clicks the button/link       id = edit
      the user clicks the button/link       link = Assign to someone else.
-     the user selects the radio button     assignee  975
+     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = [for="assignee1"]label:contains("Steve Smith")
+     Run Keyword If   '${status}' == 'PASS'    the user selects the radio button     assignee   assignee2
+     ...                              ELSE     the user selects the radio button     assignee   assignee1
      the user clicks the button/link       css = button[type="submit"]
 
 the user can mark the question as complete
