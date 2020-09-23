@@ -135,7 +135,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isH2020() {
-        return competitionTypeEnum ==  CompetitionTypeEnum.HORIZON_2020;
+        return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
     }
 
     @JsonIgnore
@@ -334,6 +334,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return competitionTypeEnum;
+    }
+
+    public void setCompetitionTypeEnum(CompetitionTypeEnum competitionTypeEnum) {
+        this.competitionTypeEnum = competitionTypeEnum;
     }
 
     @JsonIgnore

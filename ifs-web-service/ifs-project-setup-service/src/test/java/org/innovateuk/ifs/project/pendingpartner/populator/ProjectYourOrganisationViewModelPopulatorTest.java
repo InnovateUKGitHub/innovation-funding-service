@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -59,7 +60,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
         CompetitionResource competition = newCompetitionResource()
             .withFundingType(FundingType.GRANT)
             .withIncludeJesForm(true)
-            .withCompetitionTypeName("Horizon 2020")
+            .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_2020)
             .build();
         ProjectResource project = newProjectResource()
             .withId(projectId)
