@@ -1,28 +1,23 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
@@ -84,7 +79,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
         long questionsWithMultipleStatuses = questionRepository.countQuestionsWithMultipleStatuses(competitionId);
         long questionsWithSingleStatus = questionRepository.countQuestionsWithSingleStatus(competitionId);
-        long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(application.getId());
+        long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrueAndQuestionQuestionSetupTypeNotIn(application.getId(), singleton(QuestionSetupType.KTP_ASSESSMENT));
         long totalQuestions = questionsWithMultipleStatuses * organisations + questionsWithSingleStatus;
         return percentage(completedQuestionStatuses, totalQuestions);
     }

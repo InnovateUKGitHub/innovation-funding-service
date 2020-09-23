@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.form.repository;
 
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Set;
+
+import static java.util.Collections.singleton;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -29,10 +32,10 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             questionSetupType);
     long countByCompetitionId(Long competitionId);
     default long countQuestionsWithMultipleStatuses(long competitionId) {
-        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, true);
+        return countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrueAndQuestionSetupTypeNotIn(competitionId, true, singleton(QuestionSetupType.KTP_ASSESSMENT));
     }
     default long countQuestionsWithSingleStatus(long competitionId) {
-        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
+        return countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrueAndQuestionSetupTypeNotIn(competitionId, false, singleton(QuestionSetupType.KTP_ASSESSMENT));
     }
-    long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
+    long countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrueAndQuestionSetupTypeNotIn(long competitionId, boolean multipleStatuses, Set<QuestionSetupType> questionSetupTypes);
 }

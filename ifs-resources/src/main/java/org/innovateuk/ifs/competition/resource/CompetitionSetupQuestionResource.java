@@ -355,6 +355,7 @@ public class CompetitionSetupQuestionResource {
         return QuestionSetupType.KTP_ASSESSMENT != type;
     }
 
+    @JsonIgnore
     public boolean isAssessmentGuidanceRequired() {
         return QuestionSetupType.KTP_ASSESSMENT == type;
     }

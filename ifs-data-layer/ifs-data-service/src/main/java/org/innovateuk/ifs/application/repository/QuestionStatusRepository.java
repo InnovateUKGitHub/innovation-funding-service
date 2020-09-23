@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.QuestionStatus;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -25,6 +27,6 @@ public interface QuestionStatusRepository extends CrudRepository<QuestionStatus,
                                                                                               long markedAsCompleteById,
                                                                                               long assigneeId,
                                                                                               long assignedById);
-    long countByApplicationIdAndMarkedAsCompleteTrue(long applicationId);
+    long countByApplicationIdAndMarkedAsCompleteTrueAndQuestionQuestionSetupTypeNotIn(long applicationId, Set<QuestionSetupType> questionSetupTypes);
     void deleteByApplicationId(long applicationId);
 }
