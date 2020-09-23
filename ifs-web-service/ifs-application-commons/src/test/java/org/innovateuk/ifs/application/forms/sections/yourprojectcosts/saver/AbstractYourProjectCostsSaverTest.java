@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectatio
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -95,11 +97,20 @@ public class AbstractYourProjectCostsSaverTest {
         vat.setRegistered(false);
         form.setVatForm(vat);
 
+        form.getAdditionalCompanyCostForm().setAssociateSalary(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setCapitalEquipment(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setConsumables(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setManagementSupervision(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setOtherCosts(new AdditionalCostAndDescription());
+        form.getAdditionalCompanyCostForm().setOtherStaff(new AdditionalCostAndDescription());
+
         FinanceRowItem mockResponse = mock(FinanceRowItem.class);
         when(financeRowRestService.update(any())).thenReturn(restSuccess(new ValidationMessages()));
         when(financeRowRestService.create(any())).thenReturn(restSuccess(mockResponse));
 
-        ServiceResult<Void> result = target.save(form, 1L, 2L);
+        OrganisationResource organisationResource = newOrganisationResource().withId(2L).build();
+
+        ServiceResult<Void> result = target.save(form, 1L, organisationResource, new ValidationMessages());
 
         assertTrue(result.isSuccess());
 
@@ -119,6 +130,7 @@ public class AbstractYourProjectCostsSaverTest {
         verify(financeRowRestService).create(isA(TravelCost.class));
         verify(financeRowRestService).create(isA(OtherCost.class));
         verify(financeRowRestService).update(isA(Vat.class));
+        verify(financeRowRestService, times(6)).update(isA(AdditionalCompanyCost.class));
         verify(financeRowRestService, times(6)).update(mockResponse);
 
         verifyNoMoreInteractions(financeRowRestService);

@@ -177,6 +177,14 @@ table {
   }
 }
 
+table {
+  .strong-border {
+    .govuk-table__header {
+      border-bottom: 3px solid govuk-colour("black");
+    }
+  }
+}
+
 .govuk-input,
 .govuk-select{
   + button {
@@ -234,6 +242,10 @@ tr {
         &:first-of-type {
           border-left: 5px solid $govuk-error-colour;
           padding-left: 15px;
+        }
+
+        .govuk-textarea {
+          margin-bottom: 0;
         }
       }
     }

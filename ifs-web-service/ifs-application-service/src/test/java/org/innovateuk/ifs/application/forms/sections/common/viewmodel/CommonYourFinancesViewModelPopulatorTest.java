@@ -9,7 +9,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,6 +27,8 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -42,7 +47,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
     private Consumer<CommonYourProjectFinancesViewModel> expectViewModelIsEditable = model -> assertThat(model.isReadOnly()).isFalse();
 
     private Consumer<CommonYourProjectFinancesViewModel> expectedExternalUserFinanceUrl = model ->
-            assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE");
+            assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE/" + organisationId);
 
     private Consumer<CommonYourProjectFinancesViewModel> expectedInternalUserFinanceUrl = model ->
             assertThat(model.getFinancesUrl()).isEqualTo("/application/" + applicationId + "/form/FINANCE/" + organisationId);
@@ -61,6 +66,9 @@ public class CommonYourFinancesViewModelPopulatorTest {
 
     @Mock
     private SectionService sectionServiceMock;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Test
     public void populate() {
@@ -165,6 +173,20 @@ public class CommonYourFinancesViewModelPopulatorTest {
             CompetitionStatus competitionStatus,
             Consumer<CommonYourProjectFinancesViewModel>... conditionalAssertions) {
 
+        UserResource user;
+        if (internalUser) {
+            user = newUserResource()
+                    .withRoleGlobal(Role.PROJECT_FINANCE)
+                    .build();
+        } else {
+            user = newUserResource()
+                    .withRoleGlobal(Role.APPLICANT)
+                    .build();
+            when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(newProcessRoleResource()
+            .withOrganisation(organisationId)
+            .build()));
+        }
+
         CompetitionResource competition = newCompetitionResource().
                 withCompetitionStatus(competitionStatus).
                 build();
@@ -183,7 +205,7 @@ public class CommonYourFinancesViewModelPopulatorTest {
         when(sectionServiceMock.getCompleted(application.getId(), organisationId)).thenReturn(sectionsMarkedAsComplete);
         when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        CommonYourProjectFinancesViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
+        CommonYourProjectFinancesViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, user);
 
         assertThat(viewModel.getApplicationId()).isEqualTo(application.getId());
         assertThat(viewModel.getApplicationName()).isEqualTo(application.getName());

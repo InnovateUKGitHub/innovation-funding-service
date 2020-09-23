@@ -217,8 +217,6 @@
                                 id="fundingRules"
                                 th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-textarea--error'"
                                 th:field="${competitionSetupForm.fundingRules}"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                 ifs:utext="${competitionSetupForm.fundingRules}">
                         </textarea>
                     </div>

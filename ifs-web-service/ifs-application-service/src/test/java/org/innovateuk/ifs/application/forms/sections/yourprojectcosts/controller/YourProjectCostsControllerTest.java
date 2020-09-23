@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.ApplicationYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
@@ -15,8 +14,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +28,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.getNonNullValue;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -72,12 +71,13 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Mock
     private YourProjectCostsFormValidator yourFundingFormValidator;
 
-    @Mock
-    private YourProjectCostsCompleter completeSectionAction;
-
     @Test
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
+
+        OrganisationResource organisationResource = newOrganisationResource()
+                .withId(ORGANISATION_ID)
+                .build();
 
         when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
 
@@ -137,7 +137,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
         when(saver.save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
-        when(completeSectionAction.markAsComplete(SECTION_ID, APPLICATION_ID, processRole)).thenReturn(new ValidationMessages());
+        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -146,13 +146,14 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
         verify(saver).save(any(YourProjectCostsForm.class), eq(APPLICATION_ID), eq(getLoggedInUser()));
-        verify(completeSectionAction).markAsComplete(SECTION_ID, APPLICATION_ID, processRole);
+        verify(sectionStatusRestService).markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId());
     }
 
 
     @Test
     public void complete_error() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
+
         doAnswer((invocationOnMock) -> {
             ((ValidationHandler) invocationOnMock.getArguments()[2]).addAnyErrors(new ValidationMessages(fieldError("requestingFunding", "something", "error")));
             return Void.class;
@@ -252,9 +253,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     private YourProjectCostsViewModel mockViewModel() {
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        boolean internalUser = getLoggedInUser().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER) || getLoggedInUser().isInternalUser();
-
-        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, internalUser)).thenReturn(viewModel);
+        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser())).thenReturn(viewModel);
         return viewModel;
     }
 }
