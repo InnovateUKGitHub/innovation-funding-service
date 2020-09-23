@@ -1222,14 +1222,14 @@ lead applicant assigns technical approach section to partner applicant
 
 partner uploads the appendix file
     Log in as a different user                            &{internationalPartnerOrganisationCredentials}
-    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}  #${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the user clicks the button/link                       jQuery = a:contains("Technical approach")
     the user uploads the file                             css = input[name="appendix"]    ${ods_file}
     the user uploads the file                             css = input[name="appendix"]    ${excel_file}
     the user clicks the button/link                       jQuery = button:contains("Assign to lead for review")
     Log in as a different user                            &{ukLeadOrganisationCredentials}
     the user clicks the application tile if displayed
-    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}  #${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the user clicks the button/link                       jQuery = a:contains("Technical approach")
     the user clicks the button/link                       id = application-question-complete
 
