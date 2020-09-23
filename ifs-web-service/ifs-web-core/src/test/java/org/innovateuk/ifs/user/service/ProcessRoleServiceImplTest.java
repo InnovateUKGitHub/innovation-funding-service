@@ -27,13 +27,10 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
     public void findAssignableProcessRoles() throws Exception {
         long applicationId = 1;
         List<ProcessRoleResource> resources = newArrayList(new ProcessRoleResource());
-        RestResult<ProcessRoleResource[]> restResult = restSuccess(resources.toArray(new ProcessRoleResource[0]));
-        Future arrayFuture = mock(Future.class);
-        when(arrayFuture.get()).thenReturn(restResult);
-        when(userRestService.findAssignableProcessRoles(applicationId)).thenReturn(arrayFuture);
+        RestResult<List<ProcessRoleResource>> restResult = restSuccess(resources);
+        when(userRestService.findAssignableProcessRoles(applicationId)).thenReturn(restResult);
 
-        Future<List<ProcessRoleResource>> returnedResponse = service.findAssignableProcessRoles(applicationId);
-        List<ProcessRoleResource> actualResources = returnedResponse.get();
+        List<ProcessRoleResource> actualResources = service.findAssignableProcessRoles(applicationId);
 
         verify(userRestService, times(1)).findAssignableProcessRoles(applicationId);
         verifyNoMoreInteractions(userRestService);

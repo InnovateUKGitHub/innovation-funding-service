@@ -114,7 +114,7 @@ public class ManagementApplicationPopulator {
         } else {
             interviewFeedbackViewModel = null;
         }
-
+        
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 

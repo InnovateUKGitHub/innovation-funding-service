@@ -143,28 +143,28 @@
                     <div class="govuk-form-group download">
                         <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
                         <p class="govuk-body uploaded-file">
-                            <a th:href="@{/competition/{compId}/application/{applicationId}/download-response(applicationId=${model.application.id}, compId=${model.application.competition})}"
-                               th:text="|${model.interviewFeedbackViewModel.responseFilename} (opens in a new window)|"
-                               target="_blank"
-                               class="govuk-link">File</a>.
+                            <a target="_blank" class="govuk-link"
+                               th:href="@{/competition/{compId}/application/{applicationId}/download-response(applicationId=${model.application.id}, compId=${model.application.competition})}"
+                               th:text="|${model.interviewFeedbackViewModel.responseFilename} (opens in a new window)|">File</a>.
                         </p>
                     </div>
                 </th:block>
             </th:block>
         </th:block>
 
-        <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
-
-        <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
-            <div class="govuk-form-group download">
-                <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
-                <a target="_blank"
-                   th:href="@{/competition/{compId}/application/{applicationId}/download-feedback(applicationId=${model.application.id}, compId=${model.application.competition})}"
-                   th:text="|${model.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
-                   class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
+        <th:block th:insert="application/readonly/application-read-only :: accordion (model=${model.applicationReadOnlyViewModel}, feedbackFragment=~{ :: .feedbackFragment}, parentModel=${model})">
+            <div class="feedbackFragment">
+                <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
+                <div class="govuk-form-group download">
+                    <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
+                    <a target="_blank"
+                       th:href="@{/competition/{compId}/application/{applicationId}/download-feedback(applicationId=${parentModel.application.id}, compId=${parentModel.application.competition})}"
+                       th:text="|${parentModel.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
+                       class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
+                </div>
             </div>
         </th:block>
+
 
         <div th:unless="${model.externalFinanceUser}" class="govuk-body govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${model.application.competition},appId=${model.application.id})}"

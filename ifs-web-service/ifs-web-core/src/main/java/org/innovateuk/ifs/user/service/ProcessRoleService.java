@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
  */
 public interface ProcessRoleService {
 
-    Future<List<ProcessRoleResource>> findAssignableProcessRoles(Long applicationId);
+    List<ProcessRoleResource> findAssignableProcessRoles(Long applicationId);
 
     Future<ProcessRoleResource> getById(Long id);
 }

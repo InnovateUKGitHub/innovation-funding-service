@@ -9,6 +9,8 @@ Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-8157  KTP Project costs - Subcontracting costs
 ...
+...               IFS-8158  KTP project costs justification
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -16,14 +18,15 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	             KTP application
-${KTPapplicationId}              ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                 KTP new competition
-${KTPcompetitonId}               ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                       email=bob@knowledge.base    password=Passw0rd
-${estateValue}                   11000
-${associateSalaryTable}          associate-salary-costs-table
-${associateDevelopmentTable}     associate-development-costs-table
+${KTPapplication}  	               KTP application
+${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}                   KTP new competition
+${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
+&{KTPLead}                         email=bob@knowledge.base    password=Passw0rd
+${estateValue}                     11000
+${associateSalaryTable}            associate-salary-costs-table
+${associateDevelopmentTable}       associate-development-costs-table
+${limitFieldValidationMessage}     You must provide justifications for exceeding allowable cost limits.
 
 *** Test Cases ***
 Associate employment and development client side validation
@@ -132,6 +135,13 @@ Additional company cost estimation calculations
     [Documentation]  IFS-7790  IFS-8154
     Given the user fills additional company costs       description  100
     Then the user should see the element                jQuery = h4:contains("Total additional company cost estimates"):contains("£600")
+
+Limit justification validation
+    [Documentation]  IFS-8158
+    Given the user clicks the button/link                 exceed-limit-yes
+    Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
+    And the user should see a field and summary error     ${limitFieldValidationMessage}
+    And Input Text                                        css = .textarea-wrapped .editor  This is some random text
 
 Mark as complete and check read only view
     [Documentation]  IFS-7790  IFS-8154
