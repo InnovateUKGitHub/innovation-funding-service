@@ -49,6 +49,10 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8095 Content improvement for KTA journey
 ...
+...            IFS-8312 KTA profile access permissions
+...
+...            IFS-8325 Write Acceptance tests for 8312
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -394,6 +398,17 @@ The KTA can see the dashboard with assesments and applications tiles after accep
     When logging in and error checking        ${ktaEmail}   ${short_password}
     Then the user should see the element      jQuery = h2:contains("Assessments")
     And the user should see the element       jQuery = h2:contains("Applications")
+
+The KTA can see their profile page in both Assessments and Applications
+    [Documentation]  IFS-8312  IFS-8325
+    Given the user clicks the button/link     jQuery = h2:contains("Assessments")
+    When the user clicks the button/link      link = Profile
+    Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
+    And the user clicks the button/link       link = Dashboard
+    Then the user clicks the button/link      jQuery = h2:contains("Applications")
+    And the user clicks the button/link       link = Profile
+    Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
+    And the user clicks the button/link       link = Dashboard
 
 The KTA can see the read only view of the application/s
     [Documentation]  IFS-7983
