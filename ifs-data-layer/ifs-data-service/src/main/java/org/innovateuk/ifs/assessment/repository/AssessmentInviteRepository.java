@@ -51,6 +51,16 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "GROUP BY user.id ";
 
+    String KTP_ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME =
+            "FROM User user " +
+            "JOIN Profile profile ON profile.id = user.profileId " +
+            "JOIN user.roles roles " +
+            "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
+            "AND roles = org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
+            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "GROUP BY user.id ";
+
     @Query(ASSESSORS_WITH_COMPETITION)
     Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
 
@@ -60,4 +70,11 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
 
     @Query("SELECT user.id " + ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
     List<Long> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorNameFilter") String assessorNameFilter);
+
+    @Query("SELECT user " + KTP_ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
+    Page<User> findKtpAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId,
+                                                             @Param("assessorNameFilter") String assessorNameFilter, Pageable pageable);
+
+    @Query("SELECT user.id " + KTP_ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
+    List<Long> findKtpAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorNameFilter") String assessorNameFilter);
 }

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -261,20 +262,35 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, String assessorNameFilter) {
-        final Page<User> pagedResult = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter), pageable);
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+            final Page<User> pagedResult;
+            if (competition.getFundingType() != FundingType.KTP) {
+                pagedResult = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter), pageable);
+            } else {
+                pagedResult = assessmentInviteRepository.findKtpAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter), pageable);
+            }
+            return serviceSuccess(new AvailableAssessorPageResource(
+                    pagedResult.getTotalElements(),
+                    pagedResult.getTotalPages(),
+                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                    pagedResult.getNumber(),
+                    pagedResult.getSize()
+            ));
 
-        return serviceSuccess(new AvailableAssessorPageResource(
-                pagedResult.getTotalElements(),
-                pagedResult.getTotalPages(),
-                simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
-                pagedResult.getNumber(),
-                pagedResult.getSize()
-        ));
+        });
     }
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, String assessorNameFilter) {
-        return serviceSuccess(assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter)));
+        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            final List<Long> result;
+            if (competition.getFundingType() != FundingType.KTP) {
+                result = assessmentInviteRepository.findAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter));
+            } else {
+                result = assessmentInviteRepository.findKtpAssessorsByCompetitionAndAssessorNameLike(competitionId, EncodingUtils.urlDecode(assessorNameFilter));
+            }
+            return result;
+        });
     }
 
     private AvailableAssessorResource mapToAvailableAssessorResource(User assessor) {
