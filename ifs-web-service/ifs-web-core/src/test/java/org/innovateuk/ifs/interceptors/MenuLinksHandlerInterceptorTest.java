@@ -10,15 +10,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Value;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,18 +26,19 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
 
     private static final String USER_DASHBOARD_LINK = "userDashboardLink";
     private static final String USER_PROFILE_LINK = "userProfileLink";
     private static final String ASSESSOR_PROFILE_URL = "/assessment/profile/details";
     private static final String USER_PROFILE_URL = "/profile/view";
+    private static final String SHOW_MANAGE_USERS_LINK_ATTR = "showManageUsersLink";
+    private static final String ASSESSOR_DIRECT_LANDING_PAGE_URL = "assessment/assessor/dashboard";
     private static final String APPLICANT_DIRECT_LANDING_PAGE_URL ="applicant/dashboard";
-    private static final String ASSESSOR_DIRECT_LANDING_PAGE_URL ="assessment/assessor/dashboard";
 
     @InjectMocks
     private MenuLinksHandlerInterceptor menuLinksHandlerInterceptor;
@@ -57,9 +58,6 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
     @Mock
     private PageHistoryService pageHistoryService;
 
-    @Value("${logout.url}")
-    private String logoutUrl;
-
     private ModelAndView mav;
     private final Object handler = new Object();
 
@@ -74,31 +72,12 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
     }
 
     @Test
-    public void applicantShouldGetApplicantProfileLink() {
-
-        UserAuthentication authentication = new UserAuthentication(newUserResource().withRoleGlobal(APPLICANT).build());
-        ModelMap modelMap = mav.getModelMap();
-        modelMap.addAttribute(USER_DASHBOARD_LINK, APPLICANT_DIRECT_LANDING_PAGE_URL );
-        modelMap.addAttribute(USER_PROFILE_LINK, USER_PROFILE_URL );
-
-        when(userAuthenticationService.getAuthentication(request)).thenReturn(authentication);
-        when(navigationUtils.getDirectLandingPageUrl(request)).thenReturn(APPLICANT_DIRECT_LANDING_PAGE_URL);
-
-        menuLinksHandlerInterceptor.postHandle(request, response, handler, mav);
-
-        assertEquals(APPLICANT_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
-        assertEquals(USER_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
-        verify(userAuthenticationService, times(2)).getAuthenticatedUser(request);
-        verify(navigationUtils).getDirectLandingPageUrl(request);
-    }
-
-    @Test
     public void assessorShouldGetAssessorProfileLink() {
 
         UserAuthentication authentication = new UserAuthentication(newUserResource().withRoleGlobal(ASSESSOR).build());
         ModelMap modelMap = mav.getModelMap();
-        modelMap.addAttribute(USER_DASHBOARD_LINK, ASSESSOR_DIRECT_LANDING_PAGE_URL );
-        modelMap.addAttribute(USER_PROFILE_LINK, ASSESSOR_PROFILE_URL );
+        modelMap.addAttribute(USER_DASHBOARD_LINK, ASSESSOR_DIRECT_LANDING_PAGE_URL);
+        modelMap.addAttribute(USER_PROFILE_LINK, ASSESSOR_PROFILE_URL);
 
         when(userAuthenticationService.getAuthentication(request)).thenReturn(authentication);
         when(navigationUtils.getDirectLandingPageUrl(request)).thenReturn(ASSESSOR_DIRECT_LANDING_PAGE_URL);
@@ -106,15 +85,15 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
         menuLinksHandlerInterceptor.postHandle(request, response, handler, mav);
 
         assertEquals(ASSESSOR_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
-        assertEquals(USER_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
-        verify(userAuthenticationService, times(2)).getAuthenticatedUser(request);
+        assertEquals(ASSESSOR_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
+        verify(userAuthenticationService, times(1)).getAuthenticatedUser(request);
         verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
     }
 
     @Test
-    public void multiRoleUserWithApplicantRoleChosenShouldGetUserProfileLink() {
+    public void applicantShouldGetApplicantProfileLink() {
 
-        UserAuthentication authentication = new UserAuthentication(newUserResource().withRolesGlobal(asList(ASSESSOR, APPLICANT)).build());
+        UserAuthentication authentication = new UserAuthentication(newUserResource().withRoleGlobal(APPLICANT).build());
         ModelMap modelMap = mav.getModelMap();
         modelMap.addAttribute(USER_DASHBOARD_LINK, APPLICANT_DIRECT_LANDING_PAGE_URL);
         modelMap.addAttribute(USER_PROFILE_LINK, USER_PROFILE_URL);
@@ -126,7 +105,26 @@ public class MenuLinksHandlerInterceptorTest extends BaseUnitTest {
 
         assertEquals(APPLICANT_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
         assertEquals(USER_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
-        verify(userAuthenticationService, times(2)).getAuthenticatedUser(request);
+        verify(userAuthenticationService, times(1)).getAuthenticatedUser(request);
+        verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
+    }
+
+    @Test
+    public void multiRoleUserWithAssessorRoleShouldGetAssessorProfileLink() {
+
+        UserAuthentication authentication = new UserAuthentication(newUserResource().withRolesGlobal(asList(ASSESSOR, APPLICANT)).build());
+        ModelMap modelMap = mav.getModelMap();
+        modelMap.addAttribute(USER_DASHBOARD_LINK, ASSESSOR_DIRECT_LANDING_PAGE_URL);
+        modelMap.addAttribute(USER_PROFILE_LINK, ASSESSOR_PROFILE_URL);
+
+        when(userAuthenticationService.getAuthentication(request)).thenReturn(authentication);
+        when(navigationUtils.getDirectLandingPageUrl(request)).thenReturn(ASSESSOR_DIRECT_LANDING_PAGE_URL);
+
+        menuLinksHandlerInterceptor.postHandle(request, response, handler, mav);
+
+        assertEquals(ASSESSOR_DIRECT_LANDING_PAGE_URL, mav.getModelMap().get(USER_DASHBOARD_LINK));
+        assertEquals(ASSESSOR_PROFILE_URL, mav.getModelMap().get(USER_PROFILE_LINK));
+        verify(userAuthenticationService, times(1)).getAuthenticatedUser(request);
         verify(navigationUtils, times(1)).getDirectLandingPageUrl(request);
     }
 }

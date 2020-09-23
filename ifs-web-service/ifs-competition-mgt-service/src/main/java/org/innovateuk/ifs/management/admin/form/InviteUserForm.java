@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -14,27 +16,39 @@ import javax.validation.constraints.Size;
 /**
  * Form to capture the posted details of the newly invited user
  */
+@FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = true, message = "{validation.kta.invite.email.required}")
+@FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = false, message = "{validation.invite.email.required}")
+@FieldComparison(
+        firstField = "emailAddress",
+        secondField = "ktpRole",
+        message = "{validation.kta.invite.email.invalid}",
+        predicate = EmailAddressValidator.KtpPredicateProvider.class
+)
+@FieldComparison(
+        firstField = "emailAddress",
+        secondField = "ktpRole",
+        message = "{validation.standard.email.format}",
+        predicate = EmailAddressValidator.NonKtpPredicateProvider.class
+)
 public class InviteUserForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}"),
-            @Size(max=70, message="{validation.standard.firstname.length.max}"),
+            @Size(min=2, message="{validation.invite.firstname.length.min}"),
+            @Size(max=70, message="{validation.invite.firstname.length.max}"),
     })
     private String firstName;
 
     @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}"),
-            @Size(max=70, message="{validation.standard.lastname.length.max}"),
+            @Size(min=2, message="{validation.invite.lastname.length.min}"),
+            @Size(max=70, message="{validation.invite.lastname.length.max}"),
     })
     private String lastName;
 
-    @NotBlank(message = "{validation.invite.email.required}")
-    @Size(max = 254, message = "{validation.standard.email.length.max}")
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
+    @Size(max = 254, message = "{validation.invite.email.length.max}")
     private String emailAddress;
 
     private Role role;
@@ -73,6 +87,10 @@ public class InviteUserForm extends BaseBindingResultTarget {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isKtpRole() {
+        return Role.KNOWLEDGE_TRANSFER_ADVISER == role;
     }
 
     @Override
