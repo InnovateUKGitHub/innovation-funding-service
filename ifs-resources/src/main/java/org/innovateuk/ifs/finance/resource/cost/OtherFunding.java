@@ -8,17 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
-public class OtherFunding extends AbstractFinanceRowItem {
-    private Long id;
+public class OtherFunding extends BaseOtherFunding {
 
-    private String otherPublicFunding;
-    private String fundingSource;
-    private String securedDate;
-
-    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
-    private BigDecimal fundingAmount;
-
-    private OtherFunding() {
+    public OtherFunding() {
         this(null);
     }
 
@@ -27,112 +19,11 @@ public class OtherFunding extends AbstractFinanceRowItem {
     }
 
     public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount, Long targetId) {
-        this(targetId);
-        this.id = id;
-        this.otherPublicFunding = otherPublicFunding;
-        this.fundingSource = fundingSource;
-        this.securedDate = securedDate;
-        this.fundingAmount = fundingAmount;
-
-    }
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public BigDecimal getTotal() {
-        return this.fundingAmount;
-    }
-
-    public String getOtherPublicFunding() {
-        return otherPublicFunding;
-    }
-
-    public String getFundingSource() {
-        return fundingSource;
-    }
-
-    public String getSecuredDate() {
-        return securedDate;
-    }
-
-    public BigDecimal getFundingAmount() {
-        return fundingAmount;
+        super(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, targetId);
     }
 
     @Override
     public FinanceRowType getCostType() {
         return FinanceRowType.OTHER_FUNDING;
-    }
-
-    @Override
-    public String getName() {
-        return getCostType().getType();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return (StringUtils.isBlank(fundingSource) && StringUtils.isBlank(securedDate) && (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) == 0));
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setOtherPublicFunding(String otherPublicFunding) {
-        this.otherPublicFunding = otherPublicFunding;
-    }
-
-    public void setFundingSource(String fundingSource) {
-        this.fundingSource = fundingSource;
-    }
-
-    public void setSecuredDate(String securedDate) {
-        this.securedDate = securedDate;
-    }
-
-    public void setFundingAmount(BigDecimal fundingAmount) {
-        this.fundingAmount = fundingAmount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OtherFunding that = (OtherFunding) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(otherPublicFunding, that.otherPublicFunding)
-                .append(fundingSource, that.fundingSource)
-                .append(securedDate, that.securedDate)
-                .append(fundingAmount, that.fundingAmount)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(otherPublicFunding)
-                .append(fundingSource)
-                .append(securedDate)
-                .append(fundingAmount)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("otherPublicFunding", otherPublicFunding)
-                .append("fundingSource", fundingSource)
-                .append("securedDate", securedDate)
-                .append("fundingAmount", fundingAmount)
-                .toString();
     }
 }

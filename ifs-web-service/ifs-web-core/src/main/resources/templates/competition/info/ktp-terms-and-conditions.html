@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and conditions of an Innovate UK grant award'" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle='Terms and conditions of a Knowledge Transfer Partnership award'"/>
 </head>
 <body class="govuk-template__body grant-terms-conditions">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions of an Innovate UK grant award',size='govuk-heading-l'" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Terms and conditions of a Knowledge Transfer Partnership award', size='govuk-heading-l'"/>
 
         <th:block th:fragment="terms-and-conditions-content">
             <div class="govuk-grid-row">
@@ -21,34 +23,63 @@
                         <li>
                             Background
                             <ol class="ifs-list--number">
-                                <li>These terms and conditions apply to organisations (which we will refer to as ‘you’ or ‘your’ from now on) who are applying for grant funding from Innovate UK, part of UK Research and Innovation (‘we’, ‘us’ or ‘our’). This includes applications made singly or in collaboration with other applicants. These terms and conditions apply to requests to fund the project named in the funding application and confirmed in the grant offer letter (GOL).</li>
-                                <li>If your application for funding is successful, you will receive a GOL confirming the maximum project costs and any specific conditions that you must comply with, in addition to these terms and conditions. You must sign and upload the GOL before your project can start.
-                                    The GOL and these terms and conditions will together be referred to as ’this agreement’.</li>
+                                <li>These terms and conditions apply to UK registered higher education (HE) and
+                                    further education (FE) institutions, research and technology organisations (RTOs)
+                                    and Catapults, referred to as a Knowledge Base Partner (which we will refer to as
+                                    ‘you’, ‘your’ or ‘your organisation’ from now on) who are applying for Knowledge
+                                    Transfer Partnership (KTP) grant funding from Innovate UK, part of UK Research and
+                                    Innovation (‘we’, ‘us’ or ‘our’). These terms and conditions apply to requests to
+                                    fund the project named in the funding application and confirmed in the grant offer
+                                    letter (GOL).
+                                </li>
                             </ol>
                         </li>
                         <li>
                             General terms and conditions
                             <ol class="ifs-list--number">
-                                <li>We have the unilateral right to change these grant terms and conditions at any time, giving 3 months’ notice. </li>
-                                <li>You cannot assign, transfer or sub-contract any of your rights or obligations under this agreement to any third party. </li>
-                                <li>Rights and/or remedies under this agreement, whether exercised or not, remain available throughout the term of this agreement defined in 3.1. </li>
-                                <li>This agreement does not create any partnership or joint venture between us at law. </li>
+                                <li>
+                                    <p class="govuk-body">These terms are conditional on you awarding a contract of
+                                        employment to a KTP
+                                        Associate and them accepting it. You and the Business Partner must find the
+                                        Associate
+                                        jointly through a demonstrably open and fair recruitment process.</p>
+                                    <p class="govuk-body">The Associate must start work on the Partnership (“the
+                                        Associate Start Date”)
+                                        within a period of 9 months after the date of any grant offer letter being
+                                        issued.</p>
+                                </li>
+                                <li>We have the unilateral right to change these grant terms and conditions at any time,
+                                    giving 3 months’ written notice.
+                                </li>
+                                <li>You cannot assign, transfer or sub-contract any of your rights or obligations under
+                                    this agreement without Innovate UK’s express permission.
+                                </li>
+                                <li>Rights and/or remedies under these terms, whether exercised or not, remain available
+                                    throughout the term of this agreement.
+                                </li>
+                                <li>This agreement does not create any partnership or joint venture between us at law.
+                                </li>
                                 <li>
                                     We:
                                     <ul class="govuk-list--bullet">
-                                        <li>accept no liability for any consequences, whether direct or indirect, that result from you undertaking the project, using the grant, or Innovate UK terminating this agreement or the grant and</li>
-                                        <li>limit our liability to the amount of grant payable for which you can provide evidence of eligible costs incurred and defrayed, provided you are not in breach of its terms</li>
+                                        <li>accept no liability for any consequences, whether direct or indirect, that
+                                            result from you undertaking the Partnership, using the grant, or Innovate UK
+                                            terminating this agreement or grant
+                                        </li>
+                                        <li>limit our liability to the amount of grant payable for which you can provide
+                                            evidence of eligible costs incurred and defrayed, provided you are not in
+                                            breach of its terms
+                                        </li>
                                     </ul>
                                 </li>
-                                <li>This agreement is subject to the laws of England and Wales. </li>
-                                <li>The grant cannot be used for any political or lobbying activity, or for any purpose other than the project or the purpose described or referred to in the GOL. </li>
-                            </ol>
-                        </li>
-                        <li>
-                            Duration
-                            <ol class="ifs-list--number">
-                                <li>This agreement comes into effect on the date of the GOL. It continues until the project end date set out in the GOL or on any other date subsequently agreed by us, unless this agreement is terminated earlier in accordance with its provisions (the ‘term’).<br />
-                                    The project start date and end date will be confirmed when you set up your project. Any changes to these dates need to be agreed with us.
+                                <li>This agreement is subject to the laws of England and Wales.</li>
+                                <li>The grant cannot be used for any political or lobbying activity, or for any purpose
+                                    other than the Partnership referred to in these terms.
+                                </li>
+                                <li>Innovate UK has the right to reject new grant applications from a Knowledge Base
+                                    Partner or Business Partner where either has failed to return required financial
+                                    reports
+                                    (including claims) on any current or previous projects funded by Innovate UK.
                                 </li>
                             </ol>
                         </li>
@@ -58,72 +89,331 @@
                                 <li>
                                     As a successful applicant, you will:
                                     <ul class="govuk-list--bullet">
-                                        <li>manage the project in accordance with the terms of the application as awarded by us, and this agreement</li>
-                                        <li>not sub-contract any of your work on the project (unless previously agreed with us)</li>
-                                        <li>inform us promptly, through your Monitoring Officer (MO), of any issue or material change that could affect the progress, delivery or exploitation of the project</li>
-                                        <li>fully co-operate with us, responding to any requests for information promptly and comprehensively and allowing reasonable (audit) access to your sites and staff upon request</li>
-                                        <li>take out and maintain insurance covering your risks and liabilities for appropriate amounts and in keeping with good commercial practice</li>
-                                        <li>comply with all the laws and regulations of England and Wales in carrying out your activities under this agreement </li>
-                                        <li>
-                                            provide the MO, within 90 days of the end of the project, with:
-                                            <ul class="govuk-list--bullet">
-                                                <li>the final project report </li>
-                                                <li>any supporting documentation</li>
-                                                <li>confirmation that the final claim has been submitted</li>
-                                                <li>confirmation that the final independent accountant’s report has been submitted </li>
-                                            </ul>
+                                        <li>manage the Partnership in accordance with the terms of the application as
+                                            awarded by us, and this agreement
                                         </li>
+                                        <li>inform us promptly, through your Knowledge Transfer Adviser (KTA) of
+                                            any issue or material change that could affect the progress, delivery or
+                                            exploitation of the Partnership
+                                        </li>
+                                        <li>fully co-operate with us, responding to any requests for information
+                                            promptly and comprehensively and allowing reasonable (audit) access to your
+                                            sites and staff when asked
+                                        </li>
+                                        <li>take out and maintain insurance covering your risks and liabilities for
+                                            appropriate amounts and in keeping with good commercial practice
+                                        </li>
+                                        <li>comply with all the laws and regulations of England and Wales in carrying
+                                            out your activities under this agreement
+                                        </li>
+                                        <li>as a minimum, advertise the Associate post in accordance with your
+                                            institutional guidelines and on the KTP recruitment site
+                                        </li>
+                                        <li>provide a project secretariat</li>
+                                        <li>submit, within 1 calendar month of the end of the Partnership, the
+                                            Partnership Final Report together with any supporting documentation
+                                        </li>
+                                        <li>submit, within 3 calendar months of the end of the Partnership, the final
+                                            claim and Schedule 3
+                                        </li>
+
                                     </ul>
-                                    Successful and unsuccessful applicants must give us, and any data-sharing partner we appoint, any information we need to create an evaluation report. For successful applicants this will be during the term of the grant and for a further period as specified in your GOL.
                                 </li>
-                                <li>To receive your award, you must start your project within 90 days of the date of your award notification.</li>
+                                <li>
+                                    Successful and unsuccessful applicants must give us, and any data-sharing partner we
+                                    appoint, any information we need to create an evaluation report. For successful
+                                    applicants this will be during the term of the Partnership and for a further 5 years
+                                    following the end of the Partnership.
+                                </li>
+                                <li>
+                                    You are responsible for maintaining detailed records and documentation relating to
+                                    the use of your Grant. These should provide evidence sufficient to support the
+                                    submission of timely and accurate claims and to demonstrate that your eligible
+                                    project costs comply with all State Aid Rules, as outlined in clause 20. These
+                                    records must be kept for at least 6 years following your receipt of the Grant.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            Expenditure
+                            <ol class="ifs-list--number">
+                                <li>After Innovate UK has set up the Partnership on the online platform, you must enter
+                                    an initial forecast of eligible expenditure. The forecast must reasonably be
+                                    incurred during each claim period and updated throughout the Partnership to the last
+                                    date on which an Associate is expected to be engaged on the Partnership.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            Equipment and materials
+                            <ol class="ifs-list--number">
+                                <li>Equipment and materials purchased by the you for the Partnership with grant funding,
+                                    can be used by the Business Partner without charge for the duration of the
+                                    Partnership. At
+                                    the end of the Partnership the equipment must be returned to you.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            Revisions
+                            <ol class="ifs-list--number">
+                                <li>You may vire between the travel and subsistence and the consumables categories only.
+                                    Revisions are subject to the agreement of the Local Management Committee (LMC).
+                                </li>
                             </ol>
                         </li>
                         <li>
                             Payment of grant
                             <ol class="ifs-list--number">
-                                <li>We will only pay your grant into your business account at a UK clearing bank or one of its subsidiary banks within the UK. Innovate UK may accept an account at an alternative bank in exceptional circumstances at our discretion and by prior agreement. Your grant will be paid by instalments quarterly (unless otherwise agreed by Innovate UK) and in arrears on submission of a claim. This will be for your net eligible costs incurred, invoiced and paid in the quarter (or other period) covered by the claim. You accept that the eligible costs you can claim are limited to those types of costs approved by our Project Finance Team and communicated to you before the issue of the GOL. </li>
-                                <li>You must discuss and provide evidence for each grant claim with your MO before they can approve and submit your claim for payment to Innovate UK.</li>
-                                <li>Your claims must be supported by a revised forecast of eligible project costs. These should detail expected costs for each future claim period and highlight any variations from the last forecast. Your claim might need to be supported by an independent accountant’s report as set out in clause 9 below.</li>
                                 <li>
-                                    Claims must be for completed quarters only. The exception is the final quarter which is the only occasion when you can submit a claim for costs incurred but not necessarily paid, provided that the cost is:
-                                    <ul class="govuk-list--bullet">
-                                        <li>for labour, overhead and/or travel and subsistence only</li>
-                                        <li>paid within 30 days of the project end date, and</li>
-                                        <li>included within the final independent accountant’s report</li>
-                                    </ul>
+                                    <p class="govuk-body">Innovate UK will only pay your grant claim into your business
+                                        account at a UK
+                                        clearing bank or one of its subsidiary banks within the UK. Innovate UK may
+                                        accept an account at an alternative bank in exceptional circumstances at our
+                                        discretion and by prior agreement.</p>
+                                    <p class="govuk-body">Your grant will be paid by instalments quarterly (unless
+                                        otherwise agreed by
+                                        Innovate UK) and in arrears on submission of a claim. This will be for your net
+                                        eligible costs incurred, invoiced and paid in the quarter (or other period)
+                                        covered by the claim.</p>
                                 </li>
-                                <li>Innovate UK will normally pay the grant within 30 days, unless we need further information to support the claim. We agree to raise requests for further information, if any, within 14 days of receiving the claim. </li>
-                                <li>Innovate UK does not have to pay any claim received more than 30 days after the end of the quarter to which it relates. We will not pay any claims received later than 3 months after project completion.</li>
-                                <li>Innovate UK has the right not to consider new grant applications from organisations who have failed to return required financial reports on any previous projects funded by Innovate UK. </li>
+                                <li>Your claims must be supported by a revised forecast of eligible Partnership costs.
+                                    These should detail expected costs for each future claim period and highlight any
+                                    variations from the last forecast. Your claim may be subject to audit review as set
+                                    out in clause 7.11 below.
+                                </li>
+                                <li>Your project can only submit one claim per Quarter. Claims must be incurred and
+                                    defrayed in the Quarter in which they are incurred. The only exception to this
+                                    condition is the claim for the final quarter where the costs may be incurred but not
+                                    necessarily defrayed. Additional conditions relating to the final claim are set out
+                                    in clause 7.8 below.
+                                </li>
+                                <li>Claims for payment of grant on eligible expenditure actually defrayed on the
+                                    Partnership must be submitted on the online platform every 3 months following the
+                                    Associate Start Date. These must be submitted within one month of the end of the
+                                    period to which the claim refers.
+                                </li>
                                 <li>
-                                    Innovate UK will retain 15% of your maximum grant value until the project is complete and we have received:
+                                    <p class="govuk-body">You will discuss and provide evidence on request for each
+                                        grant claim with your
+                                        KTA before they can approve and submit your claim for payment to Innovate
+                                        UK.</p>
+                                    <p class="govuk-body">Your claims on the Innovation Funding Service must be
+                                        supported by a current
+                                        forecast that covers the period to the end of the Partnership. It must detail
+                                        the expected expenditure for each future claim period. In addition, your claims
+                                        must be supported by the minutes of an LMC meeting (“LMC Minutes”) covering part
+                                        or all of the period of the claim.</p>
+                                </li>
+                                <li>
+                                    <p class="govuk-body">If an Associate is not available for work for an extended
+                                        period or they resign
+                                        from their position as an Associate, you will inform Innovate UK promptly by
+                                        email to <a href="mailto: KTP_Partnerships@innovateuk.ukri.org">KTP_Partnerships@innovateuk.ukri.org</a>.
+                                    </p>
+                                    <p class="govuk-body">In this event, during the period in which work on the
+                                        Partnership is suspended,
+                                        you will continue to submit claims every 3 months, which may include periods of
+                                        zero expenditure. You can restart claims for expenditure incurred once work on
+                                        the Partnership recommences.</p>
+                                </li>
+                                <li>Innovate UK will normally pay claims within 30 days of receiving them, unless we
+                                    need any further information to support the claim. We agree to request any further
+                                    information within 14 days of receiving the claim and will pay claims within 30 days
+                                    of receipt of such information.
+                                </li>
+                                <div class="govuk-body">
+                                    Innovate UK is not obliged to pay any amount if:
+                                    <ul class="govuk-list--bullet">
+                                        <li>the claim does not meet the terms and conditions of this agreement</li>
+                                        <li>we are not satisfied that the amount is properly due and payable to you</li>
+                                        <li>any claim is received more than 30 days after the end of the quarter to
+                                            which it
+                                            relates
+                                        </li>
+                                        <li>any claim is received later than 3 months after the Partnership is
+                                            complete
+                                        </li>
+                                    </ul>
+                                </div>
+                                <li>
+                                    <p class="govuk-body">Your final claim for payment of grant on eligible expenditure
+                                        must be submitted
+                                        no later than 3 months after the last date on which an Associate was engaged
+                                        for work on the Partnership.</p>
+                                    <p class="govuk-body">The final claim must be accompanied by a Certificate of Total
+                                        Expenditure
+                                        (Schedule 3) and signed by the Finance Director or an alternative with senior
+                                        financial responsibility at your organisation. </p>
+                                    <p class="govuk-body">If the final claim has not been submitted with the required
+                                        supporting
+                                        documentation within the required period, the claim will not be paid by Innovate
+                                        UK. </p>
+                                </li>
+                                <li>
+                                    Innovate UK will retain 10% of your maximum grant value until the Partnership is
+                                    complete and we have received:
                                     <ul class="govuk-list--bullet">
                                         <li>any outstanding claims</li>
                                         <li>supporting information</li>
-                                        <li>final project report</li>
-                                        <li>final independent accountant’s report (FAR)</li>
+                                        <li>Partnership Final Report</li>
                                     </ul>
-                                    Payment of the retained value (15%) is subject to the contents of the final accountant’s report. Adjustments may mean that you are not entitled to receive all of the retained value.
                                 </li>
-                                <li>You are responsible for maintaining detailed records and documentation relating to the use of your grant. These should provide sufficient evidence to support the submission of timely and accurate claims and to demonstrate that your eligible project costs comply with all state aid rules, as outlined in paragraph 9. These records must be kept for 10 years following your receipt of the grant and must be supplied to satisfy European Commission requests for evidence of compliance within 20 days if requested.</li>
-                                <li>Innovate UK may appoint an auditor, at our expense, to ensure you are complying with the terms and conditions of this agreement. You agree to give the auditor access to your project records within 2 weeks’ notice of their appointment. If the auditor determines that all or part of the grant has been misapplied or that you should repay all or part of the grant to Innovate UK, we may recover the cost of the auditor’s work from you.</li>
+                                <li>Payment of the retained value will not be made until the Partnership has been
+                                    completed to Innovate UK’s satisfaction and is subject to the contents of the
+                                    Certificate of Total Expenditure completed by the Finance Officer. Adjustments may
+                                    mean that you are not entitled to receive all of the retained value.
+                                </li>
+                                <li>You are responsible for maintaining detailed records and documentation relating to
+                                    the use of your grant. These should provide sufficient evidence to support the
+                                    submission of timely and accurate claims. These records must be kept for 10 years
+                                    following your receipt of the grant and must be supplied to satisfy National Audit
+                                    Office (NAO) requests for evidence of compliance within 20 days if requested.
+                                </li>
+                                <li>Innovate UK may appoint an auditor, at our expense, to ensure you are complying with
+                                    the terms and conditions of this agreement. You agree to give the auditor access to
+                                    your Partnership records within 2 weeks’ notice of their appointment. If the auditor
+                                    determines that all or part of the grant has been misapplied or that you should
+                                    repay all or part of the grant to Innovate UK, we may recover the cost of the
+                                    auditor’s work from you.
+                                </li>
                             </ol>
                         </li>
                         <li>
-                            Monitoring
+                            Partnership management
                             <ol class="ifs-list--number">
-                                <li>Innovate UK is required to demonstrate to UK Research and Innovation and the Department for Business, Energy and Industrial Strategy (BEIS) the effective performance management of project delivery. Your project will be monitored by Innovate UK's project monitoring service.</li>
-                                <li>Throughout the term of your project, your progress is monitored by Innovate UK through your Monitoring Officer (MO). Your MO is your first point of contact for official notifications, queries and correspondence with Innovate UK, unless otherwise required by this agreement. You should comply with any reasonable request for information and deadlines by your MO.</li>
-                                <li>Your project manager, and others as may be agreed from time to time, will meet with your MO once a calendar quarter (or agreed period) to review your written report for the period since the last monitoring meeting. You should deliver this report to your MO no later than 14 days before the scheduled monitoring meeting.</li>
                                 <li>
-                                    Your MO will require you to provide satisfactory evidence of project delivery in the following 3 aspects:
-                                    <ol class="govuk-list--number">
-                                        <li>Technical assurance.</li>
-                                        <li>Financial assurance.</li>
-                                        <li>Project management assurance.</li>
-                                    </ol>
-                                    Failure to provide satisfactory evidence in any one of these areas will prevent your MO from validating your claims.
+                                    <p class="govuk-body">Any amount due to Innovate UK including overpayment of grant,
+                                        however disclosed,
+                                        must be repaid to Innovate UK immediately or, if notified by Innovate UK, at the
+                                        time specified in the notification, whichever happens first.</p>
+                                    <p class="govuk-body">If any overpayment is not repaid, you will pay interest to
+                                        Innovate UK on the
+                                        sum. This is on a daily basis at an annual rate of 1.5% above the Bank of
+                                        England Base Rate. This is calculated: </p>
+                                    <ul class="govuk-list--bullet">
+                                        <li>from the date of the statement informing you of the overpayment</li>
+                                        <li>to the date Innovate UK receives the full payment plus any interest</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <p class="govuk-body">Innovate UK or representatives of Innovate UK have the right
+                                        to:</p>
+                                    <ul class="govuk-list--bullet">
+                                        <li>monitor and inspect the Partnership at any time</li>
+                                        <li>require from time to time any documentation concerning the Partnership
+                                            that Innovate UK or the representatives of Innovate UK consider necessary to
+                                            ensure the Partnership conforms to these terms and conditions
+                                        </li>
+                                        <li>attend any meetings about the Partnership and, if Innovate UK or the
+                                            representatives of Innovate UK consider it necessary, call a meeting
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>The management of the Partnership and the working relationship between the Business
+                                    Partner
+                                    and your organisation must be as agreed in the Joint Commitment Statement signed on
+                                    behalf of the partners during the grant application.
+                                </li>
+                                <li>Innovate UK is the primary point of contact with you.</li>
+                            </ol>
+                        </li>
+                        <li>
+                            Suspension, termination and repayment of grant
+                            <ol class="ifs-list--number">
+                                <li>We have the right to take all reasonable steps to reclaim any, or all, of the grant
+                                    already claimed by you, should it be necessary for Innovate UK to suspend or
+                                    terminate your grant or terminate this agreement for any reason. We will take
+                                    appropriate care in how we do this, but in certain circumstances we can immediately
+                                    suspend grant payments.
+                                </li>
+                                <li>If we have concerns that mean we might need to suspend, terminate or reclaim the
+                                    grant, we will write to inform you and you will then have 30 days to address our
+                                    concerns.
+                                </li>
+                                <li>
+                                    <p class="govuk-body">Examples of events that may result in Innovate UK suspending
+                                        grant payments
+                                        include, without limitation:</p>
+                                    <ul class="govuk-list--bullet">
+                                        <li>misuse of the grant funds, including, in a fraudulent or financially
+                                            misleading way or for purposes not declared in your application or agreed to
+                                            subsequently by Innovate UK
+                                        </li>
+                                        <li>false statements in any part of your application for grant or Partnership
+                                            documentation
+                                        </li>
+                                        <li>failure to maintain satisfactory progress on the Partnership in the
+                                            opinion of Innovate UK
+                                        </li>
+                                        <li>any significant changes, without prior approval from the KTA at the
+                                            LMC, to the proposed outcomes of the Partnership
+                                        </li>
+                                        <li>failure to comply with any terms and conditions of this agreement</li>
+                                        <li>failure to deliver the agreed project support as set out in the
+                                            application form
+                                        </li>
+                                        <li>behaviour or activity by you, your staff, representatives or contractors
+                                            which, in the reasonable opinion of Innovate UK, is non-compliant with
+                                            legislation or government policies, or is detrimental to the reputation of
+                                            Innovate UK, UK Research and Innovation or the Department for Business,
+                                            Energy and Industrial Strategy, or is otherwise detrimental to the public
+                                            interest
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <p class="govuk-body">Examples of events that may result in Innovate UK terminating
+                                        the grant include,
+                                        without limitation:</p>
+                                    <ul class="govuk-list--bullet">
+                                        <li>failure to resolve to Innovate UK's satisfaction, or not being able to
+                                            resolve, the reasons for suspension
+                                        </li>
+                                        <li>being found to have applied for and secured multiple awards from Innovate UK
+                                            or UK Research and Innovation for the same or largely interchangeable
+                                            project scopes
+                                        </li>
+                                        <li>being found to have breached any of Innovate UK’s policies with which you
+                                            had previously been required to comply as a condition of the award of the
+                                            grant
+                                        </li>
+                                        <li>becoming insolvent, declared bankrupt, placed into receivership,
+                                            administration or liquidation, or having a petition presented for winding
+                                            up, or any similar arrangements that may affect you financially
+                                        </li>
+                                        <li>a change to your legal status which you have failed to declare or have
+                                            misrepresented to us
+                                        </li>
+                                        <li>you are in breach of any of the warranties contained in clause 10</li>
+                                        <li>you use the grant for purposes other than those contained within the
+                                            application and description of the Partnership without the consent of
+                                            Innovate UK
+                                        </li>
+                                        <li>you have failed completely to provide or, in the reasonable opinion of
+                                            Innovate UK, failed to make reasonable effort to collect and/or provide the
+                                            information requested of you by Innovate UK in accordance with clause 11
+                                        </li>
+                                        <li>behaviour or activity by you, your staff, your auditor, your accountant,
+                                            representatives, contractors and the Business Partner involving an act of
+                                            fraud, dishonesty, malfeasance (wrongdoing by a public official),
+                                            misrepresentation or any serious financial irregularity in respect of you or
+                                            your operations which has or could have a serious adverse effect on you,
+                                            Innovate UK or both
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>If you do not resolve an issue causing suspension or if we terminate the grant, you
+                                    may be required to repay some or all of the grant.
+                                </li>
+                                <li>Where there is an underspend in grant funds paid to or claimed by you at the
+                                    Partnership end date, the full value of the underspend will be returned to Innovate
+                                    UK immediately.
+                                </li>
+                                <li>You must inform Innovate UK promptly by email to <a
+                                    href="mailto: KTP_Partnerships@innovateuk.ukri.org">KTP_Partnerships@innovateuk.ukri.org</a>
+                                    detailing the occurrence of the event and the
+                                    action, if any, it proposes to take in order that progress is resumed.
                                 </li>
                             </ol>
                         </li>
@@ -133,139 +423,183 @@
                                 <li>
                                     As of the effective date of this agreement, you warrant to Innovate UK that:
                                     <ul class="govuk-list--bullet">
-                                        <li>you have all necessary resources and expertise to deliver the project (this assumes your reliance on and timely receipt of the grant and any conditions specified in the GOL)</li>
-                                        <li>you are not subject to any contractual or other restriction imposed by your or any other organisation's rules or regulations or otherwise which may prevent or impede you from meeting your obligations in connection with the grant</li>
+                                        <li>when responding to requests for information about the Partnership your
+                                            response will state that Innovate UK accepts no liability whatsoever for any
+                                            information or advice provided by any party to the Partnership. We will not
+                                            have any liability for any loss or damage of any kind, whether arising out
+                                            of negligence or otherwise, which is suffered by the recipient or any other
+                                            person in consequence of the provision of the information or advice
+                                        </li>
+                                        <li>you have all necessary resources and expertise to deliver the Partnership
+                                            (this assumes your reliance on and timely receipt of the grant and any
+                                            conditions specified in this agreement)
+                                        </li>
+                                        <li>you are not subject to any contractual or other restriction imposed by
+                                            your or any other organisation's rules or regulations or otherwise which may
+                                            prevent or impede you from meeting your obligations in connection with the
+                                            grant
+                                        </li>
                                         <li>you have not committed any offence under the Bribery Act 2010</li>
-                                        <li>you have adequate procedures in place for dealing with any conflicts of interest</li>
-                                        <li>all financial and other information concerning you which has been disclosed to Innovate UK is, to your reasonable knowledge and belief, true and accurate</li>
-                                        <li>you are not aware of anything in your own affairs, which you have not disclosed to Innovate UK, which might reasonably have influenced the decision of Innovate UK to make the grant on the terms contained in this agreement</li>
-                                        <li>since the date of your last accounts (if any) there has been no significant change in your financial position or prospects which you have not declared to Innovate UK</li>
-                                        <li>you are not subject to an outstanding order for the recovery of aid which has been declared by the European Commission to be illegal and incompatible with the Single Market and</li>
-                                        <li>you are not an ‘undertaking in difficulty’ as defined in accordance with the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid" class="govuk-link" target="_blank">State Aid rules</a></li>
+                                        <li>you have adequate procedures in place for dealing with any conflicts of
+                                            interest
+                                        </li>
+                                        <li>all financial and other information concerning you which has been
+                                            disclosed to Innovate UK is, to your reasonable knowledge and belief, true
+                                            and accurate
+                                        </li>
+                                        <li>you are not aware of anything in your own affairs, which you have not
+                                            disclosed to Innovate UK, which might reasonably have influenced the
+                                            decision of Innovate UK to make the grant on the terms contained in this
+                                            agreement
+                                        </li>
+                                        <li>since the date of your last accounts (if any) there has been no
+                                            significant change in your financial position or prospects which you have
+                                            not declared to Innovate UK
+                                        </li>
                                     </ul>
                                 </li>
                             </ol>
                         </li>
                         <li>
-                            Suspension, termination and repayment of grant
+                            Final Reporting
                             <ol class="ifs-list--number">
-                                <li>Innovate UK may suspend, terminate and/or reclaim the grant in whole or in part.</li>
-                                <li>We will take appropriate care in how we do this, but in certain circumstances Innovate UK can immediately suspend grant payments.</li>
-                                <li>If we have concerns that mean we might need to suspend, terminate or reclaim the grant, we will write to inform you and you will then have 30 days to address our concerns.</li>
-                                <li>
-                                    Examples of events that may result in Innovate UK suspending grant payments include, without limitation:
-                                    <ul class="govuk-list--bullet">
-                                        <li>misuse of the grant funds, including, in a fraudulent or financially misleading way or for purposes not declared in your application or agreed to subsequently by Innovate UK (or the Contracting Authority if specified as other than Innovate UK in the GOL)</li>
-                                        <li>false statements in any part of your application for grant or project documentation</li>
-                                        <li>failure to maintain satisfactory progress on the project in the opinion of Innovate UK</li>
-                                        <li>any significant changes to the proposed outcomes of the project</li>
-                                        <li>failure to comply with any terms and conditions of this agreement</li>
-                                        <li>behaviour or activity by you, your staff, representatives or contractors which, in the reasonable opinion of Innovate UK, is non-compliant with legislation or HM Government policies, or is detrimental to the reputation of Innovate UK, UK Research and Innovation or the Department for Business, Energy and Industrial Strategy, or is otherwise detrimental to the public interest</li>
-                                    </ul>
+                                <li>You will, no later than one month after the last date on which an Aciate was
+                                    engaged on the Partnership, submit a Final Report. You must aim to secure an
+                                    appropriate contribution from the Business Partner to the Final Report. If the Final
+                                    Report
+                                    has not been submitted within one month of the last date on which an Associate
+                                    was deemed to be engaged on the Partnership, the final claim detailed in clause 7.8
+                                    will not be paid by Innovate UK.
                                 </li>
-                                <li>
-                                    Examples of events that may result in Innovate UK terminating the grant include, without limitation:
-                                    <ul class="govuk-list--bullet">
-                                        <li>failure to resolve to Innovate UK's satisfaction, or not being able to resolve, the reasons for suspension </li>
-                                        <li>being found to have applied for and secured multiple awards from Innovate UK or UK Research and Innovation for the same or largely interchangeable project scopes </li>
-                                        <li>being found to have breached any of Innovate UK’s policies with which you had previously been required to comply as a condition of the award of the grant</li>
-                                        <li>becoming insolvent, declared bankrupt, placed into receivership, administration or liquidation, or having a petition presented for winding up, or any similar arrangements that may affect you financially (including any requirements imposed by GBER (see clause 11)</li>
-                                        <li>a change to your legal status which you have failed to declare or have misrepresented to us </li>
-                                        <li>you are in breach of any of the warranties contained in clause 7</li>
-                                        <li>you use the grant for purposes other than those contained within the application and description of the project without the consent of Innovate UK</li>
-                                        <li>you have failed completely to provide or, in the reasonable opinion of Innovate UK, failed to make reasonable effort to collect and/or provide the information requested of you by Innovate UK in accordance with clause 9</li>
-                                        <li>behaviour or activity by you, your staff, your auditor, your accountant, representatives or contractors involving an act of fraud, dishonesty, malfeasance, misrepresentation or any serious financial irregularity in respect of you or your operations which has or could have a serious adverse effect on you, Innovate UK or both</li>
-                                        <li>you commit a breach of your State Aid obligations referred to in clause 11</li>
-                                    </ul>
-                                </li>
-                                <li>If you do not resolve an issue causing suspension or if we terminate the grant, you may be required to repay some or all, of the grant. </li>
-                                <li>Innovate UK has the right to take all reasonable steps to reclaim any or all of the grant already claimed by you, should it be necessary for Innovate UK to suspend or terminate your grant or terminate this agreement for any reason.</li>
-                                <li>Where there is an underspend in grant funds paid to or claimed by you at the project end date, the full value of the underspend will be returned to Innovate UK immediately.</li>
                             </ol>
                         </li>
                         <li>
-                            Financial reporting
+                            Financial reporting and accounting
                             <ol class="ifs-list--number">
-                                <li>
-                                    You agree to appoint an independent accountant who will inspect your financial statements relating to the grant. They will prepare an independent accountant’s report, at the intervals stated in, and including the information set out in, Innovate UK’s guidance note. The last of these of these is referred to as the final accountant’s report. The guidance note is available from your MO. The report will contain an opinion that:
-                                    <ul class="govuk-list--bullet">
-                                        <li>the financial information and level of grant claimed are fairly stated and fully evidenced</li>
-                                        <li>your submitted eligible costs have been properly incurred and paid in accordance with this agreement</li>
-                                        <li>you have provided satisfactory explanations for any queries raised by the independent accountant</li>
-                                    </ul>
-                                </li>
-                                <li>You must appoint an independent accountant in a manner consistent with Innovate UK’s Standard Terms of Engagement of Accountants. These will be given to you by your MO.</li>
-                                <li>You must keep your accounts, including comprehensible management accounts, up to date and open to inspection by Innovate UK, or its nominated representatives, at all reasonable times.</li>
-                                <li>
-                                    Innovate UK may ask you to submit an accountant’s report if any of the following occur:
-                                    <ul class="govuk-list--bullet">
-                                        <li>you withdraw from the project </li>
-                                        <li>the project is terminated </li>
-                                        <li>you submit a claim disclosing expenditure substantially greater than forecast, in the opinion of your MO </li>
-                                        <li>you are suspected of breaching the terms and conditions of this agreement</li>
-                                    </ul>
+                                <li>You will keep proper records of all expenditure incurred and defrayed on the
+                                    Partnership. All original documentation, correspondence and invoices necessary (or
+                                    if not originals, certified copies that conform with the originals on the commonly
+                                    accepted data carriers including photocopies of the original, electronic versions of
+                                    the documents as defined in clause 4 of Article 19 of Commission Regulation (EC) No
+                                    1828/2006 of 8 December 2006) will, on demand, be produced to Innovate UK or the
+                                    NAO, the European Commission or European Court of Auditors along
+                                    with all such information as they may reasonably require.
                                 </li>
                             </ol>
                         </li>
                         <li>
                             Confidentiality and information management
                             <ol class="ifs-list--number">
-                                <li>Innovate UK has the right to request access to any additional information we feel necessary in connection with this award. You must provide or allow access to such information within 10 working days of our request. We will treat your confidential and personal information in accordance with our policies and data protection legislation.</li>
-                                <li>All your information disclosed deliberately or otherwise will be treated by Innovate UK as confidential information and commercially sensitive as exempted under the Freedom of Information Act 2000 or any related legislation, unless otherwise marked or agreed in writing. For the avoidance of doubt, it is at your discretion and must be with the agreement of the relevant third parties, if you choose to disclose confidential information of third parties to Innovate UK, at which point it will be treated as confidential information by Innovate UK unless marked otherwise.</li>
-                                <li>You acknowledge and accept the terms of Innovate <a href="https://www.gov.uk/government/publications/privacy-notice-and-information-management-policy-innovate-uk" class="govuk-link" target="_blank">UK’s privacy</a> notice and <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter" class="govuk-link" target="_blank">information management policy</a> which should be read in addition to <a href="https://www.ukri.org/privacy-notice/" class="govuk-link" target="_blank">UKRI’s privacy notice</a>. This policy explains Innovate UK’s specific arrangements for collecting, storing, using and sharing your information. This can include personal data or confidential or commercially sensitive information. It provides details on how we use this information to support our ability to fund, support and connect innovative businesses and encourage sustainable economic growth for the UK.</li>
-                                <li>Any information we collect from you, through our online platforms, grant applications and administration, events or elsewhere, will be managed according to this policy and is subject to data protection. This policy complies with the <a href="https://gdpr-info.eu/" class="govuk-link" target="_blank">General Data Protection Regulation</a> (EU 2016/679), or GDPR, introduced on 25 May 2018.</li>
-                                <li>As a public sector organisation we are also subject to some further data protection obligations under the <a href="http://www.legislation.gov.uk/ukpga/2018/12/contents" class="govuk-link" target="_blank">UK Data Protection Act 2018</a>.</li>
+                                <li>Innovate UK has the right to request access to any additional information we feel
+                                    necessary in connection with this award. You must provide or allow access to such
+                                    information within 10 working days of our request. We will treat your confidential
+                                    and personal information in accordance with our policies and data protection
+                                    legislation.
+                                </li>
+                                <li>All your information disclosed deliberately or otherwise will be treated by Innovate
+                                    UK as confidential information and commercially sensitive as exempted under the
+                                    Freedom of Information Act 2000 or any related legislation, unless otherwise marked
+                                    or agreed in writing. For the avoidance of doubt, it is at your discretion and must
+                                    be with the agreement of the relevant third parties, if you choose to disclose
+                                    confidential information of third parties to Innovate UK, at which point it will be
+                                    treated as confidential information by Innovate UK unless marked otherwise.
+                                </li>
+                                <li>You acknowledge and accept the terms of <a
+                                    href="https://www.gov.uk/government/publications/privacy-notice-and-information-management-policy-innovate-uk">Innovate
+                                    UK’s privacy notice and
+                                    information management policy</a> and <a
+                                    href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter">personal
+                                    information charter</a>, which should be read in addition to <a
+                                    href="https://www.ukri.org/privacy-notice/">UKRI’s privacy notice. </a>This policy
+                                    explains Innovate UK’s specific arrangements for collecting, storing, using and
+                                    sharing your information. This can include personal data or confidential or
+                                    commercially sensitive information. It provides details on how we use this
+                                    information to support our ability to fund, support and connect innovative
+                                    businesses and encourage sustainable economic growth for the UK.
+                                </li>
+                                <li>Any information we collect from you, through our online platforms, grant
+                                    applications and administration, events or elsewhere, will be managed according to
+                                    this policy and is subject to data protection. This policy complies with the <a
+                                        href="https://gdpr-info.eu/">General Data Protection Regulation</a> (EU
+                                    2016/679), or GDPR, introduced on 25 May 2018.
+                                </li>
+                                <li>As a public sector organisation we are also subject to some further data protection
+                                    obligations under the <a
+                                        href="http://www.legislation.gov.uk/ukpga/2018/12/contents">UK Data Protection
+                                        Act 2018.</a></li>
                             </ol>
                         </li>
                         <li>
-                            State Aid obligations
+                            Collaboration
                             <ol class="ifs-list--number">
-                                <li>Innovate UK awards grant funding through its Research, Development and Innovation 	Scheme operating under Commission Regulation (EU) No 651/2014 (the General Block Exemption Regulation (GBER)) and subsequent amendment. You must ensure at all times that you are compliant with the State Aid regulations under which you have been awarded. Further information about the regulations can be found in the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid" class="govuk-link" target="_blank">section on State Aid</a> in Innovate UK’s general guidance for applicants.</li>
-                                <li>You must inform Innovate UK of any other public funding applied for or awarded against the eligible costs covered by this award of grant. It is your responsibility to ensure that the cumulative total of public funding and aid intensity you are receiving for the project does not exceed those limits stated in GBER. You must ensure you comply with State Aid rules, which are those rules contained in <a href="http://ec.europa.eu/competition/state_aid/legislation/provisions.html" class="govuk-link" target="_blank">Articles 107 to 109 of Section 2, Title VII, of the Common Rules on Competition, Taxation and Approximation of Laws</a>, Consolidated versions of the Treaty on European Union and the Treaty on the Functioning of the European Union (2008/C 115/01). </li>
-                                <li>Innovate UK will immediately stop grant payments to you in any and all projects if you become subject to a recovery order that follows on from a previous European Commission decision, which declares any aid you have received as illegal and incompatible with the internal market.</li>
-                                <li>Where you are required by an order of the European Commission to repay any grant to Innovate UK that is found to be unlawful State Aid, interest will be charged on the amount being reclaimed from the date of payment at the applicable legislated rate.</li>
-                                <li>No subcontract can be made which would constitute a breach of State Aid obligations.</li>
-                                <li>You acknowledge that in compliance with EU Treaty obligations, Innovate UK may be required to provide the European Commission with information about the financial assistance given to it by Innovate UK and shall provide such assistance as Innovate UK shall reasonably request.</li>
+                                <li>Any grant offer is conditional on an appropriate intellectual property (IP)
+                                    agreement being in place before an Associate begins working on the Partnership.
+                                    This must be confirmed to the satisfaction of the KTA and in place before the
+                                    Associate Start Date. If this condition is not met, any grant offer will
+                                    automatically lapse.
+                                </li>
                             </ol>
                         </li>
                         <li>
-                            Intellectual property rights
+                            Exploitation of partnership results
                             <ol class="ifs-list--number">
-                                <li>Any intellectual property rights (IPRs) developed during or as a result of the project are owned by you.</li>
-                                <li>You will ensure that you have the necessary rights to use or access third party IPR needed to carry out the project.</li>
-                                <li>You manage IPRs in a professional and business-like manner in order, amongst other things, to help the achievement of Innovate UK’s overall aims of encouraging the commercialisation of new technologies, helping businesses to grow by benefiting from UK research and enhancing growth of hightechnology industry in UK.</li>
-                            </ol>
-                        </li>
-                        <li>
-                            Exploitation of project results
-                            <ol class="ifs-list--number">
-                                <li>Innovate UK requires you to establish an exploitation plan together with your Monitoring Officer at the start of your project, and to refine and update it at least once every 6 months (or at other intervals as agreed with Innovate UK) throughout the project’s lifetime.<br />
-                                    For a period of 5 years from the end of the project, Innovate UK expects you to take reasonable steps to exploit the results of the project in the UK or wider European Economic Area. Innovate UK will continuously evaluate the impact of funding awarded to the project and you will cooperate fully in this process.</li>
-                                <li>You must refine and update your exploitation plan, initially set out in your application, throughout the lifetime of the project and where specified for a defined period after the project end date.</li>
+                                <li>Innovate UK requires you to establish an exploitation plan together with your KTA at
+                                    the start of your Partnership, and to refine and update it at least once
+                                    every 6 months (or at other intervals as agreed with Innovate UK) throughout the
+                                    Partnership’s lifetime.
+                                </li>
+                                <li>For a period of 5 years from the end of the Partnership, Innovate UK expects you to
+                                    take reasonable steps to exploit the results of the Partnership in the UK or wider
+                                    European Economic Area. In some cases, exploitation outside of the EEA will be part
+                                    of a tactical plan to deliver the overall opportunity for the applicant. In these
+                                    cases, you or the Business Partner should seek written consent from the KTP
+                                    Programme
+                                    Manager. Innovate UK will continuously evaluate the impact of funding awarded to the
+                                    Partnership and you will cooperate fully in this process.
+                                </li>
                             </ol>
                         </li>
                         <li>
                             UK statutory framework
                             <ol class="ifs-list--number">
-                                <li>Innovate UK is required to comply with all legislation in England and Wales. </li>
-                                <li>You must also comply with all legislation (including in the devolved administrations) where they apply to you and to act in a way that does not affect our ability to comply.</li>
-                                <li>We particularly draw to your attention the Bribery Act 2010, the Data Protection Act 2018, the Fraud Act 2006, the Health and Safety at Work Act 1974, the Modern Slavery Act 2015 and the Procurement Regulations 2015.</li>
+                                <li>Innovate UK is required to comply with all legislation in England and Wales.
+                                </li>
+                                <li>You will comply with all legislation in England and Wales, which includes the Data
+                                    Protection Act 2018, the Bribery Act 2010, the Fraud Act 2006 and the Modern Slavery
+                                    Act 2015, Health and Safety at Work Act 1974, Equality Act 2010 and the Procurement
+                                    Regulations 2015, where they apply to you and to act in a way that does not affect
+                                    our ability to comply.
+                                </li>
                             </ol>
                         </li>
                         <li>
                             Publication of information
                             <ol class="ifs-list--number">
-                                <li>Innovate UK encourages you to seek your own publicity in respect of the project. If you want to publicise the project in any way whatsoever, please consult the Innovate UK guide ‘Publicising your project: guidelines from Innovate UK’ available from Innovate UK’s Press Office by emailing <a href="mailto:pressoffice@innovateuk.ukri.org" class="govuk-link">pressoffice@innovateuk.ukri.org</a>.</li>
+                                <li>Innovate UK encourages you to seek your own publicity in respect of the Partnership.
+                                    If you want to publicise the Partnership in any way whatsoever, please consult the
+                                    Innovate UK guide ‘Publicising your project: guidelines from Innovate UK’ available
+                                    from Innovate UK’s Press Office by emailing <a
+                                        href="mailto:pressoffice@innovateuk.ukri.org">pressoffice@innovateuk.ukri.org</a>.
+                                </li>
                             </ol>
                         </li>
                         <li>
                             Dispute resolution
                             <ol class="ifs-list--number">
-                                <li>
-                                    Where a dispute arises between you and Innovate UK, we would encourage you to contact us to discuss how the matter can be resolved. If a mutually acceptable resolution cannot be achieved within 30 days of you contacting us, Innovate UK has the right:
+                                <li>Where a dispute arises between you and Innovate UK, we would encourage you to
+                                    contact us to discuss a resolution. If a mutually acceptable resolution cannot be
+                                    achieved within 30 days of you contacting us, we have the right to do one of the
+                                    following:
                                     <ul class="govuk-list--bullet">
-                                        <li>either, unilaterally to terminate the grant and potentially to seek repayment of all or part of the grant funds previously paid to you; or </li>
-                                        <li>if both parties agree, to refer the matter to the London Court of International Arbitration (LCIA), whose decision will be binding. Any arbitration will be conducted in accordance with LCIA Arbitration Rules before one arbitrator seated in London</li>
+                                        <li>unilaterally terminate the grant and potentially seek repayment of all or
+                                            part of the grant funds previously paid to you
+                                        </li>
+                                        or
+                                        <li>if both parties agree, refer the matter to the London Court of
+                                            International Arbitration (LCIA), whose decision will be binding. Any
+                                            arbitration will be conducted in accordance with LCIA Arbitration Rules
+                                            before one arbitrator seated in London
+                                        </li>
                                     </ul>
                                 </li>
                             </ol>
@@ -273,13 +607,79 @@
                         <li>
                             Force majeure
                             <ol class="ifs-list--number">
-                                <li>Where an event of force majeure, or a change to the laws of England and Wales, UK government or devolved administration policy and/or the legal acts of the European Union occurs which affects Innovate UK’s ability to continue funding your project, we can terminate this agreement by giving you as much written notice as reasonably possible. In such circumstances, Innovate UK will meet any eligible costs in respect of the project that you have reasonably incurred and paid before the date of termination of this agreement.</li>
+                                <li>Where an event of force majeure, or a change to the laws of England and Wales, UK
+                                    government or devolved administration policy and/or the legal acts of the European
+                                    Union occurs which affects Innovate UK’s ability to continue funding your
+                                    Partnership, we can terminate this agreement by giving you as much written notice as
+                                    reasonably possible. In such circumstances, Innovate UK will meet any eligible costs
+                                    in respect of the Partnership that you have reasonably incurred and paid before the
+                                    date of termination of this agreement.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>
+                            State aid obligations and procurement
+                            <ol class="ifs-list--number">
+                                <li>Innovate UK awards grant funding through its Research, Development and Innovation
+                                    Scheme operating under Commission Regulation (EU) No 651/2014 (“the General Block
+                                    Exemption Regulation (GBER)”).
+                                </li>
+                                <li>You must inform Innovate UK of any other public funding applied for or awarded
+                                    against the eligible costs covered by this award of grant. It is your responsibility
+                                    to ensure that the cumulative total of public funding you are receiving for the
+                                    Funded Activities does not exceed those limits stated in GBER.
+                                </li>
+                                <li>Innovate UK will stop grant payments if you become subject to a recovery order that
+                                    follows on from a previous European Commission decision, which declares any aid you
+                                    have received illegal and incompatible with the internal market.
+                                </li>
+                                <li>Where you are required by an order of the European Commission to repay any grant to
+                                    Innovate UK that is found to be unlawful state aid, interest will be charged on the
+                                    amount being reclaimed from the date of payment at the applicable legislated rate.
+                                </li>
+                                <li>You cannot make any subcontract which would constitute a breach of state aid
+                                    obligations.
+                                </li>
+                                <li>Where you are a contracting authority within the meaning of the Public Contracts
+                                    Regulations 2015, Concession Contracts Regulations 2016, Utilities and Contracts
+                                    Regulations 2016 and Defence Security Public Contracts Regulations 2011, you warrant
+                                    that you will comply, as necessary, with the applicable procurement laws when
+                                    procuring goods and services.
+                                </li>
+                                <li>Where you reasonably consider that there is an objective justification for not
+                                    complying with procurement rules and seek to rely on such justification, you will
+                                    seek our prior approval for doing so, setting out the reasons for non-compliance in
+                                    a structured business case.
+                                </li>
+                                <li>You must not confer either directly or indirectly any selective advantage in breach
+                                    of State Aid Regulations.
+                                </li>
+                                <li>You must notify Innovate UK in the event that you are proposing to confer selective
+                                    advantage and if you have conferred selective advantage either directly or
+                                    indirectly
+                                </li>
+                                <li>You must seek independent legal advice regarding state aid and your compliance with
+                                    these obligations as part of the grant funding.
+                                </li>
                             </ol>
                         </li>
                         <li>
                             Entire agreement
                             <ol class="ifs-list--number">
-                                <li>This agreement constitutes the whole agreement between Innovate UK and supersedes all previous agreements between us relating to the project. Each party acknowledges that, in entering into this agreement, it has not relied on and has no right or remedy in respect of any statement, representation, assurance or warranty (whether made negligently or innocently) other than as expressly set out in this agreement. Nothing in this paragraph shall limit or exclude any liability for fraud or for fraudulent misrepresentation.</li>
+                                <li><p class="govuk-body">If your application for funding is successful, you will
+                                    receive a GOL confirming
+                                    any specific conditions of the award that you must comply with, in addition to these
+                                    terms and conditions. You must sign and upload the GOL before your project can
+                                    start.</p>
+                                    <p class="govuk-body">The GOL and these terms and conditions will together be
+                                        referred to as ’this
+                                        agreement’. Each party acknowledges that, in entering into this agreement, it
+                                        has not relied on and has no right or remedy in respect of any statement,
+                                        representation, assurance or warranty (whether made negligently or innocently)
+                                        other than as expressly set out in this agreement. Nothing in this clause will
+                                        limit or exclude any liability for fraud or for fraudulent
+                                        misrepresentation.</p>
+                                </li>
                             </ol>
                         </li>
                     </ol>
@@ -287,11 +687,11 @@
             </div>
         </th:block>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 
 </body>
 </html>

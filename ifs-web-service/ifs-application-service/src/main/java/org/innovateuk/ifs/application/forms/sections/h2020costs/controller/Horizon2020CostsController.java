@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.forms.sections.h2020costs.form.Horizon2020
 import org.innovateuk.ifs.application.forms.sections.h2020costs.populator.Horizon2020CostsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.h2020costs.saver.Horizon2020CostsSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
@@ -49,9 +48,6 @@ public class Horizon2020CostsController extends AsyncAdaptor {
     @Autowired
     private UserRestService userRestService;
 
-    @Autowired
-    private YourProjectCostsCompleter completeSectionAction;
-
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
     @SecuredBySpring(value = "VIEW_H2020_COSTS", description = "Applicants and internal users can view the Your project costs page")
@@ -92,7 +88,8 @@ public class Horizon2020CostsController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                validationHandler.addAnyErrors(completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())));
+                validationHandler.addAnyErrors(
+                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()).getSuccess());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
@@ -113,7 +110,7 @@ public class Horizon2020CostsController extends AsyncAdaptor {
     }
 
     private String viewHorizon2020Costs(UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser());
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         return VIEW;
     }

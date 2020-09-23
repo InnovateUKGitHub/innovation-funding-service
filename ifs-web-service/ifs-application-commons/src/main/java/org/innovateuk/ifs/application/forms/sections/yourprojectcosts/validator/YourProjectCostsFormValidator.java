@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator;
 
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -13,8 +11,10 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -44,10 +44,10 @@ public class YourProjectCostsFormValidator {
     private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    private ApplicationRestService applicationRestService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
-    private CompetitionRestService competitionRestService;
+    private OrganisationRestService organisationRestService;
 
 
     public void validateType(YourProjectCostsForm form, FinanceRowType type, ValidationHandler validationHandler) {
@@ -97,9 +97,19 @@ public class YourProjectCostsFormValidator {
             case ESTATE_COSTS:
                 validateEstateCosts(form.getEstateCostRows(), validationHandler);
                 break;
+            case KTP_TRAVEL:
+                validateRows(form.getKtpTravelCostRows(), "ktpTravelCostRows[%s].", validationHandler);
+                break;
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+        }
+    }
+
+    private void validateJustification(JustificationForm justificationForm, ValidationHandler validationHandler) {
+        validateForm(justificationForm, validationHandler, "justificationForm.");
+        if (justificationForm.getExceedAllowedLimit() != null && justificationForm.getExceedAllowedLimit() == Boolean.TRUE && StringUtils.isEmpty(justificationForm.getJustification())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.justification", null, "validation.ktp.project.costs.justification.required")));
         }
     }
 
@@ -110,6 +120,7 @@ public class YourProjectCostsFormValidator {
         validateAdditionalCompanyCost(additionalCompanyCostForm.getManagementSupervision(), "additionalCompanyCostForm.managementSupervision.", validationHandler);
         validateAdditionalCompanyCost(additionalCompanyCostForm.getOtherCosts(), "additionalCompanyCostForm.otherCosts.", validationHandler);
         validateAdditionalCompanyCost(additionalCompanyCostForm.getOtherStaff(), "additionalCompanyCostForm.otherStaff.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getConsumables(), "additionalCompanyCostForm.consumables.", validationHandler);
     }
 
     private void validateAdditionalCompanyCost(AdditionalCostAndDescription cost, String path, ValidationHandler validationHandler) {
@@ -146,9 +157,11 @@ public class YourProjectCostsFormValidator {
     }
 
     public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
         competition.getFinanceRowTypes().forEach(type -> validateType(form, type, validationHandler));
+        if (competition.isKtp()) {
+            validateJustification(form.getJustificationForm(), validationHandler);
+        }
     }
 
     private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {

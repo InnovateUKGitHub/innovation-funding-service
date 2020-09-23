@@ -44,7 +44,7 @@
                                 <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                             </th:block>
                             <th:block th:unless="${model.resubmission == null}">
-                                <dt>Is this application a resubmission?</dt>
+                                <dt>Has this application been previously submitted to Innovate UK?</dt>
                                 <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                                 <th:block th:if="${model.resubmission == true}">
                                     <dt>Previous application number</dt>
@@ -69,7 +69,78 @@
                     </div>
                 </div>
 
-                <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+                <th:block th:unless="${model.interviewFeedbackViewModel == null || model.interviewFeedbackViewModel.feedbackReleased}">
+                    <div class="message-alert"
+                         th:attr="aria-hidden=${!model.interviewFeedbackViewModel.hasResponse()}"
+                         data-js-toggle-on-file-upload="">
+                        <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.responseBannerText}">Some info</p>
+                    </div>
+                    <div class="message-alert"
+                         th:attr="aria-hidden=${model.interviewFeedbackViewModel.hasResponse()}"
+                         data-js-toggle-on-file-upload="">
+                        <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.noResponseBannerText}">Some info</p>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.responseSectionEnabled}">
+                    <th:block th:if="${model.interviewFeedbackViewModel.leadApplicant}">
+                        <form th:action="@{/application/{applicationId}/summary(applicationId=${model.application.id})}"
+                              method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
+                            <h2 class="govuk-heading-m">Your response</h2>
+                            <div class="upload-section">
+                                <details th:unless="${model.interviewFeedbackViewModel.feedbackReleased}"
+                                         class="govuk-details"
+                                         role="group">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">What should I include in the response?</span>
+                                    </summary>
+                                    <div class="govuk-details__text">
+                                        <p class="govuk-body">You may submit a written response to this feedback. You can upload a single PDF
+                                            document, including charts and diagrams. The maximum file upload is 10MB.</p>
+                                    </div>
+                                </details>
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.interviewFeedbackViewModel.feedbackReleased ? 'readonly' : 'edit'},
+                                            @{/application/{applicationId}/summary/download-response(applicationId=${model.application.id})},
+                                            ${model.interviewFeedbackViewModel.responseFilename},
+                                            response,
+                                            response,
+                                            true,
+                                            removeResponse,
+                                            uploadResponse)"/>
+                            </div>
+                        </form>
+                    </th:block>
+                    <th:block th:unless="${model.interviewFeedbackViewModel.leadApplicant}">
+                        <h2 class="govuk-heading-m">Response from lead applicant</h2>
+                        <th:block th:unless="${model.interviewFeedbackViewModel.hasResponse()}">
+                            <p class="govuk-body">The lead applicant has not yet uploaded a response.</p>
+                        </th:block>
+                        <th:block th:if="${model.interviewFeedbackViewModel.hasResponse()}">
+                            <div class="govuk-form-group download">
+                                <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
+                                <p class="govuk-body uploaded-file">
+                                    <a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${model.application.id})}"
+                                       th:text="|${model.interviewFeedbackViewModel.responseFilename} (opens in a new window)|"
+                                       target="_blank"
+                                       class="govuk-link">File</a>.
+                                </p>
+                            </div>
+                        </th:block>
+                    </th:block>
+                </th:block>
+
+                <th:block th:insert="application/readonly/application-read-only :: accordion (model=${model.applicationReadOnlyViewModel}, feedbackFragment=~{ :: .feedbackFragment}, parentModel=${model})">
+                    <div class="feedbackFragment">
+                        <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
+                        <div class="govuk-form-group download">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
+                            <a target="_blank"
+                               th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${parentModel.application.id})}"
+                               th:text="|${parentModel.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
+                               class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
+                        </div>
+                    </div>
+                </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

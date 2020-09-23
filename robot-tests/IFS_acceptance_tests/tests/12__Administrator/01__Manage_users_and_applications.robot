@@ -35,6 +35,8 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7960 KTA Dashboard
 ...
+...               IFS-8095 Content improvement for KTA journey
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -57,12 +59,15 @@ ${validKTNDomainEmail}                   jake.Rayan@ktn-uk.test
 ${KTNDomainEmailAssessor}                alyssa.smith@ktn-uk.test
 ${nonKTNDomainEmailAssessor}             simon.bates@gmail.com
 ${inviteExternalUserText}                Invite a new external user
-${firstNameInvalidCharacterMessage}      Your first name should have at least 2 characters.
-${lastNameInvalidCharacterMessage}       Your last name should have at least 2 characters.
+${firstNameInvalidCharacterMessage}      Their first name should have at least 2 characters.
+${lastNameInvalidCharacterMessage}       Their last name should have at least 2 characters.
+${newFirstNameInvalidCharacterMessage}   Your first name should have at least 2 characters.
+${newLastNameInvalidCharacterMessage}    Your last name should have at least 2 characters.
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
-${invalidKTNDomainValidationMessage}     Users cannot be registered without a knowledge transfer network email address.
+${invalidKTNDomainValidationMessage}     You must enter a valid Knowledge Transfer Network email address.
+${blankKTNDomainValidationMessage}       You must enter a Knowledge Transfer Network email address.
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
@@ -198,11 +203,11 @@ Support cannot see internal users
     And the user should not see the element       jQuery = p:contains("users matching the search")
 
 Server side validation for invite new internal user
-    [Documentation]  IFS-27
+    [Documentation]  IFS-27 IFS-8095
     [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/management/admin/users/active
     When the user clicks the button/link                    link = Invite a new internal user
-    And the user clicks the button/link                     jQuery = button:contains("Send invite")
+    And the user clicks the button/link                     jQuery = button:contains("Send invitation")
     Then the use should see the validation error summary    Please enter an email address.
 
 The user must use an Innovate UK email
@@ -364,16 +369,16 @@ Deactivated innovation lead cannot be selected on initial details
     Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
 Invite a new external user field validations
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                                            link = Manage users
     When the user clicks the button/link                                             link = Invite a new external user
-    And the user clicks the button/link                                              jQuery = button:contains("Save and return")
+    And the user clicks the button/link                                              jQuery = button:contains("Send invitation")
     Then the user should see invite a new external user field validation message
 
 KTN email domain validations
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user fills invite a new external user fields     Jake  Rayan  ${invalidEmail}
-    When the user clicks the button/link                       jQuery = button:contains("Save and return")
+    When the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see a field and summary error         ${invalidKTNDomainValidationMessage}
 
 Administrator can cancel the new external user details entered
@@ -383,10 +388,10 @@ Administrator can cancel the new external user details entered
     Then the user should see the element                            link = Invite a new external user
 
 Administrator can sucessfully save and return to the manage users page
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                     link = Invite a new external user
     When the user fills invite a new external user fields     Jake  Rayan  ${validKTNDomainEmail}
-    And the user clicks the button/link                       jQuery = button:contains("Save and return")
+    And the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see the element                      link = Invite a new external user
     [Teardown]  Logout as user
 
@@ -471,8 +476,8 @@ the KTA user enters the details to create account
     the user selects the checkbox                           termsAndConditions
 
 the KTA user checks for all validations
-    the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${firstNameInvalidCharacterMessage}
-    the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${lastNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${newFirstNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${newLastNameInvalidCharacterMessage}
     the user enters the text and checks for validation message     phoneNumber  12  ${enter_a_valid_phone_number}  ${enter_a_phone_number_between_8_and_20_digits}
     the user clicks the button/link                                name = create-account
     the user should see the element                                jquery = span:contains("${search_a_valid_postcode}")
@@ -515,7 +520,7 @@ the external user removes the pending parter invitation
 the user removes the pending organisation invitation
     [Arguments]  ${pageToRemoveFrom}
     the user navigates to the page      ${pageToRemoveFrom}
-    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove organisation")
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove")
     the user clicks the button/link     jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
 
 the user removes the pending organisation invitation in projet setup
@@ -557,7 +562,7 @@ the user navigates to the View internal user details
     the user clicks the button/link        jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invitation")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -578,7 +583,7 @@ the IFS admin invites a new internal user
     the user enters text to a text field        id = firstName  Support
     the user enters text to a text field        id = lastName  User
     the user enters text to a text field        id = emailAddress  ${invalidEmail}
-    the user clicks the button/link             jQuery = button:contains("Send invite")
+    the user clicks the button/link             jQuery = button:contains("Send invitation")
 
 the user enters the text and checks for validation message
     [Arguments]  ${field_id}  ${text}  ${error_message1}  ${error_message2}
@@ -593,7 +598,7 @@ the IFS admin send invite to internal user
     the user enters text to a text field                 id = lastName  ${last_name}
     the user enters text to a text field                 id = emailAddress  ${email}
     the user selects the option from the drop-down menu  ${user_role}  id = role
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invitation")
 
 the IFS admin edit internal user details
     the user enters text to a text field                 id = firstName  Innovation
@@ -626,7 +631,7 @@ the new internal user logs in and checks user details
     the user should see the element        jQuery = option[value="IFS_ADMINISTRATOR"][selected="selected"]
     the user clicks the button/link        link = Manage users
     the user clicks the button/link        jQuery = a:contains("Pending")
-    the user should see the element        jQuery = span:contains("0") + span:contains("pending internal users")
+    the user should see the element        jQuery = span:contains("0") + span:contains("pending users")
     the user should not see the element    css = .table-overflow ~ td
     the user clicks the button/link        jQuery = a:contains("Active")
 
@@ -712,7 +717,7 @@ the user should see invite a new external user field validation message
     The user should see a field and summary error     ${firstNameValidationMessage}
     The user should see a field and summary error     ${lastNameValidationMessage}
     The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
-    The user should see a field and summary error     ${emailAddressValidationMessage}
+    The user should see a field and summary error     ${blankKTNDomainValidationMessage}
 
 the user fills invite a new external user fields
     [Arguments]  ${firstName}  ${lastName}  ${emailAddress}

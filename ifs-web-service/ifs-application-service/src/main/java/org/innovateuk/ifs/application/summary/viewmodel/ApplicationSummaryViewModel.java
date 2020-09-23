@@ -23,8 +23,9 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
     private final boolean ktpCompetition;
+    private final InterviewFeedbackViewModel interviewFeedbackViewModel;
 
-    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn) {
+    public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn, InterviewFeedbackViewModel interviewFeedbackViewModel) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
         this.application = application;
         this.competition = competition;
@@ -39,6 +40,11 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
         this.ktpCompetition = competition.isKtp();
+        this.interviewFeedbackViewModel = interviewFeedbackViewModel;
+    }
+
+    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
+        return interviewFeedbackViewModel;
     }
 
     @Override

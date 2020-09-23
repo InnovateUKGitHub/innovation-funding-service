@@ -588,14 +588,14 @@ Monitoring office can see the correspondence address entered by non uk based lea
 
 Partner applicant can upload appendix file
     [Documentation]  IFS-7793
-    Given lead applicant assigns technical approach section to partner applicant
+    Given uk lead applicant completes application form
+    And lead applicant assigns technical approach section to partner applicant
     When partner uploads the appendix file
     Then the lead can see multiple appendices uploaded to the technical approach question
 
 Uk based lead applicant moves application to project setup and generates GOL
     [Documentation]  IFS-7197
     [Tags]  HappyPath
-    Given uk lead applicant completes application form
     When international partner submits finance details
     Then Uk lead submits international competition application to assesment
     And Uk lead completes project setup details and generated GOL
@@ -693,11 +693,6 @@ the user sign in and apply for international comp
     the user select the competition and starts application      ${competitionName}
     the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
     Logging in and Error Checking                               ${user}  ${password}
-
-organisation is able to accept project invite
-    [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
-    logout as user
-    the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
 
 partner user provide organisation detail and create account
     [Arguments]  ${email}
@@ -1215,24 +1210,28 @@ the user completes project team and can see international organisation addresses
 lead applicant assigns technical approach section to partner applicant
     log in as a different user                            &{ukLeadOrganisationCredentials}
     the user clicks the application tile if displayed
-    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}              #${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                       jQuery = a:contains("Technical approach")
+    the user clicks the button/link                       jQuery = button:contains(Edit)
     the user uploads the file                             css = input[name="appendix"]    ${valid_pdf}
     the user clicks the button/link                       link = Assign to someone else.
-    the user selects the radio button                     assignee  assignee3
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = [for="assignee1"]label:contains("Steve Smith")
+    Run Keyword If   '${status}' == 'PASS'    the user selects the radio button     assignee   assignee2
+    ...                              ELSE     the user selects the radio button     assignee   assignee1
     the user clicks the button/link                       jQuery = button:contains("Save and return")
 
 partner uploads the appendix file
     Log in as a different user                            &{internationalPartnerOrganisationCredentials}
-    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the user clicks the button/link                       jQuery = a:contains("Technical approach")
     the user uploads the file                             css = input[name="appendix"]    ${ods_file}
     the user uploads the file                             css = input[name="appendix"]    ${excel_file}
     the user clicks the button/link                       jQuery = button:contains("Assign to lead for review")
     Log in as a different user                            &{ukLeadOrganisationCredentials}
     the user clicks the application tile if displayed
-    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the user clicks the button/link                       jQuery = a:contains("Technical approach")
+    the user clicks the button/link                       id = application-question-complete
 
 the lead can see multiple appendices uploaded to the technical approach question
     the user should see the element     jQuery = a:contains("${valid_pdf}")

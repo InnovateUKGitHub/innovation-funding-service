@@ -186,8 +186,8 @@ Lead marks finances as complete
     When the user fills in the project costs             labour costs  n/a
     And the user enters the project location
     And the user navigates to Your-finances page         Assign test
-    Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the funding information        Assign test
+    Then the user fills in the organisation information  Assign test   ${SMALL_ORGANISATION_SIZE}
+    And the user fills in the funding information        Assign test   no
     When the user navigates to Your-finances page        Assign test
     Then the user should see all finance subsections complete
 
@@ -223,7 +223,7 @@ Lead applicant should be able to remove the partner organisation
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link  link = Assign test
     And the user clicks the button/link    link = Application team
-    And the user clicks the button/link                jQuery = td:contains("Dennis") ~ td a:contains("Remove organisation")
+    And the user clicks the button/link                jQuery = td:contains("Dennis") ~ td a:contains("Remove")
     Then The user clicks the button/link               jQuery = tr:contains("Dennis") .warning-modal button:contains("Remove organisation")
     Then the user should see the element   jQuery = h1:contains("Application team")
     And the user should not see the element  jQuery = td:contains("Dennis Bergkamp")
@@ -242,8 +242,8 @@ the collaborator edits the 'public description' question
 the collaborator is able to edit the finances
     the user fills in the project costs             labour costs  n/a
     the user navigates to Your-finances page        Assign test
-    the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
-    the user fills in the funding information       Assign test
+    the user fills in the organisation information  Assign test   ${SMALL_ORGANISATION_SIZE}
+    the user fills in the funding information       Assign test   no
 
 the applicant changes the name of the application
     Given the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}

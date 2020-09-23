@@ -20,6 +20,7 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -146,6 +147,13 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                     if (applicationFinance.getInternationalLocation() != null) {
                         dbFinance.setInternationalLocation(applicationFinance.getInternationalLocation());
                     }
+
+                    if (StringUtils.isEmpty(applicationFinance.getJustification())) {
+                        dbFinance.setJustification(null);
+                    } else {
+                        dbFinance.setJustification(applicationFinance.getJustification());
+                    }
+
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);

@@ -15,7 +15,7 @@ ${continuityLoanCompId}              ${competition_ids["${continuityLoanCompName
 ${continuityLoanPSCompId}            ${competition_ids["${continuityLoanPSCompName}"]}
 ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplication}"]}
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
-${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/feedback
+${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
 ${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
 ${continuityLoanT&C'sTitle}          Loans terms and conditions
 ${continuityLoanT&CLink}             Innovation Continuity Loan
@@ -48,7 +48,7 @@ Lead applicant is able to see correct T&C's
     [Documentation]  IFS-8002
     [Setup]  Update the competition with innovation continuity loan T&C's     ${continuityLoanCompId}
     Given Log in as a different user               &{lead_applicant_credentials}
-    And Existing user starts a new application     ${continuityLoanCompName}  ${EMPIRE_LTD_ID}
+    And Existing user starts a new application     ${continuityLoanCompName}   ${EMPIRE_LTD_ID}   Choose the lead organisation
     When the user clicks the button/link           link = ${applicationT&CLink}
     Then the user should see the element           jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
     And the user should see the element            jQuery = h1:contains("${continuityLoanT&C'sTitle}")
@@ -62,13 +62,13 @@ Lead applicant can confirm T&C's
 
 Partner applicant is able to see correct T&C's
     [Documentation]  IFS-8002
-    [Setup]  the lead invites already registered user    ${existing_lead_ktp_email}  ${continuityLoanCompName}
-    Given logging in and error checking      &{troy_ward_crendentials}
-    And the user selects the radio button    selectedOrganisationId   ${organisationWardId}
-    When the user clicks the button/link     id = save-organisation-button
-    And the user clicks the button/link      link = ${applicationT&CLink}
-    Then the user should see the element     jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
-    And the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sTitle}")
+    [Setup]  the lead invites already registered user     ${existing_lead_ktp_email}  ${continuityLoanCompName}
+    Given logging in and error checking                   &{troy_ward_crendentials}
+    When the user selected organisation if available      ${organisationWardId}   Choose your organisation
+    And the user clicks the button/link                   id = save-organisation-button
+    And the user clicks the button/link                   link = ${applicationT&CLink}
+    Then the user should see the element                  jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And the user should see the element                   jQuery = h1:contains("${continuityLoanT&C'sTitle}")
 
 Partner applicant can confirm T&C's
     [Documentation]  IFS-8002

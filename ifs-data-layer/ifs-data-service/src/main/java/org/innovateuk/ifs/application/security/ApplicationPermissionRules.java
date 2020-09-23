@@ -44,8 +44,17 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isAssessorForApplication(applicationResource, user);
     }
 
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The kta can see the participation percentage for applications they assess")
+    public boolean ktaCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+        return isKtaForApplication(applicationResource, user);
+    }
+
     private boolean isAssessorForApplication(ApplicationResource applicationResource, UserResource user) {
         return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
+    }
+
+    private boolean isKtaForApplication(ApplicationResource applicationResource, UserResource user) {
+        return isKta(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")
@@ -73,6 +82,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean leadApplicantCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "READ_FINANCE_DETAILS",
+            description = "The kta can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean ktaCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
+        return isKta(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -114,6 +130,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean stakeholdersCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
         return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "The kta can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean ktaCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isKta(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")

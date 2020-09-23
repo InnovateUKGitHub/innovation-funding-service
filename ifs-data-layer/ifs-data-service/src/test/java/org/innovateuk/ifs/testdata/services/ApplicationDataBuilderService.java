@@ -567,7 +567,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             }
 
             return builder[0].withOrganisationSize(SMALL).
-                    withWorkPostcode("AB12 3CD");
+                    withLocation();
         };
         return applicationFinanceDataBuilder.
                 withApplication(application).
@@ -602,7 +602,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withExceptionsStaff(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
                         withUploadedJesForm().
-                        withWorkPostcode("AB12 3CD"));
+                        withLocation());
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(

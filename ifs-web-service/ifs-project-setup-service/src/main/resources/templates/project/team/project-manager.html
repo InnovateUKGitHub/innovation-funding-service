@@ -31,11 +31,8 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Project manager',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
-        <p class="govuk-body" th:unless="${model.loanCompetition}">Select your project manager so that your Monitoring
-            Officer can make contact. You can change your project manager up until your grant offer letter is generated.</p>
-
-        <p class="govuk-body" th:if="${model.loanCompetition}">Select your project manager so that your Monitoring
-            Officer can make contact. You can change your project manager at any time until project setup is complete.</p>
+        <p class="govuk-body">Select your project manager so that your monitoring
+            officer can make contact. You can change your project manager at any time until project setup is complete.</p>
 
         <form id="project-manager-form" method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
               th:object="${form}">

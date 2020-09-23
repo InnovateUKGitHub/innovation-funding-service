@@ -373,71 +373,6 @@ public class GrantOfferLetterModelTest {
         assertThat(model.isShowGrantOfferLetterApprovedByInnovateMessage(), is(false));
     }
 
-    @Test
-    public void testShowDisabledSubmitButtonIfProjectManagerAndSignedGrantOfferLetterNotYetUploaded() {
-
-        boolean leadPartner = true;
-        boolean projectManager = true;
-        boolean signedGrantOfferUploaded = false;
-
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
-                stateForPmGeneratedOfferSentToProjectTeam);
-
-        assertThat(model.isShowDisabledSubmitButton(), is(true));
-    }
-
-    @Test
-    public void testShowDisabledSubmitButtonNotAllowedIfLeadPartner() {
-
-        boolean leadPartner = true;
-        boolean projectManager = false;
-        boolean signedGrantOfferUploaded = false;
-
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
-                stateForPartnerGeneratedOfferSentToProjectTeam);
-
-        assertThat(model.isShowDisabledSubmitButton(), is(false));
-    }
-
-    @Test
-    public void testShowDisabledSubmitButtonNotAllowedIfNonLeadPartner() {
-
-        boolean leadPartner = false;
-        boolean projectManager = false;
-        boolean signedGrantOfferUploaded = false;
-
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
-                stateForPartnerGeneratedOfferSentToProjectTeam);
-
-        assertThat(model.isShowDisabledSubmitButton(), is(false));
-    }
-
-    @Test
-    public void testShowDisabledSubmitButtonNotAllowedIfSignedGrantOfferLetterUploaded() {
-
-        boolean leadPartner = true;
-        boolean projectManager = true;
-        boolean signedGrantOfferUploaded = true;
-
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
-                stateForPmGeneratedOfferSentToProjectTeam);
-
-        assertThat(model.isShowDisabledSubmitButton(), is(false));
-    }
-
-    @Test
-    public void testShowDisabledSubmitButtonNotAllowedIfSignedGrantOfferLetterSubmitted() {
-
-        boolean leadPartner = true;
-        boolean projectManager = true;
-        boolean signedGrantOfferUploaded = true;
-
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
-                stateForPmSignedGrantOfferSubmittedToInternalTeam);
-
-        assertThat(model.isShowDisabledSubmitButton(), is(false));
-    }
-
     private GrantOfferLetterModel createGrantOfferLetterModel(
             boolean leadPartner,
             boolean projectManager,
@@ -457,7 +392,7 @@ public class GrantOfferLetterModelTest {
                 new FileDetailsViewModel("grant-offer", 1000L) :
                 null;
         
-        return new GrantOfferLetterModel(123L, "Project name", leadPartner,
-                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false);
+        return new GrantOfferLetterModel("Grant offer letter", 123L, "Project name", leadPartner,
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false, false);
     }
 }

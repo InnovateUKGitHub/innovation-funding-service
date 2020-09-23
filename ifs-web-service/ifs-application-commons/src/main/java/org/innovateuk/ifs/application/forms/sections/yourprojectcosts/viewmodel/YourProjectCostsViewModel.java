@@ -41,6 +41,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean showCovidGuidance;
 
+    private final boolean showJustificationForm;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -56,7 +58,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      boolean ktpCompetition,
                                      List<FinanceRowType> financeRowTypes,
                                      boolean overheadAlwaysTwenty,
-                                     boolean showCovidGuidance) {
+                                     boolean showCovidGuidance,
+                                     boolean showJustificationForm) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -74,6 +77,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.financeRowTypes = financeRowTypes;
         this.overheadAlwaysTwenty = overheadAlwaysTwenty;
         this.showCovidGuidance = showCovidGuidance;
+        this.showJustificationForm = showJustificationForm;
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
@@ -95,6 +99,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.financesUrl = null;
         this.includeVat = false;
         this.showCovidGuidance = false;
+        this.showJustificationForm = false;
     }
 
     @Override
@@ -167,6 +172,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return ktpCompetition;
     }
 
+    public boolean isShowJustificationForm() {
+        return showJustificationForm;
+    }
+
     /* view logic */
     public boolean isReadOnly() {
         return complete || !open;
@@ -178,5 +187,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
         return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
+    }
+
+    public String getStateAidCheckboxLabelFragment() {
+        return isKtpCompetition() ? "ktp_state_aid_checkbox_label" : "state_aid_checkbox_label";
     }
 }

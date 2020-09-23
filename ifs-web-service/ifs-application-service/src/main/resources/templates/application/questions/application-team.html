@@ -122,7 +122,7 @@
                                     <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">
                                         <th:block th:if="${row.invite}">
                                             <button class="button-clear govuk-!-margin-right-1" id="resent-invite-button"
-                                                    type="submit" name="resend-invite" th:value="${row.id}">Resend invite
+                                                    type="submit" name="resend-invite" th:value="${row.id}">Resend invitation
                                             </button>
                                             <span>|</span>
                                         </th:block>
@@ -259,12 +259,18 @@
                        id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>
+            </th:block>
 
-                <th:block th:if="${model.ktpCompetition} ">
+                <th:block th:if="${model.ktpCompetition}">
+                    <th:block th:unless="${model.leadApplicant}">
+                        <th:block th:if="${model.hasAssignedKta() || model.hasPendingKta()}">
+                        <h2 class="govuk-heading-m">Knowledge transfer adviser</h2>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${model.leadApplicant}">
                     <h2 class="govuk-heading-m">Knowledge transfer adviser</h2>
-                    <p class="govuk-body" th:unless="${model.readOnly}">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
-                    <p class="govuk-body" th:unless="${model.readOnly}">The lead applicant cannot mark the page as complete until a Knowledge Transfer Adviser has accepted their invitation.</p>
-
+                    <p class="govuk-body" th:unless="${model.readOnly}">Enter the knowledge transfer adviser's details below to invite them to the application. They will only be able to view the application after accepting their invitation.</p>
+                    <p class="govuk-body" th:unless="${model.readOnly}">The knowledge base partner cannot mark the page as complete until a knowledge transfer adviser has accepted their invitation.</p>
                     <div th:if="${model.hasNoKta()}" class="govuk-form-group">
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
                             <table class="govuk-table">
@@ -292,13 +298,14 @@
                                                    th:errorclass="govuk-input--error" />
                                         </td>
                                         <td class="govuk-table__cell alignright buttoncolumn">
-                                            <button class="govuk-button" type="submit" name="invite-kta">Invite to application</button>
+                                            <button class="govuk-button" type="submit" name="invite-kta">Send invitation</button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </form>
                     </div>
+                    </th:block>
                     <div th:if="${model.hasAssignedKta() || model.hasPendingKta()}">
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
                             <table class="govuk-table">
@@ -329,12 +336,17 @@
                                     <td id="ktaEmail" class="govuk-table__cell" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
                                         <th:block th:text="${model.ktaEmail}">email of kta</th:block>
                                     </td>
+                                    <th:block th:if="${model.leadApplicant}">
                                     <td class="govuk-table__cell alignright buttoncolumn" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
-                                        <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button><span>|</span></th:block>
+                                        <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invitation</button><span>|</span></th:block>
                                         <th:block th:unless="${model.complete}">
                                         <button class="button-clear" type="submit" name="remove-kta" value="${model.applicationId}">Remove</button>
                                         </th:block>
                                     </td>
+                                    </th:block>
+                                    <th:block th:unless="${model.leadApplicant}">
+                                        <td class="govuk-table__cell alignright"></td>
+                                    </th:block>
                                 </tr>
                                 </tbody>
                             </table>
@@ -342,7 +354,8 @@
                     </div>
                 </th:block>
 
-                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
+            <th:block th:if="${model.leadApplicant}">
+                    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                       method="post">
                     <div th:if="${model.open}" class="form-footer govuk-!-margin-top-8">
                         <button th:unless="${model.complete}" id="application-question-complete" type="submit"

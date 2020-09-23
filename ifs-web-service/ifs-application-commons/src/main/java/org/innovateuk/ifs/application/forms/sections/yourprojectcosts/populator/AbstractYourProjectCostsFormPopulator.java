@@ -3,16 +3,22 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
@@ -20,7 +26,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
 
-    public YourProjectCostsForm populateForm(long targetId, Long organisationId) {
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    public YourProjectCostsForm populateForm(long targetId, long organisationId) {
         YourProjectCostsForm form = new YourProjectCostsForm();
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
@@ -29,7 +38,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
                 CapitalUsageRowForm.class, CapitalUsage.class));
         form.setMaterialRows(toRows(finance, FinanceRowType.MATERIALS,
-                MaterialRowForm.class,  Materials.class));
+                MaterialRowForm.class, Materials.class));
         form.setOtherRows(toRows(finance, FinanceRowType.OTHER_COSTS,
                 OtherCostRowForm.class, OtherCost.class));
         form.setSubcontractingRows(toRows(finance, FinanceRowType.SUBCONTRACTING_COSTS,
@@ -52,9 +61,29 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 AssociateSupportCostRowForm.class, AssociateSupportCost.class));
         form.setEstateCostRows(toRows(finance, FinanceRowType.ESTATE_COSTS,
                 EstateCostRowForm.class, EstateCost.class));
+
+        form.setKtpTravelCostRows(toRows(finance, FinanceRowType.KTP_TRAVEL,
+                KtpTravelRowForm.class, KtpTravelCost.class, Comparator.comparing(cost ->
+                        ofNullable(cost.getType()).map(KtpTravelCostType::ordinal).orElse(2))));
+
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
 
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        if (ApplicationFinanceResource.class.equals(finance.getClass()) && organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
+            form.setJustificationForm(justificationForm(finance));
+        }
+
         return form;
+    }
+
+    private JustificationForm justificationForm(BaseFinanceResource finance) {
+
+        ApplicationFinanceResource applicationFinanceResource = (ApplicationFinanceResource) finance;
+        if (StringUtils.isEmpty(applicationFinanceResource.getJustification())) {
+            return new JustificationForm();
+        }
+        return new JustificationForm(Boolean.TRUE, applicationFinanceResource.getJustification());
     }
 
     private int numberOfRows(BaseFinanceResource finance, FinanceRowType type) {
@@ -94,13 +123,13 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return rows;
     }
 
-     private VatForm vat(BaseFinanceResource finance) {
+    private VatForm vat(BaseFinanceResource finance) {
         VatCostCategory costCategory = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
-         if (costCategory != null) {
-             Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));
+        if (costCategory != null) {
+            Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));
             return new VatForm(vat);
-         }
-         return new VatForm();
+        }
+        return new VatForm();
     }
 
     private AdditionalCompanyCostForm additionalCompanyCostForm(BaseFinanceResource finance) {
@@ -134,6 +163,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         }
         return new HashMap<>();
     }
+
     private Map<String, AssociateDevelopmentCostRowForm> associateDevelopment(BaseFinanceResource finance) {
         DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS);
         if (costCategory != null) {
@@ -173,10 +203,18 @@ public abstract class AbstractYourProjectCostsFormPopulator {
     }
 
     private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz, boolean addEmptyRowOverride) {
+        return toRows(finance, financeRowType, formClazz, costClazz, addEmptyRowOverride, null);
+    }
+
+    private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz, Comparator<F> comparator) {
+        return toRows(finance, financeRowType, formClazz, costClazz, true, comparator);
+    }
+
+    private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz, boolean addEmptyRowOverride, Comparator<F> comparator) {
         DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(financeRowType);
 
         if (costCategory != null) {
-            Map<String, F> rows = costCategory.getCosts().stream()
+            Stream<F> stream =  costCategory.getCosts().stream()
                     .map((cost) -> (C) cost)
                     .map(cost -> {
                         try {
@@ -187,7 +225,11 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                                 InvocationTargetException e) {
                             throw new IFSRuntimeException(e);
                         }
-                    })
+                    });
+            if (comparator != null) {
+                stream = stream.sorted(comparator);
+            }
+            Map<String, F> rows = stream
                     .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
             if (shouldAddEmptyRow() && addEmptyRowOverride) {
                 try {

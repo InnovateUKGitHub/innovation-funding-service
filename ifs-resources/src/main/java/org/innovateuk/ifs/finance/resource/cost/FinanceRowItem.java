@@ -30,7 +30,9 @@ import java.math.BigDecimal;
         @JsonSubTypes.Type(value = KnowledgeBaseCost.class, name = "knowledgeBaseCost"),
         @JsonSubTypes.Type(value = EstateCost.class, name = "estateCost"),
         @JsonSubTypes.Type(value = Consumable.class, name = "consumable"),
-        @JsonSubTypes.Type(value = AdditionalCompanyCost.class, name = "additionalCompanyCost")
+        @JsonSubTypes.Type(value = KtpTravelCost.class, name = "KtpTravelCost"),
+        @JsonSubTypes.Type(value = AdditionalCompanyCost.class, name = "additionalCompanyCost"),
+        @JsonSubTypes.Type(value = PreviousFunding.class, name = "previousFunding")
 })
 public interface FinanceRowItem {
     int MAX_DIGITS = 20;
