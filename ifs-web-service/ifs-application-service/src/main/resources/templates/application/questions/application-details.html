@@ -39,6 +39,7 @@
               data-autosave="autosaveFormPost" enctype="multipart/form-data"
               novalidate="novalidate">
             <input type="hidden" name="ktpCompetition" th:value="${model.ktpCompetition}" />
+            <input type="hidden" name="canResubmit" th:value="${model.canResubmit}" />
             <th:block th:unless="${model.readonly}">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
                 <button id="save-form-button" class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
@@ -110,73 +111,76 @@
                     </button>
                 </div>
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__resubmission__}')} ? 'govuk-form-group--error'">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="resubmission">
-                            <h2 class="govuk-fieldset__heading">Has this application been previously submitted to Innovate UK?</h2>
-                        </legend>
-                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='resubmission')" />
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item" data-target="resubmission-details">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       id="resubmission-yes"
-                                       th:field="*{__resubmission__}"
-                                       value="true"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
-                                <label for="resubmission-yes"
-                                       class="govuk-label govuk-radios__label">
-                                    Yes
-                                </label>
-                            </div>
-
-                            <div id="resubmission-details" class="govuk-radios__conditional govuk-form-group">
-                                <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('*{__previousApplicationNumber__}')} ? 'govuk-form-group--error'">
-                                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Please provide the details of this previous application</h2>
-                                    <label class="govuk-label" for="previousApplicationNumber">
-                                        Previous application number
-                                    </label>
-                                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='previousApplicationNumber')"  />
-                                    <input class="govuk-input"
-                                           type="text"
-                                           id="previousApplicationNumber"
-                                           th:field="*{__previousApplicationNumber__}"
+                <th:block th:if="${model.canResubmit}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__resubmission__}')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="resubmission">
+                                <h2 class="govuk-fieldset__heading">Has this application been previously submitted to Innovate UK?</h2>
+                            </legend>
+                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='resubmission')" />
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" data-target="resubmission-details">
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           id="resubmission-yes"
+                                           th:field="*{__resubmission__}"
+                                           th:checked=""
+                                           value="true"
                                            required="required"
-                                           th:errorclass="govuk-input--error"
-                                           th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
-                                </div>
-                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__previousApplicationTitle__}')} ? 'govuk-form-group--error'">
-                                    <label class="govuk-label" for="previousApplicationTitle">
-                                        Previous application title
+                                           th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                                    <label for="resubmission-yes"
+                                           class="govuk-label govuk-radios__label">
+                                        Yes
                                     </label>
-                                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='previousApplicationTitle')" />
-                                    <input class="govuk-input"
-                                           type="text"
-                                           id="previousApplicationTitle"
-                                           th:field="*{__previousApplicationTitle__}"
+                                </div>
+
+                                <div id="resubmission-details" class="govuk-radios__conditional govuk-form-group">
+                                    <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('*{__previousApplicationNumber__}')} ? 'govuk-form-group--error'">
+                                        <h2 class="govuk-heading-m govuk-!-margin-top-0">Please provide the details of this previous application</h2>
+                                        <label class="govuk-label" for="previousApplicationNumber">
+                                            Previous application number
+                                        </label>
+                                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='previousApplicationNumber')"  />
+                                        <input class="govuk-input"
+                                               type="text"
+                                               id="previousApplicationNumber"
+                                               th:field="*{__previousApplicationNumber__}"
+                                               required="required"
+                                               th:errorclass="govuk-input--error"
+                                               th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
+                                    </div>
+                                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__previousApplicationTitle__}')} ? 'govuk-form-group--error'">
+                                        <label class="govuk-label" for="previousApplicationTitle">
+                                            Previous application title
+                                        </label>
+                                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='previousApplicationTitle')" />
+                                        <input class="govuk-input"
+                                               type="text"
+                                               id="previousApplicationTitle"
+                                               th:field="*{__previousApplicationTitle__}"
+                                               required="required"
+                                               th:errorclass="govuk-input--error"
+                                               th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
+                                    </div>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           id="resubmission-no"
+                                           th:field="*{__resubmission__}"
+                                           value="false"
                                            required="required"
-                                           th:errorclass="govuk-input--error"
-                                           th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
+                                           th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                                    <label for="resubmission-no"
+                                           class="govuk-label govuk-radios__label">
+                                        No
+                                    </label>
                                 </div>
                             </div>
-
-                            <div class="govuk-radios__item">
-                                <input type="radio"
-                                       class="govuk-radios__input"
-                                       id="resubmission-no"
-                                       th:field="*{__resubmission__}"
-                                       value="false"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
-                                <label for="resubmission-no"
-                                       class="govuk-label govuk-radios__label">
-                                    No
-                                </label>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
+                        </fieldset>
+                    </div>
+                </th:block>
 
                 <th:block th:if="${model.procurementCompetition}">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__competitionReferralSource__}')} ? 'govuk-form-group--error'">
