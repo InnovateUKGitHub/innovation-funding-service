@@ -998,7 +998,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public CompetitionTypeEnum getCompetitionTypeEnum() {
-        return getCompetitionType().getCompetitionTypeEnum();
+        return ofNullable(getCompetitionType()).map(CompetitionType::getCompetitionTypeEnum).orElse(null);
     }
 
     @Override
