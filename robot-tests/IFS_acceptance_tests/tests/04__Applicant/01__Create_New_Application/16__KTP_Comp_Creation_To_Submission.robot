@@ -399,14 +399,17 @@ The KTA can see the dashboard with assesments and applications tiles after accep
     Then the user should see the element      jQuery = h2:contains("Assessments")
     And the user should see the element       jQuery = h2:contains("Applications")
 
-The KTA can see their profile page in both Assessments and Applications
+The KTA can see their profile page from Assessments screen
     [Documentation]  IFS-8312  IFS-8325
     Given the user clicks the button/link     jQuery = h2:contains("Assessments")
     When the user clicks the button/link      link = Profile
     Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
     And the user clicks the button/link       link = Dashboard
-    Then the user clicks the button/link      jQuery = h2:contains("Applications")
-    And the user clicks the button/link       link = Profile
+
+The KTA can see their profile page from Applications screen
+    [Documentation]  IFS-8312  IFS-8325
+    Given the user clicks the button/link     jQuery = h2:contains("Applications")
+    When the user clicks the button/link      link = Profile
     Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
     And the user clicks the button/link       link = Dashboard
 
