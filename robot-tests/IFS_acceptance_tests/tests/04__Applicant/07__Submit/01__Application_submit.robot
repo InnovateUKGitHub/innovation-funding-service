@@ -117,7 +117,7 @@ Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]
     When the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    Then the user should see the element  jQuery = .in-progress li:contains("${application_rto_name}") .msg-progress:contains("Application submitted")
+    Then the user should see the element  jQuery = .in-progress li:contains("${application_rto_name}") .msg-progress:contains("Submitted")
     And the user clicks the button/link   link = ${application_rto_name}
     And the user should see the element   link = View application
     And the user should see the element   link = Print application
