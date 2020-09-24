@@ -27,9 +27,9 @@ public class GrantClaimMaximumController {
         return grantClaimMaximumService.getGrantClaimMaximumById(id).toGetResponse();
     }
 
-    @GetMapping("/get-for-competition-type/{competitionTypeId}")
-    public RestResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(@PathVariable("competitionTypeId") final long competitionTypeId) {
-        return grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionTypeId).toGetResponse();
+    @PostMapping("/revert-to-default/{competitionId}")
+    public RestResult<Set<Long>> revertToDefault(@PathVariable("competitionId") final long competitionId) {
+        return grantClaimMaximumService.revertToDefault(competitionId).toGetResponse();
     }
 
     @PostMapping("/")

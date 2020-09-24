@@ -44,7 +44,7 @@ public interface UserRestService {
 
     RestResult<UserResource> findUserByEmail(String email);
 
-    Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(long applicationId);
+    RestResult<List<ProcessRoleResource>> findAssignableProcessRoles(long applicationId);
 
     RestResult<Boolean> userHasApplicationForCompetition(long userId, long competitionId);
 
