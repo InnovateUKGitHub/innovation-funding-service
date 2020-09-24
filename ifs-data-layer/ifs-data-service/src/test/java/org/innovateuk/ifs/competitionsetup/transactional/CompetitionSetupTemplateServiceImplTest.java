@@ -140,6 +140,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(grantBuilder.sections(any())).thenReturn(newArrayList(aSection()));
+        when(grantBuilder.initialiseFinanceTypes(any())).thenReturn(competition);
+        when(grantBuilder.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
@@ -169,6 +171,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(grantTermsAndConditionsRepositoryMock.getLatestForFundingType(FundingType.LOAN)).thenReturn(fundingTypeTerms);
         when(programmeTemplate.sections()).thenReturn(newArrayList(aSection()));
         when(loanBuilder.sections(any())).thenReturn(newArrayList(aSection()));
+        when(loanBuilder.initialiseFinanceTypes(any())).thenReturn(competition);
+        when(loanBuilder.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(competitionTypeRepositoryMock.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
