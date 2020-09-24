@@ -14,6 +14,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -72,6 +74,10 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Test
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
+
+        OrganisationResource organisationResource = newOrganisationResource()
+                .withId(ORGANISATION_ID)
+                .build();
 
         when(formPopulator.populateForm(APPLICATION_ID, ORGANISATION_ID)).thenReturn(new YourProjectCostsForm());
 
@@ -147,6 +153,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Test
     public void complete_error() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
+
         doAnswer((invocationOnMock) -> {
             ((ValidationHandler) invocationOnMock.getArguments()[2]).addAnyErrors(new ValidationMessages(fieldError("requestingFunding", "something", "error")));
             return Void.class;

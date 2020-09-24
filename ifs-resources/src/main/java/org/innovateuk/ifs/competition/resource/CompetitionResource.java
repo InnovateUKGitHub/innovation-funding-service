@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
@@ -65,6 +62,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Integer academicGrantPercentage;
     private Long competitionType;
     private String competitionTypeName;
+    private CompetitionTypeEnum competitionTypeEnum;
     private Long executive;
     private String executiveName;
     private Long leadTechnologist;
@@ -137,12 +135,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isH2020() {
-        return H2020_TYPE_NAME.equals(competitionTypeName);
+        return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
     }
 
     @JsonIgnore
     public boolean isExpressionOfInterest() {
-        return EXPRESSION_OF_INTEREST_TYPE_NAME.equals(competitionTypeName);
+        return competitionTypeEnum == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
     }
 
     @JsonIgnore
@@ -336,6 +334,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return competitionTypeEnum;
+    }
+
+    public void setCompetitionTypeEnum(CompetitionTypeEnum competitionTypeEnum) {
+        this.competitionTypeEnum = competitionTypeEnum;
     }
 
     @JsonIgnore

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.interceptors;
 
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.navigation.PageHistoryService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * Have the menu links globally available for each controller.
@@ -45,11 +47,12 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
+            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             addUserDashboardLink(request, modelAndView);
             addUserProfileLink(request, modelAndView);
             addLogoutLink(modelAndView, logoutUrl);
-            addShowManageUsersAttribute(request, modelAndView);
-            addShowManageAssessorsAttribute(request, modelAndView);
+            addShowManageUsersAttribute(user, modelAndView);
+            addShowManageAssessorsAttribute(user, modelAndView);
             Optional.of(handler)
                     .filter(HandlerMethod.class::isInstance)
                     .map(HandlerMethod.class::cast)
@@ -68,30 +71,30 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private Optional<String> getUserProfileUrl(HttpServletRequest request) {
-        String contextPath = request.getContextPath();
+        UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
+        if (authentication != null) {
+            UserResource user = authentication.getDetails();
 
-        switch (contextPath) {
-            case "/assessment":
+            if (user.hasAnyRoles(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER)) {
                 return Optional.of(ASSESSOR_PROFILE_URL);
-            case "":
-            case "/project-setup":
+            } else if (user.hasAnyRoles(APPLICANT, MONITORING_OFFICER)) {
                 return Optional.of(USER_PROFILE_URL);
-            default:
+            } else {
                 return Optional.empty();
+            }
         }
+        return Optional.empty();
     }
 
-    private void addShowManageUsersAttribute(HttpServletRequest request, ModelAndView modelAndView) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT));
+    private void addShowManageUsersAttribute(UserResource user, ModelAndView modelAndView) {
+        modelAndView.getModelMap().addAttribute(SHOW_MANAGE_USERS_LINK_ATTR, user != null && user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT));
     }
 
-    private void addShowManageAssessorsAttribute(HttpServletRequest request, ModelAndView modelAndView) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    private void addShowManageAssessorsAttribute(UserResource user, ModelAndView modelAndView) {
         modelAndView.getModelMap().addAttribute(SHOW_MANAGE_ASSESSORS_LINK_ATTR,
                         user != null &&
-                        !user.hasAnyRoles(Role.IFS_ADMINISTRATOR, Role.SUPPORT) &&
-                        user.hasAnyRoles(Role.COMP_ADMIN, Role.PROJECT_FINANCE));
+                        !user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT) &&
+                        user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE));
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
@@ -91,37 +90,26 @@ public class CompetitionInitialiser {
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {
-
-        List<ProjectStages> stages = asList(
-                createProjectSetupStage(competition, PROJECT_DETAILS),
-                createProjectSetupStage(competition, PROJECT_TEAM),
-                createProjectSetupStage(competition, MONITORING_OFFICER),
-                createProjectSetupStage(competition, FINANCE_CHECKS),
-                createProjectSetupStage(competition, SPEND_PROFILE),
-                createProjectSetupStage(competition, PROJECT_SETUP_COMPLETE)
-        );
-
-        competition.setProjectStages(stages);
+        addProjectSetupStage(competition, PROJECT_DETAILS);
+        addProjectSetupStage(competition, PROJECT_TEAM);
+        addProjectSetupStage(competition, MONITORING_OFFICER);
+        addProjectSetupStage(competition, FINANCE_CHECKS);
+        addProjectSetupStage(competition, SPEND_PROFILE);
+        addProjectSetupStage(competition, PROJECT_SETUP_COMPLETE);
     }
 
     private void addDefaultProjectSetupColumns(Competition competition) {
-
-        List<ProjectStages> stages = asList(
-                createProjectSetupStage(competition, PROJECT_DETAILS),
-                createProjectSetupStage(competition, PROJECT_TEAM),
-                createProjectSetupStage(competition, DOCUMENTS),
-                createProjectSetupStage(competition, MONITORING_OFFICER),
-                createProjectSetupStage(competition, BANK_DETAILS),
-                createProjectSetupStage(competition, FINANCE_CHECKS),
-                createProjectSetupStage(competition, SPEND_PROFILE),
-                createProjectSetupStage(competition, GRANT_OFFER_LETTER)
-        );
-
-        competition.setProjectStages(stages);
-
+        addProjectSetupStage(competition, PROJECT_DETAILS);
+        addProjectSetupStage(competition, PROJECT_TEAM);
+        addProjectSetupStage(competition, DOCUMENTS);
+        addProjectSetupStage(competition, MONITORING_OFFICER);
+        addProjectSetupStage(competition, BANK_DETAILS);
+        addProjectSetupStage(competition, FINANCE_CHECKS);
+        addProjectSetupStage(competition, SPEND_PROFILE);
+        addProjectSetupStage(competition, GRANT_OFFER_LETTER);
     }
 
-    private ProjectStages createProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {
-        return new ProjectStages(competition, projectSetupStage);
+    private void addProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {
+        competition.addProjectStage(new ProjectStages(competition, projectSetupStage));
     }
 }
