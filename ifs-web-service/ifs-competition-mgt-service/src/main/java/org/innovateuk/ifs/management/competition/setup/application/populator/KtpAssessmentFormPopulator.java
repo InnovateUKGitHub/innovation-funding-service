@@ -34,8 +34,6 @@ public class KtpAssessmentFormPopulator implements CompetitionSetupSubsectionFor
                     (objectId.get())).getSuccess();
             competitionSetupForm.setQuestion(questionResource);
 
-//            copied and pasted
-//            add back in but do it better
             competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
                 GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
                 competitionSetupForm.getGuidanceRows().add(grvm);

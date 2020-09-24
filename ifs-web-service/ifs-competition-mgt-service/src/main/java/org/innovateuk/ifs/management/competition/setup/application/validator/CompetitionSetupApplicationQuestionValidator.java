@@ -36,7 +36,6 @@ public class CompetitionSetupApplicationQuestionValidator {
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
-//    probably revert now
     public void validate(QuestionForm form, BindingResult bindingResult, long questionId, CompetitionResource competitionResource) {
         if (!competitionResource.isKtp()) {
             validateRadioButtons(form, bindingResult, competitionResource);

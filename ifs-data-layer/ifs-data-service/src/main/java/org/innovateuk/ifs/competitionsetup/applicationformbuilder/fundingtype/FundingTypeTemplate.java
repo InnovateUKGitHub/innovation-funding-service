@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
+package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
