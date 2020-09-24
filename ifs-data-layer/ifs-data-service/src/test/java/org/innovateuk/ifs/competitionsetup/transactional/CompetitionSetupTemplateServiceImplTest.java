@@ -15,7 +15,6 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.Lo
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.ProgrammeTemplate;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
-import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.junit.Before;
@@ -59,9 +58,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private FileTypeRepository fileTypeRepository;
-
-    @Mock
-    private CompetitionInitialiser competitionInitialiser;
 
     @Mock
     private ProgrammeTemplate programmeTemplate;

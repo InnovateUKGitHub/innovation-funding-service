@@ -10,14 +10,13 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
-import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
@@ -65,9 +64,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
-    private CompetitionInitialiser competitionInitialiser;
-
-    @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
@@ -107,14 +103,13 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         setDefaultProjectDocuments(competition);
 
-        competitionInitialiser.initialiseFinanceTypes(competition);
-        competitionInitialiser.initialiseProjectSetupColumns(competition);
-
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
         FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
 
         List<SectionBuilder> sectionBuilders = template.sections();
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
+        competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
+        competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
 
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
 

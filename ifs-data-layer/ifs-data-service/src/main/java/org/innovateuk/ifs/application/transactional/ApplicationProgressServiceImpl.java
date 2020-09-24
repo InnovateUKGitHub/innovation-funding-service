@@ -9,14 +9,12 @@ import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
-import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
@@ -79,7 +77,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         long organisations = organisationRepository.countDistinctByProcessRolesApplicationId(application.getId());
         long questionsWithMultipleStatuses = questionRepository.countQuestionsWithMultipleStatuses(competitionId);
         long questionsWithSingleStatus = questionRepository.countQuestionsWithSingleStatus(competitionId);
-        long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrueAndQuestionQuestionSetupTypeNotIn(application.getId(), singleton(QuestionSetupType.KTP_ASSESSMENT));
+        long completedQuestionStatuses = questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(application.getId());
         long totalQuestions = questionsWithMultipleStatuses * organisations + questionsWithSingleStatus;
         return percentage(completedQuestionStatuses, totalQuestions);
     }
