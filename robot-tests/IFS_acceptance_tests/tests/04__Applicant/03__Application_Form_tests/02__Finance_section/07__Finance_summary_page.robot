@@ -167,7 +167,6 @@ Support User can see the read only finance summary
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
     And The user clicks the button/link       link = View finances
-    #Here too
     Then The finance summary table in Your project Finances has correct values for lead  6,260,941,967  21.21%  1,319,945,791  8,000,000  4,932,996,176
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
