@@ -28,8 +28,8 @@ Your details: Server-side validations
     When the user enters the details and clicks the create account  O'Brian Elliot-Murray  O'Dean Elliot-Manor  ${valid_email}  ${blacklisted_password}
     Then the user should see a field and summary error              Password is too weak.
     When the user enters the details and clicks the create account  !@£$  &*(^  ${valid_email}  ${correct_password}
-    Then the user should see a field and summary error              Invalid first name.
-    And the user should see a field and summary error               Invalid last name.
+    Then the user should see a field and summary error              Please enter a valid first name.
+    And the user should see a field and summary error               Please enter a valid last name.
     When the user enters text to a text field                       id = firstName    ${EMPTY}
     And the user enters text to a text field                        id = lastName    ${EMPTY}
     And the user enters text to a text field                        id = phoneNumber    ${EMPTY}

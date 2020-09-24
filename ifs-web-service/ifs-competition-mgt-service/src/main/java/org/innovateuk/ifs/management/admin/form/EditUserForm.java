@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.admin.form;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -14,6 +15,18 @@ import javax.validation.constraints.Size;
 /**
  * Form to capture details of the edited User
  */
+@FieldComparison(
+        firstField = "email",
+        secondField = "ktpRole",
+        message = "{validation.kta.invite.email.invalid}",
+        predicate = EmailAddressValidator.KtpPredicateProvider.class
+)
+@FieldComparison(
+        firstField = "email",
+        secondField = "ktpRole",
+        message = "{validation.standard.email.format}",
+        predicate = EmailAddressValidator.NonKtpPredicateProvider.class
+)
 public class EditUserForm extends BaseBindingResultTarget {
 
     public interface InternalUserFieldsGroup {
@@ -21,22 +34,21 @@ public class EditUserForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.standard.firstname.required}", groups = InternalUserFieldsGroup.class)
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}", groups = InternalUserFieldsGroup.class),
-            @Size(max=70, message="{validation.standard.firstname.length.max}", groups = InternalUserFieldsGroup.class),
+            @Size(min=2, message="{validation.invite.firstname.length.min}", groups = InternalUserFieldsGroup.class),
+            @Size(max=70, message="{validation.invite.firstname.length.max}", groups = InternalUserFieldsGroup.class),
     })
     private String firstName;
 
     @NotBlank(message = "{validation.standard.lastname.required}", groups = InternalUserFieldsGroup.class)
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}", groups = InternalUserFieldsGroup.class),
-            @Size(max=70, message="{validation.standard.lastname.length.max}", groups = InternalUserFieldsGroup.class),
+            @Size(min=2, message="{validation.invite.lastname.length.min}", groups = InternalUserFieldsGroup.class),
+            @Size(max=70, message="{validation.invite.lastname.length.max}", groups = InternalUserFieldsGroup.class),
     })
     private String lastName;
 
     @NotBlank(message = "{validation.standard.emailinternal.required}")
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @Size(max = 254, message = "{validation.standard.email.length.max}")
+    @Size(max = 254, message = "{validation.invite.email.length.max}")
     private String email;
 
     private Role role;
@@ -75,6 +87,10 @@ public class EditUserForm extends BaseBindingResultTarget {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isKtpRole() {
+        return Role.KNOWLEDGE_TRANSFER_ADVISER == role;
     }
 
     @Override

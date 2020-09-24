@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.testdata.builders.*;
@@ -149,17 +150,17 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
             List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
 
             createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
-                    formInputs, "research category", "Feasibility studies");
+                    formInputs, FormInputType.ASSESSOR_RESEARCH_CATEGORY, "Feasibility studies");
 
             createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
-                    formInputs, "scope", "true");
+                    formInputs, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE, "true");
 
             createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
-                    formInputs, "Feedback",
+                    formInputs, FormInputType.TEXTAREA,
                     "This is the " + question.getShortName().toLowerCase() + " feedback");
 
             createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
-                    formInputs, "score", "7");
+                    formInputs, FormInputType.ASSESSOR_SCORE, "7");
         });
     }
 
@@ -168,11 +169,11 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                                                              String assessorEmail,
                                                              QuestionResource question,
                                                              List<FormInputResource> formInputs,
-                                                             String description,
+                                                             FormInputType formInputType,
                                                              String value) {
 
         Optional<FormInputResource> assessorFormInput = simpleFindFirst(formInputs, fi ->
-                fi.getDescription().contains(description));
+                fi.getType() == formInputType  && fi.getScope() == FormInputScope.ASSESSMENT);
 
         assessorFormInput.ifPresent(r ->
                 createAssessorResponse(
@@ -180,8 +181,8 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                         applicationName,
                         assessorEmail,
                         question.getShortName(),
-                        description,
-                        description.equals("research category"),
+                        formInputType,
+                        formInputType == FormInputType.ASSESSOR_RESEARCH_CATEGORY,
                         value));
     }
 
@@ -230,7 +231,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 line.applicationName,
                 line.assessorEmail,
                 line.shortName,
-                line.description,
+                line.formInputType,
                 line.isResearchCategory,
                 line.value);
     }
@@ -239,7 +240,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                                         String applicationName,
                                         String assessorEmail,
                                         String shortName,
-                                        String description,
+                                        FormInputType formInputType,
                                         boolean isResearchCategory,
                                         String value) {
 
@@ -247,7 +248,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 applicationName,
                 assessorEmail,
                 shortName,
-                description,
+                formInputType,
                 isResearchCategory,
                 value).build();
     }

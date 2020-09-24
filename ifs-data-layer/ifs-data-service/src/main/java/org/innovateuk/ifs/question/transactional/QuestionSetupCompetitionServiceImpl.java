@@ -16,7 +16,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +32,7 @@ import static java.util.Comparator.comparing;
 import static org.hibernate.Hibernate.initialize;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.researchCategory;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -54,7 +53,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private GuidanceRowMapper guidanceRowMapper;
 
     @Autowired
-    private QuestionSetupTemplateService questionSetupTemplateService;
+    private QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
 
     @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
@@ -160,7 +159,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccess(competition -> questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
+                .andOnSuccess(competition -> questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition))
                 .andOnSuccess(this::mapQuestionToSuperQuestionResource);
     }
 
@@ -175,7 +174,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     @Override
     @Transactional
     public ServiceResult<Void> delete(long questionId) {
-        return questionSetupTemplateService.deleteQuestionInCompetition(questionId);
+        return questionSetupAddAndRemoveService.deleteQuestionInCompetition(questionId);
     }
 
     @Override
@@ -356,17 +355,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private ServiceResult<Question> saveNewResearchCategoryQuestionForCompetition(Competition competition) {
         return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), PROJECT_DETAILS
                 .getName()), notFoundError(Section.class)).andOnSuccessReturn(section -> {
-            Question question = new Question();
-            question.setAssignEnabled(false);
-            question.setDescription("Description not used");
-            question.setMarkAsCompletedEnabled(true);
-            question.setName(RESEARCH_CATEGORY.getShortName());
-            question.setShortName(RESEARCH_CATEGORY.getShortName());
-            question.setCompetition(competition);
+            Question question = researchCategory().build();
             question.setSection(section);
-            question.setType(LEAD_ONLY);
-            question.setQuestionSetupType(RESEARCH_CATEGORY);
-
+            question.setCompetition(competition);
             Question createdQuestion = questionRepository.save(question);
             return questionPriorityOrderService.prioritiseResearchCategoryQuestionAfterCreation(createdQuestion);
         });
