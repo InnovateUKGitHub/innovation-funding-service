@@ -82,7 +82,7 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
@@ -136,7 +136,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionSetupService competitionSetupService;
     protected QuestionSetupService questionSetupService;
     protected QuestionSetupCompetitionService questionSetupCompetitionService;
-    protected QuestionSetupTemplateService questionSetupTemplateService;
+    protected QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
     protected PublicContentService publicContentService;
     protected CompetitionSetupFinanceService competitionSetupFinanceService;
     protected PublicContentRepository publicContentRepository;
@@ -300,7 +300,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
         questionSetupCompetitionService = serviceLocator.getBean(QuestionSetupCompetitionService.class);
-        questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
+        questionSetupAddAndRemoveService = serviceLocator.getBean(QuestionSetupAddAndRemoveService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         documentsService = serviceLocator.getBean(DocumentsService.class);
