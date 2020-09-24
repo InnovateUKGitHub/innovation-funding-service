@@ -34,6 +34,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("milestones").description("List of milestone ids").optional(),
             fieldWithPath("competitionType").description("the competition type this competition belongs to").optional(),
             fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to").optional(),
+            fieldWithPath("competitionTypeEnum").description("the enum of the competition type this competition belongs to").optional(),
             fieldWithPath("executive").description("the user id of the competition executive").optional(),
             fieldWithPath("executiveName").description("the name of the competition executive").optional(),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist").optional(),
