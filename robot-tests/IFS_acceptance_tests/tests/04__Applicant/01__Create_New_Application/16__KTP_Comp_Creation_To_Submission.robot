@@ -39,6 +39,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8095 Content improvement for KTA journey
 ...
+...            IFS-8318 Opens in new window link missing on select a knowledge base organisation screen
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -203,7 +205,7 @@ New lead applicant starts KTP competition
     Then the user select the competition and starts application     ${ktpCompetitionName}
 
 Select a knowledge base organisation validations and fields
-    [Documentation]  IFS-7841
+    [Documentation]  IFS-7841  IFS-8318
     Given The user clicks the button/link                           link = Continue and create an account
     When the user clicks the button/link                            jQuery = button:contains("Confirm")
     Then the user should see a field and summary error              ${selectOrgValidation}
@@ -760,6 +762,8 @@ the user should see knowledge based organisation fields
     the user should see the element     jQuery = span:contains("Select your knowledge base organisation.")
     the user should see the element     jQuery = span:contains("Create an account")
     the user should see the element     jQuery = label:contains("Find your organisation")
+    the user should see the element     link = checking your organisation's alternative name (opens in a new window)
+    the user should see the element     link = enter its details manually
 
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
