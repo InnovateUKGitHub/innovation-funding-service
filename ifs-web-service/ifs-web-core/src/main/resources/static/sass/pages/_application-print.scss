@@ -58,7 +58,8 @@
     }
   }
 
-  .project-cost-breakdown {
+  .project-cost-breakdown,
+  .finance-summary {
     table {
       td,
       th {
@@ -68,8 +69,8 @@
       td,
       th,
       small {
-        font-size: 10px;
-        line-height: 12px;
+        font-size: 12px;
+        line-height: 14px;
       }
     }
   }
@@ -177,7 +178,8 @@
       page-break-before: always;
     }
 
-    .project-cost-breakdown {
+    .project-cost-breakdown,
+    .finance-summary {
       table {
         td,
         th {
@@ -187,8 +189,8 @@
         td,
         th,
         small {
-          font-size: 10px;
-          line-height: 12px;
+          font-size: 12px;
+          line-height: 14px;
         }
       }
     }
