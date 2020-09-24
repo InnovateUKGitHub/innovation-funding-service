@@ -43,20 +43,17 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             "JOIN Profile profile ON profile.id = user.profileId " +
             "JOIN user.roles roles " +
             "JOIN user.roleProfileStatuses roleStatuses " +
-            "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
-            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
-            "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
-            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
-            "GROUP BY user.id ";
-
-    String KTP_ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME =
-            "FROM User user " +
-            "JOIN Profile profile ON profile.id = user.profileId " +
-            "JOIN user.roles roles " +
-            "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles = org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER " +
+            "JOIN Competition competition ON competition.id = :competitionId " +
+            "WHERE (" +
+                    "competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
+                    "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
+                    "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+                    "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE " +
+            ") OR ( " +
+                    "competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
+                    "AND roles = org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER " +
+            ")" +
+            "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ")" +
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
             "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
             "GROUP BY user.id ";
@@ -70,11 +67,4 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
 
     @Query("SELECT user.id " + ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
     List<Long> findAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorNameFilter") String assessorNameFilter);
-
-    @Query("SELECT user " + KTP_ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
-    Page<User> findKtpAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId,
-                                                             @Param("assessorNameFilter") String assessorNameFilter, Pageable pageable);
-
-    @Query("SELECT user.id " + KTP_ASSESSORS_WITH_COMPETITION_AND_ASSESSOR_NAME)
-    List<Long> findKtpAssessorsByCompetitionAndAssessorNameLike(@Param("competitionId") long competitionId, @Param("assessorNameFilter") String assessorNameFilter);
 }
