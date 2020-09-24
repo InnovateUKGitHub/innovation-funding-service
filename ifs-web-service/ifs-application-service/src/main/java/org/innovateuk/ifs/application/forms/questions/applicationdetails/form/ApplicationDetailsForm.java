@@ -19,7 +19,7 @@ import java.util.function.BiPredicate;
  * Form for application details.
  */
 @FieldRequiredIf(required = "startDate", argument = "ktpCompetition", predicate = false, message = "{validation.project.start.date.is.valid.date}")
-@FieldRequiredIf(required = "resubmission", argument = "canResubmit", predicate = true, message = "this is bs")
+@FieldRequiredIf(required = "resubmission", argument = "canResubmit", predicate = true, message = "{validation.application.must.indicate.resubmission.or.not}")
 @FieldComparison(
         firstField = "startDate",
         secondField = "ktpCompetition",
