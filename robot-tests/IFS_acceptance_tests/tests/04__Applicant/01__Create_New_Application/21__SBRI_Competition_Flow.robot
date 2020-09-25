@@ -81,7 +81,7 @@ Awaiting assessment status should not display for SBRI submitted applications
     [Documentation]  IFS-7314
     When log in as a different user              &{sbriLeadCredentials}
     Then the user should not see the element     jQuery = .in-progress li:contains("${sbriType1ApplicationTitle}") .msg-deadline-waiting:contains("Awaiting assessment")
-    And the user should see the element          jQuery = .in-progress li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Application submitted")
+    And the user should see the element          jQuery = .in-progress li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Submitted")
 
 Innovation Lead should only see key statistics and competition navigation links related to applications when the SBRI competition is open
     [Documentation]  IFS-7315

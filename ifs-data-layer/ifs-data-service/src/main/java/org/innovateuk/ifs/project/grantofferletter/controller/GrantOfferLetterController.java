@@ -187,4 +187,10 @@ public class GrantOfferLetterController {
             @PathVariable long projectId) {
         return grantOfferLetterService.importGrantOfferLetter(projectId).toPostResponse();
     }
+
+    @DeleteMapping(value = "/{projectId}/grant-offer/reset")
+    public RestResult<Void> resetGrantOfferLetter(
+            @PathVariable long projectId) {
+        return grantOfferLetterService.resetGrantOfferLetter(projectId).toDeleteResponse();
+    }
 }
