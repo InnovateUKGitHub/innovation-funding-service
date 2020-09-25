@@ -29,10 +29,10 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             questionSetupType);
     long countByCompetitionId(Long competitionId);
     default long countQuestionsWithMultipleStatuses(long competitionId) {
-        return countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, true);
+        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, true);
     }
     default long countQuestionsWithSingleStatus(long competitionId) {
-        return countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
+        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
     }
-    long countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
+    long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
 }

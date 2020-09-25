@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
-public class KtpBuilder implements FundingTypeTemplate {
+public class KtpTemplate implements FundingTypeTemplate {
 
     private static final Integer MAXIMUM_ASSESSOR_SCORE = 10;
 
@@ -41,9 +41,9 @@ public class KtpBuilder implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
-      competitionTypeSections.addAll(newArrayList(
-                ktpAssessmentQuestions()
-                        .withQuestions(ktpDefaultQuestions()))
+      competitionTypeSections.add(
+              ktpAssessmentSection()
+                        .withQuestions(ktpDefaultQuestions())
       );
 
       return competitionTypeSections;
@@ -56,8 +56,8 @@ public class KtpBuilder implements FundingTypeTemplate {
     }
 
     @Override
-    public Competition initialiseProjectSetupColumns(Competition competition) {
-        return commonBuilders.addDefaultProjectSetupColumns(competition);
+    public Competition overrideTermsAndConditions(Competition competition) {
+        return commonBuilders.overrideTermsAndConditions(competition);
     }
 
     public static List<QuestionBuilder> ktpDefaultQuestions() {
@@ -69,7 +69,7 @@ public class KtpBuilder implements FundingTypeTemplate {
         );
     }
 
-    public static SectionBuilder ktpAssessmentQuestions() {
+    public static SectionBuilder ktpAssessmentSection() {
         return aSection()
                 .withName("Score Guidance")
                 .withType(SectionType.KTP_ASSESSMENT);

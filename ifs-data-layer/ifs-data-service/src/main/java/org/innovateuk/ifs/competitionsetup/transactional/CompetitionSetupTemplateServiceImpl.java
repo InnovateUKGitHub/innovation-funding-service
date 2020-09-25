@@ -110,11 +110,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
+        competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
 
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
 
         template.copyTemplatePropertiesToCompetition(competition);
-        overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
@@ -173,14 +173,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 "<li>legible at 100% magnification</li>\n" +
                 "<li>less than 10MB in file size</li></ul>",
                 false, competition.isGrant(), fileTypes));
-    }
-
-    private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
-        if (populatedCompetition.getFundingType() != FundingType.GRANT) {
-            GrantTermsAndConditions grantTermsAndConditions =
-                    grantTermsAndConditionsRepository.getLatestForFundingType(populatedCompetition.getFundingType());
-            populatedCompetition.setTermsAndConditions(grantTermsAndConditions);
-        }
     }
 
     private Competition setDefaultAssessorPayAndCountAndAverageAssessorScore(Competition competition) {
