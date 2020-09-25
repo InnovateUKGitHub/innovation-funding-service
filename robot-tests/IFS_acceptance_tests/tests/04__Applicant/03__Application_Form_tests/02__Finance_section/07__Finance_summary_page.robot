@@ -167,7 +167,7 @@ Support User can see the read only finance summary
     Given the user navigates to the finances of the application
     When the user should see the element      jQuery = .project-cost-breakdown tbody tr:nth-of-type(1) th:contains("View finances")
     And The user clicks the button/link       link = View finances
-    Then The finance summary table in Your project Finances has correct values for lead  6,260,941,968  21.21%  1,319,945,791  8,000,000  4,932,996,176
+    Then The finance summary table in Your project Finances has correct values for lead  6,260,941,967  21.21%  1,319,945,791  8,000,000  4,932,996,176
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
@@ -266,7 +266,7 @@ IFS Admin views the finance summary
     [Setup]  log in as a different user     &{ifs_admin_user_credentials}
     Given the user navigates to the finances of the application
     When the user clicks the button/link    link = View finances
-    Then the finance summary table in Your project Finances has correct values for lead    6,260,941,968  21.21%  1,319,945,791  8,000,000  4,932,996,176
+    Then the finance summary table in Your project Finances has correct values for lead    6,260,941,967  21.21%  1,319,945,791  8,000,000  4,932,996,176
 
 A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
     [Documentation]  IFS-3609
@@ -281,16 +281,16 @@ Custom suite setup
     Connect to database  @{database}
 
 the finance summary calculations should be correct
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£402,797")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("£402,796")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("116,596")
     the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("4,936")
-    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("281,265")
+    the user should see the element  jQuery = .finance-summary tbody tr:last-of-type:contains("281,264")
 
 the finance Funding breakdown calculations should be correct
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£200,903")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationLudlowName}") + td:contains("£200,903")
     the user should see the element  jQuery = .project-cost-breakdown th:contains("${organisationEggsName}") + td:contains("£990")
-    the user should see the element  jQuery = .project-cost-breakdown th:contains("Total") + td:contains("£402,797")
+    the user should see the element  jQuery = .project-cost-breakdown th:contains("Total") + td:contains("£402,796")
 
 the finance summary table in Your project Finances has correct values for lead
     [Arguments]  ${project_costs}  ${grant}  ${funding_sought}  ${other_funding}  ${contribution}

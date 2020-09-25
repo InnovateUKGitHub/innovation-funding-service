@@ -30,7 +30,7 @@
     }
 
     margin-top: 10px;
-    padding: 15px 0 15px 30px;
+    padding: 15px 20px 15px 30px;
     background-color: govuk-colour("white");
     border: 1px solid $govuk-border-colour;
     overflow: auto;
@@ -102,6 +102,10 @@
     justify-content: flex-end;
     align-items: center;
     margin: 0;
+
+    >:nth-child(2), >:only-child{
+      padding-right: 0;
+    }
   }
 
   .reopen-application-link {
@@ -285,7 +289,11 @@
   .status-and-action {
     display: flex;
     flex-direction: column;
-    margin-right: 20px;
+    width: 25%;
+
+    @include media-down(mobile) {
+      margin-right: 0;
+    }
 
     p {
       &.msg-progress {
@@ -312,12 +320,31 @@
 
     .status{
       width: 42%;
+
+      @include media-down(mobile) {
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     .status-msg{
 
       &:first-child{
         border-right: 1px dashed $govuk-border-colour;
+
+        @include media-down(mobile) {
+          border-bottom: 1px dashed $govuk-border-colour;
+          border-right: none;
+          padding-bottom: 10px;
+          text-align: right;
+          padding-right: 0;
+        }
+      }
+
+      &:nth-child(2){
+        @include media-down(mobile) {
+          margin-top:10px;
+        }
       }
     }
   }
