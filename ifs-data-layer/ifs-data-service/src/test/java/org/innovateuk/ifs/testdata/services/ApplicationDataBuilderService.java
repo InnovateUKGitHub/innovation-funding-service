@@ -386,7 +386,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         if (line.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
-        System.out.println("FUCK ME WORK IS BORING" + line.title);
         return baseBuilder.build();
     }
 
