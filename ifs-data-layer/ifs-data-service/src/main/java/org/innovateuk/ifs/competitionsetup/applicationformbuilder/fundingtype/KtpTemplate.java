@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
@@ -46,7 +47,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withQuestions(ktpDefaultQuestions())
       );
 
-      return competitionTypeSections;
+      return overrideApplicationQuestionFormInputs(competitionTypeSections);
     }
 
     @Override
@@ -60,7 +61,24 @@ public class KtpTemplate implements FundingTypeTemplate {
         return commonBuilders.overrideTermsAndConditions(competition);
     }
 
-    public static List<QuestionBuilder> ktpDefaultQuestions() {
+    private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {
+        Optional<SectionBuilder> applicationQuestionSection = sections.stream()
+                .filter(sectionBuilder -> sectionBuilder.getName() == "Application questions")
+                .findFirst();
+
+        applicationQuestionSection.ifPresent(sectionBuilder -> sectionBuilder.getQuestions().forEach(questionBuilder -> {
+            questionBuilder.getFormInputs().forEach(formInputBuilder -> {
+                if (formInputBuilder.getScope() == FormInputScope.ASSESSMENT) {
+                    formInputBuilder.withActive(false);
+                }
+            });
+        }));
+
+        return sections;
+    }
+
+
+    private static List<QuestionBuilder> ktpDefaultQuestions() {
         return newArrayList(
                 impact(),
                 innovation(),
