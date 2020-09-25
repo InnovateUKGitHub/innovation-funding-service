@@ -4,7 +4,9 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -42,6 +44,9 @@ public class CommonBuilders {
 
     @Autowired
     private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
+
+    @Autowired
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     /*
     Tech debt.
@@ -359,7 +364,7 @@ public class CommonBuilders {
         );
     }
 
-    public Competition addDefaultProjectSetupColumns(Competition competition) {
+    public static Competition addDefaultProjectSetupColumns(Competition competition) {
         addProjectSetupStage(competition, PROJECT_DETAILS);
         addProjectSetupStage(competition, PROJECT_TEAM);
         addProjectSetupStage(competition, DOCUMENTS);
@@ -371,7 +376,7 @@ public class CommonBuilders {
         return competition;
     }
 
-    public void addProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {
+    public static void addProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {
         competition.addProjectStage(new ProjectStages(competition, projectSetupStage));
     }
 
@@ -381,6 +386,13 @@ public class CommonBuilders {
                         competitionFinanceRowsTypesRepository.save(
                                 new CompetitionFinanceRowTypes(competition, financeRowTypes.get(i), i)))
         );
+        return competition;
+    }
+
+    public Competition overrideTermsAndConditions(Competition competition) {
+        GrantTermsAndConditions grantTermsAndConditions =
+                grantTermsAndConditionsRepository.getLatestForFundingType(competition.getFundingType());
+        competition.setTermsAndConditions(grantTermsAndConditions);
         return competition;
     }
 }

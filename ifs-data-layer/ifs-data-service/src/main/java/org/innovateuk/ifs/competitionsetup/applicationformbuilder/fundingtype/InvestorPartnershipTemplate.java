@@ -18,7 +18,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
-public class InvestorPartnershipBuilder implements FundingTypeTemplate {
+public class InvestorPartnershipTemplate implements FundingTypeTemplate {
 
     private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
 
@@ -41,11 +41,6 @@ public class InvestorPartnershipBuilder implements FundingTypeTemplate {
         return commonBuilders.saveFinanceRows(competition, types);
     }
 
-    @Override
-    public Competition initialiseProjectSetupColumns(Competition competition) {
-        return commonBuilders.addDefaultProjectSetupColumns(competition);
-    }
-
     private List<SectionBuilder> overrideTermsAndConditionsTerminology(List<SectionBuilder> sections) {
         Optional<SectionBuilder> termsSection = sections.stream()
                 .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.TERMS_AND_CONDITIONS)
@@ -58,6 +53,11 @@ public class InvestorPartnershipBuilder implements FundingTypeTemplate {
         }));
 
         return termsSection.map(Arrays::asList).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public Competition overrideTermsAndConditions(Competition competition) {
+        return commonBuilders.overrideTermsAndConditions(competition);
     }
 
 }

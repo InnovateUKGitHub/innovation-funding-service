@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 @Component
-public class LoanBuilder implements FundingTypeTemplate {
+public class LoanTemplate implements FundingTypeTemplate {
 
     @Autowired
     private CommonBuilders commonBuilders;
@@ -23,11 +22,6 @@ public class LoanBuilder implements FundingTypeTemplate {
     @Override
     public FundingType type() {
         return FundingType.LOAN;
-    }
-
-    @Override
-    public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
-        return competitionTypeSections;
     }
 
     @Override
@@ -40,6 +34,11 @@ public class LoanBuilder implements FundingTypeTemplate {
     public Competition initialiseProjectSetupColumns(Competition competition) {
         addLoanProjectSetupColumns(competition);
         return competition;
+    }
+
+    @Override
+    public Competition overrideTermsAndConditions(Competition competition) {
+        return commonBuilders.overrideTermsAndConditions(competition);
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {
