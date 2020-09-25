@@ -35,7 +35,6 @@
 
         <form th:object="${form}" class="govuk-!-margin-top-5" id="save-organisation-form" th:action="@{/organisation/select}" method="POST">
             <th:block th:if="${model.canSelectOrganisation()}">
-                <!--<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>-->
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__selectedOrganisationId__}')} ? 'govuk-form-group--error'">
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='selectedOrganisationId')" />
                     <div class="govuk-radios">
