@@ -249,6 +249,8 @@ the user search for successful applications
 the user should see the competition details in previous tab
     the user should see the element    jQuery = th:contains("ID") + th:contains("Title")
     the user should see the element    jQuery = th:contains("Number of submitted applications") + th:contains("Number of completed projects")
+    ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain    Project Setup Comp 20
+    Run Keyword If  '${status}' == 'FAIL'     the user clicks the button/link      jQuery = button:contains("Next")
     the user should see the element    jQuery = tr td:contains("Project Setup Comp 20") ~ td:contains("0 of 1")
 
 the user checks the application details sections

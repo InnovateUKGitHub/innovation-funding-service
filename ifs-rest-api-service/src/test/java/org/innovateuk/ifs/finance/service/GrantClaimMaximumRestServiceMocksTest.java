@@ -37,16 +37,16 @@ public class GrantClaimMaximumRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void getGrantClaimMaximumsForCompetitionType() {
-        long competitionTypeId = 1L;
+    public void revertToDefaultForCompetitionType() {
+        long competitionId = 1L;
 
         Set<Long> expected = newGrantClaimMaximumResource().build(2).stream().map(GrantClaimMaximumResource::getId)
                 .collect(toSet());
 
-        setupGetWithRestResultExpectations(format("%s/get-for-competition-type/%s", grantClaimMaximumRestURL,
-                competitionTypeId), longsSetType(), expected);
+        setupPostWithRestResultExpectations(format("%s/revert-to-default/%d", grantClaimMaximumRestURL,
+                competitionId), longsSetType(), null, expected);
 
-        Set<Long> result = service.getGrantClaimMaximumsForCompetitionType(competitionTypeId)
+        Set<Long> result = service.revertToDefaultForCompetitionType(competitionId)
                 .getSuccess();
 
         assertEquals(expected, result);
