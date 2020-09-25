@@ -590,7 +590,9 @@ lead assigns a question to partner organisation
      the user clicks the button/link       link = ${questionLink}
      the user clicks the button/link       id = edit
      the user clicks the button/link       link = Assign to someone else.
-     the user selects the radio button     assignee  assignee2
+     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = [for="assignee1"]label:contains("Steve Smith")
+     Run Keyword If   '${status}' == 'PASS'    the user selects the radio button     assignee   assignee2
+     ...                              ELSE     the user selects the radio button     assignee   assignee1
      the user clicks the button/link       css = button[type="submit"]
 
 the user can mark the question as complete
@@ -638,7 +640,8 @@ the user completes partner project finances
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the partner applicant marks the KTP project location & organisation information as complete     ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
-    ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
+    ...                                             AND    the user accept the competition terms and conditions                                           Return to application overview
+
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
     the user clicks the button/link       link = Apply with a different organisation

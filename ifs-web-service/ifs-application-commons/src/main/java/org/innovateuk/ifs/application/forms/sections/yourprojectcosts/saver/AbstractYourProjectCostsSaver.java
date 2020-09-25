@@ -13,11 +13,8 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.Overhead;
-import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.JsonUtil;
 
 import java.util.ArrayList;
@@ -104,8 +101,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
     }
 
-    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, long organisationId) {
-        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
+    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, OrganisationResource organisation, ValidationMessages messages) {
+        BaseFinanceResource finance = getFinanceResource(targetId, organisation.getId());
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
 
@@ -160,9 +157,6 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
-
-
-        ValidationMessages messages = new ValidationMessages();
 
         awaitAll(futures)
                 .thenAccept(messages::addAll);

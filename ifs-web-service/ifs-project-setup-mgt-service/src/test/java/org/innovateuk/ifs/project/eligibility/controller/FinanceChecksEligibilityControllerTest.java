@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
@@ -182,7 +183,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
-        CompetitionResource h2020Comp = newCompetitionResource().withCompetitionTypeName("Horizon 2020").build();
+        CompetitionResource h2020Comp = newCompetitionResource().withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_2020).build();
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(h2020Comp));

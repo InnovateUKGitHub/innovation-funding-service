@@ -2,8 +2,6 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -15,13 +13,13 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
@@ -33,6 +31,8 @@ import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepositor
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -53,7 +53,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -72,6 +74,7 @@ import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMateria
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -82,9 +85,11 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCos
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostGroupBuilder.newCostGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.FinanceCheckBuilder.newFinanceCheck;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -94,7 +99,6 @@ import static org.mockito.Mockito.*;
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
     private Long applicationId = 123L;
     private Long organisationId = 234L;
-    private Long competitionId = 456L;
     private Long projectId = 789L;
 
     @Mock
@@ -134,19 +138,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     private OrganisationRepository organisationRepository;
 
     @Mock
-    private FormInputRepository formInputRepository;
-
-    @Mock
-    private ApplicationRepository applicationRepository;
-
-    @Mock
-    private FormInputResponseRepository formInputResponseRepository;
-
-    @Mock
     private UserRepository userRepository;
 
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Mock
+    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Test
     public void getByProjectAndOrganisationNotFound() {
@@ -287,6 +285,41 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         PartnerOrganisation leadPartner = simpleFindFirst(beforeOrdered, PartnerOrganisation::isLeadOrganisation).get();
         List<PartnerOrganisation> orderedPartnerOrganisations = new PrioritySorting<>(beforeOrdered, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         return organisationsNames.equals(simpleMap(orderedPartnerOrganisations, po -> po.getOrganisation().getName()));
+    }
+
+    @Test
+    public void resetFinanceChecks() {
+        User internalUser = newUser().withRoles(singleton(PROJECT_FINANCE)).build();
+        Organisation organisation = newOrganisation().withId(organisationId).build();
+        ProjectFinance projectFinance = newProjectFinance()
+                .withOrganisation(organisation)
+                .build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation()
+                .withOrganisation(organisation)
+                .build();
+        Project project = newProject()
+                .withId(projectId)
+                .withSpendProfileSubmittedDate(null)
+                .withPartnerOrganisations(singletonList(partnerOrganisation))
+                .withGrantOfferLetter(null)
+                .build();
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+        setUpSaveEligibilityMocking(partnerOrganisation, user, EligibilityState.APPROVED);
+        setUpSaveViabilityMocking(user, partnerOrganisation, ViabilityState.APPROVED);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, PENDING);
+
+        when(projectFinanceRepository.findByProjectId(project.getId())).thenReturn(singletonList(projectFinance));
+        when(viabilityWorkflowHandler.viabilityReset(partnerOrganisation, internalUser)).thenReturn(true);
+        when(eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, internalUser)).thenReturn(true);
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(grantOfferLetterProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
+
+        ServiceResult<Void> result = service.resetFinanceChecks(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(EligibilityRagStatus.UNSET, projectFinance.getEligibilityStatus());
+        assertEquals(ViabilityRagStatus.UNSET, projectFinance.getViabilityStatus());
     }
 
     @Test
@@ -522,7 +555,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
-        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
@@ -589,7 +622,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
-        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
@@ -656,7 +689,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
-        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
