@@ -35,12 +35,12 @@
 
         <form th:object="${form}" class="govuk-!-margin-top-5" id="save-organisation-form" th:action="@{/organisation/select}" method="POST">
             <th:block th:if="${model.canSelectOrganisation()}">
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__selectedOrganisationId__}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{selectedOrganisationId}')} ? 'govuk-form-group--error'">
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='selectedOrganisationId')" />
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="choice : ${model.choices}">
                             <input class="govuk-radios__input"
-                                   th:field="*{__selectedOrganisationId__}"
+                                   th:field="*{selectedOrganisationId}"
                                    th:value="${choice.id}"
                                    type="radio" />
                             <label class="govuk-label govuk-radios__label" th:for="${#ids.prev('selectedOrganisationId')}">
