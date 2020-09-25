@@ -100,6 +100,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
             OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
             organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
             registrationCookieService.saveToKnowledgeBaseDetailsCookie(organisationForm, response);
+            registrationCookieService.saveToKnowledgeBaseAddressCookie(createAddressResource(organisationForm), response);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/knowledge-base/confirm";
         });
@@ -140,6 +141,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
             organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
 
             registrationCookieService.saveToKnowledgeBaseDetailsCookie(knowledgeBaseCreateForm, response);
+            registrationCookieService.saveToKnowledgeBaseAddressCookie(knowledgeBaseResource.getAddress(), response);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/knowledge-base/confirm";
         });
@@ -163,10 +165,11 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
                                               HttpServletRequest request) {
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
         Optional<KnowledgeBaseCreateForm> knowledgeBaseCreateForm = registrationCookieService.getKnowledgeBaseDetailsValue(request);
+        Optional<AddressResource> address = registrationCookieService.getKnowledgeBaseAddressCookie(request);
         model.addAttribute("type", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getType() : null);
         model.addAttribute("organisationName", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getName() : null);
         model.addAttribute("identification", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getIdentification() : null);
-        model.addAttribute("address", createAddressResource(knowledgeBaseCreateForm));
+        model.addAttribute("address", address.orElse(null));
         model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
 
 
@@ -180,25 +183,26 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
                                    HttpServletResponse response) {
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
         Optional<KnowledgeBaseCreateForm> knowledgeBaseCreateForm = registrationCookieService.getKnowledgeBaseDetailsValue(request);
+        Optional<AddressResource> address = registrationCookieService.getKnowledgeBaseAddressCookie(request);
 
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(knowledgeBaseCreateForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
         organisationResource.setRegistrationNumber(knowledgeBaseCreateForm.get().getIdentification());
-        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, knowledgeBaseCreateForm)));
+        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, address.orElse(null))));
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
 
         return organisationJourneyEnd.completeProcess(request, response, userResource, organisationResource.getId());
     }
 
-    private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, Optional<KnowledgeBaseCreateForm> organisationDetailsForm) {
-        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationDetailsForm), new AddressTypeResource(KNOWLEDGE_BASE.getId(), KNOWLEDGE_BASE.name()));
+    private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, AddressResource address) {
+        return new OrganisationAddressResource(organisationResource, address, new AddressTypeResource(KNOWLEDGE_BASE.getId(), KNOWLEDGE_BASE.name()));
     }
 
-    private AddressResource createAddressResource(Optional<KnowledgeBaseCreateForm> form) {
-        if (form.isPresent() && form.get().getAddressForm() != null) {
-            AddressForm addressForm = form.get().getAddressForm();
+    private AddressResource createAddressResource(KnowledgeBaseCreateForm form) {
+        if (form.getAddressForm() != null) {
+            AddressForm addressForm = form.getAddressForm();
             if (addressForm.isManualAddressEntry()) {
                 return addressForm.getManualAddress();
             }
