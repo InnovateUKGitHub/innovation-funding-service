@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.repository;
 
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -29,10 +29,10 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
             questionSetupType);
     long countByCompetitionId(Long competitionId);
     default long countQuestionsWithMultipleStatuses(long competitionId) {
-        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, true);
+        return countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, true);
     }
     default long countQuestionsWithSingleStatus(long competitionId) {
-        return countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
+        return countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrue(competitionId, false);
     }
-    long countByCompetitionIdAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
+    long countByCompetitionIdAndAndMultipleStatusesAndMarkAsCompletedEnabledTrue(long competitionId, boolean multipleStatuses);
 }

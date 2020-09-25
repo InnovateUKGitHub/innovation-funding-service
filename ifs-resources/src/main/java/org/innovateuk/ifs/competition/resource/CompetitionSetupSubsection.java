@@ -11,7 +11,8 @@ public enum CompetitionSetupSubsection {
 	PROJECT_DETAILS(1L, "project", "Project Details"),
 	QUESTIONS(2L, "question", "Questions"),
 	FINANCES(3L, "finance", "Finances"),
-	APPLICATION_DETAILS(4L, "detail", "Application Details");
+	APPLICATION_DETAILS(4L, "detail", "Application Details"),
+	KTP_ASSESSMENT(5L, "ktp_assessment", "Score Guidance");
 
 	private Long id;
 	private String path;
