@@ -275,6 +275,23 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
+    public ServiceResult<Void> resetGrantOfferLetter(Long projectId) {
+        Project project = getProject(projectId).getSuccess();
+
+        if (project.getGrantOfferLetter() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getGrantOfferLetter().getId());
+            project.setGrantOfferLetter(null);
+        }
+        if (project.getAdditionalContractFile() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getAdditionalContractFile().getId());
+            project.setAdditionalContractFile(null);
+        }
+        golWorkflowHandler.grantOfferLetterReset(project, getCurrentlyLoggedInUser().getSuccess());
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).

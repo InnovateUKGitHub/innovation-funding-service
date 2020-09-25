@@ -49,6 +49,12 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8095 Content improvement for KTA journey
 ...
+...            IFS-8318 Opens in new window link missing on select a knowledge base organisation screen
+...
+...            IFS-8312 KTA profile access permissions
+...
+...            IFS-8325 Write Acceptance tests for 8312
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -233,7 +239,7 @@ New lead applicant starts KTP competition
     Then the user select the competition and starts application     ${ktpCompetitionName}
 
 Select a knowledge base organisation validations and fields
-    [Documentation]  IFS-7841
+    [Documentation]  IFS-7841  IFS-8318
     Given The user clicks the button/link                           link = Continue and create an account
     When the user clicks the button/link                            jQuery = button:contains("Confirm")
     Then the user should see a field and summary error              ${selectOrgValidation}
@@ -394,6 +400,20 @@ The KTA can see the dashboard with assesments and applications tiles after accep
     When logging in and error checking        ${ktaEmail}   ${short_password}
     Then the user should see the element      jQuery = h2:contains("Assessments")
     And the user should see the element       jQuery = h2:contains("Applications")
+
+The KTA can see their profile page from Assessments screen
+    [Documentation]  IFS-8312  IFS-8325
+    Given the user clicks the button/link     jQuery = h2:contains("Assessments")
+    When the user clicks the button/link      link = Profile
+    Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
+    And the user clicks the button/link       link = Dashboard
+
+The KTA can see their profile page from Applications screen
+    [Documentation]  IFS-8312  IFS-8325
+    Given the user clicks the button/link     jQuery = h2:contains("Applications")
+    When the user clicks the button/link      link = Profile
+    Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
+    And the user clicks the button/link       link = Dashboard
 
 The KTA can see the read only view of the application/s
     [Documentation]  IFS-7983
@@ -812,6 +832,8 @@ the user should see knowledge based organisation fields
     the user should see the element     jQuery = span:contains("Select your knowledge base organisation.")
     the user should see the element     jQuery = span:contains("Create an account")
     the user should see the element     jQuery = label:contains("Find your organisation")
+    the user should see the element     link = checking your organisation's alternative name (opens in a new window)
+    the user should see the element     link = enter its details manually
 
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
