@@ -3,8 +3,8 @@ package org.innovateuk.ifs.question.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateServiceImpl;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,13 +15,13 @@ import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class QuestionSetupTemplateServiceSecurityTest extends BaseServiceSecurityTest<QuestionSetupTemplateService> {
+public class QuestionSetupAddAndRemoveServiceSecurityTest extends BaseServiceSecurityTest<QuestionSetupAddAndRemoveService> {
 
     private CompetitionPermissionRules rules;
 
     @Override
-    protected Class<? extends QuestionSetupTemplateService> getClassUnderTest() {
-        return QuestionSetupTemplateServiceImpl.class;
+    protected Class<? extends QuestionSetupAddAndRemoveService> getClassUnderTest() {
+        return QuestionSetupAddAndRemoveServiceImpl.class;
     }
 
     @Before

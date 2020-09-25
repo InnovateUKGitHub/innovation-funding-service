@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * Service interface defining security rules for creating adding or deleting questions.
  */
-public interface QuestionSetupTemplateService {
+public interface QuestionSetupAddAndRemoveService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "ADD_QUESTION_TO_COMPETITION",
             description = "The Competition Admin user and Project Finance users should be able to create competition assessed questions")

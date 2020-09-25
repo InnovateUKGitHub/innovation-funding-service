@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.BaseOtherFunding;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,8 @@ public abstract class BaseOtherFundingCostCategory implements FinanceRowCostCate
             total = costs.stream()
                     .map(c -> c.getTotal())
                     .filter(c -> c != null)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .setScale(0, RoundingMode.HALF_UP);
         }
     }
 

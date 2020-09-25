@@ -7,11 +7,11 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.genericQuestion;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -28,16 +29,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Service that adds and deletes Questions to competitions.
  */
 @Service
-public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateService {
+public class QuestionSetupAddAndRemoveServiceImpl implements QuestionSetupAddAndRemoveService {
 
     @Autowired
     private SectionRepository sectionRepository;
-
-    @Autowired
-    private DefaultApplicationQuestionCreator defaultApplicationQuestionCreator;
-
-    @Autowired
-    private QuestionTemplatePersistorImpl questionTemplatePersistorServiceImpl;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -48,8 +43,12 @@ public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateSe
     @Autowired
     private QuestionNumberOrderService questionNumberOrderService;
 
+    @Autowired
+    private SetupStatusRepository setupStatusRepository;
+
     @Override
     public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
+        //todo replace without template
         if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
@@ -81,18 +80,16 @@ public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateSe
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
-        questionTemplatePersistorServiceImpl.deleteEntityById(question.getId());
+        setupStatusRepository.deleteByClassNameAndClassPk(Question.class.getName(), question.getId());
+        questionRepository.deleteById(question.getId());
         questionPriorityService.reprioritiseQuestionsAfterDeletion(question);
         questionNumberOrderService.updateAssessedQuestionsNumbers(question.getCompetition().getId());
-
         return serviceSuccess();
     }
 
     private ServiceResult<Question> initializeAndPersistQuestion(Section applicationQuestionsSection, Competition competition) {
-        Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
-        question.setSection(applicationQuestionsSection);
 
-        Question createdQuestion = questionTemplatePersistorServiceImpl.persistByEntity(Arrays.asList(question)).get(0);
+        Question createdQuestion = questionPriorityService.peristAndPrioritiesQuestions(competition, newArrayList(genericQuestion().build()), applicationQuestionsSection).get(0);
         Question prioritizedQuestion = questionPriorityService.prioritiseAssessedQuestionAfterCreation(createdQuestion);
 
         return serviceSuccess(prioritizedQuestion);

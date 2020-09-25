@@ -122,7 +122,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals("Project", viewModel.getProjectName());
         assertEquals(5L, viewModel.getApplicationId());
         assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(totalGrant, viewModel.getTotalFundingSought());
+        assertEquals(totalGrant.setScale(0, RoundingMode.HALF_UP), viewModel.getTotalFundingSought());
         assertEquals(industrialFinances.getTotal().add(academicFinances.getTotal()), viewModel.getTotalCosts());
         assertEquals(2, viewModel.getPartners().size());
 
@@ -130,7 +130,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals(industrialOrganisation, industrialViewModel.getId());
         assertEquals(60, industrialViewModel.getMaximumFundingLevel());
         assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
-        assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
+        assertEquals(industrialFinances.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP), industrialViewModel.getFundingSought());
         assertEquals(new BigDecimal("87.78"), industrialViewModel.getPercentageOfTotalGrant().setScale(MAX_DECIMAL_PLACES, RoundingMode.HALF_UP));
         assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
         assertEquals(totalGrant, industrialViewModel.getTotalGrant());
@@ -227,7 +227,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals("Project", viewModel.getProjectName());
         assertEquals(5L, viewModel.getApplicationId());
         assertEquals(projectId, viewModel.getProjectId());
-        assertEquals(totalGrant, viewModel.getTotalFundingSought());
+        assertEquals(totalGrant.setScale(0, RoundingMode.HALF_UP), viewModel.getTotalFundingSought());
         assertEquals(industrialFinances.getTotal().add(academicFinances.getTotal()), viewModel.getTotalCosts());
         assertEquals(2, viewModel.getPartners().size());
 
@@ -235,7 +235,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         assertEquals(industrialOrganisation, industrialViewModel.getId());
         assertEquals(60, industrialViewModel.getMaximumFundingLevel());
         assertEquals(industrialFinances.getTotal(), industrialViewModel.getCosts());
-        assertEquals(industrialFinances.getTotalFundingSought(), industrialViewModel.getFundingSought());
+        assertEquals(industrialFinances.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP), industrialViewModel.getFundingSought());
         assertEquals(new BigDecimal("87.78"), industrialViewModel.getPercentageOfTotalGrant().setScale(2, RoundingMode.HALF_UP));
         assertEquals(BigDecimal.ZERO, industrialViewModel.getOtherFunding());
         assertEquals(totalGrant, industrialViewModel.getTotalGrant());
