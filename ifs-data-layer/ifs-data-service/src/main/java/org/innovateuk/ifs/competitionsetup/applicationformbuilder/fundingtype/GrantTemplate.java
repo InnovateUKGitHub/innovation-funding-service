@@ -28,9 +28,4 @@ public class GrantTemplate implements FundingTypeTemplate {
         List<FinanceRowType> types = newArrayList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS, FINANCE, OTHER_FUNDING, YOUR_FINANCE);
         return commonBuilders.saveFinanceRows(competition, types);
     }
-
-    @Override
-    public Competition overrideTermsAndConditions(Competition competition) {
-        return competition;
-    }
 }
