@@ -42,7 +42,9 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     @Override
     public ServiceResult<ApplicationNotificationTemplateResource> getSuccessfulNotificationTemplate(long competitionId) {
 
-        String successfulTemplate = competitionService.getCompetitionById(competitionId).getSuccess().isKtp() ?
+        Competition ktpCompetition = getCompetition(competitionId).getSuccess();
+
+        String successfulTemplate = ktpCompetition.isKtp() ?
                 "successful_funding_decision_ktp.html" : "successful_funding_decision.html";
 
         return renderTemplate(competitionId, successfulTemplate, (competition) -> {
@@ -58,7 +60,9 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     @Override
     public ServiceResult<ApplicationNotificationTemplateResource> getUnsuccessfulNotificationTemplate(long competitionId) {
 
-        String unsuccessfulTemplate = competitionService.getCompetitionById(competitionId).getSuccess().isKtp() ?
+        Competition ktpCompetition = getCompetition(competitionId).getSuccess();
+
+        String unsuccessfulTemplate = ktpCompetition.isKtp() ?
                 "unsuccessful_funding_decision_ktp.html" : "unsuccessful_funding_decision.html";
 
         return renderTemplate(competitionId, unsuccessfulTemplate, (competition) -> {
@@ -82,7 +86,6 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
 
     private ServiceResult<ApplicationNotificationTemplateResource> renderTemplate(long competitionId, String template, Function<Competition, Map<String, Object>> argumentFunction) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-
             NotificationTarget notificationTarget = new UserNotificationTarget("", "");
             Map<String, Object> arguments = argumentFunction.apply(competition);
 

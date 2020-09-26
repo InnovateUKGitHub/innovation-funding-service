@@ -20,6 +20,8 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.DEFAULT_NOTIFICATION_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 import static org.junit.Assert.assertEquals;
@@ -53,11 +55,12 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
     public void getSuccessfulNotificationTemplate() {
         long competitionId = 1L;
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-        Competition competition = newCompetition().withName("Competition").withReleaseFeedbackDate(feedbackDate).build();
+        Competition competition = newCompetition().withName("Competition").withFundingType(GRANT).withReleaseFeedbackDate(feedbackDate).build();
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
         arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+        arguments.put("competitionId", competition.getId());
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
@@ -71,18 +74,63 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
     }
 
     @Test
-    public void getUnsuccessfulNotificationTemplate() {
+    public void getSuccessfulKtpNotificationTemplate() {
         long competitionId = 1L;
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-        Competition competition = newCompetition().withName("Competition").withReleaseFeedbackDate(feedbackDate).build();
+        Competition competition = newCompetition().withName("Competition").withFundingType(KTP).withReleaseFeedbackDate(feedbackDate).build();
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
         arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+        arguments.put("competitionId", competition.getId());
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(renderer.renderTemplate(eq(systemNotificationSource), any(),
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "successful_funding_decision_ktp.html"), eq(arguments)))
+                .thenReturn(serviceSuccess("MessageBody"));
+
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getSuccessfulNotificationTemplate(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals("MessageBody", result.getSuccess().getMessageBody());
+    }
+
+    @Test
+    public void getUnsuccessfulNotificationTemplate() {
+        long competitionId = 1L;
+        ZonedDateTime feedbackDate = ZonedDateTime.now();
+        Competition competition = newCompetition().withName("Competition").withFundingType(GRANT).withReleaseFeedbackDate(feedbackDate).build();
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("competitionName", competition.getName());
+        arguments.put("dashboardUrl", webBaseUrl);
+        arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+        arguments.put("competitionId", competition.getId());
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
                 eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision.html"), eq(arguments)))
+                .thenReturn(serviceSuccess("MessageBody"));
+
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getUnsuccessfulNotificationTemplate(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals("MessageBody", result.getSuccess().getMessageBody());
+    }
+
+    @Test
+    public void getUnsuccessfulKtpNotificationTemplate() {
+        long competitionId = 1L;
+        ZonedDateTime feedbackDate = ZonedDateTime.now();
+        Competition competition = newCompetition().withName("Competition").withFundingType(KTP).withReleaseFeedbackDate(feedbackDate).build();
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("competitionName", competition.getName());
+        arguments.put("dashboardUrl", webBaseUrl);
+        arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+        arguments.put("competitionId", competition.getId());
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(renderer.renderTemplate(eq(systemNotificationSource), any(),
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision_ktp.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));
 
         ServiceResult<ApplicationNotificationTemplateResource> result = service.getUnsuccessfulNotificationTemplate(competitionId);
