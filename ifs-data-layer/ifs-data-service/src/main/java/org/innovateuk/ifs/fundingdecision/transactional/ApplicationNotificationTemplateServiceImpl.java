@@ -3,6 +3,7 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
@@ -32,27 +33,40 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private CompetitionService competitionService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     @Override
     public ServiceResult<ApplicationNotificationTemplateResource> getSuccessfulNotificationTemplate(long competitionId) {
-        return renderTemplate(competitionId, "successful_funding_decision.html", (competition) -> {
+
+        String successfulTemplate = competitionService.getCompetitionById(competitionId).getSuccess().isKtp() ?
+                "successful_funding_decision_ktp.html" : "successful_funding_decision.html";
+
+        return renderTemplate(competitionId, successfulTemplate, (competition) -> {
             Map<String, Object> arguments = new HashMap<>();
             arguments.put("competitionName", competition.getName());
             arguments.put("dashboardUrl", webBaseUrl);
             arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+            arguments.put("competitionId", competition.getId());
             return arguments;
         });
     }
 
     @Override
     public ServiceResult<ApplicationNotificationTemplateResource> getUnsuccessfulNotificationTemplate(long competitionId) {
-        return renderTemplate(competitionId, "unsuccessful_funding_decision.html", (competition) -> {
+
+        String unsuccessfulTemplate = competitionService.getCompetitionById(competitionId).getSuccess().isKtp() ?
+                "unsuccessful_funding_decision_ktp.html" : "unsuccessful_funding_decision.html";
+
+        return renderTemplate(competitionId, unsuccessfulTemplate, (competition) -> {
             Map<String, Object> arguments = new HashMap<>();
             arguments.put("competitionName", competition.getName());
             arguments.put("dashboardUrl", webBaseUrl);
             arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+            arguments.put("competitionId", competition.getId());
             return arguments;
         });
     }
