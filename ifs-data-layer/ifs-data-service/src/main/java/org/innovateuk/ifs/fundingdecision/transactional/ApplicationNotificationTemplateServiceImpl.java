@@ -3,7 +3,6 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
@@ -32,9 +31,6 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
