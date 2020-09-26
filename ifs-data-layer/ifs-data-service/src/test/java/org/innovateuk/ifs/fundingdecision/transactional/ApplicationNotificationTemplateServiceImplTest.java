@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServiceUnitTest<ApplicationNotificationTemplateServiceImpl> {
+public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceUnitTest<ApplicationNotificationTemplateServiceImpl> {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
     private static final DateTimeFormatter formatter = ofPattern("d MMMM yyyy");
@@ -44,6 +44,8 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
     @Mock
     private CompetitionRepository competitionRepository;
 
+    private static final long competitionId = 1L;
+
     @Override
     protected ApplicationNotificationTemplateServiceImpl supplyServiceUnderTest() {
         ApplicationNotificationTemplateServiceImpl service = new ApplicationNotificationTemplateServiceImpl();
@@ -53,9 +55,13 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
 
     @Test
     public void getSuccessfulNotificationTemplate() {
-        long competitionId = 1L;
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-        Competition competition = newCompetition().withName("Competition").withFundingType(GRANT).withReleaseFeedbackDate(feedbackDate).build();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(GRANT)
+                .withReleaseFeedbackDate(feedbackDate)
+                .build();
+
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
@@ -75,9 +81,13 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
 
     @Test
     public void getSuccessfulKtpNotificationTemplate() {
-        long competitionId = 1L;
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-        Competition competition = newCompetition().withName("Competition").withFundingType(KTP).withReleaseFeedbackDate(feedbackDate).build();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(KTP)
+                .withReleaseFeedbackDate(feedbackDate)
+                .build();
+
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
@@ -97,9 +107,13 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
 
     @Test
     public void getUnsuccessfulNotificationTemplate() {
-        long competitionId = 1L;
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-        Competition competition = newCompetition().withName("Competition").withFundingType(GRANT).withReleaseFeedbackDate(feedbackDate).build();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(GRANT)
+                .withReleaseFeedbackDate(feedbackDate)
+                .build();
+
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
@@ -119,9 +133,13 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
 
     @Test
     public void getUnsuccessfulKtpNotificationTemplate() {
-        long competitionId = 1L;
         ZonedDateTime feedbackDate = ZonedDateTime.now();
-        Competition competition = newCompetition().withName("Competition").withFundingType(KTP).withReleaseFeedbackDate(feedbackDate).build();
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withFundingType(KTP)
+                .withReleaseFeedbackDate(feedbackDate)
+                .build();
+
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
         arguments.put("dashboardUrl", webBaseUrl);
@@ -141,8 +159,8 @@ public class ApplicationNotificationTemplateServiceImplMockTest extends BaseServ
 
     @Test
     public void getIneligibleNotificationTemplate() {
-        long competitionId = 1L;
         Competition competition = newCompetition().withName("Competition").build();
+
         Map<String, Object> arguments = new HashMap<>();
         arguments.put("competitionName", competition.getName());
 
