@@ -15,14 +15,24 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|You are an assessor for the upcoming competition: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
-                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
-                    <p class="govuk-body">Assessment period for reading, scoring, providing written comments and submitting to our online
-                        service. Each assessor could receive up to 10 applications to assess. This depends on the
-                        application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
+                <section class="boxed govuk-!-margin-bottom-6">
+                    <th:block th:unless="${model.ktpCompetition}" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
+                        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
+                        <p class="govuk-body">Assessment period for reading, scoring, providing written comments and submitting to our online
+                            service. Each assessor could receive up to 10 applications to assess. This depends on the
+                            application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
 
-                    <p class="govuk-body" th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
-                        hour webinar on <th:block th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}">21 March 2017</th:block>.</p>
+                        <p class="govuk-body" th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
+                            hour webinar on <th:block th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}">21 March 2017</th:block>.</p>
+                    </th:block>
+                    <th:block th:if="${model.ktpCompetition}">
+                        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Assessment period: ${#temporals.format(model.assessmentPeriodDateFrom,'d MMMM')} to ${#temporals.format(model.assessmentPeriodDateTo,'d MMMM yyyy')}|">
+                            Assessment period: 21 March to 28 March 2017
+                        </h2>
+                        <p class="govuk-body govuk-!-margin-top-2">The assessment period is for reading, scoring, writing comments and submitting your assessment.</p>
+
+                        <p class="govuk-body">You may receive up to 10 applications to assess, depending on the number of applications we receive for this competition.</p>
+                    </th:block>
                 </section>
 
                 <section>
