@@ -45,13 +45,14 @@
                 </section>
 
                 <section>
-                    <h2 class="govuk-heading-m" th:utext="|Competition details:&lt;br/&gt;${model.competitionId}: ${model.competitionName}|">Competition details: Technology inspired</h2>
+                    <h2 class="govuk-heading-m" th:utext="|Competition details:&lt;br/&gt;${model.competitionId}: ${model.competitionName}|">Competition details:
+                        99: Technology inspired</h2>
 
                     <p class="govuk-body">
                         <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
                            class="govuk-link"
                            target="_blank"
-                           rel="external noopener noreferrer">See competition brief (opens in a new window)</a>.
+                           rel="external noopener noreferrer">See the competition brief (opens in a new window)</a>
                     </p>
 
                     <h3 class="govuk-heading-s">You should reject this invitation if:</h3>
