@@ -26,6 +26,7 @@ public class KnowledgeBaseCreateForm implements Serializable {
     private String universityNumber;
 
     @Valid
+    @JsonIgnore
     private AddressForm addressForm = new AddressForm();
 
     public KnowledgeBaseCreateForm() {

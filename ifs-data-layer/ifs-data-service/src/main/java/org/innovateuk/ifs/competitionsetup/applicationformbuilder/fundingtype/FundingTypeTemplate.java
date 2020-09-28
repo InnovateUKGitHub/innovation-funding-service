@@ -6,13 +6,23 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.addDefaultProjectSetupColumns;
+
 public interface FundingTypeTemplate {
 
     FundingType type();
 
-    List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections);
+    default List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
+        return competitionTypeSections;
+    }
 
     Competition initialiseFinanceTypes(Competition competition);
 
-    Competition initialiseProjectSetupColumns(Competition competition);
+    default Competition overrideTermsAndConditions(Competition competition) {
+        return competition;
+    }
+
+    default Competition initialiseProjectSetupColumns(Competition competition) {
+        return addDefaultProjectSetupColumns(competition);
+    }
 }
