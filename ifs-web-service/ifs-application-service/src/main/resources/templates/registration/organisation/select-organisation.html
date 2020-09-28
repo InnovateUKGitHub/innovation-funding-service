@@ -33,7 +33,7 @@
             <p class="govuk-body govuk-hint" th:unless="${model.internationalJourney}">You have used these UK-based organisations in the past.</p>
         </th:block>
 
-        <form th:object="${form}" class="govuk-!-margin-top-5" id="save-organisation-form" th:action="@{/organisation/select}" method="POST">
+        <form th:object="${form}" class="govuk-!-margin-top-5" id="save-organisation-form" th:action="@{/organisation/select}" novalidate="novalidate" method="POST">
             <th:block th:if="${model.canSelectOrganisation()}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{selectedOrganisationId}')} ? 'govuk-form-group--error'">
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='selectedOrganisationId')" />
@@ -42,7 +42,10 @@
                             <input class="govuk-radios__input"
                                    th:field="*{selectedOrganisationId}"
                                    th:value="${choice.id}"
-                                   type="radio" />
+                                   type="radio"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.organisation.required}"
+                            />
                             <label class="govuk-label govuk-radios__label" th:for="${#ids.prev('selectedOrganisationId')}">
                                 <span class="govuk-label--s" th:text="${choice.name}" />
                                 <span class="govuk-hint" th:text="${choice.type}" />
