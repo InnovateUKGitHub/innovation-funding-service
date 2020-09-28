@@ -22,8 +22,7 @@
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='govuk-heading-xl'" />
-                <p class="govuk-body">You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|You are invited to assess the competition: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <section class="boxed govuk-!-margin-bottom-6">
                     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.acceptsDate, 'd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'd MMMM yyyy')}: Assessment period|">
@@ -36,7 +35,7 @@
                 </section>
 
                 <section>
-                    <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+                    <h2 class="govuk-heading-m" th:utext="|Competition details:&lt;br/&gt;${model.competitionId}: ${model.competitionName}|">Competition details: Technology inspired</h2>
 
                     <p class="govuk-body">
                         <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
@@ -47,10 +46,10 @@
 
                     <h3 class="govuk-heading-s">You should reject this invitation if:</h3>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>you are unavailable for the assessment period dates</li>
-                        <li>you are unable to meet the assessment deadlines</li>
+                        <li>you are unavailable during the assessment period</li>
+                        <li>you cannot meet the assessment deadlines</li>
                         <li>this competition is not in your area of expertise</li>
-                        <li>you have a direct conflict of interest, for example intending to apply to this competition yourself</li>
+                        <li>you have a direct conflict of interest, for example, you intend to apply for this competition yourself</li>
                     </ul>
                 </section>
 
@@ -58,7 +57,7 @@
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="acceptInvitation">
-                                <h2 class="govuk-fieldset__heading">Select your ability to assess the competition</h2>
+                                <h2 class="govuk-fieldset__heading">Are you able to assess applications for this competition?</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
@@ -70,7 +69,7 @@
                                            th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
                                     <label for="acceptCompetition"
                                            class="govuk-label govuk-radios__label">
-                                        Yes, I am able to assess applications to this competition<th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                                        Yes
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item" data-target="reject-competition">
@@ -79,7 +78,7 @@
                                            th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}"/>
                                     <label for="rejectCompetition"
                                            class="govuk-label govuk-radios__label">
-                                        No, I am not able to assess applications to this competition
+                                        No
                                     </label>
                                 </div>
                             </div>
@@ -128,7 +127,7 @@
                         </fieldset>
                     </div>
 
-                    <button class="govuk-button" type="submit">Confirm</button>
+                    <button class="govuk-button" type="submit">Accept this invitation</button>
                 </form>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
