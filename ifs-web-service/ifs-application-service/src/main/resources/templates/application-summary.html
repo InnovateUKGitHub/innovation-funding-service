@@ -34,6 +34,16 @@
                                 <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
                                 <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
                             </th:block>
+                            <th:block th:if="${model.ktpCompetition}">
+                                <dt>Application number</dt>
+                                <dd th:text="${model.applicationNumber}"></dd>
+                                <dt>Lead organisation</dt>
+                                <dd th:text="${model.leadOrganisationName}"></dd>
+                                <th:block th:unless="${model.collaboratorOrganisationNames.isEmpty()}">
+                                    <dt>Partners</dt>
+                                    <dd th:each="collaboratorName : ${model.collaboratorOrganisationNames}" th:text="${collaboratorName}"></dd>
+                                </th:block>
+                            </th:block>
                             <dt>Duration in months</dt>
                             <dd>
                                 <th:block th:text="${model.duration}"/>
@@ -64,6 +74,10 @@
                             <th:block th:if="${model.application.companyPrimaryFocus != null}">
                                 <dt>What is your organisation's primary area of focus?</dt>
                                 <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
+                            </th:block>
+                            <th:block th:if="${model.ktpCompetition}">
+                                <dt>Total project costs</dt>
+                                <dd th:text="${'£' + model.totalProjectCosts}"></dd>
                             </th:block>
                         </dl>
                     </div>

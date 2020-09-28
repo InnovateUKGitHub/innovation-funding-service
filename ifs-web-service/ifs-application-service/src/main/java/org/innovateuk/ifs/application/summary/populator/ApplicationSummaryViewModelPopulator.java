@@ -8,11 +8,19 @@ import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewMo
 import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 
@@ -31,6 +39,12 @@ public class ApplicationSummaryViewModelPopulator {
     @Autowired
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
+    private UserRestService userRestService;
+
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
@@ -42,9 +56,20 @@ public class ApplicationSummaryViewModelPopulator {
             interviewFeedbackViewModel = null;
         }
 
+        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
+        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<OrganisationResource> collaboratorOrganisations = processRoleResources.stream()
+                .filter(pr -> Role.COLLABORATOR == pr.getRole())
+                .map(pr -> pr.getOrganisationId())
+                .distinct()
+                .map(orgId -> organisationRestService.getOrganisationById(orgId).getSuccess())
+                .collect(Collectors.toList());
+
         return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
                                                application,
                                                competition,
+                                               leadOrganisation,
+                                               collaboratorOrganisations,
                                                isProjectWithdrawn(application.getId()),
                                                interviewFeedbackViewModel);
     }
