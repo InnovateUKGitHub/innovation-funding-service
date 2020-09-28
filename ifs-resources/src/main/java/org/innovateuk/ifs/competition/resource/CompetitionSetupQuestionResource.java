@@ -30,8 +30,6 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "guidanceTitle", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "shortTitle", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "title", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "assessmentGuidanceTitle", argument="assessmentGuidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "assessmentGuidance", argument="assessmentGuidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     public interface TextAreaValidationGroup { }
     public interface MultipleChoiceValidationGroup { }
@@ -353,11 +351,6 @@ public class CompetitionSetupQuestionResource {
     @JsonIgnore
     public boolean isTitleRequired() {
         return QuestionSetupType.KTP_ASSESSMENT != type;
-    }
-
-    @JsonIgnore
-    public boolean isAssessmentGuidanceRequired() {
-        return QuestionSetupType.KTP_ASSESSMENT == type;
     }
 
     @Override
