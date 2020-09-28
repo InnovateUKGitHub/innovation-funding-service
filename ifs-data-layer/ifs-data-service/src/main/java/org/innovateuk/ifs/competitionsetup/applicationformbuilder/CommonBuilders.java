@@ -262,6 +262,16 @@ public class CommonBuilders {
                                 .withScope(FormInputScope.APPLICATION)
                                 .withActive(false),
                         aFormInput()
+                                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
+                                .withDescription("Is the application in scope?"),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
+                                .withDescription("Please select the research category for this project"),
+                        aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
                                 .withActive(true)
@@ -275,17 +285,7 @@ public class CommonBuilders {
                                         aGuidanceRow()
                                                 .withSubject("No")
                                                 .withJustification("One or more of the above requirements have not been satisfied.")
-                                )),
-                        aFormInput()
-                                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
-                                .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(true)
-                                .withDescription("Is the application in scope?"),
-                        aFormInput()
-                                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
-                                .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(true)
-                                .withDescription("Please select the research category for this project")
+                                ))
                 ));
     }
 
