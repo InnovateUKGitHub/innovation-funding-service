@@ -10,7 +10,6 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -29,6 +28,10 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "guidance", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "guidanceTitle", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "shortTitle", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "title", argument="titleRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "assessmentGuidanceTitle", argument="assessmentGuidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "assessmentGuidance", argument="assessmentGuidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     public interface TextAreaValidationGroup { }
     public interface MultipleChoiceValidationGroup { }
@@ -38,10 +41,11 @@ public class CompetitionSetupQuestionResource {
     private QuestionSetupType type;
 
     private String number;
-    @NotBlank
+
     private String shortTitle;
-    @NotBlank
+
     private String title;
+
     private String subTitle;
 
     private String guidanceTitle;
@@ -343,7 +347,17 @@ public class CompetitionSetupQuestionResource {
 
     @JsonIgnore
     public boolean isGuidanceRequired() {
-        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type;
+        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type && QuestionSetupType.KTP_ASSESSMENT != type;
+    }
+
+    @JsonIgnore
+    public boolean isTitleRequired() {
+        return QuestionSetupType.KTP_ASSESSMENT != type;
+    }
+
+    @JsonIgnore
+    public boolean isAssessmentGuidanceRequired() {
+        return QuestionSetupType.KTP_ASSESSMENT == type;
     }
 
     @Override
