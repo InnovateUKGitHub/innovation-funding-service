@@ -110,11 +110,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
-        competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
-
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
-
         template.copyTemplatePropertiesToCompetition(competition);
+        competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));

@@ -18,7 +18,9 @@ public interface FundingTypeTemplate {
 
     Competition initialiseFinanceTypes(Competition competition);
 
-    Competition overrideTermsAndConditions(Competition competition);
+    default Competition overrideTermsAndConditions(Competition competition) {
+        return competition;
+    }
 
     default Competition initialiseProjectSetupColumns(Competition competition) {
         return addDefaultProjectSetupColumns(competition);

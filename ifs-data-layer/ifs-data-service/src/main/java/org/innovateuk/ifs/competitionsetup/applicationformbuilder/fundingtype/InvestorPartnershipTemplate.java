@@ -9,8 +9,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +50,7 @@ public class InvestorPartnershipTemplate implements FundingTypeTemplate {
                     .withShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
         }));
 
-        return termsSection.map(Arrays::asList).orElse(Collections.emptyList());
+        return sections;
     }
 
     @Override
