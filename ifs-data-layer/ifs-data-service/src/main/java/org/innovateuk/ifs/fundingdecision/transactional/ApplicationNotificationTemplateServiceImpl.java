@@ -38,36 +38,36 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     @Override
     public ServiceResult<ApplicationNotificationTemplateResource> getSuccessfulNotificationTemplate(long competitionId) {
 
-        Competition ktpCompetition = getCompetition(competitionId).getSuccess();
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+            String successfulTemplate = competition.isKtp() ?
+                    "successful_funding_decision_ktp.html" : "successful_funding_decision.html";
 
-        String successfulTemplate = ktpCompetition.isKtp() ?
-                "successful_funding_decision_ktp.html" : "successful_funding_decision.html";
-
-        return renderTemplate(competitionId, successfulTemplate, (competition) -> {
-            Map<String, Object> arguments = new HashMap<>();
-            arguments.put("competitionName", competition.getName());
-            arguments.put("dashboardUrl", webBaseUrl);
-            arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
-            arguments.put("competitionId", competition.getId());
-            return arguments;
+            return renderTemplate(competitionId, successfulTemplate, (c) -> {
+                Map<String, Object> arguments = new HashMap<>();
+                arguments.put("competitionName", c.getName());
+                arguments.put("dashboardUrl", webBaseUrl);
+                arguments.put("feedbackDate", toUkTimeZone(c.getReleaseFeedbackDate()).format(formatter));
+                arguments.put("competitionId", c.getId());
+                return arguments;
+            });
         });
     }
 
     @Override
     public ServiceResult<ApplicationNotificationTemplateResource> getUnsuccessfulNotificationTemplate(long competitionId) {
 
-        Competition ktpCompetition = getCompetition(competitionId).getSuccess();
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+            String unsuccessfulTemplate = competition.isKtp() ?
+                    "unsuccessful_funding_decision_ktp.html" : "unsuccessful_funding_decision.html";
 
-        String unsuccessfulTemplate = ktpCompetition.isKtp() ?
-                "unsuccessful_funding_decision_ktp.html" : "unsuccessful_funding_decision.html";
-
-        return renderTemplate(competitionId, unsuccessfulTemplate, (competition) -> {
-            Map<String, Object> arguments = new HashMap<>();
-            arguments.put("competitionName", competition.getName());
-            arguments.put("dashboardUrl", webBaseUrl);
-            arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
-            arguments.put("competitionId", competition.getId());
-            return arguments;
+            return renderTemplate(competitionId, unsuccessfulTemplate, (c) -> {
+                Map<String, Object> arguments = new HashMap<>();
+                arguments.put("competitionName", c.getName());
+                arguments.put("dashboardUrl", webBaseUrl);
+                arguments.put("feedbackDate", toUkTimeZone(c.getReleaseFeedbackDate()).format(formatter));
+                arguments.put("competitionId", c.getId());
+                return arguments;
+            });
         });
     }
 
@@ -88,8 +88,8 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
             return renderer.renderTemplate(systemNotificationSource, notificationTarget,
                     DEFAULT_NOTIFICATION_TEMPLATES_PATH + template, arguments);
         })
-        .andOnSuccessReturn(this::replaceNewline)
-        .andOnSuccessReturn(this::toResource);
+                .andOnSuccessReturn(this::replaceNewline)
+                .andOnSuccessReturn(this::toResource);
     }
 
     private String replaceNewline(String html) {
