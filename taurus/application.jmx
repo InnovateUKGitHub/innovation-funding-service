@@ -4302,6 +4302,7 @@
       <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
         <collectionProp name="Asserion.test_strings">
           <stringProp name="-218476159">2[0-9]+</stringProp>
+          <stringProp name="669027522">3[0-9]+</stringProp>
           <stringProp name="0"></stringProp>
         </collectionProp>
         <stringProp name="Assertion.custom_message"></stringProp>
