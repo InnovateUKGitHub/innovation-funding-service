@@ -63,7 +63,7 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {
         Optional<SectionBuilder> applicationQuestionSection = sections.stream()
-                .filter(sectionBuilder -> sectionBuilder.getName() == "Application questions")
+                .filter(sectionBuilder -> sectionBuilder.getName().equals("Application questions"))
                 .findFirst();
 
         applicationQuestionSection.ifPresent(sectionBuilder -> sectionBuilder.getQuestions().forEach(questionBuilder -> {
