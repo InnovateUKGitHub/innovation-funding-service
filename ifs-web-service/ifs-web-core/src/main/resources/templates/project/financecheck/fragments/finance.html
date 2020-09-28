@@ -123,42 +123,21 @@
 
     <!-- ===========================Project Finance Cost Breakdown =========================== -->
     <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
-        <div class="table-overflow govuk-!-margin-bottom-6"
-             th:with="hasLabour=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)},
-                     hasOverheads=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)},
-                     hasProcurementOverheads=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS)},
-                     hasMaterials=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS)},
-                     hasCapitalUsage=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE)},
-                     hasSubcontracting=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS)},
-                     hasTravel=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL)},
-                     hasOther=${breakdowns.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS)}">
+        <div class="table-overflow govuk-!-margin-bottom-6">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Partner</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total</th>
-                        <th th:if="${hasLabour}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Labour (&pound;)</th>
-                        <th th:if="${hasOverheads}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Overheads (&pound;)</th>
-                        <th th:if="${hasProcurementOverheads}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Overheads (&pound;)</th>
-                        <th th:if="${hasMaterials}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Materials (&pound;)</th>
-                        <th th:if="${hasCapitalUsage}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Capital usage (&pound;)</th>
-                        <th th:if="${hasSubcontracting}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Subcontract cost (&pound;)</th>
-                        <th th:if="${hasTravel}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Travel and subs (&pound;)</th>
-                        <th th:if="${hasOther}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
+                        <th th:each="type : ${breakdowns.financeRowTypes}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80"
+                            th:text="|${type.displayName} (£)|">Labour (&pound;)</th>
                     </tr>
                 </thead>
                 <tfoot class="govuk-table__foot">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">Total</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
-                        <td th:if="${hasLabour}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasOverheads}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasProcurementOverheads}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasMaterials}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasCapitalUsage}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasSubcontracting}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasTravel}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
-                        <td th:if="${hasOther}" class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <th th:each="type : ${breakdowns.financeRowTypes}" class="govuk-table__cell govuk-table__cell--numeric"></th>
                     </tr>
                 </tfoot>
                 <tbody class="govuk-table__body">
@@ -169,7 +148,7 @@
                             <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                         </th>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
-                        <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
+                        <th:block th:each="rowType : ${breakdowns.financeRowTypes}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
                             <td th:if="${rowType.isIncludedInSpendProfile()}" class="govuk-table__cell govuk-table__cell--numeric">
                                 <th:block th:text="${#numbers.formatInteger(row.total,1,'DEFAULT')}" />
                             </td>
