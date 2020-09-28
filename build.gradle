@@ -182,7 +182,7 @@ publishing {
                 username project.findProperty("nexus_username")
                 password project.findProperty("nexus_password")
             }
-            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"
+            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"+project.property("nexus_repository")
         }
     }
 }
