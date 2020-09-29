@@ -201,7 +201,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withJustification("The application has an unrealistic, ill-defined or low level of challenge for either the knowledge base partner, the associate or the business partner."),
                 aGuidanceRow()
                         .withSubject("1,2")
-                        .withJustification("The application is clearly cohesive and easily demonstrates an outstanding balance between the various expectations of a KTP project.  The application gives a very high level of confidence that the project team will work well together, that the project will exceed its goals and the partners will gain in ways above and beyond the defined outcomes of the project.")
+                        .withJustification("The application fails to demonstrate a defined or realistic challenge for either the knowledge base partner, the associate or the business partner.")
         );
     }
 
