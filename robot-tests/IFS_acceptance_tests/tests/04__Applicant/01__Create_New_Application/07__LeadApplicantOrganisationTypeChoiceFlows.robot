@@ -54,7 +54,7 @@ User cannot choose Public Sector when both Research and Public sector types are 
 Lead applicant can see a validation message in select your organisation page
     [Documentation]   IFS-7986
     Given the user clicks the button/link                                  link = Sign in
-    And logging in and error checking                                      christine.ward@gmail.com    Passw0rd
+    And logging in and error checking                                      christine.ward@gmail.com    ${short_password}
     And User starts an application with a second organisation type
     And the user start again a new application with two organisations
     When the user clicks the button/link                                   id = save-organisation-button
