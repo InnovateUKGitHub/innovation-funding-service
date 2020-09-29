@@ -1,109 +1,111 @@
 <!-- =================Application question=========================== -->
 <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${editable}">
-        <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
-                <h2 class="govuk-fieldset__heading">Application question</h2>
-            </legend>
+        <th:block th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                    <h2 class="govuk-fieldset__heading">Application question</h2>
+                </legend>
 
-            <dl class="govuk-list application-question-list govuk-grid-row">
-                <dt class="govuk-grid-column-one-third">Question heading</dt>
-                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
-                    th:text="${question.shortTitle}"></dd>
-                <dt class="govuk-grid-column-one-third">Question title</dt>
-                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.title)}"
-                    th:text="${question.title}"></dd>
-                <dt class="govuk-grid-column-one-third">Question subtitle</dt>
-                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
-                    th:unless="${#strings.isEmpty(question.subTitle)}"
-                    ifs:utext="${question.subTitle}"></dd>
-                <dt class="govuk-grid-column-one-third">Guidance title</dt>
-                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
-                    th:text="${question.guidanceTitle}"></dd>
-                <dt class="govuk-grid-column-one-third">Guidance</dt>
-                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
-                    th:unless="${#strings.isEmpty(question.guidance)}"
-                    ifs:utext="${question.guidance}"></dd>
+                <dl class="govuk-list application-question-list govuk-grid-row">
+                    <dt class="govuk-grid-column-one-third">Question heading</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
+                    <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
+                        th:text="${question.shortTitle}"></dd>
+                    <dt class="govuk-grid-column-one-third">Question title</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
+                    <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.title)}"
+                        th:text="${question.title}"></dd>
+                    <dt class="govuk-grid-column-one-third">Question subtitle</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
+                    <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
+                        th:unless="${#strings.isEmpty(question.subTitle)}"
+                        ifs:utext="${question.subTitle}"></dd>
+                    <dt class="govuk-grid-column-one-third">Guidance title</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
+                    <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
+                        th:text="${question.guidanceTitle}"></dd>
+                    <dt class="govuk-grid-column-one-third">Guidance</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
+                    <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
+                        th:unless="${#strings.isEmpty(question.guidance)}"
+                        ifs:utext="${question.guidance}"></dd>
 
-                <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
-                    <dt class="govuk-grid-column-one-third">Answer type</dt>
-                    <dd class="govuk-grid-column-two-thirds"
-                        th:text="${competitionSetupForm.typeOfQuestion.name() == 'FREE_TEXT' ? 'Free text' : 'Multiple choice'}"></dd>
-                </th:block>
-                <th:block th:if="${question.textArea != null && question.textArea}">
-                    <dt class="govuk-grid-column-one-third">Max word count</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
-                </th:block>
-                <th:block th:if="${question.multipleChoice != null && question.multipleChoice}">
-                    <dt class="govuk-grid-column-one-third">Answers</dt>
-                    <dd class="govuk-grid-column-two-thirds">
-                        <th:block th:each="choice : ${question.choices}">
-                            <div class="govuk-!-margin-bottom-2" th:text="${choice.text}"></div>
+                    <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
+                        <dt class="govuk-grid-column-one-third">Answer type</dt>
+                        <dd class="govuk-grid-column-two-thirds"
+                            th:text="${competitionSetupForm.typeOfQuestion.name() == 'FREE_TEXT' ? 'Free text' : 'Multiple choice'}"></dd>
+                    </th:block>
+                    <th:block th:if="${question.textArea != null && question.textArea}">
+                        <dt class="govuk-grid-column-one-third">Max word count</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
+                    </th:block>
+                    <th:block th:if="${question.multipleChoice != null && question.multipleChoice}">
+                        <dt class="govuk-grid-column-one-third">Answers</dt>
+                        <dd class="govuk-grid-column-two-thirds">
+                            <th:block th:each="choice : ${question.choices}">
+                                <div class="govuk-!-margin-bottom-2" th:text="${choice.text}"></div>
+                            </th:block>
+                        </dd>
+                    </th:block>
+                    <th:block th:if="${question.appendix != null}">
+                        <dt class="govuk-grid-column-one-third">Appendix uploads</dt>
+                        <th:block th:if="${competitionSetupForm.numberOfUploads == 0}">
+                            <dd class="govuk-grid-column-two-thirds">None</dd>
                         </th:block>
-                    </dd>
-                </th:block>
-                <th:block th:if="${question.appendix != null}">
-                    <dt class="govuk-grid-column-one-third">Appendix uploads</dt>
-                    <th:block th:if="${competitionSetupForm.numberOfUploads == 0}">
-                        <dd class="govuk-grid-column-two-thirds">None</dd>
+                        <th:block th:unless="${competitionSetupForm.numberOfUploads == 0}">
+                            <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.numberOfUploads}">1
+                            </dd>
+                        </th:block>
+                        <th:block th:if="${question.appendix}">
+                            <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
+                            <dd class="govuk-grid-column-two-thirds">
+                                <ul class="govuk-list govuk-list--bullet govuk-!-margin-left-0">
+                                    <li
+                                        th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
+                                        th:text="${fileType.displayName}"></li>
+                                </ul>
+                            </dd>
+                            <dt class="govuk-grid-column-one-third">Appendix guidance</dt>
+                            <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
+                                ifs:utext="${question.appendixGuidance}"></dd>
+                        </th:block>
                     </th:block>
-                    <th:block th:unless="${competitionSetupForm.numberOfUploads == 0}">
-                        <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.numberOfUploads}">1
-                        </dd>
+                    <th:block th:if="${question.templateDocument != null}">
+                        <dt class="govuk-grid-column-one-third">Template document</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:if="${question.templateDocument}">Yes</dd>
+                        <dd class="govuk-grid-column-two-thirds" th:unless="${question.templateDocument}">No</dd>
+                        <th:block th:if="${question.templateDocument}">
+                            <dt class="govuk-grid-column-one-third">Template title</dt>
+                            <dd class="govuk-grid-column-two-thirds" th:text="${question.templateTitle}"></dd>
+                            <dt class="govuk-grid-column-one-third">Template file</dt>
+                            <dd class="govuk-grid-column-two-thirds">
+                                <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})}"
+                                   th:text="${model.templateFilename}"
+                                   class="govuk-link">File</a>
+                            </dd>
+                            <dt class="govuk-grid-column-one-third">Accepted upload file types</dt>
+                            <dd class="govuk-grid-column-two-thirds">
+                                <ul>
+                                    <li th:each="fileType : ${question.allowedTemplateResponseFileTypes}"
+                                        th:text="${fileType.displayName}"></li>
+                                </ul>
+                            </dd>
+                        </th:block>
                     </th:block>
-                    <th:block th:if="${question.appendix}">
-                        <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
-                        <dd class="govuk-grid-column-two-thirds">
-                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-left-0">
-                                <li
-                                    th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
-                                    th:text="${fileType.displayName}"></li>
-                            </ul>
-                        </dd>
-                        <dt class="govuk-grid-column-one-third">Appendix guidance</dt>
-                        <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
-                            ifs:utext="${question.appendixGuidance}"></dd>
-                    </th:block>
-                </th:block>
-                <th:block th:if="${question.templateDocument != null}">
-                    <dt class="govuk-grid-column-one-third">Template document</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:if="${question.templateDocument}">Yes</dd>
-                    <dd class="govuk-grid-column-two-thirds" th:unless="${question.templateDocument}">No</dd>
-                    <th:block th:if="${question.templateDocument}">
-                        <dt class="govuk-grid-column-one-third">Template title</dt>
-                        <dd class="govuk-grid-column-two-thirds" th:text="${question.templateTitle}"></dd>
-                        <dt class="govuk-grid-column-one-third">Template file</dt>
-                        <dd class="govuk-grid-column-two-thirds">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/download-template-file(competitionId=${model.general.competition.id},questionId=${question.questionId})}"
-                               th:text="${model.templateFilename}"
-                               class="govuk-link">File</a>
-                        </dd>
-                        <dt class="govuk-grid-column-one-third">Accepted upload file types</dt>
-                        <dd class="govuk-grid-column-two-thirds">
-                            <ul>
-                                <li th:each="fileType : ${question.allowedTemplateResponseFileTypes}"
-                                    th:text="${fileType.displayName}"></li>
-                            </ul>
-                        </dd>
-                    </th:block>
-                </th:block>
-            </dl>
-        </fieldset>
+                </dl>
+            </fieldset>
+        </th:block>
         <th:block th:if="${model.displayAssessmentOptions}">
             <fieldset
                 th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
                 class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                <legend th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}" class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
                     <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
                 </legend>
 
                 <dl class="govuk-list application-question-list govuk-grid-row">
-                    <th:block th:if="${question.scored != null}">
+                    <th:block th:if="${question.scored != null && competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
                         <dt class="govuk-grid-column-one-third">Scored</dt>
                         <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
                         <th:block th:if="${question.scored}">
