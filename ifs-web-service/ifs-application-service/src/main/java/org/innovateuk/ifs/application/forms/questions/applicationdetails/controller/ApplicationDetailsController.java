@@ -71,7 +71,7 @@ public class ApplicationDetailsController {
         ApplicationDetailsViewModel viewModel = applicationDetailsViewModelPopulator.populate(application, questionId, user);
         form.populateForm(application);
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
-            return "application/questions/application-details";
+        return "application/questions/application-details";
     }
 
     @PostMapping

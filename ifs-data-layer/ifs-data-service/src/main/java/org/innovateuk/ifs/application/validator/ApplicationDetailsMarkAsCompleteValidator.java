@@ -83,6 +83,11 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
             rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
         }
 
+        if (competition.getResubmission() && application.getResubmission() == null) {
+            LOG.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
+            rejectValue(errors, "resubmission", "validation.application.must.indicate.resubmission.or.not");
+        }
+
         if (application.getResubmission() != null) {
             if (application.getResubmission()) {
                 if (isEmpty(application.getPreviousApplicationNumber())) {
@@ -94,9 +99,6 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
                     rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
                 }
             }
-        } else {
-            LOG.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
-            rejectValue(errors, "resubmission", "validation.application.must.indicate.resubmission.or.not");
         }
     }
 
