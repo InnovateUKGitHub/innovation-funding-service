@@ -6,6 +6,9 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
 ...
 ...               IFS-47 As an applicant creating an account I am able to select Business or RTO where both have been set in Competition setup
+...
+...               IFS-7986 Error missing from Select your organisation page
+...
 Suite Setup       the user starts a competition create account journey for both RTO and Business organisation types
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
@@ -48,6 +51,15 @@ User cannot choose Public Sector when both Research and Public sector types are 
     And the user clicks the button/link           jQuery = button:contains("Save and continue")
     And the user should see the text in the element  css = #main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
 
+Lead applicant can see a validation message in select your organisation page
+    [Documentation]   IFS-7986
+    Given the user clicks the button/link                                  link = Sign in
+    And logging in and error checking                                      christine.ward@gmail.com    Passw0rd
+    And User starts an application with a second organisation type
+    And the user start again a new application with two organisations
+    When the user clicks the button/link                                   id = save-organisation-button
+    Then the user should see a field and summary error                     Please select an organisation.
+
 *** Keywords ***
 the user chooses an organisation type
     [Arguments]    ${org_type_id}
@@ -63,3 +75,15 @@ the user starts a competition create account journey
     the user clicks the button/link in the paginated list    link = ${competition_name}
     the user clicks the button/link    link = Start new application
     the user clicks the button/link    link = Continue and create an account
+
+User starts an application with a second organisation type
+    the user select the competition and starts application     Performance testing competition
+    the user clicks the button/link                            link = Apply with a different organisation
+    the user selects the radio button                          organisationTypeId  2
+    the user clicks the button/link                            id = lead-organisation-type-cta
+    the user selects his organisation in Companies House       university   Aberystwyth University
+
+the user start again a new application with two organisations
+    the user select the competition and starts application     Performance testing competition
+    the user selects the radio button                          createNewApplication  true
+    the user clicks the button/link                            name = create-application-submit

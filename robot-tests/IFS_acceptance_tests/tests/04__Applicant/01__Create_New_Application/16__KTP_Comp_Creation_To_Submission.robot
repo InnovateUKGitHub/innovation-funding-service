@@ -122,14 +122,14 @@ Comp Admin is able to see KTP funding type has been selected
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
     [Teardown]  the user clicks the button/link     link = Competition details
 
-Creating a new investor comp points to the correct T&C
+Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
     Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
     And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
 
-The Investor partnership t&c's are correct
+The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
     When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
