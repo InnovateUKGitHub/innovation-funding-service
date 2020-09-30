@@ -15,6 +15,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-7718 EDI question - application form
 ...
+...             IFS-7596 Print Preview Format
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -63,7 +65,7 @@ Applicant fills in project costs with VAT
     And the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
 
 Applicant submits the application
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
     [Setup]  get application id by name and set as suite variable  ${appl_name}
     Given the user accept the procurement terms and conditions
     When the user selects research category                      Feasibility studies

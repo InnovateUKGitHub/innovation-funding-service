@@ -15,8 +15,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
 public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
@@ -36,7 +35,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
-        return asList(FINANCE, OTHER_FUNDING).contains(costType);
+        return asList(FINANCE, GRANT_CLAIM_AMOUNT, OTHER_FUNDING).contains(costType);
     }
 
     @Override
