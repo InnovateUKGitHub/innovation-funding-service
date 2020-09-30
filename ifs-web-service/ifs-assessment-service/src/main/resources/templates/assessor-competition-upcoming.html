@@ -36,8 +36,11 @@
                 </section>
 
                 <section>
-                    <h2 class="govuk-heading-m" th:utext="|Competition details:&lt;br/&gt;${model.competitionId}: ${model.competitionName}|">Competition details:
-                        99: My Competition</h2>
+                    <h2 class="govuk-heading-m">
+                        <th:block th:text="Competition details"/>
+                        <br/>
+                        <th:block th:text="${model.competitionId}: ${model.competitionName}"/>
+                    </h2>
 
                     <p class="govuk-body">
                         <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
