@@ -209,9 +209,20 @@ the user marks the KTP Assessed questions as complete with no assessment score o
     the user should not see assessment score or feedback settings in assessment questions
     the assessment questions are marked complete for other programme type competitions
     the user fills in the Finances questions without growth table                             false  true
+    the user marks the score guidance section as complete
     the user clicks the button/link                                                           jQuery = button:contains("Done")
     the user clicks the button/link                                                           link = Competition details
     the user should see the element                                                           jQuery = div:contains("Application") ~ .task-status-complete
+
+the user marks the score guidance section as complete
+    the user clicks the button/link    jQuery = a:contains('Impact')
+    the user clicks the button/link    jQuery = button:contains('Done')
+    the user navigates to the page     ${server}/management/competition/setup/108/section/application/question/2042/edit
+    the user clicks the button/link    jQuery = button:contains('Done')
+    the user clicks the button/link    jQuery = a:contains('Challenge')
+    the user clicks the button/link    jQuery = button:contains('Done')
+    the user clicks the button/link    jQuery = a:contains('Cohesiveness')
+    the user clicks the button/link    jQuery = button:contains('Done')
 
 the user should not see assessment score or feedback settings in assessment questions
     :FOR   ${ELEMENT}   IN    @{programme_questions}
@@ -282,7 +293,8 @@ the user marks the Application details section as complete
     the user marks each question as complete                Application details
     the user marks each question as complete                Project summary
     the user marks each question as complete                Equality, diversity and inclusion
-    Run Keyword If    '${compType}'!= '${compType_EOI}'     the user marks each question as complete  Public description
+    #Is this required?
+    Run Keyword If    '${compType}'!= 'KTP'                 the user marks each question as complete  Public description
     the user marks each question as complete                Scope
 
 the user marks each question as complete
