@@ -39,7 +39,8 @@ public class ImportSignedDocusignScheduled {
             docusignService.downloadFileIfSigned();
         } catch (ApiException | IOException e) {
             LOG.error(e);
+        } finally {
+            scheduleStatusService.endJob(JOB_NAME);
         }
-        scheduleStatusService.endJob(JOB_NAME);
     }
 }

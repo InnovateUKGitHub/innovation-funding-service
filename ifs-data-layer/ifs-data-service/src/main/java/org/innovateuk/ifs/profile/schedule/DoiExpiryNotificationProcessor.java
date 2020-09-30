@@ -28,7 +28,10 @@ public class DoiExpiryNotificationProcessor {
         } catch (Exception e) {
             return;
         }
-        service.notifyExpiredDoi();
-        scheduleStatusService.endJob(JOB_NAME);
+        try {
+            service.notifyExpiredDoi();
+        } finally {
+            scheduleStatusService.endJob(JOB_NAME);
+        }
     }
 }
