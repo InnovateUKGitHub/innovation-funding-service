@@ -358,7 +358,7 @@ the user fills in the CS Assessors
     [Arguments]   ${fundingType}
     the user clicks the button/link    link = Assessors
     the user clicks the button twice   jQuery = label[for^="assessors"]:contains("3")
-    Run Keyword If  '${fundingType}' != 'KTP'      css = #assessorPay[value="100"]
+    Run Keyword If  '${fundingType}' != 'KTP'      the user should see the element   css = #assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user selects the radio button  averageAssessorScore  0
