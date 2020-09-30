@@ -22,6 +22,7 @@ public class ApplicationDetailsViewModelTest {
                 .withEndDate(ZonedDateTime.now().plusMonths(12))
                 .withMinProjectDuration(15)
                 .withMaxProjectDuration(30)
+                .withResubmission(false)
                 .withFundingType(FundingType.KTP).build();
         InnovationAreaResource innovationAreaResource = InnovationAreaResourceBuilder.newInnovationAreaResource().build();
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
