@@ -42,7 +42,7 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             "FROM User user " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             "JOIN user.roles roles " +
-            "JOIN user.roleProfileStatuses roleStatuses " +
+            "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "JOIN Competition competition ON competition.id = :competitionId " +
             "WHERE ((" +
                     "competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
