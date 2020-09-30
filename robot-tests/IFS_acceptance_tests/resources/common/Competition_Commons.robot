@@ -293,7 +293,6 @@ the user marks the Application details section as complete
     the user marks each question as complete                Application details
     the user marks each question as complete                Project summary
     the user marks each question as complete                Equality, diversity and inclusion
-    #Is this required?
     Run Keyword If    '${compType}'!= '${compType_EOI}'                 the user marks each question as complete  Public description
     the user marks each question as complete                Scope
 
