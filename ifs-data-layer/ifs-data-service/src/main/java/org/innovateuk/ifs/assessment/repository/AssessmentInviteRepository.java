@@ -44,7 +44,7 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             "JOIN user.roles roles " +
             "JOIN user.roleProfileStatuses roleStatuses " +
             "JOIN Competition competition ON competition.id = :competitionId " +
-            "WHERE (" +
+            "WHERE ((" +
                     "competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
                     "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
                     "AND roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
@@ -52,7 +52,7 @@ public interface AssessmentInviteRepository extends CompetitionInviteRepository<
             ") OR ( " +
                     "competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP " +
                     "AND roles = org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER " +
-            ")" +
+            "))" +
             "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ")" +
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%') " +
             "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
