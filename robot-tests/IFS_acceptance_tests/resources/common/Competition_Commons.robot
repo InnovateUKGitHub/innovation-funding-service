@@ -22,7 +22,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
@@ -355,9 +355,10 @@ the user fills in the Finances questions without growth table
     the user should see the element       jQuery = li:contains("Finances") .task-status-complete
 
 the user fills in the CS Assessors
+    [Arguments]   ${fundingType}
     the user clicks the button/link    link = Assessors
     the user clicks the button twice   jQuery = label[for^="assessors"]:contains("3")
-    the user should see the element    css = #assessorPay[value="100"]
+    Run Keyword If  '${fundingType}' != 'KTP'      css = #assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user selects the radio button  averageAssessorScore  0
