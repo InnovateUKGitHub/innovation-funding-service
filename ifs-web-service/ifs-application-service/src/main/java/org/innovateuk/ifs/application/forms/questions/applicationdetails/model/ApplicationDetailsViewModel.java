@@ -28,6 +28,7 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
     private boolean complete;
 
     private boolean ktpCompetition;
+    private boolean canResubmit;
 
     public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete) {
         this.application = application;
@@ -40,6 +41,7 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
         this.open = open;
         this.complete = complete;
         this.ktpCompetition = competition.isKtp();
+        this.canResubmit = competition.getResubmission();
     }
 
     @Override
@@ -111,5 +113,9 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isCanResubmit() {
+        return canResubmit;
     }
 }

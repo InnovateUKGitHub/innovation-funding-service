@@ -46,9 +46,11 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
         competition = newCompetition()
                 .withMinProjectDuration(10)
                 .withMaxProjectDuration(20)
+                .withResubmission(false)
                 .build();
 
         procurementCompetition = newCompetition()
+                .withResubmission(false)
                 .withFundingType(FundingType.PROCUREMENT)
                 .withMinProjectDuration(10)
                 .withMaxProjectDuration(20)
@@ -244,6 +246,7 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
         validApplication.setDurationInMonths(10L);
         validApplication.setCompetition(newCompetition()
                 .withMinProjectDuration(10)
+                .withResubmission(false)
                 .withMaxProjectDuration(10).build());
 
         DataBinder dataBinder = new DataBinder(validApplication);
