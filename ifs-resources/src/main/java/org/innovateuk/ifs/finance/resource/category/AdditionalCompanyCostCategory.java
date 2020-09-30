@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -94,7 +95,8 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
                 .map(AdditionalCompanyCost.class::cast)
                 .map(AdditionalCompanyCost::getTotal)
                 .map(cost -> ofNullable(cost).orElse(BigDecimal.ZERO))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     @Override

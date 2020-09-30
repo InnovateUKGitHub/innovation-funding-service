@@ -2,8 +2,6 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -15,7 +13,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -102,7 +99,6 @@ import static org.mockito.Mockito.*;
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
     private Long applicationId = 123L;
     private Long organisationId = 234L;
-    private Long competitionId = 456L;
     private Long projectId = 789L;
 
     @Mock
@@ -140,15 +136,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private OrganisationRepository organisationRepository;
-
-    @Mock
-    private FormInputRepository formInputRepository;
-
-    @Mock
-    private ApplicationRepository applicationRepository;
-
-    @Mock
-    private FormInputResponseRepository formInputResponseRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -568,7 +555,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
-        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
@@ -635,7 +622,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
-        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
@@ -702,7 +689,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
-        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("10000066"), overview.getTotalProjectCost());
         assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
         assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
         assertEquals(new BigDecimal("29.98"), overview.getTotalPercentageGrant());
