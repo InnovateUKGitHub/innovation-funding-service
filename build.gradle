@@ -92,6 +92,8 @@ wrapper {
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
 
+def nexusRepository = project.hasProperty('nexus_repository') ? project.property('nexus_repository').toString() : ""
+
 apply plugin: 'maven-publish'
 
 def osFileMap = [
@@ -182,7 +184,7 @@ publishing {
                 username project.findProperty("nexus_username")
                 password project.findProperty("nexus_password")
             }
-            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"
+            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"+nexusRepository
         }
     }
 }
