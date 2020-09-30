@@ -25,7 +25,7 @@ public class ApplicationSummaryViewModelTest {
                 .withInnovationArea(innovationAreaResource).build();
 
         ApplicationSummaryViewModel viewModel = new ApplicationSummaryViewModel(null,
-                applicationResource, competitionResource,null, null, false, null);
+                applicationResource, competitionResource, null, null, false, null);
 
         assertTrue(viewModel.isKtpCompetition());
     }
