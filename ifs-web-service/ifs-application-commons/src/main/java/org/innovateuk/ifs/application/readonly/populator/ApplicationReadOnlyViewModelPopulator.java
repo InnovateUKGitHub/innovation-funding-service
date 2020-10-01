@@ -131,14 +131,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(questionId -> data.getQuestionIdToQuestion().get(questionId))
                 .map(question ->  populateQuestionViewModel(competition, question, data, settings))
                 .collect(toCollection(LinkedHashSet::new));
-
-        String sectionName;
-        if (competition.isKtp() && "Project details".equals(section.getName())) {
-            sectionName = "Application details";
-        } else {
-            sectionName = section.getName();
-        }
-        return new ApplicationSectionReadOnlyViewModel(sectionName, false, questionViews);
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), false, questionViews);
     }
 
     //Currently only theA finance section has child sections.
