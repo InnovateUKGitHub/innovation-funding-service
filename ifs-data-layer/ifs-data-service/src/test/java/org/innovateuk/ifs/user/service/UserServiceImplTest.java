@@ -772,7 +772,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String updateEmail = "new@gmail.com";
         User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
 
-        List<Invite> invite = singletonList(new RoleInvite("Mister", oldEmail, "", APPLICANT, OPENED));
+        List<Invite> invite = singletonList(new RoleInvite("Mister", oldEmail, "", APPLICANT, OPENED, null));
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userRepositoryMock.save(user)).thenReturn(user);

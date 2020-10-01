@@ -134,7 +134,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, Role.SUPPORT);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, Role.SUPPORT, "");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID));
     }
@@ -142,7 +142,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveUserInviteWhenUserRoleIsNotSpecified() throws Exception {
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, null);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, null, "");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID));
     }
@@ -150,7 +150,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveInternalUserInviteWhenRoleSpecifiedIsNotInternalRole() {
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, COLLABORATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, COLLABORATOR, "");
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
@@ -162,7 +162,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         Role role = Role.SUPPORT;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role, "");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID_EMAIL));
     }
@@ -175,7 +175,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(roleInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT, "");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
 
@@ -213,7 +213,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR, "");
 
         assertTrue(result.isSuccess());
 
@@ -260,7 +260,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceFailure(GENERAL_UNEXPECTED_ERROR));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT, "");
         assertTrue(result.isFailure());
 
         verify(roleInviteRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
@@ -299,7 +299,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR, "");
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
@@ -588,7 +588,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         Role role = KNOWLEDGE_TRANSFER_ADVISER;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role, "");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(KTA_USER_ROLE_INVITE_INVALID_EMAIL));
         verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
@@ -602,7 +602,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISER);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISER, "");
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
@@ -618,7 +618,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(roleInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISER);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISER, "");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
         verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
@@ -656,7 +656,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role, "");
 
         assertTrue(result.isSuccess());
 

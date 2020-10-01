@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -30,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -94,8 +94,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             //Pending users don't provide passwords until they accept their invite.
             userResult = userResult.andOnSuccess(u -> validateUser(user.getPassword(), u));
         }
-        ServiceResult<User> result = userResult.andOnSuccessReturn(userResource -> assembleUserFromResource(userResource, user))
-                .andOnSuccess(savedUser -> createUserWithUid(savedUser, getPasswordOrPlaceholder(user), user.getAddress()));
+        ServiceResult<User> result = userResult
+                .andOnSuccess(savedUser -> createUserWithUid(user));
 
         if (shouldSendVerificationEmail(user)) {
             result = result
@@ -172,44 +172,40 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 );
     }
 
-    private User assembleUserFromResource(UserResource userResource, UserCreationResource userCreationResource) {
-        User newUser = new User();
-        newUser.setFirstName(userResource.getFirstName());
-        newUser.setLastName(userResource.getLastName());
-        newUser.setEmail(userResource.getEmail());
-        newUser.setTitle(userResource.getTitle());
-        newUser.setPhoneNumber(userResource.getPhoneNumber());
-        newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-        newUser.setRoles(new HashSet<>(userResource.getRoles()));
-
-
-        if (userCreationResource.getInviteHash() != null) {
-            Invite invite = allInviteRepository.getByHash(userCreationResource.getInviteHash());
-            newUser.setEmail(invite.getEmail());
-
-            if (invite instanceof RoleInvite) {
-                newUser.setRoles(new HashSet<>(getInternalRoleResources(((RoleInvite) invite).getTarget()).getSuccess()));
-                userCreationResource.setRole(((RoleInvite) invite).getTarget());
-            }
-        }
-
-        return newUser;
-    }
-
     private ServiceResult<User> markLatestSiteTermsAndConditions(User userWithRole, UserCreationResource userCreationResource) {
         return userCreationResource.isAgreedTerms() ?
                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
     }
 
-    private ServiceResult<User> createUserWithUid(User user, String password, AddressResource addressResource) {
-
-        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
+    private ServiceResult<User> createUserWithUid(UserCreationResource userCreationResource) {
+        String password = getPasswordOrPlaceholder(userCreationResource);
+        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(userCreationResource.getEmail(), password);
 
         return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
+            User user = new User();
+            UserResource userResource = userCreationResource.toUserResource();
+            user.setFirstName(userResource.getFirstName());
+            user.setLastName(userResource.getLastName());
+            user.setEmail(userResource.getEmail());
+            user.setPhoneNumber(userResource.getPhoneNumber());
+            user.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
+            user.setRoles(newHashSet(userResource.getRoles()));
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
             Profile profile = new Profile();
-            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
+            if (userCreationResource.getAddress() != null) profile.setAddress(addressMapper.mapToDomain(userCreationResource.getAddress()));
+            if (userCreationResource.getInviteHash() != null) {
+                Invite invite = allInviteRepository.getByHash(userCreationResource.getInviteHash());
+                user.setEmail(invite.getEmail());
+
+                if (invite instanceof RoleInvite) {
+                    user.setRoles(new HashSet<>(getInternalRoleResources(((RoleInvite) invite).getTarget()).getSuccess()));
+                    if (((RoleInvite) invite).getSimpleOrganisation() != null) {
+                        profile.setSimpleOrganisation(((RoleInvite) invite).getSimpleOrganisation());
+                    }
+                    userCreationResource.setRole(((RoleInvite) invite).getTarget());
+                }
+            }
             Profile savedProfile = profileRepository.save(profile);
             user.setProfileId(savedProfile.getId());
             User savedUser = userRepository.save(user);
@@ -219,7 +215,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, User user) {
-
         return registrationEmailService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId).
                 andOnSuccessReturn(() -> user);
     }
