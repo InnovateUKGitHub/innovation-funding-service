@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_ASSIGNMENT_ALREADY_EXISTS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_WORKFLOW_TRANSITION_FAILURE;
@@ -113,7 +113,7 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         CofunderAssignmentResource resource = new CofunderAssignmentResource();
         //todo replace with mapstruct?
         resource.setAssignmentId(assignment.getId());
-        resource.setComments(of(assignment.getCofunderOutcome()).map(CofunderOutcome::getComment).orElse(null));
+        resource.setComments(ofNullable(assignment.getCofunderOutcome()).map(CofunderOutcome::getComment).orElse(null));
         resource.setState(assignment.getProcessState());
         return resource;
     }
