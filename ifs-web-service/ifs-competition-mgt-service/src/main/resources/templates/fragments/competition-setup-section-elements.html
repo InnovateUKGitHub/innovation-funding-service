@@ -276,7 +276,10 @@
 
             <input type="hidden" th:field="*{question.textArea}">
             <input type="hidden" th:field="*{question.multipleChoice}">
-            <input type="hidden" th:name="question.shortTitle" th:value="${question.shortTitle}"/>
+            <input type="hidden"
+                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                   th:name="question.shortTitle"
+                   th:value="${question.shortTitle}"/>
 
             <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
                 <div class="govuk-form-group"
