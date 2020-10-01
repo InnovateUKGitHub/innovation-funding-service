@@ -3,18 +3,25 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.domain.CofunderOutcome;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_ASSIGNMENT_ALREADY_EXISTS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_WORKFLOW_TRANSITION_FAILURE;
@@ -30,6 +37,9 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private CofunderAssignmentRepository cofunderAssignmentRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Override
     public ServiceResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId) {
@@ -92,13 +102,39 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId) {
-        return null;
+    public ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, Pageable pageable) {
+        Page<ApplicationsForCofundingResource> result = cofunderAssignmentRepository.findApplicationsForCofunding(competitionId, pageable);
+        return serviceSuccess(new ApplicationsForCofundingPageResource(
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.getContent(),
+                result.getNumber(),
+                result.getSize())
+        );
     }
 
     @Override
-    public ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId) {
-        return null;
+    public ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, Pageable pageable) {
+        Page<User> result = cofunderAssignmentRepository.findUsersAvailableForCofunding(applicationId, pageable);
+        List<CofunderAssignment> assignments = cofunderAssignmentRepository.findByTargetId(applicationId);
+        return serviceSuccess(new CofundersAvailableForApplicationPageResource(
+                result.getTotalElements(),
+                result.getTotalPages(),
+                result.getContent().stream().map(this::mapToCofunderUser).collect(toList()),
+                result.getNumber(),
+                result.getSize(),
+                assignments.stream().map(CofunderAssignment::getParticipant).map(this::mapToCofunderUser).collect(toList()))
+        );
+    }
+
+    private CofuderUserResource mapToCofunderUser(User user) {
+        CofuderUserResource cofunderUser = new CofuderUserResource();
+        Profile profile = profileRepository.findById(user.getProfileId()).orElseThrow(ObjectNotFoundException::new);
+        cofunderUser.setUserId(user.getId());
+        cofunderUser.setEmail(user.getEmail());
+        cofunderUser.setName(user.getFirstName() + " " + user.getLastName());
+        cofunderUser.setOrganisation(ofNullable(profile.getSimpleOrganisation()).map(SimpleOrganisation::getName).orElse(null));
+        return cofunderUser;
     }
 
     private ServiceResult<CofunderAssignment> findCofunderAssignmentByUserAndApplication(long userId, long applicationId) {

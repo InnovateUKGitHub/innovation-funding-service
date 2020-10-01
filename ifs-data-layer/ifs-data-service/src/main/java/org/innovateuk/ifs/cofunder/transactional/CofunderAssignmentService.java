@@ -5,6 +5,7 @@ import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
 import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.springframework.data.domain.Pageable;
 
 public interface CofunderAssignmentService {
 
@@ -18,8 +19,8 @@ public interface CofunderAssignmentService {
 
     ServiceResult<Void> edit(long assignmentId);
 
-    ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId);
+    ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, Pageable pageable);
 
-    ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId);
+    ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, Pageable pageable);
 
 }
