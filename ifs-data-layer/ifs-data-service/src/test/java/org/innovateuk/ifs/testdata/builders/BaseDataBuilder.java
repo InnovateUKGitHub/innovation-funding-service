@@ -22,6 +22,7 @@ import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
+import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
@@ -53,6 +54,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -221,6 +223,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected RoleProfileStatusRepository roleProfileStatusRepository;
     protected CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
     protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
+    protected InviteUserService inviteUserService;
+    protected CofunderAssignmentService cofunderAssignmentService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -341,6 +345,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionOrganisationConfigRepository = serviceLocator.getBean((CompetitionOrganisationConfigRepository.class));
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
         projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
+        inviteUserService = serviceLocator.getBean(InviteUserService.class);
+        cofunderAssignmentService = serviceLocator.getBean(CofunderAssignmentService.class);
     }
 
     protected UserResource compAdmin() {

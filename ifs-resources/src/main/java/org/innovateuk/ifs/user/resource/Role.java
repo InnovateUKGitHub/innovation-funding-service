@@ -33,15 +33,15 @@ public enum Role implements Identifiable {
     IFS_ADMINISTRATOR           (14, "ifs_administrator",   "IFS Administrator"),
     SUPPORT                     (15, "support",             "IFS Support User"),
 
-    PANEL_ASSESSOR              (16, "panel_assessor",              "Panel Assessor"),
-    INTERVIEW_ASSESSOR          (17, "interview_assessor",          "Interview Assessor"),
-    INTERVIEW_LEAD_APPLICANT    (18, "interview_lead_applicant",    "Interview Lead Applicant"),
-    MONITORING_OFFICER          (19, "monitoring_officer",       "Monitoring Officer"),
-    STAKEHOLDER                 (20, "stakeholder",               "Stakeholder"),
-    LIVE_PROJECTS_USER          (21, "live_projects_user",        "Live projects user"),
-    EXTERNAL_FINANCE            (22, "external_finance",        "External finance reviewer"),
+    PANEL_ASSESSOR              (16, "panel_assessor",             "Panel Assessor"),
+    INTERVIEW_ASSESSOR          (17, "interview_assessor",         "Interview Assessor"),
+    INTERVIEW_LEAD_APPLICANT    (18, "interview_lead_applicant",   "Interview Lead Applicant"),
+    MONITORING_OFFICER          (19, "monitoring_officer",         "Monitoring Officer"),
+    STAKEHOLDER                 (20, "stakeholder",                "Stakeholder"),
+    LIVE_PROJECTS_USER          (21, "live_projects_user",         "Live projects user"),
+    EXTERNAL_FINANCE            (22, "external_finance",           "External finance reviewer"),
     KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser"),
-    CO_FUNDER                   (24, "co_funder", "Co Funder");
+    COFUNDER                    (24, "cofunder",                    "Co-funder");
 
     final long id;
     final String name;
@@ -117,7 +117,7 @@ public enum Role implements Identifiable {
         return EnumSet.of(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER);
     }
     public static Set<Role> externalRoles() {
-        return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR));
+        return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, COFUNDER));
     }
 
     public static List<Role> multiDashboardRoles() {
@@ -132,6 +132,6 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> externalRolesToInvite() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, CO_FUNDER);
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, COFUNDER);
     }
 }
