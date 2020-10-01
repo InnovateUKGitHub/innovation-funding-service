@@ -6,12 +6,12 @@ public class ApplicationsForCofundingResource {
     private String name;
     private String lead;
 
-    private int total;
-    private int rejected;
-    private int accepted;
-    private int assigned;
+    private long total;
+    private long rejected;
+    private long accepted;
+    private long assigned;
 
-    public ApplicationsForCofundingResource(long id, String name, String lead, int total, int rejected, int accepted, int assigned) {
+    public ApplicationsForCofundingResource(long id, String name, String lead, long total, long rejected, long accepted, long assigned) {
         this.id = id;
         this.name = name;
         this.lead = lead;
@@ -45,35 +45,35 @@ public class ApplicationsForCofundingResource {
         this.lead = lead;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 
-    public int getRejected() {
+    public long getRejected() {
         return rejected;
     }
 
-    public void setRejected(int rejected) {
+    public void setRejected(long rejected) {
         this.rejected = rejected;
     }
 
-    public int getAccepted() {
+    public long getAccepted() {
         return accepted;
     }
 
-    public void setAccepted(int accepted) {
+    public void setAccepted(long accepted) {
         this.accepted = accepted;
     }
 
-    public int getAssigned() {
+    public long getAssigned() {
         return assigned;
     }
 
-    public void setAssigned(int assigned) {
+    public void setAssigned(long assigned) {
         this.assigned = assigned;
     }
 }

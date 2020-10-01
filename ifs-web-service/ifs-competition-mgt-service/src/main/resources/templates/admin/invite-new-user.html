@@ -63,6 +63,22 @@
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
+            <div th:if="${#lists.size(model.roles) == 1 && model.roles[0] == T(org.innovateuk.ifs.user.resource.Role).COFUNDER}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="organisation">
+                    Organisation
+                </label>
+                <th:block th:if="${#fields.hasErrors('organisation')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('organisation')}" th:text="${err}"></span>
+                </th:block>
+                <input id="organisation"
+                       class="govuk-input govuk-!-width-one-third"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{organisation}"
+                       maxlength="256"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
+            </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="emailAddress">
                     Email address
@@ -81,7 +97,7 @@
                                 data-maxlength-errormessage=#{validation.invite.email.length.max(null, 254)},
                                 data-required-errormessage=${model.internal} ? #{validation.invite.email.required} : #{validation.kta.invite.email.required}" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
+            <div th:attr="aria-hidden=${#lists.size(model.roles) == 1 && model.roles[0] == T(org.innovateuk.ifs.user.resource.Role).COFUNDER}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="role">
                     Role
                 </label>

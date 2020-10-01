@@ -22,7 +22,7 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 
     @Query(
-            "SELECT new org.innovateuk.ifs.cofunder.resourceApplicationsForCofundingResource(" +
+            "SELECT new org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource(" +
                     "application.id," +
                     "application.name," +
                     "org.name," +
@@ -30,11 +30,11 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
                     "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.REJECTED THEN 1 ELSE 0 END)," +
                     "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.ACCEPTED THEN 1 ELSE 0 END)," +
                     "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.CREATED THEN 1 ELSE 0 END)" +
-                    ")" +
+                    ") " +
                     "FROM Application application " +
                     "LEFT JOIN CofunderAssignment assignment on application.id = assignment.target.id " +
                     "JOIN ProcessRole pr on pr.applicationId = application.id " +
-                    "JOIN Organisation org on pr.organisationId = organisation.id " +
+                    "JOIN Organisation org on pr.organisationId = org.id " +
                     "WHERE application.competition.id = :competitionId " +
                     "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
                     "GROUP BY application.id"
@@ -45,7 +45,7 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
             "SELECT user " +
             "FROM User user " +
             "JOIN user.roles role " +
-            "WHERE NOT EXSITS (" +
+            "WHERE NOT EXISTS (" +
             "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId" +
             ")" +
             "AND role = org.innovateuk.ifs.user.resource.Role.COFUNDER"

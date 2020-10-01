@@ -18,15 +18,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.KTA_USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
@@ -54,10 +53,11 @@ public class InviteUserController {
     }
 
     @GetMapping("/invite-external-user")
-    public String inviteNewExternalUser(Model model) {
+    public String inviteNewExternalUser(@RequestParam(value = "role") String role,
+                                        Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(Role.getByName(role)));
     }
 
     private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
@@ -101,11 +101,25 @@ public class InviteUserController {
     }
 
     @GetMapping("/select-external-role")
-    public String selectOrganisation(@ModelAttribute(name = "form", binding = false) SelectExternalRoleForm form,
-                                     Model model) {
+    public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
+                             Model model) {
 
         model.addAttribute("roles", Role.externalRolesToInvite());
         return "admin/select-external-role";
+    }
+
+    @PostMapping("/select-external-role")
+    public String selectedRole(@ModelAttribute(name = "form") @Valid SelectExternalRoleForm form,
+                               BindingResult bindingResult,
+                               ValidationHandler validationHandler,
+                               Model model) {
+
+        Supplier<String> failureView = () -> selectRole(form, model);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToInviteExternalUserPage(form.getRoleId()));
+    }
+
+    private String redirectToInviteExternalUserPage(Long roleId) {
+        return String.format("redirect:/admin/invite-external-user?role=%s", Role.getById(roleId).getName());
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {
@@ -123,6 +137,6 @@ public class InviteUserController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
 
-        return new InviteUserResource(invitedUser, form.getRole());
+        return new InviteUserResource(invitedUser, form.getOrganisation(), form.getRole());
     }
 }

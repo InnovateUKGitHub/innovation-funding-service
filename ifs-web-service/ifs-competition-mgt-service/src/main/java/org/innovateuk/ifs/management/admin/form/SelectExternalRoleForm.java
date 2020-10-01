@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.management.admin.form;
 
-import org.innovateuk.ifs.user.resource.Role;
+import javax.validation.constraints.NotNull;
 
 public class SelectExternalRoleForm {
 
-    private Role role;
+    @NotNull(message = "{validation.role.required}")
+    private Long roleId;
 
-    public Role getRole() {
-        return role;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

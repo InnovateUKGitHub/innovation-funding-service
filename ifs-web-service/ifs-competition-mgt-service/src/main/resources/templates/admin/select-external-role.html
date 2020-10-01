@@ -3,7 +3,7 @@
 
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=Invite a new external user"/>
+              th:with="pageTitle='Invite a new external user'"/>
 </head>
 <body class="govuk-template__body">
 
@@ -19,7 +19,7 @@
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title"
-                id="error-summary-title">ERROR TITLE</h2>
+                id="error-summary-title">There is a problem</h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li th:each="err : ${#fields.errors('${form.*}')}">
@@ -45,17 +45,17 @@
                         <h2 class="govuk-fieldset__heading">Select user role</h2>
                     </legend>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item" th:each="role : roles">
+                        <div class="govuk-radios__item" th:each="role : ${roles}">
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   th:field="*{role}"
-                                   th:value="${role}"
+                                   th:field="*{roleId}"
+                                   th:value="${role.id}"
                                    th:id="|role-radio-${role.id}|"
                                    required="required"
                             />
                             <label class="govuk-label govuk-radios__label selection-button-radio"
                                    th:for="|role-radio-${role.id}|"
-                                   th:text="(${role.displayName}"></label>
+                                   th:text="${role.displayName}"></label>
                         </div>
                     </div>
                 </div>

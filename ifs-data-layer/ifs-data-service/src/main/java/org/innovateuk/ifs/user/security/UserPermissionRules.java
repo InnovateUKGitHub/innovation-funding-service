@@ -324,6 +324,11 @@ public class UserPermissionRules {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a co-funder role")
+    public boolean isGrantingCoFunderRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(COFUNDER);
+    }
+
     @PermissionRule(value = "GRANT_ROLE", description = "An stakeholder can request applicant role")
     public boolean stakeholderCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
