@@ -40,7 +40,8 @@ public enum Role implements Identifiable {
     STAKEHOLDER                 (20, "stakeholder",               "Stakeholder"),
     LIVE_PROJECTS_USER          (21, "live_projects_user",        "Live projects user"),
     EXTERNAL_FINANCE            (22, "external_finance",        "External finance reviewer"),
-    KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser");
+    KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser"),
+    CO_FUNDER                   (24, "co_funder", "Co Funder");
 
     final long id;
     final String name;
@@ -131,6 +132,6 @@ public enum Role implements Identifiable {
     }
 
     public static Set<Role> externalRolesToInvite() {
-        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, CO_FUNDER);
     }
 }

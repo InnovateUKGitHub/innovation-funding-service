@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.management.admin.controller;
 
-import org.innovateuk.ifs.management.admin.form.InviteUserForm;
-import org.innovateuk.ifs.management.admin.form.InviteUserView;
-import org.innovateuk.ifs.management.admin.form.validation.Primary;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.management.admin.form.InviteUserForm;
+import org.innovateuk.ifs.management.admin.form.InviteUserView;
+import org.innovateuk.ifs.management.admin.form.SelectExternalRoleForm;
+import org.innovateuk.ifs.management.admin.form.validation.Primary;
 import org.innovateuk.ifs.management.admin.viewmodel.InviteUserViewModel;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.groups.Default;
 import java.util.Set;
@@ -94,6 +98,14 @@ public class InviteUserController {
         Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
 
         return saveInvite(form, validationHandler, failureView);
+    }
+
+    @GetMapping("/select-external-role")
+    public String selectOrganisation(@ModelAttribute(name = "form", binding = false) SelectExternalRoleForm form,
+                                     Model model) {
+
+        model.addAttribute("roles", Role.externalRolesToInvite());
+        return "admin/select-external-role";
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {

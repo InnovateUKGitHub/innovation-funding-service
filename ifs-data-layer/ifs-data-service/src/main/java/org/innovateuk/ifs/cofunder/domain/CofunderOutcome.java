@@ -10,7 +10,7 @@ import javax.persistence.Entity;
  * Process outcome for the {@code FUNDING_DECISION} assessment outcome event.
  */
 @Entity
-@DiscriminatorValue(value = "funding-decision")
+@DiscriminatorValue(value = "cofunder_outcome")
 public class CofunderOutcome extends ProcessOutcome<CofunderAssignment> {
 
     public void setAssessment(CofunderAssignment assessment) {
