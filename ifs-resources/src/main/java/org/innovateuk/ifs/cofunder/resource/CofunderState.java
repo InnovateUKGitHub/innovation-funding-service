@@ -5,9 +5,9 @@ import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
 public enum CofunderState implements ProcessState, IdentifiableEnum {
-    CREATED(19, State.CREATED),
-    REJECTED(3, State.REJECTED),
-    ACCEPTED(12, State.ACCEPTED);
+    CREATED(56, State.CREATED),
+    REJECTED(57, State.REJECTED),
+    ACCEPTED(58, State.ACCEPTED);
 
     private final long id;
     private final State backingState;

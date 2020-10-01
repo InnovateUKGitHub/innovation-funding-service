@@ -6,15 +6,15 @@ import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-/**
- * Process outcome for the {@code FUNDING_DECISION} assessment outcome event.
- */
 @Entity
-@DiscriminatorValue(value = "funding-decision")
+@DiscriminatorValue(value = "cofunder-outcome")
 public class CofunderOutcome extends ProcessOutcome<CofunderAssignment> {
+    public CofunderOutcome() {
+    }
 
-    public void setAssessment(CofunderAssignment assessment) {
-        setProcess(assessment);
+    public CofunderOutcome(boolean decision, String comment) {
+        setFundingConfirmation(decision);
+        setComment(comment);
     }
 
     public Boolean isFundingConfirmation() {
@@ -23,14 +23,6 @@ public class CofunderOutcome extends ProcessOutcome<CofunderAssignment> {
 
     public void setFundingConfirmation(Boolean fundingConfirmation) {
         this.outcome = BooleanUtils.toStringTrueFalse(fundingConfirmation);
-    }
-
-    public String getFeedback() {
-        return description;
-    }
-
-    public void setFeedback(String feedback) {
-        this.description = feedback;
     }
 
     public String getComment() {

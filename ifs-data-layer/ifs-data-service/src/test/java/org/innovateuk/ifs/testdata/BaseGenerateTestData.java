@@ -2,9 +2,11 @@ package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
 import org.flywaydb.core.Flyway;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
@@ -47,6 +49,7 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
@@ -170,6 +173,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private OrganisationDataBuilderService organisationDataBuilderService;
 
+    @Autowired
+    private CofunderDataService cofunderDataService;
+
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
     private List<CsvUtils.ApplicationLine> applicationLines;
@@ -184,7 +190,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Home and industrial efficiency programme}")
+    @Value("${ifs.generate.test.data.competition.filter.name:KTP Africa project setup}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -270,6 +276,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createPublicContent(createCompetitionFutures), taskExecutor);
 
+        CompletableFuture<Void> cofunderFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
+                createCofunders(createCompetitionFutures, createApplicationsFutures), taskExecutor);
+
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
                 createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
@@ -288,7 +297,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture,
-                                competitionOrganisationConfigFutures
+                                competitionOrganisationConfigFutures,
+                                cofunderFutures
         ).join();
 
         long after = System.currentTimeMillis();
@@ -332,6 +342,21 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines, this.competitionLines);
 
     }
+
+    private void createCofunders(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
+        simpleMap(createCompetitionFutures, CompletableFuture::join);
+        List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
+
+        List<ApplicationResource> applicationsForCofunding = applications.stream()
+                .filter(app -> app.getCompetition().getFundingType() == FundingType.KTP)
+                .map(ApplicationData::getApplication)
+                .collect(toList());
+
+        List<ExternalUserLine> filteredCofunders = simpleFilter(this.externalUserLines, l -> l.role == Role.COFUNDER);
+
+        cofunderDataService.buildCofunders(applicationsForCofunding, filteredCofunders);
+    }
+
 
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);

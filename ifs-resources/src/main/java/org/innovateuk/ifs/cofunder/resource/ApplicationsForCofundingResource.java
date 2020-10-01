@@ -4,8 +4,10 @@ public class ApplicationsForCofundingResource {
 
     private long id;
     private String name;
+    private String lead;
 
-    private int assigned;
+    private int total;
     private int rejected;
     private int accepted;
+    private int assigned;
 }

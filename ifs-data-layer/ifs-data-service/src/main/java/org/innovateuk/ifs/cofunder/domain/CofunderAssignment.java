@@ -71,6 +71,14 @@ public class CofunderAssignment extends Process<User, Application, CofunderState
         this.activityState = status;
     }
 
+    public CofunderOutcome getCofunderOutcome() {
+        return cofunderOutcome;
+    }
+
+    public void setCofunderOutcome(CofunderOutcome cofunderOutcome) {
+        this.cofunderOutcome = cofunderOutcome;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
