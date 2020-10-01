@@ -276,6 +276,7 @@
 
             <input type="hidden" th:field="*{question.textArea}">
             <input type="hidden" th:field="*{question.multipleChoice}">
+            <input type="hidden" th:name="question.shortTitle" th:value="${question.shortTitle}"/>
 
             <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
                 <div class="govuk-form-group"
