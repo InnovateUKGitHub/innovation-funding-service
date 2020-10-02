@@ -54,7 +54,7 @@ public class OrganisationJourneyEnd {
 
     private String handleExistingUser(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
         if (!user.hasRole(Role.APPLICANT)) {
-            userRestService.grantRole(user.getId(), Role.APPLICANT).getSuccess();
+            userRestService.grantRole(user.getId(), Role.APPLICANT, Optional.empty()).getSuccess();
             cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
         }
 

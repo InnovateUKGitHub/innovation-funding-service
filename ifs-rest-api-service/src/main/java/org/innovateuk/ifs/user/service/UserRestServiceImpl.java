@@ -9,8 +9,10 @@ import org.innovateuk.ifs.user.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -229,8 +231,16 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> grantRole(long userId, Role targetRole) {
-        return postWithRestResult(USER_REST_URL + "/" + userId + "/grant/" + targetRole.name());
+    public RestResult<Void> grantRole(long userId, Role targetRole, Optional<String> organisation) {
+
+        String baseUrl = USER_REST_URL + "/" + userId + "/grant/" + targetRole.name();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        organisation.ifPresent(org -> params.set("organisation", org));
+
+        String uri = UriComponentsBuilder.fromPath(baseUrl).queryParams(params).build().encode().toUriString();
+
+        return postWithRestResult(uri);
     }
 
     @Override

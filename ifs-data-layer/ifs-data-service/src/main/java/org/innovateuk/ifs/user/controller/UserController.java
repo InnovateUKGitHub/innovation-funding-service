@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -239,7 +240,9 @@ public class UserController {
     }
 
     @PostMapping("{id}/grant/{role}")
-    public RestResult<Void> grantRole(@PathVariable long id, @PathVariable Role role) {
-        return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
+    public RestResult<Void> grantRole(@PathVariable long id,
+                                      @PathVariable Role role,
+                                      @RequestParam(value = "organisation", required = false) Optional<String> organisation) {
+        return userService.grantRole(new GrantRoleCommand(id, role, organisation)).toPostResponse();
     }
 }

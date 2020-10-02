@@ -53,11 +53,11 @@ public class InviteUserController {
     }
 
     @GetMapping("/invite-external-user")
-    public String inviteNewExternalUser(@RequestParam(value = "role") String role,
+    public String inviteNewExternalUser(@RequestParam(value = "role") Role role,
                                         Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(Role.getByName(role)));
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role));
     }
 
     private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
@@ -95,7 +95,7 @@ public class InviteUserController {
     public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()));
 
         return saveInvite(form, validationHandler, failureView);
     }
@@ -119,7 +119,7 @@ public class InviteUserController {
     }
 
     private String redirectToInviteExternalUserPage(Long roleId) {
-        return String.format("redirect:/admin/invite-external-user?role=%s", Role.getById(roleId).getName());
+        return String.format("redirect:/admin/invite-external-user?role=%s", Role.getById(roleId).toString());
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {

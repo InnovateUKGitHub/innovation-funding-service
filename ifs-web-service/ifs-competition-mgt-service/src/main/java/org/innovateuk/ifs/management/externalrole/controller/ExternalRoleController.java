@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ADD_ROLE_INVALID_EMAIL;
@@ -45,13 +46,14 @@ public class ExternalRoleController {
 
     @PostMapping("/external-role")
     public String addRoleToUser(@PathVariable long userId,
-                                @ModelAttribute(name = "form") ExternalRoleForm form,
+                                @ModelAttribute(name = "form") @Valid ExternalRoleForm form,
+                                BindingResult bindingResult,
                                 Model model,
                                 ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> viewUser(userId, form, form.getRole(), model);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(userRestService.grantRole(userId, form.getRole()), mappingErrorKeyToField(USER_ADD_ROLE_INVALID_EMAIL, "email"), fieldErrorsToFieldErrors(), asGlobalErrors());
+            validationHandler.addAnyErrors(userRestService.grantRole(userId, form.getRole(), Optional.ofNullable(form.getOrganisation())), mappingErrorKeyToField(USER_ADD_ROLE_INVALID_EMAIL, "email"), fieldErrorsToFieldErrors(), asGlobalErrors());
             return validationHandler.failNowOrSucceedWith(failureView,
                     () -> redirectToUserPage(userId));
         });

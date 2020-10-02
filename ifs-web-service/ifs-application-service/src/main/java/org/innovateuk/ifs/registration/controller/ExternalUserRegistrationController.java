@@ -136,6 +136,18 @@ public class ExternalUserRegistrationController {
                         .withPostcodeGuidance("")
                         .withGuidance("");
             }
+            if (invite.getRole() == Role.COFUNDER) {
+                viewModelBuilder.withTermsRequired(true)
+                        .withPhoneRequired(false)
+                        .withAddressRequired(false)
+                        .withInvitee(true)
+                        .withOrganisation(invite.getOrganisation())
+                        .withRole(invite.getRole().getDisplayName())
+                        .withPageTitle("Create " + invite.getRole().getDisplayName().toLowerCase() + " account")
+                        .withSubTitle("")
+                        .withPostcodeGuidance("")
+                        .withGuidance("");
+            }
             model.addAttribute("model", viewModelBuilder.build());
             return "registration/register";
         }

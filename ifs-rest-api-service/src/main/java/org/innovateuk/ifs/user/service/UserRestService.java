@@ -6,6 +6,7 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 
 /**
@@ -70,6 +71,6 @@ public interface UserRestService {
 
     RestResult<Void> deactivateUser(long userId);
     RestResult<Void> reactivateUser(long userId);
-    RestResult<Void> grantRole(long userId, Role targetRole);
+    RestResult<Void> grantRole(long userId, Role targetRole, Optional<String> organisation);
     RestResult<Void> updateEmail(long userId, String email);
 }

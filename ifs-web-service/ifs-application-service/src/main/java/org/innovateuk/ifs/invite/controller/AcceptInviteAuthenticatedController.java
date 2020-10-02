@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -93,7 +95,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                     }
 
                     if (!loggedInUser.hasRole(Role.APPLICANT)) {
-                        userRestService.grantRole(loggedInUser.getId(), Role.APPLICANT).getSuccess();
+                        userRestService.grantRole(loggedInUser.getId(), Role.APPLICANT, Optional.empty()).getSuccess();
                         cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
                     }
                     // Success

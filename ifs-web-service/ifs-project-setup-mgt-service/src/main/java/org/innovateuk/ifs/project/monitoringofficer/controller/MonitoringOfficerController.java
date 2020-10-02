@@ -125,7 +125,7 @@ public class MonitoringOfficerController {
             return "project/monitoring-officer/assign-role";
         }
 
-        userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
+        userRestService.grantRole(userId, MONITORING_OFFICER, Optional.empty()).getSuccess();
         updateUserPhoneNumber(userId, form.getPhoneNumber());
 
         return monitoringOfficerProjectsRedirect(userId);
@@ -133,7 +133,7 @@ public class MonitoringOfficerController {
 
     @PostMapping("/{userId}/assign-role-without-edit")
     public String assignRoleWithoutEdit(@PathVariable long userId) {
-        userRestService.grantRole(userId, MONITORING_OFFICER).getSuccess();
+        userRestService.grantRole(userId, MONITORING_OFFICER, Optional.empty()).getSuccess();
 
         return monitoringOfficerProjectsRedirect(userId);
     }
