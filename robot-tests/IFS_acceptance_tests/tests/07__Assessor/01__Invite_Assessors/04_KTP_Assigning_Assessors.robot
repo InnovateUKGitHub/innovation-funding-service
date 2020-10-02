@@ -83,7 +83,7 @@ KTA accepts the invitation to assess the application
     the user clicks the button/link      jQuery = button:contains("Confirm")
 
 KTA accepts to assess the KTP application
-    log in as a different user           ${ktaEmail}
+    log in as a different user           ${ktaEmail}  ${short_password}
     the user clicks the button/link      link = ${ktpAssessmentCompetitionName}
     the user clicks the button/link      link = Accept or reject
     the user selects the radio button    assessmentAccept  true
