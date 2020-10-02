@@ -53,7 +53,7 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, String filter, int page) {
+    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, int page) {
         String baseUrl = format("%s/application/%d", cofunderRestUrl, applicationId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
