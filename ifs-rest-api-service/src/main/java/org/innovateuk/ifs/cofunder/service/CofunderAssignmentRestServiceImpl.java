@@ -39,7 +39,6 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     @Override
     public RestResult<Void> edit(long assignmentId) {
         return postWithRestResult(format("%s/assignment/%d/edit", cofunderRestUrl, assignmentId), Void.class);
-
     }
 
     @Override
