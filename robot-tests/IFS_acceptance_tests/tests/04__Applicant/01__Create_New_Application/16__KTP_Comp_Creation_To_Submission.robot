@@ -352,7 +352,7 @@ System should not allow a KTA to be invited if they do not have a KTA account in
 
 The applicant invites a KTA user to the application
     [Documentation]  IFS-7806 IFS-8095
-    [Setup]  Assign the KTA role to the user
+    [Setup]  assign the KTA role to the user       ${ktaEmail}
     Given Log in as a different user               &{ktpLeadApplicantCredentials}
     When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
     Then The user reads his email                  ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
@@ -888,16 +888,6 @@ KTA should see application name, organisation and lead applicant details
     the user should see the element     jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
     the user should see the element     jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
     the user should see the element     jQuery = dt:contains("Application")+dd:contains("${ApplicationID}: ${ktpApplicationTitle}")
-
-Assign the KTA role to the user
-    log in as a different user               &{ifs_admin_user_credentials}
-    the user clicks the button/link          link = Manage users
-    the user enters text to a text field     id = filter   ${ktaEmail}
-    the user clicks the button/link          css = [class="btn"]
-    the user clicks the button/link          jQuery = a:contains("Edit")
-    the user clicks the button/link          link = Add a new external role profile
-    the user clicks the button/link          jQuery = button:contains("Confirm role profile")
-    the user clicks the button/link          jQuery = button:contains("Save and return")
 
 the user invites a KTA to application
     [Arguments]  ${applicationName}   ${email}
