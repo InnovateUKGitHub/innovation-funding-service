@@ -157,7 +157,7 @@ public class CompetitionInFlightViewModel {
                 !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus);
     }
 
-    public boolean isManageCoFundersLinkEnabled() {
+    public boolean isManageCofundersLinkEnabled() {
         return competitionFundingType == FundingType.KTP
                 && competitionStatus.isLaterThan(READY_TO_OPEN)
                 && !competitionStatus.isLaterThan(IN_ASSESSMENT);

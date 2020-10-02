@@ -92,7 +92,7 @@
                                class="govuk-link">
                             </a>
                         </li>
-                        <li th:if="${model.isManageCoFundersLinkEnabled()}">
+                        <li th:if="${model.isManageCofundersLinkEnabled()}">
                             <a class="govuk-link" th:href="@{/competition/{competitionId}/cofunders(competitionId=${model.competitionId})}">Manage co-funders</a>
                         </li>
                         <th:block th:unless="${model.competitionCompletionStage == T(org.innovateuk.ifs.competition.resource.CompetitionCompletionStage).COMPETITION_CLOSE}">

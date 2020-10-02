@@ -1,19 +1,17 @@
 package org.innovateuk.ifs.management.cofunders.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-
-import java.util.List;
 
 public class AllocateCofundersViewModel {
     private final Long competitionId;
     private final String competitionName;
-    private final List<ApplicationResource> applications;
+    private final ApplicationsForCofundingPageResource applicationsPage;
 
-    public AllocateCofundersViewModel(CompetitionResource competition, List<ApplicationResource> applications) {
+    public AllocateCofundersViewModel(CompetitionResource competition, ApplicationsForCofundingPageResource applicationsPage) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
-        this.applications = applications;
+        this.applicationsPage = applicationsPage;
     }
 
     public Long getCompetitionId() {
@@ -24,7 +22,7 @@ public class AllocateCofundersViewModel {
         return competitionName;
     }
 
-    public List<ApplicationResource> getApplications() {
-        return applications;
+    public ApplicationsForCofundingPageResource getApplicationsPage() {
+        return applicationsPage;
     }
 }
