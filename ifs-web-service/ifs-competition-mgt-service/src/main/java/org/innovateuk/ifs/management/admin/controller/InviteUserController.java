@@ -13,6 +13,7 @@ import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +45,9 @@ public class InviteUserController {
 
     @Autowired
     private InviteUserService inviteUserService;
+
+    @Value("${ifs.cofunder.enabled}")
+    private boolean cofunderEnabled;
 
     @GetMapping("/invite-user")
     public String inviteNewUser(Model model) {
@@ -103,6 +107,10 @@ public class InviteUserController {
     @GetMapping("/select-external-role")
     public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
                              Model model) {
+
+        if (!cofunderEnabled) {
+            return String.format("redirect:/admin/invite-external-user?role=%s", Role.KNOWLEDGE_TRANSFER_ADVISER.toString());
+        }
 
         model.addAttribute("roles", Role.externalRolesToInvite());
         return "admin/select-external-role";
