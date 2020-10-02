@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/cofunder")
 public class CofunderAssignmentController {
-
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Autowired
