@@ -48,14 +48,14 @@ public class CofunderAssignmentController {
     @GetMapping("/competition/{competitionId}")
     public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(@PathVariable long competitionId,
                                                                                              @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
-                                                                                             @RequestParam String filter) {
+                                                                                             @RequestParam(defaultValue = "") String filter) {
         return cofunderAssignmentService.findApplicationsNeedingCofunders(competitionId, filter, pageable).toGetResponse();
     }
 
     @GetMapping("/application/{applicationId}")
     public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(@PathVariable long applicationId,
                                                                                                         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
-                                                                                                        @RequestParam String filter) {
+                                                                                                        @RequestParam(defaultValue = "") String filter) {
         return cofunderAssignmentService.findAvailableCofundersForApplication(applicationId, filter, pageable).toGetResponse();
     }
 }

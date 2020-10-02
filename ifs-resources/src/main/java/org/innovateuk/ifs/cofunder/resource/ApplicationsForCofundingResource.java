@@ -11,6 +11,7 @@ public class ApplicationsForCofundingResource {
     private long accepted;
     private long assigned;
 
+    public ApplicationsForCofundingResource() {}
     public ApplicationsForCofundingResource(long id, String name, String lead, long total, long rejected, long accepted, long assigned) {
         this.id = id;
         this.name = name;
