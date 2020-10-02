@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isAssessor;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasAssessorAuthority;
 
 @PermissionRules
 @Component
@@ -31,14 +31,14 @@ public class AssessorCompetitionPermissionRules {
             " if its in assessment.")
     public boolean assessorCompetition(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isAssessor(loggedInUser) && !competition.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT);
+        return hasAssessorAuthority(loggedInUser) && !competition.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT);
     }
 
     @PermissionRule(value = "ASSESSOR_INTERVIEW", description = "Only assessors can see the competition" +
             " if its in interview panel.")
     public boolean assessorInterviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
-        return isAssessor(loggedInUser) && assessorAssignedToInterview(competitionCompositeId, loggedInUser);
+        return hasAssessorAuthority(loggedInUser) && assessorAssignedToInterview(competitionCompositeId, loggedInUser);
     }
 
     private boolean assessorAssignedToInterview(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
