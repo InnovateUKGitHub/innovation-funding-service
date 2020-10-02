@@ -77,6 +77,18 @@ the user fills in the Application details
     the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
+the user fills in the Application details with no submit
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element       jQuery = h1:contains("Application details")
+    the user enters text to a text field  id = name  ${appTitle}
+    the user enters text to a text field  id = startDate  ${tomorrowday}
+    the user enters text to a text field  css = #application_details-startdate_month  ${month}
+    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field  css = [id="durationInMonths"]  24
+    the user should not see the element   link = Choose your innovation area
+    the user can mark the question as complete
+    the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
+
 the user selects research category from funding
     [Arguments]  ${res_category}
     the user clicks the button/link   link = research category

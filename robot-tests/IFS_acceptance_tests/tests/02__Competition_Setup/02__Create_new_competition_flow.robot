@@ -296,7 +296,7 @@ Project eligibility: Contain the correct options
     And the resubmission should not have a default selection
 
 Project eligibility: Mark as Done then Edit again
-    [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
+    [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225  IFS-8044
     [Tags]  HappyPath
     Given the user selects the checkbox      research-categories-33
     And the user selects the checkbox        research-categories-34
@@ -947,7 +947,7 @@ the user fills new application details
     the user enters text to a text field             css = #application_details-startdate_month  ${month}
     the user enters text to a text field             css = #application_details-startdate_year  ${nextyear}
     the user enters text to a text field             id = durationInMonths  45
-    the user clicks the button twice                 css = label[for="resubmission-no"]
+    the user should not see the element              css = label[for="resubmission-no"]  #Set on line 307
     the user clicks the button/link                  id = innovationAreaName
     the user selects the radio button                innovationAreaChoice  NOT_APPLICABLE
     the user clicks the button/link                  jQuery = button:contains("Save")
