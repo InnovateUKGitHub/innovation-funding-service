@@ -39,7 +39,6 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     @Override
     public RestResult<Void> edit(long assignmentId) {
         return postWithRestResult(format("%s/assignment/%d/edit", cofunderRestUrl, assignmentId), Void.class);
-
     }
 
     @Override
@@ -53,7 +52,7 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, String filter, int page) {
+    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, int page) {
         String baseUrl = format("%s/application/%d", cofunderRestUrl, applicationId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)

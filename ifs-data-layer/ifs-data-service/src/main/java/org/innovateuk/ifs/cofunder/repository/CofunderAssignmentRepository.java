@@ -49,7 +49,7 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
             "WHERE role = org.innovateuk.ifs.user.resource.Role.COFUNDER " +
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :filter, '%') " +
             "AND NOT EXISTS (" +
-            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId" +
+            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
             ")"
     )
     Page<User> findUsersAvailableForCofunding(long applicationId, String filter, Pageable pageable);

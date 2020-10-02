@@ -4,23 +4,23 @@ import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 
-public class CofundersAvailableForApplicationPageResource extends PageResource<CofuderUserResource> {
+public class CofundersAvailableForApplicationPageResource extends PageResource<CofunderUserResource> {
 
-    private List<CofuderUserResource> assignedCofunders;
+    private List<CofunderUserResource> assignedCofunders;
 
     public CofundersAvailableForApplicationPageResource() {
     }
 
-    public CofundersAvailableForApplicationPageResource(long totalElements, int totalPages, List<CofuderUserResource> content, int number, int size, List<CofuderUserResource> assignedCofunders) {
+    public CofundersAvailableForApplicationPageResource(long totalElements, int totalPages, List<CofunderUserResource> content, int number, int size, List<CofunderUserResource> assignedCofunders) {
         super(totalElements, totalPages, content, number, size);
         this.assignedCofunders = assignedCofunders;
     }
 
-    public List<CofuderUserResource> getAssignedCofunders() {
+    public List<CofunderUserResource> getAssignedCofunders() {
         return assignedCofunders;
     }
 
-    public void setAssignedCofunders(List<CofuderUserResource> assignedCofunders) {
+    public void setAssignedCofunders(List<CofunderUserResource> assignedCofunders) {
         this.assignedCofunders = assignedCofunders;
     }
 }

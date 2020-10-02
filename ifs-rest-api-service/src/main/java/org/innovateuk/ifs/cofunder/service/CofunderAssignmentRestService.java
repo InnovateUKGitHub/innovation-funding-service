@@ -24,6 +24,6 @@ public interface CofunderAssignmentRestService {
 
     RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, String filter, int page);
 
-    RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, String filter, int page);
+    RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, int page);
 
 }

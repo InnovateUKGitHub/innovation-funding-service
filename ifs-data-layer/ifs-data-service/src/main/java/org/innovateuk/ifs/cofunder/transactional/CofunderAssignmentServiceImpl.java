@@ -114,7 +114,7 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, String filter, Pageable pageable) {
+    public ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, Pageable pageable) {
         Page<User> result = cofunderAssignmentRepository.findUsersAvailableForCofunding(applicationId, filter, pageable);
         List<CofunderAssignment> assignments = cofunderAssignmentRepository.findByTargetId(applicationId);
         return serviceSuccess(new CofundersAvailableForApplicationPageResource(
@@ -127,8 +127,8 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         );
     }
 
-    private CofuderUserResource mapToCofunderUser(User user) {
-        CofuderUserResource cofunderUser = new CofuderUserResource();
+    private CofunderUserResource mapToCofunderUser(User user) {
+        CofunderUserResource cofunderUser = new CofunderUserResource();
         Profile profile = profileRepository.findById(user.getProfileId()).orElseThrow(ObjectNotFoundException::new);
         cofunderUser.setUserId(user.getId());
         cofunderUser.setEmail(user.getEmail());
