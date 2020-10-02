@@ -2,21 +2,30 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
@@ -25,12 +34,19 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSubSection;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 @Component
 public class CommonBuilders {
 
     @Autowired
     private ResearchCategoryRepository categoryRepository;
+
+    @Autowired
+    private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
+
+    @Autowired
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     /*
     Tech debt.
@@ -246,6 +262,16 @@ public class CommonBuilders {
                                 .withScope(FormInputScope.APPLICATION)
                                 .withActive(false),
                         aFormInput()
+                                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
+                                .withDescription("Is the application in scope?"),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
+                                .withDescription("Please select the research category for this project"),
+                        aFormInput()
                                 .withType(FormInputType.TEXTAREA)
                                 .withScope(FormInputScope.ASSESSMENT)
                                 .withActive(true)
@@ -259,17 +285,7 @@ public class CommonBuilders {
                                         aGuidanceRow()
                                                 .withSubject("No")
                                                 .withJustification("One or more of the above requirements have not been satisfied.")
-                                )),
-                        aFormInput()
-                                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
-                                .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(true)
-                                .withDescription("Is the application in scope?"),
-                        aFormInput()
-                                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
-                                .withScope(FormInputScope.ASSESSMENT)
-                                .withActive(true)
-                                .withDescription("Please select the research category for this project")
+                                ))
                 ));
     }
 
@@ -346,5 +362,37 @@ public class CommonBuilders {
                 new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, 35),
                 new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, 25)
         );
+    }
+
+    public static Competition addDefaultProjectSetupColumns(Competition competition) {
+        addProjectSetupStage(competition, PROJECT_DETAILS);
+        addProjectSetupStage(competition, PROJECT_TEAM);
+        addProjectSetupStage(competition, DOCUMENTS);
+        addProjectSetupStage(competition, MONITORING_OFFICER);
+        addProjectSetupStage(competition, BANK_DETAILS);
+        addProjectSetupStage(competition, FINANCE_CHECKS);
+        addProjectSetupStage(competition, SPEND_PROFILE);
+        addProjectSetupStage(competition, GRANT_OFFER_LETTER);
+        return competition;
+    }
+
+    public static void addProjectSetupStage(Competition competition, ProjectSetupStage projectSetupStage) {
+        competition.addProjectStage(new ProjectStages(competition, projectSetupStage));
+    }
+
+    public Competition saveFinanceRows(Competition competition, List<FinanceRowType> financeRowTypes) {
+        IntStream.range(0, financeRowTypes.size()).forEach(i ->
+                competition.getCompetitionFinanceRowTypes().add(
+                        competitionFinanceRowsTypesRepository.save(
+                                new CompetitionFinanceRowTypes(competition, financeRowTypes.get(i), i)))
+        );
+        return competition;
+    }
+
+    public Competition overrideTermsAndConditions(Competition competition) {
+        GrantTermsAndConditions grantTermsAndConditions =
+                grantTermsAndConditionsRepository.getLatestForFundingType(competition.getFundingType());
+        competition.setTermsAndConditions(grantTermsAndConditions);
+        return competition;
     }
 }

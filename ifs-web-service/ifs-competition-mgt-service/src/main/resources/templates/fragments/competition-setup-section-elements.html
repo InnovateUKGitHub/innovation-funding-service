@@ -17,7 +17,8 @@
                     th:text="${question.title}"></dd>
                 <dt class="govuk-grid-column-one-third">Question subtitle</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.subTitle)}"
+                <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
+                    th:unless="${#strings.isEmpty(question.subTitle)}"
                     ifs:utext="${question.subTitle}"></dd>
                 <dt class="govuk-grid-column-one-third">Guidance title</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
@@ -25,12 +26,14 @@
                     th:text="${question.guidanceTitle}"></dd>
                 <dt class="govuk-grid-column-one-third">Guidance</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
+                <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
+                    th:unless="${#strings.isEmpty(question.guidance)}"
                     ifs:utext="${question.guidance}"></dd>
 
                 <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
                     <dt class="govuk-grid-column-one-third">Answer type</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.typeOfQuestion.name() == 'FREE_TEXT' ? 'Free text' : 'Multiple choice'}"></dd>
+                    <dd class="govuk-grid-column-two-thirds"
+                        th:text="${competitionSetupForm.typeOfQuestion.name() == 'FREE_TEXT' ? 'Free text' : 'Multiple choice'}"></dd>
                 </th:block>
                 <th:block th:if="${question.textArea != null && question.textArea}">
                     <dt class="govuk-grid-column-one-third">Max word count</dt>
@@ -50,7 +53,8 @@
                         <dd class="govuk-grid-column-two-thirds">None</dd>
                     </th:block>
                     <th:block th:unless="${competitionSetupForm.numberOfUploads == 0}">
-                        <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.numberOfUploads}">1</dd>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.numberOfUploads}">1
+                        </dd>
                     </th:block>
                     <th:block th:if="${question.appendix}">
                         <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
@@ -62,7 +66,8 @@
                             </ul>
                         </dd>
                         <dt class="govuk-grid-column-one-third">Appendix guidance</dt>
-                        <dd class="govuk-grid-column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
+                        <dd class="govuk-grid-column-two-thirds wysiwyg-styles"
+                            ifs:utext="${question.appendixGuidance}"></dd>
                     </th:block>
                 </th:block>
                 <th:block th:if="${question.templateDocument != null}">
@@ -89,65 +94,73 @@
                 </th:block>
             </dl>
         </fieldset>
-    <th:block th:if="${model.displayAssessmentOptions}">
-        <fieldset
-            th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
-            class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
-                <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
-            </legend>
+        <th:block th:if="${model.displayAssessmentOptions}">
+            <fieldset
+                th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
+                class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                    <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
+                </legend>
 
-            <dl class="govuk-list application-question-list govuk-grid-row">
-                <th:block th:if="${question.scored != null}">
-                    <dt class="govuk-grid-column-one-third">Scored</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
-                    <th:block th:if="${question.scored}">
-                        <dt class="govuk-grid-column-one-third">Out of</dt>
-                        <dd class="govuk-grid-column-two-thirds" th:text="${question.scoreTotal}"></dd>
+                <dl class="govuk-list application-question-list govuk-grid-row">
+                    <th:block th:if="${question.scored != null}">
+                        <dt class="govuk-grid-column-one-third">Scored</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
+                        <th:block th:if="${question.scored}">
+                            <dt class="govuk-grid-column-one-third">Out of</dt>
+                            <dd class="govuk-grid-column-two-thirds" th:text="${question.scoreTotal}"></dd>
+                        </th:block>
                     </th:block>
-                </th:block>
 
-                <th:block th:if="${question.writtenFeedback != null}">
-                    <dt class="govuk-grid-column-one-third">Written feedback</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
-                    <th:block th:if="${question.writtenFeedback}">
-                        <dt class="govuk-grid-column-one-third">Guidance title</dt>
-                        <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">
-                            None
-                        </dd>
-                        <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}"
-                            th:text="${question.assessmentGuidanceTitle}"></dd>
-                        <dt class="govuk-grid-column-one-third">Guidance</dt>
-                        <dd class="govuk-grid-column-two-thirds">
-                            <p class="govuk-body" th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
-                            <dl class="govuk-grid-row govuk-!-margin-top-6">
-                                <th:block th:each="score : ${question.guidanceRows}">
-                                    <dt class="govuk-grid-column-one-quarter"
-                                        th:text="${score.subject != null ? score.subject.replace(',', '-') : score.subject}"></dt>
-                                    <dd class="govuk-grid-column-three-quarters" th:text="${score.justification}"></dd>
-                                </th:block>
-                            </dl>
-                        </dd>
-                        <dt class="govuk-grid-column-one-third">Max word count</dt>
-                        <dd class="govuk-grid-column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
+                    <th:block th:if="${question.writtenFeedback != null}">
+                        <dt class="govuk-grid-column-one-third">Written feedback</dt>
+                        <dd class="govuk-grid-column-two-thirds"
+                            th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
+                        <th:block th:if="${question.writtenFeedback}">
+                            <dt class="govuk-grid-column-one-third">Guidance title</dt>
+                            <dd class="govuk-grid-column-two-thirds"
+                                th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">
+                                None
+                            </dd>
+                            <dd class="govuk-grid-column-two-thirds"
+                                th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}"
+                                th:text="${question.assessmentGuidanceTitle}"></dd>
+                            <dt class="govuk-grid-column-one-third">Guidance</dt>
+                            <dd class="govuk-grid-column-two-thirds">
+                                <p class="govuk-body" th:text="${question.assessmentGuidance}">Your score should be
+                                    based on the following:</p>
+                                <dl class="govuk-grid-row govuk-!-margin-top-6">
+                                    <th:block th:each="score : ${question.guidanceRows}">
+                                        <dt class="govuk-grid-column-one-quarter"
+                                            th:text="${score.subject != null ? score.subject.replace(',', '-') : score.subject}"></dt>
+                                        <dd class="govuk-grid-column-three-quarters"
+                                            th:text="${score.justification}"></dd>
+                                    </th:block>
+                                </dl>
+                            </dd>
+                            <dt class="govuk-grid-column-one-third">Max word count</dt>
+                            <dd class="govuk-grid-column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
+                        </th:block>
                     </th:block>
-                </th:block>
 
-                <th:block th:if="${question.researchCategoryQuestion != null}">
-                    <dt class="govuk-grid-column-one-third">Research category question</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
-                </th:block>
-                <th:block th:if="${question.scope != null}">
-                    <dt class="govuk-grid-column-one-third">Scope 'Y/N' question</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
-                </th:block>
-            </dl>
-        </fieldset>
-    </th:block>
+                    <th:block th:if="${question.researchCategoryQuestion != null}">
+                        <dt class="govuk-grid-column-one-third">Research category question</dt>
+                        <dd class="govuk-grid-column-two-thirds"
+                            th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
+                    </th:block>
+                    <th:block th:if="${question.scope != null}">
+                        <dt class="govuk-grid-column-one-third">Scope 'Y/N' question</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
+                    </th:block>
+                </dl>
+            </fieldset>
+        </th:block>
     </th:block>
     <th:block th:if="${editable}">
 
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Application question</h2>
+
+        <h2 th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+            class="govuk-heading-m govuk-!-margin-top-6">Application question</h2>
 
         <input type="hidden"
                th:name="question.questionId"
@@ -157,49 +170,55 @@
                th:value="${question.type}"/>
 
         <div class="question">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.shortTitle">
-                    Question heading
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
+
+            <th:block
+                th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.shortTitle">
+                        Question heading
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
                               th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-!-width-two-thirds"
-                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-input--error'"
-                       type="text"
-                       required="required"
-                       id="question.shortTitle"
-                       th:name="question.shortTitle"
-                       th:value="${question.shortTitle}"
-                       maxlength="255"/>
-            </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.title">
-                    Question title
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.title')}">
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-two-thirds"
+                           th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-input--error'"
+                           type="text"
+                           required="required"
+                           id="question.shortTitle"
+                           th:name="question.shortTitle"
+                           th:value="${question.shortTitle}"
+                           maxlength="255"/>
+                </div>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.title">
+                        Question title
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.title')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.title')}"
                               th:text="${err}"></span>
-                </th:block>
-                <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
-                       class="govuk-input govuk-!-width-two-thirds"
-                       type="text"
-                       required="required"
-                       id="question.title"
-                       th:name="question.title"
-                       th:value="${question.title}"
-                       maxlength="255"/>
-            </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.subTitle">
-                    Question subtitle
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.subTitle')}">
+                    </th:block>
+                    <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
+                           class="govuk-input govuk-!-width-two-thirds"
+                           type="text"
+                           required="required"
+                           id="question.title"
+                           th:name="question.title"
+                           th:value="${question.title}"
+                           maxlength="255"/>
+                </div>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.subTitle">
+                        Question subtitle
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.subTitle')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.subTitle')}"
                               th:text="${err}"></span>
-                </th:block>
-                <div class="textarea-wrapped short">
+                    </th:block>
+                    <div class="textarea-wrapped short">
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.subTitle"
@@ -209,35 +228,36 @@
                                   required="required"
                                   ifs:utext="${question.subTitle}">
                         </textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.guidanceTitle">
-                    Question guidance title
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.guidanceTitle">
+                        Question guidance title
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
                               th:text="${err}"></span>
-                </th:block>
-                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
-                       class="govuk-input govuk-!-width-two-thirds"
-                       type="text"
-                       id="question.guidanceTitle"
-                       th:required="${question.guidanceRequired ? 'required' : null}"
-                       th:name="question.guidanceTitle"
-                       th:value="${question.guidanceTitle}"
-                       maxlength="255"/>
-            </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.guidance">
-                    Question guidance
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.guidance')}">
+                    </th:block>
+                    <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
+                           class="govuk-input govuk-!-width-two-thirds"
+                           type="text"
+                           id="question.guidanceTitle"
+                           th:required="${question.guidanceRequired ? 'required' : null}"
+                           th:name="question.guidanceTitle"
+                           th:value="${question.guidanceTitle}"
+                           maxlength="255"/>
+                </div>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.guidance">
+                        Question guidance
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.guidance')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidance')}"
                               th:text="${err}"></span>
-                </th:block>
-                <div class="textarea-wrapped">
+                    </th:block>
+                    <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.guidance"
@@ -247,8 +267,10 @@
                                   th:required="${question.guidanceRequired ? 'required' : null}"
                                   ifs:utext="${question.guidance}">
                         </textarea>
+                    </div>
                 </div>
-            </div>
+
+            </th:block>
 
             <input type="hidden" th:field="*{question.textArea}">
             <input type="hidden" th:field="*{question.multipleChoice}">
@@ -272,7 +294,7 @@
                                        type="radio"
                                        th:field="*{typeOfQuestion}"
                                        value="FREE_TEXT"
-                                       required="required" />
+                                       required="required"/>
                                 <label class="govuk-label govuk-radios__label" for="text-area">
                                     Free text box
                                 </label>
@@ -296,7 +318,8 @@
             </th:block>
 
             <th:block th:if="${question.textArea != null}">
-                <div id="text-area-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
+                <div id="text-area-form-group" class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="question.maxWords">
                         Max word count
                     </label>
@@ -322,7 +345,8 @@
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Answers</th>
-                            <th class="govuk-table__header govuk-!-width-one-third alignright" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                            <th class="govuk-table__header govuk-!-width-one-third alignright" scope="col"><span
+                                class="govuk-visually-hidden">Action</span></th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
@@ -365,15 +389,17 @@
                         </tbody>
                     </table>
                     <div class="alignright">
-                        <button id="add-multiple-choice-option" class="button-clear" data-add-row="multipleChoice" type="button"
-                                th:attr="aria-hidden=${question.choices.size() >= 15} ? 'true' : null">+ Add another answer</button>
+                        <button id="add-multiple-choice-option" class="button-clear" data-add-row="multipleChoice"
+                                type="button"
+                                th:attr="aria-hidden=${question.choices.size() >= 15} ? 'true' : null">+ Add another answer
+                        </button>
                     </div>
                 </div>
             </th:block>
 
             <!--/* APPENDIX */-->
             <th:block th:if="${question.appendix != null or #fields.hasErrors('numberOfUploads*')}">
-                <input type="hidden" th:field="*{question.appendix}" />
+                <input type="hidden" th:field="*{question.appendix}"/>
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('numberOfUploads*')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
@@ -387,7 +413,8 @@
                         </th:block>
 
                         <div class="govuk-radios">
-                            <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-inverted="true">
+                            <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv"
+                                 data-target-inverted="true">
                                 <input id="appendix-no"
                                        class="govuk-radios__input"
                                        th:field="*{numberOfUploads}"
@@ -439,7 +466,8 @@
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.allowedAppendixResponseFileTypes')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.allowedAppendixResponseFileTypes">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                                    id="question.allowedAppendixResponseFileTypes">
                                 <h2 class="govuk-fieldset__heading">Accepted appendix file types</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.allowedAppendixResponseFileTypes')}">
@@ -470,7 +498,8 @@
                             Appendix guidance
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
+                            <span class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('question.appendixGuidance')}"
                                   th:text="${err}"></span>
                         </th:block>
                         <div class="textarea-wrapped">
@@ -502,7 +531,8 @@
                         </th:block>
                         <div class="govuk-radios govuk-radios--inline"
                              th:with="checked=${question.templateDocument != null and question.templateDocument}">
-                            <div class="govuk-radios__item" data-target="allowedTemplateFileTypesDiv" data-target-clear-form="true">
+                            <div class="govuk-radios__item" data-target="allowedTemplateFileTypesDiv"
+                                 data-target-clear-form="true">
                                 <input id="template-document-yes"
                                        class="govuk-radios__input"
                                        th:name="question.templateDocument"
@@ -540,7 +570,8 @@
                             </span>
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.templateTitle')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.templateTitle')}"
+                            <span class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('question.templateTitle')}"
                                   th:text="${err}"></span>
                         </th:block>
                         <input class="govuk-input govuk-!-width-two-thirds"
@@ -575,7 +606,8 @@
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.allowedTemplateResponseFileTypes')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.allowedTemplateResponseFileTypes">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                                    id="question.allowedTemplateResponseFileTypes">
                                 <h2 class="govuk-fieldset__heading">Accepted upload file types</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.allowedTemplateResponseFileTypes')}">
@@ -604,23 +636,26 @@
 
             <!--/* ASSESSMENT */-->
             <th:block
-                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE)}">
+                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE)}">
 
-                <input type="hidden" name="competitionSetupForm.question.type"
-                       th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}"/>
+                <input type="hidden" name="competitionSetupForm.question.type" th:field="*{question.type}"/>
 
-                <h2 class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
+                <h2 th:if="${competitionSetupForm.question.type != T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                    class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
 
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'govuk-form-group--error'">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.researchCategoryQuestion">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                                    id="question.researchCategoryQuestion">
                                 <h2 class="govuk-fieldset__heading">Research category question</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.researchCategoryQuestion')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
-                                th:text="${err}"></span>
+                                <span class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
+                                      th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
                                 <div class="govuk-radios__item">
@@ -652,7 +687,7 @@
                     </div>
 
                 </th:block>
-                <th:block th:if="${question.scored != null or #fields.hasErrors('question.scored')}">
+                <th:block th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION and (question.scored != null or #fields.hasErrors('question.scored'))}">
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.scored')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
@@ -700,7 +735,8 @@
                             Out of
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
+                                <span class="govuk-error-message"
+                                      th:each="err : ${#fields.errors('question.scoreTotal')}"
                                       th:text="${err}"></span>
                         </th:block>
                         <input class="govuk-input govuk-input--width-10"
@@ -750,18 +786,22 @@
 
                 <th:block th:if="${question.writtenFeedback != null or #fields.hasErrors('question.writtenFeedback')}">
 
-                    <div class="govuk-form-group"
-                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'govuk-form-group--error'">
+                    <div th:attr="aria-hidden=${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"
+                        class="govuk-form-group"
+                        th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.writtenFeedback">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                                    id="question.writtenFeedback">
                                 <h2 class="">Written feedback</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
-                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
+                            <span class="govuk-error-message"
+                                  th:each="err : ${#fields.errors('question.writtenFeedback')}"
                                   th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
-                                <div class="govuk-radios__item" data-target="scored-options" data-target-clear-validation="true">
+                                <div class="govuk-radios__item" data-target="scored-options"
+                                     data-target-clear-validation="true">
                                     <input id="writtenFeedback-yes"
                                            class="govuk-radios__input"
                                            th:name="question.writtenFeedback"
@@ -834,17 +874,20 @@
 
                             <h3 class="govuk-heading-s">Guidance table</h3>
                             <table id="guidance-table" class="govuk-table assessed-guidance"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}">
+                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
-                                    <th class="govuk-table__header" scope="col">Score <span class="govuk-visually-hidden"> from</span></th>
-                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Score to</span></th>
+                                    <th class="govuk-table__header" scope="col">Score <span
+                                        class="govuk-visually-hidden"> from</span></th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Score to</span>
+                                    </th>
                                     <th class="govuk-table__header" scope="col">Justification</th>
-                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
-                                    <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
+                                <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
 
                                     <tr th:id="${'guidance-'+iteration.index}"
                                         class="govuk-table__row form-group-row-validated"
@@ -932,7 +975,8 @@
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="col">Subject</th>
                                     <th class="govuk-table__header" scope="col">Justification</th>
-                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span>
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
@@ -1023,7 +1067,10 @@
                     </div>
                 </th:block>
             </th:block>
-
+            <th:block th:unless="${model.displayAssessmentOptions}">
+                <input type="hidden" value="0" th:name="question.writtenFeedback" >
+                <input type="hidden" value="0" th:name="question.scored">
+            </th:block>
         </div>
     </th:block>
 </div>

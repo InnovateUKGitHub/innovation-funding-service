@@ -5,9 +5,10 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
+
+import static org.innovateuk.ifs.util.SecurityRuleUtil.hasAssessorAuthority;
 
 /**
  * Provides the permissions around CRUD operations for {@link CompetitionParticipant} resources.
@@ -20,21 +21,17 @@ public class CompetitionParticipantPermissionRules extends BasePermissionRules {
     public boolean userCanAcceptCompetitionInvite(CompetitionParticipantResource competitionParticipant, UserResource user) {
         return user != null &&
                 competitionParticipant != null &&
-                isAssessor(user) &&
+                hasAssessorAuthority(user) &&
                 isSameUser(competitionParticipant, user);
     }
 
     @PermissionRule(value = "READ", description = "only the same user can read their competition participation")
     public boolean userCanViewTheirOwnCompetitionParticipation(CompetitionParticipantResource competitionParticipant, UserResource user) {
-        return isAssessor(user) && isSameParticipant(competitionParticipant, user);
+        return hasAssessorAuthority(user) && isSameParticipant(competitionParticipant, user);
     }
 
     private static boolean isSameParticipant(CompetitionParticipantResource competitionParticipant, UserResource user) {
         return user.getId().equals(competitionParticipant.getUserId());
-    }
-
-    private static boolean isAssessor(UserResource user) {
-        return user.hasRole(Role.ASSESSOR);
     }
 
     private static boolean isSameUser(CompetitionParticipantResource competitionParticipant, UserResource user) {

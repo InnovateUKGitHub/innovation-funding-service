@@ -33,8 +33,8 @@ public final class SecurityRuleUtil {
         return user.hasRole(SYSTEM_REGISTRATION_USER);
     }
 
-    public static boolean isAssessor(UserResource user) {
-        return user.hasRole(ASSESSOR);
+    public static boolean hasAssessorAuthority(UserResource user) {
+        return user.hasAuthority(ASSESSOR.getName());
     }
 
     public static boolean isSupport(UserResource user) {

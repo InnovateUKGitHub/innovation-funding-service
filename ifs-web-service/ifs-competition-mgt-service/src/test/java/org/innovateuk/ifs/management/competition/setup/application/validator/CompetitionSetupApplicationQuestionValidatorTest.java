@@ -30,7 +30,7 @@ public class CompetitionSetupApplicationQuestionValidatorTest {
         long questionId = 1l;
 
         CompetitionResource competitionResource = newCompetitionResource()
-                .withFundingType(FundingType.KTP)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         CompetitionSetupQuestionResource competitionSetupQuestionResource = newCompetitionSetupQuestionResource().build();
@@ -43,8 +43,10 @@ public class CompetitionSetupApplicationQuestionValidatorTest {
         validator.validate(form, bindingResult, questionId, competitionResource);
 
         assertTrue(bindingResult.hasErrors());
-        assertEquals(2, bindingResult.getErrorCount());
+        assertEquals(4, bindingResult.getErrorCount());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("numberOfUploads").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.templateDocument").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.writtenFeedback").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.scored").getDefaultMessage());
     }
 }
