@@ -183,6 +183,10 @@ public class UserResource implements Serializable {
         return roles.contains(role);
     }
 
+    public boolean hasAuthority(String auth) {
+        return roles.stream().flatMap(r -> r.getAuthorities().stream()).anyMatch(a -> a.equals(auth));
+    }
+
     @JsonIgnore
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(internalRoles(), roles);
