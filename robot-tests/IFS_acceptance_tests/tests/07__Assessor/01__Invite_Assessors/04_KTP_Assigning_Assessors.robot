@@ -51,6 +51,22 @@ Assessor accept the inviation to assess the KTP competition
     And the user navigates to the page                              ${server}/management/competition/${ktpAssessmentCompetitionID}/assessors/accepted
     Then the user should see the element                            link = Amy Colin
 
+allocated KTA to assess the KTP application
+    [Documentation]   IFS-8260
+    Given the user navigates to the page     ${server}/management/assessment/competition/${ktpAssessmentCompetitionID}/applications
+    When the user clicks the button/link     link = View progress
+    And the user selects the checkbox        assessor-row-1
+    And the user clicks the button/link      jQuery = button:contains("Add to application")
+    Then the user should see the element     jQuery = tr td:contains("Amy Colin")
+
+Assessor accept the inviation to assess the KTP application
+    [Documentation]   IFS-8260
+    Given the user navigates to the page               ${server}/management/competition/${ktpAssessmentCompetitionID}
+    And the user clicks the button/link                id = notify-assessors-changes-since-last-notify-button
+    When KTA accepts to assess the KTP application
+    And the user clicks the button/link                link = KTP assessment application
+    Then the user should see the element               jQuery = h1:contains("Assessment overview") span:contains("KTP assessment application")
+
 *** Keywords ***
 Custom suite setup
     The user logs-in in new browser     &{ifs_admin_user_credentials}
@@ -62,6 +78,15 @@ the user filters the KTA user
 
 KTA accepts the invitation to assess the application
     log in as a different user           ${ktaEmail}   ${short_password}
-    the user clicks the button/link      ${ktpAssessmentCompetitionName}
-    the user selects the radio button    acceptCompetition   true
+    the user clicks the button/link      link = ${ktpAssessmentCompetitionName}
+    the user selects the radio button    acceptInvitation   true
     the user clicks the button/link      jQuery = button:contains("Confirm")
+
+KTA accepts to assess the KTP application
+    log in as a different user           ${ktaEmail}
+    the user clicks the button/link      link = ${ktpAssessmentCompetitionName}
+    the user clicks the button/link      link = Accept or reject
+    the user selects the radio button    assessmentAccept  true
+    the user clicks the button/link      jQuery = button:contains("Confirm")
+
+
