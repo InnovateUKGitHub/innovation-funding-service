@@ -50,12 +50,16 @@ public class CofunderAssignmentController {
     }
 
     @GetMapping("/competition/{competitionId}")
-    public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(@PathVariable long competitionId, @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        return cofunderAssignmentService.findApplicationsNeedingCofunders(competitionId, pageable).toGetResponse();
+    public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(@PathVariable long competitionId,
+                                                                                             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                             @RequestParam String filter) {
+        return cofunderAssignmentService.findApplicationsNeedingCofunders(competitionId, filter, pageable).toGetResponse();
     }
 
     @GetMapping("/application/{applicationId}")
-    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(@PathVariable long applicationId, @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        return cofunderAssignmentService.findAvailableCofudersForApplication(applicationId, pageable).toGetResponse();
+    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(@PathVariable long applicationId,
+                                                                                                        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                        @RequestParam String filter) {
+        return cofunderAssignmentService.findAvailableCofudersForApplication(applicationId, filter, pageable).toGetResponse();
     }
 }

@@ -19,8 +19,8 @@ public interface CofunderAssignmentService {
 
     ServiceResult<Void> edit(long assignmentId);
 
-    ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, Pageable pageable);
+    ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, String filter, Pageable pageable);
 
-    ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, Pageable pageable);
+    ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, String filter, Pageable pageable);
 
 }
