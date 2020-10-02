@@ -15,11 +15,9 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|You are an assessor for the upcoming competition: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
-                    <h2 class="govuk-heading-m govuk-!-margin-0">
-                        <th:block th:if="${model.ktpCompetition}" th:text="|Assessment period: |"/>
-                        <th:block th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,'d MMMM yyyy')}|"/>
-                        <th:block th:unless="${model.ktpCompetition}" th:text="|: Assessment period|"/>
+                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMM yyyy' : 'd MMM'">
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Assessment period: ${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,'d MMM yyyy')}|">
+                        Assessment period: 21 Mar to 28 Mar 2017
                     </h2>
 
                     <p class="govuk-body" th:classappend="${model.ktpCompetition} ? 'govuk-!-margin-top-2' : ''">
