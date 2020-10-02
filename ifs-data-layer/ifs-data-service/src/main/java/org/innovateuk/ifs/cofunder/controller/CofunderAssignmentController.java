@@ -12,9 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Exposes CRUD operations through a REST API to manage {@link org.innovateuk.ifs.assessment.domain.Assessment} related data.
- */
 @RestController
 @RequestMapping("/cofunder")
 public class CofunderAssignmentController {

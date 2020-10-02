@@ -9,11 +9,6 @@ import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
-/**
- * {@code Assessment} is the state of a review that takes place for an Application by an assessor. This activity happens
- * once the application has been submitted and the competition reaches the Assessment phase. It is also associated
- * with the assessor responses provided during the assessment.
- */
 @Entity
 public class CofunderAssignment extends Process<User, Application, CofunderState> {
 
