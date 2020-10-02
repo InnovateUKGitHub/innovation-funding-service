@@ -121,12 +121,12 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  assessmentParticipant.competition.id = :compId AND " +
             "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  assessmentParticipant.role = 'ASSESSOR' AND " +
-            "(user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE AND " +
-            "    ((roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE) " +
-            "OR competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP) " +
-            ") AND " +
-            "CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')" +
+            "(roleStatuses IS NULL OR " +
+            "(" +
+            "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE))  " +
+            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :assessorNameFilter, '%')" +
             "GROUP BY user ")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetitionAndAssessorNameLike(@Param("compId") long competitionId,
                                                                                                @Param("assessorNameFilter") String assessorNameFilter,
