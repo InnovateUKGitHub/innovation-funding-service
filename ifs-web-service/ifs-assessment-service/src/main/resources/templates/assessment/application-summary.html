@@ -30,7 +30,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Review assessment</h2>
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-questions">
                     <th:block th:each="question, iteration : ${model.questionsForReview}">
-                        <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question}, count=${iteration.count})" />
+                        <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question}, count=${iteration.count}, ktpCompetition=${model.ktpCompetition})" />
                     </th:block>
                 </div>
 
@@ -120,7 +120,7 @@
                                 <label class="govuk-label" th:for="feedback">
                                     Your feedback
                                 </label>
-                                <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                <span class="govuk-hint">Please explain your decision with a few sentences.<th:block th:unless="${model.ktpCompetition}"> This feedback will be sent to the applicant.</th:block></span>
                                 <th:block th:if="${#fields.hasErrors('feedback')}">
                                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
                                 </th:block>
