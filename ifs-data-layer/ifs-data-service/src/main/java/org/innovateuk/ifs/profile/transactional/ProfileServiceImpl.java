@@ -3,6 +3,7 @@ package org.innovateuk.ifs.profile.transactional;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -156,6 +157,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
         Profile profile = getOrCreateUserProfile(user);
         profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
+        profile.setSimpleOrganisation(new SimpleOrganisation(profileDetails.getSimpleOrganisation()));
         profileRepository.save(profile);
 
         return serviceSuccess(user);

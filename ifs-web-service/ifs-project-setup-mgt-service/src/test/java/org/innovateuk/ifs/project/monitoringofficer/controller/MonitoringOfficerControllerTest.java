@@ -195,7 +195,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         when(userService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(userResource));
-        when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER, Optional.empty())).thenReturn(restSuccess());
+        when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER)).thenReturn(restSuccess());
 
         MvcResult mvcResult = mockMvc.perform(post("/monitoring-officer/" + userResource.getId() + "/assign-role")
                 .param("phoneNumber", userResource.getPhoneNumber()))
@@ -210,7 +210,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
                 .withId(999L)
                 .build();
         when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
-        when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER, Optional.empty())).thenReturn(restSuccess());
+        when(userRestService.grantRole(userResource.getId(), MONITORING_OFFICER)).thenReturn(restSuccess());
 
         MvcResult mvcResult = mockMvc
                 .perform(post("/monitoring-officer/" + userResource.getId() + "/assign-role-without-edit"))

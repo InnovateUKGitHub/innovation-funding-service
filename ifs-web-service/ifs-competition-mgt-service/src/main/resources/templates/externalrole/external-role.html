@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${model.userId})},dynamicBackLink=${true}"/>
+              th:with="linkTitle=${model.linkTitle},linkUrl=@{${model.backLink}},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 

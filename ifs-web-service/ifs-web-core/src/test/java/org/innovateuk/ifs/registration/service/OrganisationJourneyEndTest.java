@@ -135,7 +135,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
         when(registrationCookieService.isLeadJourney(request)).thenReturn(true);
-        when(userRestService.grantRole(user.getId(), Role.APPLICANT, Optional.empty())).thenReturn(restSuccess());
+        when(userRestService.grantRole(user.getId(), Role.APPLICANT)).thenReturn(restSuccess());
         when(registrationCookieService.getCompetitionIdCookieValue(request)).thenReturn(Optional.of(competitionId));
         when(applicationRestService.createApplication(competitionId, user.getId(), organisationId, ""))
                 .thenReturn(restSuccess(application));
@@ -144,7 +144,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
         assertEquals(result, String.format("redirect:/application/%s", application.getId()));
         verify(applicationRestService).createApplication(competitionId, user.getId(), organisationId, "");
-        verify(userRestService).grantRole(user.getId(), Role.APPLICANT, Optional.empty());
+        verify(userRestService).grantRole(user.getId(), Role.APPLICANT);
         verify(cookieUtil).saveToCookie(response, "role", Role.APPLICANT.getName());
     }
 

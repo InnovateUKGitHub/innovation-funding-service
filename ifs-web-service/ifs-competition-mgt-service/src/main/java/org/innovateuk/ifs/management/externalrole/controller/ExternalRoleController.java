@@ -48,7 +48,7 @@ public class ExternalRoleController {
 
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
 
-        model.addAttribute("model", new ExternalRoleViewModel(userId, user.getName(), user.getEmail(), role));
+        model.addAttribute("model", new ExternalRoleViewModel(userId, user.getName(), user.getEmail(), role, cofunderEnabled));
         return "externalrole/external-role";
     }
 
