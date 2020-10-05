@@ -17,6 +17,112 @@
 
         <h3 class="govuk-heading-s" th:text="${model.applicationId} + ' - ' + ${model.applicationName}" />
 
+        <h3 class="govuk-heading-s">Innovation area</h3>
+        <p class="govuk-body" th:text="${model.innovationArea}" />
+
+        <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
+           class="govuk-link">Review application</a>
+
+        <h3 class="govuk-heading-s govuk-!-margin-top-6">Assigned co-funders
+            <th:block th:unless="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}"
+                      th:text="${' (' + model.cofundersAvailableForApplicationPage.assignedCofunders.size() + ')'}" />
+        </h3>
+        <p th:if="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}">
+            No co-funders have been assigned to this application.
+        </p>
+
+        <form
+            th:unless="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}"
+            th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/remove'}" novalidate="novalidate"
+              method="post">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Co-funder</th>
+                        <th class="govuk-table__header" scope="col">Organisation</th>
+                        <th class="govuk-table__header" scope="col">Email</th>
+                        <th class="govuk-table__header" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="entry : ${model.cofundersAvailableForApplicationPage.assignedCofunders}">
+                        <td class="govuk-table__cell" th:text="${entry.name}" />
+                        <td class="govuk-table__cell" th:text="${entry.organisation}" />
+                        <td class="govuk-table__cell" th:text="${entry.email}" />
+                        <td class="govuk-table__cell">
+                            <button class="govuk-button govuk-button--secondary" type="submit"
+                                      id="remove-invite-button" name="userId" th:value="${entry.userId}">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+
+        <h3 class="govuk-heading-s">Available co-funders</h3>
+
+        <form method="GET" id="filter-cofunders-form">
+            <div class="search-filters govuk-!-margin-top-6">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                        <h2 class="govuk-fieldset__heading">Filter co-funders</h2>
+                    </legend>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds">
+                            <label class="govuk-label"
+                                   for="filter">Search for a co-funder by first or last name.</label>
+                            <input class="govuk-input"
+                                   id="filter"
+                                   name="filter"
+                                   th:value="${model.filter}">
+                        </div>
+                        <div class="govuk-grid-column-one-third">
+                            <button class="govuk-button" id="application-filter-button">Filter</button>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="govuk-!-margin-top-6">
+                    <a href="?" class="govuk-link govuk-body">Clear all filters</a>
+                </div>
+            </div>
+        </form>
+
+        <h3 class="govuk-heading-s govuk-!-margin-top-6"><th:block th:text="${model.cofundersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
+        <form
+            th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/add'}" novalidate="novalidate"
+            method="post">
+            <button class="govuk-button" type="submit">Add selected to application</button>
+
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Select co-funder</th>
+                        <th class="govuk-table__header" scope="col">Co-funder name</th>
+                        <th class="govuk-table__header" scope="col">Organisation</th>
+                        <th class="govuk-table__header" scope="col">Email</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="entry : ${model.cofundersAvailableForApplicationPage.content}">
+                        <td class="govuk-table__cell">
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           name="userId"
+                                           th:value="${entry.userId}"/>
+                                    <label class="govuk-label govuk-checkboxes__label">
+                                        <span class="govuk-visually-hidden">Add</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="govuk-table__cell" th:text="${entry.name}" />
+                        <td class="govuk-table__cell" th:text="${entry.organisation}" />
+                        <td class="govuk-table__cell" th:text="${entry.email}" />
+                    </tr>
+                </tbody>
+            </table>
+        </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

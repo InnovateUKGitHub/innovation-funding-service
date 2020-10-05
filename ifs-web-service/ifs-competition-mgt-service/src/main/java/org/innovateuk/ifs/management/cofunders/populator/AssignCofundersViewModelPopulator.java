@@ -25,8 +25,8 @@ public class AssignCofundersViewModelPopulator {
     public AssignCofundersViewModel populateModel(long competitionId, long applicationId, String filter, int page) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CofundersAvailableForApplicationPageResource cofundersAvailableForApplicationPageResource = cofunderAssignmentRestService.findAvailableCofundersForApplication(applicationId, filter, page).getSuccess();
+        CofundersAvailableForApplicationPageResource cofundersAvailableForApplicationPageResource = cofunderAssignmentRestService.findAvailableCofundersForApplication(applicationId, filter, page - 1).getSuccess();
 
-        return new AssignCofundersViewModel(competition, application, cofundersAvailableForApplicationPageResource);
+        return new AssignCofundersViewModel(competition, application, filter, cofundersAvailableForApplicationPageResource);
     }
 }

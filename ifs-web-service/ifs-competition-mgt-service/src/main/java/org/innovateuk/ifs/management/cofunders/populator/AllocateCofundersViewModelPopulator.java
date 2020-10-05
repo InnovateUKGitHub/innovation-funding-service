@@ -20,7 +20,7 @@ public class AllocateCofundersViewModelPopulator {
     public AllocateCofundersViewModel populateModel(long competitionId, String filter, int page) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        ApplicationsForCofundingPageResource applicationsForCofundingPage = cofunderAssignmentRestService.findApplicationsNeedingCofunders(competitionId, filter, page).getSuccess();
+        ApplicationsForCofundingPageResource applicationsForCofundingPage = cofunderAssignmentRestService.findApplicationsNeedingCofunders(competitionId, filter, page - 1).getSuccess();
 
         return new AllocateCofundersViewModel(competition, filter, applicationsForCofundingPage);
     }
