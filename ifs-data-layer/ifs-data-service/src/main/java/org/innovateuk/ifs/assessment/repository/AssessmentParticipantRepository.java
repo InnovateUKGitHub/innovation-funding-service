@@ -187,11 +187,11 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
             "WHERE participant.role = :role AND " +
             " participant.competition.id = :competitionId AND" +
             " participant.status = :status AND " +
-            "(roleStatuses IS NULL OR " +
+            " (user IS NULL OR roleStatuses IS NULL OR " +
             "(" +
             "    roleStatuses.profileRole = org.innovateuk.ifs.user.resource.ProfileRole.ASSESSOR " +
-            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE))  " +
-            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE ")
+            "AND roleStatuses.roleProfileState = org.innovateuk.ifs.user.resource.RoleProfileState.ACTIVE  " +
+            "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE ))")
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
 
