@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.Invite;
@@ -16,8 +15,6 @@ import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
-import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -420,15 +417,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 .andOnSuccess(user -> validateEmail(user, grantRoleCommand.getTargetRole()))
                 .andOnSuccessReturn(user -> {
                     user.getRoles().add(grantRoleCommand.getTargetRole());
-                    grantRoleCommand.getOrganisation().ifPresent(org -> addOrganisationToProfile(user, org));
                     return user;
                 }).andOnSuccessReturn(userMapper::mapToResource);
-    }
-
-    private void addOrganisationToProfile(User user, String organisation) {
-        Profile profile = profileRepository.findById(user.getProfileId()).orElseThrow(ObjectNotFoundException::new);
-        profile.setSimpleOrganisation(new SimpleOrganisation(organisation));
-        profileRepository.save(profile);
     }
 
     private ServiceResult<User> validateEmail(User user, Role role) {

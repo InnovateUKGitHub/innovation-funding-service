@@ -241,8 +241,7 @@ public class UserController {
 
     @PostMapping("{id}/grant/{role}")
     public RestResult<Void> grantRole(@PathVariable long id,
-                                      @PathVariable Role role,
-                                      @RequestParam(value = "organisation", required = false) Optional<String> organisation) {
-        return userService.grantRole(new GrantRoleCommand(id, role, organisation)).toPostResponse();
+                                      @PathVariable Role role) {
+        return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
 }

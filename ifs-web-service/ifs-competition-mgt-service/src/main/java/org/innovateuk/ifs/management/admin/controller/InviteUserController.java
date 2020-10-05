@@ -49,6 +49,32 @@ public class InviteUserController {
     @Value("${ifs.cofunder.enabled}")
     private boolean cofunderEnabled;
 
+    @GetMapping("/select-external-role")
+    public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
+                             Model model) {
+
+        if (!cofunderEnabled) {
+            return String.format("redirect:/admin/invite-external-user?role=%s", Role.KNOWLEDGE_TRANSFER_ADVISER.toString());
+        }
+
+        model.addAttribute("roles", Role.externalRolesToInvite());
+        return "admin/select-external-role";
+    }
+
+    @PostMapping("/select-external-role")
+    public String selectedRole(@ModelAttribute(name = "form") @Valid SelectExternalRoleForm form,
+                               BindingResult bindingResult,
+                               ValidationHandler validationHandler,
+                               Model model) {
+
+        Supplier<String> failureView = () -> selectRole(form, model);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToInviteExternalUserPage(form.getRoleId()));
+    }
+
+    private String redirectToInviteExternalUserPage(Long roleId) {
+        return String.format("redirect:/admin/invite-external-user?role=%s", Role.getById(roleId).toString());
+    }
+
     @GetMapping("/invite-user")
     public String inviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
@@ -102,32 +128,6 @@ public class InviteUserController {
         Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()));
 
         return saveInvite(form, validationHandler, failureView);
-    }
-
-    @GetMapping("/select-external-role")
-    public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
-                             Model model) {
-
-        if (!cofunderEnabled) {
-            return String.format("redirect:/admin/invite-external-user?role=%s", Role.KNOWLEDGE_TRANSFER_ADVISER.toString());
-        }
-
-        model.addAttribute("roles", Role.externalRolesToInvite());
-        return "admin/select-external-role";
-    }
-
-    @PostMapping("/select-external-role")
-    public String selectedRole(@ModelAttribute(name = "form") @Valid SelectExternalRoleForm form,
-                               BindingResult bindingResult,
-                               ValidationHandler validationHandler,
-                               Model model) {
-
-        Supplier<String> failureView = () -> selectRole(form, model);
-        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToInviteExternalUserPage(form.getRoleId()));
-    }
-
-    private String redirectToInviteExternalUserPage(Long roleId) {
-        return String.format("redirect:/admin/invite-external-user?role=%s", Role.getById(roleId).toString());
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {

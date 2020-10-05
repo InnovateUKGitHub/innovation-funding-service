@@ -5,7 +5,9 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.admin.form.SelectExternalRoleForm;
 import org.innovateuk.ifs.management.externalrole.form.ExternalRoleForm;
 import org.innovateuk.ifs.management.externalrole.viewmodel.ExternalRoleViewModel;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ADD_ROLE_INVALID_EMAIL;
@@ -32,6 +33,9 @@ public class ExternalRoleController {
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private ProfileRestService profileRestService;
 
     @Value("${ifs.cofunder.enabled}")
     private boolean cofunderEnabled;
@@ -57,9 +61,14 @@ public class ExternalRoleController {
 
         Supplier<String> failureView = () -> viewUser(userId, form, form.getRole(), model);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            validationHandler.addAnyErrors(userRestService.grantRole(userId, form.getRole(), Optional.ofNullable(form.getOrganisation())), mappingErrorKeyToField(USER_ADD_ROLE_INVALID_EMAIL, "email"), fieldErrorsToFieldErrors(), asGlobalErrors());
-            return validationHandler.failNowOrSucceedWith(failureView,
-                    () -> redirectToUserPage(userId));
+            validationHandler.addAnyErrors(userRestService.grantRole(userId, form.getRole()), mappingErrorKeyToField(USER_ADD_ROLE_INVALID_EMAIL, "email"), fieldErrorsToFieldErrors(), asGlobalErrors());
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                UserProfileResource userProfileResource = profileRestService.getUserProfile(userId).getSuccess();
+                userProfileResource.setSimpleOrganisation(form.getOrganisation());
+                validationHandler.addAnyErrors(profileRestService.updateUserProfile(userId, userProfileResource), mappingErrorKeyToField(USER_ADD_ROLE_INVALID_EMAIL, "email"), fieldErrorsToFieldErrors(), asGlobalErrors());
+                return validationHandler.failNowOrSucceedWith(failureView,
+                        () -> redirectToUserPage(userId));
+            });
         });
     }
 
