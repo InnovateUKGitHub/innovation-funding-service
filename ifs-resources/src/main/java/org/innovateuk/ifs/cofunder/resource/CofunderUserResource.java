@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.cofunder.resource;
 
-public class CofuderUserResource {
+public class CofunderUserResource {
 
     private long userId;
     private String name;

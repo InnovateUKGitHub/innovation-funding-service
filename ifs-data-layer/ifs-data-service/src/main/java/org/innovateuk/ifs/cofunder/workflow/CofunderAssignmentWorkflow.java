@@ -14,10 +14,6 @@ import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
 
-/**
- * Describes the workflow for assessment. This is from accepting a competition to submitting the application.
- * A persistent configuration is used, so we can apply different states to different assessments.
- */
 @Configuration
 @EnableStateMachineFactory(name = "cofunderAssignmentStateMachineFactory")
 public class CofunderAssignmentWorkflow extends StateMachineConfigurerAdapter<CofunderState, CofunderEvent> {

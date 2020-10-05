@@ -102,8 +102,8 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, Pageable pageable) {
-        Page<ApplicationsForCofundingResource> result = cofunderAssignmentRepository.findApplicationsForCofunding(competitionId, pageable);
+    public ServiceResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, String filter, Pageable pageable) {
+        Page<ApplicationsForCofundingResource> result = cofunderAssignmentRepository.findApplicationsForCofunding(competitionId, filter, pageable);
         return serviceSuccess(new ApplicationsForCofundingPageResource(
                 result.getTotalElements(),
                 result.getTotalPages(),
@@ -114,8 +114,8 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofudersForApplication(long applicationId, Pageable pageable) {
-        Page<User> result = cofunderAssignmentRepository.findUsersAvailableForCofunding(applicationId, pageable);
+    public ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, Pageable pageable) {
+        Page<User> result = cofunderAssignmentRepository.findUsersAvailableForCofunding(applicationId, filter, pageable);
         List<CofunderAssignment> assignments = cofunderAssignmentRepository.findByTargetId(applicationId);
         return serviceSuccess(new CofundersAvailableForApplicationPageResource(
                 result.getTotalElements(),
@@ -127,8 +127,8 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         );
     }
 
-    private CofuderUserResource mapToCofunderUser(User user) {
-        CofuderUserResource cofunderUser = new CofuderUserResource();
+    private CofunderUserResource mapToCofunderUser(User user) {
+        CofunderUserResource cofunderUser = new CofunderUserResource();
         Profile profile = profileRepository.findById(user.getProfileId()).orElseThrow(ObjectNotFoundException::new);
         cofunderUser.setUserId(user.getId());
         cofunderUser.setEmail(user.getEmail());

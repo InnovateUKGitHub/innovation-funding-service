@@ -19,11 +19,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
-/**
- * {@code AssessmentWorkflowService} is the entry point for triggering the workflow.
- * Based on the assessment's current state the next one is tried to transition to by triggering
- * an event.
- */
 @Component
 public class CofunderAssignmentWorkflowHandler extends BaseWorkflowEventHandler<CofunderAssignment, CofunderState, CofunderEvent, Application, User> {
 
