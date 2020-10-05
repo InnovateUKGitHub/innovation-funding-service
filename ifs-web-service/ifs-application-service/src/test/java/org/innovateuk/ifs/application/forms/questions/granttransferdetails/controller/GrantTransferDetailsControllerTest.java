@@ -87,7 +87,7 @@ public class GrantTransferDetailsControllerTest extends BaseControllerMockMVCTes
         grantTransferDetailsForm.setStartDateMonth(10);
         grantTransferDetailsForm.setStartDateYear(2000);
         grantTransferDetailsForm.setEndDateMonth(10);
-        grantTransferDetailsForm.setEndDateYear(2020);
+        grantTransferDetailsForm.setEndDateYear(now().getYear() + 1);
         grantTransferDetailsForm.setParticipantId("123456789");
         grantTransferDetailsForm.setProjectName("Project Name");
 
