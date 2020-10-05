@@ -17,12 +17,11 @@ public class AllocateCofundersViewModelPopulator {
     @Autowired
     private CofunderAssignmentRestService cofunderAssignmentRestService;
 
-    public AllocateCofundersViewModel populateModel(long competitionId) {
+    public AllocateCofundersViewModel populateModel(long competitionId, String filter, int page) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        ApplicationsForCofundingPageResource applicationsForCofundingPage = cofunderAssignmentRestService.findApplicationsNeedingCofunders(competitionId, null, 1).getSuccess();
+        ApplicationsForCofundingPageResource applicationsForCofundingPage = cofunderAssignmentRestService.findApplicationsNeedingCofunders(competitionId, filter, page).getSuccess();
 
-        return new AllocateCofundersViewModel(competition, applicationsForCofundingPage);
-
+        return new AllocateCofundersViewModel(competition, filter, applicationsForCofundingPage);
     }
 }

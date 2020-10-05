@@ -6,11 +6,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 public class AllocateCofundersViewModel {
     private final Long competitionId;
     private final String competitionName;
+    private final String filter;
     private final ApplicationsForCofundingPageResource applicationsPage;
 
-    public AllocateCofundersViewModel(CompetitionResource competition, ApplicationsForCofundingPageResource applicationsPage) {
+
+    public AllocateCofundersViewModel(CompetitionResource competition, String filter, ApplicationsForCofundingPageResource applicationsPage) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
+        this.filter = filter;
         this.applicationsPage = applicationsPage;
     }
 
@@ -24,5 +27,13 @@ public class AllocateCofundersViewModel {
 
     public ApplicationsForCofundingPageResource getApplicationsPage() {
         return applicationsPage;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public int getPage() {
+        return applicationsPage.getNumber();
     }
 }
