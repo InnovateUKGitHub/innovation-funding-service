@@ -81,8 +81,9 @@ public class AssessmentOverviewSectionViewModel {
     public Integer getScorePercentage() {
         if (!getMaximumScore().equals(0)) {
             return BigDecimal.valueOf(getScore())
-                    .divide(BigDecimal.valueOf(getMaximumScore()), 0, RoundingMode.HALF_UP)
+                    .divide(BigDecimal.valueOf(getMaximumScore()), 4, RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(100))
+                    .setScale(0, RoundingMode.HALF_UP)
                     .intValue();
         }
         return 0;
