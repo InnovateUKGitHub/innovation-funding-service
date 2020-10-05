@@ -54,7 +54,7 @@
                                 <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                             </th:block>
                             <th:block th:unless="${model.resubmission == null}">
-                                <dt>Has this application been previously submitted to Innovate UK?</dt>
+                                <dt>Is this application a resubmission?</dt>
                                 <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                                 <th:block th:if="${model.resubmission == true}">
                                     <dt>Previous application number</dt>
@@ -77,7 +77,7 @@
                             </th:block>
                             <th:block th:if="${model.ktpCompetition}">
                                 <dt>Total project costs</dt>
-                                <dd th:text="${'£' + model.totalProjectCosts}"></dd>
+                                <dd th:text="'£' + ${#numbers.formatInteger(model.totalProjectCosts, 0, 'DEFAULT')}"></dd>
                             </th:block>
                         </dl>
                     </div>
