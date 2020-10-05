@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.util.Collections;
 
+import static java.time.LocalDate.now;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,7 +88,7 @@ public class GrantTransferDetailsControllerTest extends BaseControllerMockMVCTes
         grantTransferDetailsForm.setStartDateMonth(10);
         grantTransferDetailsForm.setStartDateYear(2000);
         grantTransferDetailsForm.setEndDateMonth(10);
-        grantTransferDetailsForm.setEndDateYear(2020);
+        grantTransferDetailsForm.setEndDateYear(now().getYear() + 1);
         grantTransferDetailsForm.setParticipantId("123456789");
         grantTransferDetailsForm.setProjectName("Project Name");
 
