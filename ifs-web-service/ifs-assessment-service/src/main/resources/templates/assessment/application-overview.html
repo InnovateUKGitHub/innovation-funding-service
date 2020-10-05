@@ -66,8 +66,19 @@
                             </div>
                             <div class="task-status"><span>No score required</span></div>
                         </li>
-
                     </ul>
+
+                    <th:block th:if="${section.hasAnyScoredQuestions()}">
+                    <p class="govuk-body govuk-!-font-weight-bold alignright">
+                        Total score:
+                        <th:block th:text="${section.score}"></th:block>
+                        /
+                        <th:block th:text="${section.maximumScore}"></th:block>
+                    </p>
+                    <p class="govuk-body govuk-!-font-weight-bold alignright">
+                        <th:block th:text="|${section.scorePercentage}%|"></th:block>
+                    </p>
+                    </th:block>
                 </section>
 
                 <th:block th:unless="${#lists.isEmpty(model.appendices)}">

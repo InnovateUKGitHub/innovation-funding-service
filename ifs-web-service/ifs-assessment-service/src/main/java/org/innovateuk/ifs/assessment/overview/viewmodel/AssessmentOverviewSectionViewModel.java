@@ -3,7 +3,10 @@ package org.innovateuk.ifs.assessment.overview.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Holder of model attributes for sections displayed within the Assessment Overview view.
@@ -53,6 +56,36 @@ public class AssessmentOverviewSectionViewModel {
 
     public boolean isTermsAndConditions() {
         return termsAndConditions;
+    }
+
+    public boolean hasAnyScoredQuestions() {
+        return questions.stream().anyMatch(AssessmentOverviewQuestionViewModel::isScoreRequired);
+    }
+
+    public Integer getScore() {
+        return questions.stream()
+                .map(AssessmentOverviewQuestionViewModel::getScoreResponse)
+                .filter(Objects::nonNull)
+                .map(Integer::valueOf)
+                .reduce(0, Integer::sum);
+    }
+
+    public Integer getMaximumScore() {
+        return questions.stream()
+                .filter(AssessmentOverviewQuestionViewModel::isScoreRequired)
+                .map(AssessmentOverviewQuestionViewModel::getMaximumScore)
+                .filter(Objects::nonNull)
+                .reduce(0, Integer::sum);
+    }
+
+    public Integer getScorePercentage() {
+        if (!getMaximumScore().equals(0)) {
+            return BigDecimal.valueOf(getScore())
+                    .divide(BigDecimal.valueOf(getMaximumScore()), 0, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(100))
+                    .intValue();
+        }
+        return 0;
     }
 
     @Override

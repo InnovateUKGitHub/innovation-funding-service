@@ -89,7 +89,8 @@ public class KtpTemplate implements FundingTypeTemplate {
 
     public static SectionBuilder ktpAssessmentSection() {
         return aSection()
-                .withName("Score Guidance")
+                .withName("Score assessment")
+                .withAssessorGuidanceDescription("Please review the application provided and score the application on four sections each out of a total of 10 points.")
                 .withType(SectionType.KTP_ASSESSMENT);
     }
 

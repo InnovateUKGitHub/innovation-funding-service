@@ -33,8 +33,14 @@
 <th:block th:fragment="textarea (field)">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label govuk-label--s" th:for="formInput[__${field.id}__]" th:id="'form-label-'+${field.id}">Feedback</label>
-        <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
-        <span th:unless="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+        <th:block th:unless="${field.guidanceTitle == null}">
+            <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+            <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+        </th:block>
+        <th:block th:if="${field.guidanceTitle == null}">
+            <span class="govuk-hint">Please justify your score by writing 2 or 3 sentences.</span>
+        </th:block>
+        <span th:if="${field.guidanceTitle == null}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         <details th:unless="${#strings.isEmpty(field.guidanceTitle)}"
                  class="govuk-details">
