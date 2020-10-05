@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.cofunders.viewmodel;
 
 import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 public class AllocateCofundersViewModel {
     private final Long competitionId;
@@ -33,7 +34,8 @@ public class AllocateCofundersViewModel {
         return filter;
     }
 
-    public int getPage() {
-        return applicationsPage.getNumber();
+    public Pagination getPagination() {
+        return new Pagination(applicationsPage);
     }
+
 }

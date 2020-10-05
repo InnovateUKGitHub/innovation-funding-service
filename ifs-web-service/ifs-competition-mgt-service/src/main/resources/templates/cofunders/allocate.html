@@ -56,7 +56,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="entry : ${model.applicationsPage.content}">
                     <td class="govuk-table__cell">
-                        <a th:href="@{/competition/{competitionId}/cofunders/assign/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
                            class="govuk-link"
                            th:text="${entry.id}" />
                     </td>
@@ -71,6 +71,7 @@
                 </tr>
             </tbody>
         </table>
+        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

@@ -3,8 +3,7 @@ package org.innovateuk.ifs.management.cofunders.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-
-import java.util.Set;
+import org.innovateuk.ifs.management.navigation.Pagination;
 
 public class AssignCofundersViewModel {
 
@@ -53,6 +52,10 @@ public class AssignCofundersViewModel {
 
     public CofundersAvailableForApplicationPageResource getCofundersAvailableForApplicationPage() {
         return cofundersAvailableForApplicationPage;
+    }
+
+    public Pagination getPagination() {
+        return new Pagination(cofundersAvailableForApplicationPage);
     }
 
 }
