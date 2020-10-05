@@ -52,7 +52,7 @@
 
                     <div th:if="${model.appendixExists}">
                         <th:block th:each="appendix : ${model.appendixDetails}">
-                            <div th:replace="question-type/form-elements :: readonly-file-download
+                            <th:block th:insert="question-type/form-elements :: readonly-file-download
                             (filename=${appendix.filename},
                             filesizeKbytes=${appendix.filesizeKbytes},
                             fileDescription=${model.appendixFileDescription}+':',
@@ -61,7 +61,7 @@
                     </div>
 
                     <div th:if="${model.templateDocumentExists}">
-                        <div th:replace="question-type/form-elements :: readonly-file-download
+                        <th:block th:insert="question-type/form-elements :: readonly-file-download
                         (filename=${model.templateDocumentDetails.filename},
                         filesizeKbytes=${model.templateDocumentDetails.filesizeKbytes},
                         fileDescription=${model.templateDocumentFileDescription}+':',
@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
-                        <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
+                        <th:block th:insert="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" th:with="feedbackWillBeReleasedToApplicant=${!model.ktp}" />
                     </div>
 
                     <th:block th:if="${responseRequired}">
