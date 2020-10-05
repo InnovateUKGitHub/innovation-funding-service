@@ -111,7 +111,7 @@ public class ManagementApplicationPopulator {
         }
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
-        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess() && settings.isIncludeAllAssessorFeedback()) {
+        if (settings.isIncludeAllAssessorFeedback() && interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
             interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
