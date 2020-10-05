@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.util.Collections;
 
+import static java.time.LocalDate.now;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.ArgumentMatchers.any;
