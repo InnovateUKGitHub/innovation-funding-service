@@ -5,30 +5,33 @@ import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcoming
 
 import java.util.List;
 
+/**
+ * Holder of model attributes for the Cofunder Dashboard.
+ */
 public class CofunderDashboardViewModel {
 
-    private List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource;
-    private List<CofunderDashboardCompetitionAwaitingResource> cofunderDashboardCompetitionAwaitingResource;
+    private List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions;
+    private List<CofunderDashboardCompetitionAwaitingResource> awaitingCompetitions;
 
     public CofunderDashboardViewModel(List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource,
-                                      List<CofunderDashboardCompetitionAwaitingResource> cofunderDashboardCompetitionAwaitingResource) {
-        this.cofunderDashboardCompetitionUpcomingResource = cofunderDashboardCompetitionUpcomingResource;
-        this.cofunderDashboardCompetitionAwaitingResource = cofunderDashboardCompetitionAwaitingResource;
+                                      List<CofunderDashboardCompetitionAwaitingResource> awaitingCompetitions) {
+        this.upcomingCompetitions = cofunderDashboardCompetitionUpcomingResource;
+        this.awaitingCompetitions = awaitingCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionUpcomingResource> getCofunderDashboardCompetitionUpcomingResource() {
-        return cofunderDashboardCompetitionUpcomingResource;
+    public List<CofunderDashboardCompetitionUpcomingResource> getUpcomingCompetitions() {
+        return upcomingCompetitions;
     }
 
-    public void setCofunderDashboardCompetitionUpcomingResource(List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource) {
-        this.cofunderDashboardCompetitionUpcomingResource = cofunderDashboardCompetitionUpcomingResource;
+    public void setUpcomingCompetitions(List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions) {
+        this.upcomingCompetitions = upcomingCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionAwaitingResource> getCofunderDashboardCompetitionAwaitingResource() {
-        return cofunderDashboardCompetitionAwaitingResource;
+    public List<CofunderDashboardCompetitionAwaitingResource> getAwaitingCompetitions() {
+        return awaitingCompetitions;
     }
 
-    public void setCofunderDashboardCompetitionAwaitingResource(List<CofunderDashboardCompetitionAwaitingResource> cofunderDashboardCompetitionAwaitingResource) {
-        this.cofunderDashboardCompetitionAwaitingResource = cofunderDashboardCompetitionAwaitingResource;
+    public void setAwaitingCompetitions(List<CofunderDashboardCompetitionAwaitingResource> awaitingCompetitions) {
+        this.awaitingCompetitions = awaitingCompetitions;
     }
 }

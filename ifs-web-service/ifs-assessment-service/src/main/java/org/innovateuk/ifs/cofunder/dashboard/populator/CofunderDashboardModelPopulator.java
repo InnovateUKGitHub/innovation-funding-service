@@ -16,7 +16,6 @@ public class CofunderDashboardModelPopulator {
     @Autowired
     private CofunderDashboardRestService cofunderDashboardRestService;
 
-    // build the model for the comps
     public CofunderDashboardViewModel populateModel(UserResource user) {
 
         CofunderDashboardCompetitionResource cofunderDashboardCompetitionResource = cofunderDashboardRestService.getCofunderCompetitionDashboard(user.getId()).getSuccess();
