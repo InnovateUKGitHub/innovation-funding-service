@@ -629,7 +629,7 @@ the KTA user enters the details to create account
     the user enters text to a text field                   name = password   ${short_password}
     the user selects the checkbox                          termsAndConditions
 
-assign the KTA role to the user
+assign the KTA role to an existing user
     [Arguments]   ${ktaEmail}
     log in as a different user               &{ifs_admin_user_credentials}
     the user clicks the button/link          link = Manage users

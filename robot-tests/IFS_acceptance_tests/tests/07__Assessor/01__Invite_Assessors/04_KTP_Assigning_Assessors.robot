@@ -30,11 +30,11 @@ Internal users not be allowed to invite a new assessor to the KTP Competitions
     When the user clicks the button/link         link = Invite
     Then the user should not see the element     link = Add a non-registered assessor to your list
 
-Comp admin can see the user who is got both applicant and KTA role in the list of assessors
+Comp admin can see the user who is both applicant and KTA role in the list of assessors
     [Documentation]   IFS-8260
-    Given assign the KTA role to the user      ${existingKTAEmail}
-    When the user navigates to the page        ${server}/management/competition/${ktpAssessmentCompetitionID}/assessors/find
-    Then the user should see the element       link = John Fenton
+    Given assign the KTA role to an existing user      ${existingKTAEmail}
+    When the user navigates to the page                ${server}/management/competition/${ktpAssessmentCompetitionID}/assessors/find
+    Then the user should see the element               link = John Fenton
 
 Invite the KTA to assess the KTP application
     [Documentation]   IFS-8260
@@ -51,7 +51,7 @@ Assessor accept the inviation to assess the KTP competition
     And the user navigates to the page                              ${server}/management/competition/${ktpAssessmentCompetitionID}/assessors/accepted
     Then the user should see the element                            link = Amy Colin
 
-allocated KTA to assess the KTP application
+Allocated KTA to assess the KTP application
     [Documentation]   IFS-8260
     Given the user navigates to the page     ${server}/management/assessment/competition/${ktpAssessmentCompetitionID}/applications
     When the user clicks the button/link     link = View progress

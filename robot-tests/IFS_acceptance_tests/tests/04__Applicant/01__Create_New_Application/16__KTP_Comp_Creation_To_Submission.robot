@@ -352,12 +352,12 @@ System should not allow a KTA to be invited if they do not have a KTA account in
 
 The applicant invites a KTA user to the application
     [Documentation]  IFS-7806 IFS-8095
-    [Setup]  assign the KTA role to the user       ${ktaEmail}
-    Given Log in as a different user               &{ktpLeadApplicantCredentials}
-    When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
-    Then The user reads his email                  ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
-    And the user should see the element            jQuery = td:contains("pending for 0 days")
-    And the user should see the element            Jquery = td:contains("${ktaEmail}")
+    [Setup]  assign the KTA role to an existing user    ${ktaEmail}
+    Given Log in as a different user                    &{ktpLeadApplicantCredentials}
+    When the user invites a KTA to application          ${ktpApplicationTitle}   ${ktaEmail}
+    Then The user reads his email                       ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    And the user should see the element                 jQuery = td:contains("pending for 0 days")
+    And the user should see the element                 jQuery = td:contains("${ktaEmail}")
 
 The applicant should not be able to mark the application team section as complete until the KTA has accepted the invitation to join the application
     [Documentation]  IFS-7806
