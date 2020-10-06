@@ -10,6 +10,7 @@
 
     <form th:action="@{(${model.general.editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id}" data-section="assessors">
+        <input type="hidden" name="ktpCompetition" th:value="${model.general.competition.ktp}" />
         <th:block th:if="${model.general.editable}" id="section-assessors-edit">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
@@ -36,28 +37,30 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" for="assessorPay">
-                    How much do assessors receive per application?
-                </label>
-                <span class="govuk-hint">This information will be available in the assessor invites.</span>
-                <th:block th:if="${#fields.hasErrors('assessorPay')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-input--width-10"
-                       id="assessorPay"
-                       name="assessorPay"
-                       type="number"
-                       min="0"
-                       max="99999999"
-                       data-prevent-input-non-number
-                       th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
-                       data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
+            <th:block th:unless="${model.general.competition.ktp}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label--s" for="assessorPay">
+                        How much do assessors receive per application?
+                    </label>
+                    <span class="govuk-hint">This information will be available in the assessor invites.</span>
+                    <th:block th:if="${#fields.hasErrors('assessorPay')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-10"
+                           id="assessorPay"
+                           name="assessorPay"
+                           type="number"
+                           min="0"
+                           max="99999999"
+                           data-prevent-input-non-number
+                           th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
+                           data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="govuk-input--error"
-                       th:readonly="${model.general.state.setupAndLive}"/>
-            </div>
+                           th:errorclass="govuk-input--error"
+                           th:readonly="${model.general.state.setupAndLive}"/>
+                </div>
+            </th:block>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -238,8 +241,10 @@
                 <dt>How many assessors are required for each application?</dt>
                 <dd th:text="${competitionSetupForm.assessorCount}"></dd>
 
-                <dt>How much do assessors receive per application?</dt>
-                <dd>&pound;<th:block th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'DEFAULT')}"></dd>
+                <th:block th:unless="${model.general.competition.ktp}">
+                    <dt>How much do assessors receive per application?</dt>
+                    <dd>&pound;<th:block th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'DEFAULT')}"></dd>
+                </th:block>
 
                 <dt>Enable assessment panel for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasAssessmentPanel} ? 'Yes' : 'No' "/>
