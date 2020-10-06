@@ -20,6 +20,9 @@
         <h3 class="govuk-heading-s">Innovation area</h3>
         <p class="govuk-body" th:text="${model.innovationArea}" />
 
+        <h3 class="govuk-heading-s">Partners</h3>
+        <p class="govuk-body" th:each="partner: ${model.partners}" th:text="${partner}" />
+
         <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
            class="govuk-link">Review application</a>
 
@@ -90,7 +93,32 @@
         <form
             th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/add'}" novalidate="novalidate"
             method="post">
-            <button class="govuk-button" type="submit">Add selected to application</button>
+
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half select-all">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input type="checkbox"
+                                   class="govuk-checkboxes__input"
+                                   data-select-all=""
+                                   id="select-all-check"
+                                   />
+                            <label for="select-all-check"
+                                   class="govuk-label govuk-checkboxes__label">
+                                Select all co-funders
+                            </label>
+                        </div>
+                    </div>
+                    <span class="govuk-hint">
+                        <span data-count-selected="">0</span> co-funders selected
+                    </span>
+                </div>
+                <div class="govuk-grid-column-one-half select-all alignright">
+                    <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" >
+                        Add selected to application
+                    </button>
+                </div>
+            </div>
 
             <table class="govuk-table">
                 <thead class="govuk-table__head">

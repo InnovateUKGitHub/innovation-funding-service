@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.cofunder.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.domain.CofunderOutcome;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
@@ -7,19 +8,25 @@ import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -32,6 +39,13 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class CofunderAssignmentServiceImpl extends BaseTransactionalService implements CofunderAssignmentService {
 
+    enum Notifications {
+        ASSIGN_COFUNDER
+    }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
     @Autowired
     private CofunderAssignmentWorkflowHandler cofunderAssignmentWorkflowHandler;
 
@@ -40,6 +54,12 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Override
     public ServiceResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId) {
@@ -57,7 +77,21 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         return find(application(applicationId), user(userId)).andOnSuccess(
                 (application, user) ->
                         serviceSuccess(map(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
+                                .andOnSuccessReturn(resource -> {
+                                    notifyUserAssignedAsCofunder(user, application);
+                                    return resource;
+                                })
         );
+    }
+
+    private ServiceResult<Void> notifyUserAssignedAsCofunder(User user, Application application) {
+        NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", application.getId());
+        notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("link", format("%s/application/%d", webBaseUrl, application.getId()));
+        Notification notification = new Notification(systemNotificationSource, recipient, Notifications.ASSIGN_COFUNDER, notificationArguments);
+        return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
     }
 
     @Override

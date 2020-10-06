@@ -8,6 +8,9 @@ import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -49,6 +52,12 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     @Mock
     private ApplicationRepository applicationRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSource;
+
     @Override
     protected CofunderAssignmentService supplyServiceUnderTest() {
         return new CofunderAssignmentServiceImpl();
@@ -88,10 +97,11 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
         when(cofunderAssignmentRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        ServiceResult<CofunderAssignmentResource> result = service.getAssignment(userId, applicationId);
+        ServiceResult<CofunderAssignmentResource> result = service.assign(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
         verify(cofunderAssignmentRepository).save(any());
+        verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
 
     @Test
