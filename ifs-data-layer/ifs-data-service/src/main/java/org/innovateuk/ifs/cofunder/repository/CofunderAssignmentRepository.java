@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,6 +18,8 @@ import java.util.Optional;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface CofunderAssignmentRepository extends ProcessRepository<CofunderAssignment>, PagingAndSortingRepository<CofunderAssignment, Long> {
+
+    List<CofunderAssignment> findByParticipantId(long userId);
 
     Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
