@@ -7,6 +7,8 @@ ${applicationId} : ${applicationName}
 
 You will be able to review the applications and decide if you want to co-fund it.
 
+${link}
+
 Yours sincerely,
 <@layout.senderPlainText />
 </@layout.defaultPlainText>
