@@ -66,6 +66,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
                 .withEndDate(ZonedDateTime.now())
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(30)
+                .withResubmission(false)
                 .build();
 
         ApplicationResource application = newApplicationResource()

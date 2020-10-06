@@ -250,6 +250,12 @@ Internal user can send the contract
     Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
     And the user reads his email                   ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
 
+Check that the VAT value shows on finance table
+    [Documentation]  IFS-8321
+    Given log in as a different user             &{becky_mason_credentials}
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks/overview
+    Then the user should see the element         jQuery = th:contains("Total VAT")
+
 External user of international org should not see bank details
     [Documentation]  IFS-8202
     Given log in as a different user             ${lead_international_email}	${short_password}

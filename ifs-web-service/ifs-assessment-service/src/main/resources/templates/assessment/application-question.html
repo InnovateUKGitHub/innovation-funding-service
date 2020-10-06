@@ -27,7 +27,7 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <form th:if="${responseRequired}"
+                <form th:remove="${!responseRequired} ? tag : none"
                       th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
                       method="post"
                       enctype="multipart/form-data"
@@ -72,20 +72,13 @@
                         <th:block th:insert="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" th:with="feedbackWillBeReleasedToApplicant=${!model.ktp}" />
                     </div>
 
-                    <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                    <th:block th:if="${responseRequired}">
+                        <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                        <button  type="submit" class="govuk-button govuk-button--secondary" name="submit-section">Save and return to assessment overview</button>
+                    </th:block>
 
-                    <button type="submit" class="govuk-button govuk-button--secondary" name="submit-section">Save and return to assessment overview</button>
-                </form>
+                    </form>
 
-                <th:block th:unless="${responseRequired}">
-                    <div class="govuk-form-group">
-                        <h2 class="govuk-heading-m">
-                            <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
-                            <th:block th:text="${model.questionName}"  />
-                        </h2>
-                        <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles" />
-                    </div>
-                </th:block>
                 <input type="hidden" id="cacheTest" value="" />
 
                 <th:block th:insert="fragments/assessment :: assessment-pagination" />

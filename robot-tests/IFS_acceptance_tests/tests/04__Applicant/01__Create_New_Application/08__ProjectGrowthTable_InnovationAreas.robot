@@ -66,7 +66,7 @@ Comp admin completes ths competition setup
     [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition details")
     Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
-    And the user fills in the CS Assessors
+    And the user fills in the CS Assessors       GRANT
     When the user clicks the button/link         link = Public content
     Then the user fills in the Public content and publishes  NoGrowthTable
     And the user clicks the button/link          link = Return to setup overview
@@ -131,7 +131,7 @@ Once the project growth table is selected
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
-    And the user fills in the CS Assessors
+    And the user fills in the CS Assessors                      GRANT
     And the user fills in the CS Documents in other projects
     When the user clicks the button/link                        link = Public content
     Then the user fills in the Public content and publishes     GrowthTable
