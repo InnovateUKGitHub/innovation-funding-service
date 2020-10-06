@@ -3,6 +3,7 @@ package org.innovateuk.ifs.cofunder.workflow;
 import org.innovateuk.ifs.cofunder.resource.CofunderEvent;
 import org.innovateuk.ifs.cofunder.resource.CofunderState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -17,6 +18,9 @@ import static java.util.Arrays.asList;
 @Configuration
 @EnableStateMachineFactory(name = "cofunderAssignmentStateMachineFactory")
 public class CofunderAssignmentWorkflow extends StateMachineConfigurerAdapter<CofunderState, CofunderEvent> {
+
+    @Autowired
+    private CofunderDecisionAction cofunderDecisionAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<CofunderState, CofunderEvent> config) throws Exception {
@@ -37,6 +41,7 @@ public class CofunderAssignmentWorkflow extends StateMachineConfigurerAdapter<Co
                 .source(CofunderState.CREATED)
                 .target(CofunderState.ACCEPTED)
                 .event(CofunderEvent.ACCEPT)
+                .action(cofunderDecisionAction)
             .and()
                 .withExternal()
                 .source(CofunderState.ACCEPTED)
@@ -47,6 +52,7 @@ public class CofunderAssignmentWorkflow extends StateMachineConfigurerAdapter<Co
                 .source(CofunderState.CREATED)
                 .target(CofunderState.REJECTED)
                 .event(CofunderEvent.REJECT)
+                .action(cofunderDecisionAction)
             .and()
                 .withExternal()
                 .source(CofunderState.REJECTED)
