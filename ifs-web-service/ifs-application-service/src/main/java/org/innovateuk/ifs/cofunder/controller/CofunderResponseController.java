@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.cofunder.form.CofunderResponseForm;
 import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderState;
 import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
 import org.innovateuk.ifs.cofunder.viewmodel.CofunderResponseViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @Controller
 @RequestMapping("cofunder/application/{applicationId}/response")
@@ -29,9 +33,18 @@ public class CofunderResponseController {
 
     @GetMapping
     public String editResponse(@PathVariable long applicationId,
+                               @ModelAttribute("previousResponse") CofunderAssignmentResource previousAssignment,
                                Model model,
                                UserResource user) {
-        CofunderAssignmentResource assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+        CofunderAssignmentResource assignment;
+        if (previousAssignment.getState() != null) {
+            assignment = previousAssignment;
+        } else {
+            assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+            if (newArrayList(CofunderState.ACCEPTED, CofunderState.REJECTED).contains(assignment.getState())) {
+                return String.format("redirect:/cofunder/application/%d/response/view", applicationId);
+            }
+        }
         CofunderResponseForm form = new CofunderResponseForm(assignment);
         model.addAttribute("form", form);
         return editView(model, applicationId);
@@ -42,11 +55,24 @@ public class CofunderResponseController {
                                Model model,
                                UserResource user) {
         CofunderAssignmentResource assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+        if (assignment.getState() == CofunderState.CREATED) {
+            return String.format("redirect:/cofunder/application/%d/response", applicationId);
+        }
         CofunderResponseForm form = new CofunderResponseForm(assignment);
         model.addAttribute("form", form);
         return readonlyView(model, applicationId);
     }
 
+    @PostMapping("/view")
+    public String changeResponse(@PathVariable long applicationId,
+                                 Model model,
+                                 UserResource user,
+                                 RedirectAttributes redirectAttributes) {
+        CofunderAssignmentResource assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+        cofunderAssignmentRestService.edit(assignment.getAssignmentId()).getSuccess();
+        redirectAttributes.addFlashAttribute("previousResponse", assignment);
+        return String.format("redirect:/cofunder/application/%d/response", applicationId);
+    }
     @PostMapping
     public String saveResponse(@PathVariable long applicationId,
                            Model model,
@@ -54,7 +80,7 @@ public class CofunderResponseController {
                            @Valid @ModelAttribute("form") CofunderResponseForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
-        Supplier<String> success = () -> String.format("redirect:/cofunder/application/%d/response/view", applicationId);
+        Supplier<String> success = () -> "redirect:/";
         Supplier<String> failure = () -> editView(model, applicationId);
 
         return validationHandler.failNowOrSucceedWith(failure, () -> {

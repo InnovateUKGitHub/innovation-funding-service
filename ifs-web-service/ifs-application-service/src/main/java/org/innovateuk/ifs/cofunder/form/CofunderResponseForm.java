@@ -9,6 +9,9 @@ public class CofunderResponseForm {
     private Boolean decision;
     private String comments;
 
+    public CofunderResponseForm() {
+    }
+
     public CofunderResponseForm(CofunderAssignmentResource assignment) {
         this.assignmentId = assignment.getAssignmentId();
         if (assignment.getState() == CofunderState.CREATED) {
