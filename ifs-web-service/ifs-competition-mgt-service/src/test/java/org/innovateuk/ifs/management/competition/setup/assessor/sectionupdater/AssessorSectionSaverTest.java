@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.assessor.sectionupdater;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
@@ -42,6 +43,8 @@ public class AssessorSectionSaverTest {
 
 	@Mock
 	private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
+	private ArgumentCaptor<CompetitionAssessmentConfigResource> assessmentConfigArgumentCaptor = ArgumentCaptor.forClass(CompetitionAssessmentConfigResource.class);
 
 	@Test
 	public void testSaveSection() {
@@ -174,5 +177,41 @@ public class AssessorSectionSaverTest {
 		assertTrue(saver.saveSection(competition, assessorsForm).isFailure());
 
 		verify(competitionSetupRestService, never()).update(competition);
+	}
+
+	@Test
+	public void testSaveSectionForKtpCompetitionSavesNullAssessorPay() {
+		AssessorsForm competitionSetupForm = new AssessorsForm();
+		competitionSetupForm.setAssessorCount(1);
+		competitionSetupForm.setHasAssessmentPanel(Boolean.FALSE);
+		competitionSetupForm.setHasInterviewStage(Boolean.FALSE);
+		competitionSetupForm.setAssessorFinanceView(OVERVIEW);
+		competitionSetupForm.setAverageAssessorScore(Boolean.FALSE);
+
+		CompetitionResource competition = newCompetitionResource()
+				.withFundingType(FundingType.KTP)
+				.withId(1L).build();
+
+		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
+				.build();
+
+		List<AssessorCountOptionResource> assessorCounts = newAssessorCountOptionResource()
+				.withAssessorOptionName("1", "3", "5")
+				.withAssessorOptionValue(1, 3, 5)
+				.build(3);
+
+		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
+				.thenReturn(restSuccess(assessorCounts));
+		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
+		when(competitionAssessmentConfigRestService.update(anyLong(), any(CompetitionAssessmentConfigResource.class))).thenReturn(restSuccess(competitionAssessmentConfigResource));
+
+		saver.saveSection(competition, competitionSetupForm);
+
+		verify(assessorCountOptionsRestService).findAllByCompetitionType(competition.getCompetitionType());
+		verify(competitionAssessmentConfigRestService).update(eq(competition.getId()), assessmentConfigArgumentCaptor.capture());
+
+		CompetitionAssessmentConfigResource assessmentConfigToUpdate = assessmentConfigArgumentCaptor.getValue();
+
+		assertNull(assessmentConfigToUpdate.getAssessorPay());
 	}
 }
