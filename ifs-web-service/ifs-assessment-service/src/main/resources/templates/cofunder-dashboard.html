@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Cofunder assessments'" />
+</head>
+<body class="govuk-template__body assessor-dashboard">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Co-fund competitions',size='govuk-heading-xl'" />
+
+        <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.pendingInvites)}">
+            <div class="progress-list">
+                <h2 class="govuk-heading-m">Competitions to review (<span
+                    th:text="${#lists.size(model.pendingInvites)}"/>)</h2>
+                <ul>
+                    <li th:each="pendingInvite : ${model.pendingInvites}" class="status-2-col">
+                        <div class="task">
+                            <h3 class="govuk-heading-s"><a class="govuk-link"
+                                                           th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}"
+                                                           th:text="${pendingInvite.displayLabel}">Technology inspired</a></h3>
+                            <p class="govuk-body govuk-!-margin-0">You have been asked to assess this competition. Please respond.</p>
+                        </div>
+                        <div class="assessment-period">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>
+                            <dl class="standard-definition-list reduced-width">
+                                <dt>Begins</dt>
+                                <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateFrom, 'd MMMM yyyy')}">
+                                    15 November 2017
+                                </dd>
+                                <dt>Ends</dt>
+                                <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateTo, 'd MMMM yyyy')}">
+                                    25 December 2017
+                                </dd>
+                            </dl>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+<!--        <div class="my-applications">-->
+<!--            <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">-->
+
+<!--                <div class="progress-list">-->
+<!--                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Competitions for assessment (<span-->
+<!--                        th:text="${#lists.size(model.activeCompetitions)}"/>)</h2>-->
+<!--                    <ul>-->
+<!--                        <li th:each="activeCompetition : ${model.activeCompetitions}">-->
+<!--                            <div class="task">-->
+<!--                                <h3 class="govuk-heading-s"><a class="govuk-link"-->
+<!--                                                               th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"-->
+<!--                                                               th:text="${activeCompetition.displayLabel}"/></h3>-->
+<!--                                <div th:if="${!activeCompetition.hasPendingAssessments() && !activeCompetition.hasApplicationsToAssess()}">-->
+<!--                                    There are currently no assessments for you to review.-->
+<!--                                </div>-->
+
+<!--                                <div th:if="${!activeCompetition.hasApplicationsToAssess() && activeCompetition.hasPendingAssessments()}" class="action-required">-->
+<!--                                            <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications">-->
+<!--                                                COUNT-->
+<!--                                            </span> applications awaiting acceptance-->
+<!--                                </div>-->
+
+<!--                                <div th:if="${activeCompetition.hasPendingAssessments() && activeCompetition.hasApplicationsToAssess()}" class="action-required">-->
+<!--                                    <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications" /> applications awaiting acceptance | <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications" /> applications to assess-->
+<!--                                </div>-->
+
+<!--                                <div th:if="${activeCompetition.hasApplicationsToAssess() && !activeCompetition.hasPendingAssessments()}" class="action-required">-->
+<!--                                            <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications">-->
+<!--                                                COUNT-->
+<!--                                            </span> applications to assess-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="status">-->
+<!--                                <div class="status-msg msg-deadline" th:attr="data-competition-id=${activeCompetition.competitionId}">-->
+<!--                                    <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${activeCompetition.daysLeft}"></strong>-->
+<!--                                    <br />-->
+<!--                                    days left <br />-->
+<!--                                    Deadline-->
+<!--                                    <span class="day" th:text="${#temporals.day(activeCompetition.submitDeadline)}">END DAY</span>-->
+<!--                                    <span class="month" th:text="${#temporals.monthName(activeCompetition.submitDeadline)}">END MONTH</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+
+<!--            </th:block>-->
+<!--        </div>-->
+
+<!--        <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">-->
+<!--            <div class="progress-list"><h2 class="govuk-heading-m">Upcoming competitions to assess (<span-->
+<!--                th:text="${#lists.size(model.upcomingCompetitions)}"/>)</h2>-->
+<!--                <ul>-->
+<!--                    <li th:each="upcomingCompetition : ${model.upcomingCompetitions}" class="status-2-col">-->
+<!--                        <div class="task">-->
+<!--                            <h3 class="govuk-heading-s">-->
+<!--                                <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}"-->
+<!--                                   th:text="${upcomingCompetition.displayLabel}"-->
+<!--                                   class="govuk-link" />-->
+<!--                            </h3>-->
+<!--                            <p class="govuk-body govuk-!-margin-0">Upcoming competition</p>-->
+<!--                        </div>-->
+<!--                        <div class="assessment-period">-->
+<!--                            <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>-->
+<!--                            <dl class="standard-definition-list reduced-width">-->
+<!--                                <dt>Begins</dt>-->
+<!--                                <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateFrom)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateFrom)}|">15 November 2017</dd>-->
+<!--                                <dt>Ends</dt>-->
+<!--                                <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateTo)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateTo)}|">25 December 2017</dd>-->
+<!--                            </dl>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="assessment-panel-invites">-->
+<!--            <th:block th:unless="${#lists.isEmpty(model.assessmentPanelAccepted)}">-->
+<!--                <div class="progress-list"><h2 class="govuk-heading-m govuk-!-margin-top-0">Attend panel (<span-->
+<!--                    th:text="${#lists.size(model.assessmentPanelAccepted)}"/>)</h2>-->
+<!--                    <ul>-->
+<!--                        <li th:each="assessmentPanelAccept : ${model.assessmentPanelAccepted}">-->
+<!--                            <div class="task">-->
+<!--                                <h3 class="govuk-heading-s">-->
+<!--                                    <a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${assessmentPanelAccept.competitionId})}"-->
+<!--                                       th:text="${assessmentPanelAccept.competitionName}"-->
+<!--                                       class="govuk-link" />-->
+<!--                                </h3>-->
+
+<!--                                <div th:if="${assessmentPanelAccept.awaitingApplications == 0}">-->
+<!--                                    Applications awaiting review will be added here.-->
+<!--                                </div>-->
+
+<!--                                <div th:if="${assessmentPanelAccept.awaitingApplications > 0}" class="action-required">-->
+<!--                                            <span th:text="${assessmentPanelAccept.awaitingApplications}" class="accepted-applications">COUNT-->
+<!--                                            </span> applications awaiting review-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="status">-->
+<!--                                <div class="status-msg msg-deadline" th:attr="data-competition-id=${assessmentPanelAccept.competitionId}">-->
+<!--                                    <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>-->
+<!--                                    <br />days left <br />-->
+<!--                                    Deadline-->
+<!--                                    <span class="day" th:text="${#temporals.day(assessmentPanelAccept.panelDateDeadline)}">END DAY</span>-->
+<!--                                    <span class="month" th:text="${#temporals.monthName(assessmentPanelAccept.panelDateDeadline)}">END MONTH</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </th:block>-->
+<!--        </div>-->
+
+<!--        <div class="assessment-panel-invites" th:unless="${#lists.isEmpty(model.assessmentPanelInvites)}">-->
+<!--            <div class="progress-list"><h2 class="govuk-heading-m">Invitations to attend panel (<span-->
+<!--                th:text="${#lists.size(model.assessmentPanelInvites)}"/>)</h2>-->
+<!--                <ul>-->
+<!--                    <li th:each="assessmentReviewPanelInvite : ${model.assessmentPanelInvites}" class="status-2-col">-->
+<!--                        <div class="task">-->
+<!--                            <h3 class="govuk-heading-s">-->
+<!--                                <a th:href="@{/invite/panel/{inviteHash}(inviteHash=${assessmentReviewPanelInvite.inviteHash})}"-->
+<!--                                   th:text="${assessmentReviewPanelInvite.competitionName}"-->
+<!--                                   class="govuk-link" />-->
+<!--                            </h3>-->
+<!--                            <p class="govuk-body">You have been asked to attend this assessment panel. Please respond.</p>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="interview-panel-invites" th:unless="${#lists.isEmpty(model.interviewPanelInvites)}">-->
+<!--            <div class="progress-list"><h2 class="govuk-heading-m">Invitations to interview panel (<span-->
+<!--                th:text="${#lists.size(model.interviewPanelInvites)}"/>)</h2>-->
+<!--                <ul>-->
+<!--                    <li th:each="interviewPanelInvite : ${model.interviewPanelInvites}" class="status-2-col">-->
+<!--                        <div class="task">-->
+<!--                            <h3 class="govuk-heading-s">-->
+<!--                                <a th:href="@{/invite/interview/{inviteHash}(inviteHash=${interviewPanelInvite.inviteHash})}"-->
+<!--                                   th:text="${interviewPanelInvite.competitionName}"-->
+<!--                                   class="govuk-link" />-->
+<!--                            </h3>-->
+<!--                            <p class="govuk-body">You have been asked to attend an interview panel for this competition. Please respond.</p>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <h2 class="govuk-heading-m">Your assessor details</h2>-->
+<!--        <ul class="govuk-list govuk-list&#45;&#45;bullet">-->
+<!--            <li>-->
+<!--                <a th:href="@{/profile/agreement}" class="govuk-link">your assessor agreement</a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a th:href="@{/profile/travel}" class="govuk-link">travel and subsistence rates</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+
+<!--        <h2 class="govuk-heading-m">Profile</h2>-->
+<!--        <ul class="govuk-list govuk-list&#45;&#45;bullet">-->
+<!--            <li>-->
+<!--                <a th:href="@{/profile/details/skills}" class="govuk-link">your details</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

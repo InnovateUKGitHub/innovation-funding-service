@@ -31,9 +31,7 @@ public class NavigationUtils {
                     STAKEHOLDER, "management/dashboard",
                     EXTERNAL_FINANCE, "management/dashboard",
                     KNOWLEDGE_TRANSFER_ADVISER, "assessment/assessor/dashboard",
-
-                    // temp - will be updated with new dashboard
-                    COFUNDER, "assessment/assessor/dashboard"
+                    COFUNDER, "assessment/cofunder/dashboard"
             );
 
     @Value("${ifs.live.projects.landing.page.url}")
