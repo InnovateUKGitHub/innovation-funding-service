@@ -21,6 +21,7 @@ public abstract class AssessmentInviteMapper extends BaseMapper<AssessmentInvite
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),
             @Mapping(source = "target.name", target = "competitionName"),
+            @Mapping(source = "target.fundingType", target = "competitionFundingType"),
             @Mapping(source = "target.assessorAcceptsDate", target = "acceptsDate"),
             @Mapping(source = "target.assessorDeadlineDate", target = "deadlineDate"),
             @Mapping(source = "target.competitionAssessmentConfig.assessorPay", target = "assessorPay"),

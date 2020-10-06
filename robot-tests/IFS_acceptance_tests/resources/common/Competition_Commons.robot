@@ -22,7 +22,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
@@ -355,9 +355,10 @@ the user fills in the Finances questions without growth table
     the user should see the element       jQuery = li:contains("Finances") .task-status-complete
 
 the user fills in the CS Assessors
+    [Arguments]   ${fundingType}
     the user clicks the button/link    link = Assessors
     the user clicks the button twice   jQuery = label[for^="assessors"]:contains("3")
-    the user should see the element    css = #assessorPay[value="100"]
+    Run Keyword If  '${fundingType}' != 'KTP'      the user should see the element   css = #assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user selects the radio button  averageAssessorScore  0
@@ -591,3 +592,50 @@ comp admin enters more than 9 answer options
          \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link          id = remove-multiple-choice-row-10
     the user should not see the element      id = question.choices[10].text
+
+ifs admin invites a KTA user to IFS
+    [Arguments]   ${email}
+    the user clicks the button/link                        link = Manage users
+    the user clicks the button/link                        link = Invite a new external user
+    the user fills invite a new external user fields       Amy  Colin  ${email}
+    the user clicks the button/link                        jQuery = button:contains("Send invitation")
+    Logout as user
+
+KTA user creates an account and signed in to IFS
+    [Arguments]   ${email}
+    the user reads his email and clicks the link           ${email}   Invitation to Innovation Funding Service   You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
+    the user should see the element                        jQuery = h1:contains("Create knowledge transfer adviser account")
+    the KTA user enters the details to create account      Amy  Colin
+    the user clicks the button/link                        name = create-account
+    the user should see the element                        jQuery = h1:contains("Your account has been created")
+    the user clicks the button/link                        link = Sign into your account
+    logging in and error checking                          ${email}  ${short_password}
+
+the user fills invite a new external user fields
+    [Arguments]  ${firstName}  ${lastName}  ${emailAddress}
+    the user enters text to a text field     id = firstName      ${firstName}
+    the user enters text to a text field     id = lastName       ${lastName}
+    the user enters text to a text field     id = emailAddress   ${emailAddress}
+
+the KTA user enters the details to create account
+    [Arguments]  ${firstName}  ${lastName}
+    the user enters text to a text field                   name = firstName  ${firstName}
+    the user enters text to a text field                   name = lastName  ${lastName}
+    the user enters text to a text field                   name = password  ${short_password}
+    the user enters text to a text field                   id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link                        id = postcode-lookup
+    the user selects the index from the drop-down menu     1  id=addressForm.selectedPostcodeIndex
+    the user enters text to a text field                   name = phoneNumber  98765637474
+    the user enters text to a text field                   name = password   ${short_password}
+    the user selects the checkbox                          termsAndConditions
+
+assign the KTA role to an existing user
+    [Arguments]   ${ktaEmail}
+    log in as a different user               &{ifs_admin_user_credentials}
+    the user clicks the button/link          link = Manage users
+    the user enters text to a text field     id = filter   ${ktaEmail}
+    the user clicks the button/link          css = [class="btn"]
+    the user clicks the button/link          jQuery = a:contains("Edit")
+    the user clicks the button/link          link = Add a new external role profile
+    the user clicks the button/link          jQuery = button:contains("Confirm role profile")
+    the user clicks the button/link          jQuery = button:contains("Save and return")

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.upcoming.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -19,6 +20,7 @@ public class UpcomingCompetitionViewModel {
     private ZonedDateTime assessmentPeriodDateTo;
     private ZonedDateTime assessorBriefingDate;
     private BigDecimal assessorPay;
+    private boolean ktpCompetition;
 
     public UpcomingCompetitionViewModel(CompetitionResource competitionResource, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         this.competitionId = competitionResource.getId();
@@ -27,6 +29,7 @@ public class UpcomingCompetitionViewModel {
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
         this.assessorPay = competitionAssessmentConfigResource.getAssessorPay();
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
+        this.ktpCompetition = competitionResource.isKtp();
     }
 
     public long getCompetitionId() {
@@ -71,6 +74,10 @@ public class UpcomingCompetitionViewModel {
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     @Override
