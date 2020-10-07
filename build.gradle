@@ -192,7 +192,6 @@ publishing {
                 password project.findProperty("nexus_password")
             }
 
-            println("nexus repository is " + nexusRepository)
             if (nexusRepository.equals("snapshots")) {
                 url "https://devops.innovateuk.org/binaries/repository/ifs-config-snapshots/"
             } else {
