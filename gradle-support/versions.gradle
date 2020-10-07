@@ -1,7 +1,6 @@
 
 // Deployment behaviour for differing versions has not been tested yet
 // and so version numbers should always equal project.version
-// DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
 ext.nexusVersion = project.hasProperty('nexusVersion') ? project.property('nexusVersion') : project.version
 
 ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
