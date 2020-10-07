@@ -3,10 +3,13 @@ package org.innovateuk.ifs.cofunder.form;
 import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderState;
 
+import javax.validation.constraints.NotBlank;
+
 public class CofunderResponseForm {
 
     private long assignmentId;
     private Boolean decision;
+    @NotBlank(message = "{validation.cofunder.response.comments.required}")
     private String comments;
 
     public CofunderResponseForm() {
