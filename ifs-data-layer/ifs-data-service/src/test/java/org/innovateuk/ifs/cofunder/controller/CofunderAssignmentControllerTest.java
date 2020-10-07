@@ -140,7 +140,7 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
         List<Long> expected = Arrays.asList(1L, 2L, 3L);
         when(cofunderAssignmentService.findAvailableCofundersUserIdsForApplication(applicationId, filter)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/application/{applicationId}/userIds?filter={filter}", applicationId, filter))
+        mockMvc.perform(get("/cofunder/application/{applicationId}/userIds?filter={filter}", applicationId, filter))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
