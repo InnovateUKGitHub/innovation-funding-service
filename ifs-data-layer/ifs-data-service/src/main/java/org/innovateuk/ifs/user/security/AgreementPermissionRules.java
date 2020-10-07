@@ -12,6 +12,6 @@ public class AgreementPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Any assessor user can view the current agreement")
     public boolean anyAssessorCanViewTheCurrentAgreement(UserResource user) {
-        return SecurityRuleUtil.isAssessor(user);
+        return SecurityRuleUtil.hasAssessorAuthority(user);
     }
 }
