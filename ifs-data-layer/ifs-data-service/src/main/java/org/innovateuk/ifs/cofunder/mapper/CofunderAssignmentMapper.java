@@ -2,7 +2,6 @@ package org.innovateuk.ifs.cofunder.mapper;
 
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.BaseResourceMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -13,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
 @Mapper(config = GlobalMapperConfig.class)
-public abstract class CofunderAssignmentMapper extends BaseResourceMapper<CofunderAssignment, CofunderAssignmentResource, Long> {
+public abstract class CofunderAssignmentMapper extends BaseResourceMapper<CofunderAssignment, CofunderAssignmentResource> {
 
     @Autowired
     private ProfileRepository profileRepository;
