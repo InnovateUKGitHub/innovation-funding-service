@@ -26,11 +26,9 @@
                                                                th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                                                th:text="${activeCompetition.competitionName}"/></h3>
 
-                                <!-- Do we need '&& !activeCompetition.hasApplicationsToAssess() in this check also -->
                                 <div th:if="${!activeCompetition.hasPendingAssessments()}">
                                     There are currently no assessments for you to review.
                                 </div>
-                                <!--Do we need '!activeCompetition.hasApplicationsToAssess() &&' in this check? -->
                                 <div th:if="${activeCompetition.hasPendingAssessments()}">
                                     <strong>
                                         <span th:text="${activeCompetition.pendingAssessments}"
