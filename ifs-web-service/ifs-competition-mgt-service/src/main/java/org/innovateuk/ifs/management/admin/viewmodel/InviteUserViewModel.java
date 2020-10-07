@@ -59,6 +59,11 @@ public class InviteUserViewModel {
         return type.equals(InviteUserView.EXTERNAL_USER);
     }
 
+    public boolean isAddingCofunderRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.COFUNDER;
+    }
+
     public String getLinkTitle() {
         return cofunderEnabled ? "Back to select user role" : "Back to manage users";
     }

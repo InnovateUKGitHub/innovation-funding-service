@@ -48,8 +48,8 @@
                         <div class="govuk-radios__item" th:each="role : ${roles}">
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   th:field="*{roleId}"
-                                   th:value="${role.id}"
+                                   th:field="*{role}"
+                                   th:value="${role}"
                                    th:id="|role-radio-${role.id}|"
                                    required="required"
                             />

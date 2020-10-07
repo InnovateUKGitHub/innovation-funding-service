@@ -68,11 +68,11 @@ public class InviteUserController {
                                Model model) {
 
         Supplier<String> failureView = () -> selectRole(form, model);
-        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToInviteExternalUserPage(form.getRoleId()));
+        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToInviteExternalUserPage(form.getRole()));
     }
 
-    private String redirectToInviteExternalUserPage(Long roleId) {
-        return String.format("redirect:/admin/invite-external-user?role=%s", Role.getById(roleId).toString());
+    private String redirectToInviteExternalUserPage(Role role) {
+        return String.format("redirect:/admin/invite-external-user?role=%s", role.toString());
     }
 
     @GetMapping("/invite-user")

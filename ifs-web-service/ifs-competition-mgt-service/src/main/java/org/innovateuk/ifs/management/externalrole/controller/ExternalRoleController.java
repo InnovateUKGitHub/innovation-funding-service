@@ -93,11 +93,11 @@ public class ExternalRoleController {
                                Model model) {
 
         Supplier<String> failureView = () -> selectRole(userId, form, model);
-        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToAddRolePage(form.getRoleId(), userId));
+        return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToAddRolePage(form.getRole(), userId));
     }
 
-    private String redirectToAddRolePage(Long roleId, long userId) {
-        return String.format("redirect:/admin/user/%d/external-role?role=%s", userId, Role.getById(roleId).toString());
+    private String redirectToAddRolePage(Role role, long userId) {
+        return String.format("redirect:/admin/user/%d/external-role?role=%s", userId, role.toString());
     }
 
     private String redirectToUserPage(long userId) {

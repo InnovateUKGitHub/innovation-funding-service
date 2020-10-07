@@ -15,7 +15,6 @@ import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
 import org.innovateuk.ifs.invite.repository.UserInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
@@ -149,9 +148,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
 
     private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
