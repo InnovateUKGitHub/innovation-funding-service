@@ -90,9 +90,13 @@
         </form>
 
         <h3 class="govuk-heading-s govuk-!-margin-top-6"><th:block th:text="${model.cofundersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
-        <form
-            th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/addSelected'}" novalidate="novalidate"
-            method="post">
+
+        <form method="POST"
+              th:action="@{/competition/{competitionId}/cofunders/assign/{applicationId}/find/addSelected(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
+              th:object="${cofunderSelectionForm}"
+              data-multipage-select=""
+              autocomplete="off"
+              th:attr="data-total-checkboxes=${model.pagination.totalElements}">
 
             <div class="govuk-grid-row sorting">
                 <div class="govuk-grid-column-one-half select-all">
@@ -102,7 +106,8 @@
                                    class="govuk-checkboxes__input"
                                    data-select-all=""
                                    id="select-all-check"
-                                   />
+                                   th:checked="${cofunderSelectionForm.isAllSelected()}"
+                                   th:disabled="${model.pagination.totalElements == 0}"/>
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
                                 Select all co-funders
@@ -110,7 +115,7 @@
                         </div>
                     </div>
                     <span class="govuk-hint">
-                        <span data-count-selected="">0</span> co-funders selected
+                        <span data-count-selected="" th:text="${#lists.size(cofunderSelectionForm.selectedCofunderIds)}"></span> co-funders selected
                     </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">

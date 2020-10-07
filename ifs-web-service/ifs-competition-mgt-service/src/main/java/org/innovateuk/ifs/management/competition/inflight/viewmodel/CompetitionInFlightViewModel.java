@@ -35,13 +35,15 @@ public class CompetitionInFlightViewModel {
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
+    private boolean cofunderEnabled;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
-                                        boolean readOnly) {
+                                        boolean readOnly,
+                                        boolean cofunderEnabled) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionCompletionStage = competitionResource.getCompletionStage();
@@ -62,6 +64,7 @@ public class CompetitionInFlightViewModel {
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
+        this.cofunderEnabled = cofunderEnabled;
     }
 
     public Long getCompetitionId() {
@@ -158,7 +161,8 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isManageCofundersLinkEnabled() {
-        return competitionFundingType == FundingType.KTP
+        return cofunderEnabled
+                && competitionFundingType == FundingType.KTP
                 && competitionStatus.isLaterThan(READY_TO_OPEN)
                 && !competitionStatus.isLaterThan(IN_ASSESSMENT);
     }
