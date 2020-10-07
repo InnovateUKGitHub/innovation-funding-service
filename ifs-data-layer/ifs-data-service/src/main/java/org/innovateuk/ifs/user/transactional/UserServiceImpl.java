@@ -201,8 +201,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotificationWithFlush(notification, EMAIL);
-        } else if (userIsExternalNotOnlyAssessor(user) &&
-                userNotYetVerified(user)) {
+        } else if (userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
         } else {
             return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
