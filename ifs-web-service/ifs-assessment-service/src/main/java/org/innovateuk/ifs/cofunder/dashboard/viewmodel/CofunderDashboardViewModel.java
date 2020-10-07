@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.cofunder.dashboard.viewmodel;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionAwaitingResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionActiveResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcomingResource;
 
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.List;
 public class CofunderDashboardViewModel {
 
     private List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions;
-    private List<CofunderDashboardCompetitionAwaitingResource> awaitingCompetitions;
+    private List<CofunderDashboardCompetitionActiveResource> awaitingCompetitions;
 
     public CofunderDashboardViewModel(List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource,
-                                      List<CofunderDashboardCompetitionAwaitingResource> awaitingCompetitions) {
+                                      List<CofunderDashboardCompetitionActiveResource> awaitingCompetitions) {
         this.upcomingCompetitions = cofunderDashboardCompetitionUpcomingResource;
         this.awaitingCompetitions = awaitingCompetitions;
     }
@@ -27,11 +27,11 @@ public class CofunderDashboardViewModel {
         this.upcomingCompetitions = upcomingCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionAwaitingResource> getAwaitingCompetitions() {
+    public List<CofunderDashboardCompetitionActiveResource> getAwaitingCompetitions() {
         return awaitingCompetitions;
     }
 
-    public void setAwaitingCompetitions(List<CofunderDashboardCompetitionAwaitingResource> awaitingCompetitions) {
+    public void setAwaitingCompetitions(List<CofunderDashboardCompetitionActiveResource> awaitingCompetitions) {
         this.awaitingCompetitions = awaitingCompetitions;
     }
 }

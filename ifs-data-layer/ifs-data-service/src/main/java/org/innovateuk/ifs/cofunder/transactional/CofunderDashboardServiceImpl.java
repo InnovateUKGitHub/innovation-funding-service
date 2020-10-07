@@ -3,7 +3,7 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionAwaitingResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionActiveResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcomingResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderState;
@@ -40,7 +40,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
         Map<Competition, List<CofunderAssignment>> competitionAssignments =
                 assignments.stream().collect(groupingBy(co -> co.getTarget().getCompetition()));
 
-        List<CofunderDashboardCompetitionAwaitingResource> awaiting = new ArrayList();
+        List<CofunderDashboardCompetitionActiveResource> awaiting = new ArrayList();
         List<CofunderDashboardCompetitionUpcomingResource> upcoming = new ArrayList();
 
         competitionAssignments.keySet().forEach(competition -> {
@@ -65,16 +65,17 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
         return serviceSuccess(new CofunderDashboardCompetitionResource(awaiting, upcoming));
     }
 
-    private CofunderDashboardCompetitionAwaitingResource createAwaitingResource(List<CofunderAssignment> cofunderAssignments,
-                                                                                Competition competition) {
-        long awaitingReview = cofunderAssignments.stream().filter(cofunderAssignment -> cofunderAssignment.getProcessState() ==  CofunderState.CREATED).count();
+    private CofunderDashboardCompetitionActiveResource createAwaitingResource(List<CofunderAssignment> cofunderAssignments,
+                                                                              Competition competition) {
+        long pendingReview = cofunderAssignments.stream().filter(cofunderAssignment -> cofunderAssignment.getProcessState() ==  CofunderState.CREATED).count();
 
-        return new CofunderDashboardCompetitionAwaitingResource(
+        return new CofunderDashboardCompetitionActiveResource(
                 competition.getId(),
                 competition.getName(),
                 competition.getAssessorDeadlineDate(),
-                awaitingReview,
-                competition.getFundingType());
+                pendingReview,
+                competition.getFundingType(),
+                competition.getDaysLeft());
     }
 
     private CofunderDashboardCompetitionUpcomingResource createUpcomingResource(List<CofunderAssignment> cofunderAssignments,

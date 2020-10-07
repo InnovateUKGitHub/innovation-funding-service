@@ -4,28 +4,27 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import java.time.ZonedDateTime;
 
-public class CofunderDashboardCompetitionAwaitingResource {
+public class CofunderDashboardCompetitionActiveResource {
 
     private long competitionId;
     private String competitionName;
     private ZonedDateTime cofunderDeadlineDate;
-    private long awaitingReview;
+    private long pendingAssessments;
     private FundingType fundingType;
+    private long daysLeft;
 
-
-    public CofunderDashboardCompetitionAwaitingResource() {
-    }
-
-    public CofunderDashboardCompetitionAwaitingResource(long competitionId,
-                                                        String competitionName,
-                                                        ZonedDateTime cofunderDeadlineDate,
-                                                        long awaitingReview,
-                                                        FundingType fundingType) {
+    public CofunderDashboardCompetitionActiveResource(long competitionId,
+                                                      String competitionName,
+                                                      ZonedDateTime cofunderDeadlineDate,
+                                                      long pendingAssessments,
+                                                      FundingType fundingType,
+                                                      long daysLeft) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.cofunderDeadlineDate = cofunderDeadlineDate;
-        this.awaitingReview = awaitingReview;
+        this.pendingAssessments = pendingAssessments;
         this.fundingType = fundingType;
+        this.daysLeft = daysLeft;
     }
 
     public long getCompetitionId() {
@@ -52,12 +51,12 @@ public class CofunderDashboardCompetitionAwaitingResource {
         this.cofunderDeadlineDate = cofunderDeadlineDate;
     }
 
-    public long getAwaitingReview() {
-        return awaitingReview;
+    public long getPendingAssessments() {
+        return pendingAssessments;
     }
 
-    public void setAwaitingReview(long awaitingReview) {
-        this.awaitingReview = awaitingReview;
+    public void setPendingAssessments(long pendingAssessments) {
+        this.pendingAssessments = pendingAssessments;
     }
 
     public FundingType getFundingType() {
@@ -66,5 +65,17 @@ public class CofunderDashboardCompetitionAwaitingResource {
 
     public void setFundingType(FundingType fundingType) {
         this.fundingType = fundingType;
+    }
+
+    public long getDaysLeft() {
+        return daysLeft;
+    }
+
+    public void setDaysLeft(long daysLeft) {
+        this.daysLeft = daysLeft;
+    }
+
+    public boolean hasPendingAssessments(){
+        return pendingAssessments != 0;
     }
 }

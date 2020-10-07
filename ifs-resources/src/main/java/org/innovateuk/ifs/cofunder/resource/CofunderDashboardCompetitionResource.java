@@ -4,20 +4,20 @@ import java.util.List;
 
 public class CofunderDashboardCompetitionResource {
 
-    private List<CofunderDashboardCompetitionAwaitingResource> cofunderDashboardCompetitionAwaitingResource;
+    private List<CofunderDashboardCompetitionActiveResource> cofunderDashboardCompetitionActiveResource;
     private List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource;
 
     public CofunderDashboardCompetitionResource() {
     }
 
-    public CofunderDashboardCompetitionResource(List<CofunderDashboardCompetitionAwaitingResource> cofunderDashboardCompetitionAwaitingResource,
+    public CofunderDashboardCompetitionResource(List<CofunderDashboardCompetitionActiveResource> cofunderDashboardCompetitionActiveResource,
                                                 List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource) {
-        this.cofunderDashboardCompetitionAwaitingResource = cofunderDashboardCompetitionAwaitingResource;
+        this.cofunderDashboardCompetitionActiveResource = cofunderDashboardCompetitionActiveResource;
         this.cofunderDashboardCompetitionUpcomingResource = cofunderDashboardCompetitionUpcomingResource;
     }
 
-    public List<CofunderDashboardCompetitionAwaitingResource> getCofunderDashboardCompetitionAwaitingResource() {
-        return cofunderDashboardCompetitionAwaitingResource;
+    public List<CofunderDashboardCompetitionActiveResource> getCofunderDashboardCompetitionActiveResource() {
+        return cofunderDashboardCompetitionActiveResource;
     }
 
     public List<CofunderDashboardCompetitionUpcomingResource> getCofunderDashboardCompetitionUpcomingResource() {
