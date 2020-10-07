@@ -24,6 +24,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * populates the model for the Application Questions landing page of the competition setup section.
@@ -64,8 +65,9 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
 
         List<QuestionResource> questions = getSortedQuestions(questionResources, parentSections);
         List<QuestionResource> projectDetails = getSortedProjectDetails(questionResources, parentSections);
+        List<QuestionResource> ktpQuestions = getKtpAssessorQuestions(competitionResource, sections, questionResources);
 
-        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, questions, projectDetails);
+        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, combineLists(questions, ktpQuestions), projectDetails);
 
         return new LandingViewModel(generalViewModel,
                 questions,
@@ -73,7 +75,7 @@ public class LandingModelPopulator implements CompetitionSetupSectionModelPopula
                 subSectionsStatuses,
                 questionStatuses,
                 allStatusesComplete,
-                getKtpAssessorQuestions(competitionResource, sections, questionResources));
+                ktpQuestions);
     }
 
     private List<QuestionResource> getKtpAssessorQuestions(CompetitionResource competitionResource, List<SectionResource> sections, List<QuestionResource> questionResources) {

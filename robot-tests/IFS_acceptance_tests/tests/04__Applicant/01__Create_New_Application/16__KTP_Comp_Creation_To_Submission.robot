@@ -124,14 +124,14 @@ Comp Admin is able to see KTP funding type has been selected
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
     [Teardown]  the user clicks the button/link     link = Competition details
 
-Creating a new investor comp points to the correct T&C
+Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
     Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
     And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
 
-The Investor partnership t&c's are correct
+The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
     When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
@@ -352,12 +352,12 @@ System should not allow a KTA to be invited if they do not have a KTA account in
 
 The applicant invites a KTA user to the application
     [Documentation]  IFS-7806 IFS-8095
-    [Setup]  Assign the KTA role to the user
-    Given Log in as a different user               &{ktpLeadApplicantCredentials}
-    When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
-    Then The user reads his email                  ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
-    And the user should see the element            jQuery = td:contains("pending for 0 days")
-    And the user should see the element            Jquery = td:contains("${ktaEmail}")
+    [Setup]  assign the KTA role to an existing user    ${ktaEmail}
+    Given Log in as a different user                    &{ktpLeadApplicantCredentials}
+    When the user invites a KTA to application          ${ktpApplicationTitle}   ${ktaEmail}
+    Then The user reads his email                       ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    And the user should see the element                 jQuery = td:contains("pending for 0 days")
+    And the user should see the element                 jQuery = td:contains("${ktaEmail}")
 
 The applicant should not be able to mark the application team section as complete until the KTA has accepted the invitation to join the application
     [Documentation]  IFS-7806
@@ -888,16 +888,6 @@ KTA should see application name, organisation and lead applicant details
     the user should see the element     jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
     the user should see the element     jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
     the user should see the element     jQuery = dt:contains("Application")+dd:contains("${ApplicationID}: ${ktpApplicationTitle}")
-
-Assign the KTA role to the user
-    log in as a different user               &{ifs_admin_user_credentials}
-    the user clicks the button/link          link = Manage users
-    the user enters text to a text field     id = filter   ${ktaEmail}
-    the user clicks the button/link          css = [class="btn"]
-    the user clicks the button/link          jQuery = a:contains("Edit")
-    the user clicks the button/link          link = Add a new external role profile
-    the user clicks the button/link          jQuery = button:contains("Confirm role profile")
-    the user clicks the button/link          jQuery = button:contains("Save and return")
 
 the user invites a KTA to application
     [Arguments]  ${applicationName}   ${email}

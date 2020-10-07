@@ -65,17 +65,17 @@ The Applicant completing the application details
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
 
 Applicant Applies to Public content leading Competition
-    [Documentation]  IFS-1012  IFS-4046
+    [Documentation]  IFS-1012  IFS-4046  IFS-8044
     [Tags]  Applicant  CompAdmin  HappyPath
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
-    Given logged in user applies to competition public    ${openCompetitionPublicSector_name}  4
-    When the user clicks the button/link                  link = Application details
-    Then the user fills in the Application details        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
-    And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
-    When the user navigates to Your-finances page         ${publicLeadApp}
-    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
-    And the user accept the competition terms and conditions    Return to application overview
+    Given logged in user applies to competition public                   ${openCompetitionPublicSector_name}  4
+    When the user clicks the button/link                                 link = Application details
+    Then the user fills in the Application details with no submit        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user marks every section but one as complete                 ${publicLeadApp}  Experimental development
+    When the user navigates to Your-finances page                        ${publicLeadApp}
+    Then the user marks the finances as complete                         ${publicLeadApp}  Calculate  52,214  no
+    And the user accept the competition terms and conditions             Return to application overview
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com  no
 
 Project Finance is able to see the Overheads costs file
@@ -103,7 +103,7 @@ The competition admin creates a competition for
     the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user removes the Project details questions and marks the Application section as done  yes  Generic  ${competition}
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      GRANT
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
