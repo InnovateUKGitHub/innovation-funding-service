@@ -193,7 +193,7 @@ publishing {
             }
 
             println("nexus repository is " + nexusRepository)
-            if (nexusRepository.equals("snapshot")) {
+            if (nexusRepository.equals("snapshots")) {
                 url "https://devops.innovateuk.org/binaries/repository/ifs-config-snapshots/"
             } else {
                 url "https://devops.innovateuk.org/binaries/repository/ifs-config-releases/"
