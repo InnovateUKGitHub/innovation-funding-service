@@ -329,15 +329,15 @@ public class CommonBuilders {
                         .withType(FormInputType.TEMPLATE_DOCUMENT)
                         .withScope(FormInputScope.APPLICATION)
                         .withActive(false),
+                aFormInput()
+                        .withType(FormInputType.ASSESSOR_SCORE)
+                        .withScope(FormInputScope.ASSESSMENT)
+                        .withActive(true),
                 assessorTextAreaModifier.apply(aFormInput()
                         .withType(FormInputType.TEXTAREA)
                         .withScope(FormInputScope.ASSESSMENT)
                         .withActive(true)
-                        .withWordCount(100)),
-                aFormInput()
-                        .withType(FormInputType.ASSESSOR_SCORE)
-                        .withScope(FormInputScope.ASSESSMENT)
-                        .withActive(true)
+                        .withWordCount(100))
         );
     }
 
