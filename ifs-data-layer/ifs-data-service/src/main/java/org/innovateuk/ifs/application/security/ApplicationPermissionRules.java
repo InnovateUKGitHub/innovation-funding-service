@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -33,6 +34,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
+
+    @Autowired
+    private CofunderAssignmentRepository cofunderAssignmentRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
@@ -186,6 +190,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             return false;
         }
         return isPartner(linkedProject.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Cofunders can can see application resources for applications assigned to them.")
+    public boolean cofundersCanViewApplicationsAssigned(final ApplicationResource application, final UserResource user) {
+        return application != null && cofunderAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
