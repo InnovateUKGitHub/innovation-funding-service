@@ -11,8 +11,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to application',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -23,7 +23,8 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${pageTitle},subTitle=${competitionName},size='govuk-heading-xl'" />
 
         <p class="govuk-body govuk-!-margin-top-6" th:unless="${model.general.state.preventEdit}">
-            You can edit this question for the applicant as well as the guidance for assessors. </p>
+            You can edit this question for the applicant as well as the guidance for
+            <span th:text="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT ? 'Knowledge transfer adviser' : 'assessors'}">assessors</span>.</p>
 
         <p class="govuk-body govuk-!-margin-top-6" th:if="${model.general.state.preventEdit}">
             You are no longer able to make changes to this page.</p>
