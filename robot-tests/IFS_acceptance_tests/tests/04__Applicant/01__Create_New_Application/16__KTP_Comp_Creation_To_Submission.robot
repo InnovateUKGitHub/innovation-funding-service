@@ -55,6 +55,9 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8325 Write Acceptance tests for 8312
 ...
+...            IFS-8212 KTP Assessments - applicant view
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -494,6 +497,15 @@ Moving KTP Competition to Project Setup
     And making the application a successful project    ${competitionId}  ${ktpApplicationTitle}
     And moving competition to Project Setup            ${competitionId}
     [Teardown]  Requesting IDs of this Project
+
+Applicant should not see the banner at the top of the application overview and the project start date
+    [Documentation]  IFS-8212
+    Given Log in as a different user                    &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                 link = ${ktpApplicationTitle}
+    When the user clicks the button/link                link = view application feedback
+    Then the user should not see the element            jQuery = h2:contains("Congratulations, your application has been successful")
+    And the user should not see the element             jQuery = dt:contains("When do you wish to start your project?")
+    Then the user should see application details
 
 the project finance user cannot see the project start date
     [Documentation]  IFS-7805
@@ -965,3 +977,9 @@ the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
+
+the user should see application details
+    the user should see the element     jQuery = dt:contains("Application number:")+dd:contains("${ApplicationID}")
+    the user should see the element     jQuery = dt:contains("Lead organisation:")+dd:contains("${ktpOrgName}")
+    the user should see the element     jQuery = dt:contains("Partners:")+dd:contains("${newPartnerOrgName}")
+    the user should see the element     jQuery = dt:contains("Total project costs:")+dd:contains("${246}")
