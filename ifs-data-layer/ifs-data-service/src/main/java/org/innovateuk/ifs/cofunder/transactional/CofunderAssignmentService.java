@@ -27,4 +27,6 @@ public interface CofunderAssignmentService {
 
     ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, Pageable pageable);
 
+    ServiceResult<List<Long>> findAvailableCofundersUserIdsForApplication(long applicationId, String filter);
+
 }

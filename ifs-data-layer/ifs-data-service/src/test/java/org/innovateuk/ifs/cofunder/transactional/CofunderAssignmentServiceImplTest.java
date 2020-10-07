@@ -21,6 +21,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -259,5 +262,19 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         assertThat(result.getSuccess().getAssignedCofunders().get(0).getName(), equalTo("Assigned Guy"));
         assertThat(result.getSuccess().getAssignedCofunders().get(0).getUserId(), equalTo(assignedUser.getId()));
         assertThat(result.getSuccess().getAssignedCofunders().get(0).getOrganisation(), equalTo("Simply an assigned organisation"));
+    }
+
+    @Test
+    public void findAvailableCofundersUserIdsForApplication() {
+        long applicationId = 4L;
+        String filter = "w";
+        List<Long> ids = Arrays.asList(1L, 2L, 3L);
+
+        when(cofunderAssignmentRepository.usersAvailableForCofundingUserIds(applicationId, filter)).thenReturn(ids);
+
+        ServiceResult<List<Long>> result = service.findAvailableCofundersUserIdsForApplication(applicationId, filter);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        assertThat(result.getSuccess(), equalTo(ids));
     }
 }

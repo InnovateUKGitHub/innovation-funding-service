@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cofunder")
 public class CofunderAssignmentController {
@@ -59,5 +61,11 @@ public class CofunderAssignmentController {
                                                                                                         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
                                                                                                         @RequestParam(defaultValue = "") String filter) {
         return cofunderAssignmentService.findAvailableCofundersForApplication(applicationId, filter, pageable).toGetResponse();
+    }
+
+    @GetMapping("/application/{applicationId}/userIds")
+    public RestResult<List<Long>> findAvailableCofundersUserIdsForApplication(@PathVariable long applicationId,
+                                                                              @RequestParam(defaultValue = "") String filter) {
+        return cofunderAssignmentService.findAvailableCofundersUserIdsForApplication(applicationId, filter).toGetResponse();
     }
 }

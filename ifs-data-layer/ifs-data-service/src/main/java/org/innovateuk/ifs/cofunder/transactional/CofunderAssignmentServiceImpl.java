@@ -192,6 +192,11 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         );
     }
 
+    @Override
+    public ServiceResult<List<Long>> findAvailableCofundersUserIdsForApplication(long applicationId, String filter) {
+        return serviceSuccess(cofunderAssignmentRepository.usersAvailableForCofundingUserIds(applicationId, filter));
+    }
+
     private CofunderUserResource mapToCofunderUser(User user) {
         CofunderUserResource cofunderUser = new CofunderUserResource();
         Profile profile = profileRepository.findById(user.getProfileId()).orElseThrow(ObjectNotFoundException::new);

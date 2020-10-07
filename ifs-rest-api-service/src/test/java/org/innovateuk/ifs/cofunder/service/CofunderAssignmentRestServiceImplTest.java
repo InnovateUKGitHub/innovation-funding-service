@@ -7,7 +7,11 @@ import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
 import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -87,5 +91,15 @@ public class CofunderAssignmentRestServiceImplTest extends BaseRestServiceUnitTe
 
         setupGetWithRestResultExpectations(format("%s/application/%d?page=%d&filter=%s", cofunderRestUrl, applicationId, page, filter), CofundersAvailableForApplicationPageResource.class, expected);
         assertSame(expected, service.findAvailableCofundersForApplication(applicationId, filter, page).getSuccess());
+    }
+
+    @Test
+    public void findAvailableCofundersUserIdsForApplication() {
+        long applicationId = 1L;
+        String filter = "filter";
+        List<Long> expected = Arrays.asList(1L, 2L, 3L);
+
+        setupGetWithRestResultExpectations(format("%s/application/%d/userIds?filter=%s", cofunderRestUrl, applicationId, filter), longsListType(), expected);
+        assertSame(expected, service.findAllAvailableCofunderUserIdsForApplication(applicationId, filter).getSuccess());
     }
 }

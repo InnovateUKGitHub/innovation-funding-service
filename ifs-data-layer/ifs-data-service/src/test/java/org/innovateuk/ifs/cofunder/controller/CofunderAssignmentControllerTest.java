@@ -10,6 +10,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -121,5 +124,19 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(content().json(toJson(expected)));
 
         verify(cofunderAssignmentService, only()).findAvailableCofundersForApplication(applicationId, filter, pageRequest);
+    }
+
+    @Test
+    public void findAvailableCofundersUserIdsForApplication() throws Exception {
+        long applicationId = 1L;
+        String filter = "filter";
+        List<Long> expected = Arrays.asList(1L, 2L, 3L);
+        when(cofunderAssignmentService.findAvailableCofundersUserIdsForApplication(applicationId, filter)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/application/{applicationId}/userIds?filter={filter}", applicationId, filter))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(cofunderAssignmentService, only()).findAvailableCofundersUserIdsForApplication(applicationId, filter);
     }
 }

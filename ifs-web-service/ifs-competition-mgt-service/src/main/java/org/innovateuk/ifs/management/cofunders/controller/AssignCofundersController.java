@@ -184,29 +184,7 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
     }
 
     private List<Long> getAllCofunderIds(long applicationId, String filter) {
-
-        List<Long> allCofunderIds = new ArrayList<>();
-
-        int page = 0;
-        CofundersAvailableForApplicationPageResource result;
-
-        do {
-            result = availableCofunders(applicationId, filter, page++);
-            allCofunderIds.addAll(userIds(result));
-        } while (moreResultsExist(result));
-
-        return allCofunderIds;
-    }
-
-    private boolean moreResultsExist(CofundersAvailableForApplicationPageResource result) {
-        return result.getTotalPages() > result.getNumber();
-    }
-
-    private CofundersAvailableForApplicationPageResource availableCofunders(long applicationId, String filter, int page) {
-        return cofunderAssignmentRestService.findAvailableCofundersForApplication(applicationId, filter, page).getSuccess();
-    }
-    private List<Long> userIds(CofundersAvailableForApplicationPageResource results) {
-        return results.getContent().stream().map(CofunderUserResource::getUserId).collect(Collectors.toList());
+        return cofunderAssignmentRestService.findAllAvailableCofunderUserIdsForApplication(applicationId, filter).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,6 +21,14 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
 
     Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
+
+    String QUERY = "FROM User user " +
+            "JOIN user.roles role " +
+            "WHERE role = org.innovateuk.ifs.user.resource.Role.COFUNDER " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :filter, '%') " +
+            "AND NOT EXISTS (" +
+            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
+            ")";
 
     @Query(
             "SELECT new org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource( " +
@@ -42,15 +51,9 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
     )
     Page<ApplicationsForCofundingResource> findApplicationsForCofunding(long competitionId, String filter, Pageable pageable);
 
-    @Query(
-            "SELECT user " +
-            "FROM User user " +
-            "JOIN user.roles role " +
-            "WHERE role = org.innovateuk.ifs.user.resource.Role.COFUNDER " +
-            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :filter, '%') " +
-            "AND NOT EXISTS (" +
-            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
-            ")"
-    )
+    @Query("SELECT user " + QUERY)
     Page<User> findUsersAvailableForCofunding(long applicationId, String filter, Pageable pageable);
+
+    @Query("SELECT user.id " + QUERY)
+    List<Long> usersAvailableForCofundingUserIds(long applicationId, String filter);
 }

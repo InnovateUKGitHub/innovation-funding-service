@@ -6,7 +6,10 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 @Service
 public class CofunderAssignmentRestServiceImpl extends BaseRestService implements CofunderAssignmentRestService {
@@ -61,5 +64,14 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
                 .queryParam("page", page)
                 .queryParam("filter", filter);
         return getWithRestResult(builder.toUriString(), CofundersAvailableForApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<Long>> findAllAvailableCofunderUserIdsForApplication(long applicationId, String filter) {
+        String baseUrl = format("%s/application/%d/userIds", cofunderRestUrl, applicationId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("filter", filter);
+        return getWithRestResult(builder.toUriString(), longsListType());
     }
 }
