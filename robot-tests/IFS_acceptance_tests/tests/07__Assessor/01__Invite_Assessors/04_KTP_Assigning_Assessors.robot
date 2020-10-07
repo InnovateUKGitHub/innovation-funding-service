@@ -70,38 +70,46 @@ Assessor accept the inviation to assess the KTP application
     And the user clicks the button/link                link = KTP assessment application
     Then the user should see the element               jQuery = h1:contains("Assessment overview") span:contains("KTP assessment application")
 
+Assessor should get a validation message if the score is not selected
+    [Documentation]   IFS-7915
+    Given the user clicks the button/link                  link = Impact
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to assessment overview")
+    Then the user should see a field and summary error     The assessor score must be a number.
+
 Assessor can score impact category in the KTP application
     [Documentation]   IFS-7915
-    Given the user clicks the button/link             link = Impact
     When Assessor completes the KTP category
+    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Impact   10   25%
-
 
 Assessor can score innovation category in the KTP application
     [Documentation]   IFS-7915
     Given the user clicks the button/link             link = Innovation
     When Assessor completes the KTP category
+    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Innovation   20   50%
 
 Assessor can score challenge category in the KTP application
     [Documentation]   IFS-7915
     Given the user clicks the button/link             link = Challenge
     When Assessor completes the KTP category
+    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Innovation   30   75%
 
 Assessor can score cohesiveness category in the KTP application
     [Documentation]   IFS-7915
     Given the user clicks the button/link             link = Cohesiveness
     When Assessor completes the KTP category
+    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Innovation   40   100%
 
 Assessor can save the KTP application assessment
     [Documentation]   IFS-7915
-    Given Assessor completes the score section of an application
+    Given Assessor completes the scope section of an application
     When the user clicks the button/link                             link = Review and complete your assessment
     And the user selects the radio button                            fundingConfirmation   true
     And the user enters text to a text field                         id = feedback    Testing feedback text
-    And the user clicks the button/link                              name = submit-section
+    And the user clicks the button/link                              jQuery = button:contains("Save assessment")
     Then the user should see the element                             jQuery = li:contains("KTP assessment application") .msg-progress:contains("Assessed")
 
 Assessor can submit the KTP application assessment
@@ -148,11 +156,12 @@ Assessor should see the category details
     the user should see the element     jQuery = p:contains("${score}")
     the user should see the element     jQuery = p:contains("${percentage}")
 
-Assessor completes the score section of an application
+Assessor completes the scope section of an application
     the user clicks the button/link                        link = Scope
-    the user selects the radio button                      in-scope-true   true
+    the user selects the radio button                      formInput(5867)   true
     The user selects the option from the drop-down menu    Industrial research    css = .research-category
     The user enters text to a text field                   css = .editor    Testing feedback text
     Wait for autosave
-    mouse out  css = .editor
-    Wait Until Page Contains Without Screenshots    Saved!
+    mouse out                                              css = .editor
+    Wait Until Page Contains Without Screenshots           Saved!
+    the user clicks the button/link                        jQuery = button:contains("Save and return to assessment overview")
