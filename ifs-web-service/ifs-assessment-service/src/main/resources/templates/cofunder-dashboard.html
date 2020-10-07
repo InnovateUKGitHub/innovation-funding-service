@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Cofunder assessments'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Cofunder Assessments'"/>
 </head>
 <body class="govuk-template__body assessor-dashboard">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Co-fund competitions',size='govuk-heading-xl'" />
-
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Co-fund competitions',size='govuk-heading-xl'"/>
         <div class="my-applications">
             <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
 
@@ -24,47 +24,80 @@
                             <div class="task">
                                 <h3 class="govuk-heading-s"><a class="govuk-link"
                                                                th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
-                                                               th:text="${activeCompetition.displayLabel}"/></h3>
-                                <div th:if="${!activeCompetition.hasPendingAssessments() && !activeCompetition.hasApplicationsToAssess()}">
+                                                               th:text="${activeCompetition.competitionName}"/></h3>
+
+                                <!-- Do we need '&& !activeCompetition.hasApplicationsToAssess() in this check also -->
+                                <div th:if="${!activeCompetition.hasPendingAssessments()}">
                                     There are currently no assessments for you to review.
                                 </div>
-
-                                <div th:if="${!activeCompetition.hasApplicationsToAssess() && activeCompetition.hasPendingAssessments()}" class="action-required">
-                                            <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications">
-                                                COUNT
-                                            </span> applications awaiting acceptance
+                                <!--Do we need '!activeCompetition.hasApplicationsToAssess() &&' in this check? -->
+                                <div th:if="${activeCompetition.hasPendingAssessments()}">
+                                    <strong>
+                                        <span th:text="${activeCompetition.pendingAssessments}"
+                                              class="pending-applications">
+                                            COUNT
+                                        </span> applications awaiting review
+                                    </strong>
                                 </div>
-
-                                <div th:if="${activeCompetition.hasPendingAssessments() && activeCompetition.hasApplicationsToAssess()}" class="action-required">
-                                    <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications" /> applications awaiting acceptance | <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications" /> applications to assess
-                                </div>
-
-                                <div th:if="${activeCompetition.hasApplicationsToAssess() && !activeCompetition.hasPendingAssessments()}" class="action-required">
-                                            <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications">
-                                                COUNT
-                                            </span> applications to assess
-                                </div>
+                                Funding type:
                             </div>
                             <div class="status">
-                                <div class="status-msg msg-deadline" th:attr="data-competition-id=${activeCompetition.competitionId}">
-                                    <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${activeCompetition.daysLeft}"></strong>
-                                    <br />
-                                    days left <br />
+                                <div class="status-msg msg-deadline"
+                                     th:attr="data-competition-id=${activeCompetition.competitionId}">
+                                    <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining"
+                                            th:text="${activeCompetition.daysLeft}"></strong>
+                                    <br/>
+                                    days left <br/>
                                     Deadline
-                                    <span class="day" th:text="${#temporals.day(activeCompetition.submitDeadline)}">END DAY</span>
-                                    <span class="month" th:text="${#temporals.monthName(activeCompetition.submitDeadline)}">END MONTH</span>
+                                    <span class="day"
+                                          th:text="${#temporals.day(activeCompetition.cofunderDeadlineDate)}">END DAY</span>
+                                    <span class="month"
+                                          th:text="${#temporals.monthName(activeCompetition.cofunderDeadlineDate)}">END MONTH</span>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
+            </th:block>
+        </div>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
+            <div class="progress-list"><h2 class="govuk-heading-m">Upcoming competitions to assess (<span
+                th:text="${#lists.size(model.upcomingCompetitions)}"/>)</h2>
+                <ul>
+                    <li th:each="upcomingCompetition : ${model.upcomingCompetitions}" class="status-2-col">
+                        <div class="task">
+                            <h3 class="govuk-heading-s">
+                                <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}"
+                                   th:text="${upcomingCompetition.competitionName}"
+                                   class="govuk-link"/>
+                            </h3>
+                            <p class="govuk-body govuk-!-margin-0">Upcoming competition</p>
+                        </div>
+                        <div class="assessment-period">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>
+                            <dl class="standard-definition-list reduced-width">
+                                <dt>Begins</dt>
+                                <dd th:text="|${#temporals.day(upcomingCompetition.cofunderAcceptDate)} ${#temporals.monthName(upcomingCompetition.cofunderAcceptDate)}|">
+                                    15 November 2017
+                                </dd>
+                                <dt>Ends</dt>
+                                <dd th:text="|${#temporals.day(upcomingCompetition.cofunderDeadlineDate)} ${#temporals.monthName(upcomingCompetition.cofunderDeadlineDate)}|">
+                                    25 December 2017
+                                </dd>
+                            </dl>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 </body>
 </html>

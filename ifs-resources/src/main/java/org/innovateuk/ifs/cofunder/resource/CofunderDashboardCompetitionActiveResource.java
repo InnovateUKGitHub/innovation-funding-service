@@ -13,6 +13,9 @@ public class CofunderDashboardCompetitionActiveResource {
     private FundingType fundingType;
     private long daysLeft;
 
+    public CofunderDashboardCompetitionActiveResource() {
+    }
+
     public CofunderDashboardCompetitionActiveResource(long competitionId,
                                                       String competitionName,
                                                       ZonedDateTime cofunderDeadlineDate,
@@ -75,7 +78,7 @@ public class CofunderDashboardCompetitionActiveResource {
         this.daysLeft = daysLeft;
     }
 
-    public boolean hasPendingAssessments(){
+    public boolean hasPendingAssessments() {
         return pendingAssessments != 0;
     }
 }

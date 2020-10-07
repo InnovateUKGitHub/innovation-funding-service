@@ -35,12 +35,14 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<CofunderDashboardCompetitionResource> getCompetitionsForCofunding(long userId) {
+
+        // finds competitions assigned to
         List<CofunderAssignment> assignments = cofunderAssignmentRepository.findByParticipantId(userId);
 
         Map<Competition, List<CofunderAssignment>> competitionAssignments =
                 assignments.stream().collect(groupingBy(co -> co.getTarget().getCompetition()));
 
-        List<CofunderDashboardCompetitionActiveResource> awaiting = new ArrayList();
+        List<CofunderDashboardCompetitionActiveResource> pending = new ArrayList();
         List<CofunderDashboardCompetitionUpcomingResource> upcoming = new ArrayList();
 
         competitionAssignments.keySet().forEach(competition -> {
@@ -53,7 +55,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 case COMPETITION_SETUP:
                     break;
                 case IN_ASSESSMENT:
-                    awaiting.add(createAwaitingResource(competitionAssignments.get(competition), competition));
+                    pending.add(createAwaitingResource(competitionAssignments.get(competition), competition));
                     break;
                 case CLOSED:
                     // do we want it to appear for open?
@@ -62,8 +64,10 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
             }
         });
 
-        return serviceSuccess(new CofunderDashboardCompetitionResource(awaiting, upcoming));
+        return serviceSuccess(new CofunderDashboardCompetitionResource(pending, upcoming));
     }
+
+    // TODO: add count repo calls - replace the below loops
 
     private CofunderDashboardCompetitionActiveResource createAwaitingResource(List<CofunderAssignment> cofunderAssignments,
                                                                               Competition competition) {
@@ -80,7 +84,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
     private CofunderDashboardCompetitionUpcomingResource createUpcomingResource(List<CofunderAssignment> cofunderAssignments,
                                                                                 Competition competition) {
-        // Check this - don't think it's right
+
         long upcomingReview = cofunderAssignments.stream().filter(cofunderAssignment -> cofunderAssignment.getProcessState() ==  CofunderState.CREATED).count();
 
         return new CofunderDashboardCompetitionUpcomingResource(
@@ -88,7 +92,6 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 competition.getName(),
                 competition.getAssessorAcceptsDate(),
                 competition.getAssessorDeadlineDate(),
-                // Check this - don't think it's right
                 upcomingReview,
                 competition.getFundingType());
     }

@@ -21,7 +21,7 @@ public class CofunderDashboardModelPopulator {
         CofunderDashboardCompetitionResource cofunderDashboardCompetitionResource = cofunderDashboardRestService.getCofunderCompetitionDashboard(user.getId()).getSuccess();
 
         return new CofunderDashboardViewModel(
-                cofunderDashboardCompetitionResource.getCofunderDashboardCompetitionUpcomingResource(),
-                cofunderDashboardCompetitionResource.getCofunderDashboardCompetitionActiveResource());
+                cofunderDashboardCompetitionResource.getUpcomingCompetitions(),
+                cofunderDashboardCompetitionResource.getActiveCompetitions());
     }
 }
