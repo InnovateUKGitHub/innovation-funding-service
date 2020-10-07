@@ -117,7 +117,8 @@ Non IFS competitions do not appear in search results
 *** Keywords ***
 The user should see competitions in project set up
     # We have used the JQuery selector for the link because the title will change according to the competitions number
-    the user should see the element       jQuery = .govuk-heading-m:contains("Project setup ")
+    the user should see the element        jQuery = .govuk-heading-m:contains("Project setup ")
+    the user clicks the button/link        jQuery = button:contains('Next')
     the user should see the element        link = Project setup loan comp
     the user should see the element        jQuery =.govuk-body:contains("5 projects")
     the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}
