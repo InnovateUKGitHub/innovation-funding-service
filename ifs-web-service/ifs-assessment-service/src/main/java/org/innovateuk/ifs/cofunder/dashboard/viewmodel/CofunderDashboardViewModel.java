@@ -11,12 +11,12 @@ import java.util.List;
 public class CofunderDashboardViewModel {
 
     private List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions;
-    private List<CofunderDashboardCompetitionActiveResource> awaitingCompetitions;
+    private List<CofunderDashboardCompetitionActiveResource> activeCompetitions;
 
     public CofunderDashboardViewModel(List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource,
-                                      List<CofunderDashboardCompetitionActiveResource> awaitingCompetitions) {
+                                      List<CofunderDashboardCompetitionActiveResource> activeCompetitions) {
         this.upcomingCompetitions = cofunderDashboardCompetitionUpcomingResource;
-        this.awaitingCompetitions = awaitingCompetitions;
+        this.activeCompetitions = activeCompetitions;
     }
 
     public List<CofunderDashboardCompetitionUpcomingResource> getUpcomingCompetitions() {
@@ -27,11 +27,11 @@ public class CofunderDashboardViewModel {
         this.upcomingCompetitions = upcomingCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionActiveResource> getAwaitingCompetitions() {
-        return awaitingCompetitions;
+    public List<CofunderDashboardCompetitionActiveResource> getActiveCompetitions() {
+        return activeCompetitions;
     }
 
-    public void setAwaitingCompetitions(List<CofunderDashboardCompetitionActiveResource> awaitingCompetitions) {
-        this.awaitingCompetitions = awaitingCompetitions;
+    public void setActiveCompetitions(List<CofunderDashboardCompetitionActiveResource> activeCompetitions) {
+        this.activeCompetitions = activeCompetitions;
     }
 }
