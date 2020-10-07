@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.cofunder.controller;
 
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,11 @@ public class CofunderAssignmentController {
     @PostMapping("assignment/{assignmentId}/edit")
     public RestResult<Void> edit(@PathVariable long assignmentId) {
         return cofunderAssignmentService.edit(assignmentId).toGetResponse();
+    }
+
+    @PostMapping("assignment")
+    public RestResult<Void> assign(@RequestBody AssignCofundersResource assignCofundersResource) {
+        return cofunderAssignmentService.assign(assignCofundersResource.getCofunderIds(), assignCofundersResource.getApplicationId()).toPostResponse();
     }
 
     @GetMapping("/competition/{competitionId}")

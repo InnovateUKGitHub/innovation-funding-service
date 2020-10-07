@@ -2,13 +2,11 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have been invited to review this application on the Innovation Funding Service for co-funding opportunities.
+You have been removed as a co-funder on this application.
 
 ${applicationId} : ${applicationName}
 
-You will be able to review the applications and decide if you want to co-fund it.
-
-${link}
+You will no longer be able to review the application and it will be removed from your dashboard.
 
 Yours sincerely,
 <@layout.senderPlainText />

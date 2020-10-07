@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderAssignmentBuilder.newCofunderAssignment;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderOutcomeBuilder.newCofunderOutcome;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.SimpleOrganisationBuilder.newSimpleOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -95,7 +96,12 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId)).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(of(user));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
-        when(cofunderAssignmentRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(cofunderAssignmentRepository.save(any())).thenAnswer(inv -> {
+            CofunderAssignment assignment = (CofunderAssignment) inv.getArgument(0);
+            assignment.setId(6L);
+            return assignment;
+        });
+        when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<CofunderAssignmentResource> result = service.assign(userId, applicationId);
 
@@ -112,11 +118,13 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
                 .build();
 
         when(cofunderAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(cofunderAssignment));
+        when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.removeAssignment(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
         verify(cofunderAssignmentRepository).delete(cofunderAssignment);
+        verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
 
     @Test

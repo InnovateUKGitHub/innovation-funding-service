@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.cofunder.service;
 
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,11 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     @Override
     public RestResult<CofunderAssignmentResource> assign(long userId, long applicationId) {
         return postWithRestResult(format("%s/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class);
+    }
+
+    @Override
+    public RestResult<Void> assign(AssignCofundersResource assignCofundersResource) {
+        return postWithRestResult(format("%s/assignment", cofunderRestUrl), assignCofundersResource, Void.class);
     }
 
     @Override

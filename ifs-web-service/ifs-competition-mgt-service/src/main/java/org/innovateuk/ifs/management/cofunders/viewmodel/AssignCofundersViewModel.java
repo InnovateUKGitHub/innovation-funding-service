@@ -3,8 +3,8 @@ package org.innovateuk.ifs.management.cofunders.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,8 +61,8 @@ public class AssignCofundersViewModel {
         return cofundersAvailableForApplicationPage;
     }
 
-    public Pagination getPagination() {
-        return new Pagination(cofundersAvailableForApplicationPage);
+    public PaginationViewModel getPagination() {
+        return new PaginationViewModel(cofundersAvailableForApplicationPage);
     }
 
     public List<String> getPartners() {

@@ -91,7 +91,7 @@
 
         <h3 class="govuk-heading-s govuk-!-margin-top-6"><th:block th:text="${model.cofundersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
         <form
-            th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/add'}" novalidate="novalidate"
+            th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/addSelected'}" novalidate="novalidate"
             method="post">
 
             <div class="govuk-grid-row sorting">
@@ -136,7 +136,7 @@
                                 <div class="govuk-checkboxes__item">
                                     <input type="checkbox"
                                            class="govuk-checkboxes__input"
-                                           name="userId"
+                                           name="selectedCofunderIds"
                                            th:value="${entry.userId}"/>
                                     <label class="govuk-label govuk-checkboxes__label">
                                         <span class="govuk-visually-hidden">Add</span>

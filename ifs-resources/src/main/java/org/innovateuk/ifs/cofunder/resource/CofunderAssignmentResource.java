@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.cofunder.resource;
 
 public class CofunderAssignmentResource {
-    private Long assignmentId;
+    private long assignmentId;
     private CofunderState state;
     private String comments;
 
@@ -9,7 +9,7 @@ public class CofunderAssignmentResource {
         return assignmentId;
     }
 
-    public void setAssignmentId(Long assignmentId) {
+    public void setAssignmentId(long assignmentId) {
         this.assignmentId = assignmentId;
     }
 

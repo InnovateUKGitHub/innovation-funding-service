@@ -40,7 +40,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class CofunderAssignmentServiceImpl extends BaseTransactionalService implements CofunderAssignmentService {
 
     enum Notifications {
-        ASSIGN_COFUNDER
+        ASSIGN_COFUNDER,
+        REMOVE_COFUNDER
     }
 
     @Value("${ifs.web.baseURL}")
@@ -74,14 +75,30 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         if (exists) {
             return serviceFailure(COFUNDER_ASSIGNMENT_ALREADY_EXISTS);
         }
+        return doAssign(userId, applicationId);
+    }
+
+    private ServiceResult<CofunderAssignmentResource> doAssign(long userId, long applicationId) {
         return find(application(applicationId), user(userId)).andOnSuccess(
                 (application, user) ->
                         serviceSuccess(map(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
-                                .andOnSuccessReturn(resource -> {
-                                    notifyUserAssignedAsCofunder(user, application);
-                                    return resource;
-                                })
+                                .andOnSuccess(resource ->
+                                     notifyUserAssignedAsCofunder(user, application)
+                                             .andOnSuccessReturn(() -> resource)
+                                )
         );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> assign(List<Long> userIds, long applicationId) {
+        userIds.forEach(userId -> {
+            boolean exists = cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId);
+            if (!exists) {
+                doAssign(userId, applicationId);
+            }
+        });
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> notifyUserAssignedAsCofunder(User user, Application application) {
@@ -94,11 +111,25 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
     }
 
+    private ServiceResult<Void> notifyUserRemovedAsCofunder(User user, Application application) {
+        NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", application.getId());
+        notificationArguments.put("applicationName", application.getName());
+        Notification notification = new Notification(systemNotificationSource, recipient, Notifications.REMOVE_COFUNDER, notificationArguments);
+        return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
+    }
+
     @Override
     @Transactional
     public ServiceResult<Void> removeAssignment(long userId, long applicationId) {
-        return findCofunderAssignmentByUserAndApplication(userId, applicationId).andOnSuccessReturnVoid(assignment ->
-            cofunderAssignmentRepository.delete(assignment)
+        return find(application(applicationId), user(userId)).andOnSuccessReturnVoid(
+                (application, user) ->
+                    findCofunderAssignmentByUserAndApplication(userId, applicationId)
+                            .andOnSuccessReturn((CofunderAssignment assignment) -> {
+                                cofunderAssignmentRepository.delete(assignment);
+                                return notifyUserRemovedAsCofunder(user, application);
+                            })
         );
     }
 
@@ -187,7 +218,5 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         resource.setState(assignment.getProcessState());
         return resource;
     }
-
-
 
 }

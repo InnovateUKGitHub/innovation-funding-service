@@ -7,11 +7,15 @@ import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPage
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CofunderAssignmentService {
 
     ServiceResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId);
 
     ServiceResult<CofunderAssignmentResource> assign(long userId, long applicationId);
+
+    ServiceResult<Void> assign(List<Long> userIds, long applicationId);
 
     ServiceResult<Void> removeAssignment(long userId, long applicationId);
 

@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.cofunder.service;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
 /**
@@ -15,6 +12,8 @@ public interface CofunderAssignmentRestService {
     RestResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId);
 
     RestResult<CofunderAssignmentResource> assign(long userId, long applicationId);
+
+    RestResult<Void> assign(AssignCofundersResource assignCofundersResource);
 
     RestResult<Void> removeAssignment(long userId, long applicationId);
 
