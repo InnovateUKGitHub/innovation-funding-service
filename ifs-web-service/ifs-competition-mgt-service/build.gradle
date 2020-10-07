@@ -30,11 +30,11 @@ version project.version
 
 apply plugin: 'idea'
 
-project.version = competitionMgtServiceVersion
-tagDocker.tag = competitionMgtServiceVersion
-osStageRemote.tag = competitionMgtServiceVersion
-tagDockerLocal.tag = competitionMgtServiceVersion
-osStageLocal.tag = competitionMgtServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.hostName = "competition-mgt-svc"
 createContainer.containerName = "competition-mgt-svc"

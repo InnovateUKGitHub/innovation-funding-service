@@ -123,6 +123,12 @@ def osFileMap = [
         [name:'11-gluster-endpoints', type: 'gluster'],
         [name:'12-file-upload-claim', type: 'gluster'],
 
+        [name:'12-ifs-demo-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-perf-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-prod-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-sysint-file-upload-claim', type: 'gluster'],
+        [name:'12-ifs-uat-file-upload-claim', type: 'gluster'],
+
         [name:'4-application-service', type: 'ifs-services'],
         [name:'5-front-door-service', type: 'ifs-services'],
         [name:'31-data-service', type: 'ifs-services'],
@@ -166,6 +172,7 @@ publishing {
         osFileMap.each {
             osFile ->
                 "$osFile.name"(MavenPublication) {
+                    println("sub type is " + osFile.subType)
                     groupId "org.innovateuk.ifs."+osFile.type
                     if (project.hasProperty('ifs.version')) {
                         version = project.findProperty('ifs.version')
@@ -184,7 +191,13 @@ publishing {
                 username project.findProperty("nexus_username")
                 password project.findProperty("nexus_password")
             }
-            url "https://devops.innovateuk.org/binaries/repository/ifs-config/"+nexusRepository
+
+            println("nexus repository is " + nexusRepository)
+            if (nexusRepository.equals("snapshot")) {
+                url "https://devops.innovateuk.org/binaries/repository/ifs-config-snapshots/"
+            } else {
+                url "https://devops.innovateuk.org/binaries/repository/ifs-config-releases/"
+            }
         }
     }
 }
