@@ -2,6 +2,7 @@
 // Deployment behaviour for differing versions has not been tested yet
 // and so version numbers should always equal project.version
 ext.nexusVersion = project.hasProperty('nexusVersion') ? project.property('nexusVersion') : project.version
+ext.nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository') : "innovateuk"
 
 ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
 ext.mysqlClientVersion = project.properties['mysql-client.version'] ?: project.version

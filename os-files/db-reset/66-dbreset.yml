@@ -8,7 +8,7 @@ items:
     spec:
       containers:
         - name: dbreset
-          image: innovateuk/dbreset:${nexusVersion}
+          image: ${nexusRepository}/dbreset:${nexusVersion}
           imagePullPolicy: Always
           command: [ "/bin/bash", "-exec" ]
           args:
