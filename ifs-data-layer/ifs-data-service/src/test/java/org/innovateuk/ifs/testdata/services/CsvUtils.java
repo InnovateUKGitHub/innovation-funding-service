@@ -17,6 +17,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -748,13 +749,14 @@ public class CsvUtils {
     }
 
     public static class ExternalUserLine extends UserLine {
+        public Role role;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
 
         @Override
         protected void processLine(List<String> line, int i) {
-
+            this.role = nullableEnum(line.get(i++), Role::valueOf);
         }
 
     }
