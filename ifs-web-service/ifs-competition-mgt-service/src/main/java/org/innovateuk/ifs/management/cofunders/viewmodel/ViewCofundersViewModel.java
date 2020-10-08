@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.cofunders.viewmodel;
 
 import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ public class ViewCofundersViewModel {
     private long competitionId;
     private String competitionName;
     private List<ApplicationsForCofundingResource> rows;
-    private final Pagination pagination;
+    private final PaginationViewModel pagination;
 
-    public ViewCofundersViewModel(CompetitionResource competitionResource, List<ApplicationsForCofundingResource> rows, Pagination pagination) {
+    public ViewCofundersViewModel(CompetitionResource competitionResource, List<ApplicationsForCofundingResource> rows, PaginationViewModel pagination) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.rows = rows;
@@ -44,7 +44,7 @@ public class ViewCofundersViewModel {
         this.rows = rows;
     }
 
-    public Pagination getPagination() {
+    public PaginationViewModel getPagination() {
         return pagination;
     }
 }

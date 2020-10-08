@@ -5,7 +5,7 @@ import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.cofunders.viewmodel.ViewCofundersViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +24,6 @@ public class ViewCofunderViewModelPopulator {
         ApplicationsForCofundingPageResource applicationsForCofundingPageResource =
                 cofunderAssignmentRestService.findApplicationsNeedingCofunders(competitionId, applicationFilter, page).getSuccess();
 
-        return new ViewCofundersViewModel(competitionResource, applicationsForCofundingPageResource.getContent(), new Pagination(applicationsForCofundingPageResource));
+        return new ViewCofundersViewModel(competitionResource, applicationsForCofundingPageResource.getContent(), new PaginationViewModel(applicationsForCofundingPageResource));
     }
 }
