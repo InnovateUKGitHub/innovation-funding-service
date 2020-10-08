@@ -19,6 +19,9 @@ public interface CofunderAssignmentService {
     ServiceResult<CofunderAssignmentResource> assign(long userId, long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> assign(List<Long> userId, long applicationId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> removeAssignment(long userId, long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
