@@ -45,21 +45,19 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
         competitionAssignments.keySet().forEach(competition -> {
             switch (competition.getCompetitionStatus()) {
                 case READY_TO_OPEN:
-                case PROJECT_SETUP:
-                case ASSESSOR_FEEDBACK:
-                case FUNDERS_PANEL:
                 case COMPETITION_SETUP:
                     break;
                 case IN_ASSESSMENT:
                     pending.add(createAwaitingResource(competitionAssignments.get(competition), competition));
                     break;
                 case CLOSED:
-                    // do we want it to appear for open?
                 case OPEN:
                     upcoming.add(createUpcomingResource(competitionAssignments.get(competition), competition));
                 case PREVIOUS:
+                case PROJECT_SETUP:
+                case ASSESSOR_FEEDBACK:
+                case FUNDERS_PANEL:
                     previous.add(createPreviousResource(competitionAssignments.get(competition), competition));
-
             }
         });
 
@@ -98,7 +96,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                                                                                 Competition competition) {
 
         // this is wrong, needs to be reviewed assessments
-//        long acceptedReview = cofunderAssignments.stream().filter(cofunderAssignment -> cofunderAssignment.getProcessState() ==  CofunderState.ACCEPTED).count();
+        long acceptedReview = cofunderAssignments.stream().filter(cofunderAssignment -> cofunderAssignment.getProcessState() ==  CofunderState.ACCEPTED).count();
 
         return new CofunderDashboardCompetitionPreviousResource(
                 competition.getId(),
