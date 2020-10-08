@@ -38,6 +38,7 @@
                                     </strong>
                                 </div>
                                 Funding type:
+                                <span th:text="${activeCompetition.fundingType.displayName}">FUNDING TYPE</span>
                             </div>
                             <div class="status">
                                 <div class="status-msg msg-deadline"
@@ -90,27 +91,30 @@
             </div>
         </div>
 
-        <div class="progress-list">
-            <h2 class="govuk-heading-m govuk-!-margin-top-0">Previous reviews</h2>
-            <ul>
-                <li th:each="previousCompetition : ${model.previousCompetitions}">
-                    <div class="task">
-                        <h3 class="govuk-heading-s"><a class="govuk-link"
-                                                       th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
-                                                       th:text="${previousCompetition.competitionName}"/></h3>
-                        <strong>
+        <th:block th:if="${model.previousCompetitions.size() > 0}">
+            <div class="progress-list">
+                <h2 class="govuk-heading-m govuk-!-margin-top-0">Previous reviews</h2>
+                <ul>
+                    <li th:each="previousCompetition : ${model.previousCompetitions}">
+                        <div class="task">
+                            <h3 class="govuk-heading-s"><a class="govuk-link"
+                                                           th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
+                                                           th:text="${previousCompetition.competitionName}"/></h3>
+                            <strong>
                             <span th:text="${previousCompetition.reviewed}"
                                   class="reviewed-applications">
                                 COUNT
                             </span> applications reviewed
-                        </strong>
-                        Funding type:
-                    </div>
-                </li>
-            </ul>
-        </div>
+                            </strong>
+                            Funding type:
+                            <span th:text="${previousCompetition.fundingType.displayName}">FUNDING TYPE</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </th:block>
 
-        <th:block th:insert="fragments/layout :: main-content-end"/>
+            <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
 
