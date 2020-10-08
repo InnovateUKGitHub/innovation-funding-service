@@ -6,9 +6,11 @@ items:
     metadata:
       name: dbreset
     spec:
+      imagePullSecrets:
+        - name: imagePullSecretsName
       containers:
         - name: dbreset
-          image: docker-ifs.devops.innovateuk.org/${nexusRepository}/dbreset:${nexusVersion}
+          image: innovateuk/dbreset:${nexusVersion}
           imagePullPolicy: Always
           command: [ "/bin/bash", "-exec" ]
           args:
