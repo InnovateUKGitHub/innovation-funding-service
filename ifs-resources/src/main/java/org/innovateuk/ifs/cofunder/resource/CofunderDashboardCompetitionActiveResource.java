@@ -3,6 +3,7 @@ package org.innovateuk.ifs.cofunder.resource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class CofunderDashboardCompetitionActiveResource {
 
@@ -11,7 +12,6 @@ public class CofunderDashboardCompetitionActiveResource {
     private ZonedDateTime cofunderDeadlineDate;
     private long pendingAssessments;
     private FundingType fundingType;
-    private long daysLeft;
 
     public CofunderDashboardCompetitionActiveResource() {
     }
@@ -20,14 +20,11 @@ public class CofunderDashboardCompetitionActiveResource {
                                                       String competitionName,
                                                       ZonedDateTime cofunderDeadlineDate,
                                                       long pendingAssessments,
-                                                      FundingType fundingType,
-                                                      long daysLeft) {
+                                                      FundingType fundingType) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.cofunderDeadlineDate = cofunderDeadlineDate;
         this.pendingAssessments = pendingAssessments;
-        this.fundingType = fundingType;
-        this.daysLeft = daysLeft;
     }
 
     public long getCompetitionId() {
@@ -71,11 +68,7 @@ public class CofunderDashboardCompetitionActiveResource {
     }
 
     public long getDaysLeft() {
-        return daysLeft;
-    }
-
-    public void setDaysLeft(long daysLeft) {
-        this.daysLeft = daysLeft;
+        return ChronoUnit.DAYS.between(ZonedDateTime.now(), cofunderDeadlineDate);
     }
 
     public boolean hasPendingAssessments() {

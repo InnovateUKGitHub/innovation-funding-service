@@ -90,6 +90,26 @@
             </div>
         </div>
 
+        <div class="progress-list">
+            <h2 class="govuk-heading-m govuk-!-margin-top-0">Previous reviews</h2>
+            <ul>
+                <li th:each="previousCompetition : ${model.previousCompetitions}">
+                    <div class="task">
+                        <h3 class="govuk-heading-s"><a class="govuk-link"
+                                                       th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
+                                                       th:text="${previousCompetition.competitionName}"/></h3>
+                        <strong>
+                            <span th:text="${previousCompetition.reviewed}"
+                                  class="reviewed-applications">
+                                COUNT
+                            </span> applications reviewed
+                        </strong>
+                        Funding type:
+                    </div>
+                </li>
+            </ul>
+        </div>
+
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>

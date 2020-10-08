@@ -3,10 +3,7 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionActiveResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcomingResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -36,7 +33,6 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<CofunderDashboardCompetitionResource> getCompetitionsForCofunding(long userId) {
 
-        // finds competitions assigned to
         List<CofunderAssignment> assignments = cofunderAssignmentRepository.findByParticipantId(userId);
 
         Map<Competition, List<CofunderAssignment>> competitionAssignments =
@@ -44,11 +40,11 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
         List<CofunderDashboardCompetitionActiveResource> pending = new ArrayList();
         List<CofunderDashboardCompetitionUpcomingResource> upcoming = new ArrayList();
+        List<CofunderDashboardCompetitionPreviousResource> previous = new ArrayList<>();
 
         competitionAssignments.keySet().forEach(competition -> {
             switch (competition.getCompetitionStatus()) {
                 case READY_TO_OPEN:
-                case PREVIOUS:
                 case PROJECT_SETUP:
                 case ASSESSOR_FEEDBACK:
                 case FUNDERS_PANEL:
@@ -61,10 +57,13 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                     // do we want it to appear for open?
                 case OPEN:
                     upcoming.add(createUpcomingResource(competitionAssignments.get(competition), competition));
+                case PREVIOUS:
+                    previous.add(createPreviousResource(competitionAssignments.get(competition), competition));
+
             }
         });
 
-        return serviceSuccess(new CofunderDashboardCompetitionResource(pending, upcoming));
+        return serviceSuccess(new CofunderDashboardCompetitionResource(pending, upcoming, previous));
     }
 
     // TODO: add count repo calls - replace the below loops
@@ -78,8 +77,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 competition.getName(),
                 competition.getAssessorDeadlineDate(),
                 pendingReview,
-                competition.getFundingType(),
-                competition.getDaysLeft());
+                competition.getFundingType());
     }
 
     private CofunderDashboardCompetitionUpcomingResource createUpcomingResource(List<CofunderAssignment> cofunderAssignments,
@@ -93,6 +91,19 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 competition.getAssessorAcceptsDate(),
                 competition.getAssessorDeadlineDate(),
                 upcomingReview,
+                competition.getFundingType());
+    }
+
+    private CofunderDashboardCompetitionPreviousResource createPreviousResource(List<CofunderAssignment> cofunderAssignments,
+                                                                                Competition competition) {
+
+        // this is wrong, needs to be reviewed assessments
+//        long acceptedReview = cofunderAssignments.stream().filter(cofunderAssignment -> cofunderAssignment.getProcessState() ==  CofunderState.ACCEPTED).count();
+
+        return new CofunderDashboardCompetitionPreviousResource(
+                competition.getId(),
+                competition.getName(),
+//                acceptedReview,
                 competition.getFundingType());
     }
 

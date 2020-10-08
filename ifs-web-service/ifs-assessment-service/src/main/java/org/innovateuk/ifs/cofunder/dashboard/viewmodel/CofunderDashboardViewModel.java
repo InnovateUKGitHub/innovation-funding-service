@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.cofunder.dashboard.viewmodel;
 
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionActiveResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionPreviousResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcomingResource;
 
 import java.util.List;
@@ -12,26 +13,25 @@ public class CofunderDashboardViewModel {
 
     private List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions;
     private List<CofunderDashboardCompetitionActiveResource> activeCompetitions;
+    private List<CofunderDashboardCompetitionPreviousResource> previousCompetitions;
 
-    public CofunderDashboardViewModel(List<CofunderDashboardCompetitionUpcomingResource> cofunderDashboardCompetitionUpcomingResource,
-                                      List<CofunderDashboardCompetitionActiveResource> activeCompetitions) {
-        this.upcomingCompetitions = cofunderDashboardCompetitionUpcomingResource;
+    public CofunderDashboardViewModel(List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions,
+                                      List<CofunderDashboardCompetitionActiveResource> activeCompetitions,
+                                      List<CofunderDashboardCompetitionPreviousResource> previousCompetitions) {
+        this.upcomingCompetitions = upcomingCompetitions;
         this.activeCompetitions = activeCompetitions;
+        this.previousCompetitions = previousCompetitions;
     }
 
     public List<CofunderDashboardCompetitionUpcomingResource> getUpcomingCompetitions() {
         return upcomingCompetitions;
     }
 
-    public void setUpcomingCompetitions(List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions) {
-        this.upcomingCompetitions = upcomingCompetitions;
-    }
-
     public List<CofunderDashboardCompetitionActiveResource> getActiveCompetitions() {
         return activeCompetitions;
     }
 
-    public void setActiveCompetitions(List<CofunderDashboardCompetitionActiveResource> activeCompetitions) {
-        this.activeCompetitions = activeCompetitions;
+    public List<CofunderDashboardCompetitionPreviousResource> getPreviousCompetitions() {
+        return previousCompetitions;
     }
 }
