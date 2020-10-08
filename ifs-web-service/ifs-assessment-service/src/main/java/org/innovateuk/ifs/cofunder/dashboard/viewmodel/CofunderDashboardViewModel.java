@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.cofunder.dashboard.viewmodel;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionActiveResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionPendingResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionPreviousResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcomingResource;
 
@@ -12,11 +12,11 @@ import java.util.List;
 public class CofunderDashboardViewModel {
 
     private List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions;
-    private List<CofunderDashboardCompetitionActiveResource> activeCompetitions;
+    private List<CofunderDashboardCompetitionPendingResource> activeCompetitions;
     private List<CofunderDashboardCompetitionPreviousResource> previousCompetitions;
 
     public CofunderDashboardViewModel(List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions,
-                                      List<CofunderDashboardCompetitionActiveResource> activeCompetitions,
+                                      List<CofunderDashboardCompetitionPendingResource> activeCompetitions,
                                       List<CofunderDashboardCompetitionPreviousResource> previousCompetitions) {
         this.upcomingCompetitions = upcomingCompetitions;
         this.activeCompetitions = activeCompetitions;
@@ -27,7 +27,7 @@ public class CofunderDashboardViewModel {
         return upcomingCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionActiveResource> getActiveCompetitions() {
+    public List<CofunderDashboardCompetitionPendingResource> getActiveCompetitions() {
         return activeCompetitions;
     }
 

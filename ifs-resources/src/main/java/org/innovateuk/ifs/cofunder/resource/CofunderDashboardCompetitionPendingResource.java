@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class CofunderDashboardCompetitionActiveResource {
+public class CofunderDashboardCompetitionPendingResource {
 
     private long competitionId;
     private String competitionName;
@@ -13,14 +13,14 @@ public class CofunderDashboardCompetitionActiveResource {
     private long pendingAssessments;
     private FundingType fundingType;
 
-    public CofunderDashboardCompetitionActiveResource() {
+    public CofunderDashboardCompetitionPendingResource() {
     }
 
-    public CofunderDashboardCompetitionActiveResource(long competitionId,
-                                                      String competitionName,
-                                                      ZonedDateTime cofunderDeadlineDate,
-                                                      long pendingAssessments,
-                                                      FundingType fundingType) {
+    public CofunderDashboardCompetitionPendingResource(long competitionId,
+                                                       String competitionName,
+                                                       ZonedDateTime cofunderDeadlineDate,
+                                                       long pendingAssessments,
+                                                       FundingType fundingType) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.cofunderDeadlineDate = cofunderDeadlineDate;

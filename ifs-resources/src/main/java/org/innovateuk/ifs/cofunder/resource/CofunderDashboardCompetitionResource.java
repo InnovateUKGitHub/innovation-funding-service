@@ -4,14 +4,14 @@ import java.util.List;
 
 public class CofunderDashboardCompetitionResource {
 
-    private List<CofunderDashboardCompetitionActiveResource> activeCompetitions;
+    private List<CofunderDashboardCompetitionPendingResource> activeCompetitions;
     private List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions;
     private List<CofunderDashboardCompetitionPreviousResource> previousCompetitions;
 
     public CofunderDashboardCompetitionResource() {
     }
 
-    public CofunderDashboardCompetitionResource(List<CofunderDashboardCompetitionActiveResource> activeCompetitions,
+    public CofunderDashboardCompetitionResource(List<CofunderDashboardCompetitionPendingResource> activeCompetitions,
                                                 List<CofunderDashboardCompetitionUpcomingResource> upcomingCompetitions,
                                                 List<CofunderDashboardCompetitionPreviousResource> previousCompetitions) {
         this.activeCompetitions = activeCompetitions;
@@ -19,7 +19,7 @@ public class CofunderDashboardCompetitionResource {
         this.previousCompetitions = previousCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionActiveResource> getActiveCompetitions() {
+    public List<CofunderDashboardCompetitionPendingResource> getActiveCompetitions() {
         return activeCompetitions;
     }
 

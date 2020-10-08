@@ -3,7 +3,7 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
 import org.innovateuk.ifs.cofunder.domain.CompetitionForCofunding;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionActiveResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionPendingResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionPreviousResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionUpcomingResource;
@@ -35,8 +35,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
         List<CompetitionForCofunding> participantCompetitions = cofunderAssignmentRepository.findCompetitionsForParticipant(userId);
 
-        // update resource name
-        List<CofunderDashboardCompetitionActiveResource> pending = new ArrayList();
+        List<CofunderDashboardCompetitionPendingResource> pending = new ArrayList();
         List<CofunderDashboardCompetitionUpcomingResource> upcoming = new ArrayList();
         List<CofunderDashboardCompetitionPreviousResource> previous = new ArrayList<>();
 
@@ -46,7 +45,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 case COMPETITION_SETUP:
                     break;
                 case IN_ASSESSMENT:
-                    pending.add(createAwaitingResource(competition));
+                    pending.add(createPendingResource(competition));
                     break;
                 case CLOSED:
                 case OPEN:
@@ -56,7 +55,10 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 case PROJECT_SETUP:
                 case ASSESSOR_FEEDBACK:
                 case FUNDERS_PANEL:
-                    // update to submitted
+                    /*
+                       getAccepted needs to be assessment submitted.
+                       Question asked in Java Devs channel as there is no current CofunderState for submitted.
+                    */
                     if (competition.getAccepted() != 0) {
                         previous.add(createPreviousResource(competition));
                     }
@@ -67,9 +69,8 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
         return serviceSuccess(new CofunderDashboardCompetitionResource(pending, upcoming, previous));
     }
 
-    // update awaiting
-    private CofunderDashboardCompetitionActiveResource createAwaitingResource(CompetitionForCofunding competitionForCofunding) {
-        return new CofunderDashboardCompetitionActiveResource(
+    private CofunderDashboardCompetitionPendingResource createPendingResource(CompetitionForCofunding competitionForCofunding) {
+        return new CofunderDashboardCompetitionPendingResource(
                 competitionForCofunding.getCompetitionId(),
                 competitionForCofunding.getCompetitionName(),
                 competitionForCofunding.getCofunderDeadline(),
@@ -87,12 +88,15 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                 competitionForCofunding.getFundingType());
     }
 
-    // getAccepted needs to be assessment submitted.
-
     private CofunderDashboardCompetitionPreviousResource createPreviousResource(CompetitionForCofunding competitionForCofunding) {
         return new CofunderDashboardCompetitionPreviousResource(
                 competitionForCofunding.getCompetitionId(),
                 competitionForCofunding.getCompetitionName(),
+
+                /*
+                 getAccepted needs to be assessment submitted.
+                 Question asked in Java Devs channel as there is no current CofunderState for submitted.
+                 */
                 competitionForCofunding.getAccepted(),
                 competitionForCofunding.getFundingType());
     }
