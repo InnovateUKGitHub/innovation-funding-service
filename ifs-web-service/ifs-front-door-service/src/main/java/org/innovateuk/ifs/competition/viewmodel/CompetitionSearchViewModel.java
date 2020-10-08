@@ -20,8 +20,6 @@ public class CompetitionSearchViewModel {
     private Integer pageNumber;
     private String nextPageLink;
     private String previousPageLink;
-    private boolean showCovidQuestionnaireLink;
-
 
     public List<PublicContentItemViewModel> getPublicContentItems() {
         return publicContentItems;
@@ -121,11 +119,4 @@ public class CompetitionSearchViewModel {
         this.searchKeywords = searchKeywords;
     }
 
-    public boolean isShowCovidQuestionnaireLink() {
-        return showCovidQuestionnaireLink;
-    }
-
-    public void setShowCovidQuestionnaireLink(boolean showCovidQuestionnaireLink) {
-        this.showCovidQuestionnaireLink = showCovidQuestionnaireLink;
-    }
 }

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.h2020costs.form.Horizon2020
 import org.innovateuk.ifs.application.forms.sections.h2020costs.populator.Horizon2020CostsFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.h2020costs.saver.Horizon2020CostsSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -55,9 +54,6 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
     @Mock
     private UserRestService userRestService;
 
-    @Mock
-    private YourProjectCostsCompleter completeSectionAction;
-
     @Test
     public void viewYourProjectCosts() throws Exception {
         YourProjectCostsViewModel viewModel = mockViewModel();
@@ -105,7 +101,7 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
         when(saver.save(any(Horizon2020CostsForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
-        when(completeSectionAction.markAsComplete(SECTION_ID, APPLICATION_ID, processRole)).thenReturn(new ValidationMessages());
+        when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/horizon-2020-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -114,12 +110,11 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
                 .andExpect(redirectedUrl(String.format("/application/%s/form/%s", APPLICATION_ID, SectionType.FINANCE)));
 
         verify(saver).save(any(Horizon2020CostsForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
-        verify(completeSectionAction).markAsComplete(SECTION_ID, APPLICATION_ID, processRole);
     }
 
     private YourProjectCostsViewModel mockViewModel() {
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
-        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser().isInternalUser())).thenReturn(viewModel);
+        when(viewModelPopulator.populate(APPLICATION_ID, SECTION_ID, ORGANISATION_ID, getLoggedInUser())).thenReturn(viewModel);
         return viewModel;
     }
 }

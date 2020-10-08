@@ -3,31 +3,30 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumServiceImpl;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantClaimMaximumServiceImpl> {
 
@@ -35,18 +34,17 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
 
     @Mock
-    private CompetitionTypeRepository competitionTypeRepository;
-
-    @Mock
     private CompetitionRepository competitionRepository;
 
     @Mock
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
 
+    @Mock
+    private CommonBuilders commonBuilders;
+
     @Override
     protected GrantClaimMaximumServiceImpl supplyServiceUnderTest() {
-        return new GrantClaimMaximumServiceImpl(grantClaimMaximumRepository, competitionTypeRepository,
-                competitionRepository, grantClaimMaximumMapper);
+        return new GrantClaimMaximumServiceImpl();
     }
 
     @Test
@@ -74,21 +72,22 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     }
 
     @Test
-    public void getGrantClaimMaximumsForCompetitionType() {
+    public void revertToDefault() {
+        List<GrantClaimMaximum> defaultGrantClaimMaximums = newGrantClaimMaximum().build(3);
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum().build(2);
         Competition competition = newCompetition()
                 .withGrantClaimMaximums(grantClaimMaximums)
                 .build();
-        CompetitionType competitionType = newCompetitionType()
-                .withTemplate(competition)
-                .build();
 
-        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+        when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
+        when(commonBuilders.getDefaultGrantClaimMaximums()).thenReturn(defaultGrantClaimMaximums);
+        when(grantClaimMaximumRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetitionType(competitionType.getId());
+        ServiceResult<Set<Long>> result = service.revertToDefault(competition.getId());
         assertTrue(result.isSuccess());
-        assertEquals(asLinkedSet(grantClaimMaximums.get(0).getId(), grantClaimMaximums.get(1).getId()), result
-                .getSuccess());
+
+        assertTrue(result.getSuccess().containsAll(defaultGrantClaimMaximums.stream().map(GrantClaimMaximum::getId).collect(Collectors.toList())));
+        verify(grantClaimMaximumRepository, times(defaultGrantClaimMaximums.size())).save(any());
     }
 
     @Test
@@ -108,21 +107,13 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
     @Test
     public void isMaximumFundingLevelOverridden() {
-        List<GrantClaimMaximum> templateGrantClaimMaximums = newGrantClaimMaximum().build(2);
-
-        Competition templateCompetition = newCompetition()
-                .withGrantClaimMaximums(templateGrantClaimMaximums)
-                .build();
-
-        CompetitionType competitionType = newCompetitionType()
-                .withTemplate(templateCompetition)
-                .build();
+        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum().build(2);
 
         Competition competition = newCompetition()
-                .withGrantClaimMaximums(templateGrantClaimMaximums)
-                .withCompetitionType(competitionType)
+                .withGrantClaimMaximums(grantClaimMaximums)
                 .build();
 
+        when(commonBuilders.getDefaultGrantClaimMaximums()).thenReturn(grantClaimMaximums);
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelOverridden(competition
@@ -134,22 +125,15 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
     @Test
     public void isMaximumFundingLevelOverridden_fundingLevelsOverridden() {
-        List<GrantClaimMaximum> templateGrantClaimMaximums = newGrantClaimMaximum().build(2);
+        List<GrantClaimMaximum> defaultGrantClaimMaximums = newGrantClaimMaximum().build(3);
         List<GrantClaimMaximum> competitionGrantClaimMaximums = newGrantClaimMaximum().build(2);
-
-        Competition templateCompetition = newCompetition()
-                .withGrantClaimMaximums(templateGrantClaimMaximums)
-                .build();
-
-        CompetitionType competitionType = newCompetitionType()
-                .withTemplate(templateCompetition)
-                .build();
 
         Competition competition = newCompetition()
                 .withGrantClaimMaximums(competitionGrantClaimMaximums)
-                .withCompetitionType(competitionType)
+                .withSections(newSection().withSectionType(SectionType.FINANCE).build(1))
                 .build();
 
+        when(commonBuilders.getDefaultGrantClaimMaximums()).thenReturn(defaultGrantClaimMaximums);
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
         ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelOverridden(competition

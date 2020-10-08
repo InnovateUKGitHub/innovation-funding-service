@@ -79,8 +79,7 @@ import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -165,9 +164,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Override
     protected UserService supplyServiceUnderTest() {
-        UserServiceImpl spendProfileService = new UserServiceImpl();
-        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", WEB_BASE_URL);
-        return spendProfileService;
+        UserServiceImpl userService = new UserServiceImpl();
+        ReflectionTestUtils.setField(userService, "webBaseUrl", WEB_BASE_URL);
+        ReflectionTestUtils.setField(userService, "externalUserEmailDomain", ".test");
+        return userService;
     }
 
     @Test
@@ -754,12 +754,25 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
+    public void grantRole_invalidEmail() {
+        GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, KNOWLEDGE_TRANSFER_ADVISER);
+        User user = newUser()
+                .withEmailAddress("test@invalid.com").build();
+        when(userRepositoryMock.findById(grantRoleCommand.getUserId())).thenReturn(Optional.of(user));
+
+        ServiceResult<UserResource> result = service.grantRole(grantRoleCommand);
+
+        assertTrue(result.isFailure());
+        assertFalse(user.hasRole(KNOWLEDGE_TRANSFER_ADVISER));
+    }
+
+    @Test
     public void updateEmail() {
         String oldEmail = "old@gmail.com";
         String updateEmail = "new@gmail.com";
         User user = newUser().withUid("uid").withFirstName("Bob").withLastName("Man").withEmailAddress(oldEmail).build();
 
-        List<Invite> invite = singletonList(new RoleInvite("Mister", oldEmail, "", APPLICANT, OPENED));
+        List<Invite> invite = singletonList(new RoleInvite("Mister", oldEmail, "", APPLICANT, OPENED, null));
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(userRepositoryMock.save(user)).thenReturn(user);

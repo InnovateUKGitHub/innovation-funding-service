@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 import java.math.BigDecimal;
@@ -18,6 +19,8 @@ public class CompetitionInviteResource extends InviteResource {
     private Long competitionId;
 
     private String competitionName;
+
+    private FundingType competitionFundingType;
 
     private ZonedDateTime acceptsDate;
 
@@ -49,6 +52,14 @@ public class CompetitionInviteResource extends InviteResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public FundingType getCompetitionFundingType() {
+        return competitionFundingType;
+    }
+
+    public void setCompetitionFundingType(FundingType competitionFundingType) {
+        this.competitionFundingType = competitionFundingType;
     }
 
     public String getEmail() {

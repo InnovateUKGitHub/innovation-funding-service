@@ -213,25 +213,26 @@ Timestamp approval verification for viability and eligibility
 External users can view finance checks status on dashboard
     [Documentation]    INFUND-4843, INFUND-8787
     [Tags]  HappyPath
-    [Setup]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Given log in as a different user                &{lead_applicant_credentials}  #Non finance contact
-    Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user                 &{collaborator2_credentials}   #Academic user
-    Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user                 &{collaborator1_credentials}   #Non Lead Partner
-    Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user                 &{successful_applicant_credentials}  #finance contact
-    Then check finance checks status on dashboard   waiting  Awaiting review
+    [Setup]    the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Given log in as a different user                          &{lead_applicant_credentials}  #Non finance contact
+    And the user clicks the application tile if displayed
+    Then check finance checks status on dashboard             waiting  Awaiting review
+    When log in as a different user                           &{collaborator2_credentials}   #Academic user
+    Then check finance checks status on dashboard             waiting  Awaiting review
+    When log in as a different user                           &{collaborator1_credentials}   #Non Lead Partner
+    Then check finance checks status on dashboard             waiting  Awaiting review
+    When log in as a different user                           &{successful_applicant_credentials}  #finance contact
+    Then check finance checks status on dashboard             waiting  Awaiting review
 
 Project finance user can view finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]  HappyPath
-    [Setup]  log in as a different user              &{internal_finance_credentials}
+    [Setup]  log in as a different user     &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    28.95%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,796    116,596    4,936    28.95%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -249,7 +250,7 @@ Project finance user can view finances summary for the consortium
     Then the Categories Are Verified For Finances Summary Section    3    200,903    30.00%    57,803    2,468    140,632
     #Check total
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1    402,797    116,596    4,936    281,265
+    And The Total Calculation For Finances Summary Are Verified    1    402,796    116,596    4,936    281,264
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -267,7 +268,7 @@ Project finance can see finance breakdown for different categories
     When the user should see the text in the element   css = .table-overflow tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
     Then all the categories are verified  3   200,903 	3,081   0   100,200  552  90,000   5,970  1,100
     #Check total
-    And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,797
+    And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,796
 
 IFS Admin user can review Lead partner's finance changes page before the revisions made
     [Documentation]    INFUND-4837, IFS-603
@@ -300,14 +301,15 @@ IFS Admin user can review partner's finances before the revisions made
 Lead Partner can review the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-    Given log in as a different user        &{lead_applicant_credentials}
-    When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user clicks the button/link    link = Finance checks
-    When the user clicks the button/link    link = your project finances
-    Then the user should see the element    jQuery = h2:contains("Detailed finances")
+    Given log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    Then the user clicks the button/link                      link = Finance checks
+    When the user clicks the button/link                      link = your project finances
+    Then the user should see the element                      jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
-    Then the user should see the element    css = input[id = "total-cost"][value = "£200,903"]
-    And the user clicks the button/link     link = Finance checks
+    Then the user should see the element                      css = input[id = "total-cost"][value = "£200,903"]
+    And the user clicks the button/link                       link = Finance checks
 
 Partner can review only the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -629,8 +631,8 @@ Proj Finance is able to see the Finances amended
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
-    When the user navigates to the page           ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element          jQuery = dt:contains("Total project cost:") + dd:contains("£379,678")   # Total project cost
+    When the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the element         jQuery = dt:contains("Total project cost:") + dd:contains("£379,677")   # Total project cost
     And the user should see the element          jQuery = dt:contains("Funding applied for:") + dd:contains("116,596")   # Grant applied for
     And the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("109,660")
     And the user should see the element          jQuery = dt:contains("Total percentage grant:") + dd:contains("28.88%")      # Total percentage grant
@@ -764,9 +766,9 @@ Project finance user can see updated finance overview after partner changes to e
     [Tags]
     Given log in as a different user             &{internal_finance_credentials}
     When the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
-    Then the user should see the element         jQuery = dt:contains("Total project cost:") + dd:contains("£356,559")   # Total project cost
+    Then the user should see the element         jQuery = dt:contains("Total project cost:") + dd:contains("£356,558")   # Total project cost
     And the user should see the element          jQuery = dt:contains("Funding applied for:") + dd:contains("116,596")   # Grant applied for
-    And the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("102,725")
+    And the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("102,724")
     And the user should see the element          jQuery = dt:contains("Total percentage grant:") + dd:contains("28.81%")
 
 Project finance can see updated finance breakdown for different categories
@@ -784,7 +786,7 @@ Project finance can see updated finance breakdown for different categories
     When the user should see the text in the element   css = .table-overflow tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
     Then all the categories are verified  3   £177,784   59,430  1,954  80,000    5,050   10,600  10,000   10,750
     #Check total
-    And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,559
+    And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,558
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can edit academic finances
@@ -810,7 +812,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link = View finances
     Then the user should see the element    jQuery = h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,469   102,635    4,936     28.79%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,468   102,634    4,936     28.79%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -828,7 +830,7 @@ Project finance user can view updated finances summary for the consortium
     Then the Categories Are Verified For Finances Summary Section   3   £177,784  30.00%     50,867    2,468     124,449
     #check total
     And the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £356,469   102,635    4,936     248,898
+    And The Total Calculation For Finances Summary Are Verified    1   £356,468   102,634    4,936     248,898
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -1031,11 +1033,12 @@ Finance contact can access the external view of the finance checks page
 Lead Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
-    Given log in as a different user        &{lead_applicant_credentials}
-    When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery = li.complete:contains("Finance")
-    When the user clicks the button/link    link = Finance checks
-    Then the user should see the element    jQuery = .success-alert:contains("your project finances approved.")
+    Given log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    Then the user should see the element                      jQuery = li.complete:contains("Finance")
+    When the user clicks the button/link                      link = Finance checks
+    Then the user should see the element                      jQuery = .success-alert:contains("your project finances approved.")
 
 Lead partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -1130,7 +1133,7 @@ Custom suite setup
     Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the table row has expected values
-    the user should see the element          jQuery = dt:contains("Total project cost:") + dd:contains("£402,797")   # Total project cost
+    the user should see the element          jQuery = dt:contains("Total project cost:") + dd:contains("£402,796")   # Total project cost
     the user should see the element          jQuery = dt:contains("Funding applied for:") + dd:contains("116,596")   # Grant applied for
     the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("116,596")
     the user should see the element          jQuery = dt:contains("Other public sector funding:") + dd:contains("4,936")     # Other public sector funding
@@ -1270,14 +1273,14 @@ Project finance user amends capital usage details in eligibility for lead
     And the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 Project finance user amends subcontracting usage details in eligibility for lead
-    When the user expands the section               Subcontracting costs
-    Then verify percentage and total                Subcontracting costs  £90,000
+    When the user expands the section               Subcontracting
+    Then verify percentage and total                Subcontracting  £90,000
     When the user clicks the button/link            jQuery = #accordion-finances-content-5 a:contains("Edit")
     And the user adds subcontracting data into row  1    test    10600
-    Then verify percentage and total                Subcontracting costs  £10,600
+    Then verify percentage and total                Subcontracting  £10,600
     When the user clicks the button/link            jQuery = button:contains("Add another subcontractor")
     And the user adds subcontracting data into row  2    test    9400
-    Then verify percentage and total                Subcontracting costs  £20,000
+    Then verify percentage and total                Subcontracting  £20,000
     When the user clicks the button/link            css = #subcontracting div:nth-child(2) button
     When the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     Then verify total costs of project              £162,150
@@ -1401,7 +1404,7 @@ the user verifies the financial sub-totals for external version under the Detail
     the user should see the element     jQuery = span:contains("${overheads}") + button:contains("Overhead costs")
     the user should see the element     jQuery = span:contains("${materials}") + button:contains("Materials")
     the user should see the element     jQuery = span:contains("${capital_usage}") + button:contains("Capital usage")
-    the user should see the element     jQuery = span:contains("${sub_contracting}") + button:contains("Subcontracting costs")
+    the user should see the element     jQuery = span:contains("${sub_contracting}") + button:contains("Subcontracting")
     the user should see the element     jQuery = span:contains("${travel_and_subsistence}") + button:contains("Travel and subsistence")
     the user should see the element     jQuery = span:contains("${other_costs}") + button:contains("Other costs")
 

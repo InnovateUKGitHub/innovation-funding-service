@@ -21,6 +21,7 @@ sonarqube {
         // These exclusions are because SonarQube fails to parse the files
         // Raised DHS-400 to contact SonarQube for support
         property "sonar.exclusions", "**/*MapperImpl.java," +
+                "**/CategoryRepositoryIntegrationTest.java," +
                 "**/ProjectPartnerInviteServiceImpl.java," +
                 "**/GrantsInviteServiceImpl.java," +
                 "**/OverheadFileServiceImpl.java," +

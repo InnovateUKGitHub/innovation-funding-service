@@ -11,9 +11,7 @@ import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
-import org.innovateuk.ifs.user.resource.RoleProfileState;
-import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
-import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.springframework.stereotype.Component;
 
@@ -55,25 +53,30 @@ public class AssessorDashboardModelPopulator {
         this.roleProfileStatusRestService = roleProfileStatusRestService;
     }
 
-    public AssessorDashboardViewModel populateModel(long userId) {
+    public AssessorDashboardViewModel populateModel(UserResource user) {
 
-        RoleProfileStatusResource roleProfileStatusResource = roleProfileStatusRestService.findByUserIdAndProfileRole(userId, ASSESSOR).getSuccess();
+        RoleProfileState roleProfileState;
+        if (user.hasRole(Role.ASSESSOR)) {
+            roleProfileState = roleProfileStatusRestService.findByUserIdAndProfileRole(user.getId(), ASSESSOR).getSuccess().getRoleProfileState();
+        } else {
+            roleProfileState = RoleProfileState.ACTIVE;
+        }
 
-        UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
+        UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(user.getId()).getSuccess();
 
-        if (!roleProfileStatusResource.isActive()) {
-            return new AssessorDashboardViewModel(getProfileStatus(profileStatusResource, roleProfileStatusResource.getRoleProfileState()));
+        if (roleProfileState != RoleProfileState.ACTIVE) {
+            return new AssessorDashboardViewModel(getProfileStatus(profileStatusResource, roleProfileState));
         }
 
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
-                .getAssessorParticipants(userId).getSuccess();
+                .getAssessorParticipants(user.getId()).getSuccess();
 
-        List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
+        List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
-        List<InterviewParticipantResource> interviewParticipantResourceList = interviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
+        List<InterviewParticipantResource> interviewParticipantResourceList = interviewInviteRestService.getAllInvitesByUser(user.getId()).getSuccess();
 
         return new AssessorDashboardViewModel(
-                getProfileStatus(profileStatusResource, roleProfileStatusResource.getRoleProfileState()),
+                getProfileStatus(profileStatusResource, roleProfileState),
                 getActiveCompetitions(participantResourceList),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),

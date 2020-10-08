@@ -56,7 +56,7 @@ The competition admin creates The Prince's Trust Comp
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     RELEASE_FEEDBACK   ${month}   ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      GRANT
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}

@@ -21,9 +21,6 @@
 
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',size='govuk-heading-l'" />
-            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showCovidQuestionnaireLink}">
-                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">You may be eligible for additional funding</a> if your organisation is facing significant challenges due to the COVID-19 outbreak.</p>
-            </div>
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Set up your project</h2>
@@ -72,7 +69,7 @@
                                     <span class="status-msg msg-progress" th:text="${euGrantTransfer.applicationProgress}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </th:block>
                                 <th:block th:if="${euGrantTransfer.submitted}">
-                                    <span class="status-msg msg-progress">Application submitted</span>
+                                    <span class="status-msg msg-progress">Submitted</span>
                                 </th:block>
                                 <th:block th:if="${euGrantTransfer.successful}">
                                     <span class="status-msg msg-progress">Project in setup</span>
@@ -139,7 +136,7 @@
                                             <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
                                         </th:block>
                                         <span class="status-msg msg-progress">
-                                            Application submitted
+                                            Submitted
                                             <th:block th:if="${inProgressView.showReopenLink}">
                                                 <br/>
                                                 <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link govuk-body reopen-application-link">Reopen</a>

@@ -40,6 +40,7 @@ public class AssessmentFeedbackApplicationDetailsModelPopulator extends Assessme
                 application.getDurationInMonths(),
                 competition.getAssessmentDaysLeft(),
                 competition.getAssessmentDaysLeftPercentage(),
-                question.getShortName());
+                question.getShortName(),
+                competition.isKtp());
     }
 }

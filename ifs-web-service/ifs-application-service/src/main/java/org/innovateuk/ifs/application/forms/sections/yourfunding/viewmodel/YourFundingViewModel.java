@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 public class YourFundingViewModel implements BaseAnalyticsViewModel {
     private final long applicationId;
@@ -39,6 +41,10 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final boolean overridingFundingRules;
 
+    private final FundingType fundingType;
+
+    private final OrganisationTypeEnum organisationType;
+
     public YourFundingViewModel(long applicationId,
                                 String competitionName,
                                 long sectionId,
@@ -56,7 +62,9 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 long yourOrganisationSectionId,
                                 Integer maximumFundingLevel,
                                 String financesUrl,
-                                boolean overridingFundingRules) {
+                                boolean overridingFundingRules,
+                                FundingType fundingType,
+                                OrganisationTypeEnum organisationType) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.sectionId = sectionId;
@@ -75,6 +83,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.maximumFundingLevel = maximumFundingLevel;
         this.financesUrl = financesUrl;
         this.overridingFundingRules = overridingFundingRules;
+        this.fundingType = fundingType;
+        this.organisationType = organisationType;
     }
 
     @Override
@@ -151,8 +161,33 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         return overridingFundingRules;
     }
 
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public boolean isKtpFundingType() {
+        return FundingType.KTP == fundingType;
+    }
+
+    public OrganisationTypeEnum getOrganisationType() {
+        return organisationType;
+    }
+
     /* view logic */
     public boolean isReadOnly() {
         return complete || !open;
+    }
+
+    /*
+    * Will all lead applicants on a ktp competition be Knowledge Base
+    *
+    * */
+    public boolean hideAreYouRequestingFunding() {
+        return isKtpFundingType() && organisationType != OrganisationTypeEnum.KNOWLEDGE_BASE;
+    }
+
+    public String getPageTitle() {
+        return isKtpFundingType() && organisationType != OrganisationTypeEnum.KNOWLEDGE_BASE
+                ? "Other funding" : "Your funding";
     }
 }

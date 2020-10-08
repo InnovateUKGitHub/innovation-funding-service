@@ -18,6 +18,7 @@ public class AssessmentFeedbackApplicationDetailsViewModel extends BaseAssessmen
     private long daysLeft;
     private long daysLeftPercentage;
     private String questionShortName;
+    private boolean ktpCompetition;
 
     public AssessmentFeedbackApplicationDetailsViewModel(long applicationId,
                                                          String applicationName,
@@ -25,7 +26,8 @@ public class AssessmentFeedbackApplicationDetailsViewModel extends BaseAssessmen
                                                          long applicationDurationInMonths,
                                                          long daysLeft,
                                                          long daysLeftPercentage,
-                                                         String questionShortName) {
+                                                         String questionShortName,
+                                                         boolean ktpCompetition) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationStartDate = applicationStartDate;
@@ -33,6 +35,7 @@ public class AssessmentFeedbackApplicationDetailsViewModel extends BaseAssessmen
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.questionShortName = questionShortName;
+        this.ktpCompetition = ktpCompetition;
     }
 
     public long getApplicationId() {
@@ -61,6 +64,10 @@ public class AssessmentFeedbackApplicationDetailsViewModel extends BaseAssessmen
 
     public String getQuestionShortName() {
         return questionShortName;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     @Override

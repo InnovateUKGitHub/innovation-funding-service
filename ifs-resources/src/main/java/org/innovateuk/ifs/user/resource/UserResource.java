@@ -35,7 +35,6 @@ public class UserResource implements Serializable {
     private String phoneNumber;
     private String imageUrl;
     private String email;
-    private String password;
     private UserStatus status;
     private List<Role> roles = new ArrayList<>();
     private Long profileId;
@@ -142,14 +141,6 @@ public class UserResource implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -190,6 +181,10 @@ public class UserResource implements Serializable {
 
     public boolean hasRole(Role role) {
         return roles.contains(role);
+    }
+
+    public boolean hasAuthority(String auth) {
+        return roles.stream().flatMap(r -> r.getAuthorities().stream()).anyMatch(a -> a.equals(auth));
     }
 
     @JsonIgnore
@@ -284,7 +279,7 @@ public class UserResource implements Serializable {
      * See IFS-656.
      */
     @JsonIgnore
-    public String getRolesString(){
+    public String getRolesString() {
         //TODO: Replace and simplify this once IFS-656 is implemented
         if (hasRole(IFS_ADMINISTRATOR)) {
             return IFS_ADMINISTRATOR.getDisplayName();

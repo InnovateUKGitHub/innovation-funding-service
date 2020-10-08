@@ -80,9 +80,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
 
-    @OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
-    private CompetitionType templateForType;
-
     private String pafCode;
     private String budgetCode;
     private String code;
@@ -151,7 +148,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinTable(name = "grant_claim_maximum_competition",
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
-    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
+        private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;
 
@@ -173,11 +170,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Column(name = "funding_type")
     private FundingType fundingType;
 
-    @ElementCollection(targetClass = FinanceRowType.class)
-    @JoinTable(name = "competition_finance_row_types", joinColumns = @JoinColumn(name = "competition_id"))
-    @Column(name = "finance_row_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Set<FinanceRowType> financeRowTypes = new HashSet<>();
+    @OneToMany(mappedBy = "competitionFinanceRowTypesId.competition")
+    @OrderBy("priority")
+    private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectStages> projectStages = new ArrayList<>();
@@ -266,12 +261,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.covidType = covidType;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
-        return financeRowTypes;
-    }
-
-    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
-        this.financeRowTypes = financeRowTypes;
+    public List<FinanceRowType> getFinanceRowTypes() {
+        return competitionFinanceRowTypes.stream().map(CompetitionFinanceRowTypes::getFinanceRowType).collect(toList());
     }
 
     public List<ProjectStages> getProjectStages() {
@@ -778,15 +769,19 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isLoan() {
-        return FundingType.LOAN.equals(fundingType);
+        return FundingType.LOAN == fundingType;
     }
 
     public boolean isGrant() {
-        return FundingType.GRANT.equals(fundingType);
+        return FundingType.GRANT == fundingType;
     }
 
     public boolean isProcurement() {
-        return FundingType.PROCUREMENT.equals(fundingType);
+        return FundingType.PROCUREMENT == fundingType;
+    }
+
+    public boolean isKtp() {
+        return FundingType.KTP == fundingType;
     }
 
     public void releaseFeedback(ZonedDateTime date) {
@@ -986,6 +981,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 .orElse(true)) ;
     }
 
+    public List<CompetitionFinanceRowTypes> getCompetitionFinanceRowTypes() {
+        return competitionFinanceRowTypes;
+    }
 
     public void setHasAssessmentStage(boolean hasAssessmentStage) {
         this.hasAssessmentStage = hasAssessmentStage;
@@ -997,6 +995,20 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionAssessmentConfig(CompetitionAssessmentConfig competitionAssessmentConfig) {
         this.competitionAssessmentConfig = competitionAssessmentConfig;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return ofNullable(getCompetitionType()).map(CompetitionType::getCompetitionTypeEnum).orElse(null);
+    }
+
+    @Override
+    public boolean isExpressionOfInterest() {
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
+    }
+
+    @Override
+    public boolean isSbriPilot() {
+        return SBRI_PILOT.equals(name);
     }
 
     @Override

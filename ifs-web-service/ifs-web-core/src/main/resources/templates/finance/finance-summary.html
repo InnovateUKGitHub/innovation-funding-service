@@ -6,25 +6,23 @@
         <th:block th:unless="${summary.readOnly}">
 
             <th:block th:if="${summary.showFinancesIncompleteWarning()}">
-                <div th:if="${summary.collaborativeProject}" class="warning-alert">
-                    <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not marked their finances as complete:</h2>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <th:block th:each="incompleteOrganisation : ${summary.incompleteOrganisations}">
-                            <li th:text="${incompleteOrganisation.organisationName}" />
-                        </th:block>
-                    </ul>
-                    <p class="govuk-body"
+                <div class="warning-alert">
+                    <th:block th:if="${summary.collaborativeProject}" class="warning-alert">
+                        <h2 class="govuk-heading-s govuk-!-margin-0">These organisations have not marked their finances as complete:</h2>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <th:block th:each="incompleteOrganisation : ${summary.incompleteOrganisations}">
+                                <li th:text="${incompleteOrganisation.organisationName}" />
+                            </th:block>
+                        </ul>
+                    </th:block>
+                    <th:block th:unless="${summary.collaborativeProject}" class="warning-alert">
+                        <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your project finances as complete.</h2>
+                    </th:block>
+                    <p class="govuk-body standard-color"
                        th:if="${summary.isUsersFinancesIncomplete()}">
                         <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                           class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
-                    <p class="govuk-body">This application cannot be submitted unless your project finances have been marked as complete by all partners.</p>
-                </div>
-                <div th:unless="${summary.collaborativeProject}" class="warning-alert">
-                    <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your project finances as complete.</h2>
-                    <p class="govuk-body">
-                        <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                           class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
-                    <p class="govuk-body">This application cannot be submitted unless your project finances have been marked as complete.</p>
+                           class="govuk-body govuk-link standard-color">Return to your project finances</a> to complete the finance section.</p>
+                    <p class="govuk-body standard-color">This application cannot be submitted until all items in the finances section have been marked as complete by all partners.</p>
                 </div>
             </th:block>
 
@@ -39,218 +37,192 @@
             </div>
         </th:block>
 
-        <div class="govuk-form-group finance-summary table-overflow">
-            <table class="govuk-table">
-                <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"/>
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric "
-                        th:classappend="${summary.fundingLevelFirst} ? 'width-80' : 'width-100'"
-                        th:text="${summary.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric "
-                        th:classappend="${summary.fundingSoughtFirst} ? 'width-80' : 'width-100'"
-                        th:text="${summary.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other public sector funding (&pound;)</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Contribution to project (&pound;)</th>
-                </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                <tr class="govuk-table__row" th:each="row : ${summary.rows}">
-                    <th class="govuk-table__header" scope="row">
-                        <div>
-                            <div th:text="${row.organisationName}">OrganisationName</div>
-                            <small th:text="${row.status}">Lead</small>
+        <th:block th:replace="finance/finance-summary :: finances-summary-table (${summary.financeSummaryTableViewModel})" />
 
-                            <th:block th:unless="${summary.readOnly}">
-                                <th:block th:if="${row.complete}">
-                                    <img class="table-tick" width="20" height="17"
-                                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
-                                         alt="has marked the Finances as complete"/>
-                                    <span class="govuk-visually-hidden">Complete</span>
-                                </th:block>
-                                <th:block th:unless="${row.complete}">
-                                    <img class="table-tick" width="20" height="20"
-                                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
-                                         alt="has not yet marked the Finances as complete" />
-                                    <span class="govuk-visually-hidden">Incomplete</span>
-                                </th:block>
-                            </th:block>
-                        </div>
-                    </th>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <strong>&pound;<th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
-                    </td>
-                    <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
-                    </th:block>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
-                </tr>
-                <tr class="govuk-table__row" th:if="${summary.collaborativeProject}">
-                    <th class="govuk-table__header" scope="row">Total
-                        <div th:unless="${summary.readOnly}">
-                            <th:block th:if="${summary.allFinancesComplete}">
-                                <img class="table-total-tick" width="20" height="17"
+    </th:block>
+
+    <th:block th:fragment="finances-summary-table(table)">
+        <div class="govuk-form-group finance-summary table-overflow">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th th:if="${table.includeOrganisationNames}" class="govuk-table__header">
+                    <span class="govuk-visually-hidden">Organisation name</span>
+                </th>
+                <th class="govuk-table__header govuk-table__header--numeric" scope="col"
+                    th:classappend="${table.includeOrganisationNames} ? null : 'width-80'">Total costs (&pound;)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric "
+                    th:classappend="${table.fundingLevelFirst} ? 'width-80' : 'width-100'"
+                    th:text="${table.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric "
+                    th:classappend="${table.fundingSoughtFirst} ? 'width-80' : 'width-100'"
+                    th:text="${table.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150"
+                    th:text="${table.ktp ? 'Other funding (£)' : 'Other public sector funding (£)'}">Other public sector funding (&pound;)</th>
+                <th th:if="${table.ktp}" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)</th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100"
+                    th:text="${table.ktp ? 'Company contribution (£)' : 'Contribution to project (£)'}">Contribution to project (&pound;)</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="row : ${table.rows}">
+                <th class="govuk-table__header" scope="row"
+                    th:if="${table.includeOrganisationNames}">
+                    <div>
+                        <div th:text="${row.organisationName}">OrganisationName</div>
+                        <small th:text="${row.status}">Lead</small>
+                        <a th:if="${row.showViewFinancesLink}"
+                           th:href="${row.url}"
+                           class="govuk-link govuk-!-font-weight-regular">View finances</a>
+
+                        <th:block th:unless="${table.readOnly}">
+                            <th:block th:if="${row.complete}">
+                                <img class="table-tick" width="20" height="17"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
                                      alt="has marked the Finances as complete"/>
                                 <span class="govuk-visually-hidden">Complete</span>
                             </th:block>
-                            <th:block th:unless="${summary.allFinancesComplete}">
-                                <img class="table-total-tick" width="20" height="20"
+                            <th:block th:unless="${row.complete}">
+                                <img class="table-tick" width="20" height="20"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
                                      alt="has not yet marked the Finances as complete" />
                                 <span class="govuk-visually-hidden">Incomplete</span>
                             </th:block>
-                        </div>
-                    </th>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <strong>&pound;<th:block th:text="${#numbers.formatInteger(summary.costs, 0, 'DEFAULT')}" /></strong>
-                    </td>
-                    <th:block th:with="fundingSought=${#numbers.formatInteger(summary.fundingSought, 0, 'DEFAULT')}">
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingLevelFirst} ? '' : ${fundingSought}"/>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingSoughtFirst} ? '' : ${fundingSought}"/>
-                    </th:block>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summary.otherFunding, 0, 'DEFAULT')}"></td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summary.contribution, 0, 'DEFAULT')}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                        </th:block>
+                    </div>
+                </th>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong><th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
+                </td>
+                <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
+                </th:block>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
+                <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contributionPercentage, 0, 'DEFAULT')}"/>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
+            </tr>
+            <tr class="govuk-table__row" th:if="${table.rows.size() > 1}">
+                <th class="govuk-table__header" scope="row">Total
+                    <div th:unless="${table.readOnly}">
+                        <th:block th:if="${table.allFinancesComplete}">
+                            <img class="table-total-tick" width="20" height="17"
+                                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
+                                 alt="has marked the Finances as complete"/>
+                            <span class="govuk-visually-hidden">Complete</span>
+                        </th:block>
+                        <th:block th:unless="${table.allFinancesComplete}">
+                            <img class="table-total-tick" width="20" height="20"
+                                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
+                                 alt="has not yet marked the Finances as complete" />
+                            <span class="govuk-visually-hidden">Incomplete</span>
+                        </th:block>
+                    </div>
+                </th>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong>&pound;<th:block th:text="${#numbers.formatInteger(table.costs, 0, 'DEFAULT')}" /></strong>
+                </td>
+                <th:block th:with="fundingSought=${#numbers.formatInteger(table.fundingSought, 0, 'DEFAULT')}">
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? '' : ${fundingSought}"/>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingSoughtFirst} ? '' : ${fundingSought}"/>
+                </th:block>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.otherFunding, 0, 'DEFAULT')}"></td>
+                <td th:if="${table.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.contributionPercentage, 0, 'DEFAULT')}"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(table.contribution, 0, 'DEFAULT')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     </th:block>
-
     <!-- ===========================Form: finance breakdown table =========================== -->
     <th:block th:fragment="finance-breakdown-table(breakdown)">
-        <div class="project-cost-breakdown">
-            <div class="table-overflow">
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell"></td>
-                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasLabour}"
-                            class="govuk-table__header govuk-table__header--numeric">Labour (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasOverheads}"
-                            class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasProcurementOverheads}"
-                            class="govuk-table__header govuk-table__header--numeric">Overhead costs (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasMaterials}"
-                            class="govuk-table__header govuk-table__header--numeric">Materials (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasCapitalUsage}"
-                            class="govuk-table__header govuk-table__header--numeric width-80">Capital usage (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasSubcontracting}"
-                            class="govuk-table__header govuk-table__header--numeric width-80">Subcontracting costs (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasTravel}"
-                            class="govuk-table__header govuk-table__header--numeric width-80">Travel and subsistence (&pound;)</th>
-                        <th scope="col"
-                            th:if="${breakdown.hasOther}"
-                            class="govuk-table__header govuk-table__header--numeric width-80">Other costs (&pound;)</th>
-                        <th scope="col" th:if="${breakdown.hasVat}"
-                            class="govuk-table__header govuk-table__header--numeric width-80">Total VAT (&pound;)</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="row : ${breakdown.rows}">
-                        <th class="govuk-table__header" scope="row">
-                            <div th:text="${row.organisationName}"></div>
-                            <div><small th:text="${row.status}">Lead organisation</small></div>
-                            <a th:if="${row.showViewFinancesLink}"
-                               th:href="${row.url}"
-                               class="govuk-link govuk-!-font-weight-regular">View finances</a>
-                        </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
-                            th:text="|£${#numbers.formatInteger(row.total, 0, 'DEFAULT')}|">
-                        </td>
-                        <td th:if="${breakdown.hasLabour}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.labour, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasOverheads}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.overheads, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasProcurementOverheads}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.procurementOverheads, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasMaterials}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.materials, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasCapitalUsage}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.capitalUsage, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasSubcontracting}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.subcontracting, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasTravel}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.travel, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasOther}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.other, 0, 'DEFAULT')}">0</td>
-                        <td th:if="${breakdown.hasVat}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.vat, 0, 'DEFAULT')}">0</td>
-                    </tr>
-                    <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
-                        <th class="govuk-table__header" scope="row">Total</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
-                            th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasLabour}"
-                            th:text="${#numbers.formatInteger(breakdown.labour, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasOverheads}"
-                            th:text="${#numbers.formatInteger(breakdown.overheads, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasProcurementOverheads}"
-                            th:text="${#numbers.formatInteger(breakdown.procurementOverheads, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasMaterials}"
-                            th:text="${#numbers.formatInteger(breakdown.materials, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasCapitalUsage}"
-                            th:text="${#numbers.formatInteger(breakdown.capitalUsage, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasSubcontracting}"
-                            th:text="${#numbers.formatInteger(breakdown.subcontracting, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasTravel}"
-                            th:text="${#numbers.formatInteger(breakdown.travel, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasOther}"
-                            th:text="${#numbers.formatInteger(breakdown.other, 0, 'DEFAULT')}">
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"
-                            th:if="${breakdown.hasVat}"
-                            th:text="${#numbers.formatInteger(breakdown.vat, 0, 'DEFAULT')}">
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <th:block th:unless="${breakdown.ktpCompetition}" >
+            <div class="project-cost-breakdown">
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"></td>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
+                            <th scope="col"
+                                th:each="type : ${breakdown.financeRowTypes}"
+                                class="govuk-table__header govuk-table__header--numeric"
+                                th:text="|${type.displayName} (£)|">Labour (&pound;)</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="row : ${breakdown.rows}">
+                            <th class="govuk-table__header" scope="row">
+                                <div th:text="${row.organisationName}"></div>
+                                <div><small th:text="${row.status}">Lead organisation</small></div>
+                                <a th:if="${row.showViewFinancesLink}"
+                                   th:href="${row.url}"
+                                   class="govuk-link govuk-!-font-weight-regular">View finances</a>
+                            </th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                                th:text="|£${#numbers.formatInteger(row.total, 0, 'DEFAULT')}|">
+                            </td>
+                            <td th:each="type : ${breakdown.financeRowTypes}"
+                                class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
+                        </tr>
+                        <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
+                            <th class="govuk-table__header" scope="row">Total</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                                th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
+                            </td>
+                            <td th:each="type : ${breakdown.financeRowTypes}"
+                                class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${#numbers.formatInteger(breakdown.getTypeTotal(type), 0, 'DEFAULT')}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </th:block>
+        <th:block th:if="${breakdown.ktpCompetition}" >
+            <div class="project-cost-breakdown">
+                <div class="table-overflow" th:each="row : ${breakdown.rows}">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">
+                                <div th:text="${row.organisationName}"></div>
+                                <div><small th:text="${row.status}">Lead organisation</small></div>
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Cost(£)</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="type : ${breakdown.financeRowTypes}">
+                            <td class="govuk-table__cell"
+                                th:text="${type.displayName}">Labour</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
+                        </tr>
+                        </tbody>
+                        <tfoot class="govuk-table__foot">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Total</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                                th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </th:block>
     </th:block>
-
 
     <!-- ===========================Form: Research Participations alert messages =========================== -->
     <th:block th:fragment="research-participation-alert(alertmodel)">
-        <div th:if="${alertmodel.researchParticipationPercentage &gt; alertmodel.currentCompetition.maxResearchRatio}" class="warning-alert">
-            <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are not within the required range</h2>
-            <p class="govuk-body">The research participation costs must be <span th:text="${alertmodel.currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
-        </div>
+        <th:block th:unless="${alertmodel.currentCompetition.isKtp()}">
+            <div th:if="${alertmodel.researchParticipationPercentage &gt; alertmodel.currentCompetition.maxResearchRatio}" class="warning-alert">
+                <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are not within the required range</h2>
+                <p class="govuk-body">The research participation costs must be <span th:text="${alertmodel.currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
+            </div>
+        </th:block>
     </th:block>
 </html>

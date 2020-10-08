@@ -119,7 +119,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "leadOrganisation", "Lead Organisation 123",
                 "inviteOrganisationName", "Invite Organisation Name",
                 "competitionName", "Competition 1",
-                "inviteUrl", "https://ifs-local-dev/invite"
+                "inviteUrl", "https://ifs-local-dev/invite",
+                "procurement", false
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("invite_finance_contact_subject.txt", templateArguments);
@@ -133,7 +134,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev",
                 "applicationId", 1234L,
-                "competitionName", "Competition 1"
+                "title", "grant offer letter",
+                "shortTitle", "letter"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_subject.txt", templateArguments);
@@ -218,7 +220,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "applicationId", "1234",
                 "projectName", "Project 1",
                 "projectStartDate", "12 June 2020",
-                "projectSetupUrl", "https://ifs.local-dev/project-setup/project/1234"
+                "projectSetupUrl", "https://ifs.local-dev/project-setup/project/1234",
+                "titleUpper", "Grant offer letter",
+                "title", "grant offer letter"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", templateArguments);

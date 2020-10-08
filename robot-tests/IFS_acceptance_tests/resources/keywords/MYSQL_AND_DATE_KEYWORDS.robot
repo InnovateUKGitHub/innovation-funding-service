@@ -18,6 +18,12 @@ update milestone to yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
     reload page
 
+update milestone to tomorrow
+    [Arguments]  ${competition_id}  ${milestone}
+    ${tomorrow} =  get tomorrow
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${tomorrow}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
+    reload page
+
 the calculation of the remaining days should be correct
     [Arguments]    ${END_DATE}    ${COMPETITION_ID}
     ${GET_TIME}=    get time    hour    UTC
@@ -275,3 +281,9 @@ User sets a max funding level for a competition
     [Arguments]     ${id}  ${max_funding}
     execute sql string  UPDATE `${database_name}`.`competition_application_config` SET `maximum_funding_sought`='${max_funding}' WHERE `id`='${id}';
 
+get spend profile value
+    [Arguments]    ${section}  ${projectId}  ${month}
+    ${result} =  query  SELECT c.value from spend_profile sp inner join cost_group cg on cg.id = sp.spend_profile_figures_cost_group_id inner join cost c on c.cost_group_id = cg.id inner join cost_categorization cc on cc.cost_id = c.id inner join cost_category ccat on ccat.id = cc.cost_category_id inner join cost_time_period ctp on ctp.cost_id = c.id where sp.project_id = '${projectId}' and ccat.name = '${section}' and ctp.offset_unit = 'MONTH' and ctp.offset_amount = ${month}
+    ${result} =  get from list  ${result}  0
+    ${result} =  get from list  ${result}  0
+    [Return]  ${result}

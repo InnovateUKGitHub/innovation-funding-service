@@ -111,7 +111,8 @@ ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}   ${getPrettyLongMi
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_TIME_DATE_LONG}  ${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DATE_LONG}  ${getPrettyLongMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
-${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_DATE}   ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_TITLE}      Intelligent Building
@@ -184,16 +185,22 @@ ${MEDIUM_ORGANISATION_SIZE}    MEDIUM
 ${LARGE_ORGANISATION_SIZE}     LARGE
 
 # File related variables
-${UPLOAD_FOLDER}    uploaded_files
-${DOWNLOAD_FOLDER}    download_files
-${valid_pdf}      testing.pdf
-${gol_pdf}        GOL_template.pdf
-${5mb_pdf}        testing_5MB.pdf
-${too_large_pdf}    large.pdf
-${text_file}      testing.txt
-${excel_file}     testing.xlsx
+${UPLOAD_FOLDER}        uploaded_files
+${DOWNLOAD_FOLDER}      download_files
+${valid_pdf}            testing.pdf
+${gol_pdf}              GOL_template.pdf
+${contract_pdf}         Contract.pdf
+${valid_xls}            testing.xls
+${valid_odt}            testing.odt
+${valid_doc}            testing.doc
+${valid_docx}           testing.docx
+${valid_jpeg}           testing.jpeg
+${5mb_pdf}              testing_5MB.pdf
+${too_large_pdf}        large.pdf
+${text_file}            testing.txt
+${excel_file}           testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${ods_file}      file_example_ODS.ods
+${ods_file}             file_example_ODS.ods
 
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
@@ -216,6 +223,8 @@ ${403_error_message}                               You do not have the necessary
 ${404_error_message}                               Please check the web address or search term you entered for any errors
 ${500_error_message}                               something went wrong
 ${wrong_filetype_validation_error}                 Your upload must be a PDF.
+${finance_query_notes_filetype_error}              Your file must be a PDF or an open source document
+${applicant_query_response_filetype_error}         Your upload must be a PDF, document or a spreadsheet
 ${too_large_5MB_validation_error}                  Please upload a file less than 5MB in size.
 ${too_large_10MB_validation_error}                 Please upload a file less than 10MB in size.
 ${unsuccessful_login_message}                      Your sign in was unsuccessful because of the following issues
@@ -229,8 +238,10 @@ ${enter_a_valid_date}                              Please enter a valid date.
 ${enter_a_phone_number}                            Please enter a phone number.
 ${enter_a_valid_phone_number}                      Please enter a valid phone number.
 ${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
+${search_a_valid_postcode}                         Search using a valid postcode or enter the address manually.
 ${only_accept_whole_numbers_message}               This field can only accept whole numbers.
 ${field_should_be_1_or_higher}                     This field should be 1 or higher.
+${estate_Error_Message}                            You should enter less than £10,000 for estate costs
 
 # Database variables
 ${database_name}    ifs
@@ -268,6 +279,8 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
+${existingAcademicPartnerOrgName}     WORTH IT LTD
+${newPartnerOrgName}                  INNOVATE LTD
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
@@ -315,3 +328,16 @@ ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}
+
+#OrganisationTypes and Info text
+${businessOrganisationName}              Business
+${researchOrganisationName}              Research
+${rtoOrganisationName}                   Research and technology organisation (RTO)
+${nonProfitOrganisationName}             Public sector, charity or non Je-S registered research organisation
+${bussinessOrgInfoText}                  A person or organisation that provides goods or services in exchange for something of value, usually money.
+${nonJe-s/Public/CharityOrgInfoText}     A not-for-profit organisation focusing on innovation.
+${researchOrgInfoText}                   Higher education and organisations registered with Je-S.
+${rtoOrgInfoText}                        Organisations which solely promote and conduct collaborative research and innovation.
+
+#invalid organisation validation message
+${invalidOrganisationValidationMessage}     You are not eligible to start an application

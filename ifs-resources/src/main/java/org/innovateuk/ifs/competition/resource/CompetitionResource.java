@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -34,6 +32,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     private static final int CLOSING_SOON_AMOUNT = 3;
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy");
+
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
@@ -63,6 +62,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Integer academicGrantPercentage;
     private Long competitionType;
     private String competitionTypeName;
+    private CompetitionTypeEnum competitionTypeEnum;
     private Long executive;
     private String executiveName;
     private Long leadTechnologist;
@@ -82,18 +82,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Set<Long> researchCategories;
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private Integer assessorCount;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private BigDecimal assessorPay;
     private String activityCode;
     private boolean setupComplete = false;
     private Boolean useResubmissionQuestion;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private Boolean hasAssessmentPanel;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-    private Boolean hasInterviewStage;
-    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -112,7 +103,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonFinanceType;
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
-    private Set<FinanceRowType> financeRowTypes;
+    private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
     private CovidType covidType;
@@ -144,12 +135,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     @JsonIgnore
     public boolean isH2020() {
-        return H2020_TYPE_NAME.equals(competitionTypeName);
+        return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
     }
 
     @JsonIgnore
     public boolean isExpressionOfInterest() {
-        return EXPRESSION_OF_INTEREST_TYPE_NAME.equals(competitionTypeName);
+        return competitionTypeEnum == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
     }
 
     @JsonIgnore
@@ -210,11 +201,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.projectSetupStages = projectSetupStages;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
+    public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
     }
 
-    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
+    public void setFinanceRowTypes(List<FinanceRowType> financeRowTypes) {
         this.financeRowTypes = financeRowTypes;
     }
 
@@ -343,6 +334,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return competitionTypeEnum;
+    }
+
+    public void setCompetitionTypeEnum(CompetitionTypeEnum competitionTypeEnum) {
+        this.competitionTypeEnum = competitionTypeEnum;
     }
 
     @JsonIgnore
@@ -605,22 +604,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public Integer getAssessorCount() {
-        return assessorCount;
-    }
-
-    public void setAssessorCount(Integer assessorCount) {
-        this.assessorCount = assessorCount;
-    }
-
-    public BigDecimal getAssessorPay() {
-        return assessorPay;
-    }
-
-    public void setAssessorPay(BigDecimal assessorPay) {
-        this.assessorPay = assessorPay;
-    }
-
     public boolean getSetupComplete() {
         return setupComplete;
     }
@@ -643,22 +626,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setNonIfsUrl(String nonIfsUrl) {
         this.nonIfsUrl = nonIfsUrl;
-    }
-
-    public Boolean isHasAssessmentPanel() {
-        return hasAssessmentPanel;
-    }
-
-    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
-        this.hasAssessmentPanel = hasAssessmentPanel;
-    }
-
-    public Boolean isHasInterviewStage() {
-        return hasInterviewStage;
-    }
-
-    public void setHasInterviewStage(Boolean hasInterviewStage) {
-        this.hasInterviewStage = hasInterviewStage;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {
@@ -978,6 +945,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 covidType == CovidType.DE_MINIMIS ||
                         covidType == CovidType.DE_MINIMIS_ROUND_2
                 );
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isSbriPilot() {
+        return SBRI_PILOT.equals(name);
     }
 
 }

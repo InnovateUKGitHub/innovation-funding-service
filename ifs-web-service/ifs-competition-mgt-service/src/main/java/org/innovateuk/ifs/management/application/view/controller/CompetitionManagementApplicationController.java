@@ -12,11 +12,12 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -53,6 +54,10 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
     @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    @Autowired
+    private InterviewResponseRestService interviewResponseRestService;
+    @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Autowired
     private ManagementApplicationPopulator managementApplicationPopulator;
@@ -67,8 +72,7 @@ public class CompetitionManagementApplicationController {
                                         BindingResult bindingResult,
                                         UserResource user,
                                         Model model) {
-        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user);
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", managementApplicationPopulator.populate(applicationId, user));
         return "competition-mgt-application-overview";
     }
 
@@ -163,5 +167,26 @@ public class CompetitionManagementApplicationController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
+    }
+
+    @GetMapping("/{applicationId}/download-response")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadResponse(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+
+        return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
+                interviewResponseRestService.findResponse(applicationId).getSuccess());
+    }
+
+    @GetMapping("/{applicationId}/download-feedback")
+    @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadFeedback(Model model,
+                                                       @PathVariable("applicationId") long applicationId) {
+        return getFileResponseEntity(interviewAssignmentRestService.downloadFeedback(applicationId).getSuccess(),
+                interviewAssignmentRestService.findFeedback(applicationId).getSuccess());
     }
 }

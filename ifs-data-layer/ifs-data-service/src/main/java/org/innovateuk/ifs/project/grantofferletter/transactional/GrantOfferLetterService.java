@@ -53,8 +53,17 @@ public interface GrantOfferLetterService {
     @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )
     ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @SecuredBySpring(value = "DELETE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to delete a grant offer letter" )
+    ServiceResult<Void> removeAdditionalContractFileEntry(Long projectId);
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'DELETE_SIGNED_GRANT_OFFER')")
     ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId);
+
+    @PreAuthorize("hasAnyAuthority('system_maintainer' , 'project_finance')")
+    @SecuredBySpring(value = "RESET_GRANT_OFFER_LETTER", securedType = ProjectResource.class, description = "Only project finance user or system maintenance user are able to reset a GOL" )
+    @Activity(projectId = "projectId", type = ActivityType.GRANT_OFFER_LETTER_RESET)
+    ServiceResult<Void> resetGrantOfferLetter(Long projectId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a additional contract for Appendix 2 if any")

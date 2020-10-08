@@ -267,7 +267,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     @SafeVarargs
-    public final CompetitionResourceBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
+    public final CompetitionResourceBuilder withFinanceRowTypes(List<FinanceRowType>... financeRowTypes) {
         return withArray((financeRowType, competitionResource) -> competitionResource.setFinanceRowTypes(financeRowType), financeRowTypes);
     }
 
@@ -284,6 +284,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((projectSetupStage, competitionResource) -> competitionResource.setProjectSetupStages(projectSetupStage), projectSetupStages);
     }
 
+    public CompetitionResourceBuilder withCompetitionTypeEnum(CompetitionTypeEnum... types) {
+        return withArray((type, competitionResource) -> competitionResource.setCompetitionTypeEnum(type), types);
+
+    }
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);
@@ -293,4 +297,5 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     protected CompetitionResource createInitial() {
         return new CompetitionResource();
     }
+
 }

@@ -132,6 +132,13 @@ public class GrantOfferLetterController {
 
         return redirectToGrantOfferLetterPage(projectId);
     }
+    
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PostMapping(value = "/upload-annex", params = "removeAdditionalContractFileClicked")
+    public String removeAdditionalContractFile(@P("projectId") @PathVariable("projectId") final Long projectId) {
+        grantOfferLetterService.removeAdditionalContractFile(projectId);
+        return redirectToGrantOfferLetterPage(projectId);
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping("/signed")
@@ -243,7 +250,10 @@ public class GrantOfferLetterController {
 
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        return new GrantOfferLetterModel(competition.getId(),
+        return new GrantOfferLetterModel(
+                competition.isProcurement() ? "Contract" : "Grant offer letter",
+                competition.isProcurement() ? "Contract" : "Letter",
+                competition.getId(),
                 competition.isH2020(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),

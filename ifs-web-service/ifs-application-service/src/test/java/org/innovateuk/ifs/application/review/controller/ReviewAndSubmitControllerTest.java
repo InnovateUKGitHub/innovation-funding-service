@@ -3,21 +3,20 @@ package org.innovateuk.ifs.application.review.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
+import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,17 +26,17 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<ReviewAndSubmitController> {
 
-    @Mock
-    private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
     @Mock
     private ApplicationRestService applicationRestService;
     @Mock
@@ -46,12 +45,6 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Mock
     private UserService userService;
-    @Mock
-    private QuestionStatusRestService questionStatusRestService;
-    @Mock
-    private UserRestService userRestService;
-    @Mock
-    private QuestionRestService questionRestService;
 
     @Override
     protected ReviewAndSubmitController supplyControllerUnderTest() {
@@ -99,7 +92,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         mockMvc.perform(post("/application/" + application.getId() + "/confirm-submit")
                 .param("agreeTerms", "yes"))
-                .andExpect(redirectedUrl("/application/1/confirm-submit"));
+                .andExpect(redirectedUrl("/application/1"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
         verify(applicationRestService, never()).updateApplicationState(any(Long.class), any(ApplicationState.class));
@@ -142,7 +135,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     public void h2020GrantTransferTrack() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.GRANT)
-                .withCompetitionTypeName("Horizon 2020")
+                .withCompetitionTypeEnum(HORIZON_2020)
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -169,4 +162,51 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId()));
     }
+
+    @Test
+    public void ktpApplicationTrackForProjectSetupCompletion() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("application-track"))
+                .andReturn();
+
+        TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
+
+        assertFalse(model.isDisplayIfsAssessmentInformation());
+    }
+
+    @Test
+    public void ktpApplicationTrackForCompetitionCloseCompletion() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("application-track"))
+                .andReturn();
+
+        TrackViewModel model = (TrackViewModel) result.getModelAndView().getModel().get("model");
+
+        assertFalse(model.isDisplayIfsAssessmentInformation());
+    }
+
 }

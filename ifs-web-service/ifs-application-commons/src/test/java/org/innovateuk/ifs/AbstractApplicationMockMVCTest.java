@@ -195,7 +195,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .build();
 
-        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+        competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource();
 
@@ -565,7 +565,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
-                .getId(), SMALL, "ABC 123", null);
+                .getId(), SMALL, "ABC 123", null, "");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new ExcludedCostCategory();
         costCategory.addCost(new GrantClaimPercentage(1L, BigDecimal.valueOf(50), applicationFinanceResource.getId()));

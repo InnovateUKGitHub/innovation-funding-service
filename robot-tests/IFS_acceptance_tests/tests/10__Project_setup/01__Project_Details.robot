@@ -112,17 +112,18 @@ Lead partner can see the project setup page
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
-    Given the user clicks the button/link    link = Dashboard
-    Then the user should see the element    jQuery = h2:contains("Set up your project")
+    Given the user clicks the button/link                     link = Dashboard
+    And the user clicks the application tile if displayed
+    Then the user should see the element                      jQuery = h2:contains("Set up your project")
     And the user can see the application overview
 
 Lead partner is able to see finances without an error
-    [Documentation]  INFUND-7634
+    [Documentation]  INFUND-7634  IFS-8066
     [Tags]
     Given the user clicks the button/link    jQuery = button:contains("Finances summary")
     When the user clicks the button/link     link = View finances
     Then the user should see the element     jQuery = h2:contains("Finance summary")
-    And the user clicks the button/link      link = Back to feedback overview
+    And the user clicks the button/link      link = Back to application overview
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
@@ -345,7 +346,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 the user can see the application overview
     the user navigates to the page       ${Project_In_Setup_Page}
     the user clicks the button/link      link = view application feedback
-    the user should see the element      jQuery = .success-alert:contains("Congratulations, your application has been successful") ~ h2:contains("Application details")
+    the user should see the element      jQuery = .success-alert:contains("Congratulations, your application has been successful")
 
 the user should see the project details
     the user should see the element    jQuery = p:contains("As the lead you must complete these details on behalf of the overall project.")

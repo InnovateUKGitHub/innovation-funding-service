@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
+import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class YourProjectCostsForm {
 
@@ -27,6 +29,24 @@ public class YourProjectCostsForm {
     private Map<String, OtherCostRowForm> otherRows = new LinkedHashMap<>();
 
     private VatForm vatForm;
+
+    private Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows = new LinkedHashMap<>();
+
+    private Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows = new LinkedHashMap<>();
+
+    private Map<String, ConsumablesRowForm> consumableCostRows = new LinkedHashMap<>();
+
+    private Map<String, KnowledgeBaseCostRowForm> knowledgeBaseCostRows = new LinkedHashMap<>();
+
+    private Map<String, AssociateSupportCostRowForm> associateSupportCostRows = new LinkedHashMap<>();
+
+    private Map<String, EstateCostRowForm> estateCostRows = new LinkedHashMap<>();
+
+    private Map<String, KtpTravelRowForm> ktpTravelCostRows = new LinkedHashMap<>();
+
+    private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
+
+    private JustificationForm justificationForm = new JustificationForm();
 
     private Boolean eligibleAgreement;
 
@@ -110,17 +130,93 @@ public class YourProjectCostsForm {
         this.labour = labour;
     }
 
-    /* View methods. */
-    public BigDecimal getTotalLabourCosts() {
-        return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
+    public Map<String, AssociateSalaryCostRowForm> getAssociateSalaryCostRows() {
+        return associateSalaryCostRows;
     }
 
+    public void setAssociateSalaryCostRows(Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows) {
+        this.associateSalaryCostRows = associateSalaryCostRows;
+    }
+
+    public Map<String, AssociateSupportCostRowForm> getAssociateSupportCostRows() {
+        return associateSupportCostRows;
+    }
+
+    public void setAssociateSupportCostRows(Map<String, AssociateSupportCostRowForm> associateSupportCostRows) {
+        this.associateSupportCostRows = associateSupportCostRows;
+    }
+
+    public Map<String, EstateCostRowForm> getEstateCostRows() {
+        return estateCostRows;
+    }
+
+    public void setEstateCostRows(Map<String, EstateCostRowForm> estateCostRows) {
+        this.estateCostRows = estateCostRows;
+    }
+
+    public AdditionalCompanyCostForm getAdditionalCompanyCostForm() {
+        return additionalCompanyCostForm;
+    }
+
+    public void setAdditionalCompanyCostForm(AdditionalCompanyCostForm additionalCompanyCostForm) {
+        this.additionalCompanyCostForm = additionalCompanyCostForm;
+    }
+
+    public Map<String, AssociateDevelopmentCostRowForm> getAssociateDevelopmentCostRows() {
+        return associateDevelopmentCostRows;
+    }
+
+    public void setAssociateDevelopmentCostRows(Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows) {
+        this.associateDevelopmentCostRows = associateDevelopmentCostRows;
+    }
+
+    public Map<String, ConsumablesRowForm> getConsumableCostRows() {
+        return consumableCostRows;
+    }
+
+    public void setConsumableCostRows(Map<String, ConsumablesRowForm> consumableCostRows) {
+        this.consumableCostRows = consumableCostRows;
+    }
+
+    public Map<String, KnowledgeBaseCostRowForm> getKnowledgeBaseCostRows() {
+        return knowledgeBaseCostRows;
+    }
+
+    public void setKnowledgeBaseCostRows(Map<String, KnowledgeBaseCostRowForm> knowledgeBaseCostRows) {
+        this.knowledgeBaseCostRows = knowledgeBaseCostRows;
+    }
+
+    public Map<String, KtpTravelRowForm> getKtpTravelCostRows() {
+        return ktpTravelCostRows;
+    }
+
+    public void setKtpTravelCostRows(Map<String, KtpTravelRowForm> ktpTravelCostRows) {
+        this.ktpTravelCostRows = ktpTravelCostRows;
+    }
+
+    public JustificationForm getJustificationForm() {
+        return justificationForm;
+    }
+
+    public void setJustificationForm(JustificationForm justificationForm) {
+        this.justificationForm = justificationForm;
+    }
+
+    /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
     }
 
     public BigDecimal getProjectVatTotal() {
         return getOrganisationFinanceTotal().add(getVatTotal());
+    }
+
+    public BigDecimal getTotalLabourCosts() {
+        return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
+    }
+
+    public BigDecimal getTotalAssociateSalaryCosts() {
+        return calculateTotal(associateSalaryCostRows);
     }
 
     public BigDecimal getTotalOverheadCosts() {
@@ -161,6 +257,30 @@ public class YourProjectCostsForm {
         return calculateTotal(otherRows);
     }
 
+    public BigDecimal getTotalAssociateSupportCosts() {
+        return calculateTotal(associateSupportCostRows);
+    }
+
+    public BigDecimal getTotalAssociateDevelopmentCosts() {
+        return calculateTotal(associateDevelopmentCostRows);
+    }
+
+    public BigDecimal getTotalConsumableCosts() {
+        return calculateTotal(consumableCostRows);
+    }
+
+    public BigDecimal getTotalKnowledgeBaseCosts() {
+        return calculateTotal(knowledgeBaseCostRows);
+    }
+
+    public BigDecimal getTotalEstateCosts() {
+        return calculateTotal(estateCostRows);
+    }
+
+    public BigDecimal getTotalKtpTravelCosts() {
+        return calculateTotal(ktpTravelCostRows);
+    }
+
     public BigDecimal getOrganisationFinanceTotal() {
         return getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
@@ -169,17 +289,75 @@ public class YourProjectCostsForm {
                 .add(getTotalCapitalUsageCosts())
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())
-                .add(getTotalOtherCosts());
+                .add(getTotalOtherCosts())
+                .add(getTotalAssociateSalaryCosts())
+                .add(getTotalAssociateDevelopmentCosts())
+                .add(getTotalAssociateSupportCosts())
+                .add(getTotalConsumableCosts())
+                .add(getTotalKnowledgeBaseCosts())
+                .add(getTotalEstateCosts())
+                .add(getTotalKtpTravelCosts());
     }
 
     private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {
+        return calculateTotal(costRows.values());
+    }
+
+    private BigDecimal calculateTotal(Collection<? extends AbstractCostRowForm> costRows) {
+        return calculateTotal(costRows.stream());
+    }
+
+    private BigDecimal calculateTotal(Stream<? extends AbstractCostRowForm> costRows) {
         return costRows
-                .values()
-                .stream()
                 .map(AbstractCostRowForm::getTotal)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
+    }
 
+    public void recalculateTotals() {
+        getLabour().getRows().forEach((id, row) -> {
+            LabourCost cost = row.toCost(null);
+            row.setTotal(cost.getTotal(getLabour().getWorkingDaysPerYear()));
+            row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
+        });
+        getOverhead().setTotal(getOverhead().getTotal());
+        recalculateTotal(getMaterialRows());
+        recalculateTotal(getCapitalUsageRows());
+        recalculateTotal(getSubcontractingRows());
+        recalculateTotal(getTravelRows());
+        recalculateTotal(getOtherRows());
+
+        recalculateTotal(getProcurementOverheadRows());
+
+        recalculateTotal(getAssociateSalaryCostRows());
+        recalculateTotal(getAssociateDevelopmentCostRows());
+        recalculateTotal(getConsumableCostRows());
+        recalculateTotal(getKnowledgeBaseCostRows());
+        recalculateTotal(getEstateCostRows());
+        recalculateTotal(getAssociateSupportCostRows());
+        recalculateTotal(getKtpTravelCostRows());
+    }
+
+    private void recalculateTotal(Map<String, ? extends AbstractCostRowForm> rows) {
+        rows.forEach((id, row) -> {
+            FinanceRowItem cost = row.toCost(null);
+            row.setTotal(cost.getTotal());
+        });
+    }
+
+    public BigDecimal getTotalKtpTravelAssociateCosts() {
+        return calculateTotal(ktpTravelCostRows
+                .values()
+                .stream()
+                .filter(cost -> cost.getType() != null && cost.getType() == KtpTravelCostType.ASSOCIATE));
+    }
+
+
+    public BigDecimal getTotalKtpTravelSupervisorCosts() {
+        return calculateTotal(ktpTravelCostRows
+                .values()
+                .stream()
+                .filter(cost -> cost.getType() != null && cost.getType() == KtpTravelCostType.SUPERVISOR));
     }
 }

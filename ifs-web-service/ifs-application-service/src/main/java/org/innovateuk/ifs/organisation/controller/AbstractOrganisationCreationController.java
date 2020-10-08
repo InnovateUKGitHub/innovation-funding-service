@@ -2,7 +2,13 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
@@ -35,6 +41,7 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String FIND_ORGANISATION = "find-organisation";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
     protected static final String INTERNATIONAL_CONFIRM_ORGANISATION = "international-confirm-organisation";
+    protected static final String KNOWLEDGE_BASE_CONFIRM_ORGANISATION = "knowledge-base-confirm-organisation";
     protected static final String INTERNATIONAL_ORGANISATION = "international-organisation";
     protected static final String INTERNATIONAL_ORGANISATION_DETAILS = "international-organisation-details";
 
@@ -61,6 +68,12 @@ public abstract class AbstractOrganisationCreationController {
 
     @Autowired
     protected OrganisationJourneyEnd organisationJourneyEnd;
+
+    @Autowired
+    private InviteRestService inviteRestService;
+
+    @Autowired
+    private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
     protected Validator validator;
 
@@ -156,7 +169,21 @@ public abstract class AbstractOrganisationCreationController {
                 model.addAttribute("subtitle", "Create new application");
             }
         } else {
-            model.addAttribute("subtitle", "Create your account");
+            model.addAttribute("subtitle", "Create an account");
+        }
+    }
+
+    protected long getCompetitionIdFromInviteOrCookie(HttpServletRequest request) {
+        if (registrationCookieService.isLeadJourney(request)) {
+            return registrationCookieService.getCompetitionIdCookieValue(request).orElseThrow(ObjectNotFoundException::new);
+        } else if (registrationCookieService.getProjectInviteHashCookieValue(request).isPresent()) {
+            InviteAndIdCookie projectInvite = registrationCookieService.getProjectInviteHashCookieValue(request).get();
+            SentProjectPartnerInviteResource invite = projectPartnerInviteRestService.getInviteByHash(projectInvite.getId(), projectInvite.getHash()).getSuccess();
+            return invite.getCompetitionId();
+        } else {
+            String applicationInviteHash = registrationCookieService.getInviteHashCookieValue(request).orElseThrow(ObjectNotFoundException::new);
+            ApplicationInviteResource invite = inviteRestService.getInviteByHash(applicationInviteHash).getSuccess();
+            return invite.getCompetitionId();
         }
     }
 }

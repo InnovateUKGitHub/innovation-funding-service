@@ -35,22 +35,26 @@
                       th:with="pageTitle='Target start date',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('projectStartDate')} ? 'govuk-form-group--error'">
+                 th:classappend="|${model.ktpCompetition ? 'govuk-!-margin-bottom-1' : ''} ${#fields.hasErrors('projectStartDate') ? 'govuk-form-group--error' : ''}|">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="projectStartDate">
-                        <h2 class="govuk-fieldset__heading">Change target start date</h2>
-                    </legend>
-                    <span class="govuk-hint">Projects must start on the first day of a month.</span>
-                    <th:block th:if="${#fields.hasErrors('projectStartDate')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('projectStartDate')}"
-                              th:text="${err}"/>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="projectStartDate">
+                            <h2 class="govuk-fieldset__heading">Change target start date</h2>
+                        </legend>
+                        <span class="govuk-hint">Projects must start on the first day of a month.</span>
+                        <th:block th:if="${#fields.hasErrors('projectStartDate')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('projectStartDate')}"
+                                  th:text="${err}"/>
+                        </th:block>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate-date', field='projectStartDate', dayReadonly=true)"/>
                     </th:block>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate-date', field='projectStartDate', dayReadonly=true)"/>
                 </fieldset>
             </div>
 
-            <p class="govuk-body">We can change the target start date up until the spend profile is generated.</p>
+            <th:block th:unless="${model.ktpCompetition}">
+                <p class="govuk-body">We can change the target start date up until the spend profile is generated.</p>
+            </th:block>
 
             <h2 class="govuk-heading-m">Project duration</h2>
             <p class="govuk-body">

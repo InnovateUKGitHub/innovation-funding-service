@@ -2,11 +2,15 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterModelPopulator;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -43,6 +47,12 @@ public class GrantOfferLetterController {
     @Autowired
     private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ProjectRestService projectRestService;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
@@ -64,8 +74,11 @@ public class GrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping("/confirmation")
-    public String confirmation(@P("projectId")@PathVariable("projectId") Long projectId, Model model) {
+    public String confirmation(@PathVariable long projectId, Model model) {
         model.addAttribute("projectId", projectId);
+        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        model.addAttribute("title", competition.isProcurement() ? "Contract" : "Grant offer letter");
         return BASE_DIR + "/grant-offer-letter-confirmation";
     }
 
@@ -117,7 +130,7 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
-    @GetMapping("/grant-offer-letter")
+    @GetMapping("/download")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
@@ -130,7 +143,7 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
-    @GetMapping("/signed-grant-offer-letter")
+    @GetMapping("/signed-download")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(

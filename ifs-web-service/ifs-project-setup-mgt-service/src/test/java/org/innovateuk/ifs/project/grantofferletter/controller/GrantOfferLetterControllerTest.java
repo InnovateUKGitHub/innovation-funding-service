@@ -353,6 +353,24 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     }
 
     @Test
+    public void removeAdditionalContractLetterFile() throws Exception {
+
+        Long projectId = 123L;
+
+        when(grantOfferLetterService.removeAdditionalContractFile(projectId)).thenReturn(serviceSuccess());
+
+        MockMultipartFile fileToDelete = new MockMultipartFile("annex", "annex.pdf", "application/pdf", "Annex content".getBytes());
+
+        mockMvc.perform(
+                fileUpload("/project/"+ projectId  + "/grant-offer-letter/upload-annex").
+                        file(fileToDelete).param("removeAdditionalContractFileClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send"));
+
+        verify(grantOfferLetterService).removeAdditionalContractFile(projectId);
+    }
+
+    @Test
     public void testDownloadAnnexFileEntryNotPresent() throws Exception {
 
         Long projectId = 1L;
@@ -659,7 +677,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   "templateName",
                                                                   industrialTable,
                                                                   academicTable,
-                                                                  summaryTable));
+                                                                  summaryTable,
+                                                                 false));
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));

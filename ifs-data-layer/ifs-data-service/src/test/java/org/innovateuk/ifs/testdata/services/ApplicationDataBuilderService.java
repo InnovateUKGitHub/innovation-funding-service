@@ -554,20 +554,22 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             });
 
-            if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
-                builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
-                        60L,
-                        new BigDecimal("100000"),
-                        new BigDecimal("200000"),
-                        new BigDecimal("300000"),
-                        new BigDecimal("400000"));
-            } else {
-                builder[0] = builder[0].withEmployeesAndTurnover(50L,
-                        new BigDecimal("700000"));
+            if (!competition.isKtp()) {
+                if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
+                    builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
+                            60L,
+                            new BigDecimal("100000"),
+                            new BigDecimal("200000"),
+                            new BigDecimal("300000"),
+                            new BigDecimal("400000"));
+                } else {
+                    builder[0] = builder[0].withEmployeesAndTurnover(50L,
+                            new BigDecimal("700000"));
+                }
             }
 
             return builder[0].withOrganisationSize(SMALL).
-                    withWorkPostcode("AB12 3CD");
+                    withLocation();
         };
         return applicationFinanceDataBuilder.
                 withApplication(application).
@@ -602,7 +604,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withExceptionsStaff(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
                         withUploadedJesForm().
-                        withWorkPostcode("AB12 3CD"));
+                        withLocation());
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(

@@ -22,6 +22,7 @@ import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
+import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
@@ -53,6 +54,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -82,7 +84,7 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
@@ -136,7 +138,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionSetupService competitionSetupService;
     protected QuestionSetupService questionSetupService;
     protected QuestionSetupCompetitionService questionSetupCompetitionService;
-    protected QuestionSetupTemplateService questionSetupTemplateService;
+    protected QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
     protected PublicContentService publicContentService;
     protected CompetitionSetupFinanceService competitionSetupFinanceService;
     protected PublicContentRepository publicContentRepository;
@@ -221,6 +223,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected RoleProfileStatusRepository roleProfileStatusRepository;
     protected CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
     protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
+    protected InviteUserService inviteUserService;
+    protected CofunderAssignmentService cofunderAssignmentService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -300,7 +304,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
         questionSetupCompetitionService = serviceLocator.getBean(QuestionSetupCompetitionService.class);
-        questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
+        questionSetupAddAndRemoveService = serviceLocator.getBean(QuestionSetupAddAndRemoveService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         documentsService = serviceLocator.getBean(DocumentsService.class);
@@ -341,6 +345,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionOrganisationConfigRepository = serviceLocator.getBean((CompetitionOrganisationConfigRepository.class));
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
         projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
+        inviteUserService = serviceLocator.getBean(InviteUserService.class);
+        cofunderAssignmentService = serviceLocator.getBean(CofunderAssignmentService.class);
     }
 
     protected UserResource compAdmin() {

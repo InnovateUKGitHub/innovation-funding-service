@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.registration.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class AssessorServiceImpl implements AssessorService {
     private AssessorRestService assessorRestService;
 
     @Override
-    public ServiceResult<Void> createAssessorByInviteHash(String inviteHash, AssessorRegistrationForm registrationForm, AddressResource address) {
+    public ServiceResult<Void> createAssessorByInviteHash(String inviteHash, RegistrationForm registrationForm, AddressResource address) {
         UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
         userRegistrationResource.setFirstName(registrationForm.getFirstName());
         userRegistrationResource.setLastName(registrationForm.getLastName());

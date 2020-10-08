@@ -119,6 +119,12 @@ public class GrantOfferLetterController {
         return grantOfferLetterService.removeGrantOfferLetterFileEntry(projectId).toDeleteResponse();
     }
 
+    @DeleteMapping(value = "/{projectId}/additional-contract", produces = "application/json")
+    public RestResult<Void> removeAdditionalContractFile(@PathVariable(value = "projectId") long projectId) {
+
+        return grantOfferLetterService.removeAdditionalContractFileEntry(projectId).toDeleteResponse();
+    }
+
     @DeleteMapping(value = "/{projectId}/signed-grant-offer-letter", produces = "application/json")
     public RestResult<Void> removeSignedGrantOfferLetterFile(@PathVariable(value = "projectId") long projectId) {
 
@@ -180,5 +186,11 @@ public class GrantOfferLetterController {
     public RestResult<Void> importSignedOfferLetter(
             @PathVariable long projectId) {
         return grantOfferLetterService.importGrantOfferLetter(projectId).toPostResponse();
+    }
+
+    @DeleteMapping(value = "/{projectId}/grant-offer/reset")
+    public RestResult<Void> resetGrantOfferLetter(
+            @PathVariable long projectId) {
+        return grantOfferLetterService.resetGrantOfferLetter(projectId).toDeleteResponse();
     }
 }

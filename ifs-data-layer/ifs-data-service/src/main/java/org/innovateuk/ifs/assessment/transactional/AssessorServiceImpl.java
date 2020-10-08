@@ -53,6 +53,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -134,7 +135,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     @Override
     public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
-        return getAssessor(assessorId)
+        return getUser(assessorId)
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(
                                 profile -> {
@@ -238,10 +239,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         return find(profileRepository.findById(profileId), notFoundError(Profile.class, profileId));
     }
 
-    private ServiceResult<User> getAssessor(long assessorId) {
-        return find(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR), notFoundError(User.class, assessorId));
-    }
-
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {
         return assessmentInviteService.getInvite(inviteHash);
     }
@@ -253,8 +250,17 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {
-        return registrationService.createUser(userRegistrationResource).andOnSuccess(
-                created -> registrationService.activateAssessorAndSendDiversitySurvey(created.getId()).andOnSuccessReturn(
+        return registrationService.createUser(anUserCreationResource()
+                .withFirstName(userRegistrationResource.getFirstName())
+                .withLastName(userRegistrationResource.getLastName())
+                .withEmail(userRegistrationResource.getEmail())
+                .withPassword(userRegistrationResource.getPassword())
+                .withAddress(userRegistrationResource.getAddress())
+                .withPhoneNumber(userRegistrationResource.getPhoneNumber())
+                .withRole(Role.ASSESSOR)
+                .build())
+                .andOnSuccess(
+                        created -> registrationService.activateAssessorAndSendDiversitySurvey(created.getId()).andOnSuccessReturn(
                         result -> userRepository.findById(created.getId()).orElse(null)
                 )
         );

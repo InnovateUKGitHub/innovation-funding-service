@@ -12,7 +12,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
-import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder.newCompetitionApplicationConfigResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,6 +69,12 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Mock
     private YourFundingFormValidator yourFundingFormValidator;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Test
     public void viewYourFunding() throws Exception {
@@ -239,6 +247,12 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         String rowId = "123";
         OtherFundingRowForm row = new OtherFundingRowForm();
         row.setCostId(Long.valueOf(rowId));
+        Long competitionId = 4L;
+
+        ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        CompetitionResource competition = newCompetitionResource().build();
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         doAnswer((invocation) -> {
             YourFundingPercentageForm form = (YourFundingPercentageForm) invocation.getArguments()[0];

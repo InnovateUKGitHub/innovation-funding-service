@@ -13,8 +13,11 @@ public class FinanceSummaryTableRow {
     private final BigDecimal fundingSought;
     private final BigDecimal otherFunding;
     private final BigDecimal contribution;
+    private final BigDecimal contributionPercentage;
 
     private final boolean complete;
+    private final boolean showViewFinancesLink;
+    private final String url;
 
     public FinanceSummaryTableRow(Long organisationId,
                                   String organisationName,
@@ -24,7 +27,10 @@ public class FinanceSummaryTableRow {
                                   BigDecimal fundingSought,
                                   BigDecimal otherFunding,
                                   BigDecimal contribution,
-                                  boolean complete) {
+                                  BigDecimal contributionPercentage,
+                                  boolean complete,
+                                  boolean showViewFinancesLink,
+                                  String url) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.status = status;
@@ -33,7 +39,10 @@ public class FinanceSummaryTableRow {
         this.fundingSought = fundingSought;
         this.otherFunding = otherFunding;
         this.contribution = contribution;
+        this.contributionPercentage = contributionPercentage;
         this.complete = complete;
+        this.showViewFinancesLink = showViewFinancesLink;
+        this.url = url;
     }
 
     public Long getOrganisationId() {
@@ -68,8 +77,20 @@ public class FinanceSummaryTableRow {
         return contribution;
     }
 
+    public BigDecimal getContributionPercentage() {
+        return contributionPercentage;
+    }
+
     public boolean isComplete() {
         return complete;
+    }
+
+    public boolean isShowViewFinancesLink() {
+        return showViewFinancesLink;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     /* view logic */
@@ -87,7 +108,10 @@ public class FinanceSummaryTableRow {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                false
+                BigDecimal.ZERO,
+                false,
+                false,
+                null
         );
     }
 }

@@ -66,7 +66,7 @@ Comp admin completes ths competition setup
     [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition details")
     Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
-    And the user fills in the CS Assessors
+    And the user fills in the CS Assessors       GRANT
     When the user clicks the button/link         link = Public content
     Then the user fills in the Public content and publishes  NoGrowthTable
     And the user clicks the button/link          link = Return to setup overview
@@ -131,7 +131,7 @@ Once the project growth table is selected
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
-    And the user fills in the CS Assessors
+    And the user fills in the CS Assessors                      GRANT
     And the user fills in the CS Documents in other projects
     When the user clicks the button/link                        link = Public content
     Then the user fills in the Public content and publishes     GrowthTable
@@ -375,14 +375,14 @@ RTOs are not allowed to apply on Competition where only Businesses are allowed t
     [Documentation]  IFS-1015
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
-    When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
+    When the user should see the element           jQuery = h1:contains("${invalidOrganisationValidationMessage}")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
-    When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
+    When the user should see the element           jQuery = h1:contains("${invalidOrganisationValidationMessage}")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 The lead applicant checks for terms and conditions partners status
@@ -419,7 +419,7 @@ the user should see that the funding depends on the research area
     the user clicks the button/link  link = Your project finances
 
 the user should see his finances empty
-    the user should see the element  jQuery = thead:contains("Total project costs") ~ *:contains("£0")
+    the user should see the element  jQuery = thead:contains("Total costs") ~ *:contains("0")
 
 the user enters value to field
     [Arguments]  ${field}  ${value}
