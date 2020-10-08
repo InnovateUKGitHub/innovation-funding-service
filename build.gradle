@@ -92,7 +92,7 @@ wrapper {
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
 
-def nexusRepository = project.hasProperty('nexus_repository') ? project.property('nexus_repository').toString() : ""
+def nexusRepository = project.hasProperty('nexusRepository') ? project.property('nexusRepository').toString() : ""
 
 apply plugin: 'maven-publish'
 
