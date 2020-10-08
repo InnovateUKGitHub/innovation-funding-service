@@ -18,8 +18,8 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
     private static final Logger LOG = LoggerFactory.getLogger(InternalUserDataBuilder.class);
 
     @Override
-    public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber) {
-        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, emailAddress, phoneNumber, data.getRole(), data)));
+    public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, String organisation) {
+        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, emailAddress, phoneNumber, role, null, data)));
     }
 
     public static InternalUserDataBuilder newInternalUserData(ServiceLocator serviceLocator) {
