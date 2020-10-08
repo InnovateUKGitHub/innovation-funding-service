@@ -59,7 +59,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "Co funder can see can see all Organisations")
     public boolean cofunderCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isCoFunder(user);
+        return isCoFunder(user) && organisationLinkedToAnApplication(organisation);
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")

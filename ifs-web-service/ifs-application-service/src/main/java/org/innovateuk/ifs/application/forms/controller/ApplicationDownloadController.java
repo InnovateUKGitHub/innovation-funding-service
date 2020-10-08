@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'cofunder')")
 public class ApplicationDownloadController {
 
     @Autowired
@@ -61,14 +61,14 @@ public class ApplicationDownloadController {
         ProcessRoleResource processRole = processRoles.stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()
-                .orElseGet(() -> leadRoleIfUserIsMonitoringOfficer(processRoles, user));
+                .orElseGet(() -> impersonateLeadRole(processRoles, user));
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-    private ProcessRoleResource leadRoleIfUserIsMonitoringOfficer(List<ProcessRoleResource> processRoles, UserResource user) {
-        if (user.hasRole(Role.MONITORING_OFFICER)) {
+    private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
+        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.COFUNDER)) {
                 return processRoles.stream()
                         .filter(pr -> pr.getRole().equals(Role.LEADAPPLICANT))
                         .findFirst()
