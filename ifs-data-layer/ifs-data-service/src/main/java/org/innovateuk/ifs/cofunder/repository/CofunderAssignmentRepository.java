@@ -26,7 +26,7 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
             "SUM(CASE WHEN p.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.REJECTED THEN 1 ELSE 0 END)," +
             "SUM(CASE WHEN p.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.ACCEPTED THEN 1 ELSE 0 END)" +
             ") " +
-            "FROM CofunderAssignment assignment" +
+            "FROM CofunderAssignment assignment " +
             "INNER JOIN Application application ON application.id = assignment.target.id " +
             "INNER JOIN Competition competition ON competition.id = application.competition " +
             "WHERE assignment.participant.id = :userId " +
