@@ -57,6 +57,11 @@ public class OrganisationPermissionRules {
         return isExternalFinanceUser(user);
     }
 
+    @PermissionRule(value = "READ", description = "Co funder can see can see all Organisations")
+    public boolean cofunderCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isCoFunder(user);
+    }
+
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
