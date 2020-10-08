@@ -6,7 +6,7 @@ public class CofunderDashboardCompetitionPreviousResource {
 
     private long competitionId;
     private String competitionName;
-    private long reviewed;
+    private long submitted;
     private FundingType fundingType;
 
     public CofunderDashboardCompetitionPreviousResource() {
@@ -14,11 +14,11 @@ public class CofunderDashboardCompetitionPreviousResource {
 
     public CofunderDashboardCompetitionPreviousResource(long competitionId,
                                                         String competitionName,
-//                                                        long reviewed,
+                                                        long submitted,
                                                         FundingType fundingType) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-//        this.reviewed = reviewed;
+        this.submitted = submitted;
         this.fundingType = fundingType;
     }
 
@@ -38,12 +38,12 @@ public class CofunderDashboardCompetitionPreviousResource {
         this.competitionName = competitionName;
     }
 
-    public long getReviewed() {
-        return reviewed;
+    public long getSubmitted() {
+        return submitted;
     }
 
-    public void setReviewed(long reviewed) {
-        this.reviewed = reviewed;
+    public void setSubmitted(long submitted) {
+        this.submitted = submitted;
     }
 
     public FundingType getFundingType() {

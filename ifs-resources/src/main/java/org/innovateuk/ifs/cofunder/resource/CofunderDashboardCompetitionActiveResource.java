@@ -25,6 +25,7 @@ public class CofunderDashboardCompetitionActiveResource {
         this.competitionName = competitionName;
         this.cofunderDeadlineDate = cofunderDeadlineDate;
         this.pendingAssessments = pendingAssessments;
+        this.fundingType = fundingType;
     }
 
     public long getCompetitionId() {
