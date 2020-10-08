@@ -187,8 +187,8 @@ publishing {
     repositories {
         maven {
             credentials {
-                username project.findProperty("nexus_username")
-                password project.findProperty("nexus_password")
+                username project.findProperty("nexusUsername")
+                password project.findProperty("nexusPassword")
             }
 
             if (nexusRepository.equals("snapshots")) {
