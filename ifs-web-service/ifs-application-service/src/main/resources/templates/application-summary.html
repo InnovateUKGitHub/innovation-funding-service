@@ -142,6 +142,16 @@
                     </div>
                 </th:block>
 
+                <div th:if="${model.ktpCompetition}" class="govuk-body govuk-!-margin-top-6">
+                    <a th:href="@{/application/{id}/print(id=${model.application.id})}"
+                       class="govuk-link"
+                       rel="nofollow"
+                       target="_blank">
+                        <span class="icon icon-print"></span>
+                        Print application
+                    </a>
+                </div>
+
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>
         </div>
