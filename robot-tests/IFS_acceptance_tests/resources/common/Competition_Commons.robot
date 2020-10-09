@@ -216,13 +216,16 @@ the user marks the KTP Assessed questions as complete with no assessment score o
 
 the user marks the score guidance section as complete
     the user clicks the button/link    jQuery = a:contains('Impact')
-    the user clicks the button/link    jQuery = button:contains('Done')
-    the user navigates to the page     ${server}/management/competition/setup/109/section/application/question/2069/edit
-    the user clicks the button/link    jQuery = button:contains('Done')
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
+
+    sleep    10s
+    #the user navigates to the page     ${server}/management/competition/setup/109/section/application/question/2069/edit
+    the user clicks the button/link    link = Innovation
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
     the user clicks the button/link    jQuery = a:contains('Challenge')
-    the user clicks the button/link    jQuery = button:contains('Done')
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
     the user clicks the button/link    jQuery = a:contains('Cohesiveness')
-    the user clicks the button/link    jQuery = button:contains('Done')
+    the user clicks the button/link    jQuery = .govuk-button:contains("Done")
 
 the user should not see assessment score or feedback settings in assessment questions
     :FOR   ${ELEMENT}   IN    @{programme_questions}
@@ -315,7 +318,7 @@ the assessed questions are marked as complete(procurement)
      the user should see the element                                jQuery = button:contains("Add question")
      the user fills in the Finances questions                       ${growthTable}  false  true
      the user clicks the button/link                                jQuery = button:contains("Done")
-     the user clicks the button/link                                link = Competition details
+     the user clicks the button/link                                link = Back to competition details
 
 the user marks each procurement question as complete
     [Arguments]  ${question_link}
@@ -561,7 +564,7 @@ the user selects the organisational eligibility
     the user clicks the button/link         jQuery = button:contains("Save and continue")
     the user selects the radio button       leadInternationalOrganisationsApplicable  ${CanInternationalOrganisationsLead}
     the user clicks the button/link         jQuery = button:contains("Save and continue")
-    the user clicks the button/link         link = Competition details
+    the user clicks the button/link         link = Back to Competition details
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 the user selects the organisational eligibility to no
