@@ -437,7 +437,8 @@ Application: Scope
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Scope
     Then the user should see the element          jQuery = h1:contains("Scope")
-    And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
+    And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for")
+    And the user should see the element           jQuery = span:contains("assessors")
     When The user fills the empty question fields
     And The user enters text to a text field      id = question.shortTitle  Test heading
     And The user clicks the button/link           jQuery = button:contains('Done')
@@ -460,20 +461,21 @@ Application: Scope Assessment questions
     And the user clicks the button/link              jQuery = button:contains('Done')
     And the user clicks the button/link              link = Test heading
     Then the user should not see the scope feedback
-    [Teardown]    The user clicks the button/link    link = Application
+    [Teardown]    The user clicks the button/link    link = Back to application
 
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
     [Tags]  HappyPath
     Given the user clicks the button/link            link = Project summary
     And the user should see the element              jQuery = h1:contains("Project summary")
-    And the user should see the element             jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
+    And the user should see the element              jQuery = p:contains("You can edit this question for the applicant as well as the guidance for")
+    And the user should see the element              jQuery = span:contains("assessors")
     When The user fills the empty question fields
     And The user clicks the button/link              jQuery = button:contains('Done')
     And the user clicks the button/link              link = Project summary
     Then the user should see the element             jQuery = h1:contains("Project summary")
     And the user checks the question fields
-    [Teardown]  The user clicks the button/link      link = Application
+    [Teardown]  The user clicks the button/link      link = Back to application
 
 Application: Need or challenge
     [Documentation]  INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283 IFS-2776
@@ -513,7 +515,7 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button/link                                               jQuery = button[type="submit"]  #Add question link
+    Given the user clicks the button/link                                               jQuery = button:contains("Add question")  #Add question link
     When the user is able to configure the new question                                 ${customQuestion}
     And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
     Then the user should be able to see the read only view of question correctly        ${customQuestion}

@@ -202,7 +202,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
-    the user clicks the button/link  link = Competition details
+    the user clicks the button/link  link = Back to competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
 the user marks the KTP Assessed questions as complete with no assessment score or feedback
