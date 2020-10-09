@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -32,6 +35,9 @@ public class FinanceLinksUtil {
     @Autowired
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
+    @Autowired
+    private CofunderAssignmentRestService cofunderAssignmentRestService;
+
     public Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
@@ -44,10 +50,17 @@ public class FinanceLinksUtil {
             } else {
                 return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
+        } else if (authenticatedUser.getRoles().contains(COFUNDER)) {
+            if (competition.isKtp()) {
+                CofunderAssignmentResource cofunderAssignmentResource = cofunderAssignmentRestService.getAssignment(authenticatedUser.getId(), application.getId()).getSuccess();
+                if (cofunderAssignmentResource.getState() == CofunderState.ACCEPTED) {
+                    return Optional.of(organisationIdInLink(application.getId(), organisation));
+                }
+            }
         }
 
         if (currentUserRole.isPresent()) {
-            if (applicantProcessRoles().contains(currentUserRole.get().getRole())) {
+            if (applicantProcessRoles().contains(currentUserRole.get().getRole()) ) {
                 if (competition.isKtp()) {
                     //All KTP users can see each others finances.
                     return Optional.of(organisationIdInLink(application.getId(), organisation));
