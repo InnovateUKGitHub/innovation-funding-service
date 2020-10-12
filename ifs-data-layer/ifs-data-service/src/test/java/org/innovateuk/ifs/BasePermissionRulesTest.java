@@ -1,5 +1,7 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -61,6 +63,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected ExternalFinanceRepository externalFinanceRepository;
+
+    @Mock
+    protected CofunderAssignmentRepository cofunderAssignmentRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
@@ -154,6 +159,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         setupLeadPartnerExpectations(project, user, false);
     }
 
+    protected void setupCofunderAssignmentExpectations(Long applicationId, Long userId, boolean userIsCofunder) {
+        when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId))
+                .thenReturn(userIsCofunder);
+    }
+
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();
@@ -172,5 +182,4 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     }
 
     protected abstract T supplyPermissionRulesUnderTest();
-
 }
