@@ -15,6 +15,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.validation.Validator;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.junit.Assert.assertEquals;
@@ -35,6 +37,9 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
 
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private Validator validator;
 
     @Override
     protected ExternalUserRegistrationController supplyControllerUnderTest() {
@@ -68,7 +73,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
     public void testSubmitYourDetails() throws Exception {
         setLoggedInUser(null);
         when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(Role.COFUNDER)
                 .withEmail("blah@gmail.com")
                 .build()));
 
@@ -81,7 +86,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
         registrationForm.setTermsAndConditions("1");
         when(userRestService.createUser(refEq(registrationForm.constructUserCreationResource()
                 .withInviteHash("hash")
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(Role.COFUNDER)
                 .build())))
             .thenReturn(restSuccess(new UserResource()));
         mockMvc.perform(post(URL_PREFIX + "/hash/register")
@@ -90,7 +95,6 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
                 .param("lastName", registrationForm.getLastName())
                 .param("password", registrationForm.getPassword())
                 .param("email", registrationForm.getEmail())
-                .param("phoneNumber", registrationForm.getPhoneNumber())
                 .param("termsAndConditions", registrationForm.getTermsAndConditions()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/registration/hash/register/account-created"));

@@ -157,7 +157,9 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
         Profile profile = getOrCreateUserProfile(user);
         profile.setAddress(addressMapper.mapToDomain(profileDetails.getAddress()));
-        profile.setSimpleOrganisation(new SimpleOrganisation(profileDetails.getSimpleOrganisation()));
+        if (profileDetails.getSimpleOrganisation() != null) {
+            profile.setSimpleOrganisation(new SimpleOrganisation(profileDetails.getSimpleOrganisation()));
+        }
         profileRepository.save(profile);
 
         return serviceSuccess(user);

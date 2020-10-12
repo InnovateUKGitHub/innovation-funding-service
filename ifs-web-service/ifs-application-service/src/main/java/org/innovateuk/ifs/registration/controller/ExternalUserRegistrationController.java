@@ -3,10 +3,8 @@ package org.innovateuk.ifs.registration.controller;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
@@ -22,21 +20,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.newFieldError;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 
 /**
@@ -59,12 +56,8 @@ public class ExternalUserRegistrationController {
     @Autowired
     private AddressRestService addressRestService;
 
-//    @Autowired
-//    @Qualifier("mvcValidator")
-//    private Validator validator;
-
     @Autowired
-    private javax.validation.Validator validator;
+    private Validator validator;
 
     @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
@@ -89,9 +82,8 @@ public class ExternalUserRegistrationController {
             Set<ConstraintViolation<RegistrationForm>> constraintViolations =
                     validator.validate(registrationForm, RegistrationForm.PhoneNumberValidationGroup.class);
 
-            validationHandler.addAnyErrors(
-                    new ValidationMessages(constraintViolations), toFieldErrorWithPath(String.format("form.")), defaultConverters());
-
+            constraintViolations.forEach(violation ->
+                    bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
         }
 
         Supplier<String> failureView = () -> doViewYourDetails(model, invite, loggedInUser);
@@ -116,15 +108,6 @@ public class ExternalUserRegistrationController {
                                                  () -> format("redirect:/registration/%s/register/account-created", inviteHash));
             });
         }
-    }
-
-    private ErrorToObjectErrorConverter toFieldErrorWithPath(String path) {
-        return e -> {
-            if (e.isFieldError()) {
-                return Optional.of(newFieldError(e, path + e.getFieldName(), e.getFieldRejectedValue()));
-            }
-            return Optional.empty();
-        };
     }
 
     @GetMapping(value = "/{inviteHash}/register/account-created")
