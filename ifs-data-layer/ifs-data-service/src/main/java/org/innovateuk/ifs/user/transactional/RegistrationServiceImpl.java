@@ -178,39 +178,38 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> createUserWithUid(UserCreationResource userCreationResource) {
-        String password = getPasswordOrPlaceholder(userCreationResource);
-        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(userCreationResource.getEmail(), password);
+        UserResource userResource = userCreationResource.toUserResource();
+        User user = new User();
+        Profile profile = new Profile();
+        user.setFirstName(userResource.getFirstName());
+        user.setLastName(userResource.getLastName());
+        user.setEmail(userResource.getEmail());
+        user.setPhoneNumber(userResource.getPhoneNumber());
+        user.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
+        user.setRoles(newHashSet(userResource.getRoles()));
+        if (userCreationResource.getInviteHash() != null) {
+            Invite invite = allInviteRepository.getByHash(userCreationResource.getInviteHash());
+            user.setEmail(invite.getEmail());
 
+            if (invite instanceof RoleInvite) {
+                user.setRoles(new HashSet<>(getInternalRoleResources(((RoleInvite) invite).getTarget()).getSuccess()));
+                if (((RoleInvite) invite).getSimpleOrganisation() != null) {
+                    profile.setSimpleOrganisation(((RoleInvite) invite).getSimpleOrganisation());
+                }
+                userCreationResource.setRole(((RoleInvite) invite).getTarget());
+            }
+        }
+
+        String password = getPasswordOrPlaceholder(userCreationResource);
+        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
+    
         return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
-            User user = new User();
-            UserResource userResource = userCreationResource.toUserResource();
-            user.setFirstName(userResource.getFirstName());
-            user.setLastName(userResource.getLastName());
-            user.setEmail(userResource.getEmail());
-            user.setPhoneNumber(userResource.getPhoneNumber());
-            user.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-            user.setRoles(newHashSet(userResource.getRoles()));
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
-            Profile profile = new Profile();
             if (userCreationResource.getAddress() != null) profile.setAddress(addressMapper.mapToDomain(userCreationResource.getAddress()));
-            if (userCreationResource.getInviteHash() != null) {
-                Invite invite = allInviteRepository.getByHash(userCreationResource.getInviteHash());
-                user.setEmail(invite.getEmail());
-
-                if (invite instanceof RoleInvite) {
-                    user.setRoles(new HashSet<>(getInternalRoleResources(((RoleInvite) invite).getTarget()).getSuccess()));
-                    if (((RoleInvite) invite).getSimpleOrganisation() != null) {
-                        profile.setSimpleOrganisation(((RoleInvite) invite).getSimpleOrganisation());
-                    }
-                    userCreationResource.setRole(((RoleInvite) invite).getTarget());
-                }
-            }
             Profile savedProfile = profileRepository.save(profile);
             user.setProfileId(savedProfile.getId());
-            User savedUser = userRepository.save(user);
-
-            return savedUser;
+            return userRepository.save(user);
         });
     }
 

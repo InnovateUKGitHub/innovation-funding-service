@@ -11,6 +11,8 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-7429 The stakeholder has access to Project Details after Finance reviewer is assigned
 ...
+...             IFS-8431 Permission errors for users on application section of project
+...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/Competition_Commons.robot
@@ -23,6 +25,8 @@ ${stakeholderEmail}              stakeHolder@test.com
 ${applicantEmail}                louis.morgan@example.com
 ${previousStakeholderEmail}      blake.wood@gmail.com
 ${uk_based_applicant_new}        aastha.walia@test.com
+${steakHolderCompId}             ${competition_ids["Rolling stock future developments"]}
+${stakeHolderApplicationId}      ${application_ids["New materials for lighter stock"]}
 
 *** Test Cases ***
 The internal user cannot invite a Stakeholder when they have triggered the name validation
@@ -213,6 +217,13 @@ The stakeholder partner organisation provides organisation details and do not se
     And the user selects the checkbox                     agree
     When the user clicks the button/link                  jQuery = button:contains("Continue")
     Then the user should not see an error in the page
+
+Innovation lead can see the application of a project
+    [Documentation]   IFS-8431
+    Given log in as a different user        &{stakeholder_user}
+    When the user navigates to the page     ${server}/project-setup-management/competition/${steakHolderCompId}/status/all
+    And the user clicks the button/link     link = ${stakeHolderApplicationId}
+    Then the user should see the element    id = accordion-questions-heading-1-1
 
 *** Keywords ***
 new user apply for competition and create account

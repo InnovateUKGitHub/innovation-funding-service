@@ -40,7 +40,7 @@ ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competiti
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
 ${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
 ${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
-${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}: Assessment period
+${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_DATE}  to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 # ${IN_ASSESSMENT_COMPETITION_NAME} is the Sustainable living models for the future
@@ -57,7 +57,7 @@ Assessor dashboard contains the correct competitions
 User can view the competition brief
     [Documentation]    INFUND-5494
     Given the user clicks the button/link        link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    When the user clicks the button/link         link = View competition brief (opens in a new window)
+    When the user clicks the button/link         link = See the competition brief (opens in a new window)
     Then The user should get a competition brief window
     And the user should see competition details
     And The user closes the competition brief
@@ -100,7 +100,6 @@ Upcoming competition should be visible
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     And the assessor should see the correct date
     When The user clicks the button/link           link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    And the user should see the element            jQuery = p:contains("You have agreed to be an assessor for the upcoming competition '${UPCOMING_COMPETITION_TO_ASSESS_NAME}'")
     And The user clicks the button/link            link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should see the element           jQuery = h2:contains("Upcoming competitions to assess")
 
@@ -219,7 +218,7 @@ the user should see competition details
     And the user should see the element         jQuery = .govuk-button:contains("Start new application")
 
 the user checks for field validations
-    the user should see the element                     jQuery = h1:contains("Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'")
+    the user should see the element                     jQuery = h1:contains("You are invited to assess the competition: ${READY_TO_OPEN_COMPETITION_NAME}")
     the user should not see the element                 id = rejectComment
     the user selects the radio button                   acceptInvitation  false
     The user enters multiple strings into a text field  id = rejectComment  a${SPACE}  102
@@ -229,7 +228,7 @@ the user checks for field validations
 
 the assessor accepts the invite
     the user navigates to the page      ${Invitation_for_upcoming_comp_assessor1}
-    the user should see the element     jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user should see the element     jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
     the user should see the element     jQuery = h2:contains("${assessmentPeriod}")
     the user selects the radio button   acceptInvitation  true
     the user clicks the button/link     jQuery = button:contains("Confirm")

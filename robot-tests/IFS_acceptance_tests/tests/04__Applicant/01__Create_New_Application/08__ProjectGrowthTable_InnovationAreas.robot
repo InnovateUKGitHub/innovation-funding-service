@@ -59,14 +59,14 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link     link = Competition details
+    Then the user clicks the button/link     link = Back to competition details
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393  IFS-7700
     [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition details")
     Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
-    And the user fills in the CS Assessors
+    And the user fills in the CS Assessors       GRANT
     When the user clicks the button/link         link = Public content
     Then the user fills in the Public content and publishes  NoGrowthTable
     And the user clicks the button/link          link = Return to setup overview
@@ -131,7 +131,7 @@ Once the project growth table is selected
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
-    And the user fills in the CS Assessors
+    And the user fills in the CS Assessors                      GRANT
     And the user fills in the CS Documents in other projects
     When the user clicks the button/link                        link = Public content
     Then the user fills in the Public content and publishes     GrowthTable
@@ -513,7 +513,7 @@ the user fills in the Open-All Initial details
     the user selects the value from the drop-down menu   21  id = executiveUserId
     the user clicks the button twice                     css = label[for="stateAid2"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition details
+    the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the logged in user should not be able to apply in a competition he has not right to
@@ -550,7 +550,7 @@ the user selects temporary framework terms and conditions
     the user selects the radio button       termsAndConditionsId  30
     the user clicks the button/link         jQuery = button:contains("Done")
     the user should see the element         link = New projects temporary framework
-    the user clicks the button/link         link = Competition details
+    the user clicks the button/link         link = Back to competition details
     the user should see the element         jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user accept the temporary framework terms and conditions

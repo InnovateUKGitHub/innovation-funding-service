@@ -10,16 +10,15 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype.FundingTypeTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
-import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,8 +42,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResourc
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
 
-    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
-
     @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
 
@@ -67,17 +64,21 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
-    private CompetitionInitialiser competitionInitialiser;
-
-    @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
+    private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
 
     @Autowired
     public void setCompetitionTemplates(List<CompetitionTemplate> templateBeans) {
         templates = templateBeans.stream()
                 .collect(toMap(CompetitionTemplate::type, Function.identity()));
+    }
+
+    @Autowired
+    public void setFundingTypeTemplates(List<FundingTypeTemplate> templateBeans) {
+        fundingTypeTemplates = templateBeans.stream()
+                .collect(toMap(FundingTypeTemplate::type, Function.identity()));
     }
 
     @Override
@@ -102,38 +103,19 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         setDefaultProjectDocuments(competition);
 
-        competitionInitialiser.initialiseFinanceTypes(competition);
-        competitionInitialiser.initialiseProjectSetupColumns(competition);
-
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
+        FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
 
         List<SectionBuilder> sectionBuilders = template.sections();
-
-        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition.getFundingType(), sectionBuilders);
-
+        sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
+        competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
+        competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
-
         template.copyTemplatePropertiesToCompetition(competition);
-        overrideTermsAndConditionsForNonGrantCompetitions(competition);
+        competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
-    }
-
-
-    private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(FundingType fundingType, List<SectionBuilder> sections) {
-        if (FundingType.INVESTOR_PARTNERSHIPS == fundingType) {
-            Optional<SectionBuilder> termsSection = sections.stream()
-                    .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.TERMS_AND_CONDITIONS)
-                    .findFirst();
-
-            termsSection.ifPresent(sectionBuilder -> sectionBuilder.getQuestions().forEach(questionBuilder -> {
-                questionBuilder.withDescription(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS)
-                        .withName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS)
-                        .withShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
-            }));
-
-        }
     }
 
     private void setDefaultOrganisationConfig(Competition competition) {
@@ -191,14 +173,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 false, competition.isGrant(), fileTypes));
     }
 
-    private void overrideTermsAndConditionsForNonGrantCompetitions(Competition populatedCompetition) {
-        if (populatedCompetition.getFundingType() != FundingType.GRANT) {
-            GrantTermsAndConditions grantTermsAndConditions =
-                    grantTermsAndConditionsRepository.getLatestForFundingType(populatedCompetition.getFundingType());
-            populatedCompetition.setTermsAndConditions(grantTermsAndConditions);
-        }
-    }
-
     private Competition setDefaultAssessorPayAndCountAndAverageAssessorScore(Competition competition) {
 
         if (competition.getCompetitionAssessmentConfig() == null) {
@@ -207,7 +181,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
             Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
             defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.setAssessorCount(assessorCountOption.getOptionValue()));
-            competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+            if (!competition.isKtp()) {
+                competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+            }
             competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         }
 

@@ -6,8 +6,9 @@ import org.innovateuk.ifs.testdata.builders.CofunderDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.testdata.services.CsvUtils.ExternalUserLine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -16,7 +17,8 @@ import static org.innovateuk.ifs.testdata.builders.CofunderDataBuilder.newCofund
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 
-@Service
+@Component
+@Lazy
 public class CofunderDataService {
 
     @Autowired
