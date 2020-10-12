@@ -188,7 +188,8 @@ Support can change email address
     [Documentation]  IFS-6380  IFS-6928
     Given Log in as a different user           &{support_user_credentials}
     And The user clicks the button/link        link = Manage users
-    And the user clicks the button/link        jQuery = .pagination-links a:contains("6")
+    And the user enters text to a text field   id = filter   ${supportChangeEmailOld}
+    And the user clicks the button/link        css = input[type="submit"]
     When the user clicks the button/link       jQuery = .user-profile:contains("${supportChangeEmailOld}") a:contains("Edit")
     And the user enters text to a text field   id = email  ${supportChangeEmailNew}
     And the user clicks the button/link        jQuery = button:contains("Save and return")

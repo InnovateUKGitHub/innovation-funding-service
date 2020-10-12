@@ -122,7 +122,7 @@ Comp Admin is able to see KTP funding type has been selected
     Given the user clicks the button/link           link = View and update competition details
     When the user clicks the button/link            link = Initial details
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
-    [Teardown]  the user clicks the button/link     link = Competition details
+    [Teardown]  the user clicks the button/link     link = Back to competition details
 
 Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
@@ -140,7 +140,7 @@ The knowledge transfer partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213
     Given the user clicks the button/link    jQuery = button:contains("Done")
-    When the user clicks the button/link     link = Competition details
+    When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Admin user completes the KTP competition setup
