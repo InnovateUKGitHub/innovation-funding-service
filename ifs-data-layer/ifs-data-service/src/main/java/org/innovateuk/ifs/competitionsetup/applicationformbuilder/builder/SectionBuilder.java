@@ -82,6 +82,10 @@ public final class SectionBuilder {
         return type;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Section build() {
         Section section = new Section();
         section.setName(name);

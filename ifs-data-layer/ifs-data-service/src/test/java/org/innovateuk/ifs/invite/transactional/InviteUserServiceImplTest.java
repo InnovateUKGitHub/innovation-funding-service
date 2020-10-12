@@ -21,6 +21,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.SimpleOrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
@@ -99,6 +100,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Mock
     private SystemNotificationSource systemNotificationSource;
+
+    @Mock
+    private SimpleOrganisationRepository simpleOrganisationRepository;
 
     @Captor
     private ArgumentCaptor<RoleInvite> roleInviteArgumentCaptor;

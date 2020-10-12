@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Arrays;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -73,7 +75,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(result.getSuccess().getAssignmentId(), equalTo(cofunderAssignment.getId()));
         assertThat(result.getSuccess().getComments(), equalTo("Terrible"));
-        assertThat(result.getSuccess().getState(), equalTo(true));
+        assertThat(result.getSuccess().getState(), equalTo(CofunderState.REJECTED));
         assertThat(result.isSuccess(), equalTo(true));
     }
 
@@ -86,9 +88,13 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId)).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(of(user));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
-        when(cofunderAssignmentRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(cofunderAssignmentRepository.save(any())).thenAnswer(inv -> {
+            CofunderAssignment c = inv.getArgument(0);
+            c.setId(4L);
+            return c;
+        });
 
-        ServiceResult<CofunderAssignmentResource> result = service.getAssignment(userId, applicationId);
+        ServiceResult<CofunderAssignmentResource> result = service.assign(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
         verify(cofunderAssignmentRepository).save(any());
@@ -141,7 +147,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
                 .build();
 
         when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));
-        when(cofunderAssignmentWorkflowHandler.reject(eq(cofunderAssignment), any())).thenReturn(true);
+        when(cofunderAssignmentWorkflowHandler.accept(eq(cofunderAssignment), any())).thenReturn(true);
 
         ServiceResult<Void> result = service.decision(assignmentId, decision);
 
@@ -182,7 +188,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
 
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(result.getSuccess().getContent().get(0), equalTo(app));
-        assertThat(result.getSuccess().getTotalElements(), equalTo(1));
+        assertThat(result.getSuccess().getTotalElements(), equalTo(1L));
         assertThat(result.getSuccess().getTotalPages(), equalTo(1));
         assertThat(result.getSuccess().getNumber(), equalTo(0));
         assertThat(result.getSuccess().getSize(), equalTo(1));
@@ -208,6 +214,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
                 .withProfileId(assignedProfileId)
                 .build();
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
+                .withParticipant(assignedUser)
                 .build();
         Page<User> page = new PageImpl<>(newArrayList(unsassignedUser), pageRequest, 1L);
         Profile unassignedProfile = newProfile()
@@ -225,6 +232,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         when(cofunderAssignmentRepository.findUsersAvailableForCofunding(applicationId, filter, pageRequest)).thenReturn(page);
         when(profileRepository.findById(unassignedProfileId)).thenReturn(of(unassignedProfile));
         when(profileRepository.findById(assignedProfileId)).thenReturn(of(assignedProfile));
+        when(cofunderAssignmentRepository.findByTargetId(applicationId)).thenReturn(Arrays.asList(cofunderAssignment));
 
         ServiceResult<CofundersAvailableForApplicationPageResource> result = service.findAvailableCofundersForApplication(applicationId, filter, pageRequest);
 
@@ -233,7 +241,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         assertThat(result.getSuccess().getContent().get(0).getName(), equalTo("Bob Bobberson"));
         assertThat(result.getSuccess().getContent().get(0).getUserId(), equalTo(unsassignedUser.getId()));
         assertThat(result.getSuccess().getContent().get(0).getOrganisation(), equalTo("Simply an organisation"));
-        assertThat(result.getSuccess().getTotalElements(), equalTo(1));
+        assertThat(result.getSuccess().getTotalElements(), equalTo(1L));
         assertThat(result.getSuccess().getTotalPages(), equalTo(1));
         assertThat(result.getSuccess().getNumber(), equalTo(0));
         assertThat(result.getSuccess().getSize(), equalTo(1));

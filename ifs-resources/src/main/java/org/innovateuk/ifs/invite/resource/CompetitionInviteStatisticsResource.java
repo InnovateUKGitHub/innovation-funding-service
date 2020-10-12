@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * DTO for competition invite statistics
@@ -69,5 +70,15 @@ public class CompetitionInviteStatisticsResource {
                 .append(declined)
                 .append(inviteList)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("invited", invited)
+                .append("accepted", accepted)
+                .append("declined", declined)
+                .append("inviteList", inviteList)
+                .toString();
     }
 }
