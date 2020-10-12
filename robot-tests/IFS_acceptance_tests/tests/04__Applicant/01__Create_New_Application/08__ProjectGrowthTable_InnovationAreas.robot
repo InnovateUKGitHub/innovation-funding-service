@@ -59,7 +59,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link     link = Competition details
+    Then the user clicks the button/link     link = Back to competition details
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393  IFS-7700
@@ -513,7 +513,7 @@ the user fills in the Open-All Initial details
     the user selects the value from the drop-down menu   21  id = executiveUserId
     the user clicks the button twice                     css = label[for="stateAid2"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition details
+    the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the logged in user should not be able to apply in a competition he has not right to
@@ -550,7 +550,7 @@ the user selects temporary framework terms and conditions
     the user selects the radio button       termsAndConditionsId  30
     the user clicks the button/link         jQuery = button:contains("Done")
     the user should see the element         link = New projects temporary framework
-    the user clicks the button/link         link = Competition details
+    the user clicks the button/link         link = Back to competition details
     the user should see the element         jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user accept the temporary framework terms and conditions
