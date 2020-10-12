@@ -387,7 +387,14 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * KTA user
      */
     NOT_A_KTA_USER_ROLE(BAD_REQUEST),
-    KTA_USER_ROLE_INVITE_INVALID_EMAIL(BAD_REQUEST);
+    KTA_USER_ROLE_INVITE_INVALID_EMAIL(BAD_REQUEST),
+
+    /**
+     * Cofunder
+     */
+    COFUNDER_ASSIGNMENT_ALREADY_EXISTS(BAD_REQUEST),
+    COFUNDER_WORKFLOW_TRANSITION_FAILURE(BAD_REQUEST);
+
 
     private ErrorTemplate errorTemplate;
 
