@@ -59,6 +59,10 @@ public class InviteUserViewModel {
         return type.equals(InviteUserView.EXTERNAL_USER);
     }
 
+    public boolean isAddingKtaRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.KNOWLEDGE_TRANSFER_ADVISER;    }
+
     public boolean isAddingCofunderRole() {
         return this.roles.size() == 1 &&
                 this.roles.stream().findFirst().get() == Role.COFUNDER;

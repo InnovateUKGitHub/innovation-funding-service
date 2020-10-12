@@ -93,9 +93,9 @@
                        th:field="*{emailAddress}"
                        maxlength="256"
                        required="required"
-                       th:attr="external-user=${model.external},
+                       th:attr="kta-user=${model.isAddingKtaRole()},
                                 data-maxlength-errormessage=#{validation.invite.email.length.max(null, 254)},
-                                data-required-errormessage=${model.internal} ? #{validation.invite.email.required} : #{validation.kta.invite.email.required}" />
+                                data-required-errormessage=${model.addingKtaRole} ? #{validation.kta.invite.email.required} : #{validation.invite.email.required}" />
             </div>
             <div th:attr="aria-hidden=${#lists.size(model.roles) == 1 && model.roles[0] == T(org.innovateuk.ifs.user.resource.Role).COFUNDER}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="role">
