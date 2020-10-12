@@ -254,7 +254,7 @@ User fills in funding overide
     the user enters text to a text field                 id = fundingLevelPercentageOverride  100
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user should see the element                      jQuery = dt:contains("Funding level") ~ dd:contains("100%")
-    the user clicks the button/link                      link = Competition details
+    the user clicks the button/link                      link = Back to competition details
     the user clicks the button/link                      jQuery = a:contains("Complete")
     the user clicks the button/link                      css = button[type="submit"]
 

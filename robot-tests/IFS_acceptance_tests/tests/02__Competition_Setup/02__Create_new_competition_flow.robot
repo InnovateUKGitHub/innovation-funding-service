@@ -173,7 +173,7 @@ Initial details - Comp Type and Date should not be editable
 Initial details - should have a green check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
-    When The user clicks the button/link    link = Competition details
+    When The user clicks the button/link    link = Back to competition details
     Then the user should see the element    jQuery = li:contains("Initial details") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
@@ -195,7 +195,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     Given the user clicks the button/link    link = Terms and conditions
     When the user should see the element     link = Loans
     And the user clicks the button/link      jQuery = button:contains("Done")
-    And the user clicks the button/link      link = Competition details
+    And the user clicks the button/link      link = Back to competition details
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Internal user can navigate to Public Content without having any issues
@@ -266,7 +266,7 @@ Funding information: can be edited
 Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
-    When The user clicks the button/link    link = Competition details
+    When The user clicks the button/link    link = Back to competition details
     Then the user should see the element    jQuery = li:contains("Funding information") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
@@ -296,7 +296,7 @@ Project eligibility: Contain the correct options
     And the resubmission should not have a default selection
 
 Project eligibility: Mark as Done then Edit again
-    [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
+    [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225  IFS-8044
     [Tags]  HappyPath
     Given the user selects the checkbox      research-categories-33
     And the user selects the checkbox        research-categories-34
@@ -315,7 +315,7 @@ Project eligibility: Mark as Done then Edit again
     And the user should see the element      jQuery = dt:contains("Are resubmissions allowed") ~ dd:contains("No")
     And the user should see the element      jQuery = dt:contains("Override funding rules") ~ dd:contains("No")
     And The user should not see the element  id = streamName
-    When the user clicks the button/link     link = Competition details
+    When the user clicks the button/link     link = Back to competition details
     When the user clicks the button/link     link = Project eligibility
     And the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user clicks the button/link      jQuery = button:contains("Done")
@@ -323,7 +323,7 @@ Project eligibility: Mark as Done then Edit again
 Project eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
-    When The user clicks the button/link    link = Competition details
+    When The user clicks the button/link    link = Back to competition details
     Then the user should see the element    jQuery = li:contains("Project eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
@@ -349,7 +349,7 @@ Milestones: Correct Weekdays should show
 Milestones: Green check should show
     [Documentation]    INFUND-2993
     [Tags]  HappyPath
-    When The user clicks the button/link    link = Competition details
+    When The user clicks the button/link    link = Back to competition details
     Then the user should see the element    jQuery = li:contains("Milestones") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
@@ -437,7 +437,8 @@ Application: Scope
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Scope
     Then the user should see the element          jQuery = h1:contains("Scope")
-    And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
+    And the user should see the element           jQuery = p:contains("You can edit this question for the applicant as well as the guidance for")
+    And the user should see the element           jQuery = span:contains("assessors")
     When The user fills the empty question fields
     And The user enters text to a text field      id = question.shortTitle  Test heading
     And The user clicks the button/link           jQuery = button:contains('Done')
@@ -460,20 +461,21 @@ Application: Scope Assessment questions
     And the user clicks the button/link              jQuery = button:contains('Done')
     And the user clicks the button/link              link = Test heading
     Then the user should not see the scope feedback
-    [Teardown]    The user clicks the button/link    link = Application
+    [Teardown]    The user clicks the button/link    link = Back to application
 
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
     [Tags]  HappyPath
     Given the user clicks the button/link            link = Project summary
     And the user should see the element              jQuery = h1:contains("Project summary")
-    And the user should see the element             jQuery = p:contains("You can edit this question for the applicant as well as the guidance for assessors.")
+    And the user should see the element              jQuery = p:contains("You can edit this question for the applicant as well as the guidance for")
+    And the user should see the element              jQuery = span:contains("assessors")
     When The user fills the empty question fields
     And The user clicks the button/link              jQuery = button:contains('Done')
     And the user clicks the button/link              link = Project summary
     Then the user should see the element             jQuery = h1:contains("Project summary")
     And the user checks the question fields
-    [Teardown]  The user clicks the button/link      link = Application
+    [Teardown]  The user clicks the button/link      link = Back to application
 
 Application: Need or challenge
     [Documentation]  INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283 IFS-2776
@@ -513,7 +515,7 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button/link                                               jQuery = button[type="submit"]  #Add question link
+    Given the user clicks the button/link                                               jQuery = button:contains("Add question")  #Add question link
     When the user is able to configure the new question                                 ${customQuestion}
     And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
     Then the user should be able to see the read only view of question correctly        ${customQuestion}
@@ -573,7 +575,7 @@ Documents in project setup: The competition admin removes a document
     When the user clicks the button/link        css = button[name = "removeDocument"]
     And the user clicks the button/link         jQuery = button:contains("Confirm")
     Then the user should not see the element    jQuery = span:contains("Test document type")
-    And the user clicks the button/link         link = Competition details
+    And the user clicks the button/link         link = Back to competition details
 
 Public content is required for a Competition to be setup
     [Documentation]
@@ -589,7 +591,7 @@ Organisational eligibility is required for a Competition to be setup
     Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
     When the user selects the radio button                    internationalOrganisationsApplicable       false
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
-    And the user clicks the button/link                       link = Competition details
+    And the user clicks the button/link                       link = Back to competition details
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 Complete button disabled when sections are edited
@@ -598,7 +600,7 @@ Complete button disabled when sections are edited
     Given the user should see the element       id = compCTA
     When the user clicks the button/link        link = Project eligibility
     And the user clicks the button/link         jQuery = button:contains("Edit")
-    And the user clicks the button/link         link = Competition details
+    And the user clicks the button/link         link = Back to competition details
     Then the user should see the element        css = #compCTA[disabled]
     When the user clicks the button/link        link = Project eligibility
     And the user clicks the button/link         jQuery = button:contains("Done")
@@ -620,11 +622,11 @@ Ready To Open button is visible when the user re-opens a section
     [Setup]  the user navigates to the page    ${server}/management/competition/setup/${competitionId}
     When The user clicks the button/link       link = Initial details
     And the user clicks the button/link        jQuery = .govuk-button:contains("Edit")
-    And The user clicks the button/link        link = Competition details
+    And The user clicks the button/link        link = Back to competition details
     Then the user should see the element       css = #compCTA[disabled]
     [Teardown]    Run keywords    Given The user clicks the button/link    link = Initial details
     ...    AND    The user clicks the button/link    jQuery = button:contains("Done")
-    ...    AND    And The user clicks the button/link    link = Competition details
+    ...    AND    And The user clicks the button/link    link = Back to competition details
 
 Application: Edit again should mark as incomplete
     [Documentation]    INFUND-5964
@@ -688,7 +690,7 @@ Assessor: Mark as Done then Edit again
 Assessor: Should have a Green Check
     [Documentation]  INFUND-5641
     [Tags]  HappyPath
-    When The user clicks the button/link    link = Competition details
+    When The user clicks the button/link    link = Back to competition details
     Then the user should see the element    jQuery = li:contains("Assessors") .task-status-complete
     And the user clicks the button/link     css = #compCTA
     And the user clicks the button/link     jQuery = button:contains("Done")
@@ -947,7 +949,7 @@ the user fills new application details
     the user enters text to a text field             css = #application_details-startdate_month  ${month}
     the user enters text to a text field             css = #application_details-startdate_year  ${nextyear}
     the user enters text to a text field             id = durationInMonths  45
-    the user clicks the button twice                 css = label[for="resubmission-no"]
+    the user should not see the element              css = label[for="resubmission-no"]  #Set on line 307
     the user clicks the button/link                  id = innovationAreaName
     the user selects the radio button                innovationAreaChoice  NOT_APPLICABLE
     the user clicks the button/link                  jQuery = button:contains("Save")

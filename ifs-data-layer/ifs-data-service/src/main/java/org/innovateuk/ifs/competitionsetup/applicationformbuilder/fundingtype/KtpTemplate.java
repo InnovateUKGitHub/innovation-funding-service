@@ -42,12 +42,12 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
-      competitionTypeSections.add(
-              ktpAssessmentSection()
+        competitionTypeSections.add(
+                ktpAssessmentSection()
                         .withQuestions(ktpDefaultQuestions())
-      );
+        );
 
-      return overrideApplicationQuestionFormInputs(competitionTypeSections);
+        return overrideApplicationQuestionFormInputs(competitionTypeSections);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class KtpTemplate implements FundingTypeTemplate {
         return newArrayList(
                 aGuidanceRow()
                         .withSubject("9,10")
-                        .withJustification("The application demonstrates a well-defined, realistic and positive impact on the business partner’s financial position (i.e. profit, turn-over, productivity and cost savings) and embeds new capabilities within the organisation, which will develop a culture of and capacity for ongoing innovation. There is potential for impact (economic or societal) beyond the partnership."),
+                        .withJustification("The application demonstrates a well-defined, substantial, realistic and positive impact on the business partner’s financial position (i.e. profit, turn-over, productivity and cost savings) compared to current trading and embeds significant new capabilities within the organisation. The project will develop a culture of and capacity for ongoing innovation and have other wider impact (economic or societal) beyond the partnership."),
                 aGuidanceRow()
                         .withSubject("7,8")
                         .withJustification("The application demonstrates a well-defined, realistic and positive impact on the business partner’s financial position (i.e. profit, turn-over, productivity and cost savings) and embeds new capabilities within the organisation, which will develop a culture of and capacity for ongoing innovation. There is potential for impact (economic or societal) beyond the partnership."),
@@ -172,10 +172,10 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withJustification("The application is clearly cohesive and easily demonstrates an outstanding balance between the various expectations of a KTP project.  The application gives a very high level of confidence that the project team will work well together, that the project will exceed its goals and the partners will gain in ways above and beyond the defined outcomes of the project."),
                 aGuidanceRow()
                         .withSubject("7,8")
-                        .withJustification("The application is ill-defined or only demonstrates a moderate to low level of cohesiveness between the individual elements, so the project is not likely to deliver it goals."),
+                        .withJustification("The application is cohesive and demonstrates an excellent balance between the various aspects of a KTP project, so there is a high level of confidence the project team will work well together and the project will exceed its goals."),
                 aGuidanceRow()
                         .withSubject("5,6")
-                        .withJustification("The application is ill-defined or only demonstrates a moderate to low level of cohesiveness between the individual elements, so the project is not likely to deliver it goals."),
+                        .withJustification("The application is cohesive and demonstrates realistic, logical and easily-followed steps for the whole project team, so there is a reasonable level of confidence the project team will work well together and the project will deliver its goals."),
                 aGuidanceRow()
                         .withSubject("3,4")
                         .withJustification("The application is ill-defined or only demonstrates a moderate to low level of cohesiveness between the individual elements, so the project is not likely to deliver it goals."),
@@ -201,7 +201,7 @@ public class KtpTemplate implements FundingTypeTemplate {
                         .withJustification("The application has an unrealistic, ill-defined or low level of challenge for either the knowledge base partner, the associate or the business partner."),
                 aGuidanceRow()
                         .withSubject("1,2")
-                        .withJustification("The application is clearly cohesive and easily demonstrates an outstanding balance between the various expectations of a KTP project.  The application gives a very high level of confidence that the project team will work well together, that the project will exceed its goals and the partners will gain in ways above and beyond the defined outcomes of the project.")
+                        .withJustification("The application fails to demonstrate a defined or realistic challenge for either the knowledge base partner, the associate or the business partner.")
         );
     }
 
@@ -229,14 +229,15 @@ public class KtpTemplate implements FundingTypeTemplate {
         return newArrayList(aFormInput()
                         .withType(FormInputType.ASSESSOR_SCORE)
                         .withScope(FormInputScope.ASSESSMENT)
-                        .withGuidanceAnswer("Your score should be base of the following")
+                        .withGuidanceAnswer("Your score should be based on the following")
                         .withGuidanceTitle("Guidance for assessing " + questionName)
                         .withActive(true),
                 aFormInput()
                         .withType(FormInputType.TEXTAREA)
                         .withScope(FormInputScope.ASSESSMENT)
-                        .withGuidanceAnswer("Your score should be base of the following")
+                        .withGuidanceAnswer("Your score should be based on the following")
                         .withGuidanceTitle("Guidance for assessing " + questionName)
+                        .withWordCount(100)
                         .withActive(true)
                         .withGuidanceRows(guidanceRows)
         );
