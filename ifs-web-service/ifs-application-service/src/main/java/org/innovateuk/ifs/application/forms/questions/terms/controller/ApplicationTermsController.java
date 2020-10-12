@@ -43,6 +43,9 @@ public class ApplicationTermsController {
     private ApplicationRestService applicationRestService;
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
 
+    public ApplicationTermsController() {
+
+    }
 
     public ApplicationTermsController(UserRestService userRestService,
                                       QuestionStatusRestService questionStatusRestService,

@@ -167,6 +167,45 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
     }
 
     @Test
+    public void populateForCofunderReturnsCorrectDownloadUrlForFiles() {
+        user = newUserResource().withRoleGlobal(Role.COFUNDER).build();
+
+        FormInputResource appendix = newFormInputResource()
+                .withType(FormInputType.FILEUPLOAD)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .build();
+        FormInputResource templateDocument = newFormInputResource()
+                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .withDescription("Document Title")
+                .build();
+        FormInputResponseResource appendixResponse = newFormInputResponseResource()
+                .withFormInputs(appendix.getId())
+                .withFileEntries(newFileEntryResource()
+                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                        .build(2))
+                .build();
+        FormInputResponseResource templateDocumentResponse = newFormInputResponseResource()
+                .withFormInputs(templateDocument.getId())
+                .withFileEntries(newFileEntryResource()
+                        .withName("template.pdf")
+                        .build(1))
+                .build();
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList());
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
+
+        assertEquals("/application/1/form/question/3/forminput/6/file/8/download", viewModel.getAppendices().get(0).getUrl());
+        assertEquals("/application/1/form/question/3/forminput/6/file/9/download", viewModel.getAppendices().get(1).getUrl());
+        assertEquals("/application/1/form/question/3/forminput/7/file/11/download", viewModel.getTemplateFile().getUrl());
+    }
+
+    @Test
     public void populateForMultipleChoiceOptions() {
         FormInputResource multipleChoice = newFormInputResource()
                 .withType(FormInputType.MULTIPLE_CHOICE)
@@ -179,7 +218,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withMultipleChoiceOptionText("Some text")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
