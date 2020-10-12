@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -193,6 +192,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Role role = Role.APPLICANT;
         setupPostWithRestResultExpectations(format("%s/%s/grant/%s", USERS_URL, userId, role.name()),
                 HttpStatus.OK);
-        assertTrue(service.grantRole(userId, role, Optional.empty()).isSuccess());
+        assertTrue(service.grantRole(userId, role).isSuccess());
     }
 }
