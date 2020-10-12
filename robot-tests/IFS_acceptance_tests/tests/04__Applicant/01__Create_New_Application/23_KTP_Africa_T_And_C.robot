@@ -38,7 +38,7 @@ KTP africa t&c's are correct
 
 T&c's section should be completed
     [Documentation]  IFS-8164
-    When the user clicks the button/link     link = Competition details
+    When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Applicant is able to see correct T&C's

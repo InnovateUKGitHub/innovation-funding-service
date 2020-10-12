@@ -272,6 +272,28 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
+    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=KTP_ASSESSMENT")
+    public String submitKtpAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) KtpAssessmentForm competitionSetupForm,
+                                         BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         @PathVariable long competitionId,
+                                         @PathVariable long questionId,
+                                         UserResource loggedInUser,
+                                         Model model) {
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        competitionSetupApplicationQuestionValidator.validateKtpAssessmentQuestion(competitionSetupForm, bindingResult);
+
+        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
+            return "redirect:/competition/setup/" + competitionResource.getId();
+        }
+
+        Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, loggedInUser, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, KTP_ASSESSMENT));
+    }
+
 
     @PostMapping(value = "/question/{questionId}/edit", params = {"question.type=ASSESSED_QUESTION", "uploadTemplateDocumentFile"})
     public String uploadTemplateDocumentFile(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) QuestionForm competitionSetupForm,
@@ -432,6 +454,8 @@ public class CompetitionSetupApplicationController {
 
                             if (type.equals(QuestionSetupType.ASSESSED_QUESTION)) {
                                 setupSubsection = CompetitionSetupSubsection.QUESTIONS;
+                            } else if (type.equals(QuestionSetupType.KTP_ASSESSMENT)) {
+                                setupSubsection = CompetitionSetupSubsection.KTP_ASSESSMENT;
                             } else {
                                 setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
                             }
@@ -459,11 +483,15 @@ public class CompetitionSetupApplicationController {
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {
-        return !competitionResource.isKtp() && isAssessedQuestion(questionResource);
+        return (!competitionResource.isKtp() && isAssessedQuestion(questionResource)) || isKtpAssessmentQuestion(questionResource);
     }
 
     private boolean isAssessedQuestion(CompetitionSetupQuestionResource questionResource) {
         return questionResource != null && (questionResource.getScored() != null || questionResource.getResearchCategoryQuestion() != null || questionResource.getScope() != null);
+    }
+
+    private boolean isKtpAssessmentQuestion(CompetitionSetupQuestionResource questionResource) {
+        return questionResource != null && questionResource.getType().equals(QuestionSetupType.KTP_ASSESSMENT);
     }
 
     private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {

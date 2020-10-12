@@ -386,7 +386,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         if (line.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
-
         return baseBuilder.build();
     }
 
