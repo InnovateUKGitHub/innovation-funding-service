@@ -276,8 +276,25 @@ New lead applicant completes the KTP application
     And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
+New lead applicant opens the detailed KTP Guidance links in the new window
+    [Documentation]  IFS-8399
+    Given The user clicks the button/link                            link = Your project finances
+    And The user clicks the button/link                              jQuery = a:contains("Your project costs")
+    And The user clicks the button/link                              id = edit
+    When the user switch to the new tab on click guidance links      read our detailed guidance on KTP project costs (opens in a new window)
+    Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
+
+New lead applicant opens the KTP Project costs Guidance links in the new window
+    [Documentation]  IFS-8399
+    Given the user closes the last opened tab
+    When the user switch to the new tab on click guidance links      KTP project costs guidance (opens in a new window)
+    Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
+
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
+    Given the user closes the last opened tab
+    And the user clicks the button/link                                    css = label[for="stateAidAgreed"]
+    And the user clicks the button/link                                      jQuery = button:contains("Mark as complete")
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Your funding
     Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
@@ -965,3 +982,8 @@ the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
+
+the user switch to the new tab on click guidance links
+    [Arguments]  ${link}
+    the user clicks the button/link     link = ${link}
+    Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
