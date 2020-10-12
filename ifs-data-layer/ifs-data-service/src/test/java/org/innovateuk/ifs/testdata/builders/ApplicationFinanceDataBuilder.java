@@ -78,7 +78,8 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
             IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
-                    withCompetition(data.getCompetition());
+                    withCompetition(data.getCompetition()).
+                    withOrganisation(data.getOrganisation());
 
             costBuilderFn.apply(baseFinanceBuilder).build();
         });

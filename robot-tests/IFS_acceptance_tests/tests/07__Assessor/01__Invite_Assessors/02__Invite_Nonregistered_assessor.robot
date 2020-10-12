@@ -162,7 +162,7 @@ the user should not see the error messages after entering valid values
 
 the user checks for validations on reject invitation page
     the user navigates to the page                    ${Invitation_nonregistered_assessor2}
-    the user should see the element                   jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user should see the element                   jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
     the user selects the radio button                 acceptInvitation  false
     the user clicks the button/link                   jQuery = button:contains("Confirm")
     the user should see a field and summary error     The reason cannot be blank.
