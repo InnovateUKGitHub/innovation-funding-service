@@ -285,6 +285,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         competitionSections.stream().filter(section -> section.getName().equals("Project details"))
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
+        // only for ktp competitions
+        competitionSections.stream().filter(section -> section.getName().equals("Score Guidance"))
+                .findFirst()
+                .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
     }
 
     private void markSectionQuestionsSetupComplete(List<QuestionResource> questionResources, SectionResource section, CompetitionData data) {

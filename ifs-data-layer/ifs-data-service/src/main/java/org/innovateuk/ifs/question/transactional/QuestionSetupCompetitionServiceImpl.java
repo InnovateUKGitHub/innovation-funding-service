@@ -183,12 +183,17 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findById(questionId).get();
 
-        if (question.getQuestionSetupType() != QuestionSetupType.APPLICATION_DETAILS) {
-            question.setShortName(competitionSetupQuestionResource.getShortTitle());
+
+        if (question.getQuestionSetupType() != QuestionSetupType.KTP_ASSESSMENT) {
+
+            if (question.getQuestionSetupType() != QuestionSetupType.APPLICATION_DETAILS) {
+                question.setShortName(competitionSetupQuestionResource.getShortTitle());
+            }
+
+            question.setName(competitionSetupQuestionResource.getTitle());
+            question.setDescription(competitionSetupQuestionResource.getSubTitle());
+            question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
         }
-        question.setName(competitionSetupQuestionResource.getTitle());
-        question.setDescription(competitionSetupQuestionResource.getSubTitle());
-        question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
 
         /* form inputs */
         markTextAreaAsActiveOrInactive(questionId, competitionSetupQuestionResource);
@@ -273,7 +278,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         if (templateFormInput != null && competitionSetupQuestionResource.getTemplateDocument() != null) {
             templateFormInput.setActive(competitionSetupQuestionResource.getTemplateDocument());
 
-            if(competitionSetupQuestionResource.getTemplateDocument()) {
+            if (competitionSetupQuestionResource.getTemplateDocument()) {
                 templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
                 if (competitionSetupQuestionResource.getTemplateTitle() != null) {
                     templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateTitle());
