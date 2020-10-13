@@ -55,6 +55,9 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8325 Write Acceptance tests for 8312
 ...
+...            IFS-8212 KTP Assessments - applicant view
+...
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -972,6 +975,12 @@ the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
+
+the user should see application details
+    the user should see the element     jQuery = dt:contains("Application number:")+dd:contains("${ApplicationID}")
+    the user should see the element     jQuery = dt:contains("Lead organisation:")+dd:contains("${ktpOrgName}")
+    the user should see the element     jQuery = dt:contains("Partners:")+dd:contains("${newPartnerOrgName}")
+    the user should see the element     jQuery = dt:contains("Total project costs:")+dd:contains("${246}")
 
 the user switch to the new tab on click guidance links
     [Arguments]  ${link}
