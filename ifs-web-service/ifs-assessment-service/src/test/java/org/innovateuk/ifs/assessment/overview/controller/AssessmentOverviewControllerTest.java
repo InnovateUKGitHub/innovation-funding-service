@@ -59,6 +59,7 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBuilder.newApplicantFormInputResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -85,8 +86,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -276,67 +276,75 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getOverview() throws Exception {
+        AssessmentOverviewSectionViewModel expectedProjectDetailsSectionViewModel =new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
+                "Project details",
+                "These do not need scoring.",
+                asList(
+                        new AssessmentOverviewQuestionViewModel(
+                                questionApplicationDetails.getId(),
+                                questionApplicationDetails.getShortName(),
+                                questionApplicationDetails.getQuestionNumber(),
+                                questionApplicationDetails.getAssessorMaximumScore(),
+                                false,
+                                false,
+                                null,
+                                null,
+                                false),
+                        new AssessmentOverviewQuestionViewModel(
+                                questionScope.getId(),
+                                questionScope.getShortName(),
+                                questionScope.getQuestionNumber(),
+                                questionScope.getAssessorMaximumScore(),
+                                true,
+                                false,
+                                TRUE,
+                                null,
+                                false)
+                ),
+                false,
+                false
+        );
+        AssessmentOverviewSectionViewModel expectedApplicationQuestionsSectionViewModel = new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
+                "Application questions",
+                "Each question should be given a score.",
+                asList(
+                        new AssessmentOverviewQuestionViewModel(
+                                questionBusinessOpportunity.getId(),
+                                questionBusinessOpportunity.getShortName(),
+                                questionBusinessOpportunity.getQuestionNumber(),
+                                questionBusinessOpportunity.getAssessorMaximumScore(),
+                                true,
+                                true,
+                                null,
+                                "7",
+                                true),
+                        new AssessmentOverviewQuestionViewModel(
+                                questionPotentialMarket.getId(),
+                                questionPotentialMarket.getShortName(),
+                                questionPotentialMarket.getQuestionNumber(),
+                                questionPotentialMarket.getAssessorMaximumScore(),
+                                true,
+                                false,
+                                null,
+                                null,
+                                true)
+                ),
+                false,
+                false
+        );
+
+        AssessmentOverviewSectionViewModel expectedFinancesSectionViewModel = new AssessmentOverviewSectionViewModel((sections.get(2).getId()),
+                "Finances",
+                "Each partner is required to submit their own finances.",
+                emptyList(),
+                true,
+                false
+        );
 
         List<AssessmentOverviewSectionViewModel> expectedSections = asList(
-                new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
-                        "Project details",
-                        "These do not need scoring.",
-                        asList(
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionApplicationDetails.getId(),
-                                        questionApplicationDetails.getShortName(),
-                                        questionApplicationDetails.getQuestionNumber(),
-                                        questionApplicationDetails.getAssessorMaximumScore(),
-                                        false,
-                                        false,
-                                        null,
-                                        null),
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionScope.getId(),
-                                        questionScope.getShortName(),
-                                        questionScope.getQuestionNumber(),
-                                        questionScope.getAssessorMaximumScore(),
-                                        true,
-                                        false,
-                                        TRUE,
-                                        null)
-                        ),
-                        false,
-                        false
-                ),
-                new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
-                        "Application questions",
-                        "Each question should be given a score.",
-                        asList(
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionBusinessOpportunity.getId(),
-                                        questionBusinessOpportunity.getShortName(),
-                                        questionBusinessOpportunity.getQuestionNumber(),
-                                        questionBusinessOpportunity.getAssessorMaximumScore(),
-                                        true,
-                                        true,
-                                        null,
-                                        "7"),
-                                new AssessmentOverviewQuestionViewModel(
-                                        questionPotentialMarket.getId(),
-                                        questionPotentialMarket.getShortName(),
-                                        questionPotentialMarket.getQuestionNumber(),
-                                        questionPotentialMarket.getAssessorMaximumScore(),
-                                        true,
-                                        false,
-                                        null,
-                                        null)
-                        ),
-                        false,
-                        false
-                ),
-                new AssessmentOverviewSectionViewModel((sections.get(2).getId()),
-                        "Finances",
-                        "Each partner is required to submit their own finances.",
-                        emptyList(),
-                        true,
-                        false
-                )
+                expectedProjectDetailsSectionViewModel,
+                expectedApplicationQuestionsSectionViewModel,
+                expectedFinancesSectionViewModel
         );
 
         List<AssessmentOverviewAppendixViewModel> expectedAppendices = singletonList(
@@ -366,6 +374,10 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .andExpect(model().attributeExists("model"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/application-overview"));
+
+        assertThat(expectedApplicationQuestionsSectionViewModel.getMaximumScore(), equalTo(25));
+        assertThat(expectedApplicationQuestionsSectionViewModel.getScore(), equalTo(7));
+        assertThat(expectedApplicationQuestionsSectionViewModel.getScorePercentage(), equalTo(28));
 
         InOrder inOrder = inOrder(assessmentService, competitionRestService, sectionRestService, questionRestService,
                 formInputRestService, assessorFormInputResponseRestService, formInputResponseRestService);
