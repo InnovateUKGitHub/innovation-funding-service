@@ -80,30 +80,27 @@ Assessor should get a validation message if the score is not selected
 
 Assessor can score impact category in the KTP application
     [Documentation]   IFS-7915
-    Given the user clicks the button/link             link = Impact
+    Given The user clicks the button/link             link = Back to your assessment overview
+    And the user clicks the button/link               link = Impact
     When Assessor completes the KTP category          Testing feedback text
-    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Impact   10   25%
 
 Assessor can score innovation category in the KTP application
     [Documentation]   IFS-7915
     Given the user clicks the button/link             link = Innovation
     When Assessor completes the KTP category          Testing feedback text
-    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Innovation   20   50%
 
 Assessor can score challenge category in the KTP application
     [Documentation]   IFS-7915
     Given the user clicks the button/link             link = Challenge
     When Assessor completes the KTP category          Testing feedback text
-    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Innovation   30   75%
 
 Assessor can score cohesiveness category in the KTP application
     [Documentation]   IFS-7915
     Given the user clicks the button/link             link = Cohesiveness
     When Assessor completes the KTP category          Testing feedback text
-    And the user clicks the button/link               jQuery = button:contains("Save and return to assessment overview")
     Then Assessor should see the category details     Innovation   40   100%
 
 Assessor is presented an error when saving an incomplete assessment
