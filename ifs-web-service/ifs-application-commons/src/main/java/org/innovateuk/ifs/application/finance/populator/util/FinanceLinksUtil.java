@@ -51,16 +51,15 @@ public class FinanceLinksUtil {
                 return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
         } else if (authenticatedUser.getRoles().contains(COFUNDER)) {
-            if (competition.isKtp()) {
-                CofunderAssignmentResource cofunderAssignmentResource = cofunderAssignmentRestService.getAssignment(authenticatedUser.getId(), application.getId()).getSuccess();
-                if (cofunderAssignmentResource.getState() == CofunderState.ACCEPTED) {
-                    return Optional.of(organisationIdInLink(application.getId(), organisation));
-                }
+            Optional<CofunderAssignmentResource> cofunderAssignment = cofunderAssignmentRestService.getAssignment(authenticatedUser.getId(), application.getId())
+                    .toOptionalIfNotFound().getSuccess();
+            if (cofunderAssignment.isPresent()) {
+                return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
         }
 
         if (currentUserRole.isPresent()) {
-            if (applicantProcessRoles().contains(currentUserRole.get().getRole()) ) {
+            if (applicantProcessRoles().contains(currentUserRole.get().getRole())) {
                 if (competition.isKtp()) {
                     //All KTP users can see each others finances.
                     return Optional.of(organisationIdInLink(application.getId(), organisation));

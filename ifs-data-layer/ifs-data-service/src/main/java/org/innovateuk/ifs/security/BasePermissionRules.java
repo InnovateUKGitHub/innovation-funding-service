@@ -2,7 +2,6 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
@@ -22,7 +21,6 @@ import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerReposit
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
