@@ -55,11 +55,11 @@ public class ReviewCofunderViewModel {
     }
 
     public int getPendingCount() {
-        return isPending() ? this.assignments.get(CofunderState.REJECTED).size() : 0;
+        return isPending() ? this.assignments.get(CofunderState.CREATED).size() : 0;
     }
 
     public int getDeclinedCount() {
-        return isDeclined() ? this.assignments.get(CofunderState.CREATED).size() : 0;
+        return isDeclined() ? this.assignments.get(CofunderState.REJECTED).size() : 0;
     }
 }
 
