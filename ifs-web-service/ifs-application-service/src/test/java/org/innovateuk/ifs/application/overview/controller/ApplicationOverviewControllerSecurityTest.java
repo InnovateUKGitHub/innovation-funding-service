@@ -29,6 +29,7 @@ public class ApplicationOverviewControllerSecurityTest extends BaseControllerSec
         List<Role> roles = new ArrayList<>();
         roles.add(Role.APPLICANT);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        roles.add(Role.COFUNDER);
 
         assertRolesCanPerform(() -> classUnderTest.termsAndConditions(), roles);
     }
