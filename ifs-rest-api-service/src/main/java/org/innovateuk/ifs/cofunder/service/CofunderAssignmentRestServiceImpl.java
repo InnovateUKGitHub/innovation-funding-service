@@ -26,7 +26,7 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId) {
-        return getWithRestResult(format("%s/assignment/application/{applicationId}/%d", cofunderRestUrl, applicationId), cofunderAssignmentResourceListType());
+        return getWithRestResult(format("%s/assignment/application/%d", cofunderRestUrl, applicationId), cofunderAssignmentResourceListType());
     }
 
     @Override
