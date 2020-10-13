@@ -131,7 +131,7 @@ public enum Role implements Identifiable {
         return newArrayList(this.name);
     }
 
-    public static Set<Role> externalRolesToInvite() {
-        return EnumSet.of(COFUNDER, KNOWLEDGE_TRANSFER_ADVISER);
+    public static List<Role> externalRolesToInvite() {
+        return newArrayList(COFUNDER, KNOWLEDGE_TRANSFER_ADVISER);
     }
 }
