@@ -624,7 +624,7 @@ the user checks for organisational eligibility fields
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-no"]
     the user should see the element           jQuery = button:contains("Save and continue")
     the user should see the element           jQuery = span:contains("${projectEligibilityLink}")
-    the user should see the element           link = Competition details
+    the user should see the element           link = Back to competition details
     the user should see the element           link = Return to setup overview
 
 the user checks for lead organisations fields
@@ -644,7 +644,7 @@ the user completes all categories except organisational eligibility category
     the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}
     the user marks the Application as done                  ${projectGrowth}       ${compType}                 ${internationalLeadInternationalCompetition}
-    the user fills in the CS Assessors
+    the user fills in the CS Assessors                      GRANT
     the user clicks the button/link                         link = Public content
     the user fills in the Public content and publishes      ${extraKeyword}
     the user clicks the button/link                         link = Return to setup overview

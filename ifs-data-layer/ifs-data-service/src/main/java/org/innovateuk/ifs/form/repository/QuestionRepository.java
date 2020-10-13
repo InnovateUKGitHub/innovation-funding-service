@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.repository;
 
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
