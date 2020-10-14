@@ -643,11 +643,22 @@ the KTA user enters the details to create account
 
 assign the KTA role to an existing user
     [Arguments]   ${ktaEmail}
-    log in as a different user               &{ifs_admin_user_credentials}
-    the user clicks the button/link          link = Manage users
-    the user enters text to a text field     id = filter   ${ktaEmail}
-    the user clicks the button/link          css = [class="btn"]
-    the user clicks the button/link          jQuery = a:contains("Edit")
-    the user clicks the button/link          link = Add a new external role profile
-    the user clicks the button/link          jQuery = button:contains("Confirm role profile")
-    the user clicks the button/link          jQuery = button:contains("Save and return")
+    log in as a different user                    &{ifs_admin_user_credentials}
+    the user clicks the button/link               link = Manage users
+    the user enters text to a text field          id = filter   ${ktaEmail}
+    the user clicks the button/link               css = [class="btn"]
+    the user clicks the button/link               jQuery = a:contains("Edit")
+    the user clicks the button/link               link = Add a new external role profile
+    the user selects a new external user role     KNOWLEDGE_TRANSFER_ADVISER
+    the user clicks the button/link               jQuery = button:contains("Confirm role profile")
+    the user clicks the button/link               jQuery = button:contains("Save and return")
+
+the user selects a new external user role
+    [Arguments]   ${userRole}
+    the user selects the radio button     role  ${userRole}
+    the user clicks the button/link       jQuery = button:contains("Save and continue")
+
+the user search for an existing user
+    [Arguments]   ${name}
+    the user enters text to a text field     id = filter   ${name}
+    the user clicks the button/link          css = input[type="submit"]
