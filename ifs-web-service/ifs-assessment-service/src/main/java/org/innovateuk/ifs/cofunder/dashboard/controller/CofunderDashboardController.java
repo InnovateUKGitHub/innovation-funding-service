@@ -27,6 +27,6 @@ public class CofunderDashboardController {
     @NavigationRoot
     public String dashboard(Model model, UserResource loggedInUser) {
         model.addAttribute("model", cofunderDashboardModelPopulator.populateModel(loggedInUser));
-        return "cofunder-dashboard";
+        return "cofunder/cofunder-dashboard";
     }
 }

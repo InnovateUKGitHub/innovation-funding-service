@@ -37,7 +37,7 @@ public class CofunderDashboardControllerTest extends BaseControllerMockMVCTest<C
 
         MvcResult result = mockMvc.perform(get("/cofunder/dashboard"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("cofunder-dashboard"))
+                .andExpect(view().name("cofunder/cofunder-dashboard"))
                 .andReturn();
 
         CofunderDashboardViewModel actual = (CofunderDashboardViewModel) result.getModelAndView().getModel().get("model");
