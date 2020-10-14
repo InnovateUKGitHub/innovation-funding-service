@@ -31,4 +31,16 @@ public enum CofunderState implements ProcessState, IdentifiableEnum {
     public long getId() {
         return id;
     }
+
+    public boolean isCreated() {
+        return this == CREATED;
+    }
+
+    public boolean isRejected() {
+        return this == REJECTED;
+    }
+
+    public boolean isAccepted() {
+        return this == ACCEPTED;
+    }
 }
