@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -216,7 +217,7 @@ public class FinanceLinksUtilTest {
     }
 
     @Test
-    public void financesLinkForCofunderWithAcceptedState() {
+    public void financesLinkForCofunderWithAssignment() {
         competition.setFundingType(FundingType.KTP);
 
         UserResource user = newUserResource()
@@ -237,7 +238,7 @@ public class FinanceLinksUtilTest {
     }
 
     @Test
-    public void noFinancesLinkForCofunderWithNotAcceptedState() {
+    public void noFinancesLinkForCofunderWithNoAssignment() {
         competition.setFundingType(FundingType.KTP);
 
         UserResource user = newUserResource()
@@ -249,7 +250,7 @@ public class FinanceLinksUtilTest {
         cofunderAssignment.setState(CofunderState.REJECTED);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
-        when(cofunderAssignmentRestService.getAssignment(userId, applicationId)).thenReturn(RestResult.restSuccess(cofunderAssignment));
+        when(cofunderAssignmentRestService.getAssignment(userId, applicationId)).thenReturn(RestResult.restFailure(HttpStatus.NOT_FOUND));
 
         Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.emptyList(), user, application, competition);
 
