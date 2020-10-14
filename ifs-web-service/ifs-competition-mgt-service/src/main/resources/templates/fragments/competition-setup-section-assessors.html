@@ -224,6 +224,20 @@
                                 Detailed
                             </label>
                         </div>
+                        <div class="govuk-radios__item">
+                            <input id="assessorFinanceView-2"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.assessorFinanceView}"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   value="ALL"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
+                            <label for="assessorFinanceView-1"
+                                   class="govuk-label govuk-radios__label">
+                                All
+                            </label>
+                        </div>
                     </div>
                 </fieldset>
 
