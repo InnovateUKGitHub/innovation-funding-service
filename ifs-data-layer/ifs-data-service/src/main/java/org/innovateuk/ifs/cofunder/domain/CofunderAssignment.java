@@ -20,7 +20,7 @@ public class CofunderAssignment extends Process<User, Application, CofunderState
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY, orphanRemoval = true)
     private CofunderOutcome cofunderOutcome;
 
     @Column(name="activity_state_id")
@@ -71,6 +71,9 @@ public class CofunderAssignment extends Process<User, Application, CofunderState
     }
 
     public void setCofunderOutcome(CofunderOutcome cofunderOutcome) {
+        if (cofunderOutcome != null) {
+            cofunderOutcome.setProcess(this);
+        }
         this.cofunderOutcome = cofunderOutcome;
     }
 

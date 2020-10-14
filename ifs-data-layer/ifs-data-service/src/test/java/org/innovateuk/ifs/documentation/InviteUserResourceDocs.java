@@ -8,7 +8,8 @@ public class InviteUserResourceDocs {
 
     public static final FieldDescriptor[] inviteUserResourceFields = {
             fieldWithPath("invitedUser").description("The user for whom the invitation is being sent"),
-            fieldWithPath("role").type("String").description("The role of the invited user")
+            fieldWithPath("role").type("String").description("The role of the invited user"),
+            fieldWithPath("organisation").type("String").description("The organisation")
     };
 
     public static final FieldDescriptor[] roleInviteResourceFields = {

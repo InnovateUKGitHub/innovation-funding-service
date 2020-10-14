@@ -9,10 +9,12 @@ import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,8 +77,9 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
         CofunderDecisionResource decision = new CofunderDecisionResource();
         when(cofunderAssignmentService.decision(assignmentId, decision)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/assignment/{userId}/decision", assignmentId)
-                .content(toJson(decision)))
+        mockMvc.perform(post("/cofunder/assignment/{assignmentId}/decision", assignmentId)
+                .content(toJson(decision))
+                .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(cofunderAssignmentService, only()).decision(assignmentId, decision);
@@ -87,7 +90,7 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
         long assignmentId = 1L;
         when(cofunderAssignmentService.edit(assignmentId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/assignment/{userId}/edit", assignmentId))
+        mockMvc.perform(post("/cofunder/assignment/{assignmentId}/edit", assignmentId))
                 .andExpect(status().isOk());
 
         verify(cofunderAssignmentService, only()).edit(assignmentId);
@@ -97,11 +100,13 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
     public void findApplicationsNeedingCofunders() throws Exception {
         long competitionId = 1L;
         String filter = "filter";
-        PageRequest pageRequest = PageRequest.of(0, 10);
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "id");
         ApplicationsForCofundingPageResource expected = new ApplicationsForCofundingPageResource();
         when(cofunderAssignmentService.findApplicationsNeedingCofunders(competitionId, filter, pageRequest)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/competition/{competitionId}?filter={filter}&page={page}&size={size}", competitionId, filter, pageRequest.getPageNumber(), pageRequest.getPageSize()))
+        mockMvc.perform(get("/cofunder/competition/{competitionId}?filter={filter}&page={page}&size={size}", competitionId, filter, page, size))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
@@ -112,11 +117,13 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
     public void findAvailableCofundersForApplication() throws Exception {
         long applicationId = 1L;
         String filter = "filter";
-        PageRequest pageRequest = PageRequest.of(0, 10);
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "id");
         CofundersAvailableForApplicationPageResource expected = new CofundersAvailableForApplicationPageResource();
         when(cofunderAssignmentService.findAvailableCofundersForApplication(applicationId, filter, pageRequest)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/application/{applicationId}?filter={filter}&page={page}&size={size}", applicationId, filter, pageRequest.getPageNumber(), pageRequest.getPageSize()))
+        mockMvc.perform(get("/cofunder/application/{applicationId}?filter={filter}&page={page}&size={size}", applicationId, filter, page, size))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 

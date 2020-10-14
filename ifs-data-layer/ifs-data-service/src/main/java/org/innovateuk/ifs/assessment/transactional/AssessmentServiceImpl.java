@@ -230,7 +230,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     @Transactional
     public ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
-        return getAssessor(assessmentCreateResource.getAssessorId())
+        return getUser(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application ->  createAssessment(assessor, application, ASSESSOR))
@@ -264,10 +264,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         }
 
         return processRole;
-    }
-
-    private ServiceResult<User> getAssessor(Long assessorId) {
-        return find(userRepository.findByIdAndRoles(assessorId, ASSESSOR), notFoundError(User.class, ASSESSOR, assessorId));
     }
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
