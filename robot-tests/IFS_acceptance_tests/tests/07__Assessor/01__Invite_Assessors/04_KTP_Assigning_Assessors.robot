@@ -181,10 +181,10 @@ Assessor can save the KTP application assessment
 
 Assessor can submit the KTP application assessment
     [Documentation]   IFS-7915, IFS-8295
-    Given the user selects the checkbox     assessmentIds1
-    When the user clicks the button/link    id = submit-assessment-button
-    And the user clicks the button/link     jQuery = button:contains("Yes I want to submit the assessments")
-    Then the user should see the element    jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
+    Given the user selects the checkbox             assessmentIds1
+    When the user clicks the button/link            id = submit-assessment-button
+    And the user clicks the button/link             jQuery = button:contains("Yes I want to submit the assessments")
+    Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
 
 
 *** Keywords ***

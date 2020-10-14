@@ -42,6 +42,10 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
+        competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
+                .findAny()
+                .ifPresent(financeSection ->
+                        financeSection.withAssessorGuidanceDescription("The knowledge base partner is required to submit their project finance details."));
         competitionTypeSections.add(
                 ktpAssessmentSection()
                         .withQuestions(ktpDefaultQuestions())
@@ -230,13 +234,11 @@ public class KtpTemplate implements FundingTypeTemplate {
         return newArrayList(aFormInput()
                         .withType(FormInputType.ASSESSOR_SCORE)
                         .withScope(FormInputScope.ASSESSMENT)
-                        .withGuidanceAnswer("Your score should be based on the following")
-                        .withGuidanceTitle("Guidance for assessing " + questionName)
                         .withActive(true),
                 aFormInput()
                         .withType(FormInputType.TEXTAREA)
                         .withScope(FormInputScope.ASSESSMENT)
-                        .withGuidanceAnswer("Your score should be based on the following")
+                        .withGuidanceAnswer("Your score should be based on the following:")
                         .withGuidanceTitle("Guidance for assessing " + questionName)
                         .withWordCount(100)
                         .withActive(true)
