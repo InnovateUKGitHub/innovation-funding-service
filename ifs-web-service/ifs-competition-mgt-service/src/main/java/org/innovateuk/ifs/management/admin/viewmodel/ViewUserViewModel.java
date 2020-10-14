@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.admin.viewmodel;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.ProfileRole;
@@ -10,7 +11,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
+import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
 
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
@@ -56,7 +57,7 @@ public class ViewUserViewModel {
     }
 
     public boolean isLinkVisibleToIfsAdmin() {
-        return isIfsAdmin() && !user.hasRole(KNOWLEDGE_TRANSFER_ADVISER) && isExternalRoleLinkEnabled();
+        return isIfsAdmin() && !CollectionUtils.containsAny(user.getRoles(), externalRolesToInvite()) && isExternalRoleLinkEnabled();
     }
 
     public boolean isCanEditUserDetails() {
