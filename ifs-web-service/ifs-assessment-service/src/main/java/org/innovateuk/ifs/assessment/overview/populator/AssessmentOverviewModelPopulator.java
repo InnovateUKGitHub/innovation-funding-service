@@ -139,7 +139,8 @@ public class AssessmentOverviewModelPopulator {
                     !questionFormInputs.isEmpty(),
                     isAssessed(questionFormInputs, responses),
                     scopeResponse,
-                    scoreResponse
+                    scoreResponse,
+                    scoreInput.isPresent()
             );
         });
     }

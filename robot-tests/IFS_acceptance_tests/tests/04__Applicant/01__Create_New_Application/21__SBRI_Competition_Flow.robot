@@ -308,7 +308,7 @@ the user fills in the competition close Milestones
     the user clicks the button/link     jQuery = button:contains("Done")
 
 the user should see milestones section marked as complete
-    the user clicks the button/link     link = Competition details
+    the user clicks the button/link     link = Back to competition details
     the user should see the element     jQuery = div:contains("Milestones") ~ .task-status-complete
 
 the user assign the stakeholder to the SBRI competition

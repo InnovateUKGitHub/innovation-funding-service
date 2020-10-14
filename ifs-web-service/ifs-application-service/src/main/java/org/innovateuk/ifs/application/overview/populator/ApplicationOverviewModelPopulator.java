@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -93,6 +94,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .stream()
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
+                .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
