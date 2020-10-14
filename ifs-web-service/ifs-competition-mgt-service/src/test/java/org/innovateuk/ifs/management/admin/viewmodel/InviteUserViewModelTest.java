@@ -29,6 +29,6 @@ public class InviteUserViewModelTest {
         assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
         assertEquals(InviteUserView.EXTERNAL_USER.getName(), viewModel.getTypeName());
         assertTrue(viewModel.isExternal());
-        assertEquals(viewModel.getRoles(), Role.externalRolesToInvite());
+        assertEquals(viewModel.getRoles(), Role.externalRolesToInvite().stream().collect(toSet()));
     }
 }

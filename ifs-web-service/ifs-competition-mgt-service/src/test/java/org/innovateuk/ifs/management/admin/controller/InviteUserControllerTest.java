@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.innovateuk.ifs.user.resource.Role.COFUNDER;
@@ -45,6 +46,8 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Test
     public void selectExternalRole() throws Exception {
+        ReflectionTestUtils.setField(controller, "cofunderEnabled", Boolean.TRUE);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/select-external-role"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/select-external-role"));
@@ -53,7 +56,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     @Test
     public void selectedRole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/select-external-role")
-                .param("roleId", "24"))
+                .param("role", COFUNDER.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/admin/invite-external-user?role=%s", COFUNDER.toString())));
     }
