@@ -211,12 +211,14 @@ KTA accepts to assess the KTP application
 
 Assessor completes the KTP category
     [Arguments]   ${feedbackText}
-    The user selects the option from the drop-down menu    10    css = .assessor-question-score
-    The user enters text to a text field                   css = .editor    ${feedbackText}
+    The user selects the option from the drop-down menu     10    css = .assessor-question-score
+    The user enters text to a text field                    css = .editor    ${feedbackText}
     Wait for autosave
     mouse out  css = .editor
-    Wait Until Page Contains Without Screenshots    Saved!
+    the user should see the element                         jQuery = span:contains("Saved!")
     The user clicks the button/link                         jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 Assessor should see the category details
     [Arguments]   ${category}   ${score}   ${percentage}
@@ -231,8 +233,10 @@ Assessor completes the scope section of an application
     The user enters text to a text field                    css = .editor    Testing feedback text
     Wait for autosave
     mouse out  css = .editor
-    Wait Until Page Contains Without Screenshots            Saved!
+    the user should see the element                         jQuery = span:contains("Saved!")
     the user clicks the button/link                         jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 Assessor should review the assessment category details
     [Arguments]   ${sectionStatus}   ${score}   ${idSelector}   ${feedbackText}
