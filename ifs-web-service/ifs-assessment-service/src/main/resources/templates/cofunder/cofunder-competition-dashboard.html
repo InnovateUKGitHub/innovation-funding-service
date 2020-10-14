@@ -45,18 +45,25 @@
                         <li th:each="app,iterStat : ${model.applications}">
                             <div class="task">
                                 <h3 class="govuk-heading-s"><a class="govuk-link"
-                                        href="#"
+                                        th:href="@{~/application/{applicationId}/summary(applicationId=${app.id})}"
                                         th:text="${app.name}"/></h3>
                                 <p th:text="${app.lead}" class="govuk-body govuk-!-margin-0"/>
                             </div>
-                            <div class="status">
-                                <strong th:if="${app.state.accepted}" class="status-msg msg-progress">
-                                    Accepted
-                                </strong>
-
-                                <strong th:if="${app.state.rejected}" class="status-msg msg-progress">
-                                    Declined
-                                </strong>
+                            <div th:if="${app.state.accepted or app.state.rejected}"
+                                 class="status-and-action">
+                                <p th:if="${app.state.accepted}"
+                                   class="govuk-body status-msg msg-progress msg-positive">Accepted</p>
+                                <p th:if="${app.state.rejected}"
+                                   class="govuk-body status-msg msg-progress">Declined</p>
+                                <div class="action">
+                                    <a class="govuk-link"
+                                       th:href="@{/cofunder/application/{applicationId}/response(applicationId=${app.id})}">Edit</a>
+                                </div>
+                            </div>
+                            <div th:unless="${app.state.accepted or app.state.rejected}"
+                                 class="status">
+                                <a class="govuk-link"
+                                   th:href="@{/cofunder/application/{applicationId}/response(applicationId=${app.id})}">Review</a>
                             </div>
                         </li>
                     </ul>
