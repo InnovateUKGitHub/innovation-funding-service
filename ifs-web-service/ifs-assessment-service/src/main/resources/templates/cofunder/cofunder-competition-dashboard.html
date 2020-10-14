@@ -62,6 +62,7 @@
                     </ul>
                 </div>
             </div>
+            <th:block th:insert="fragments/elements :: pagination(pagination=${model.pagination})" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
     </div>
