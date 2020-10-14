@@ -22,9 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
@@ -32,8 +31,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_ASSIGNMENT_ALREADY_EXISTS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_WORKFLOW_TRANSITION_FAILURE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -92,16 +90,15 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     public ServiceResult<Void> assign(List<Long> userIds, long applicationId) {
-        for(Long userId: userIds)  {
-            boolean exists = cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId);
-            if (!exists) {
-                ServiceResult<CofunderAssignmentResource> assignmentResult = doAssign(userId, applicationId);
-                if (assignmentResult.isFailure()) {
-                    return serviceFailure(assignmentResult.getFailure());
-                }
-            }
-        }
-        return serviceSuccess();
+        List<ServiceResult<CofunderAssignmentResource>> assignmentResults = userIds.stream().map(userId -> {
+                    boolean exists = cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId);
+                    if (!exists) {
+                        return doAssign(userId, applicationId);
+                    }
+                    return null;
+                }).filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        return aggregate(assignmentResults).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<Void> notifyUserAssignedAsCofunder(User user, Application application) {
@@ -126,14 +123,13 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     public ServiceResult<Void> removeAssignment(long userId, long applicationId) {
-        return find(application(applicationId), user(userId)).andOnSuccessReturnVoid(
+        return find(application(applicationId), user(userId)).andOnSuccess(
                 (application, user) ->
                     findCofunderAssignmentByUserAndApplication(userId, applicationId)
-                            .andOnSuccessReturn((CofunderAssignment assignment) -> {
+                            .andOnSuccess((CofunderAssignment assignment) -> {
                                 cofunderAssignmentRepository.delete(assignment);
                                 return notifyUserRemovedAsCofunder(user, application);
-                            })
-        );
+                            }));
     }
 
     @Override
