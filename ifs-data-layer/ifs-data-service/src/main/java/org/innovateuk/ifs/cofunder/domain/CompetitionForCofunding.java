@@ -6,6 +6,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.ZonedDateTime;
 
+/**
+ * This allows us to use competition as a constructor argument (enabling us to use its getCompetitionStatus method)
+ * as the resource DTO layer does not have access to domain classes.
+ */
 public class CompetitionForCofunding {
     private long competitionId;
     private String competitionName;
