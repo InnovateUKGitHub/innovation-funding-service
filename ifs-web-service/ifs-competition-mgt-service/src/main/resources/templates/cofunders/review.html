@@ -11,7 +11,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block
-        th:insert="fragments/layout :: header-sub (linkTitle='Back to co-funders',linkUrl=@{/competition/{id}/cofunders/view(id=${model.competitionId})})"/>
+        th:insert="fragments/layout :: header-sub (linkTitle='Back to in assessment',linkUrl=@{/competition/{id}/cofunders/view(id=${model.competitionId})})"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
@@ -61,6 +61,12 @@
                 </li>
             </ul>
         </th:block>
+
+        <div class="govuk-!-margin-top-6">
+            <a th:href="@{/competition/{id}/cofunders/view(id=${model.competitionId})}"
+               class="govuk-button govuk-button--secondary">Return to co-funders
+            </a>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
