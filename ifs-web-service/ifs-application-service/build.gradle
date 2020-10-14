@@ -27,11 +27,11 @@ version project.version
 
 apply plugin: 'idea'
 
-project.version = applicationServiceVersion
-tagDocker.tag = applicationServiceVersion
-osStageRemote.tag = applicationServiceVersion
-tagDockerLocal.tag = applicationServiceVersion
-osStageLocal.tag = applicationServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.hostName = "application-svc"
 createContainer.containerName = "application-svc"

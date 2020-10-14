@@ -23,11 +23,11 @@ apply plugin: 'idea'
 group 'innovateuk'
 version project.version
 
-project.version = dataServiceVersion
-tagDocker.tag = dataServiceVersion
-osStageRemote.tag = dataServiceVersion
-tagDockerLocal.tag = dataServiceVersion
-osStageLocal.tag = dataServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 afterEvaluate {
     ext {
