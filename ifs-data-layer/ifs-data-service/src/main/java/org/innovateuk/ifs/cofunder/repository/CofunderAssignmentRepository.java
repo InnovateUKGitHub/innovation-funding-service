@@ -45,7 +45,7 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
                     "JOIN ProcessRole pr on pr.applicationId = application.id " +
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
                     "WHERE application.competition.id = :competitionId " +
-                    "AND application.submittedDate IS NOT NULL " +
+                    "AND application.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED " +
                     "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id"
