@@ -35,15 +35,15 @@
         <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
               th:object="${form}">
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                    <h2 class="govuk-fieldset__heading">Select user role</h2>
-                </legend>
                 <div class="govuk-form-group" id="select-partner-section"
                      th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
                     <th:block th:if="${#fields.hasErrors('*')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}"
                               th:text="${err}"></span>
                     </th:block>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">Select user role</h2>
+                    </legend>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="role : ${roles}">
                             <input type="radio"
