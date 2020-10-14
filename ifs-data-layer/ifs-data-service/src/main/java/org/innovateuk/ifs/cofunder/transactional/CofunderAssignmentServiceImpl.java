@@ -92,12 +92,15 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     public ServiceResult<Void> assign(List<Long> userIds, long applicationId) {
-        userIds.forEach(userId -> {
+        for(Long userId: userIds)  {
             boolean exists = cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId);
             if (!exists) {
-                doAssign(userId, applicationId);
+                ServiceResult<CofunderAssignmentResource> assignmentResult = doAssign(userId, applicationId);
+                if (assignmentResult.isFailure()) {
+                    return serviceFailure(assignmentResult.getFailure());
+                }
             }
-        });
+        }
         return serviceSuccess();
     }
 
