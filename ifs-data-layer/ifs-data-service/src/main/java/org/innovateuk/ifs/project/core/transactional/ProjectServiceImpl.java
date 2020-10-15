@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
@@ -13,7 +11,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -190,15 +187,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(long applicationId) {
-
-        return getApplication(applicationId).andOnSuccess(application -> {
-
-            if (FundingDecisionStatus.FUNDED.equals(application.getFundingDecision())) {
-                return createSingletonProjectFromApplicationId(applicationId);
-            } else {
-                return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
-            }
-        });
+        return getApplication(applicationId).andOnSuccess(application ->
+                createSingletonProjectFromApplicationId(applicationId));
     }
 
     @Override
