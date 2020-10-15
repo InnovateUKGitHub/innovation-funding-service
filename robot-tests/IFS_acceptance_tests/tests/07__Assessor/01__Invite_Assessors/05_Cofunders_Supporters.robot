@@ -1,9 +1,11 @@
 *** Settings ***
 Documentation    
 ...
+...     IFS-8409 Co funder - application response & edit 
+...
 
-#Suite Setup       Custom suite setup
-#Suite Teardown    the user closes the browser
+Suite Setup       Custom suite setup
+Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/Competition_Commons.robot
@@ -22,40 +24,39 @@ ${KTP_Application_URL}                ${SERVER}/assessment/cofunder/application/
 
 The user sees the validation when responding to the Cofunder/Supprter review
     [Documentation]   IFS-8409
-    #Given the user logs-in in new browser               &{Supporter01_credentials}
-    Then the user navigates to the page                 ${KTP_Application_URL} 
-    Logging in and Error Checking                       ${supporter01_email}  ${short_password}
-    the user clicks the button/link                     jQuery = button:contains("Save review and return to applications")
-    #the user should see a field and summary error       Please select an option.  #To do TBC 
-    the user should see a field and summary error       Please enter some text.
-    #To do - Should be more erros here!!! More enter text and select an option!!!
-
-    the user selects the radio button     decision  decision-no
-    the user clicks the button/link       jQuery = button:contains("Save review and return to applications")
-    #the user should not see a field and summary error       Please select an option.  #To do TBC 
-    the user should see a field and summary error       Please enter some text.
-
-    the user selects the radio button     decision  decision-yes
-    the user clicks the button/link       jQuery = button:contains("Save review and return to applications")
-    #the user should not see a field and summary error       Please select an option.  #To do TBC 
-    the user should see a field and summary error       Please enter some text.
+    Given the guest user inserts user email and password        ${supporter01_email}  ${short_password}
+    And the guest user clicks the log-in button
+    And the user navigates to the page                          ${KTP_Application_URL} 
+    Then the user selects the radio button                      decision  decision-no
+    And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
+    Then the user should see a field and summary error          Please provide some feedback.
+    And the user selects the radio button                       decision  decision-yes
+    Then the user clicks the button/link                        jQuery = button:contains("Save review and return to applications")
+    And the user should see a field and summary error           Please provide some feedback.
+    Then the user enters multiple strings into a text field     css = .editor  a${SPACE}  252
+    And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
+    Then the user should see a field error                      Maximum word count exceeded. Please reduce your word count to 250.
 
 The user responds to the Cofunder/Supprter review No
     [Documentation]   IFS-8409
-    the user selects the radio button            decision  decision-no
-    
-    The user enters text to a docusign field     comments  This is the comments from the supporter
-    the user clicks the button/link              jQuery = button:contains("Save review and return to applications")
+    Given the user selects the radio button           decision  decision-no
+    When the user enters text to a text field         css = .editor  This is the comments from the supporter
+    Then the user clicks the button/link              jQuery = button:contains("Save review and return to applications")
+    And the user navigates to the page                ${KTP_Application_URL}
+    Then the user should see the element              jQuery = p:contains("This is the comments from the supporter")
 
-The user responds to the Cofunder/Supprter review No
+The user responds to the Cofunder/Supprter review Yes
     [Documentation]   IFS-8409
-    Then the user navigates to the page                 ${KTP_Application_URL} 
-    the user selects the radio button            decision  decision-yes
-    
-    The user enters text to a docusign field     comments  This is the comments from the supporter
-    the user clicks the button/link              jQuery = button:contains("Save review and return to applications")
+    Given the user navigates to the page         ${KTP_Application_URL} 
+    When the user clicks the button/link         jQuery = button:contains("Edit")
+    Then the user selects the radio button       decision  decision-yes
+    And the user enters text to a text field     css = .editor  This is the comments from the supporter
+    Then the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
 
 
 *** Keywords ***
 Custom suite setup
-    The user logs-in in new browser     &{ifs_admin_user_credentials}  #May need to change this
+    The guest user opens the browser
+
+Custom suite teardown
+    The user closes the browser
