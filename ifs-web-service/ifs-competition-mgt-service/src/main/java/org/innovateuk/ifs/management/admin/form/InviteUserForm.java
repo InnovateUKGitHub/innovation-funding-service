@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 /**
  * Form to capture the posted details of the newly invited user
  */
-@FieldRequiredIf(required = "organisation", argument = "coFunder", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "organisation", argument = "coFunder", predicate = true, message = "{validation.invite.organisation.required}")
 @FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = true, message = "{validation.kta.invite.email.required}")
 @FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = false, message = "{validation.invite.email.required}")
 @FieldComparison(
