@@ -180,7 +180,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                         competitionName,
                         applicationName,
                         assessorEmail,
-                        question.getShortName(),
+                        question.getId(),
                         formInputType,
                         formInputType == FormInputType.ASSESSOR_RESEARCH_CATEGORY,
                         value));
@@ -253,6 +253,22 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 value).build();
     }
 
+    private void createAssessorResponse(String competitionName,
+                                        String applicationName,
+                                        String assessorEmail,
+                                        long questionId,
+                                        FormInputType formInputType,
+                                        boolean isResearchCategory,
+                                        String value) {
+
+        assessorResponseBuilder.withAssessorResponseData(competitionName,
+                applicationName,
+                assessorEmail,
+                questionId,
+                formInputType,
+                isResearchCategory,
+                value).build();
+    }
     private void submitAssessment(AssessmentLine line) {
         assessmentBuilder.withSubmission(
                 line.applicationName,

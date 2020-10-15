@@ -83,7 +83,7 @@ Test Heading: Mark as done
     Then the user should see the element         jQuery = h1:contains("Test Heading")
     And the user should see the element          jQuery = dt:contains("Question title") + dd:contains("Test title")
     And the user should see the element          jQuery = dt:contains("Max word count") + dd:contains("150")
-    [Teardown]  the user clicks the button/link  link = Application
+    [Teardown]  the user clicks the button/link  link = Back to application
 
 Equality, diversity and inclusion should display default content
     [Documentation]    IFS-7700
@@ -100,7 +100,7 @@ Equality, diversity and inclusion: validations
 
 Equality, diversity and inclusion can be removed from application section
     [Documentation]    IFS-7700
-    Given the user clicks the button/link        link = Application
+    Given the user clicks the button/link        link = Back to application
     When the user clicks the button/link         name = deleteQuestion
     Then the user should not see the element     jQuery = a:contains("Equality, diversity and inclusion")
 
@@ -187,7 +187,7 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    John Doe    id = executiveUserId
     And the user clicks the button twice        css = label[for="stateAid2"]
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user clicks the button/link         link = Competition details
+    And the user clicks the button/link         link = Back to competition details
 
 the user clears predefined text in EDI question
     The user enters text to a text field    id = question.shortTitle        ${EMPTY}
