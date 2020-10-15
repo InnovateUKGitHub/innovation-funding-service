@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertThat;
 
 @Rollback
@@ -64,6 +65,7 @@ import static org.junit.Assert.assertThat;
     public void findApplicationsNeedingCofunders() {
         loginSteveSmith();
         TestData data = setupTestData();
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COFUNDER).withId(data.cofunder.getId()).build());
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("activityState"));
 
