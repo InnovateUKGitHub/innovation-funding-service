@@ -36,7 +36,7 @@ The comp admin views the feedback of the application
     Given Log in as a different user                &{Comp_admin1_credentials}
     And the user navigates to the page              ${server}/management/competition/99/cofunders/view
     When And the user clicks the button/link        link = ${cofunderApplicationID}
-    Given the user clicks the button/link           link = Back to co-funders
+    And the user clicks the button/link             link = Back to co-funders
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the cofunder review
 
@@ -45,7 +45,7 @@ The finance manager views the feedback of the application
     Given Log in as a different user                &{internal_finance_credentials}
     And the user navigates to the page              ${server}/management/competition/99/cofunders/view
     When And the user clicks the button/link        link = ${cofunderApplicationID}
-    Given the user clicks the button/link           link = Back to co-funders
+    And the user clicks the button/link             link = Back to co-funders
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the cofunder review
 
