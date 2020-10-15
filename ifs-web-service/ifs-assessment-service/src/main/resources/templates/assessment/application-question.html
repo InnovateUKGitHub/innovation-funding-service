@@ -36,21 +36,23 @@
                       data-autosave="assessorFeedback">
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                    <p class="govuk-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
-                    <p class="govuk-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
+                    <th:block th:if="${model.applicantResponse != null}">
+                        <p class="govuk-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
+                        <p class="govuk-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
 
-                    <div class="govuk-form-group">
-                        <h2 class="govuk-heading-m">
-                            <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
-                            <th:block th:text="${model.questionName}" />
-                        </h2>
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-heading-m">
+                                <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
+                                <th:block th:text="${model.questionName}" />
+                            </h2>
 
-                        <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response.</p>
-                    </div>
+                            <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response.</p>
+                        </div>
+                    </th:block>
 
                     <div th:if="${model.appendixExists}">
                         <th:block th:each="appendix : ${model.appendixDetails}">
-                            <div th:replace="question-type/form-elements :: readonly-file-download
+                            <th:block th:insert="question-type/form-elements :: readonly-file-download
                             (filename=${appendix.filename},
                             filesizeKbytes=${appendix.filesizeKbytes},
                             fileDescription=${model.appendixFileDescription}+':',
@@ -59,7 +61,7 @@
                     </div>
 
                     <div th:if="${model.templateDocumentExists}">
-                        <div th:replace="question-type/form-elements :: readonly-file-download
+                        <th:block th:insert="question-type/form-elements :: readonly-file-download
                         (filename=${model.templateDocumentDetails.filename},
                         filesizeKbytes=${model.templateDocumentDetails.filesizeKbytes},
                         fileDescription=${model.templateDocumentFileDescription}+':',
@@ -67,7 +69,7 @@
                     </div>
 
                     <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
-                        <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
+                        <th:block th:insert="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" th:with="feedbackWillBeReleasedToApplicant=${!model.ktp}" />
                     </div>
 
                     <th:block th:if="${responseRequired}">

@@ -14,11 +14,11 @@ version project.version
 
 processResources.dependsOn applyProfiles
 
-project.version = alertServiceVersion
-tagDocker.tag = alertServiceVersion
-osStageRemote.tag = alertServiceVersion
-tagDockerLocal.tag = alertServiceVersion
-osStageLocal.tag = alertServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 

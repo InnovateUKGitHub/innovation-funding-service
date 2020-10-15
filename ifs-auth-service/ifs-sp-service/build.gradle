@@ -43,11 +43,11 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
-project.version = spVersion
-tagDocker.tag = spVersion
-osStageRemote.tag = spVersion
-tagDockerLocal.tag = spVersion
-osStageLocal.tag = spVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.containerName = "shib"
 createContainer.containerId = "shib"

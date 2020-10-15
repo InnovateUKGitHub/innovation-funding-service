@@ -49,11 +49,11 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
-project.version = ldapVersion
-tagDocker.tag = ldapVersion
-osStageRemote.tag = ldapVersion
-tagDockerLocal.tag = ldapVersion
-osStageLocal.tag = ldapVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.containerName = "ldap"
 createContainer.containerId = "ldap"
