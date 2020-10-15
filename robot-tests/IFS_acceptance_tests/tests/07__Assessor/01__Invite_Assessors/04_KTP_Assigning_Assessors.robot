@@ -103,76 +103,76 @@ Assessor can score cohesiveness category in the KTP application
     When Assessor completes the KTP category          Testing feedback text
     Then Assessor should see the category details     Innovation   40   100%
 
-Assessor is presented an error when saving an incomplete assessment
-    [Documentation]   IFS-7915, IFS-8295
-    Given the user clicks the button/link             link = Review and complete your assessment
-    When the user clicks the button/link              jQuery = button:contains("Save assessment")
-    Then the user should see a summary error          You must select an option.
+Assessor is presented with an error message when saving an assessment without guidance for funding sutability decision
+    [Documentation]   IFS-8295
+    Given the user clicks the button/link                  link = Review and complete your assessment
+    When the user clicks the button/link                   jQuery = button:contains("Save assessment")
+    Then the user should see a field and summary error     You must select an option.
+    And the user should see the element                    jQuery = h1:contains("Assessment summary")
+    And the user should see the element                    jQuery = h2:contains("Review assessment")
 
-Assessor can review feedback they added to the scope assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
-    Given the user should see the element                                   jQuery = h1:contains("Assessment summary")
-    And the user should see the element                                     jQuery = h2:contains("Review assessment")
+Assessor should see the scope section as incomplete if try to review the assessment without completing scope section
+    [Documentation]   IFS-8295
     When the user clicks the button/link                                    id = accordion-questions-heading-1
     Then Assessor should review the incomplete scope category details       Incomplete    accordion-questions-content-1   ${EMPTY}
 
 Assessor can review feedback they added to the impact assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                           id = accordion-questions-heading-2
     Then Assessor should review the assessment category details     Complete    10/10   accordion-questions-content-2   Testing feedback text
 
 Assessor can review feedback they added to the innovation assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            id = accordion-questions-heading-3
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-3   Testing feedback text
 
 Assessor can review feedback they added to the challenge assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            id = accordion-questions-heading-4
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-4   Testing feedback text
 
 Assessor can review feedback they added to the cohesiveness assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            id = accordion-questions-heading-5
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-5   Testing feedback text
 
 Assessor can amend the feedback they added to the scope assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            link = Edit the scope section
     When Assessor completes the scope section of an application
     And the user clicks the button/link                              link = Review and complete your assessment
     Then Assessor should review the scope category details           Complete    Yes   accordion-questions-content-1   Testing feedback text
 
 Assessor can amend the feedback they added to the impact assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            link = Edit the impact section
     When Assessor completes the KTP category                         NEW testing feedback text
     And the user clicks the button/link                              link = Review and complete your assessment
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-2   NEW testing feedback text
 
 Assessor can amend the feedback they added to the innovation assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            link = Edit the innovation section
     When Assessor completes the KTP category                         NEW testing feedback text
     And the user clicks the button/link                              link = Review and complete your assessment
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-3   NEW testing feedback text
 
 Assessor can amend the feedback they added to the challenge assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            link = Edit the challenge section
     When Assessor completes the KTP category                         NEW testing feedback text
     And the user clicks the button/link                              link = Review and complete your assessment
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-4   NEW testing feedback text
 
 Assessor can amend the feedback they added to the cohesiveness assessment category section in the KTP application
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user clicks the button/link                            link = Edit the cohesiveness section
     When Assessor completes the KTP category                         NEW testing feedback text
     And the user clicks the button/link                              link = Review and complete your assessment
     Then Assessor should review the assessment category details      Complete    10/10   accordion-questions-content-5   NEW testing feedback text
 
 Assessor can save the KTP application assessment
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user should see the element           jQuery = .govuk-body:contains("You must explain your decision")
     And the user selects the radio button           fundingConfirmation   true
     And the user enters text to a text field        id = feedback    Testing feedback text
@@ -180,7 +180,7 @@ Assessor can save the KTP application assessment
     Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Assessed")
 
 Assessor can submit the KTP application assessment
-    [Documentation]   IFS-7915, IFS-8295
+    [Documentation]   IFS-8295
     Given the user selects the checkbox             assessmentIds1
     When the user clicks the button/link            id = submit-assessment-button
     And the user clicks the button/link             jQuery = button:contains("Yes I want to submit the assessments")
