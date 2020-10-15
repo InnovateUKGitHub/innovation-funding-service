@@ -66,9 +66,4 @@ VALUES
 INSERT INTO user_role
 (user_id, role_id)
 VALUES
-((SELECT id FROM user WHERE email = 'debbie.darper@ktn-uk.test'), @kta_role_id);
-
-INSERT INTO user_role
-(user_id, role_id)
-VALUES
 ((SELECT id FROM user WHERE email = 'hubert.cumberdale@salad-fingers.com'), @applicant_role_id);
