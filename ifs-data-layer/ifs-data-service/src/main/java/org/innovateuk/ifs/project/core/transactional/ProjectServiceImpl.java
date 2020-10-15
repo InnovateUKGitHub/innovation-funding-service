@@ -11,7 +11,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -249,44 +248,46 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             project.setPartnerOrganisations(partnerOrganisations);
             Project savedProject = projectRepository.save(project);
 
-            if (application.getCompetition().getFundingType() == FundingType.KTP) {
-                prepopulateKtpData(savedProject);
-            }
-
             return createProcessEntriesForNewProject(savedProject).
+                    andOnSuccess(() -> handleFundingTypeSpecificSetup(savedProject)).
                     andOnSuccess(() -> setCompetitionProjectSetupStartedDate(savedProject)).
                     andOnSuccessReturn(() -> projectMapper.mapToResource(savedProject));
         });
     }
 
-    private void prepopulateKtpData(Project project) {
-        PartnerOrganisation lead = project.getPartnerOrganisations()
-                .stream()
-                .filter(PartnerOrganisation::isLeadOrganisation)
-                .findAny()
-                .get();
-        Address address = lead.getOrganisation().getAddresses()
-                .stream()
-                .filter(orgAddress -> orgAddress.getAddressType().getId().equals(KNOWLEDGE_BASE.getId()))
-                .findFirst()
-                .map(OrganisationAddress::getAddress)
-                .orElse(null);
+    private ServiceResult<Void> handleFundingTypeSpecificSetup(Project project) {
+        if (project.getApplication().getCompetition().isKtp()) {
+            PartnerOrganisation lead = project.getPartnerOrganisations()
+                    .stream()
+                    .filter(PartnerOrganisation::isLeadOrganisation)
+                    .findAny()
+                    .get();
+            Address address = lead.getOrganisation().getAddresses()
+                    .stream()
+                    .filter(orgAddress -> orgAddress.getAddressType().getId().equals(KNOWLEDGE_BASE.getId()))
+                    .findFirst()
+                    .map(OrganisationAddress::getAddress)
+                    .orElse(null);
 
-        project.setAddress(address);
+            project.setAddress(address);
+            if (!projectDetailsWorkflowHandler.projectAddressAdded(project, project.getProjectUsers().get(0))) {
+                return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
+            }
 
-        Map<Long, ProcessRole> organisationIdToRoleMap = project.getApplication().getProcessRoles().stream()
+            Map<Long, ProcessRole> organisationIdToRoleMap = project.getApplication().getProcessRoles().stream()
                 .filter(pr -> pr.getOrganisationId() != null)
                 .collect(Collectors.toMap(ProcessRole::getOrganisationId, Function.identity(), (pr1, pr2) -> pr2.isLeadApplicant() ? pr2 : pr1));
-        organisationIdToRoleMap.forEach((orgId, pr) -> {
-            Organisation organisation = organisationRepository.findById(pr.getOrganisationId()).orElse(null);
-            if (pr.isLeadApplicant()) {
-                project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_MANAGER));
-            }
-            project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_FINANCE_CONTACT));
-        });
+            organisationIdToRoleMap.forEach((orgId, pr) -> {
+                Organisation organisation = organisationRepository.findById(pr.getOrganisationId()).orElse(null);
+                if (pr.isLeadApplicant()) {
+                    project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_MANAGER));
+                }
+                project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_FINANCE_CONTACT));
+            });
 
-        Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).findAny();
-        ktaRole.ifPresent(role -> project.setProjectMonitoringOfficer(new MonitoringOfficer(role.getUser(), project)));
+            Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).findAny();
+            ktaRole.ifPresent(role -> project.setProjectMonitoringOfficer(new MonitoringOfficer(role.getUser(), project)));
+        }
     }
 
     private void setCompetitionProjectSetupStartedDate(Project newProject) {
@@ -340,11 +341,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
-        boolean success = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser);
-        if (success && newProject.getApplication().getCompetition().isKtp()) {
-            success = projectDetailsWorkflowHandler.projectAddressAdded(newProject, originalLeadApplicantProjectUser);
-        }
-        if (success) {
+        if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
