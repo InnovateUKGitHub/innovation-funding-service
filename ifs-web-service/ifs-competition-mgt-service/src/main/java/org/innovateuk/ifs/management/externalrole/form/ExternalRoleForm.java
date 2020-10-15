@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.externalrole.form;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.user.resource.Role;
 
-@FieldRequiredIf(required = "organisation", argument = "coFunder", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "organisation", argument = "coFunder", predicate = true, message = "{validation.invite.organisation.required}")
 public class ExternalRoleForm {
 
     private String email;
