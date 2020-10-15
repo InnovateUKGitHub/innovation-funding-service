@@ -28,9 +28,9 @@ The user sees the validation when responding to the Cofunder/Supprter review
     Then the user navigates to the page                         ${KTP_Application_URL} 
     And the user checks the feedback validation                 decision-no 
     And the user checks the feedback validation                 decision-yes 
-    Then the user enters multiple strings into a text field     css = .editor  a${SPACE}  252
+    And the user enters multiple strings into a text field      css = .editor  a${SPACE}  252
     And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
-    Then the user should see a field error                      Maximum word count exceeded. Please reduce your word count to 250.
+    And the user should see a field error                       Maximum word count exceeded. Please reduce your word count to 250.
 
 The user responds to the Cofunder/Supprter review No
     [Documentation]   IFS-8409
