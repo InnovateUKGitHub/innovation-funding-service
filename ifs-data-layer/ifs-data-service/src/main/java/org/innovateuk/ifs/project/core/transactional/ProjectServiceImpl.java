@@ -288,6 +288,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).findAny();
             ktaRole.ifPresent(role -> project.setProjectMonitoringOfficer(new MonitoringOfficer(role.getUser(), project)));
         }
+        return serviceSuccess();
     }
 
     private void setCompetitionProjectSetupStartedDate(Project newProject) {
