@@ -51,7 +51,7 @@ The user responds to the Cofunder/Supprter review Yes
     When the user clicks the button/link         jQuery = button:contains("Edit")
     Then the user selects the radio button       decision  decision-yes
     And the user enters text to a text field     css = .editor  This is the comments from the supporter
-    Then the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
+    Then the user clicks the button/link         jQuery = button:contains("Save review and return to applications")
 
 
 *** Keywords ***
