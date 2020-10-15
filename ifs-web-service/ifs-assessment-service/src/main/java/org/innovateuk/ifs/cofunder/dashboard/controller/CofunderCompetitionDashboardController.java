@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/cofunder/dashboard/competition/{competitionId}")
-@SecuredBySpring(value = "Controller", description = "Cofunders can view their dashboard", securedType = CofunderCompetitionDashboard.class)
+@SecuredBySpring(value = "Controller", description = "Cofunders can view their dashboard", securedType = CofunderCompetitionDashboardController.class)
 @PreAuthorize("hasAuthority('cofunder')")
-public class CofunderCompetitionDashboard {
+public class CofunderCompetitionDashboardController {
 
     @Autowired
     private CofunderDashboardRestService cofunderDashboardRestService;
@@ -33,7 +33,7 @@ public class CofunderCompetitionDashboard {
                        @RequestParam(name = "page", defaultValue = "1") int page,
                        UserResource loggedInUser,
                        Model model) {
-        CofunderDashboardApplicationPageResource pageResource = cofunderDashboardRestService.getCofunderDashboard(loggedInUser.getId(), competitionId, page - 1).getSuccess();
+        CofunderDashboardApplicationPageResource pageResource = cofunderDashboardRestService.getCofunderCompetitionDashboardApplications(loggedInUser.getId(), competitionId, page - 1).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         model.addAttribute("model", new CofunderCompetitionDashboardViewModel(pageResource, competition));
         return "cofunder/cofunder-competition-dashboard";

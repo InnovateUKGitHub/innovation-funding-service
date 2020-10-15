@@ -11,7 +11,7 @@ public class CofunderDashboardRestServiceImpl extends BaseRestService implements
     private final String baseUrl = "/cofunder/dashboard";
 
     @Override
-    public RestResult<CofunderDashboardApplicationPageResource> getCofunderDashboard(long userId, long competitionId, int page) {
+    public RestResult<CofunderDashboardApplicationPageResource> getCofunderCompetitionDashboardApplications(long userId, long competitionId, int page) {
         return getWithRestResult(String.format("%s/user/%d/competition/%d?page=%d", baseUrl, userId, competitionId, page), CofunderDashboardApplicationPageResource.class);
     }
 }

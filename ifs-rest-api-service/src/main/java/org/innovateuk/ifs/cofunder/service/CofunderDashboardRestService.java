@@ -5,5 +5,5 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.web.bind.annotation.PathVariable;
 
 public interface CofunderDashboardRestService {
-    RestResult<CofunderDashboardApplicationPageResource> getCofunderDashboard(@PathVariable long userId, @PathVariable long competitionId, int page);
+    RestResult<CofunderDashboardApplicationPageResource> getCofunderCompetitionDashboardApplications(@PathVariable long userId, @PathVariable long competitionId, int page);
 }
