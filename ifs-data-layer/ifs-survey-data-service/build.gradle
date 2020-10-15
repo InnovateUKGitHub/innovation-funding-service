@@ -14,11 +14,11 @@ processResources.dependsOn applyProfiles
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
-project.version = surveyDataServiceVersion
-tagDocker.tag = surveyDataServiceVersion
-osStageRemote.tag = surveyDataServiceVersion
-tagDockerLocal.tag = surveyDataServiceVersion
-osStageLocal.tag = surveyDataServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 def enabled = project.hasProperty('ifs.survey-data-service.enabled') ? project.property('ifs.survey-data-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.survey-data-service.pull.nexus.image') ? project.property('ifs.survey-data-service.pull.nexus.image').toBoolean() : false

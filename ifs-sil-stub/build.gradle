@@ -55,11 +55,11 @@ buildDocker.inputDir = project.file("$project.buildDir/docker")
 
 osStageRemote.onlyIf { isNotProductionEnv() }
 
-project.version = silStubVersion
-tagDocker.tag = silStubVersion
-osStageRemote.tag = silStubVersion
-tagDockerLocal.tag = silStubVersion
-osStageLocal.tag = silStubVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.hostName = "sil-stub"
 createContainer.containerName = "sil-stub"
