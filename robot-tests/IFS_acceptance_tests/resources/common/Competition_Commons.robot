@@ -609,6 +609,7 @@ ifs admin invites a KTA user to IFS
     [Arguments]   ${email}
     the user clicks the button/link                        link = Manage users
     the user clicks the button/link                        link = Invite a new external user
+    the user selects a new external user role              KNOWLEDGE_TRANSFER_ADVISER
     the user fills invite a new external user fields       Amy  Colin  ${email}
     the user clicks the button/link                        jQuery = button:contains("Send invitation")
     Logout as user
