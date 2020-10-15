@@ -340,7 +340,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {
-        if (projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser)) {
+        boolean success = projectDetailsWorkflowHandler.projectCreated(newProject, originalLeadApplicantProjectUser);
+        if (success && newProject.getApplication().getCompetition().isKtp()) {
+            success = projectDetailsWorkflowHandler.projectAddressAdded(newProject, originalLeadApplicantProjectUser);
+        }
+        if (success) {
             return serviceSuccess();
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
