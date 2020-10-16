@@ -164,6 +164,11 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
                 .thenReturn(userIsCofunder);
     }
 
+    protected void setupCofunderAssignmentCompetitionExpectations(Long competitionId, Long userId, boolean userIsCofunder) {
+        when(cofunderAssignmentRepository.existsByParticipantIdAndCompetitionId(userId, competitionId))
+                .thenReturn(userIsCofunder);
+    }
+
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();

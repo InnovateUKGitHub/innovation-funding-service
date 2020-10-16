@@ -167,4 +167,8 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isCofunderForApplication(long applicationId, long loggedInUserId) {
         return cofunderAssignmentRepository.existsByParticipantIdAndTargetId(loggedInUserId, applicationId);
     }
+
+    protected boolean isCofunderForCompetition(long competitionId, long loggedInUserId) {
+        return cofunderAssignmentRepository.existsByParticipantIdAndCompetitionId(loggedInUserId, competitionId);
+    }
 }
