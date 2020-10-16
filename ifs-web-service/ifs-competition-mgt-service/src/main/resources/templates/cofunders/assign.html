@@ -91,6 +91,8 @@
 
         <h3 class="govuk-heading-s govuk-!-margin-top-6"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.cofundersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
 
+        <hr/>
+
         <form method="POST"
               th:action="@{/competition/{competitionId}/cofunders/assign/{applicationId}/find/addSelected(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
               th:object="${cofunderSelectionForm}"
