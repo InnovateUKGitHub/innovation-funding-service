@@ -22,6 +22,7 @@ public abstract class CofunderAssignmentMapper extends BaseResourceMapper<Cofund
             @Mapping(source = "participant.email", target = "userEmail"),
             @Mapping(source = "cofunderOutcome.comment", target = "comments"),
             @Mapping(source = "processState", target = "state"),
+            @Mapping(source = "id", target = "assignmentId"),
     })
     @Override
     public abstract CofunderAssignmentResource mapToResource(CofunderAssignment domain);
