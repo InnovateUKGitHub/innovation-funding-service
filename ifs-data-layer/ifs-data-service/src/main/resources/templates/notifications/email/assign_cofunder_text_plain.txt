@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have been invited to review this application on the Innovation Funding Service for co-funding opportunities.
+You have been invited to review this application on the Innovation Funding Service for co-funding opportunities:
 
 ${applicationId} : ${applicationName}
 
