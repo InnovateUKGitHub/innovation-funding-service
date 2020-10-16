@@ -19,7 +19,7 @@ ${lastNameInvalidCharacterMessage}       Their last name should have at least 2 
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
-${organisationValidationMessage}         This field cannot be left blank.
+${organisationValidationMessage}         Please enter an organisation.
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${coFunderEmailInviteText}               You've been invited to become a co-funder for the Innovation Funding Service.
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
