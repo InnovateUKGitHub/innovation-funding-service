@@ -64,6 +64,6 @@ the user requesting the application id
 
 the user can view the cofunder review
     the user should see the element     jQuery = h1:contains("Co-funder review")
-    the user should see the element     jQuery = h2:contains("Accepted (1)")
-    the user should see the element     jQuery = h2:contains("Declined (2)")
-    the user should see the element     jQuery = h2:contains("Pending review (2)")
+    the user should see the element     jQuery = h2:contains("Accepted")
+    the user should see the element     jQuery = h2:contains("Declined")
+    the user should see the element     jQuery = h2:contains("Pending review")
