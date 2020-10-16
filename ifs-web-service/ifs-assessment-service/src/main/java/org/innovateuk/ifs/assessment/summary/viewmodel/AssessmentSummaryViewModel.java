@@ -23,6 +23,7 @@ public class AssessmentSummaryViewModel {
     private final int totalScoreGiven;
     private final int totalScorePossible;
     private final int totalScorePercentage;
+    private final boolean ktpCompetition;
 
     public AssessmentSummaryViewModel(final AssessmentResource assessment,
                                       final CompetitionResource competition,
@@ -37,6 +38,7 @@ public class AssessmentSummaryViewModel {
         this.totalScoreGiven = getTotalScoreGiven(questionViewModels);
         this.totalScorePossible = getTotalScorePossible(questionViewModels);
         this.totalScorePercentage = totalScorePossible == 0 ? 0 : Math.round(totalScoreGiven * 100.0f / totalScorePossible);
+        this.ktpCompetition = competition.isKtp();
     }
 
     public long getAssessmentId() {
@@ -73,6 +75,10 @@ public class AssessmentSummaryViewModel {
 
     public int getTotalScorePercentage() {
         return totalScorePercentage;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     @Override
