@@ -18,8 +18,8 @@ public class ProjectCreationAsyncConfiguration implements AsyncConfigurer {
     @Bean("ProjectCreationAsyncExecutor")
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(2);
-        executor.setMaxPoolSize(4);
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
         executor.setThreadNamePrefix("ProjectCreationThreadPool-");
         executor.initialize();
         return executor;
