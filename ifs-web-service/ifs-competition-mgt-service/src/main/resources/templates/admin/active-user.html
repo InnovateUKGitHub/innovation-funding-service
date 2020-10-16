@@ -79,6 +79,26 @@
                 </th:block>
             </dl>
             <th:block th:unless="${model.readOnly}">
+
+                <div th:if="${model.organisationVisible}" class="govuk-form-group" th:classappend="${#fields.hasErrors('organisation')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="organisation">
+                        Organisation
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('organisation')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('organisation')}" th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-!-width-one-half"
+                           id="organisation"
+                           name="organisation"
+                           th:errorclass="govuk-input--error"
+                           type="organisation"
+                           th:field="*{organisation}"
+                           th:value="*{organisation}"
+                           maxlength="256"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.organisationinternal.required}" />
+                </div>
+
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="email">
                         Email

@@ -138,6 +138,9 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
                         profileDetails.setCreatedOn(profile.getCreatedOn());
                         profileDetails.setModifiedBy(profile.getModifiedBy().getName());
                         profileDetails.setModifiedOn(profile.getModifiedOn());
+                        if (profile.getSimpleOrganisation() != null) {
+                            profileDetails.setSimpleOrganisation(profile.getSimpleOrganisation().getName());
+                        }
                     }
                     return serviceSuccess(profileDetails);
                 });

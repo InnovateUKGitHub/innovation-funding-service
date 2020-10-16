@@ -11,6 +11,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.user.resource.Role.COFUNDER;
 import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
 
 /**
@@ -80,6 +81,10 @@ public class ViewUserViewModel {
             }
         }
         return "Active";
+    }
+
+    public boolean isOrganisationVisible() {
+        return this.user.getRoles().contains(COFUNDER);
     }
 
     @Override
