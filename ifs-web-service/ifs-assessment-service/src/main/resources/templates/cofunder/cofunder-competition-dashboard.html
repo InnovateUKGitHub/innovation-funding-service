@@ -32,6 +32,10 @@
                 </div>
             </div>
 
+            <p class="govuk-body">
+                Applications will be removed from your dashboard if no action is taken when the assessment is closed.
+            </p>
+
             <p th:if="${#lists.isEmpty(model.applications)}" class="govuk-body govuk-!-margin-top-6">
                 There are currently no applications for you to review.
             </p>
@@ -39,7 +43,7 @@
             <div class="in-progress" th:unless="${#lists.isEmpty(model.applications)}">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m govuk-!-margin-0">Applications for review (<span
-                    th:text="${#lists.size(model.pagination.totalElements)}"/>)</h2>
+                    th:text="${model.pagination.totalElements}"/>)</h2>
 
                     <ul>
                         <li th:each="app,iterStat : ${model.applications}">
