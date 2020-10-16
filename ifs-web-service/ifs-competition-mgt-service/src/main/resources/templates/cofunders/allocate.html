@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allocate co-funders',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
-        <p class="govuk-body">Assign co-funders to applications</p>
+        <p class="govuk-body">Assign co-funders to applications.</p>
 
         <form method="GET" id="filter-applications-form">
             <div class="search-filters govuk-!-margin-top-6">
@@ -26,7 +26,7 @@
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
                             <label class="govuk-label"
-                                   for="filter">Search by application number.</label>
+                                   for="filter">Search by application number</label>
                             <input class="govuk-input"
                                    id="filter"
                                    name="filter"
@@ -65,7 +65,7 @@
                     <td class="govuk-table__cell" th:text="${entry.total}" />
                     <td class="govuk-table__cell">
                         <a th:href="@{/competition/{competitionId}/cofunders/assign/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
-                           class="govuk-button">Assign
+                           class="govuk-button govuk-button--secondary">Assign
                         </a>
                     </td>
                 </tr>
