@@ -30,6 +30,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -77,6 +78,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.GrantTermsAndConditionsResourceBuilder.newGrantTermsAndConditionsResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -393,7 +395,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getFinancesSummary() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
         setupApplicationWithRoles();
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -444,7 +446,58 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getDetailedFinancesBusiness() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
+        setupApplicationWithRoles();
+        ApplicationResource applicationResource = applications.get(0);
+        AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
+
+        SortedSet<OrganisationResource> orgSet = setupOrganisations();
+        OrganisationResource organisation = orgSet.first();
+
+        ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
+        QuestionResource costQuestion = newQuestionResource().withType(QuestionType.COST).build();
+        ApplicantSectionResource costSection = newApplicantSectionResource()
+                .withApplicantQuestions(newApplicantQuestionResource().withQuestion(costQuestion).build(1))
+                .build();
+
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withApplication(applicationResource)
+                .withCompetition(competitionResource)
+                .withCurrentApplicant(applicant)
+                .withApplicants(asList(applicant))
+                .withSection(newSectionResource()
+                        .withType(SectionType.FINANCE).build())
+                .withApplicantQuestions(
+                        newApplicantQuestionResource()
+                                .withQuestion(newQuestionResource()
+                                        .withType(QuestionType.GENERAL).build())
+                                .build(1))
+                .withApplicantChildrenSections(asList(costSection))
+                .withCurrentUser(loggedInUser)
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
+        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
+        when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
+        YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
+        when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), getLoggedInUser())).thenReturn(viewModel);
+        when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0).getId())).thenReturn(new YourProjectCostsForm());
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
+
+        MvcResult result = mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("costsViewModel", viewModel))
+                .andExpect(model().attribute("form", instanceOf(YourProjectCostsForm.class)))
+                .andExpect(view().name("assessment/application-detailed-finances"))
+                .andReturn();
+
+    }
+
+    @Test
+    public void getAllFinancesKtp() throws Exception {
+        setupCompetition(KTP, AssessorFinanceView.ALL);
         setupApplicationWithRoles();
         ApplicationResource applicationResource = applications.get(0);
         AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
@@ -495,7 +548,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getDetailedFinancesAcademic() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
         setupApplicationWithRoles();
         ApplicationResource applicationResource = applications.get(0);
         AssessmentResource assessmentResource = setUpAssessmentResource(applicationResource.getId());
@@ -794,7 +847,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
     @Test
     public void getTermsAndConditions() throws Exception {
-        setupCompetition();
+        setupCompetition(GRANT, AssessorFinanceView.OVERVIEW);
         setupApplicationWithRoles();
 
         GrantTermsAndConditionsResource grantTermsAndConditions = newGrantTermsAndConditionsResource()
