@@ -19,6 +19,8 @@ import java.util.Optional;
  */
 public interface CofunderAssignmentRepository extends ProcessRepository<CofunderAssignment>, PagingAndSortingRepository<CofunderAssignment, Long> {
 
+    List<CofunderAssignment> findByParticipantId(long userId);
+
     Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 

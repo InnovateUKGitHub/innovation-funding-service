@@ -327,7 +327,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void userIsConnectedToApplicationResource() {
-        assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, leadOnApplication1));
+        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
     }
 
     @Test

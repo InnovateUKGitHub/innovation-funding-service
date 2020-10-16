@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -61,6 +62,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected ExternalFinanceRepository externalFinanceRepository;
+
+    @Mock
+    protected CofunderAssignmentRepository cofunderAssignmentRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
