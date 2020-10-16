@@ -65,8 +65,7 @@
                                    type="radio"
                                    value="true"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.cofunder.response.decision.required}"
-                                   data-switches-button-status="#save-cofunder-response">
+                                   th:attr="data-required-errormessage=#{validation.cofunder.response.decision.required}">
                             <label class="govuk-label govuk-radios__label" for="decision-yes">
                                 Yes
                             </label>
@@ -78,8 +77,7 @@
                                    type="radio"
                                    value="false"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.cofunder.response.decision.required}"
-                                   data-switches-button-status="#save-cofunder-response">
+                                   th:attr="data-required-errormessage=#{validation.cofunder.response.decision.required}">
                             <label class="govuk-label govuk-radios__label" for="decision-no">
                                 No
                             </label>
@@ -110,7 +108,7 @@
                 </div>
             </div>
 
-            <button id="save-cofunder-response" type="submit" class="govuk-button" data-enable-button-when="one-checked">
+            <button id="save-cofunder-response" type="submit" class="govuk-button">
                 Save review and return to applications
             </button>
         </th:block>
