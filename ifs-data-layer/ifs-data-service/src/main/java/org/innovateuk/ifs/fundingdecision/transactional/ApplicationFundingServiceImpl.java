@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -50,6 +52,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
+    private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
 
     @Autowired
     private NotificationService notificationService;
@@ -136,6 +139,18 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                         return serviceSuccess();
                     });
                 });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markApplicationAsNotified(long applicationId) {
+        return applicationService.setApplicationFundingEmailDateTime(applicationId, ZonedDateTime.now()).andOnSuccessReturnVoid();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> markApplicationAsUnNotified(long applicationId) {
+        return applicationService.setApplicationFundingEmailDateTime(applicationId, null).andOnSuccessReturnVoid();
     }
 
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -135,6 +136,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         projectFinanceResource.setCostChanges(costChanges);
     }
 
+    @ZeroDowntime(description = "remove this method", reference = "IFS-blah")
     private ServiceResult<ProjectFinance> generateFinanceCheckEntitiesForProjectOrganisation(long projectId, long organisationId) {
         return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project ->
             find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccess(organisation ->

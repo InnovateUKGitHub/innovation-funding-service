@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -43,7 +42,7 @@ public interface CompetitionService {
     @SecuredBySpring(value = "RELEASE_FEEDBACK", description = "Comp Admins can change the competition state to Feedback Released")
     ServiceResult<Void> releaseFeedback(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'system')")
     @SecuredBySpring(value = "MANAGE_INFORM", description = "Comp Admins can manage the transition from Panel to Inform")
     ServiceResult<Void> manageInformState(long competitionId);
 
