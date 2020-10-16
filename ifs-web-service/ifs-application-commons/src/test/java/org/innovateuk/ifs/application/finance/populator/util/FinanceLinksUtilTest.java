@@ -187,7 +187,7 @@ public class FinanceLinksUtilTest {
     }
 
     @Test
-    public void financesLinkForAssessor() {
+    public void financesLinkForAssessorWithDetailedFinanceView() {
         UserResource user = newUserResource()
                 .withId(userId)
                 .withRoleGlobal(Role.ASSESSOR)
@@ -206,5 +206,27 @@ public class FinanceLinksUtilTest {
 
         assertTrue(financeLink.isPresent());
         assertEquals("/assessment/application/1/detailed-finances/organisation/3", financeLink.get());
+    }
+
+    @Test
+    public void financesLinkForAssessorWithAllFinanceView() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.ASSESSOR)
+                .build();
+        processRole = newProcessRoleResource()
+                .withUserId(userId)
+                .withRole(Role.ASSESSOR)
+                .build();
+        CompetitionAssessmentConfigResource assessmentConfigResource = newCompetitionAssessmentConfigResource()
+                .withAssessorFinanceView(AssessorFinanceView.ALL).build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(anyLong())).thenReturn(RestResult.restSuccess(assessmentConfigResource));
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertTrue(financeLink.isPresent());
+        assertEquals("/application/1/form/FINANCE/3", financeLink.get());
     }
 }
