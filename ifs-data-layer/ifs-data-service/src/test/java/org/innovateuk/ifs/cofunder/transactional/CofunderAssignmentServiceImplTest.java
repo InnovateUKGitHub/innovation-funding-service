@@ -4,10 +4,13 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
+import org.innovateuk.ifs.cofunder.mapper.CofunderAssignmentMapper;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -30,6 +33,7 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderAssignmentBuilder.newCofunderAssignment;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderOutcomeBuilder.newCofunderOutcome;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.SimpleOrganisationBuilder.newSimpleOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -58,6 +62,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     @Mock
     private NotificationService notificationService;
 
+    @Mock
+    private CofunderAssignmentMapper cofunderAssignmentMapper;
+
     @Override
     protected CofunderAssignmentService supplyServiceUnderTest() {
         return new CofunderAssignmentServiceImpl();
@@ -74,8 +81,14 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
                         .build()
                 )
                 .build();
+        CofunderAssignmentResource resource = new CofunderAssignmentResource();
+        resource.setAssignmentId(cofunderAssignment.getId());
+        resource.setComments(cofunderAssignment.getCofunderOutcome().getComment());
+        resource.setState(cofunderAssignment.getProcessState());
 
         when(cofunderAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(cofunderAssignment));
+        when(cofunderAssignmentMapper.mapToResource(cofunderAssignment)).thenReturn(resource);
+
 
         ServiceResult<CofunderAssignmentResource> result = service.getAssignment(userId, applicationId);
 
@@ -101,6 +114,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
             return c;
         });
         when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
+        when(cofunderAssignmentMapper.mapToResource(any(CofunderAssignment.class))).thenReturn(new CofunderAssignmentResource());
 
         ServiceResult<CofunderAssignmentResource> result = service.assign(userId, applicationId);
 

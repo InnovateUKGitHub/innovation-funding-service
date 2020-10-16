@@ -4,6 +4,7 @@ import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource
 import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
 import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,9 @@ public interface CofunderAssignmentService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<CofunderAssignmentResource> assign(long userId, long applicationId);

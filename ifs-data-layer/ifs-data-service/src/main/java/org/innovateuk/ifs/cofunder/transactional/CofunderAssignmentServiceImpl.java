@@ -3,6 +3,7 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.domain.CofunderOutcome;
+import org.innovateuk.ifs.cofunder.mapper.CofunderAssignmentMapper;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_ASSIGNMENT_ALREADY_EXISTS;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_WORKFLOW_TRANSITION_FAILURE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -60,10 +62,19 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private CofunderAssignmentMapper mapper;
+
     @Override
     public ServiceResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId) {
         return findCofunderAssignmentByUserAndApplication(userId, applicationId)
-                .andOnSuccessReturn(this::map);
+                .andOnSuccessReturn(mapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId) {
+        return findCofunderAssignmentsByApplicationId(applicationId)
+                .andOnSuccessReturn(assignments -> simpleMap(assignments,mapper::mapToResource));
     }
 
     @Override
@@ -79,10 +90,10 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     private ServiceResult<CofunderAssignmentResource> doAssign(long userId, long applicationId) {
         return find(application(applicationId), user(userId)).andOnSuccess(
                 (application, user) ->
-                        serviceSuccess(map(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
+                        serviceSuccess(mapper.mapToResource(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
                                 .andOnSuccess(resource ->
-                                     notifyUserAssignedAsCofunder(user, application)
-                                             .andOnSuccessReturn(() -> resource)
+                                        notifyUserAssignedAsCofunder(user, application)
+                                                .andOnSuccessReturn(() -> resource)
                                 )
         );
     }
@@ -210,17 +221,12 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         return find(cofunderAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId), notFoundError(CofunderAssignment.class, userId, applicationId));
     }
 
-    private ServiceResult<CofunderAssignment> findCofunderAssignmentById(long assignmentId) {
-        return find(cofunderAssignmentRepository.findById(assignmentId), notFoundError(CofunderAssignment.class, assignmentId));
+    private ServiceResult<List<CofunderAssignment>> findCofunderAssignmentsByApplicationId(long applicationId) {
+        return find(cofunderAssignmentRepository.findByTargetId(applicationId), notFoundError(CofunderAssignment.class, applicationId));
     }
 
-    private CofunderAssignmentResource map(CofunderAssignment assignment) {
-        CofunderAssignmentResource resource = new CofunderAssignmentResource();
-        //todo replace with mapstruct?
-        resource.setAssignmentId(assignment.getId());
-        resource.setComments(ofNullable(assignment.getCofunderOutcome()).map(CofunderOutcome::getComment).orElse(null));
-        resource.setState(assignment.getProcessState());
-        return resource;
+    private ServiceResult<CofunderAssignment> findCofunderAssignmentById(long assignmentId) {
+        return find(cofunderAssignmentRepository.findById(assignmentId), notFoundError(CofunderAssignment.class, assignmentId));
     }
 
 }

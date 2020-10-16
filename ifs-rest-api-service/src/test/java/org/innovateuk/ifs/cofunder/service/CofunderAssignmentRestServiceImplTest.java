@@ -31,7 +31,7 @@ public class CofunderAssignmentRestServiceImplTest extends BaseRestServiceUnitTe
         long applicationId = 2L;
         CofunderAssignmentResource expected = new CofunderAssignmentResource();
 
-        setupGetWithRestResultExpectations(format("%s/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/assignment/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class, expected);
         assertSame(expected, service.getAssignment(userId, applicationId).getSuccess());
     }
 

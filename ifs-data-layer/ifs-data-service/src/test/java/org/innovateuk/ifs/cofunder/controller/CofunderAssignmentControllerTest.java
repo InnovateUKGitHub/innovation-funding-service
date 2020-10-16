@@ -39,7 +39,7 @@ public class CofunderAssignmentControllerTest extends BaseControllerMockMVCTest<
 
         when(cofunderAssignmentService.getAssignment(userId, applicationId)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/cofunder/user/{userId}/application/{applicationId}", userId, applicationId))
+        mockMvc.perform(get("/cofunder/assignment/user/{userId}/application/{applicationId}", userId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 

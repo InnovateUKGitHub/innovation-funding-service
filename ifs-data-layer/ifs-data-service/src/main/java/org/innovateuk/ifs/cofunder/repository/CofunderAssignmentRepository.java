@@ -22,6 +22,9 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
     List<CofunderAssignment> findByParticipantId(long userId);
 
     Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
+
+    List<CofunderAssignment> findByParticipantId(long userId);
+
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 
     String QUERY = "FROM User user " +

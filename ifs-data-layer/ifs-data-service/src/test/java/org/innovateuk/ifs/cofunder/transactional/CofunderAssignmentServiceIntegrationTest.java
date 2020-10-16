@@ -141,6 +141,7 @@ import static org.junit.Assert.assertThat;
                 .withLastName("unassigned", "assigned", "accepted", "rejected")
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId(), profiles.get(2).getId(), profiles.get(3).getId())
                 .withRoles(newHashSet(Role.COFUNDER))
+                .withCreatedBy()
                 .build(4);
 
         cofunders = newArrayList(userRepository.saveAll(cofunders));

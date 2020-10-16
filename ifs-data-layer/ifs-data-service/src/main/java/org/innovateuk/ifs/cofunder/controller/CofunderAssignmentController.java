@@ -19,9 +19,14 @@ public class CofunderAssignmentController {
     @Autowired
     private CofunderAssignmentService cofunderAssignmentService;
 
-    @GetMapping("/user/{userId}/application/{applicationId}")
+    @GetMapping("/assignment/user/{userId}/application/{applicationId}")
     public RestResult<CofunderAssignmentResource> getAssignment(@PathVariable long userId, @PathVariable long applicationId) {
         return cofunderAssignmentService.getAssignment(userId, applicationId).toGetResponse();
+    }
+
+    @GetMapping("/assignment/application/{applicationId}")
+    public RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(@PathVariable long applicationId) {
+        return cofunderAssignmentService.getAssignmentsByApplicationId(applicationId).toGetResponse();
     }
 
     @PostMapping("/user/{userId}/application/{applicationId}")

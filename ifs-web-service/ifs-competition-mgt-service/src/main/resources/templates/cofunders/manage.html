@@ -22,7 +22,7 @@
                     class="govuk-link">Allocate applications</a>
             </li>
             <li>
-                <a href="#" class="govuk-link">View feedback</a>
+                <a th:href="@{/competition/{competitionId}/cofunders/view(competitionId=${model.competitionId})}" class="govuk-link">View feedback</a>
             </li>
         </ul>
         <th:block th:insert="fragments/layout :: main-content-end" />
