@@ -36,6 +36,9 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
     List<CompetitionForCofunding> findCompetitionsForParticipant(long userId);
 
     Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
+
+    List<CofunderAssignment> findByParticipantId(long userId);
+
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 
     @Query(

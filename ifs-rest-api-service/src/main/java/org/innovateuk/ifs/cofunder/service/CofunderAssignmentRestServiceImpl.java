@@ -9,7 +9,10 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.cofunderAssignmentResourceListType;
 
 @Service
 public class CofunderAssignmentRestServiceImpl extends BaseRestService implements CofunderAssignmentRestService {
@@ -18,7 +21,12 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId) {
-        return getWithRestResult(format("%s/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class);
+        return getWithRestResult(format("%s/assignment/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class);
+    }
+
+    @Override
+    public RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId) {
+        return getWithRestResult(format("%s/assignment/application/%d", cofunderRestUrl, applicationId), cofunderAssignmentResourceListType());
     }
 
     @Override
