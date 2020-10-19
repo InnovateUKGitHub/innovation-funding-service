@@ -116,7 +116,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
-                .withPassword("Passw0rd123")
+                .withPassword("Passw0rd1357123")
                 .build();
 
         String inviteHash = "hash";

@@ -69,7 +69,7 @@ def main():
        downloadPublicFile(downloadUrl, downloadFileLocation)
     else:
        user = sys.argv[1] # e.g. john.doe@innovateuk.test
-       password = sys.argv[2] # e.g. Passw0rd
+       password = sys.argv[2] # e.g. Passw0rd1357
        downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
        downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
        baseUrl = getBaseUrl(downloadUrl)

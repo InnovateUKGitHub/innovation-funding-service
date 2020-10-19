@@ -191,7 +191,7 @@ Deactivate external user
 
 Deactivated internal user cannot login until activated
     [Documentation]  IFS-6380
-    Given the user cannot login with their new details            ${adminChangeEmailNew}  Passw0rd
+    Given the user cannot login with their new details            ${adminChangeEmailNew}  Passw0rd1357
     When Logging in and Error Checking                            &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details     ${adminChangeEmailNew}  inactive
     And the IFS admin reactivate the user                         ${adminChangeEmailNew}
