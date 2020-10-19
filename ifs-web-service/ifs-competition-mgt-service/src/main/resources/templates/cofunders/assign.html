@@ -17,11 +17,18 @@
 
         <h3 class="govuk-heading-s" th:text="${model.applicationId} + ' - ' + ${model.applicationName}" />
 
-        <h3 class="govuk-heading-s">Innovation area</h3>
-        <p class="govuk-body" th:text="${model.innovationArea}" />
-
-        <h3 class="govuk-heading-s">Partners</h3>
-        <p class="govuk-body" th:each="partner: ${model.partners}" th:text="${partner}" />
+        <div class="govuk-grid-row govuk-!-margin-top-6">
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-0">Partners</h3>
+                <ul class="govuk-list">
+                    <li th:each="partner : ${model.partners}" th:text="${partner}">Biotech Corp.</li>
+                </ul>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                <h3 class="govuk-heading-s govuk-!-margin-0">Innovation area</h3>
+                <span class="govuk-body" th:text="${model.innovationArea} ? ${model.innovationArea} : 'Not listed'"></span>
+            </div>
+        </div>
 
         <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
            class="govuk-link">Review application</a>
