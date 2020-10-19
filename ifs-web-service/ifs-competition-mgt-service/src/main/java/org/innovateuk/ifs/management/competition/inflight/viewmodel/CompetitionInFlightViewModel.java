@@ -161,9 +161,6 @@ public class CompetitionInFlightViewModel {
     }
 
     public boolean isManageCofundersLinkEnabled() {
-        return cofunderEnabled
-                && competitionFundingType == FundingType.KTP
-                && competitionStatus.isLaterThan(READY_TO_OPEN)
-                && !competitionStatus.isLaterThan(IN_ASSESSMENT);
+        return cofunderEnabled;
     }
 }

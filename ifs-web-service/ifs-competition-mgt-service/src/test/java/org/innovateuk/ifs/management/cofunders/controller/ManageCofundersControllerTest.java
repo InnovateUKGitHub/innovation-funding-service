@@ -28,7 +28,7 @@ public class ManageCofundersControllerTest extends BaseControllerMockMVCTest<Man
     public void manageCofundersPage() throws Exception {
         long competitionId = 4L;
 
-        ManageCofundersViewModel model = new ManageCofundersViewModel(new CompetitionResource());
+        ManageCofundersViewModel model = new ManageCofundersViewModel(new CompetitionResource(), true);
         when(manageCofundersViewModelPopulator.populateModel(competitionId)).thenReturn(model);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}/cofunders", competitionId))

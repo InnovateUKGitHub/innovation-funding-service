@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign to application',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
-        <h3 class="govuk-heading-s" th:text="${model.applicationId} + ' - ' + ${model.applicationName}" />
+        <h3 class="govuk-heading-s" th:text="${model.applicationId} + ': ' + ${model.applicationName}" />
 
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div class="govuk-grid-column-one-quarter">
