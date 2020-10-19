@@ -117,7 +117,7 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("applicationName", application.getName());
-        notificationArguments.put("link", format("%s/application/%d", webBaseUrl, application.getId()));
+        notificationArguments.put("link", format("%s/assessment/cofunder/dashboard", webBaseUrl));
         Notification notification = new Notification(systemNotificationSource, recipient, Notifications.ASSIGN_COFUNDER, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
     }
