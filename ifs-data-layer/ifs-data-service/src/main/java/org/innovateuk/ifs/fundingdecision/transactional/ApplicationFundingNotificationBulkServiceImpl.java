@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.project.core.transactional.ProjectCreationAsyncService;
 import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,6 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
 
     @Autowired
     private ApplicationFundingService applicationFundingService;
-
-    @Autowired
-    private ProjectCreationAsyncService projectCreationAsyncService;
 
     @Autowired
     private ProjectToBeCreatedService projectToBeCreatedService;
@@ -61,26 +57,6 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
                 .forEach(entry -> projectToBeCreatedService.markApplicationReadyToBeCreated(entry.getKey(), fundingNotificationResource.getMessageBody()));
     }
 
-    /* asnyc.
-    private ServiceResult<Void> handleSuccessfulNotificationsCreatingProjects(FundingNotificationResource fundingNotificationResource) {
-        List<ServiceResult<Void>> results = fundingNotificationResource.getFundingDecisions().entrySet().stream().map(entry ->
-            applicationFundingService.markApplicationAsNotified(entry.getKey())
-                .andOnSuccess(() -> projectCreationAsyncService.createAsync(id ->
-                        applicationFundingService.notifyApplicantsOfFundingDecisions(new FundingNotificationResource(fundingNotificationResource.getMessageBody(), singleMap(id, FundingDecision.FUNDED))),
-                        entry.getKey(),
-                        id -> applicationFundingService.markApplicationAsUnNotified(id)
-                )))
-                .collect(Collectors.toList());
-        return aggregate(results).andOnSuccessReturnVoid();
-    }
-
-    private Map<Long, FundingDecision> singleMap(long applicationId, FundingDecision decision) {
-        Map<Long, FundingDecision> map = new HashMap<>();
-        map.put(applicationId, decision);
-        return map;
-    }
-
-     */
     private boolean isReleaseFeedbackCompletionStage(Map<Long, FundingDecision> fundingDecisions) {
         return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
             CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();

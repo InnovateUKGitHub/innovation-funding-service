@@ -51,7 +51,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
 
     @Override
     @Transactional
-    @Trace
+    @Trace(dispatcher = true)
     public ServiceResult<Void> createProject(long applicationId) {
         return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
                 .andOnSuccess(projectToBeCreated -> {

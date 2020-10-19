@@ -26,7 +26,7 @@ public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwar
     private static final String JOB_NAME = "INTEGRATION_TEST";
 
     @Test
-    public void multipleServicesRunningSchedule() throws InterruptedException, ExecutionException {
+    public void multipleServicesRunningSchedule_DifferentTimes() throws InterruptedException, ExecutionException {
         CompletableFuture<Optional<Exception>> future1 = new CompletableFuture<>();
         CompletableFuture<Optional<Exception>> future2 = new CompletableFuture<>();
 
@@ -42,7 +42,7 @@ public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwar
     }
 
     @Test
-    public void multipleServicesRunningScheduleAtSameTime() throws InterruptedException, ExecutionException {
+    public void multipleServicesRunningSchedule_AtSameTime() throws InterruptedException, ExecutionException {
         CompletableFuture<Optional<Exception>> future1 = new CompletableFuture<>();
         CompletableFuture<Optional<Exception>> future2 = new CompletableFuture<>();
 
