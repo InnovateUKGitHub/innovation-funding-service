@@ -200,21 +200,25 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
 
     @Override
     @Transactional
-    public void downloadFileIfSigned() throws ApiException, IOException {
-        LOG.info("Starting import of docusign documents.");
-        EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
-        ListStatusChangesOptions options = envelopesApi.new ListStatusChangesOptions();
-        LocalDate date = LocalDate.now().minusDays(1);
-        options.setFromDate(DATE_FORMATTER.format(date));
-        options.setFromToStatus("completed");
-        EnvelopesInformation envelopesInformation = envelopesApi.listStatusChanges(accountId, options);
+    public void downloadFileIfSigned() {
+        try {
+            LOG.info("Starting import of docusign documents.");
+            EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
+            ListStatusChangesOptions options = envelopesApi.new ListStatusChangesOptions();
+            LocalDate date = LocalDate.now().minusDays(1);
+            options.setFromDate(DATE_FORMATTER.format(date));
+            options.setFromToStatus("completed");
+            EnvelopesInformation envelopesInformation = envelopesApi.listStatusChanges(accountId, options);
 
-        for (Envelope envelope : envelopesInformation.getEnvelopes()) {
-            Optional<DocusignDocument> document = docusignDocumentRepository.findByEnvelopeId(envelope.getEnvelopeId());
-            document = document.filter(d -> d.getSignedDocumentImported() == null);
-            if (document.isPresent()) {
-                importDocument(document.get());
+            for (Envelope envelope : envelopesInformation.getEnvelopes()) {
+                Optional<DocusignDocument> document = docusignDocumentRepository.findByEnvelopeId(envelope.getEnvelopeId());
+                document = document.filter(d -> d.getSignedDocumentImported() == null);
+                if (document.isPresent()) {
+                    importDocument(document.get());
+                }
             }
+        } catch (IOException | ApiException e) {
+            throw new IFSRuntimeException(e);
         }
     }
 

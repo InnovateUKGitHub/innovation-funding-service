@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.grant.schedule;
 
 import org.innovateuk.ifs.grant.service.GrantService;
-import org.innovateuk.ifs.schedule.transactional.ScheduleStatusService;
+import org.innovateuk.ifs.schedule.transactional.ScheduleStatusWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,21 +17,12 @@ public class GrantProcessor {
     private GrantService service;
 
     @Autowired
-    private ScheduleStatusService scheduleStatusService;
+    private ScheduleStatusWrapper scheduleStatusWrapper;
 
     private static final String JOB_NAME = "GRANT_SEND";
 
     @Scheduled(fixedDelayString = "${ifs.data.service.file.grant.send.delay.millis:60000}")
     public void send() {
-        try {
-            scheduleStatusService.startJob(JOB_NAME);
-        } catch (Exception e) {
-            return;
-        }
-        try {
-            service.sendReadyProjects();
-        } finally {
-            scheduleStatusService.endJob(JOB_NAME);
-        }
+        scheduleStatusWrapper.work(JOB_NAME, () -> service.sendReadyProjects());
     }
 }

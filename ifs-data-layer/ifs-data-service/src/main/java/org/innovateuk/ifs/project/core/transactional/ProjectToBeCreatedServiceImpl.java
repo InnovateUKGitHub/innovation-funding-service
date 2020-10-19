@@ -40,7 +40,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
 
     @Override
     public Optional<Long> findProjectToCreate() {
-        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, NUMBER_OF_RECORDS_TO_CHECK, Direction.DESC, "created"));
+        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, NUMBER_OF_RECORDS_TO_CHECK, Direction.ASC, "created"));
         if (page.hasContent()) {
             int index = ThreadLocalRandom.current().nextInt(0, page.getContent().size());
             return Optional.of(page.getContent().get(index).getApplication().getId());
