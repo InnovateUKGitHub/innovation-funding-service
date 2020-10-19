@@ -386,7 +386,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         if (line.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
-
         return baseBuilder.build();
     }
 
@@ -554,16 +553,18 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             });
 
-            if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
-                builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
-                        60L,
-                        new BigDecimal("100000"),
-                        new BigDecimal("200000"),
-                        new BigDecimal("300000"),
-                        new BigDecimal("400000"));
-            } else {
-                builder[0] = builder[0].withEmployeesAndTurnover(50L,
-                        new BigDecimal("700000"));
+            if (!competition.isKtp()) {
+                if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
+                    builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
+                            60L,
+                            new BigDecimal("100000"),
+                            new BigDecimal("200000"),
+                            new BigDecimal("300000"),
+                            new BigDecimal("400000"));
+                } else {
+                    builder[0] = builder[0].withEmployeesAndTurnover(50L,
+                            new BigDecimal("700000"));
+                }
             }
 
             return builder[0].withOrganisationSize(SMALL).

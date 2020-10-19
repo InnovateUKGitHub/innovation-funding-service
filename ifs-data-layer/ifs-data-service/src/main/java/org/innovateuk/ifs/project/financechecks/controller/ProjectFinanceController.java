@@ -46,6 +46,21 @@ public class ProjectFinanceController {
         return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/viability/reset")
+    public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId) {
+        return financeCheckService.resetViability(projectId).toPostResponse();
+    }
+
+    @PostMapping("/{projectId}/eligibility/reset")
+    public RestResult<Void> resetEligibility(@PathVariable("projectId") final Long projectId) {
+        return financeCheckService.resetEligibility(projectId).toPostResponse();
+    }
+
+    @PostMapping("/{projectId}/finance-checks/reset")
+    public RestResult<Void> resetFinanceChecks(@PathVariable("projectId") final Long projectId) {
+        return financeCheckService.resetFinanceChecks(projectId).toPostResponse();
+    }
+
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/eligibility")
     public RestResult<EligibilityResource> getEligibility(@PathVariable("projectId") final Long projectId,
                                                           @PathVariable("organisationId") final Long organisationId) {

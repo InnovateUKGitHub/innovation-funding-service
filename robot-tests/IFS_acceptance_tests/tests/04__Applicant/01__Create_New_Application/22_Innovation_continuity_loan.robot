@@ -110,7 +110,7 @@ the user fills in initial details
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")
-    the user clicks the button/link             link = Competition details
+    the user clicks the button/link             link = Back to competition details
 
 the user confirmed terms and conditions
     the user selects the radio button     termsAndConditionsId  termsAndConditionsId12

@@ -119,7 +119,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 if (competitionTypeName != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName);
                     competition.setCompetitionType(competitionType.getId());
                 }
 
@@ -283,6 +283,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
         competitionSections.stream().filter(section -> section.getName().equals("Project details"))
+                .findFirst()
+                .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
+        // only for ktp competitions
+        competitionSections.stream().filter(section -> section.getName().equals("Score Guidance"))
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
     }

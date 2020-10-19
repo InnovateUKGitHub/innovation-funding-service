@@ -81,7 +81,7 @@ Awaiting assessment status should not display for SBRI submitted applications
     [Documentation]  IFS-7314
     When log in as a different user              &{sbriLeadCredentials}
     Then the user should not see the element     jQuery = .in-progress li:contains("${sbriType1ApplicationTitle}") .msg-deadline-waiting:contains("Awaiting assessment")
-    And the user should see the element          jQuery = .in-progress li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Application submitted")
+    And the user should see the element          jQuery = .in-progress li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Submitted")
 
 Innovation Lead should only see key statistics and competition navigation links related to applications when the SBRI competition is open
     [Documentation]  IFS-7315
@@ -250,6 +250,12 @@ Internal user can send the contract
     Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
     And the user reads his email                   ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
 
+Check that the VAT value shows on finance table
+    [Documentation]  IFS-8321
+    Given log in as a different user             &{becky_mason_credentials}
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks/overview
+    Then the user should see the element         jQuery = th:contains("Total VAT")
+
 External user of international org should not see bank details
     [Documentation]  IFS-8202
     Given log in as a different user             ${lead_international_email}	${short_password}
@@ -302,7 +308,7 @@ the user fills in the competition close Milestones
     the user clicks the button/link     jQuery = button:contains("Done")
 
 the user should see milestones section marked as complete
-    the user clicks the button/link     link = Competition details
+    the user clicks the button/link     link = Back to competition details
     the user should see the element     jQuery = div:contains("Milestones") ~ .task-status-complete
 
 the user assign the stakeholder to the SBRI competition

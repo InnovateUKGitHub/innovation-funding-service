@@ -24,7 +24,7 @@ User can view funding level change page
     And The user clicks the button/link    link = Change funding level percentages
     When the user should see the element   jQuery = h1:contains("Change funding level")
     Then the user should see the element   jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("£57,803") ~ td:contains("49.58%")
-    And the user should see the element    jQuery = th:contains("Total grant value") ~ td:contains("£402,797") ~ td:contains("£116,596") ~ td:contains("£116,596")
+    And the user should see the element    jQuery = th:contains("Total grant value") ~ td:contains("£402,796") ~ td:contains("£116,596") ~ td:contains("£116,596")
 
 Project finance cannot add an invalid percentage
     [Documentation]  IFS-6695
@@ -58,7 +58,7 @@ New funding percentage is applied on finance overview
     Given the user enters text to a text field      id = partners[${orgId}].fundingLevel  20
     And the user should not see the element         jQuery = .message-alert:contains("The revised amount is higher")
     When the user clicks the button/link            jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element            jQuery = th:contains("Ward Ltd") ~ td:contains("£200,903") ~ td:contains("20.00%") ~ td:contains("37,713") ~ td:contains("2,468") ~ td:contains("160,723")
+    Then the user should see the element            jQuery = th:contains("Ward Ltd") ~ td:contains("£200,903") ~ td:contains("20.00%") ~ td:contains("37,713") ~ td:contains("2,468") ~ td:contains("160,722")
     And the user should see the element             jQuery = h3:contains("Overview") + div table td:contains("23.96%")
 
 New funding percentage is applied on finance checks
@@ -96,6 +96,6 @@ the user should see the correct funding values
 the user should see the correct revised values
     [Arguments]  ${revisedfunding}  ${revisedpercentage}  ${revisedtotal}
     the user should see the element             jQuery = td:contains("Ward") ~ td:contains("£57,803") ~ td:contains("49.58%") ~ td ~ td:contains("${revisedfunding}") ~ td:contains("${revisedpercentage}")
-    the user should see the element             jQuery = th:contains("Total grant value") ~ td:contains("£402,797") ~ td:contains("£116,596") ~ td:contains("${revisedtotal}")
+    the user should see the element             jQuery = th:contains("Total grant value") ~ td:contains("£402,796") ~ td:contains("£116,596") ~ td:contains("${revisedtotal}")
     then the user should see the element        jQuery = dt:contains("Funding applied for") + dd:contains("£116,596") ~ dt:contains("Current amount") + dd:contains("${revisedtotal}")
 

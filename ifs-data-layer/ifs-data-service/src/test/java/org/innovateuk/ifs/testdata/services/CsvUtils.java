@@ -12,10 +12,12 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -424,7 +426,7 @@ public class CsvUtils {
         public String applicationName;
         public String assessorEmail;
         public String shortName;
-        public String description;
+        public FormInputType formInputType;
         public boolean isResearchCategory;
         public String value;
 
@@ -434,17 +436,17 @@ public class CsvUtils {
             applicationName = line.get(i++);
             assessorEmail = line.get(i++);
             shortName = line.get(i++);
-            description = line.get(i++);
+            formInputType = nullableEnum(line.get(i++), FormInputType::valueOf);
             isResearchCategory = nullableBoolean(line.get(i++));
             value = line.get(i++);
         }
 
-        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, String description, boolean isResearchCategory, String value) {
+        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, FormInputType formInputType, boolean isResearchCategory, String value) {
             this.competitionName = competitionName;
             this.applicationName = applicationName;
             this.assessorEmail = assessorEmail;
             this.shortName = shortName;
-            this.description = description;
+            this.formInputType = formInputType;
             this.isResearchCategory = isResearchCategory;
             this.value = value;
         }
@@ -747,13 +749,14 @@ public class CsvUtils {
     }
 
     public static class ExternalUserLine extends UserLine {
+        public Role role;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
 
         @Override
         protected void processLine(List<String> line, int i) {
-
+            this.role = nullableEnum(line.get(i++), Role::valueOf);
         }
 
     }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
@@ -27,26 +28,61 @@ public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorR
     public AssessorResponseDataBuilder withAssessorResponseData(String competitionName,
                                                                 String applicationName,
                                                                 String assessorEmail,
+                                                                long questionId,
+                                                                FormInputType formInputType,
+                                                                boolean isResearchCategory,
+                                                                String value) {
+        Competition competition = retrieveCompetitionByName(competitionName);
+        Question question = questionRepository.findById(questionId).get();
+        return withAssessorResponseData(competition,
+                applicationName,
+                assessorEmail,
+                question,
+                formInputType,
+                isResearchCategory,
+                value);
+    }
+
+    public AssessorResponseDataBuilder withAssessorResponseData(String competitionName,
+                                                                String applicationName,
+                                                                String assessorEmail,
                                                                 String shortName,
-                                                                String description,
+                                                                FormInputType formInputType,
+                                                                boolean isResearchCategory,
+                                                                String value) {
+        Competition competition = retrieveCompetitionByName(competitionName);
+        Question question = questionRepository.findByCompetitionId(competition.getId())
+                .stream()
+                .filter(x -> shortName.equals(x.getShortName()))
+                .findFirst()
+                .get();
+        return withAssessorResponseData(competition,
+                applicationName,
+                assessorEmail,
+                question,
+                formInputType,
+                isResearchCategory,
+                value);
+    }
+
+    private AssessorResponseDataBuilder withAssessorResponseData(Competition competition,
+                                                                String applicationName,
+                                                                String assessorEmail,
+                                                                Question question,
+                                                                FormInputType formInputType,
                                                                 boolean isResearchCategory,
                                                                 String value) {
         return with(data -> {
             UserResource assessor = retrieveUserByEmail(assessorEmail);
             ProcessRole processRole = retrieveAssessorByApplicationNameAndUser(applicationName, assessor);
-            Competition competition = retrieveCompetitionByName(competitionName);
 
             Assessment assessment = assessmentRepository.findOneByParticipantId(processRole.getId());
 
-            Question question = questionRepository.findByCompetitionId(competition.getId())
-                    .stream()
-                    .filter(x -> shortName.equals(x.getShortName()))
-                    .findFirst()
-                    .get();
+
 
             FormInput formInput = formInputRepository.findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(question.getId(), FormInputScope.ASSESSMENT)
                     .stream()
-                    .filter(x -> x.getDescription().contains(description))
+                    .filter(x -> x.getType().equals(formInputType))
                     .findFirst()
                     .get();
 

@@ -256,7 +256,7 @@ the user filter applications by sent email status
 external lead applicant reads his email and checks status on his dashboard
     verify the user has received the on hold email  ${test_mailbox_one}+fundsuccess@gmail.com
     log in as a different user                      ${test_mailbox_one}+fundsuccess@gmail.com   ${short_password}
-    the user should see the element                 jQuery = .task:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ .status:contains("Application submitted")
+    the user should see the element                 jQuery = .task:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ .status:contains("Submitted")
 
 external collaborators read their email
     verify the user has received the on hold email    ${lead_applicant}
@@ -267,7 +267,7 @@ external collaborators read their email
     verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
 
 Assess the application and move to in notification
-    the user clicks the button/link    link = Competition details
+    the user clicks the button/link    link = Back to competition details
     the user clicks the button/link    link = Competition
     the user clicks the button/link    id = close-assessment-button
     the user clicks the button/link    link = Input and review funding decision

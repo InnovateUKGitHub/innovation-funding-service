@@ -4,13 +4,9 @@ import org.innovateuk.ifs.MockMvcTest;
 import org.innovateuk.ifs.finance.controller.GrantClaimMaximumController;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.FieldDescriptor;
-
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.GrantClaimMaximumDocs.grantClaimMaximumResourceFields;
@@ -21,7 +17,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -57,24 +52,24 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
                 ));
     }
 
-    @Test
-    public void getGrantClaimMaximumsForCompetitionType() throws Exception {
-        Long competitionType = 1L;
-        Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
-        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType)).thenReturn(serviceSuccess(expectedGcms));
-
-        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "grant-claim-maximum/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionTypeId").description("id of the CompetitionType to be retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("Set of Grant Claim Maximums for given CompetitionType"))
-                ));
-    }
+//    @Test
+//    public void getGrantClaimMaximumsForCompetitionType() throws Exception {
+//        Long competitionType = 1L;
+//        Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
+//        when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType)).thenReturn(serviceSuccess(expectedGcms));
+//
+//        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType)
+//                .header("IFS_AUTH_TOKEN", "123abc"))
+//                .andExpect(status().isOk())
+//                .andDo(document(
+//                        "grant-claim-maximum/{method-name}",
+//                        pathParameters(
+//                                parameterWithName("competitionTypeId").description("id of the CompetitionType to be retrieved")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("[]").description("Set of Grant Claim Maximums for given CompetitionType"))
+//                ));
+//    }
 
     @Test
     public void update() throws Exception {

@@ -49,6 +49,12 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8095 Content improvement for KTA journey
 ...
+...            IFS-8318 Opens in new window link missing on select a knowledge base organisation screen
+...
+...            IFS-8312 KTA profile access permissions
+...
+...            IFS-8325 Write Acceptance tests for 8312
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -116,16 +122,16 @@ Comp Admin is able to see KTP funding type has been selected
     Given the user clicks the button/link           link = View and update competition details
     When the user clicks the button/link            link = Initial details
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
-    [Teardown]  the user clicks the button/link     link = Competition details
+    [Teardown]  the user clicks the button/link     link = Back to competition details
 
-Creating a new investor comp points to the correct T&C
+Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
     Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
     And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
 
-The Investor partnership t&c's are correct
+The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
     When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
@@ -134,7 +140,7 @@ The Investor partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213
     Given the user clicks the button/link    jQuery = button:contains("Done")
-    When the user clicks the button/link     link = Competition details
+    When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Admin user completes the KTP competition setup
@@ -233,7 +239,7 @@ New lead applicant starts KTP competition
     Then the user select the competition and starts application     ${ktpCompetitionName}
 
 Select a knowledge base organisation validations and fields
-    [Documentation]  IFS-7841
+    [Documentation]  IFS-7841  IFS-8318
     Given The user clicks the button/link                           link = Continue and create an account
     When the user clicks the button/link                            jQuery = button:contains("Confirm")
     Then the user should see a field and summary error              ${selectOrgValidation}
@@ -270,8 +276,25 @@ New lead applicant completes the KTP application
     And the user clicks the button/link                                                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
+New lead applicant opens the detailed KTP Guidance links in the new window
+    [Documentation]  IFS-8399
+    Given The user clicks the button/link                            link = Your project finances
+    And The user clicks the button/link                              jQuery = a:contains("Your project costs")
+    And The user clicks the button/link                              id = edit
+    When the user switch to the new tab on click guidance links      read our detailed guidance on KTP project costs (opens in a new window)
+    Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
+
+New lead applicant opens the KTP Project costs Guidance links in the new window
+    [Documentation]  IFS-8399
+    Given the user closes the last opened tab
+    When the user switch to the new tab on click guidance links      KTP project costs guidance (opens in a new window)
+    Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
+
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
+    Given the user closes the last opened tab
+    And the user clicks the button/link                                    css = label[for="stateAidAgreed"]
+    And the user clicks the button/link                                      jQuery = button:contains("Mark as complete")
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Your funding
     Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
@@ -346,12 +369,12 @@ System should not allow a KTA to be invited if they do not have a KTA account in
 
 The applicant invites a KTA user to the application
     [Documentation]  IFS-7806 IFS-8095
-    [Setup]  Assign the KTA role to the user
-    Given Log in as a different user               &{ktpLeadApplicantCredentials}
-    When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
-    Then The user reads his email                  ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
-    And the user should see the element            jQuery = td:contains("pending for 0 days")
-    And the user should see the element            Jquery = td:contains("${ktaEmail}")
+    [Setup]  assign the KTA role to an existing user    ${ktaEmail}
+    Given Log in as a different user                    &{ktpLeadApplicantCredentials}
+    When the user invites a KTA to application          ${ktpApplicationTitle}   ${ktaEmail}
+    Then The user reads his email                       ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    And the user should see the element                 jQuery = td:contains("pending for 0 days")
+    And the user should see the element                 jQuery = td:contains("${ktaEmail}")
 
 The applicant should not be able to mark the application team section as complete until the KTA has accepted the invitation to join the application
     [Documentation]  IFS-7806
@@ -394,6 +417,20 @@ The KTA can see the dashboard with assesments and applications tiles after accep
     When logging in and error checking        ${ktaEmail}   ${short_password}
     Then the user should see the element      jQuery = h2:contains("Assessments")
     And the user should see the element       jQuery = h2:contains("Applications")
+
+The KTA can see their profile page from Assessments screen
+    [Documentation]  IFS-8312  IFS-8325
+    Given the user clicks the button/link     jQuery = h2:contains("Assessments")
+    When the user clicks the button/link      link = Profile
+    Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
+    And the user clicks the button/link       link = Dashboard
+
+The KTA can see their profile page from Applications screen
+    [Documentation]  IFS-8312  IFS-8325
+    Given the user clicks the button/link     jQuery = h2:contains("Applications")
+    When the user clicks the button/link      link = Profile
+    Then the user should see the element      jQuery = dd:contains("${ktaEmail}")
+    And the user clicks the button/link       link = Dashboard
 
 The KTA can see the read only view of the application/s
     [Documentation]  IFS-7983
@@ -812,6 +849,8 @@ the user should see knowledge based organisation fields
     the user should see the element     jQuery = span:contains("Select your knowledge base organisation.")
     the user should see the element     jQuery = span:contains("Create an account")
     the user should see the element     jQuery = label:contains("Find your organisation")
+    the user should see the element     link = checking your organisation's alternative name (opens in a new window)
+    the user should see the element     link = enter its details manually
 
 the user selects a knowledge based organisation
     [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
@@ -866,16 +905,6 @@ KTA should see application name, organisation and lead applicant details
     the user should see the element     jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
     the user should see the element     jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
     the user should see the element     jQuery = dt:contains("Application")+dd:contains("${ApplicationID}: ${ktpApplicationTitle}")
-
-Assign the KTA role to the user
-    log in as a different user               &{ifs_admin_user_credentials}
-    the user clicks the button/link          link = Manage users
-    the user enters text to a text field     id = filter   ${ktaEmail}
-    the user clicks the button/link          css = [class="btn"]
-    the user clicks the button/link          jQuery = a:contains("Edit")
-    the user clicks the button/link          link = Add a new external role profile
-    the user clicks the button/link          jQuery = button:contains("Confirm role profile")
-    the user clicks the button/link          jQuery = button:contains("Save and return")
 
 the user invites a KTA to application
     [Arguments]  ${applicationName}   ${email}
@@ -943,3 +972,8 @@ the user marks the questions as complete
     the user clicks the button/link     link = Back to project exploitation
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
+
+the user switch to the new tab on click guidance links
+    [Arguments]  ${link}
+    the user clicks the button/link     link = ${link}
+    Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
