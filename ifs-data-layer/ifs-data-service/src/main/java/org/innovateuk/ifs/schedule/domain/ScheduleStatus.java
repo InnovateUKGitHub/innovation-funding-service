@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.schedule.domain;
 
-import javax.persistence.*;
-import java.time.ZonedDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class ScheduleStatus {
@@ -12,10 +14,11 @@ public class ScheduleStatus {
 
     private String jobName;
 
-    private boolean active;
+    ScheduleStatus() {}
 
-    @Version
-    private ZonedDateTime version = ZonedDateTime.now();
+    public ScheduleStatus(String jobName) {
+        this.jobName = jobName;
+    }
 
     public Long getId() {
         return id;
@@ -33,19 +36,4 @@ public class ScheduleStatus {
         this.jobName = jobName;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public ZonedDateTime getVersion() {
-        return version;
-    }
-
-    public void setVersion(ZonedDateTime version) {
-        this.version = version;
-    }
 }
