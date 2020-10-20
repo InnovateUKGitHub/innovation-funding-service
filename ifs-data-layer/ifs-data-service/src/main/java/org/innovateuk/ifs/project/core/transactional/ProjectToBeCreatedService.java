@@ -6,7 +6,7 @@ import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import java.util.Optional;
 
 public interface ProjectToBeCreatedService {
-    Optional<Long> findProjectToCreate();
+    Optional<Long> findProjectToCreate(int index);
 
     ServiceResult<ScheduleResponse> createProject(long applicationId);
 

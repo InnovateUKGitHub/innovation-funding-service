@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -28,7 +27,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService implements ProjectToBeCreatedService {
-    private static final int NUMBER_OF_RECORDS_TO_CHECK = 10;
 
     @Autowired
     private ProjectToBeCreatedRepository projectToBeCreatedRepository;
@@ -40,11 +38,10 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     private ApplicationFundingService applicationFundingService;
 
     @Override
-    public Optional<Long> findProjectToCreate() {
-        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, NUMBER_OF_RECORDS_TO_CHECK, Direction.ASC, "application.id"));
+    public Optional<Long> findProjectToCreate(int index) {
+        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(index, 1, Direction.ASC, "application.id"));
         if (page.hasContent()) {
-            int index = ThreadLocalRandom.current().nextInt(0, page.getContent().size());
-            return Optional.of(page.getContent().get(index).getApplication().getId());
+            return Optional.of(page.getContent().get(0).getApplication().getId());
         } else {
             return Optional.empty();
         }

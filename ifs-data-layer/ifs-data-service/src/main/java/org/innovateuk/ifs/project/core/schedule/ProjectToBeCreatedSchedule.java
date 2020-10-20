@@ -26,11 +26,11 @@ public class ProjectToBeCreatedSchedule {
     }
 
     private void doJob(int timesCalled) {
-        Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate();
+        Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate(timesCalled);
         projectToCreated.ifPresent(id -> wrapper.doScheduledJob(String.format(JOB_NAME, id), () ->
                         projectToBeCreatedService.createProject(id),
                 () -> {
-                    if (timesCalled < 5) {
+                    if (timesCalled < 10) {
                         doJob(timesCalled + 1);
                     }
                 }));
