@@ -23,7 +23,8 @@ public class ProjectToBeCreatedSchedule {
     @Scheduled(fixedDelayString = "${ifs.data.service.schedule.project.creation.delay.millis:30000}")
     public void send() {
         Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate();
-        projectToCreated.ifPresent(id -> wrapper.work(String.format(JOB_NAME, id), () ->
-                projectToBeCreatedService.createProject(id)));
+        projectToCreated.ifPresent(id -> wrapper.doScheduledJob(String.format(JOB_NAME, id), () ->
+                projectToBeCreatedService.createProject(id),
+                this::send));
     }
 }

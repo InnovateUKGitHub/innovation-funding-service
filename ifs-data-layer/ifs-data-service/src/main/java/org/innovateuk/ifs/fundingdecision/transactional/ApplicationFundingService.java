@@ -19,12 +19,6 @@ public interface ApplicationFundingService {
 	@SecuredBySpring(value = "SEND_FUNDING_DECISION_EMAILS", securedType = FundingDecision.class, description = "Comp Admins should be able to send emails to Lead Applicants confirming the Funding Panel's decisions on their Applications")
 	ServiceResult<Void> notifyApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource);
 
-	ServiceResult<Void> markApplicationAsNotified(long applicationId);
-
-	@PreAuthorize("hasAuthority('system_maintainer')")
-	@SecuredBySpring(value = "TODO", description = "TODO" )
-	ServiceResult<Void> markApplicationAsUnNotified(long applicationId);
-
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "SAVE_FUNDING_DECISION_DATA", securedType = FundingDecision.class, description = "Comp Admins should be able to save the decision of what applications to fund for a given competition")
 	ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions);

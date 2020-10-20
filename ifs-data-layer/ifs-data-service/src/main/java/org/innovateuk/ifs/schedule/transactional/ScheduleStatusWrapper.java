@@ -18,10 +18,12 @@ public class ScheduleStatusWrapper {
 
     @Autowired
     private SlackErrorReporter errorReporter;
-    public void work(String jobName, Runnable runnable) {
+
+    public void doScheduledJob(String jobName, Runnable runnable, Runnable failedToGetLock) {
         try {
             scheduleStatusService.startJob(jobName);
         } catch (Exception e) {
+            failedToGetLock.run();
             return;
         }
         try {
@@ -34,5 +36,9 @@ public class ScheduleStatusWrapper {
         } finally {
             scheduleStatusService.endJob(jobName);
         }
+    }
+
+    public void doScheduledJob(String jobName, Runnable runnable) {
+        doScheduledJob(jobName, runnable, () -> {});
     }
 }

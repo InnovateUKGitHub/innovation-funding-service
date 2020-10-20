@@ -8,5 +8,5 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
  */
 public interface ApplicationFundingNotificationBulkService {
 
-	ServiceResult<Void> doit(FundingNotificationResource fundingNotificationResource);
+	ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource);
 }

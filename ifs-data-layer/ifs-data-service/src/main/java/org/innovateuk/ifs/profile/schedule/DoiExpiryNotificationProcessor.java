@@ -23,6 +23,6 @@ public class DoiExpiryNotificationProcessor {
 
     @Scheduled(fixedDelayString = "60000")
     public void send() {
-        scheduleStatusWrapper.work(JOB_NAME, () -> service.notifyExpiredDoi());
+        scheduleStatusWrapper.doScheduledJob(JOB_NAME, () -> service.notifyExpiredDoi());
     }
 }

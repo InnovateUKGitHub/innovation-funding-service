@@ -23,6 +23,6 @@ public class GrantProcessor {
 
     @Scheduled(fixedDelayString = "${ifs.data.service.file.grant.send.delay.millis:60000}")
     public void send() {
-        scheduleStatusWrapper.work(JOB_NAME, () -> service.sendReadyProjects());
+        scheduleStatusWrapper.doScheduledJob(JOB_NAME, () -> service.sendReadyProjects());
     }
 }

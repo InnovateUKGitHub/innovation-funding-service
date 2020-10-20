@@ -35,7 +35,7 @@ public class ApplicationFundingDecisionController {
 
     @PostMapping(value="/send-notifications")
     public RestResult<Void> sendFundingDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
-        return applicationFundingNotificationBulkService.doit(fundingNotificationResource).toPostCreateResponse();
+        return applicationFundingNotificationBulkService.sendBulkFundingNotifications(fundingNotificationResource).toPostCreateResponse();
     }
     
     @PostMapping(value="/{competitionId}")

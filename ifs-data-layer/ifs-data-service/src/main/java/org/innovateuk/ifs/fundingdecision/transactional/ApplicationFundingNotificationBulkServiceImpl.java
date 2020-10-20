@@ -28,7 +28,7 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
     private ProjectToBeCreatedService projectToBeCreatedService;
 
     @Override
-    public ServiceResult<Void> doit(FundingNotificationResource fundingNotificationResource) {
+    public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
         if (isReleaseFeedbackCompletionStage(fundingNotificationResource.getFundingDecisions())) {
             return applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         } else {

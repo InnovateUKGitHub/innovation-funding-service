@@ -26,6 +26,6 @@ public class ImportSignedDocusignScheduled {
     //Every hour
     @Scheduled(cron = "0 0 * ? * *")
     public void send() {
-        scheduleStatusWrapper.work(JOB_NAME, () -> docusignService.downloadFileIfSigned());
+        scheduleStatusWrapper.doScheduledJob(JOB_NAME, () -> docusignService.downloadFileIfSigned());
     }
 }
