@@ -11,6 +11,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.cofunderAssignmentResourceListType;
+import static org.innovateuk.ifs.util.EncodingUtils.urlEncode;
 
 @Service
 public class CofunderAssignmentRestServiceImpl extends BaseRestService implements CofunderAssignmentRestService {
@@ -58,7 +59,7 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page)
-                .queryParam("filter", filter);
+                .queryParam("filter", urlEncode(filter));
         return getWithRestResult(builder.toUriString(), ApplicationsForCofundingPageResource.class);
     }
 
@@ -68,7 +69,7 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page)
-                .queryParam("filter", filter);
+                .queryParam("filter", urlEncode(filter));
         return getWithRestResult(builder.toUriString(), CofundersAvailableForApplicationPageResource.class);
     }
 
@@ -77,7 +78,7 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
         String baseUrl = format("%s/application/%d/userIds", cofunderRestUrl, applicationId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("filter", filter);
+                .queryParam("filter", urlEncode(filter));
         return getWithRestResult(builder.toUriString(), longsListType());
     }
 }
