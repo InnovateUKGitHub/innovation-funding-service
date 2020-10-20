@@ -1015,4 +1015,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }
+
+    public boolean isAssessmentClosed() {
+        return getCompetitionStatus() != null && getCompetitionStatus().isLaterThan(IN_ASSESSMENT);
+    }
 }
