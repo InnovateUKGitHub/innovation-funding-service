@@ -7,8 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface GrantService {
 
-    @SecuredBySpring(value = "SEND_READY_PROJECTS", description = "A System Registration User can send ready projects to ACC.")
-    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "SEND_READY_PROJECTS", description = "A System Maintanence User can send ready projects to ACC.")
+    @PreAuthorize("hasAuthority('system_maintainer')")
     ServiceResult<ScheduleResponse> sendReadyProjects();
 }
 
