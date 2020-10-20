@@ -207,6 +207,11 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN
+                - name: IFS_SLACK_AUTH_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SLACK_AUTH_KEY
                 - name: IFS_DOCUSIGN_API_ACCOUNT
                   valueFrom:
                     configMapKeyRef:
