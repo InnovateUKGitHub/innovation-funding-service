@@ -253,7 +253,7 @@ Account creation validation checks - Blank
 
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
-    Given the user enters text to a text field  id = password  PASSWORD123
+    Given the user enters text to a text field  id = password  PASSWORD1357123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field   css = #password  ${short_password}
