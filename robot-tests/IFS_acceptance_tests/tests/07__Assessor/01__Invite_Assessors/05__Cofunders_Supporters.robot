@@ -15,6 +15,22 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 ${cofunderApplicationTitle}     KTP application
 
 *** Test Cases ***
+The cofunder can see their dashboard
+    [Documentation]  IFS-8402
+    Given Logging in and Error Checking                 hubert.cumberdale@salad-fingers.com  Passw0rd
+    The user clicks the button/link                     jQuery = h2:contains("Co-funding")    #link = Co-funding
+    When the user should see the element                jQuery = h2:contains("Competitions for assessment")
+    And the user should see the element                 jQuery = h2:contains("Upcoming competitions to assess")
+
+The cofunder should see the tiles on their dashboard
+    [Documentation]  IFS-8402
+    Given the user select the competition and starts application  KTP new competition
+    #And the user apply with knowledge base organisation     Reading   ${secondKTPOrgName}
+    the user clicks the button/link                     link = Dashboard
+    The user should see the element                     jQuery = h2:contains("Applications")
+    The user should see the element                     jQuery = h2:contains("Co-funding")
+    logout as user
+
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
