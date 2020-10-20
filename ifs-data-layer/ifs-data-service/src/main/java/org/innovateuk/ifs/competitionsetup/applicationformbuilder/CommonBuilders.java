@@ -39,6 +39,8 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 @Component
 public class CommonBuilders {
 
+    public static final String EDI_QUESTION_PATTERN = "<a href=\"%s\" target=\"_blank\" rel=\"external\">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>";
+
     @Autowired
     private ResearchCategoryRepository categoryRepository;
 
@@ -169,7 +171,7 @@ public class CommonBuilders {
         return aQuestion()
                 .withShortName("Equality, diversity and inclusion")
                 .withName("Have you completed the EDI survey?")
-                .withDescription("<a href=\"https://www.surveymonkey.co.uk/r/ifsaccount\" target=\"_blank\" rel=\"external\">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>")
+                .withDescription(String.format(EDI_QUESTION_PATTERN, "https://www.surveymonkey.co.uk/r/ifsaccount"))
                 .withAssignEnabled(true)
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(false)

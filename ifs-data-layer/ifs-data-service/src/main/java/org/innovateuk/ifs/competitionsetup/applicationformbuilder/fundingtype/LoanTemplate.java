@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.EDI_QUESTION_PATTERN;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
@@ -39,6 +41,19 @@ public class LoanTemplate implements FundingTypeTemplate {
     @Override
     public Competition overrideTermsAndConditions(Competition competition) {
         return commonBuilders.overrideTermsAndConditions(competition);
+    }
+
+    @Override
+    public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
+        competitionTypeSections.stream().filter(section -> section.getName().equals("Project details"))
+                .findAny()
+                .ifPresent(financeSection ->
+                        financeSection.getQuestions().stream().filter(question -> question.getName().equals("Have you completed the EDI survey?"))
+                        .findAny()
+                        .ifPresent(ediQuestion ->
+                                ediQuestion.withDescription(String.format(EDI_QUESTION_PATTERN, "https://bit.ly/EDIForm"))
+                        ));
+        return competitionTypeSections;
     }
 
     private void addLoanProjectSetupColumns(Competition competition) {
