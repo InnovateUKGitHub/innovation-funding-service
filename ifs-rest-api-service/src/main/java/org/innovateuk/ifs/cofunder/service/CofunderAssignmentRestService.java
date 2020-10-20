@@ -7,12 +7,16 @@ import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
 import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
+import java.util.List;
+
 /**
  * Interface for CRUD operations on {@link AssessmentResource} related data.
  */
 public interface CofunderAssignmentRestService {
 
     RestResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId);
+
+    RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId);
 
     RestResult<CofunderAssignmentResource> assign(long userId, long applicationId);
 
