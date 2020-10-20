@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -95,6 +96,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Override
     @Transactional //Write transaction for first time creation of project finances.
+    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-blah")
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findById(projectId).get();
         PartnerOrganisation lead = project.getLeadOrganisation().get();

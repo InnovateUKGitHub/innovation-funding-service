@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.core.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
@@ -25,6 +23,7 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -32,6 +31,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +94,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
+
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private FinanceChecksGenerator financeChecksGenerator;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -260,6 +266,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
+                            andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccess(() -> setCompetitionProjectSetupStartedDate(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
@@ -374,4 +381,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private List<ProjectUser> getProjectUsersByProjectId(Long projectId, List<ProjectParticipantRole> projectParticipantRoles) {
         return projectUserRepository.findByProjectIdAndRoleIsIn(projectId, projectParticipantRoles);
     }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = newProject.getOrganisations();
+
+        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
+                financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
+                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+                                financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
+
+        return processAnyFailuresOrSucceed(financeCheckResults);
+    }
+
 }

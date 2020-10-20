@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.profile.transactional;
 
+import com.newrelic.api.agent.Trace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.AffiliationRepository;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,16 +59,17 @@ public class DoiExpiryServiceImpl extends BaseTransactionalService implements Do
 
     @Override
     @Transactional
-    public void notifyExpiredDoi() {
+    @Trace(dispatcher = true)
+    public ServiceResult<ScheduleResponse> notifyExpiredDoi() {
         ZonedDateTime expiry = Profile.startOfCurrentFinancialYear(ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault());
 
         Page<User> expired = affiliationRepository.findUserToBeNotifiedOfExpiry(expiry, PageRequest.of(0, 1));
 
-        expired.getContent().stream().findFirst().ifPresent(this::notifyExpiry);
+        return ServiceResult.serviceSuccess(expired.getContent().stream().findFirst().map(this::notifyExpiry).orElse(ScheduleResponse.noWorkNeeded()));
 
     }
 
-    private void notifyExpiry(User user) {
+    private ScheduleResponse notifyExpiry(User user) {
         LOG.info(String.format("Notifying user of DOI expiry %d", user.getId()));
         NotificationTarget recipient = new UserNotificationTarget(
                 user.getName(),
@@ -83,6 +87,7 @@ public class DoiExpiryServiceImpl extends BaseTransactionalService implements Do
         notificationService.sendNotificationWithFlush(notification, EMAIL).getSuccess();
 
         profileRepository.findById(user.getProfileId()).get().setDoiNotifiedOn(ZonedDateTime.now());
+        return new ScheduleResponse("Notified users DOI " + user.getId());
     }
 
     enum Notifications {

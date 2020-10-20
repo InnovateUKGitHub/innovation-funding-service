@@ -62,6 +62,9 @@ public abstract class ApplicationSummaryMapper {
         if (source.getApplicationProcess().getProcessState() == ApplicationState.APPROVED) {
             result.setFundingDecision(FundingDecision.FUNDED);
         }
+        if (source.getProjectToBeCreated() != null) {
+            result.setProjectBeingCreated(source.getProjectToBeCreated().isPending());
+        }
 
         BigDecimal grantRequested = getGrantRequested(source);
         result.setGrantRequested(grantRequested);
