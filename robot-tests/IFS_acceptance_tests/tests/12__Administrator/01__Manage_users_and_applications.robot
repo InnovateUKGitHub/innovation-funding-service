@@ -246,7 +246,7 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
     Given the user reads his email and clicks the link            ${email}  ${emailInviteSubject}  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                           jQuery = .govuk-button:contains("Create account")
-    And the use should see the validation error summary           Password must be at least 8 characters
+    And the use should see the validation error summary           Password must be at least 12 characters
     When the user enters the basic details to create account      New  Administrator  ${email}
     Set Focus To Element                                          css = #lastName
     Then the user cannot see a validation error in the page
