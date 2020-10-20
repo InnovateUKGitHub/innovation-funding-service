@@ -2,9 +2,12 @@ package org.innovateuk.ifs.schedule.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Supplier;
 
 @Component
 public class ScheduleStatusWrapper {
@@ -17,9 +20,9 @@ public class ScheduleStatusWrapper {
     private AuthenticationHelper authenticationHelper;
 
     @Autowired
-    private SlackErrorReporter errorReporter;
+    private SlackReporter errorReporter;
 
-    public void doScheduledJob(String jobName, Runnable runnable, Runnable failedToGetLock) {
+    public void doScheduledJob(String jobName, Supplier<ServiceResult<ScheduleResponse>> runnable, Runnable failedToGetLock) {
         try {
             scheduleStatusService.startJob(jobName);
         } catch (Exception e) {
@@ -28,17 +31,23 @@ public class ScheduleStatusWrapper {
         }
         try {
             authenticationHelper.loginSystemUser();
-            runnable.run();
-            errorReporter.reportProblem("Schedule job ran fine " + jobName);
+            ServiceResult<ScheduleResponse> response = runnable.get();
+            if (response.isSuccess()) {
+                if (response.getSuccess().getResponse() != null) {
+                    errorReporter.report("Schedule SUCCESS " + jobName + " response: " + response.getSuccess().getResponse());
+                }
+            } else {
+                errorReporter.report("Schedule FAILURE " + jobName + " response: " + response.getFailure().toDisplayString());
+            }
         } catch (Exception e) {
             LOG.error("Error running scheduled job " + jobName, e);
-            errorReporter.reportProblem("Error running scheduled job " + jobName + " error: " + e.getMessage());
+            errorReporter.report("Schedule FAILURE " + jobName + " response: " + e.getMessage());
         } finally {
             scheduleStatusService.endJob(jobName);
         }
     }
 
-    public void doScheduledJob(String jobName, Runnable runnable) {
+    public void doScheduledJob(String jobName,  Supplier<ServiceResult<ScheduleResponse>> runnable) {
         doScheduledJob(jobName, runnable, () -> {});
     }
 }

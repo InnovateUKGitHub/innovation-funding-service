@@ -12,31 +12,32 @@ import org.springframework.stereotype.Component;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 @Component
-public class SlackErrorReporter {
-    private static final Log LOG = LogFactory.getLog(SlackErrorReporter.class);
+public class SlackReporter {
+    private static final Log LOG = LogFactory.getLog(SlackReporter.class);
 
     private SlackClient slackClient;
 
     private String channel;
 
-    public SlackErrorReporter(@Value("${ifs.slack.auth.key:@null}") String authKey) {
+    public SlackReporter(@Value("${ifs.slack.auth.key:@null}") String authKey) {
         if (!isNullOrEmpty(authKey)) {
             SlackClientRuntimeConfig runtimeConfig = SlackClientRuntimeConfig.builder()
                     .setTokenSupplier(() -> authKey)
                     .build();
             this.slackClient = SlackClientFactory.defaultFactory().build(runtimeConfig);
-            this.channel = "ifs_monitor_test";
+            this.channel = "ifs_production_monitoring";
         }
     }
 
-    public void reportProblem(String problem) {
+    public void report(String text) {
         if (slackClient != null) {
             slackClient.postMessage(
                     ChatPostMessageParams.builder()
-                            .setText(problem)
+                            .setText(text)
                             .setChannelId(channel)
                             .build()
             ).join().ifErr(err -> LOG.error(err.getError()));
         }
     }
+
 }

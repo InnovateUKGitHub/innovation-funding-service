@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.project.core.repository.ProjectToBeCreatedRepository;
+import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,7 +41,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
 
     @Override
     public Optional<Long> findProjectToCreate() {
-        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, NUMBER_OF_RECORDS_TO_CHECK, Direction.ASC, "created"));
+        Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(0, NUMBER_OF_RECORDS_TO_CHECK, Direction.ASC, "application.id"));
         if (page.hasContent()) {
             int index = ThreadLocalRandom.current().nextInt(0, page.getContent().size());
             return Optional.of(page.getContent().get(index).getApplication().getId());
@@ -52,12 +53,15 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     @Trace(dispatcher = true)
-    public ServiceResult<Void> createProject(long applicationId) {
+    public ServiceResult<ScheduleResponse> createProject(long applicationId) {
         return find(projectToBeCreatedRepository.findByApplicationId(applicationId), notFoundError(ProjectToBeCreated.class, applicationId))
                 .andOnSuccess(projectToBeCreated -> {
                     projectToBeCreated.setPending(false);
                     return createProject(projectToBeCreated.getApplication(), projectToBeCreated.getEmailBody())
-                            .andOnSuccessReturnVoid(() -> projectToBeCreated.setMessage("Success"));
+                            .andOnSuccessReturn(() -> {
+                                projectToBeCreated.setMessage("Success");
+                                return new ScheduleResponse("Project created: " + applicationId);
+                            });
                 });
     }
 
