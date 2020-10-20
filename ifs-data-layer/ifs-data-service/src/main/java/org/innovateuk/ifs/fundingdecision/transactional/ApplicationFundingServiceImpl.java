@@ -141,18 +141,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 });
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> markApplicationAsNotified(long applicationId) {
-        return applicationService.setApplicationFundingEmailDateTime(applicationId, ZonedDateTime.now()).andOnSuccessReturnVoid();
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> markApplicationAsUnNotified(long applicationId) {
-        return applicationService.setApplicationFundingEmailDateTime(applicationId, null).andOnSuccessReturnVoid();
-    }
-
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
