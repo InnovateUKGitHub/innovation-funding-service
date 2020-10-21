@@ -2,6 +2,8 @@
 Documentation  IFS-8414 Internal user - View co funder feedback progress - list view
 ...
 ...            IFS-8407 Internal user - View co funder feedback
+...
+...            IFS-8402 Co funder dashboard - competition level
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -15,26 +17,24 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 ${cofunderApplicationTitle}     KTP application
 
 *** Test Cases ***
-The cofunder can see their dashboard
+The cofunder can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
-    Given Logging in and Error Checking                 hubert.cumberdale@salad-fingers.com  Passw0rd
-    The user clicks the button/link                     jQuery = h2:contains("Co-funding")    #link = Co-funding
-    When the user should see the element                jQuery = h2:contains("Competitions for assessment")
-    And the user should see the element                 jQuery = h2:contains("Upcoming competitions to assess")
+    Given Logging in and Error Checking     hubert.cumberdale@salad-fingers.com  Passw0rd
+    When the user clicks the button/link    jQuery = h2:contains("Co-funding")
+    Then the user should see the element    jQuery = h2:contains("Competitions for assessment")
+    And the user should see the element     jQuery = h2:contains("Upcoming competitions to assess")
 
 The cofunder should see the tiles on their dashboard
     [Documentation]  IFS-8402
-    Given the user select the competition and starts application  KTP new competition
-    #And the user apply with knowledge base organisation     Reading   ${secondKTPOrgName}
-    the user clicks the button/link                     link = Dashboard
-    The user should see the element                     jQuery = h2:contains("Applications")
-    The user should see the element                     jQuery = h2:contains("Co-funding")
-    logout as user
+    Given the user select the competition and starts application     KTP new competition
+    When the user clicks the button/link                             link = Dashboard
+    Then the user should see the element                             jQuery = h2:contains("Applications")
+    And the user should see the element                              jQuery = h2:contains("Co-funding")
 
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
-    Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
+    Given Log in as a different user                    &{ifs_admin_user_credentials}
     And the user navigates to the page                  ${server}/management/competition/99/cofunders/view
     When the user enters text to a text field           id=applicationFilter    ${cofunderApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
