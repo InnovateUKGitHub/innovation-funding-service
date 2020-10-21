@@ -2,6 +2,8 @@
 Documentation  IFS-8414 Internal user - View co funder feedback progress - list view
 ...
 ...            IFS-8407 Internal user - View co funder feedback
+...
+...            IFS-8404 Internal user - Assign Co-funder
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
