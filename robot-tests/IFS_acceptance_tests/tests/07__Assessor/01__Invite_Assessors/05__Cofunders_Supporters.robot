@@ -14,38 +14,34 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${cofunderApplicationTitle}     KTP application
+${cofunderApplicationTitle}     	Reconfiguring an immune response
 
 *** Test Cases ***
-The comp admin can allocate applications
+The internal user can allocate applications
     [Documentation]   IFS-8404
-    Given Logging in and Error Checking         &{Comp_admin1_credentials}
+    Given Logging in and Error Checking         &{ifs_admin_user_credentials}
     When the user clicks the button/link        link = KTP cofunding
     And the user clicks the button/link         link = Manage co-funders
     Then the user can allocate applictions
 
-The comp admin can allocate co-funders and search for cofunder by first name and/or last name
+The internal user can allocate co-funders and search for cofunder by first name and/or last name
     [Documentation]   IFS-8404
     Given the user can allocate cofunders
     When the user searches for cofunder by name      Douglas
     And the user searches for cofunder by name       Alston
     Then the user searches for cofunder by name      Douglas Alston
 
-The comp admin can invite a co-funder to a KTP application
+The internal user can invite a co-funder to a KTP application
     [Documentation]   IFS-8404
     Given the user can view already assigned co-funders
     Then the user can invite a cofunder to a KTP application
 
-The comp admin can close the assessment and the link to allocate applications is no longer active
-    [Documentation]   IFS-8404
-    Given the user can close the assessment
-    Then the user is no longer able to allocate applications
-
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
-    Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
-    And the user navigates to the page                  ${server}/management/competition/99/cofunders/view
+    Given The user clicks the button/link               link = Back to competition
+    And the user clicks the button/link                 link = Manage co-funders
+    And the user clicks the button/link                 link = View feedback
     When the user enters text to a text field           id=applicationFilter    ${cofunderApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
     And the user clicks the button/link                 link = ${cofunderApplicationID}
@@ -60,7 +56,9 @@ The ifs admin views the feedback of the application
 The comp admin views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{Comp_admin1_credentials}
-    And the user navigates to the page              ${server}/management/competition/99/cofunders/view
+    And the user clicks the button/link             link = KTP cofunding
+    And the user clicks the button/link             link = Manage co-funders
+    And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${cofunderApplicationID}
     And the user clicks the button/link             link = Back to co-funders
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
@@ -69,11 +67,18 @@ The comp admin views the feedback of the application
 The finance manager views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{internal_finance_credentials}
-    And the user navigates to the page              ${server}/management/competition/99/cofunders/view
+    And the user clicks the button/link             link = KTP cofunding
+    And the user clicks the button/link             link = Manage co-funders
+    And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${cofunderApplicationID}
     And the user clicks the button/link             link = Back to co-funders
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the cofunder review
+
+The comp admin can close the assessment and the link to allocate applications is no longer active
+    [Documentation]   IFS-8404
+    Given the user can close the assessment
+    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
@@ -129,13 +134,13 @@ Given the user can view already assigned co-funders
     the user should see the element         jQuery = h1:contains(Assign to application)
     the user should see the element         jQuery = h3:contains("Partners")
     the user should see the element         jQuery = h3:contains("Innovation area")
-    the user should see the element         jQuery = h3:contains("Assigned co-funders")
+    the user should see the element         jQuery = h2:contains("Assigned co-funders")
     the user should see the element         jQuery = th:contains("Co-funder")
     the user should see the element         jQuery = th:contains("Organisation")
     the user should see the element         jQuery = th:contains("Email")
 
 the user can invite a cofunder to a KTP application
-    the user should see the element         jQuery = h3:contains("Available co-funders")
+    the user should see the element         jQuery = h2:contains("Available co-funders")
     the user should see the element         jQuery = th:contains("Select co-funder")
     the user should see the element         jQuery = th:contains("Co-funder name")
     the user should see the element         jQuery = span:contains("0 co-funders selected")
@@ -147,7 +152,7 @@ the user can invite a cofunder to a KTP application
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
 
 the user can close the assessment
-    the user clicks the button/link         link = Back to competition
+    the user navigates to the page          ${server}/management/competition/109
     the user clicks the button/link         jQuery = button:contains("Close assessment")
 
 the user is no longer able to allocate applications
