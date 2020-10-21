@@ -17,6 +17,30 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 ${cofunderApplicationTitle}     KTP application
 
 *** Test Cases ***
+The comp admin can allocate applications
+    [Documentation]   IFS-8404
+    Given Logging in and Error Checking         &{Comp_admin1_credentials}
+    When the user clicks the button/link        link = KTP cofunding
+    And the user clicks the button/link         link = Manage co-funders
+    Then the user can allocate applictions
+
+The comp admin can allocate co-funders and search for cofunder by first name and/or last name
+    [Documentation]   IFS-8404
+    Given the user can allocate cofunders
+    When the user searches for cofunder by name      Douglas
+    And the user searches for cofunder by name       Alston
+    Then the user searches for cofunder by name      Douglas Alston
+
+The comp admin can invite a co-funder to a KTP application
+    [Documentation]   IFS-8404
+    Given the user can view already assigned co-funders
+    Then the user can invite a cofunder to a KTP application
+
+The comp admin can close the assessment and the link to allocate applications is no longer active
+    [Documentation]   IFS-8404
+    Given the user can close the assessment
+    Then the user is no longer able to allocate applications
+
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
@@ -50,30 +74,6 @@ The finance manager views the feedback of the application
     And the user clicks the button/link             link = Back to co-funders
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the cofunder review
-
-The comp admin can allocate applications
-    [Documentation]   IFS-8404
-    Given Log in as a different user            &{Comp_admin1_credentials}
-    When the user clicks the button/link        link = KTP cofunding
-    And the user clicks the button/link         link = Manage co-funders
-    Then the user can allocate applictions
-
-The comp admin can allocate co-funders and search for cofunder by first name and/or last name
-    [Documentation]   IFS-8404
-    Given the user can allocate cofunders
-    When the user searches for cofunder by name      Douglas
-    And the user searches for cofunder by name       Alston
-    Then the user searches for cofunder by name      Douglas Alston
-
-The comp admin can invite a co-funder to a KTP application
-    [Documentation]   IFS-8404
-    Given the user can view already assigned co-funders
-    Then the user can invite a cofunder to a KTP application
-
-The comp admin can close the assessment and the link to allocate applications is no longer active
-    [Documentation]   IFS-8404
-    Given the user can close the assessment
-    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
