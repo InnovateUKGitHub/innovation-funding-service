@@ -39,23 +39,10 @@ public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwar
 
         assertTrue(taskWasSuccessful(future1));
         assertFalse(taskExists());
+
+        //cleanup
+        scheduleStatusRepository.findByJobName(JOB_NAME).ifPresent(scheduleStatusRepository::delete);
     }
-
-    @Test
-    public void multipleServicesRunningSchedule_AtSameTime() throws InterruptedException, ExecutionException {
-        CompletableFuture<Optional<Exception>> future1 = new CompletableFuture<>();
-        CompletableFuture<Optional<Exception>> future2 = new CompletableFuture<>();
-
-        new Thread(new ScheduleTask(future1, "Task 1")).start();
-        new Thread(new ScheduleTask(future2, "Task 2")).start();
-
-        assertFalse(taskWasSuccessful(future2));
-        assertTrue(taskExists());
-
-        assertTrue(taskWasSuccessful(future1));
-        assertFalse(taskExists());
-    }
-
 
     private boolean taskExists() {
         return scheduleStatusRepository.findByJobName(JOB_NAME).isPresent();
