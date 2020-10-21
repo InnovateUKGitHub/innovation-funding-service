@@ -25,18 +25,18 @@ public class ProjectToBeCreatedSchedule {
     private static final String JOB_NAME = "CREATE_PROJECT_%d";
 
     @Scheduled(fixedDelayString = "${ifs.data.service.schedule.project.creation.delay.millis:30000}")
-    public void send() {
-        doJob(0);
+    public void schedule() {
+        createProject(0);
     }
 
-    private void doJob(int timesCalled) {
+    private void createProject(int timesCalled) {
         authenticationHelper.loginSystemUser();
         Optional<Long> projectToCreated = projectToBeCreatedService.findProjectToCreate(timesCalled);
         projectToCreated.ifPresent(id -> wrapper.doScheduledJob(String.format(JOB_NAME, id), () ->
                         projectToBeCreatedService.createProject(id),
                 () -> {
                     if (timesCalled < 10) {
-                        doJob(timesCalled + 1);
+                        createProject(timesCalled + 1);
                     }
                 }));
     }
