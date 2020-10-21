@@ -64,9 +64,9 @@ public class FinanceLinksUtil {
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
             if (assessorProcessRoles().contains(currentUserRole.get().getRole())) {
-                if (DETAILED.equals(competitionAssessmentConfigResource.getAssessorFinanceView())) {
+                if (DETAILED == competitionAssessmentConfigResource.getAssessorFinanceView()) {
                     return Optional.of(assessorLink(application, organisation));
-                } else if (ALL.equals(competitionAssessmentConfigResource.getAssessorFinanceView())) {
+                } else if (ALL == competitionAssessmentConfigResource.getAssessorFinanceView()) {
                     return Optional.of(organisationIdInLink(application.getId(), organisation));
                 }
             }
