@@ -43,7 +43,7 @@ Cofunder checks the number of applications count is correct
     And the user gets expected number of applications in the page
     Then should be equal as numbers                                       ${actualNumberOfApplications}   ${expectedNumberOfApplications}
 
-Cofunder can view read only view of an application and print application link
+Cofunder can view read only view of an application and see the print application link
     [Documentation]  IFS-8408
     Given the user clicks the button/link       link = Previous
     And the user clicks the button/link         link = ${cofundingApplicationTitle}
