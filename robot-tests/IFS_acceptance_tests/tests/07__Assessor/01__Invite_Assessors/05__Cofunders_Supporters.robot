@@ -30,12 +30,12 @@ The cofunder should see the tiles on their dashboard
     When the user clicks the button/link                             link = Dashboard
     Then the user should see the element                             jQuery = h2:contains("Applications")
     And the user should see the element                              jQuery = h2:contains("Co-funding")
-    logout as user
+    #logout as user
 
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
-    Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
+    Given Log in as a different user                 &{ifs_admin_user_credentials}
     And the user navigates to the page                  ${server}/management/competition/99/cofunders/view
     When the user enters text to a text field           id=applicationFilter    ${cofunderApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
