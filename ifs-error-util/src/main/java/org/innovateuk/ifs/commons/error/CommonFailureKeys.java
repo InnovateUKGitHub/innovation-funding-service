@@ -393,7 +393,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
      * Cofunder
      */
     COFUNDER_ASSIGNMENT_ALREADY_EXISTS(BAD_REQUEST),
-    COFUNDER_WORKFLOW_TRANSITION_FAILURE(BAD_REQUEST);
+    COFUNDER_WORKFLOW_TRANSITION_FAILURE(BAD_REQUEST),
+    COFUNDER_AFTER_ASSESSMENT_CLOSE(BAD_REQUEST);
 
 
     private ErrorTemplate errorTemplate;
