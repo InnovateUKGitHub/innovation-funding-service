@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have been removed as a co-funder on this application.
+You have been removed as a co-funder on this application:
 
 ${applicationId} : ${applicationName}
 
