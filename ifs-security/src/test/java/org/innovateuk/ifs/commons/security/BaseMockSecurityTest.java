@@ -255,6 +255,11 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * the action will raise an error and vice versa any not specified who can will also raise an error
      */
     protected void assertRolesCanPerform(Runnable actionFn, List<Role> supportedRoles) {
+        if (supportedRoles.contains(Role.ASSESSOR)) {
+            supportedRoles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        } else if (supportedRoles.contains(Role.PROJECT_FINANCE) || supportedRoles.contains(Role.IFS_ADMINISTRATOR)) {
+            supportedRoles.add(Role.SYSTEM_MAINTAINER);
+        }
 
         asList(Role.values()).forEach(role -> {
 

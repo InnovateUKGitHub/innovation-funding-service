@@ -149,7 +149,7 @@ public class ApplicationSummaryResource {
     }
 
     public Boolean applicationFundingDecisionIsChangeable() {
-        return this.manageFundingEmailDate == null || !fundingDecision.equals(FundingDecision.FUNDED) || !projectBeingCreated;
+        return (this.manageFundingEmailDate == null || !fundingDecision.equals(FundingDecision.FUNDED)) && !projectBeingCreated;
 
     }
 
