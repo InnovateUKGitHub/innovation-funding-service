@@ -47,6 +47,8 @@ items:
                 failureThreshold: 3
               imagePullPolicy: Always
               env:
+                - name: IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED
+                  value: "${IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED}"
                 - name: SPRING_DATASOURCE_URL
                   valueFrom:
                     configMapKeyRef:
