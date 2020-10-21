@@ -195,47 +195,20 @@
                     </th:block>
                     <div th:if="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
                          class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input id="assessorFinanceView-0"
+                        <div class="govuk-radios__item" th:each="assessorFinanceView : ${T(org.innovateuk.ifs.competition.resource.AssessorFinanceView).values()}">
+                            <input type="radio"
                                    class="govuk-radios__input"
-                                   type="radio"
+                                   th:id="${'assessorFinanceView-' + assessorFinanceView.name()}"
+                                   th:name="assessorFinanceView"
+                                   th:value="${assessorFinanceView.name()}"
                                    th:field="${competitionSetupForm.assessorFinanceView}"
-                                   th:checked="${competitionSetupForm.assessorFinanceView == 'OVERVIEW'}"
-                                   value="OVERVIEW"
+                                   th:checked="${competitionSetupForm.assessorFinanceView == assessorFinanceView.name()}"
                                    th:errorclass="field-error"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                            <label for="assessorFinanceView-0"
-                                   class="govuk-label govuk-radios__label">
+                            <label th:for="${'assessorFinanceView-' + assessorFinanceView.name()}"
+                                   class="govuk-label govuk-radios__label" th:text="${assessorFinanceView.viewType}">
                                 Overview
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input id="assessorFinanceView-1"
-                                   class="govuk-radios__input"
-                                   type="radio"
-                                   th:field="${competitionSetupForm.assessorFinanceView}"
-                                   th:errorclass="field-error"
-                                   required="required"
-                                   value="DETAILED"
-                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                            <label for="assessorFinanceView-1"
-                                   class="govuk-label govuk-radios__label">
-                                Detailed
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input id="assessorFinanceView-2"
-                                   class="govuk-radios__input"
-                                   type="radio"
-                                   th:field="${competitionSetupForm.assessorFinanceView}"
-                                   th:errorclass="field-error"
-                                   required="required"
-                                   value="ALL"
-                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                            <label for="assessorFinanceView-2"
-                                   class="govuk-label govuk-radios__label">
-                                All
                             </label>
                         </div>
                     </div>
