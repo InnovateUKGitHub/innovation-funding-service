@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# The infamous user password: Passw0rd
+# The infamous user password: Passw0rd1357
 password="e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM="
 # Defaults. As this script should only ever be run on development environments they should suffice.
 # Database
