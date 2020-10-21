@@ -7,9 +7,11 @@ import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderState;
 import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
 import org.innovateuk.ifs.cofunder.viewmodel.CofunderResponseViewModel;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,8 @@ import static com.google.common.collect.Lists.newArrayList;
 
 @Controller
 @RequestMapping("cofunder/application/{applicationId}/response")
+@SecuredBySpring(value = "Controller", description = "Only cofunders can edit their responses", securedType = CofunderResponseController.class)
+@PreAuthorize("hasAnyAuthority('cofunder')")
 public class CofunderResponseController {
 
     @Autowired
