@@ -77,7 +77,7 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {
         if (application.getCompetition().isKtp()) {
-            return serviceSuccess();
+            return projectService.createProjectFromApplication(application.getId()).andOnSuccessReturnVoid();
         } else {
             return applicationFundingService.notifyApplicantsOfFundingDecisions(new FundingNotificationResource(emailBody, singleMap(application.getId(), FundingDecision.FUNDED)))
                     .andOnSuccess(() -> projectService.createProjectFromApplication(application.getId()))

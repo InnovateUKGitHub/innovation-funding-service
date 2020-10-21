@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -52,9 +54,11 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
         }
     }
 
-    private void handleSuccessfulNotificationsCreatingProjects(FundingNotificationResource fundingNotificationResource) {
-        fundingNotificationResource.getFundingDecisions().entrySet().stream()
-                .forEach(entry -> projectToBeCreatedService.markApplicationReadyToBeCreated(entry.getKey(), fundingNotificationResource.getMessageBody()));
+    private ServiceResult<Void> handleSuccessfulNotificationsCreatingProjects(FundingNotificationResource fundingNotificationResource) {
+        return aggregate(fundingNotificationResource.getFundingDecisions().keySet().stream()
+                .map(applicationId -> projectToBeCreatedService.markApplicationReadyToBeCreated(applicationId, fundingNotificationResource.getMessageBody()))
+                .collect(toList()))
+                .andOnSuccessReturnVoid();
     }
 
     private boolean isReleaseFeedbackCompletionStage(Map<Long, FundingDecision> fundingDecisions) {
