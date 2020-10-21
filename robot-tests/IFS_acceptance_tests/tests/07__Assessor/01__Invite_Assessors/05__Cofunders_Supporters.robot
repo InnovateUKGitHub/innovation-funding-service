@@ -15,21 +15,31 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${cofunderApplicationTitle}     KTP application
+${cofunderOrg}                  The University of Surrey
+${newApplication}               New application
 
 *** Test Cases ***
 The cofunder can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
     Given Logging in and Error Checking     hubert.cumberdale@salad-fingers.com  Passw0rd
     When the user clicks the button/link    jQuery = h2:contains("Co-funding")
-    Then the user should see the element    jQuery = h2:contains("Competitions for assessment")
-    And the user should see the element     jQuery = h2:contains("Upcoming competitions to assess")
+    Then the user should see the element    jQuery = h2:contains("Competitions to review")
+    And the user should see the element     jQuery = h2:contains("Upcoming competitions to review")
 
-The cofunder should see the tiles on their dashboard
+The cofunder should see a newly created application from the dashboard
     [Documentation]  IFS-8402
     Given the user select the competition and starts application     KTP new competition
-    When the user clicks the button/link                             link = Dashboard
-    Then the user should see the element                             jQuery = h2:contains("Applications")
-    And the user should see the element                              jQuery = h2:contains("Co-funding")
+    input text                                                       id = knowledgeBase        ${cofunderOrg}
+    When the user clicks the button/link                             jQuery = ul li:contains("${cofunderOrg}")
+    And the user clicks the button/link                              jQuery = button:contains("Confirm")
+    Then the user clicks the button/link                             id = knowledge-base-confirm-organisation-cta
+    And the user clicks the button/link                              link = Application details
+    Then the user enters text to a text field                        css = [id = "name"]    ${newApplication}
+    And the user enters text to a text field                         css = [id = "durationInMonths"]    3
+    Then the user clicks the button/link                             jQuery = button:contains("Mark as complete")
+    And the user clicks the button/link                              link = Dashboard
+    Then the user clicks the button/link                             jQuery = h2:contains("Applications")
+    And the user should see the element                              jQuery = a:contains("${newApplication}")
 
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
