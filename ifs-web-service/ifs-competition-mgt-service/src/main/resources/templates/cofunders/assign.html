@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign to application',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
-        <h3 class="govuk-heading-s" th:text="${model.applicationId} + ': ' + ${model.applicationName}" />
+        <h2 class="govuk-heading-m" th:text="${model.applicationId} + ' - ' + ${model.applicationName}" />
 
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div class="govuk-grid-column-one-quarter">
@@ -33,10 +33,10 @@
         <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
            class="govuk-link">Review application</a>
 
-        <h3 class="govuk-heading-s govuk-!-margin-top-6">Assigned co-funders
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Assigned co-funders
             <th:block th:unless="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}"
                       th:text="${' (' + model.cofundersAvailableForApplicationPage.assignedCofunders.size() + ')'}" />
-        </h3>
+        </h2>
         <p th:if="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}">
             No co-funders have been assigned to this application.
         </p>
@@ -59,7 +59,7 @@
                         <td class="govuk-table__cell" th:text="${entry.name}" />
                         <td class="govuk-table__cell" th:text="${entry.organisation}" />
                         <td class="govuk-table__cell" th:text="${entry.email}" />
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell alignright">
                             <button class="govuk-button govuk-button--secondary" type="submit"
                                       id="remove-invite-button" name="userId" th:value="${entry.userId}">Remove</button>
                         </td>
@@ -68,7 +68,7 @@
             </table>
         </form>
 
-        <h3 class="govuk-heading-s">Available co-funders</h3>
+        <h2 class="govuk-heading-m">Available co-funders</h2>
 
         <form method="GET" id="filter-cofunders-form">
             <div class="search-filters govuk-!-margin-top-6">
@@ -145,13 +145,14 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="entry : ${model.cofundersAvailableForApplicationPage.content}">
+                    <tr class="govuk-table__row" th:each="entry, index : ${model.cofundersAvailableForApplicationPage.content}">
                         <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input type="checkbox"
+                                     <input type="checkbox"
                                            class="govuk-checkboxes__input"
-                                           name="selectedCofunderIds"
+                                           th:id="|cofunder-row-${index.count}|"
+                                           th:field="*{selectedCofunderIds}"
                                            th:value="${entry.userId}"/>
                                     <label class="govuk-label govuk-checkboxes__label">
                                         <span class="govuk-visually-hidden">Add</span>
