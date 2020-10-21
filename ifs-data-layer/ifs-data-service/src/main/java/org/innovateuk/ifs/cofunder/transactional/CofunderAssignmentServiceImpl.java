@@ -102,12 +102,12 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Transactional
     public ServiceResult<Void> assign(List<Long> userIds, long applicationId) {
         List<ServiceResult<CofunderAssignmentResource>> assignmentResults = userIds.stream().map(userId -> {
-                    boolean exists = cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId);
-                    if (!exists) {
-                        return doAssign(userId, applicationId);
-                    }
-                    return null;
-                }).filter(Objects::nonNull)
+            boolean exists = cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId);
+            if (!exists) {
+                return doAssign(userId, applicationId);
+            }
+            return null;
+        }).filter(Objects::nonNull)
                 .collect(Collectors.toList());
         return aggregate(assignmentResults).andOnSuccessReturnVoid();
     }
@@ -136,11 +136,11 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     public ServiceResult<Void> removeAssignment(long userId, long applicationId) {
         return find(application(applicationId), user(userId)).andOnSuccess(
                 (application, user) ->
-                    findCofunderAssignmentByUserAndApplication(userId, applicationId)
-                            .andOnSuccess((CofunderAssignment assignment) -> {
-                                cofunderAssignmentRepository.delete(assignment);
-                                return notifyUserRemovedAsCofunder(user, application);
-                            }));
+                        findCofunderAssignmentByUserAndApplication(userId, applicationId)
+                                .andOnSuccess((CofunderAssignment assignment) -> {
+                                    cofunderAssignmentRepository.delete(assignment);
+                                    return notifyUserRemovedAsCofunder(user, application);
+                                }));
     }
 
     @Override
