@@ -145,13 +145,14 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="entry : ${model.cofundersAvailableForApplicationPage.content}">
+                    <tr class="govuk-table__row" th:each="entry, index : ${model.cofundersAvailableForApplicationPage.content}">
                         <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input type="checkbox"
+                                     <input type="checkbox"
                                            class="govuk-checkboxes__input"
-                                           name="selectedCofunderIds"
+                                           th:id="|cofunder-row-${index.count}|"
+                                           th:field="*{selectedCofunderIds}"
                                            th:value="${entry.userId}"/>
                                     <label class="govuk-label govuk-checkboxes__label">
                                         <span class="govuk-visually-hidden">Add</span>
