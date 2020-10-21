@@ -58,8 +58,10 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
         String baseUrl = format("%s/competition/%d", cofunderRestUrl, competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("page", page)
-                .queryParam("filter", urlEncode(filter));
+                .queryParam("page", page);
+        if (filter != null) {
+            builder = builder.queryParam("filter", urlEncode(filter));
+        }
         return getWithRestResult(builder.toUriString(), ApplicationsForCofundingPageResource.class);
     }
 
@@ -68,8 +70,10 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
         String baseUrl = format("%s/application/%d", cofunderRestUrl, applicationId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("page", page)
-                .queryParam("filter", urlEncode(filter));
+                .queryParam("page", page);
+        if (filter != null) {
+            builder = builder.queryParam("filter", urlEncode(filter));
+        }
         return getWithRestResult(builder.toUriString(), CofundersAvailableForApplicationPageResource.class);
     }
 
@@ -77,8 +81,11 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     public RestResult<List<Long>> findAllAvailableCofunderUserIdsForApplication(long applicationId, String filter) {
         String baseUrl = format("%s/application/%d/userIds", cofunderRestUrl, applicationId);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("filter", urlEncode(filter));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        if (filter != null) {
+            builder = builder.queryParam("filter", urlEncode(filter));
+        }
         return getWithRestResult(builder.toUriString(), longsListType());
     }
 }
