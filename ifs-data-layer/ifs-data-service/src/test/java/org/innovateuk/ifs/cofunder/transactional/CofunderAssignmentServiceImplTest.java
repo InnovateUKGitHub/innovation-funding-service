@@ -11,8 +11,6 @@ import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.notifications.resource.NotificationMedium;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -34,7 +32,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderAssignmentBuilder.newCofunderAssignment;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderOutcomeBuilder.newCofunderOutcome;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.SimpleOrganisationBuilder.newSimpleOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -104,7 +102,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         long userId = 1L;
         long applicationId = 2l;
         User user = newUser().build();
-        Application application = newApplication().build();
+        Application application = newApplication().withCompetition(newCompetition().build()).build();
         when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId)).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(of(user));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
@@ -128,8 +126,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         long userId = 1L;
         long applicationId = 2l;
         User user = newUser().build();
-        Application application = newApplication().build();
+        Application application = newApplication().withCompetition(newCompetition().build()).build();
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
+                .withApplication(application)
                 .build();
 
         when(userRepository.findById(userId)).thenReturn(of(user));
@@ -150,7 +149,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         CofunderDecisionResource decision = new CofunderDecisionResource();
         decision.setComments("Terrible");
         decision.setAccept(false);
+        Application application = newApplication().withCompetition(newCompetition().build()).build();
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
+                .withApplication(application)
                 .build();
 
         when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));
@@ -172,7 +173,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         CofunderDecisionResource decision = new CofunderDecisionResource();
         decision.setComments("Amazing");
         decision.setAccept(true);
+        Application application = newApplication().withCompetition(newCompetition().build()).build();
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
+                .withApplication(application)
                 .build();
 
         when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));
@@ -191,7 +194,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     @Test
     public void edit() {
         long assignmentId = 1L;
+        Application application = newApplication().withCompetition(newCompetition().build()).build();
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
+                .withApplication(application)
                 .build();
 
         when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));

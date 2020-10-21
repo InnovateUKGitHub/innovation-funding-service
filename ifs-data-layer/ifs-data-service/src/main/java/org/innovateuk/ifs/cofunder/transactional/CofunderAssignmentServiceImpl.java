@@ -30,8 +30,7 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_ASSIGNMENT_ALREADY_EXISTS;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COFUNDER_WORKFLOW_TRANSITION_FAILURE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -89,12 +88,16 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
 
     private ServiceResult<CofunderAssignmentResource> doAssign(long userId, long applicationId) {
         return find(application(applicationId), user(userId)).andOnSuccess(
-                (application, user) ->
-                        serviceSuccess(mapper.mapToResource(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
+                (application, user) -> {
+                        if (application.getCompetition().isAssessmentClosed()) {
+                            return serviceFailure(COFUNDER_AFTER_ASSESSMENT_CLOSE);
+                        }
+                        return serviceSuccess(mapper.mapToResource(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
                                 .andOnSuccess(resource ->
                                         notifyUserAssignedAsCofunder(user, application)
                                                 .andOnSuccessReturn(() -> resource)
-                                )
+                                );
+                }
         );
     }
 
@@ -138,6 +141,9 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
                 (application, user) ->
                         findCofunderAssignmentByUserAndApplication(userId, applicationId)
                                 .andOnSuccess((CofunderAssignment assignment) -> {
+                                    if (assignment.getTarget().getCompetition().isAssessmentClosed()) {
+                                        return serviceFailure(COFUNDER_AFTER_ASSESSMENT_CLOSE);
+                                    }
                                     cofunderAssignmentRepository.delete(assignment);
                                     return notifyUserRemovedAsCofunder(user, application);
                                 }));
@@ -147,6 +153,9 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Transactional
     public ServiceResult<Void> decision(long assignmentId, CofunderDecisionResource decision) {
         return findCofunderAssignmentById(assignmentId).andOnSuccess(assignment -> {
+                    if (assignment.getTarget().getCompetition().isAssessmentClosed()) {
+                        return serviceFailure(COFUNDER_AFTER_ASSESSMENT_CLOSE);
+                    }
                     CofunderOutcome outcome = new CofunderOutcome(decision.isAccept(), decision.getComments());
                     boolean success;
                     if (decision.isAccept()) {
@@ -166,6 +175,9 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
     @Transactional
     public ServiceResult<Void> edit(long assignmentId) {
         return findCofunderAssignmentById(assignmentId).andOnSuccess(assignment -> {
+                if (assignment.getTarget().getCompetition().isAssessmentClosed()) {
+                    return serviceFailure(COFUNDER_AFTER_ASSESSMENT_CLOSE);
+                }
                     boolean success = cofunderAssignmentWorkflowHandler.edit(assignment);
                     if (!success) {
                         return serviceFailure(COFUNDER_WORKFLOW_TRANSITION_FAILURE);
