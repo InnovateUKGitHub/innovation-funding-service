@@ -217,7 +217,6 @@ the user marks the KTP Assessed questions as complete with no assessment score o
 the user marks the score guidance section as complete
     the user clicks the button/link    jQuery = a:contains('Impact')
     the user clicks the button/link    jQuery = .govuk-button:contains("Done")
-    #the user navigates to the page     ${server}/management/competition/setup/109/section/application/question/2069/edit
     the user clicks the button/link    link = Innovation
     the user clicks the button/link    jQuery = .govuk-button:contains("Done")
     the user clicks the button/link    jQuery = a:contains('Challenge')
