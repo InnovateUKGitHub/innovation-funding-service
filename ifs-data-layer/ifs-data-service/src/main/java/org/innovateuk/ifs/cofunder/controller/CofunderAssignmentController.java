@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cofunder")
 public class CofunderAssignmentController {
@@ -20,9 +22,14 @@ public class CofunderAssignmentController {
     @Autowired
     private CofunderAssignmentService cofunderAssignmentService;
 
-    @GetMapping("/user/{userId}/application/{applicationId}")
+    @GetMapping("/assignment/user/{userId}/application/{applicationId}")
     public RestResult<CofunderAssignmentResource> getAssignment(@PathVariable long userId, @PathVariable long applicationId) {
         return cofunderAssignmentService.getAssignment(userId, applicationId).toGetResponse();
+    }
+
+    @GetMapping("/assignment/application/{applicationId}")
+    public RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(@PathVariable long applicationId) {
+        return cofunderAssignmentService.getAssignmentsByApplicationId(applicationId).toGetResponse();
     }
 
     @PostMapping("/user/{userId}/application/{applicationId}")
@@ -54,8 +61,8 @@ public class CofunderAssignmentController {
 
     @GetMapping("/application/{applicationId}")
     public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(@PathVariable long applicationId,
-                                                                                                        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
-                                                                                                        @RequestParam(defaultValue = "") String filter) {
+                                                                                                         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                         @RequestParam(defaultValue = "") String filter) {
         return cofunderAssignmentService.findAvailableCofundersForApplication(applicationId, filter, pageable).toGetResponse();
     }
 }

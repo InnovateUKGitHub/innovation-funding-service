@@ -30,11 +30,11 @@ version project.version
 
 apply plugin: 'idea'
 
-project.version = projectSetupMgtServiceVersion
-tagDocker.tag = projectSetupMgtServiceVersion
-osStageRemote.tag = projectSetupMgtServiceVersion
-tagDockerLocal.tag = projectSetupMgtServiceVersion
-osStageLocal.tag = projectSetupMgtServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.hostName = "project-setup-mgt-svc"
 createContainer.containerName = "project-setup-mgt-svc"

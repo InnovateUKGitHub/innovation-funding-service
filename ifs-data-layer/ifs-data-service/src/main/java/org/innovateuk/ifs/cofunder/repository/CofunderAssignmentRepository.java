@@ -2,6 +2,7 @@ package org.innovateuk.ifs.cofunder.repository;
 
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,6 +21,9 @@ import java.util.Optional;
 public interface CofunderAssignmentRepository extends ProcessRepository<CofunderAssignment>, PagingAndSortingRepository<CofunderAssignment, Long> {
 
     Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
+
+    List<CofunderAssignment> findByParticipantId(long userId);
+
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 
     @Query(
@@ -29,6 +34,23 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
                     "AND application.competition.id = :competitionId"
     )
     boolean existsByParticipantIdAndCompetitionId(long userId, long competitionId);
+
+    @Query(
+            "SELECT new org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource( " +
+                    "application.id, " +
+                    "application.name, " +
+                    "organisation.name, " +
+                    "assignment.activityState" +
+                    ") " +
+                    "FROM CofunderAssignment assignment " +
+                    "JOIN assignment.target application " +
+                    "JOIN ProcessRole pr on pr.applicationId = application.id " +
+                    "JOIN Organisation organisation on pr.organisationId = organisation.id " +
+                    "WHERE application.competition.id = :competitionId " +
+                    "AND assignment.participant.id = :userId " +
+                    "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT "
+    )
+    Page<CofunderDashboardApplicationResource> findApplicationsForCofunderCompetitionDashboard(long userId, long competitionId, Pageable pageable);
 
     @Query(
             "SELECT new org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource( " +

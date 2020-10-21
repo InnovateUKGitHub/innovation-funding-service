@@ -280,7 +280,7 @@ New lead applicant completes the KTP application
     Then the user completes the KTP application except application team and your funding
 
 New lead applicant opens the detailed KTP Guidance links in the new window
-    [Documentation]  IFS-8399
+    [Documentation]  IFS-8212
     Given The user clicks the button/link                            link = Your project finances
     And The user clicks the button/link                              jQuery = a:contains("Your project costs")
     And The user clicks the button/link                              id = edit
@@ -288,7 +288,7 @@ New lead applicant opens the detailed KTP Guidance links in the new window
     Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")
 
 New lead applicant opens the KTP Project costs Guidance links in the new window
-    [Documentation]  IFS-8399
+    [Documentation]  IFS-8212
     Given the user closes the last opened tab
     When the user switch to the new tab on click guidance links      KTP project costs guidance (opens in a new window)
     Then the user should see the element                             jQuery = h1:contains("Costs guidance for knowledge transfer partnership projects")

@@ -53,11 +53,11 @@ if (enabled && pullNexusImage) {
 
 ext.ifsSurveyDataServiceRestBaseURL = "http://survey-data-service:8080"
 
-project.version = surveyServiceVersion
-tagDocker.tag = surveyServiceVersion
-osStageRemote.tag = surveyServiceVersion
-tagDockerLocal.tag = surveyServiceVersion
-osStageLocal.tag = surveyServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.hostName = "survey-svc"
 createContainer.containerName = "survey-svc"
