@@ -25,31 +25,41 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <dl class="govuk-list govuk-!-font-size-16">
-                            <dt>Competition name</dt>
+                            <dt>Competition name:</dt>
                             <dd th:text="${model.competitionName}"></dd>
-                            <dt>Application name</dt>
+                            <dt>Application name:</dt>
                             <dd th:text="${model.applicationName}"></dd>
                             <th:block th:unless="${model.ktpCompetition}">
                                 <dt>When do you wish to start your project?</dt>
                                 <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
                                 <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
                             </th:block>
-                            <dt>Duration in months</dt>
+                            <th:block th:if="${model.ktpCompetition}">
+                                <dt>Application number:</dt>
+                                <dd th:text="${model.applicationNumber}"></dd>
+                                <dt>Lead organisation:</dt>
+                                <dd th:text="${model.leadOrganisationName}"></dd>
+                                <th:block th:unless="${model.collaboratorOrganisationNames.isEmpty()}">
+                                    <dt>Partners:</dt>
+                                    <dd th:each="collaboratorName : ${model.collaboratorOrganisationNames}" th:text="${collaboratorName}"></dd>
+                                </th:block>
+                            </th:block>
+                            <dt>Duration in months:</dt>
                             <dd>
                                 <th:block th:text="${model.duration}"/>
                                 months
                             </dd>
                             <th:block th:if="${model.canSelectInnovationArea}">
-                                <dt>Innovation area</dt>
+                                <dt>Innovation area:</dt>
                                 <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                             </th:block>
                             <th:block th:unless="${model.resubmission == null}">
-                                <dt>Has this application been previously submitted to Innovate UK?</dt>
+                                <dt>Is this application a resubmission?</dt>
                                 <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                                 <th:block th:if="${model.resubmission == true}">
-                                    <dt>Previous application number</dt>
+                                    <dt>Previous application number:</dt>
                                     <dd th:text="${model.previousApplicationNumber}"></dd>
-                                    <dt>Previous application title</dt>
+                                    <dt>Previous application title:</dt>
                                     <dd th:text="${model.previousApplicationTitle}"></dd>
                                 </th:block>
                             </th:block>
@@ -64,6 +74,10 @@
                             <th:block th:if="${model.application.companyPrimaryFocus != null}">
                                 <dt>What is your organisation's primary area of focus?</dt>
                                 <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
+                            </th:block>
+                            <th:block th:if="${model.ktpCompetition}">
+                                <dt>Total project costs:</dt>
+                                <dd th:text="'£' + ${#numbers.formatInteger(model.totalProjectCosts, 0, 'DEFAULT')}"></dd>
                             </th:block>
                         </dl>
                     </div>
