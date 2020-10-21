@@ -4,10 +4,8 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingNotificationBulkService;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +21,6 @@ public class ApplicationFundingDecisionController {
 
     @Autowired
     private ApplicationFundingService applicationFundingService;
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private ApplicationFundingNotificationBulkService applicationFundingNotificationBulkService;
