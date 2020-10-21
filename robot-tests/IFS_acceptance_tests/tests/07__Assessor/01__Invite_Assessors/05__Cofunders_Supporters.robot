@@ -20,8 +20,8 @@ ${cofunderApplicationTitle}     KTP application
 The cofunder can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
     Given Logging in and Error Checking     hubert.cumberdale@salad-fingers.com  Passw0rd
-    Then the user clicks the button/link    jQuery = h2:contains("Co-funding")
-    When the user should see the element    jQuery = h2:contains("Competitions for assessment")
+    When the user clicks the button/link    jQuery = h2:contains("Co-funding")
+    Then the user should see the element    jQuery = h2:contains("Competitions for assessment")
     And the user should see the element     jQuery = h2:contains("Upcoming competitions to assess")
 
 The cofunder should see the tiles on their dashboard
