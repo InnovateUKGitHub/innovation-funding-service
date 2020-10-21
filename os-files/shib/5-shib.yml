@@ -27,7 +27,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/sp-service:${spVersion}
+            - image: innovateuk/sp-service:${nexusVersion}
               name: shib
               volumeMounts:
                 - name: sp-keys-volume

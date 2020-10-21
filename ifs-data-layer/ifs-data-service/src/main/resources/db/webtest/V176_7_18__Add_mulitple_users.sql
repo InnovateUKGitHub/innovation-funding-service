@@ -7,6 +7,9 @@ SET @stakeholder_role_id =
 SET @assessor_role_id =
 (SELECT id FROM role WHERE name = 'assessor');
 
+SET @kta_role_id =
+(SELECT id FROM role WHERE name = 'knowledge_transfer_adviser');
+
 INSERT INTO user_role
 (user_id, role_id)
 VALUES

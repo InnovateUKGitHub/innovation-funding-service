@@ -1,6 +1,8 @@
--- TODO Configure user builder to register stakeholders and monitoring officers and then this can be deleted
+-- TODO Configure user builder to register stakeholders and monitoring officers and ktas and then this can be deleted
 SET @applicant_role_id =
 (SELECT id FROM role WHERE name = 'applicant');
+SET @assessor_role_id =
+(SELECT id FROM role WHERE name = 'assessor');
 
 DELETE FROM user_role WHERE user_id = (select id from user where email = 'orville.Gibbs@gmail.com') AND role_id = @applicant_role_id;
 DELETE FROM user_role WHERE user_id = (select id from user where email = 'Nilesh.Patti@gmail.com') AND role_id = @applicant_role_id;
