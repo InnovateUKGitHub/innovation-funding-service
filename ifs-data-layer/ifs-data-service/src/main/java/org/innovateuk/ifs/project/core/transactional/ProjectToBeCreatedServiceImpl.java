@@ -65,8 +65,14 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     public ServiceResult<Void> markApplicationReadyToBeCreated(long applicationId, String emailBody) {
-        return getApplication(applicationId)
-                .andOnSuccessReturnVoid(application -> projectToBeCreatedRepository.save(new ProjectToBeCreated(application, emailBody)));
+        Optional<ProjectToBeCreated> projectToBeCreated = projectToBeCreatedRepository.findByApplicationId(applicationId);
+        if (projectToBeCreated.isPresent()) {
+            projectToBeCreated.get().setPending(true);
+            return serviceSuccess();
+        } else {
+            return getApplication(applicationId)
+                    .andOnSuccessReturnVoid(application -> projectToBeCreatedRepository.save(new ProjectToBeCreated(application, emailBody)));
+        }
     }
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {
