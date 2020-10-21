@@ -69,7 +69,7 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
                     if (application.getCompetition().isAssessmentClosed()) {
                         return serviceFailure(COFUNDER_AFTER_ASSESSMENT_CLOSE);
                     }
-                    return serviceSuccess(mapper.mapToResource(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))))
+                    return serviceSuccess(mapper.mapToResource(cofunderAssignmentRepository.save(new CofunderAssignment(application, user))));
                 }
         );
     }
