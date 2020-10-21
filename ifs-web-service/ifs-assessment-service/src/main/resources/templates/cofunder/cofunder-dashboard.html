@@ -17,7 +17,7 @@
             <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
 
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Competitions for assessment (<span
+                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Competitions to review (<span
                         th:text="${#lists.size(model.activeCompetitions)}"/>)</h2>
                     <ul>
                         <li th:each="activeCompetition : ${model.activeCompetitions}">
@@ -61,7 +61,7 @@
         </div>
 
         <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
-            <div class="progress-list"><h2 class="govuk-heading-m">Upcoming competitions to assess (<span
+            <div class="progress-list"><h2 class="govuk-heading-m">Upcoming competitions to review (<span
                 th:text="${#lists.size(model.upcomingCompetitions)}"/>)</h2>
                 <ul>
                     <li th:each="upcomingCompetition : ${model.upcomingCompetitions}" class="status-2-col">
