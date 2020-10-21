@@ -40,8 +40,8 @@
                 There are currently no applications for you to review.
             </p>
 
-            <div class="in-progress margin-!-bottom-0" th:unless="${#lists.isEmpty(model.applications)}">
-                <div class="progress-list">
+            <div class="in-progress" th:unless="${#lists.isEmpty(model.applications)}">
+                <div class="progress-list govuk-!-margin-bottom-4">
                     <h2 class="govuk-heading-m govuk-!-margin-0">Applications for review (<span
                     th:text="${model.pagination.totalElements}"/>)</h2>
 
