@@ -310,6 +310,11 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
 
     protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, Role... roles){
         EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
+        if (rolesThatShouldSucceed.contains(Role.ASSESSOR)) {
+            rolesThatShouldSucceed.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        } else if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE) || rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+            rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        }
         EnumSet<Role> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
             BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
