@@ -154,7 +154,7 @@
                                            th:id="|cofunder-row-${index.count}|"
                                            th:field="*{selectedCofunderIds}"
                                            th:value="${entry.userId}"/>
-                                    <label class="govuk-label govuk-checkboxes__label">
+                                    <label th:for="|cofunder-row-${index.count}|" class="govuk-label govuk-checkboxes__label">
                                         <span class="govuk-visually-hidden">Add</span>
                                     </label>
                                 </div>
