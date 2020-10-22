@@ -22,7 +22,8 @@ public class CofunderDashboardModelPopulator {
 
     public CofunderDashboardViewModel populateModel(UserResource user) {
 
-        Map<AssessorDashboardState, List<CofunderDashboardCompetitionResource>> cofunderDashboardCompetitionResources = cofunderDashboardRestService.getCofunderCompetitionDashboard(user.getId()).getSuccess();
+        Map<AssessorDashboardState, List<CofunderDashboardCompetitionResource>> cofunderDashboardCompetitionResources
+                = cofunderDashboardRestService.getCofunderCompetitionDashboard(user.getId()).getSuccess();
 
         return new CofunderDashboardViewModel(
                 cofunderDashboardCompetitionResources.get(AssessorDashboardState.UPCOMING),
