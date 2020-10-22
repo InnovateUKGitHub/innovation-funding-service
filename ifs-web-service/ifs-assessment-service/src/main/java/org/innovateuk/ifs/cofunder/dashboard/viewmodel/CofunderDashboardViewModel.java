@@ -9,20 +9,13 @@ import java.util.List;
  */
 public class CofunderDashboardViewModel {
 
-    private List<CofunderDashboardCompetitionResource> upcomingCompetitions;
     private List<CofunderDashboardCompetitionResource> activeCompetitions;
     private List<CofunderDashboardCompetitionResource> previousCompetitions;
 
-    public CofunderDashboardViewModel(List<CofunderDashboardCompetitionResource> upcomingCompetitions,
-                                      List<CofunderDashboardCompetitionResource> activeCompetitions,
+    public CofunderDashboardViewModel(List<CofunderDashboardCompetitionResource> activeCompetitions,
                                       List<CofunderDashboardCompetitionResource> previousCompetitions) {
-        this.upcomingCompetitions = upcomingCompetitions;
         this.activeCompetitions = activeCompetitions;
         this.previousCompetitions = previousCompetitions;
-    }
-
-    public List<CofunderDashboardCompetitionResource> getUpcomingCompetitions() {
-        return upcomingCompetitions;
     }
 
     public List<CofunderDashboardCompetitionResource> getActiveCompetitions() {

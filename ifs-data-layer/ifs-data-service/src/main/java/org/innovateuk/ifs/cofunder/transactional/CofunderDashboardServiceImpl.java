@@ -39,8 +39,7 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
         List<CompetitionForCofunding> participantCompetitions = cofunderAssignmentRepository.findCompetitionsForParticipant(userId);
 
-        List<CofunderDashboardCompetitionResource> pending = new ArrayList();
-        List<CofunderDashboardCompetitionResource> upcoming = new ArrayList();
+        List<CofunderDashboardCompetitionResource> pending = new ArrayList<>();
         List<CofunderDashboardCompetitionResource> previous = new ArrayList<>();
 
         participantCompetitions.forEach(competition -> {
@@ -53,8 +52,6 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
                     break;
                 case CLOSED:
                 case OPEN:
-                    upcoming.add(createCompetitionResource(competition));
-                    break;
                 case PREVIOUS:
                 case PROJECT_SETUP:
                 case ASSESSOR_FEEDBACK:
@@ -68,7 +65,6 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
         Map<AssessorDashboardState, List<CofunderDashboardCompetitionResource>> result = new HashMap<>();
         result.put(AssessorDashboardState.INFLIGHT, pending);
-        result.put(AssessorDashboardState.UPCOMING, upcoming);
         result.put(AssessorDashboardState.PREVIOUS, previous);
 
         return serviceSuccess(result);

@@ -26,7 +26,6 @@ public class CofunderDashboardModelPopulator {
                 = cofunderDashboardRestService.getCofunderCompetitionDashboard(user.getId()).getSuccess();
 
         return new CofunderDashboardViewModel(
-                cofunderDashboardCompetitionResources.get(AssessorDashboardState.UPCOMING),
                 cofunderDashboardCompetitionResources.get(AssessorDashboardState.INFLIGHT),
                 cofunderDashboardCompetitionResources.get(AssessorDashboardState.PREVIOUS));
     }

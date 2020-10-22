@@ -60,37 +60,6 @@
             </th:block>
         </div>
 
-        <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
-            <div class="progress-list"><h2 class="govuk-heading-m">Upcoming competitions to review (<span
-                th:text="${#lists.size(model.upcomingCompetitions)}"/>)</h2>
-                <ul>
-                    <li th:each="upcomingCompetition : ${model.upcomingCompetitions}" class="status-2-col">
-                        <div class="task">
-                            <h3 class="govuk-heading-s">
-                                <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}"
-                                   th:text="${upcomingCompetition.competitionName}"
-                                   class="govuk-link"/>
-                            </h3>
-                            <p class="govuk-body govuk-!-margin-0">Upcoming competition</p>
-                        </div>
-                        <div class="assessment-period">
-                            <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>
-                            <dl class="standard-definition-list reduced-width">
-                                <dt>Begins</dt>
-                                <dd th:text="|${#temporals.day(upcomingCompetition.cofunderAcceptDate)} ${#temporals.monthName(upcomingCompetition.cofunderAcceptDate)}|">
-                                    15 November 2017
-                                </dd>
-                                <dt>Ends</dt>
-                                <dd th:text="|${#temporals.day(upcomingCompetition.cofunderDeadlineDate)} ${#temporals.monthName(upcomingCompetition.cofunderDeadlineDate)}|">
-                                    25 December 2017
-                                </dd>
-                            </dl>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
         <th:block th:if="${model.previousCompetitions.size() > 0}">
             <div class="progress-list">
                 <h2 class="govuk-heading-m govuk-!-margin-top-0">Previous reviews</h2>
