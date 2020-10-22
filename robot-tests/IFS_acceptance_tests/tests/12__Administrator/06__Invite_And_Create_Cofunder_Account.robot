@@ -30,7 +30,7 @@ Select an external role field validations
     Given the user clicks the button/link                  link = Manage users
     When the user clicks the button/link                   link = Invite a new external user
     And the user clicks the button/link                    jQuery = button:contains("Save and continue")
-    Then the user should see a field and summary error     Select user role.
+    Then the user should see a field and summary error     You must select a user role.
 
 Invite a new cofunder user field validations
     [Documentation]  IFS-8401
