@@ -4,6 +4,11 @@ Documentation  IFS-8414 Internal user - View co funder feedback progress - list 
 ...            IFS-8407 Internal user - View co funder feedback
 ...
 ...            IFS-8404 Internal user - Assign Co-funder
+...
+...            IFS-8405 Internal user - Remove Co-funder
+...
+...            IFS-8409 Co funder - application response & edit
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -15,6 +20,8 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${cofunderApplicationTitle}     	Reconfiguring an immune response
+&{Supporter01_credentials}          email=mister.branches@money.com    password=${short_password}
+${KTP_Application_URL}              ${SERVER}/assessment/cofunder/application/247/response
 
 *** Test Cases ***
 The internal user can allocate applications
@@ -35,6 +42,11 @@ The internal user can invite a co-funder to a KTP application
     [Documentation]   IFS-8404
     Given the user can view already assigned co-funders
     Then the user can invite a cofunder to a KTP application
+
+The internl user can remove a co-funder from an application
+    [Documentation]   IFS-8405
+    Given The user clicks the button/link                   jQuery = [type="submit"][value="213"]
+    Then the cofunder is removed from the application
 
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
@@ -75,10 +87,45 @@ The finance manager views the feedback of the application
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the cofunder review
 
-The comp admin can close the assessment and the link to allocate applications is no longer active
-    [Documentation]   IFS-8404
-    Given the user can close the assessment
-    Then the user is no longer able to allocate applications
+
+
+
+#The user sees the validation when responding to the Cofunder/Supprter review
+#    [Documentation]   IFS-8409
+#    Given Log in as a different user                            &{Supporter01_credentials}
+#    When the user navigates to the page                         ${KTP_Application_URL}
+#    Then the user clicks the button/link                        jQuery = button:contains("Save review and return to applications")
+#    And the user should see a field error                       You must select an option.
+#    And the user should see a field and summary error           Please provide some feedback.
+#    And the user checks the feedback validation                 decision-no
+#    And the user checks the feedback validation                 decision-yes
+#    And the user enters multiple strings into a text field      css = .editor  a${SPACE}  252
+#    And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
+#    And the user should see a field error                       Maximum word count exceeded. Please reduce your word count to 250.
+#
+#The user responds to the Cofunder/Supporter review No
+#    [Documentation]   IFS-8409
+#    Given the user selects the radio button           decision  decision-no
+#    When the user enters text to a text field         css = .editor  This is the comments from the supporter
+#    Then the user clicks the button/link              jQuery = button:contains("Save review and return to applications")
+#    And the user navigates to the page                ${KTP_Application_URL}
+#    And the user should see the element               jQuery = p:contains("This is the comments from the supporter")
+#
+#The user responds to the Cofunder/Supporter review Yes
+#    [Documentation]   IFS-8409
+#    Given the user navigates to the page         ${KTP_Application_URL}
+#    When the user clicks the button/link         jQuery = button:contains("Edit")
+#    Then the user selects the radio button       decision  decision-yes
+#    And the user enters text to a text field     css = .editor  This is the comments from the supporter
+#    And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
+
+
+
+
+#The comp admin can close the assessment and the link to allocate applications is no longer active
+#    [Documentation]   IFS-8404
+#    Given the user can close the assessment
+#    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
@@ -150,6 +197,11 @@ the user can invite a cofunder to a KTP application
     the user should not see the element     jQuery = [disabled="disabled"]
     the user clicks the button/link         jQuery = button:contains("Add selected to application")
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
+    the user should see the element         jQuery = [type="submit"][value="213"]
+
+the cofunder is removed from the application
+    the user should not see the element     jQuery = [type="submit"][value="213"]
+
 
 the user can close the assessment
     the user navigates to the page          ${server}/management/competition/109
@@ -158,3 +210,9 @@ the user can close the assessment
 the user is no longer able to allocate applications
     the user clicks the button/link         link = Manage co-funders
     the user should see the element         jQuery = [aria-disabled="true"]
+
+the user checks the feedback validation
+    [Arguments]  ${decision}
+    And the user selects the radio button                       decision  ${decision}
+    Then the user clicks the button/link                        jQuery = button:contains("Save review and return to applications")
+    And the user should see a field and summary error           Please provide some feedback.
