@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
  */
 @Controller
 @RequestMapping("/application")
-@PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
+@PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser', 'cofunder')")
 @SecuredBySpring(value="Controller",
         description = "Only applicants on an application are allowed to view the corresponding application overview",
         securedType = ApplicationOverviewController.class)
