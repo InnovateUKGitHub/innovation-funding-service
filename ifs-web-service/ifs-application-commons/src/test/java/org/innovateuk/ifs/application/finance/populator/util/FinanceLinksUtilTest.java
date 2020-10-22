@@ -278,5 +278,4 @@ public class FinanceLinksUtilTest {
 
         assertFalse(financeLink.isPresent());
     }
->>>>>>> development
 }
