@@ -61,8 +61,8 @@ public class CofunderAssignmentController {
 
     @GetMapping("/application/{applicationId}")
     public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(@PathVariable long applicationId,
-                                                                                                        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
-                                                                                                        @RequestParam(defaultValue = "") String filter) {
+                                                                                                         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                                                                                                         @RequestParam(defaultValue = "") String filter) {
         return cofunderAssignmentService.findAvailableCofundersForApplication(applicationId, filter, pageable).toGetResponse();
     }
 }
