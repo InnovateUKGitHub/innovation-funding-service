@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -24,6 +25,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -167,6 +170,59 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
     }
 
     @Test
+    public void populateForCofunderReturnsCorrectDownloadUrlForFiles() {
+        user = newUserResource().withRoleGlobal(Role.COFUNDER).build();
+
+        FormInputResource appendix = newFormInputResource()
+                .withType(FormInputType.FILEUPLOAD)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .build();
+
+        FileEntryResource appendixOneFileEntry = newFileEntryResource()
+                .withName("Appendix1.pdf")
+                .build();
+
+        FileEntryResource appendixTwoFileEntry = newFileEntryResource()
+                .withName("Appendix2.pdf")
+                .build();
+
+        FormInputResource templateDocument = newFormInputResource()
+                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .withDescription("Document Title")
+                .build();
+
+        FormInputResponseResource appendixResponse = newFormInputResponseResource()
+                .withFormInputs(appendix.getId())
+                .withFileEntries(Arrays.asList(appendixOneFileEntry, appendixTwoFileEntry))
+                .build();
+
+        FileEntryResource templateFileEntry = newFileEntryResource()
+                .withName("template.pdf")
+                .build();
+
+        FormInputResponseResource templateDocumentResponse = newFormInputResponseResource()
+                .withFormInputs(templateDocument.getId())
+                .withFileEntries(Collections.singletonList(templateFileEntry))
+                .build();
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList());
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
+
+        assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
+                question.getId(), appendix.getId(), appendixOneFileEntry.getId()), viewModel.getAppendices().get(0).getUrl());
+        assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
+                question.getId(), appendix.getId(), appendixTwoFileEntry.getId()), viewModel.getAppendices().get(1).getUrl());
+        assertEquals(String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", application.getId(),
+                question.getId(), templateDocument.getId(), templateFileEntry.getId()), viewModel.getTemplateFile().getUrl());
+    }
+
+    @Test
     public void populateForMultipleChoiceOptions() {
         FormInputResource multipleChoice = newFormInputResource()
                 .withType(FormInputType.MULTIPLE_CHOICE)
@@ -179,7 +235,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withMultipleChoiceOptionText("Some text")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
