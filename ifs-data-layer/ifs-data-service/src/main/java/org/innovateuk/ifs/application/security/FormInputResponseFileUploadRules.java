@@ -63,6 +63,11 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
         return monitoringOfficerCanViewApplication(fileEntry.getCompoundId().getApplicationId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "A cofunder can download a file for an answer to one of their own Applications")
+    public boolean cofunderCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        return isCofunderForApplication(fileEntry.getCompoundId().getApplicationId(), user.getId());
+    }
+
     @PermissionRule(value = "READ", description = "Stakeholders can can download a file for an answer for applications theyre assigned to")
     public boolean stakeholdersCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();

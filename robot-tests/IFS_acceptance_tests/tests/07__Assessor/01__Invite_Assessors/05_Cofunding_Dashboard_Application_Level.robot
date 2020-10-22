@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation    IFS-8403  Co funder dashboard - application level
 ...
+...              IFS-8408  Co funder view of application
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -14,6 +16,7 @@ ${ktpCofundingCompetitionNavigation}      Co funder dashboard - application leve
 ${cofunderUserUsername}                   Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
 ${cofundingCompetitionID}                 ${competition_ids['${cofundingCompetitionName}']}
+${cofundingApplicationTitle}              How cancer invasion takes shape
 
 *** Test Cases ***
 Cofunder can see list of applications assigned to him in the dashboard
@@ -39,6 +42,15 @@ Cofunder checks the number of applications count is correct
     When the user gets the actual number of applications in all pages
     And the user gets expected number of applications in the page
     Then should be equal as numbers                                       ${actualNumberOfApplications}   ${expectedNumberOfApplications}
+
+Cofunder can view read only view of an application and see the print application link
+    [Documentation]  IFS-8408
+    Given the user clicks the button/link       link = Previous
+    And the user clicks the button/link         link = ${cofundingApplicationTitle}
+    When the user clicks the button/link        jQuery = button:contains("Application team")
+    Then the user should see the element        jQuery = h1:contains("Application overview") span:contains("${cofundingApplicationTitle}")
+    And the user should not see the element     jQuery = button:contains("Edit")
+    And the user should see the element         jQuery = a:contains("Print application")
 
 *** Keywords ***
 Custom suite setup

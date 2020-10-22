@@ -3,6 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
@@ -68,6 +69,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     @Autowired
     private ExternalFinanceRepository externalFinanceRepository;
+
+    @Autowired
+    private CofunderAssignmentRepository cofunderAssignmentRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
@@ -158,5 +162,13 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isProjectActive(long projectId) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
         return projectProcess.getProcessState().isActive();
+    }
+
+    protected boolean isCofunderForApplication(long applicationId, long loggedInUserId) {
+        return cofunderAssignmentRepository.existsByParticipantIdAndTargetId(loggedInUserId, applicationId);
+    }
+
+    protected boolean isCofunderForCompetition(long competitionId, long loggedInUserId) {
+        return cofunderAssignmentRepository.existsByParticipantIdAndCompetitionId(loggedInUserId, competitionId);
     }
 }
