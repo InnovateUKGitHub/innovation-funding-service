@@ -9,6 +9,8 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.cofunder.resource.AssessorDashboardState;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
@@ -379,6 +381,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ActivityLogResource>> activityLogResourceListType() {
         return new ParameterizedTypeReference<List<ActivityLogResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<Map<AssessorDashboardState, List<CofunderDashboardCompetitionResource>>> mapAssessorDashboardStateToCofunderDashboardCompetitionResourceListType() {
+        return new ParameterizedTypeReference<Map<AssessorDashboardState, List<CofunderDashboardCompetitionResource>>>() {};
     }
 
     public static ParameterizedTypeReference<List<CofunderAssignmentResource>> cofunderAssignmentResourceListType() {

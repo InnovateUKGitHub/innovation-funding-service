@@ -10,6 +10,9 @@ SET @assessor_role_id =
 SET @kta_role_id =
 (SELECT id FROM role WHERE name = 'knowledge_transfer_adviser');
 
+SET @applicant_role_id =
+(SELECT id FROM role WHERE name = 'applicant');
+
 INSERT INTO user_role
 (user_id, role_id)
 VALUES
@@ -59,3 +62,8 @@ INSERT INTO user_role
 (user_id, role_id)
 VALUES
 ((SELECT id FROM user WHERE email = 'carolyn.reed@example.com'), @stakeholder_role_id);
+
+INSERT INTO user_role
+(user_id, role_id)
+VALUES
+((SELECT id FROM user WHERE email = 'hubert.cumberdale@salad-fingers.com'), @applicant_role_id);
