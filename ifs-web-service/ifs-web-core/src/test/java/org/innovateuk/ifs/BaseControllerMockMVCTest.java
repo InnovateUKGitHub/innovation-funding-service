@@ -157,6 +157,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER))
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
+    protected UserResource cofunder = newUserResource().withId(2L)
+            .withFirstName("kta")
+            .withLastName("kta")
+            .withEmail("kta@email.co.uk")
+            .withRolesGlobal(singletonList(Role.COFUNDER))
+            .withUID("6573ag-aeg32aeb-23aerr").build();
+
     protected UserResource loggedInUser = applicant;
 
     @Before
