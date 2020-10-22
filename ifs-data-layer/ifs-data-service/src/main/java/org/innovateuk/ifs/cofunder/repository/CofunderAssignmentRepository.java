@@ -2,6 +2,7 @@ package org.innovateuk.ifs.cofunder.repository;
 
 import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
 import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,23 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
             "AND NOT EXISTS (" +
             "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
             ")";
+
+    @Query(
+            "SELECT new org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource( " +
+                    "application.id, " +
+                    "application.name, " +
+                    "organisation.name, " +
+                    "assignment.activityState" +
+                    ") " +
+                    "FROM CofunderAssignment assignment " +
+                    "JOIN assignment.target application " +
+                    "JOIN ProcessRole pr on pr.applicationId = application.id " +
+                    "JOIN Organisation organisation on pr.organisationId = organisation.id " +
+                    "WHERE application.competition.id = :competitionId " +
+                    "AND assignment.participant.id = :userId " +
+                    "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT "
+    )
+    Page<CofunderDashboardApplicationResource> findApplicationsForCofunderCompetitionDashboard(long userId, long competitionId, Pageable pageable);
 
     @Query(
             "SELECT new org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource( " +
