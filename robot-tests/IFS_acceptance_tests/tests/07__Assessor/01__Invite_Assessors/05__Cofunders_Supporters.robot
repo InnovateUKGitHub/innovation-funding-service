@@ -37,7 +37,6 @@ ${cofunderOrg}                            The University of Surrey
 ${newApplication}                         New application
 
 *** Test Cases ***
-<<<<<<< HEAD
 The internal user can allocate applications
     [Documentation]   IFS-8404
     Given Logging in and Error Checking         &{ifs_admin_user_credentials}
@@ -100,6 +99,28 @@ The finance manager views the feedback of the application
     And the user clicks the button/link             link = Back to co-funders
     And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the cofunder review
+
+The cofunder can see the sections in the cofunding dashboard
+    [Documentation]  IFS-8402
+    Given Log in as a different user            hubert.cumberdale@salad-fingers.com  Passw0rd
+    When the user clicks the button/link        jQuery = h2:contains("Co-funding")
+    Then the user should see the element        jQuery = h2:contains("Competitions to review")
+    And the user should not see the element     jQuery = h2:contains("Upcoming competitions to review")
+
+The cofunder should see a newly created application from the dashboard
+    [Documentation]  IFS-8402
+    Given the user select the competition and starts application     KTP new competition
+    input text                                                       id = knowledgeBase        ${cofunderOrg}
+    When the user clicks the button/link                             jQuery = ul li:contains("${cofunderOrg}")
+    And the user clicks the button/link                              jQuery = button:contains("Confirm")
+    Then the user clicks the button/link                             id = knowledge-base-confirm-organisation-cta
+    And the user clicks the button/link                              link = Application details
+    Then the user enters text to a text field                        css = [id = "name"]    ${newApplication}
+    And the user enters text to a text field                         css = [id = "durationInMonths"]    3
+    Then the user clicks the button/link                             jQuery = button:contains("Mark as complete")
+    And the user clicks the button/link                              link = Dashboard
+    Then the user clicks the button/link                             jQuery = h2:contains("Applications")
+    And the user should see the element                              jQuery = a:contains("${newApplication}")
 
 Cofunder can see list of applications assigned to him in the dashboard
     [Documentation]  IFS-8403
@@ -166,28 +187,6 @@ The user responds to the Cofunder/Supporter review Yes
     And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
 
 # -------------------------
-
-The cofunder can see the sections in the cofunding dashboard
-    [Documentation]  IFS-8402
-    Given Logging in and Error Checking         hubert.cumberdale@salad-fingers.com  Passw0rd
-    When the user clicks the button/link        jQuery = h2:contains("Co-funding")
-    Then the user should see the element        jQuery = h2:contains("Competitions to review")
-    And the user should not see the element     jQuery = h2:contains("Upcoming competitions to review")
-
-The cofunder should see a newly created application from the dashboard
-    [Documentation]  IFS-8402
-    Given the user select the competition and starts application     KTP new competition
-    input text                                                       id = knowledgeBase        ${cofunderOrg}
-    When the user clicks the button/link                             jQuery = ul li:contains("${cofunderOrg}")
-    And the user clicks the button/link                              jQuery = button:contains("Confirm")
-    Then the user clicks the button/link                             id = knowledge-base-confirm-organisation-cta
-    And the user clicks the button/link                              link = Application details
-    Then the user enters text to a text field                        css = [id = "name"]    ${newApplication}
-    And the user enters text to a text field                         css = [id = "durationInMonths"]    3
-    Then the user clicks the button/link                             jQuery = button:contains("Mark as complete")
-    And the user clicks the button/link                              link = Dashboard
-    Then the user clicks the button/link                             jQuery = h2:contains("Applications")
-    And the user should see the element                              jQuery = a:contains("${newApplication}")
 
 The comp admin can close the assessment and the link to allocate applications is no longer active
     [Documentation]   IFS-8404
