@@ -73,9 +73,6 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     @Autowired
     private ExternalFinanceRepository externalFinanceRepository;
 
-    @Autowired
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
-
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();

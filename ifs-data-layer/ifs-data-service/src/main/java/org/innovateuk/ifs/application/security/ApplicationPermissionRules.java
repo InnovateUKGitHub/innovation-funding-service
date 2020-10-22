@@ -43,11 +43,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
-    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The cofunder can see the participation percentage for their applications")
-    public boolean cofunderCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
-        return isCofunder(applicationResource.getId(), user);
-    }
-
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
     public boolean assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
         return isAssessorForApplication(applicationResource, user);
@@ -110,12 +105,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean consortiumCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
-    }
-
-    @PermissionRule(value = "READ_FINANCE_TOTALS",
-            description = "The cofunder can see the application finance totals")
-    public boolean cofunderCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isCofunder(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -339,8 +328,5 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
 
-    private boolean isCofunder(long applicationId, UserResource user) {
-        return cofunderAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), applicationId);
-    }
 }
 
