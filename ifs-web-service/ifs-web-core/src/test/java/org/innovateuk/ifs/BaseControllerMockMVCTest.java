@@ -164,6 +164,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(singletonList(Role.COFUNDER))
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
+    protected UserResource applicantAndCofunder = newUserResource().withId(4L)
+            .withFirstName("Kit")
+            .withLastName("Fisto")
+            .withEmail("kit.fisto@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.COFUNDER))
+            .withUID("1234-abcdefgh-abc1234").build();
+
     protected UserResource loggedInUser = applicant;
 
     @Before
