@@ -158,9 +158,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
     protected UserResource cofunder = newUserResource().withId(2L)
-            .withFirstName("Cofunder")
-            .withLastName("Cofunder")
-            .withEmail("cofunder@email.co.uk")
+            .withFirstName("kta")
+            .withLastName("kta")
+            .withEmail("kta@email.co.uk")
             .withRolesGlobal(singletonList(Role.COFUNDER))
             .withUID("6573ag-aeg32aeb-23aerr").build();
 
