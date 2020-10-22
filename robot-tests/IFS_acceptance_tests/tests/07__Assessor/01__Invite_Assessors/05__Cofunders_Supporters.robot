@@ -64,7 +64,8 @@ The internal user can remove a co-funder from an application
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
-    Given The user clicks the button/link               link = Back to competition
+    Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
+    And the user clicks the button/link                 link = ${cofundingCompetitionName}
     And the user clicks the button/link                 link = Manage co-funders
     And the user clicks the button/link                 link = View feedback
     When the user enters text to a text field           id=applicationFilter    ${cofunderApplicationID}
@@ -81,7 +82,7 @@ The ifs admin views the feedback of the application
 The comp admin views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{Comp_admin1_credentials}
-    And the user clicks the button/link             link = KTP cofunding
+    And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage co-funders
     And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${cofunderApplicationID}
@@ -92,7 +93,7 @@ The comp admin views the feedback of the application
 The finance manager views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{internal_finance_credentials}
-    And the user clicks the button/link             link = KTP cofunding
+    And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage co-funders
     And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${cofunderApplicationID}
@@ -157,7 +158,7 @@ Cofunder can view read only view of an application and see the print application
 
 # ----------------------------
 
-The user sees the validation when responding to the Cofunder/Supprter review
+The user sees the validation when responding to the Cofunder/Supporter review
     [Documentation]   IFS-8409
     Given Log in as a different user                            &{Supporter01_credentials}
     When the user navigates to the page                         ${KTP_Application_URL}
@@ -269,7 +270,12 @@ the user can invite a cofunder to a KTP application
 
 the cofunder is removed from the application
     the user should not see the element     jQuery = [type="submit"][value="213"]
-
+    Log in as a different user              email=douglas.alston@money.com    password=${short_password}
+    the user clicks the button/link         link = ${cofundingCompetitionName}
+    the user should not see the element     link = The proton size
+    the user clicks the button/link         link = Next
+    the user should not see the element     link = The proton size
+    the user navigates to the page          ${server}/management/competition/109/application/289
 
 the user can close the assessment
     the user navigates to the page          ${server}/management/competition/109
