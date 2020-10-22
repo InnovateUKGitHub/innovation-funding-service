@@ -35,6 +35,15 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
             ")";
 
     @Query(
+            "SELECT CASE WHEN count(assignment)>0 THEN TRUE ELSE FALSE END " +
+                    "FROM CofunderAssignment assignment " +
+                    "INNER JOIN Application application ON application.id = assignment.target.id " +
+                    "WHERE assignment.participant.id = :userId " +
+                    "AND application.competition.id = :competitionId"
+    )
+    boolean existsByParticipantIdAndCompetitionId(long userId, long competitionId);
+
+    @Query(
             "SELECT new org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource( " +
                     "application.id, " +
                     "application.name, " +

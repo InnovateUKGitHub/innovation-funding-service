@@ -73,6 +73,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     @Autowired
     private ExternalFinanceRepository externalFinanceRepository;
 
+    @Autowired
+    private CofunderAssignmentRepository cofunderAssignmentRepository;
+
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();
@@ -162,5 +165,13 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isProjectActive(long projectId) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
         return projectProcess.getProcessState().isActive();
+    }
+
+    protected boolean isCofunderForApplication(long applicationId, long loggedInUserId) {
+        return cofunderAssignmentRepository.existsByParticipantIdAndTargetId(loggedInUserId, applicationId);
+    }
+
+    protected boolean isCofunderForCompetition(long competitionId, long loggedInUserId) {
+        return cofunderAssignmentRepository.existsByParticipantIdAndCompetitionId(loggedInUserId, competitionId);
     }
 }
