@@ -19,7 +19,6 @@ import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreation
  * injected into a RegistrationForm instance, so it is easy to use and you don't need to
  * read all the request attributes to get to the form data.
  */
-
 public class RegistrationForm extends BaseBindingResultTarget {
     public interface PhoneNumberValidationGroup {}
     public interface TermsValidationGroup {}

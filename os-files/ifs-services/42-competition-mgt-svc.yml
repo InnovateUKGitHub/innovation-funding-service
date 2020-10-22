@@ -25,7 +25,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/competition-mgt-service:${competitionMgtServiceVersion}
+            - image: innovateuk/competition-mgt-service:${nexusVersion}
               name: competition-mgt-svc
               livenessProbe:
                 httpGet:
@@ -49,6 +49,11 @@ items:
               env:
                 - name: IFS_EXTERNAL_ROLE_ENABLED
                   value: "${IFS_EXTERNAL_ROLE_ENABLED}"
+                - name: IFS_COFUNDER_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_COFUNDER_ENABLED
                 - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                   valueFrom:
                     configMapKeyRef:

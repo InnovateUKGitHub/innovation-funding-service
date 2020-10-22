@@ -14,10 +14,13 @@ public class InviteUserViewModel {
 
     private Set<Role> roles;
 
-    public InviteUserViewModel(InviteUserView type, Set<Role> roles)
+    private boolean cofunderEnabled;
+
+    public InviteUserViewModel(InviteUserView type, Set<Role> roles, boolean cofunderEnabled)
     {
         this.type = type;
         this.roles = roles;
+        this.cofunderEnabled = cofunderEnabled;
     }
 
     public InviteUserView getType() {
@@ -40,6 +43,14 @@ public class InviteUserViewModel {
         this.roles = roles;
     }
 
+    public boolean isCofunderEnabled() {
+        return cofunderEnabled;
+    }
+
+    public void setCofunderEnabled(boolean cofunderEnabled) {
+        this.cofunderEnabled = cofunderEnabled;
+    }
+
     public boolean isInternal() {
         return type.equals(InviteUserView.INTERNAL_USER);
     }
@@ -48,11 +59,29 @@ public class InviteUserViewModel {
         return type.equals(InviteUserView.EXTERNAL_USER);
     }
 
+    public boolean isAddingKtaRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.KNOWLEDGE_TRANSFER_ADVISER;    }
+
+    public boolean isAddingCofunderRole() {
+        return this.roles.size() == 1 &&
+                this.roles.stream().findFirst().get() == Role.COFUNDER;
+    }
+
+    public String getLinkTitle() {
+        return cofunderEnabled ? "Back to select user role" : "Back to manage users";
+    }
+
+    public String getBackLink() {
+        return cofunderEnabled ? "/admin/select-external-role" : "/admin/users/active";
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(type)
                 .append(roles)
+                .append(cofunderEnabled)
                 .toHashCode();
     }
 
@@ -67,6 +96,7 @@ public class InviteUserViewModel {
         return new EqualsBuilder()
                 .append(type, this.type)
                 .append(roles, this.roles)
+                .append(cofunderEnabled, this.cofunderEnabled)
                 .isEquals();
     }
 

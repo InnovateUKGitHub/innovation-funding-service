@@ -8,10 +8,15 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CofunderAssignmentService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CofunderAssignmentResource> assign(long userId, long applicationId);

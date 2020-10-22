@@ -21,6 +21,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -103,13 +104,14 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRolesFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
 
-        if(settings.isIncludeAllAssessorFeedback()) {
+        if (settings.isIncludeAllAssessorFeedback()) {
             settings.setIncludeAllAssessorFeedback(data.getAssessmentToApplicationAssessment().size() > 0);
         }
 
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
+                .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));

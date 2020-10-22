@@ -229,7 +229,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("fundingConfirmation"));
-        assertEquals("Please indicate your decision.", bindingResult.getFieldError("fundingConfirmation")
+        assertEquals("You must select an option.", bindingResult.getFieldError("fundingConfirmation")
                 .getDefaultMessage());
 
         verify(assessmentService).getById(assessmentResource.getId());

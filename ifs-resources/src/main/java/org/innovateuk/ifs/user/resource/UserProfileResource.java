@@ -20,6 +20,8 @@ public class UserProfileResource extends UserProfileBaseResource {
 
     private ZonedDateTime modifiedOn;
 
+    private String simpleOrganisation;
+
     public Long getUser() {
         return user;
     }
@@ -58,6 +60,14 @@ public class UserProfileResource extends UserProfileBaseResource {
 
     public void setModifiedOn(ZonedDateTime modifiedOn) {
         this.modifiedOn = modifiedOn;
+    }
+
+    public String getSimpleOrganisation() {
+        return simpleOrganisation;
+    }
+
+    public void setSimpleOrganisation(String simpleOrganisation) {
+        this.simpleOrganisation = simpleOrganisation;
     }
 
     @Override
