@@ -23,7 +23,7 @@
                         <li th:each="activeCompetition : ${model.activeCompetitions}">
                             <div class="task">
                                 <h3 class="govuk-heading-s"><a class="govuk-link"
-                                                               th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
+                                                               th:href="@{/cofunder/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                                                th:text="${activeCompetition.competitionName}"/></h3>
 
                                 <div th:if="${!activeCompetition.hasPendingAssessments()}">
@@ -67,7 +67,7 @@
                     <li th:each="previousCompetition : ${model.previousCompetitions}">
                         <div class="task">
                             <h3 class="govuk-heading-s"><a class="govuk-link"
-                                                           th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
+                                                           th:href="@{/cofunder/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
                                                            th:text="${previousCompetition.competitionName}"/></h3>
                             <strong>
                             <span th:text="${previousCompetition.submitted}"
