@@ -31,10 +31,10 @@ ${newApplication}                         New application
 *** Test Cases ***
 The cofunder can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
-    Given Logging in and Error Checking     hubert.cumberdale@salad-fingers.com  Passw0rd
-    When the user clicks the button/link    jQuery = h2:contains("Co-funding")
-    Then the user should see the element    jQuery = h2:contains("Competitions to review")
-    And the user should see the element     jQuery = h2:contains("Upcoming competitions to review")
+    Given Logging in and Error Checking         hubert.cumberdale@salad-fingers.com  Passw0rd
+    When the user clicks the button/link        jQuery = h2:contains("Co-funding")
+    Then the user should see the element        jQuery = h2:contains("Competitions to review")
+    And the user should not see the element     jQuery = h2:contains("Upcoming competitions to review")
 
 The cofunder should see a newly created application from the dashboard
     [Documentation]  IFS-8402
