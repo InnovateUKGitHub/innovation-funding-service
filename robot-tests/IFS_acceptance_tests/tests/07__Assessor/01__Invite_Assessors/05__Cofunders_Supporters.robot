@@ -58,8 +58,16 @@ The internal user can invite a co-funder to a KTP application
 
 The internal user can remove a co-funder from an application
     [Documentation]   IFS-8405
-    Given The user clicks the button/link                   jQuery = [type="submit"][value="213"]
-    Then the cofunder is removed from the application
+    Given The user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+    Then the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+
+The co-funder should not see the removed application on their dashboard
+     [Documentation]   IFS-8405
+     [Setup]    get application id using application name
+     Given Log in as a different user              email=douglas.alston@money.com    password=${short_password}
+     When the user clicks the button/link          link = ${cofundingCompetitionName}
+     And The user navigates to the page            ${server}/application/${protonApplicationId}/summary
+     Then The user should see the element          jQuery = h1:contains("You do not have the necessary permissions for your request")
 
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
@@ -156,8 +164,6 @@ Cofunder can view read only view of an application and see the print application
     And the user should not see the element     jQuery = button:contains("Edit")
     And the user should see the element         jQuery = a:contains("Print application")
 
-# ----------------------------
-
 The user sees the validation when responding to the Cofunder/Supporter review
     [Documentation]   IFS-8409
     Given Log in as a different user                            &{Supporter01_credentials}
@@ -186,8 +192,6 @@ The user responds to the Cofunder/Supporter review Yes
     Then the user selects the radio button       decision  decision-yes
     And the user enters text to a text field     css = .editor  This is the comments from the supporter
     And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
-
-# -------------------------
 
 The comp admin can close the assessment and the link to allocate applications is no longer active
     [Documentation]   IFS-8404
@@ -266,16 +270,6 @@ the user can invite a cofunder to a KTP application
     the user should not see the element     jQuery = [disabled="disabled"]
     the user clicks the button/link         jQuery = button:contains("Add selected to application")
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
-    the user should see the element         jQuery = [type="submit"][value="213"]
-
-the cofunder is removed from the application
-    the user should not see the element     jQuery = [type="submit"][value="213"]
-    Log in as a different user              email=douglas.alston@money.com    password=${short_password}
-    the user clicks the button/link         link = ${cofundingCompetitionName}
-    the user should not see the element     link = The proton size
-    the user clicks the button/link         link = Next
-    the user should not see the element     link = The proton size
-    the user navigates to the page          ${server}/management/competition/109/application/289
 
 the user can close the assessment
     the user navigates to the page          ${server}/management/competition/109
@@ -305,3 +299,7 @@ the user gets the actual number of applications in all pages
 the user gets expected number of applications in the page
     ${expectedNumberOfApplications} =  get text     jQuery = h2:contains("Applications for review") span
     set suite variable     ${expectedNumberOfApplications}
+
+get application id using application name
+    ${protonApplicationId} =    get application id by name      The proton size
+    set suite variable     ${protonApplicationId}
