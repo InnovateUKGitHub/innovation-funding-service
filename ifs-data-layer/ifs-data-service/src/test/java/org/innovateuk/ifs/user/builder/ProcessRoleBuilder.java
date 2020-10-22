@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -59,6 +60,11 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
                 setField("applicationId", application.getId(), processRole);
                 application.addUserApplicationRole(processRole);
            }, applications);
+    }
+    public ProcessRoleBuilder withOrganisation(Organisation... organisations) {
+        return withArray((organisation, processRole) -> {
+            setField("organisationId", organisation.getId(), processRole);
+        }, organisations);
     }
 
     public ProcessRoleBuilder withOrganisationId(Long... organisationIds) {
