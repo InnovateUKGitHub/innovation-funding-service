@@ -122,6 +122,11 @@
                     <dt>Email address</dt>
                     <dd th:text="${model.user.email}">email@email.com</dd>
                 </dl>
+
+                <dl th:if="${model.organisationVisible}" class="govuk-list">
+                    <dt>Organisation</dt>
+                    <dd th:text="${form.organisation}">email@email.com</dd>
+                </dl>
             </th:block>
             <th:block th:if="${model.canEditUserDetails}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
