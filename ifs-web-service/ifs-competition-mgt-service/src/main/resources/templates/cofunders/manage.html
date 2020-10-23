@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Manage co-funders - ${model.competitionName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Manage supporters - ${model.competitionName}|" />
 </head>
 
 <body class="govuk-template__body competition-management competition-overview">
@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage co-funders',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage supporters',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
         <ul class="govuk-list link-list">
             <h3 class="govuk-heading-s">Actions</h3>

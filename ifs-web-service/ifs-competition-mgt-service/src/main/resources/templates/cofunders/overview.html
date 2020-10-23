@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Co-funders' " />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Supporters' " />
 </head>
 
 <body class="govuk-template__body competition-management">
@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub (linkTitle='Back to in assessment',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Co-funders',subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Supporters',subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
 
         <form method="GET">
             <div class="search-filters govuk-!-margin-top-6">
@@ -48,7 +48,7 @@
                     <th class="govuk-table__header width-150" scope="col">Application number</th>
                     <th class="govuk-table__header" scope="col">Title</th>
                     <th class="govuk-table__header" scope="col">Lead organisation</th>
-                    <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Co-funders</th>
+                    <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Supporters</th>
                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Accepted</th>
                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Declined</th>
                     <th class="govuk-table__header govuk-table__header--numeric width-100" scope="col">Pending</th>

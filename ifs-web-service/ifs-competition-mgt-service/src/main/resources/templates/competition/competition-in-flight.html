@@ -93,7 +93,7 @@
                             </a>
                         </li>
                         <li th:if="${model.isManageSupportersLinkEnabled()}">
-                            <a class="govuk-link" th:href="@{/competition/{competitionId}/supporters(competitionId=${model.competitionId})}">Manage co-funders</a>
+                            <a class="govuk-link" th:href="@{/competition/{competitionId}/supporters(competitionId=${model.competitionId})}">Manage supporters</a>
                         </li>
                         <li th:unless="${model.isManageSupportersLinkEnabled()}">
                             <a class="disabled govuk-link" aria-disabled="true">

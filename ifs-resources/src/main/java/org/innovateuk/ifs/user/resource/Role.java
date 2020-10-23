@@ -41,7 +41,7 @@ public enum Role implements Identifiable {
     LIVE_PROJECTS_USER          (21, "live_projects_user",         "Live projects user"),
     EXTERNAL_FINANCE            (22, "external_finance",           "External finance reviewer"),
     KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser"),
-    SUPPORTER                    (24, "supporter",                    "Co-funder");
+    SUPPORTER                    (24, "supporter",                    "Supporter");
 
     final long id;
     final String name;

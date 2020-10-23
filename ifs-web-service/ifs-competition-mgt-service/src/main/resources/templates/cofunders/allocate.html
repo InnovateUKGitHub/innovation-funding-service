@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Allocate co-funders - ${model.competitionName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Allocate supporters - ${model.competitionName}|" />
 </head>
 
 <body class="govuk-template__body competition-management competition-overview">
@@ -13,9 +13,9 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allocate co-funders',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allocate supporters',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
-        <p class="govuk-body">Assign co-funders to applications.</p>
+        <p class="govuk-body">Assign supporters to applications.</p>
 
         <form method="GET" id="filter-applications-form">
             <div class="search-filters govuk-!-margin-top-6">
@@ -49,7 +49,7 @@
                     <th class="govuk-table__header" scope="col">Application number</th>
                     <th class="govuk-table__header" scope="col">Title</th>
                     <th class="govuk-table__header" scope="col">Knowledge base partner</th>
-                    <th class="govuk-table__header" scope="col">Co-funders</th>
+                    <th class="govuk-table__header" scope="col">Supporters</th>
                     <th class="govuk-table__header" scope="col"></th>
                 </tr>
             </thead>

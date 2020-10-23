@@ -35,12 +35,12 @@
                 class="govuk-link">Review application</a>
         </div>
 
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Assigned co-funders
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Assigned supporters
             <th:block th:unless="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}"
                       th:text="${' (' + model.supportersAvailableForApplicationPage.assignedSupporters.size() + ')'}" />
         </h2>
         <p th:if="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}">
-            No co-funders have been assigned to this application.
+            No supporters have been assigned to this application.
         </p>
 
         <form
@@ -50,7 +50,7 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Co-funder</th>
+                        <th class="govuk-table__header" scope="col">Supporter</th>
                         <th class="govuk-table__header" scope="col">Organisation</th>
                         <th class="govuk-table__header" scope="col">Email</th>
                         <th class="govuk-table__header" scope="col"></th>
@@ -70,18 +70,18 @@
             </table>
         </form>
 
-        <h2 class="govuk-heading-m">Available co-funders</h2>
+        <h2 class="govuk-heading-m">Available supporters</h2>
 
         <form method="GET" id="filter-supporters-form">
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
-                        <h2 class="govuk-fieldset__heading">Filter co-funders</h2>
+                        <h2 class="govuk-fieldset__heading">Filter supporters</h2>
                     </legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
                             <label class="govuk-label"
-                                   for="filter">Search for a co-funder by first or last name</label>
+                                   for="filter">Search for a supporter by first or last name</label>
                             <input class="govuk-input"
                                    id="filter"
                                    name="filter"
@@ -98,7 +98,7 @@
             </div>
         </form>
 
-        <h3 class="govuk-heading-s govuk-!-margin-top-6"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.supportersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-top-6"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.supportersAvailableForApplicationPage.totalElements}"/> Supporters</h3>
 
         <hr/>
 
@@ -121,12 +121,12 @@
                                    th:disabled="${model.pagination.totalElements == 0}"/>
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
-                                Select all co-funders
+                                Select all supporters
                             </label>
                         </div>
                     </div>
                     <span class="govuk-hint">
-                        <span data-count-selected="" th:text="${#lists.size(supporterSelectionForm.selectedSupporterIds)}"></span> co-funders selected
+                        <span data-count-selected="" th:text="${#lists.size(supporterSelectionForm.selectedSupporterIds)}"></span> supporters selected
                     </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
@@ -140,8 +140,8 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Select co-funder</th>
-                        <th class="govuk-table__header" scope="col">Co-funder name</th>
+                        <th class="govuk-table__header" scope="col">Select supporter</th>
+                        <th class="govuk-table__header" scope="col">Supporter name</th>
                         <th class="govuk-table__header" scope="col">Organisation</th>
                         <th class="govuk-table__header" scope="col">Email</th>
                     </tr>

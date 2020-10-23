@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Co-funders' "/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Supporters' "/>
 </head>
 
 <body class="govuk-template__body competition-management">
@@ -15,7 +15,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Co-funder review',subTitle=${model.applicationId + ': ' + model.applicationName}, size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Supporter review',subTitle=${model.applicationId + ': ' + model.applicationName}, size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.accepted}">
             <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Accepted (${model.AcceptedCount})|">Accepted</h2>
@@ -64,7 +64,7 @@
 
         <div class="govuk-!-margin-top-6">
             <a th:href="@{/competition/{id}/supporters/view(id=${model.competitionId})}"
-               class="govuk-button govuk-button--secondary">Return to co-funders
+               class="govuk-button govuk-button--secondary">Return to supporters
             </a>
         </div>
 
