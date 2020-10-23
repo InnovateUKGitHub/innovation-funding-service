@@ -5,6 +5,8 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8295  KTP Assessments - assessor summary
 ...
+...              IFS-8453  Assessor view of detailed finances
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -185,6 +187,7 @@ Assessor can submit the KTP application assessment
     When the user clicks the button/link            id = submit-assessment-button
     And the user clicks the button/link             jQuery = button:contains("Yes I want to submit the assessments")
     Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
+
 
 
 *** Keywords ***
