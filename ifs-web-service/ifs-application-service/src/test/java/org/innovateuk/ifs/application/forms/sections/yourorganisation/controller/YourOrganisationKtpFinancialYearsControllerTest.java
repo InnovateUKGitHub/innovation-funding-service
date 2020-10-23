@@ -69,4 +69,26 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void viewPageAsCofunder() throws Exception {
+        OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource = newOrganisationFinancesKtpYearsResource().build();
+        CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = mock(CommonYourProjectFinancesViewModel.class);
+        YourOrganisationViewModel yourOrganisationViewModel = mock(YourOrganisationViewModel.class);
+        YourOrganisationKtpFinancialYearsForm yourOrganisationKtpFinancialYearsForm = mock(YourOrganisationKtpFinancialYearsForm.class);
+
+        when(commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, getLoggedInUser())).thenReturn(commonYourProjectFinancesViewModel);
+        when(viewModelPopulator.populate(applicationId, competitionId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
+        when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);
+
+        setLoggedInUser(cofunder);
+        mockMvc.perform(get("/application/{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}/ktp-financial-years",
+                applicationId, competitionId, organisationId, sectionId))
+                .andExpect(model().attributeExists("commonFinancesModel"))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attributeExists("form"))
+                .andExpect(model().attribute("formFragment", "ktp-financial-years"))
+                .andExpect(view().name("application/sections/your-organisation/your-organisation"))
+                .andExpect(status().isOk());
+    }
 }
