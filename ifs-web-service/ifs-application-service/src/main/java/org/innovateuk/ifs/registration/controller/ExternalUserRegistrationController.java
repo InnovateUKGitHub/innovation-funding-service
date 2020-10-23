@@ -152,7 +152,7 @@ public class ExternalUserRegistrationController {
                         .withInvitee(true)
                         .withOrganisation(invite.getOrganisation())
                         .withRole(invite.getRole().getDisplayName())
-                        .withPageTitle("Create " + invite.getRole().getDisplayName().toLowerCase() + " account")
+                        .withPageTitle("Create a " + invite.getRole().getDisplayName().toLowerCase() + " account")
                         .withSubTitle("")
                         .withPostcodeGuidance("")
                         .withGuidance("");
