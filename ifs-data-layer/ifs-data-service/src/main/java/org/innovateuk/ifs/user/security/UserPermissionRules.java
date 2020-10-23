@@ -326,7 +326,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a supporter role")
     public boolean isGrantingCoFunderRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
-        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(COFUNDER);
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(SUPPORTER);
     }
 
     @PermissionRule(value = "GRANT_ROLE", description = "An stakeholder can request applicant role")

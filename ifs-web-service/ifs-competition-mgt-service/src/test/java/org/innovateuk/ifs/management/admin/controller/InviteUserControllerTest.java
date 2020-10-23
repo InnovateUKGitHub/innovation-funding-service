@@ -13,7 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.innovateuk.ifs.user.resource.Role.COFUNDER;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -38,7 +38,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
         InviteUserForm expectedUserForm = new InviteUserForm();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-external-user")
-                .param("role", COFUNDER.toString()))
+                .param("role", SUPPORTER.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"))
                 .andExpect(model().attribute("form", expectedUserForm));
@@ -56,9 +56,9 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     @Test
     public void selectedRole() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/select-external-role")
-                .param("role", COFUNDER.toString()))
+                .param("role", SUPPORTER.toString()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/admin/invite-external-user?role=%s", COFUNDER.toString())));
+                .andExpect(redirectedUrl(String.format("/admin/invite-external-user?role=%s", SUPPORTER.toString())));
     }
 
     @Test

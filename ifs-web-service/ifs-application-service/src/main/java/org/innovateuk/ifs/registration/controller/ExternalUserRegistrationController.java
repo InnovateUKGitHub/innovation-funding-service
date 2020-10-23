@@ -78,7 +78,7 @@ public class ExternalUserRegistrationController {
                                     UserResource loggedInUser) {
         RoleInviteResource invite = inviteUserRestService.getInvite(inviteHash).getSuccess();
 
-        if (invite.getRole() != Role.COFUNDER) {
+        if (invite.getRole() != Role.SUPPORTER) {
             Set<ConstraintViolation<RegistrationForm>> constraintViolations =
                     validator.validate(registrationForm, RegistrationForm.PhoneNumberValidationGroup.class);
 
@@ -145,7 +145,7 @@ public class ExternalUserRegistrationController {
                         .withPostcodeGuidance("")
                         .withGuidance("");
             }
-            if (invite.getRole() == Role.COFUNDER) {
+            if (invite.getRole() == Role.SUPPORTER) {
                 viewModelBuilder.withTermsRequired(true)
                         .withPhoneRequired(false)
                         .withAddressRequired(false)

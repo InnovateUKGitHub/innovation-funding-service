@@ -56,7 +56,7 @@
                 <input type="hidden" th:value="${model.role}" th:field="*{role}"/>
             </dl>
 
-            <div th:if="${model.role == T(org.innovateuk.ifs.user.resource.Role).COFUNDER}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
+            <div th:if="${model.role == T(org.innovateuk.ifs.user.resource.Role).SUPPORTER}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="organisation">
                     Organisation
                 </label>

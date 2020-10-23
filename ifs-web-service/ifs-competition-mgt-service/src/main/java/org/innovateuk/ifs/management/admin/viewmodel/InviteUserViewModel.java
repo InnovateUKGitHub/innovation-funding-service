@@ -65,7 +65,7 @@ public class InviteUserViewModel {
 
     public boolean isAddingSupporterRole() {
         return this.roles.size() == 1 &&
-                this.roles.stream().findFirst().get() == Role.COFUNDER;
+                this.roles.stream().findFirst().get() == Role.SUPPORTER;
     }
 
     public String getLinkTitle() {

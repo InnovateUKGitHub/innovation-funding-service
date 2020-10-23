@@ -104,7 +104,7 @@ public class EditUserForm extends BaseBindingResultTarget {
     }
 
     public boolean isCoFunderRole() {
-        return Role.COFUNDER == role;
+        return Role.SUPPORTER == role;
     }
 
     @Override

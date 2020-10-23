@@ -34,7 +34,7 @@ Select an external role field validations
 
 Invite a new supporter user field validations
     [Documentation]  IFS-8401
-    When the user selects a new external user role                                   COFUNDER
+    When the user selects a new external user role                                   SUPPORTER
     And the user clicks the button/link                                              jQuery = button:contains("Send invitation")
     Then the user should see invite a new supporter user field validation message
 
@@ -48,7 +48,7 @@ Administrator can cancel the new supporter user details entered
 Administrator can sucessfully save the confunder details and return to the manage users page
     [Documentation]  IFS-8401
     Given the user clicks the button/link                     link = Invite a new external user
-    And the user selects a new external user role             COFUNDER
+    And the user selects a new external user role             SUPPORTER
     When the user fills invite a new external user fields     Jack  Simor  ${validSupporterEmail}
     And the user enters text to a text field                  id = organisation   ${organisationName}
     And the user clicks the button/link                       jQuery = button:contains("Send invitation")
@@ -118,7 +118,7 @@ the user selects an existing user to edit details
 the user adds a new external role profile of supporter
     [Arguments]   ${orgName}
     the user clicks the button/link               link = Add a new external role profile
-    the user selects a new external user role     COFUNDER
+    the user selects a new external user role     SUPPORTER
     the user enters text to a text field          id = organisation   ${orgName}
     the user clicks the button/link               jQuery = button:contains("Confirm role profile")
 
