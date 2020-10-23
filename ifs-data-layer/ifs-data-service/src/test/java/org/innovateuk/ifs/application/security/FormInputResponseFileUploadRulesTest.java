@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -26,6 +27,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -172,5 +174,30 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
                 assertFalse(fileUploadRules.monitoringOfficerCanDownloadFilesInResponses(fileEntry, user));
             }
         });
+    }
+
+    @Test
+    public void cofunderCanDownloadFilesInResponsesForOwnApplication() {
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP).build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .withApplicationState(ApplicationState.SUBMITTED).build();
+
+        UserResource compAdmin = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource cofunder = newUserResource().withRolesGlobal(singletonList(COFUNDER)).build();
+
+        FormInputResponseFileEntryId responseFileEntryId = new FormInputResponseFileEntryId(formInputId, application.getId(), processRoleId, fileEntryId);
+
+        FormInputResponseFileEntryResource fileEntryResource = newFormInputResponseFileEntryResource()
+                .withCompoundId(responseFileEntryId)
+                .build();
+
+        setupCofunderAssignmentExpectations(application.getId(), cofunder.getId(), true);
+        setupCofunderAssignmentExpectations(application.getId(), compAdmin.getId(), false);
+
+        assertTrue(fileUploadRules.cofunderCanDownloadFilesInResponsesForOwnApplication(fileEntryResource, cofunder));
+        assertFalse(fileUploadRules.cofunderCanDownloadFilesInResponsesForOwnApplication(fileEntryResource, compAdmin));
     }
 }
