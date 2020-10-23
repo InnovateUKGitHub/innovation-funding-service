@@ -22,6 +22,9 @@ public interface CofunderAssignmentService {
     ServiceResult<CofunderAssignmentResource> assign(long userId, long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> assign(List<Long> userId, long applicationId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> removeAssignment(long userId, long applicationId);
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
@@ -35,5 +38,8 @@ public interface CofunderAssignmentService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, Pageable pageable);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<List<Long>> findAvailableCofundersUserIdsForApplication(long applicationId, String filter);
 
 }
