@@ -18,7 +18,7 @@
         </div>
 
         <th:block>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Supporter review',subTitle=${model.applicationId + ': ' + model.applicationName},size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Supporter review feedback',subTitle=${model.applicationId + ': ' + model.applicationName},size='govuk-heading-xl'" />
         </th:block>
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -42,7 +42,7 @@
         </th:block>
 
         <th:block th:unless="${model.readonly}">
-            <p class="govuk-body">Please review this application and tell us if you want to support it.</p>
+            <p class="govuk-body">Please review this application and tell us if you are interested in supporting it, either financially or with another kind of support.</p>
             <p class="govuk-body">If you choose 'Yes' tell us the maximum percentage of the total project costs you would like to fund.</p>
             <p class="govuk-body">We will confirm your participation and funding percentage after the funders panel has met.</p>
             <p class="govuk-body">Your decision and feedback will also be seen by the applicants.</p>
@@ -52,7 +52,7 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         <h1 class="govuk-fieldset__heading">
-                            Do you want to fund this application?
+                            Are you interested in supporting this application?
                         </h1>
                     </legend>
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('decision')}"
@@ -109,7 +109,7 @@
             </div>
 
             <button id="save-supporter-response" type="submit" class="govuk-button">
-                Save review and return to applications
+                Save and return to applications
             </button>
         </th:block>
         </form>
