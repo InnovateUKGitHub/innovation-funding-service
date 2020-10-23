@@ -4,6 +4,8 @@ Dear ${notificationTarget.name},
 
 You've been invited to become a ${role} for the Innovation Funding Service.
 
+You must create an account to accept this invitation.
+
 Create your account: ${inviteUrl}
 
 Yours sincerely
