@@ -20,6 +20,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new ' + ${model.getTypeName()} + ' user',size='govuk-heading-l'" />
 
+        <p class="govuk-body" th:if="${model.external}" th:text="|Enter the new ${model.onlyRole.displayName.toLowerCase()}'s details:|"></p>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="firstName">
@@ -97,28 +98,23 @@
                                 data-maxlength-errormessage=#{validation.invite.email.length.max(null, 254)},
                                 data-required-errormessage=${model.addingKtaRole} ? #{validation.kta.invite.email.required} : #{validation.invite.email.required}" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
+            <div th:if="${#lists.size(model.roles) > 1}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="role">
                     Role
                 </label>
-                <th:block th:if="${#lists.size(model.roles) > 1}">
-                    <th:block th:if="${#fields.hasErrors('role')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
-                    </th:block>
-                    <select name="role"
-                            class="govuk-select govuk-!-width-one-third"
-                            id="role"
-                            th:field="*{role}"
-                            required="required"
-                            data-required-errormessage="Please select a role">
-                        <option th:each="adminRole : ${model.roles}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
-                    </select>
+                <th:block th:if="${#fields.hasErrors('role')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                 </th:block>
-                <th:block th:if="${#lists.size(model.roles) == 1}">
-                    <input type="hidden" name="role" th:value="${model.roles[0]}" />
-                    <label class="govuk-label" for="role" th:text="${model.roles[0].displayName}">KTA</label>
-                </th:block>
+                <select name="role"
+                        class="govuk-select govuk-!-width-one-third"
+                        id="role"
+                        th:field="*{role}"
+                        required="required"
+                        data-required-errormessage="Please select a role">
+                    <option th:each="adminRole : ${model.roles}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+                </select>
             </div>
+            <input th:if="${#lists.size(model.roles) == 1}" type="hidden" name="role" th:value="${model.roles[0]}" />
             <div class="govuk-form-group govuk-!-margin-top-6">
                 <button class="govuk-button">Send invitation</button>
                 <a th:href="@{/admin/users/active}" class="button-clear">Cancel</a>

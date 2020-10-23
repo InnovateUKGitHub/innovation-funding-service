@@ -32,7 +32,15 @@ public class InviteUserViewModel {
     }
 
     public String getTypeName() {
-        return type.getName();
+        if (type == InviteUserView.INTERNAL_USER) {
+            return type.getName();
+        } else {
+            return getOnlyRole().getDisplayName().toLowerCase();
+        }
+    }
+
+    public Role getOnlyRole() {
+        return roles.iterator().next();
     }
 
     public Set<Role> getRoles() {
