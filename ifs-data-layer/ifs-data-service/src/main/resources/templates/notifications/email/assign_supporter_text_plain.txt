@@ -2,11 +2,11 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have been invited to review this application on the Innovation Funding Service for support opportunities:
+You have been invited to review this application for support opportunities:
 
 ${applicationId} : ${applicationName}
 
-You will be able to review the applications and decide if you want to support it.
+You will be able to decide if your organisation wishes to offer support and provide feedback to the applicant.
 
 ${link}
 
