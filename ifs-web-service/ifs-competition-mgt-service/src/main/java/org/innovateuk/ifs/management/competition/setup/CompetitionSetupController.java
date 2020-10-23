@@ -237,7 +237,7 @@ public class CompetitionSetupController {
             competitionSetupForm.setFunders(funders);
             competitionSetupForm.setMarkAsCompleteAction(false);
         } else if (request.getParameterMap().containsKey("remove-funder")) {
-            int removeCoFunderIndex = Integer.valueOf(request.getParameterMap().get("remove-cofunder")[0]);
+            int removeCoFunderIndex = Integer.valueOf(request.getParameterMap().get("remove-supporter")[0]);
             competitionSetupForm.getFunders().remove(removeCoFunderIndex);
             competitionSetupForm.setMarkAsCompleteAction(false);
         }

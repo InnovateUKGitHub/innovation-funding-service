@@ -256,7 +256,7 @@ IFS.core.formValidation = (function () {
     checkEmail: function (field) {
       // checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
       var email = field.val()
-      var external = (field.attr('external-user') == null) ? 'false' : field.attr('external-user')
+      var external = (field.attr('kta-user') == null) ? 'false' : field.attr('external-user')
       console.log(external)
       var invalidEmailAttribute = 'email-invalid'
       var invalidKtpEmailAttribute = 'email-ktpInvalid'

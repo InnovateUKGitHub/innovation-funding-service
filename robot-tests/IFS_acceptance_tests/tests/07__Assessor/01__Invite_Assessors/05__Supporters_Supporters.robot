@@ -3,9 +3,9 @@ Documentation  IFS-8414 Internal user - View co funder feedback progress - list 
 ...
 ...            IFS-8407 Internal user - View co funder feedback
 ...
-...            IFS-8404 Internal user - Assign Co-funder
+...            IFS-8404 Internal user - Assign Supporter
 ...
-...            IFS-8405 Internal user - Remove Co-funder
+...            IFS-8405 Internal user - Remove Supporter
 ...
 ...            IFS-8409 Co funder - application response & edit
 ...
@@ -41,27 +41,27 @@ The internal user can allocate applications
     [Documentation]   IFS-8404
     Given Logging in and Error Checking         &{ifs_admin_user_credentials}
     When the user clicks the button/link        link = ${cofundingCompetitionName}
-    And the user clicks the button/link         link = Manage co-funders
+    And the user clicks the button/link         link = Manage supporters
     Then the user can allocate applictions
 
-The internal user can allocate co-funders and search for supporter by first name and/or last name
+The internal user can allocate supporters and search for supporter by first name and/or last name
     [Documentation]   IFS-8404
     Given the user can allocate supporters
     When the user searches for supporter by name      Douglas
     And the user searches for supporter by name       Alston
     Then the user searches for supporter by name      Douglas Alston
 
-The internal user can invite a co-funder to a KTP application
+The internal user can invite a supporter to a KTP application
     [Documentation]   IFS-8404
-    Given the user can view already assigned co-funders
+    Given the user can view already assigned supporters
     Then the user can invite a supporter to a KTP application
 
-The internal user can remove a co-funder from an application
+The internal user can remove a supporter from an application
     [Documentation]   IFS-8405
     Given The user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
     Then the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
 
-The co-funder should not see the removed application on their dashboard
+The supporter should not see the removed application on their dashboard
      [Documentation]   IFS-8405
      [Setup]    get application id using application name
      Given Log in as a different user              email=douglas.alston@money.com    password=${short_password}
@@ -69,12 +69,12 @@ The co-funder should not see the removed application on their dashboard
      And The user navigates to the page            ${server}/application/${protonApplicationId}/summary
      Then The user should see the element          jQuery = h1:contains("You do not have the necessary permissions for your request")
 
-The internal user can view a co-funder application by searching with an application number
+The internal user can view a supporter application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
     Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
     And the user clicks the button/link                 link = ${cofundingCompetitionName}
-    And the user clicks the button/link                 link = Manage co-funders
+    And the user clicks the button/link                 link = Manage supporters
     And the user clicks the button/link                 link = View feedback
     When the user enters text to a text field           id=applicationFilter    ${supporterApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
@@ -83,7 +83,7 @@ The internal user can view a co-funder application by searching with an applicat
 
 The ifs admin views the feedback of the application
     [Documentation]   IFS-8407
-    Given the user clicks the button/link           link = Back to co-funders
+    Given the user clicks the button/link           link = Back to supporters
     When the user clicks the button/link            jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the supporter review
 
@@ -91,10 +91,10 @@ The comp admin views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{Comp_admin1_credentials}
     And the user clicks the button/link             link = ${cofundingCompetitionName}
-    And the user clicks the button/link             link = Manage co-funders
+    And the user clicks the button/link             link = Manage supporters
     And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${supporterApplicationID}
-    And the user clicks the button/link             link = Back to co-funders
+    And the user clicks the button/link             link = Back to supporters
     And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the supporter review
 
@@ -102,10 +102,10 @@ The finance manager views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{internal_finance_credentials}
     And the user clicks the button/link             link = ${cofundingCompetitionName}
-    And the user clicks the button/link             link = Manage co-funders
+    And the user clicks the button/link             link = Manage supporters
     And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${supporterApplicationID}
-    And the user clicks the button/link             link = Back to co-funders
+    And the user clicks the button/link             link = Back to supporters
     And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the supporter review
 
@@ -214,35 +214,35 @@ the user requesting the application id
     Set Suite Variable  ${supporterApplicationID}
 
 the user can view the supporter review
-    the user should see the element     jQuery = h1:contains("Co-funder review")
+    the user should see the element     jQuery = h1:contains("Supporter review")
     the user should see the element     jQuery = h2:contains("Accepted")
     the user should see the element     jQuery = h2:contains("Declined")
     the user should see the element     jQuery = h2:contains("Pending review")
 
 the user can allocate applictions
-    the user should see the element     jQuery = h1:contains("Manage co-funders")
+    the user should see the element     jQuery = h1:contains("Manage supporters")
     the user should see the element     jQuery = h3:contains("Actions")
     the user should see the element     link = Allocate applications
     the user should see the element     link = View feedback
     the user clicks the button/link     link = Allocate applications
 
 the user can allocate supporters
-    the user should see the element     jQuery = h1:contains("Allocate co-funders")
-    the user should see the element     jQuery = p:contains("Assign co-funders to applications.")
+    the user should see the element     jQuery = h1:contains("Allocate supporters")
+    the user should see the element     jQuery = p:contains("Assign supporters to applications.")
     the user should see the element     jQuery = h2:contains("Filter applications")
     the user should see the element     jQuery = label:contains("Search by application number")
     the user should see the element     jQuery = th:contains("Application number")
     the user should see the element     jQuery = th:contains("Title")
     the user should see the element     jQuery = th:contains("Knowledge base partner")
-    the user should see the element     jQuery = th:contains("Co-funders")
+    the user should see the element     jQuery = th:contains("Supporters")
     the user should see the element     jQuery = span:contains("Showing 1 - 20 of 36 results")
     the user clicks the button/link     link = Next
     the user clicks the button/link     jQuery = td:contains("The proton size") ~ td a:contains("Assign")
 
 the user searches for supporter by name
     [Arguments]   ${name}
-    the user should see the element         jQuery = h2:contains("Filter co-funders")
-    the user should see the element         jQuery = label:contains("Search for a co-funder by first or last name")
+    the user should see the element         jQuery = h2:contains("Filter supporters")
+    the user should see the element         jQuery = label:contains("Search for a supporter by first or last name")
     the user enters text to a text field    id = filter    ${name}
     the user clicks the button/link         jQuery = button:contains("Filter")
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
@@ -250,20 +250,20 @@ the user searches for supporter by name
     the user clicks the button/link         link = Clear all filters
     the user should see the element         jQuery = .govuk-table__cell:contains("Keane Connolly")
 
-Given the user can view already assigned co-funders
+Given the user can view already assigned supporters
     the user should see the element         jQuery = h1:contains(Assign to application)
     the user should see the element         jQuery = h3:contains("Partners")
     the user should see the element         jQuery = h3:contains("Innovation area")
-    the user should see the element         jQuery = h2:contains("Assigned co-funders")
-    the user should see the element         jQuery = th:contains("Co-funder")
+    the user should see the element         jQuery = h2:contains("Assigned supporters")
+    the user should see the element         jQuery = th:contains("Supporter")
     the user should see the element         jQuery = th:contains("Organisation")
     the user should see the element         jQuery = th:contains("Email")
 
 the user can invite a supporter to a KTP application
-    the user should see the element         jQuery = h2:contains("Available co-funders")
-    the user should see the element         jQuery = th:contains("Select co-funder")
-    the user should see the element         jQuery = th:contains("Co-funder name")
-    the user should see the element         jQuery = span:contains("0 co-funders selected")
+    the user should see the element         jQuery = h2:contains("Available supporters")
+    the user should see the element         jQuery = th:contains("Select supporter")
+    the user should see the element         jQuery = th:contains("Supporter name")
+    the user should see the element         jQuery = span:contains("0 supporters selected")
     the user should see the element         jQuery = button:contains("Add selected to application")
     the user should see the element         jQuery = [disabled="disabled"]
     the user selects the checkbox           select-all-check
@@ -276,7 +276,7 @@ the user can close the assessment
     the user clicks the button/link         jQuery = button:contains("Close assessment")
 
 the user is no longer able to allocate applications
-    the user clicks the button/link         link = Manage co-funders
+    the user clicks the button/link         link = Manage supporters
     the user should see the element         jQuery = [aria-disabled="true"]
 
 the user checks the feedback validation

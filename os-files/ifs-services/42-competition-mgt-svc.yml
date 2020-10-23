@@ -49,6 +49,11 @@ items:
               env:
                 - name: IFS_EXTERNAL_ROLE_ENABLED
                   value: "${IFS_EXTERNAL_ROLE_ENABLED}"
+                - name: IFS_SUPPORTER_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_SUPPORTER_ENABLED
                 - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                   valueFrom:
                     configMapKeyRef:

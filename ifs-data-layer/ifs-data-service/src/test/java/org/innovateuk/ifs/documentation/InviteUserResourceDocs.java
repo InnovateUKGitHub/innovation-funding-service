@@ -19,6 +19,7 @@ public class InviteUserResourceDocs {
             fieldWithPath("roleId").description("The role to which user has been invited"),
             fieldWithPath("roleName").description("The name of role for the invited user"),
             fieldWithPath("role").description("The role for the invited user"),
-            fieldWithPath("hash").description("Invite hash key")
+            fieldWithPath("hash").description("Invite hash key"),
+            fieldWithPath("organisation").description("The organisation")
     };
 }

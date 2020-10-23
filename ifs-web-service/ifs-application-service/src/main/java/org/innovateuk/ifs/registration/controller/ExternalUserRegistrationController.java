@@ -9,26 +9,27 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
 import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -56,7 +57,6 @@ public class ExternalUserRegistrationController {
     private AddressRestService addressRestService;
 
     @Autowired
-    @Qualifier("mvcValidator")
     private Validator validator;
 
     @GetMapping("/{inviteHash}/register")
@@ -72,11 +72,20 @@ public class ExternalUserRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
+                                    @Validated({Default.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
         RoleInviteResource invite = inviteUserRestService.getInvite(inviteHash).getSuccess();
+
+        if (invite.getRole() != Role.SUPPORTER) {
+            Set<ConstraintViolation<RegistrationForm>> constraintViolations =
+                    validator.validate(registrationForm, RegistrationForm.PhoneNumberValidationGroup.class);
+
+            constraintViolations.forEach(violation ->
+                    bindingResult.addError(new FieldError("form", violation.getPropertyPath().toString(), violation.getMessage())));
+        }
+
         Supplier<String> failureView = () -> doViewYourDetails(model, invite, loggedInUser);
 
         if(loggedInUser != null){
@@ -130,6 +139,18 @@ public class ExternalUserRegistrationController {
                         .withPhoneRequired(true)
                         .withAddressRequired(true)
                         .withInvitee(true)
+                        .withRole(invite.getRole().getDisplayName())
+                        .withPageTitle("Create " + invite.getRole().getDisplayName().toLowerCase() + " account")
+                        .withSubTitle("")
+                        .withPostcodeGuidance("")
+                        .withGuidance("");
+            }
+            if (invite.getRole() == Role.SUPPORTER) {
+                viewModelBuilder.withTermsRequired(true)
+                        .withPhoneRequired(false)
+                        .withAddressRequired(false)
+                        .withInvitee(true)
+                        .withOrganisation(invite.getOrganisation())
                         .withRole(invite.getRole().getDisplayName())
                         .withPageTitle("Create " + invite.getRole().getDisplayName().toLowerCase() + " account")
                         .withSubTitle("")
