@@ -98,6 +98,7 @@ apply plugin: 'maven-publish'
 
 def osFileMap = [
         [name:'cache-config', type: 'config-maps'],
+        [name:'feature-toggle-config', type: 'config-maps'],
         [name:'data-service-config', type: 'config-maps'],
         [name:'db-config', type: 'config-maps'],
         [name:'docusign-config', type: 'config-maps'],
