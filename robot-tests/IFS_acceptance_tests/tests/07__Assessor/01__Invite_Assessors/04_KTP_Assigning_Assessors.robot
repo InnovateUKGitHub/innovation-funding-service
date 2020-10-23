@@ -16,20 +16,24 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${ktpAssessmentCompetitionName}          KTP assessment
-${ktpAssessmentCompetitionID}            ${competition_ids['${ktpAssessmentCompetitionName}']}
-${ktpAssessmentApplicationName}          KTP assessment application
-${ktpAssessmentApplicationID}            ${application_ids['${ktpAssessmentApplicationName}']}
-${ktpDetailsFinanceCompetitionName}      KTP assessment Detailed Finances
-${ktpDetailsFinanceCompetitionID}        ${competition_ids['${ktpDetailsFinanceCompetitionName}']}
-${ktpDetailsFinanceApplicationName}    	 KTP assessment detailed finances application
-${ktpDetailsFinanceApplicationID}        ${application_ids['${ktpDetailsFinanceApplicationName}']}
-${ktpOverviewFinanceCompetitionName}     KTP assessment Overview Finances
-${ktpOverviewFinanceCompetitionID}       ${competition_ids['${ktpOverviewFinanceCompetitionName}']}
-${ktpOverviewFinanceApplicationName}     KTP assessment overview finances application
-${ktpOverviewFinanceApplicationID}       ${application_ids['${ktpOverviewFinanceApplicationName}']}
-${ktaEmail}                              Amy.Colin@ktn-uk.test
-${existingKTAEmail}                      john.fenton@ktn-uk.test
+${ktpAssessmentCompetitionName}             KTP assessment
+${ktpAssessmentCompetitionID}               ${competition_ids['${ktpAssessmentCompetitionName}']}
+${ktpAssessmentApplicationName}             KTP assessment application
+${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
+${ktpDetailsFinanceCompetitionName}         KTP assessment Detailed Finances
+${ktpDetailsFinanceCompetitionID}           ${competition_ids['${ktpDetailsFinanceCompetitionName}']}
+${ktpDetailsFinanceApplicationName}    	    KTP assessment detailed finances application
+${ktpDetailsFinanceApplicationID}           ${application_ids['${ktpDetailsFinanceApplicationName}']}
+${ktpOverviewFinanceCompetitionName}        KTP assessment Overview Finances
+${ktpOverviewFinanceCompetitionID}          ${competition_ids['${ktpOverviewFinanceCompetitionName}']}
+${ktpOverviewFinanceApplicationName}        KTP assessment overview finances application
+${ktpOverviewFinanceApplicationID}          ${application_ids['${ktpOverviewFinanceApplicationName}']}
+${nonKTPOverviewFinanceCompetitionName}     Non KTP competition all finance overview
+${nonKTPOverviewFinanceCompetitionID}       ${competition_ids['${nonKTPOverviewFinanceCompetitionName}']}
+${nonKTPOverviewFinanceApplicationName}     Non KTP Application
+${nonKTPOverviewFinanceApplicationID}       ${application_ids['${nonKTPOverviewFinanceApplicationName}']}
+${ktaEmail}                                 Amy.Colin@ktn-uk.test
+${existingKTAEmail}                         john.fenton@ktn-uk.test
 
 *** Test Cases ***
 Comp admin can find the registered KTA in system
@@ -61,7 +65,7 @@ Invite the KTA to assess the KTP competition
 
 Assessor accept the inviation to assess the KTP competition
     [Documentation]   IFS-8260
-    Given KTA accepts the invitation to assess the application      ${ktpAssessmentCompetitionName}
+    Given KTA accepts the invitation to assess the application      ${ktpAssessmentCompetitionName}   ${ktaEmail}   ${short_password}
     When log in as a different user                                 &{ifs_admin_user_credentials}
     And the user navigates to the page                              ${server}/management/competition/${ktpAssessmentCompetitionID}/assessors/accepted
     Then the user should see the element                            link = Amy Colin
@@ -78,7 +82,7 @@ Assessor accept the inviation to assess the KTP application
     [Documentation]   IFS-8260
     Given the user navigates to the page               ${server}/management/competition/${ktpAssessmentCompetitionID}
     And the user clicks the button/link                id = notify-assessors-changes-since-last-notify-button
-    When KTA accepts to assess the KTP application     ${ktpAssessmentCompetitionName}
+    When KTA accepts to assess the KTP application     ${ktpAssessmentCompetitionName}   ${ktaEmail}  ${short_password}
     And the user clicks the button/link                link = KTP assessment application
     Then the user should see the element               jQuery = h1:contains("Assessment overview") span:contains("KTP assessment application")
 
@@ -221,7 +225,7 @@ Assessor can submit the KTP application assessment
 
 Assessor can see lead organisation detailed finances when detailed option selected in assessor view of fiannces in competition setup
     [Documentation]  IFS-8453
-    Given Invite KTA to assess the competition     ${ktpDetailsFinanceCompetitionID}   ${ktpDetailsFinanceApplicationName}   ${ktpDetailsFinanceCompetitionName}
+    Given Invite KTA to assess the competition     ${ktpDetailsFinanceCompetitionID}   ${ktpDetailsFinanceApplicationName}   ${ktpDetailsFinanceCompetitionName}   ${ktaEmail}  ${short_password}
     And the user clicks the button/link            link = Finances overview
     When the user clicks the button/link           jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
     Then the user should not see the element       link = Your project costs
@@ -244,14 +248,33 @@ Assessor can see project cost summary in detailed finance overview when detailed
     Then the user should see the element      jQuery = h2:contains("Project cost summary")
     And the user should see the element       jQuery = td:contains("Other costs") + td:contains("1,100")
 
-Assessor can see lead organisation finance overview when overview option selected in assessor view of fiannces in competition setup
+Assessor can see lead and partner organisation finance overview when overview option selected in assessor view of fiannces in competition setup
     [Documentation]  IFS-8453
-    Given Invite KTA to assess the competition     ${ktpOverviewFinanceCompetitionID}   ${ktpOverviewFinanceApplicationName}   ${ktpOverviewFinanceCompetitionName}
+    Given Invite KTA to assess the competition     ${ktpOverviewFinanceCompetitionID}   ${ktpOverviewFinanceApplicationName}   ${ktpOverviewFinanceCompetitionName}   ${ktaEmail}  ${short_password}
     When the user clicks the button/link           link = Finances overview
     Then the user should not see the element       jQuery = div:contains("A base of knowledge") ~ a:contains("View finances")
     And the user should not see the element        jQuery = div:contains("Ludlow") ~ a:contains("View finances")
-    And  the user should see the element           jQuery = h2:contains("Project cost summary")
+    And the user should see the element            jQuery = h2:contains("Project cost summary")
     And the user should see the element            jQuery = td:contains("Other costs") + td:contains("1,100")
+
+Assessor can see lead organisation finances for non ktp compettition when all option selected in assessor view of fiannces in competition setup
+    [Documentation]  IFS-8453
+    Given Invite KTA to assess the competition     ${nonKTPOverviewFinanceCompetitionID}    ${nonKTPOverviewFinanceApplicationName}    ${nonKTPOverviewFinanceCompetitionName}     addison.shannon@gmail.com   ${short_password}
+    And the user clicks the button/link            link = Finances overview
+    When the user clicks the button/link           jQuery = div:contains("Mo Juggling Mo Problems Ltd") ~ a:contains("View finances")
+    Then the user should see the element           link = Your project costs
+    And the user should see the element            link = Your project location
+    And the user should see the element            link = Your organisation
+    And the user should see the element            link = Your funding
+
+Assessor can see partner organisation finances for non ktp compettition when all option selected in assessor view of fiannces in competition setup
+    [Documentation]  IFS-8453
+    Given the user clicks the button/link     link = Back to funding
+    When the user clicks the button/link      jQuery = div:contains("University of Bath") ~ a:contains("View finances")
+    Then the user should see the element      link = Your organisation
+    And the user should see the element       link = Your project costs
+    And the user should see the element       link = Your project location
+    And the user should see the element       link = Your funding
 
 *** Keywords ***
 Custom suite setup
@@ -263,14 +286,14 @@ the user filters the KTA user
     the user clicks the button/link          id = assessor-filter-button
 
 KTA accepts the invitation to assess the application
-    [Arguments]    ${compettitionName}
+    [Arguments]    ${compettitionName}   ${ktaEmail}   ${short_password}
     log in as a different user           ${ktaEmail}   ${short_password}
     the user clicks the button/link      link = ${compettitionName}
     the user selects the radio button    acceptInvitation   true
     the user clicks the button/link      jQuery = button:contains("Confirm")
 
 KTA accepts to assess the KTP application
-    [Arguments]   ${compettitionName}
+    [Arguments]   ${compettitionName}    ${ktaEmail}  ${short_password}
     log in as a different user           ${ktaEmail}  ${short_password}
     the user clicks the button/link      link = ${compettitionName}
     the user clicks the button/link      link = Accept or reject
@@ -330,14 +353,14 @@ Assessor should review the incomplete scope category details
     the user should see the element         jQuery = \#${idSelector}:contains("${feedbackText}")
 
 Invite KTA to assess the competition
-    [Arguments]   ${competitionID}   ${applicationTitle}   ${competitionName}
+    [Arguments]   ${competitionID}   ${applicationTitle}   ${competitionName}   ${email}  ${short_password}
     Log in as a different user                               &{ifs_admin_user_credentials}
     the user navigates to the page                           ${server}/management/competition/${competitionID}/assessors/find
     the user selects the checkbox                            assessor-row-1
     the user clicks the button/link                          id = add-selected-assessors-to-invite-list-button
     the user clicks the button/link                          id = review-and-send-assessor-invites-button
     the user clicks the button/link                          jQuery = button:contains("Send invite")
-    KTA accepts the invitation to assess the application     ${competitionName}
+    KTA accepts the invitation to assess the application     ${competitionName}  ${email}   ${short_password}
     Log in as a different user                               &{ifs_admin_user_credentials}
     the user navigates to the page                           ${server}/management/assessment/competition/${competitionID}/applications
     the user clicks the button/link                          link = View progress
@@ -345,5 +368,5 @@ Invite KTA to assess the competition
     the user clicks the button/link                          jQuery = button:contains("Add to application")
     the user navigates to the page                           ${server}/management/competition/${competitionID}
     the user clicks the button/link                          id = notify-assessors-changes-since-last-notify-button
-    KTA accepts to assess the KTP application                ${competitionName}
+    KTA accepts to assess the KTP application                ${competitionName}    ${email}  ${short_password}
     the user clicks the button/link                          link = ${applicationTitle}
