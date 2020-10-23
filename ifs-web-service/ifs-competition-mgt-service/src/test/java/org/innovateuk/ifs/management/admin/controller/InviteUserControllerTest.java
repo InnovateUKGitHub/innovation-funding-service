@@ -46,7 +46,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Test
     public void selectExternalRole() throws Exception {
-        ReflectionTestUtils.setField(controller, "cofunderEnabled", Boolean.TRUE);
+        ReflectionTestUtils.setField(controller, "supporterEnabled", Boolean.TRUE);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/select-external-role"))
                 .andExpect(status().isOk())

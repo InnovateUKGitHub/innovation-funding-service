@@ -324,7 +324,7 @@ public class UserPermissionRules {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a co-funder role")
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a supporter role")
     public boolean isGrantingCoFunderRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(COFUNDER);
     }

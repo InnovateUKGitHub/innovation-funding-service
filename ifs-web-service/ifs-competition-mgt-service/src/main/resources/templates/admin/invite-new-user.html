@@ -63,7 +63,7 @@
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
-            <div th:if="${model.addingCofunderRole}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
+            <div th:if="${model.addingSupporterRole}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="organisation">
                     Organisation
                 </label>

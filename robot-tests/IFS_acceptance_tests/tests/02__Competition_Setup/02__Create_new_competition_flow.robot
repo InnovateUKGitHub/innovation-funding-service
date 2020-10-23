@@ -25,7 +25,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
 ...
-...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
+...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added supporter rows in the funding information section
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
 ...
@@ -233,8 +233,8 @@ Funding information: calculations
     And the user enters text to an autocomplete field  id = funders[0].funder    Advanced Propulsion Centre (APC)
     And the user clicks the button/link         id = funders[0].funder
     And click element                           id = funders[0].funder__option--0
-    When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
-    And the user should see the element         jQuery = Button:contains("+Add co-funder")
+    When the user clicks the button/link        jQuery = Button:contains("+Add supporter")
+    And the user should see the element         jQuery = Button:contains("+Add supporter")
     And the user should see the element         jQuery = Button:contains("Remove")
     And the user enters text to an autocomplete field   id = funders[1].funder   Aerospace Technology Institute (ATI)
     And the user clicks the button/link         id = funders[1].funder
