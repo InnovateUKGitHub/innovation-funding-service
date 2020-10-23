@@ -9,7 +9,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to applications',linkUrl=@{/}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to applications',linkUrl=@{/cofunder/dashboard/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -37,7 +37,7 @@
             <button type="submit" class="govuk-button">Edit</button>
 
             <div class="govuk-!-margin-top-5">
-                <a href="#" class="govuk-button govuk-button--secondary">Return to applications</a>
+                <a th:href="@{~/cofunder/dashboard/competition/{competitionId}(competitionId=${model.competitionId})}" class="govuk-button govuk-button--secondary">Return to applications</a>
             </div>
         </th:block>
 
