@@ -2,15 +2,12 @@ package org.innovateuk.ifs.management.externalrole;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.management.externalrole.controller.ExternalRoleController;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.Map;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
@@ -38,7 +35,7 @@ public class ExternalRoleControllerTest extends BaseControllerMockMVCTest<Extern
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(new UserResource()));
 
-        mockMvc.perform(get("/admin/user/{userId}/external-role", userId))
+        mockMvc.perform(get("/admin/user/{userId}/external-role", userId).param("role", Role.COFUNDER.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("externalrole/external-role"));
 

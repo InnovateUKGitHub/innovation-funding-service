@@ -725,10 +725,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void ifsAdminCanViewAnyUsersProfile() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
-                assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+            if (user.isInternalUser()) {
+                assertTrue(rules.internalUserCanViewAnyUsersProfile(newUserProfileResource().build(), user));
             } else {
-                assertFalse(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+                assertFalse(rules.internalUserCanViewAnyUsersProfile(newUserProfileResource().build(), user));
             }
         });
     }
