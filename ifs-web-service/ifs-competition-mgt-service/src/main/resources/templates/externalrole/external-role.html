@@ -25,7 +25,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new external role profile',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${(model.role == T(org.innovateuk.ifs.user.resource.Role).SUPPORTER) ? 'Confirm role profile' : 'Add a new external role profile'},size='govuk-heading-xl'" />
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"

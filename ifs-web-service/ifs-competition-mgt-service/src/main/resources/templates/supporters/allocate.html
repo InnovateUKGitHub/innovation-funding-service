@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Allocate supporters - ${model.competitionName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assign supporters to applications - ${model.competitionName}|" />
 </head>
 
 <body class="govuk-template__body competition-management competition-overview">
@@ -10,12 +10,10 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage supporters',linkUrl=@{/competition/{competitionId}/supporters(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allocate supporters',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
-
-        <p class="govuk-body">Assign supporters to applications.</p>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign supporters to applications',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
         <form method="GET" id="filter-applications-form">
             <div class="search-filters govuk-!-margin-top-6">

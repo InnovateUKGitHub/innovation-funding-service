@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assign to application - ${model.competitionName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Manage supporters for this application - ${model.competitionName}|" />
 </head>
 
 <body class="govuk-template__body competition-management competition-overview">
@@ -10,10 +10,10 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to assign supporters to applications',linkUrl=@{/competition/{competitionId}/supporters/allocate(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign to application',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage supporters for this application',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
         <h2 class="govuk-heading-m" th:text="${model.applicationId} + ' - ' + ${model.applicationName}" />
 
@@ -76,12 +76,12 @@
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
-                        <h2 class="govuk-fieldset__heading">Filter supporters</h2>
+                        <h2 class="govuk-fieldset__heading">Filter</h2>
                     </legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
                             <label class="govuk-label"
-                                   for="filter">Search for a supporter by first or last name</label>
+                                   for="filter">Search by first or last name</label>
                             <input class="govuk-input"
                                    id="filter"
                                    name="filter"
@@ -121,12 +121,12 @@
                                    th:disabled="${model.pagination.totalElements == 0}"/>
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
-                                Select all supporters
+                                Select all
                             </label>
                         </div>
                     </div>
                     <span class="govuk-hint">
-                        <span data-count-selected="" th:text="${#lists.size(supporterSelectionForm.selectedSupporterIds)}"></span> supporters selected
+                        <span data-count-selected="" th:text="${#lists.size(supporterSelectionForm.selectedSupporterIds)}"></span> selected
                     </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
@@ -140,8 +140,8 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Select supporter</th>
-                        <th class="govuk-table__header" scope="col">Supporter name</th>
+                        <th class="govuk-table__header" scope="col">Select</th>
+                        <th class="govuk-table__header" scope="col">Name</th>
                         <th class="govuk-table__header" scope="col">Organisation</th>
                         <th class="govuk-table__header" scope="col">Email</th>
                     </tr>
