@@ -9,6 +9,8 @@ import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Optional.of;
@@ -28,6 +31,7 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderAssignmentBuilder.newCofunderAssignment;
 import static org.innovateuk.ifs.cofunder.domain.builder.CofunderOutcomeBuilder.newCofunderOutcome;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.SimpleOrganisationBuilder.newSimpleOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -54,6 +58,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     private ApplicationRepository applicationRepository;
 
     @Mock
+    private NotificationService notificationService;
+
+    @Mock
     private CofunderAssignmentMapper cofunderAssignmentMapper;
 
     @Override
@@ -68,7 +75,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
                 .withProcessState(CofunderState.REJECTED)
                 .withCofunderOutcome(newCofunderOutcome()
-                    .withComment("Terrible")
+                        .withComment("Terrible")
                         .build()
                 )
                 .build();
@@ -104,29 +111,36 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
             c.setId(4L);
             return c;
         });
+        when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
         when(cofunderAssignmentMapper.mapToResource(any(CofunderAssignment.class))).thenReturn(new CofunderAssignmentResource());
 
         ServiceResult<CofunderAssignmentResource> result = service.assign(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
         verify(cofunderAssignmentRepository).save(any());
+        verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
 
     @Test
     public void removeAssignment() {
         long userId = 1L;
         long applicationId = 2l;
+        User user = newUser().build();
         Application application = newApplication().withCompetition(newCompetition().build()).build();
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
                 .withApplication(application)
                 .build();
 
+        when(userRepository.findById(userId)).thenReturn(of(user));
+        when(applicationRepository.findById(applicationId)).thenReturn(of(application));
         when(cofunderAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(cofunderAssignment));
+        when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.removeAssignment(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
         verify(cofunderAssignmentRepository).delete(cofunderAssignment);
+        verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
 
     @Test
@@ -239,9 +253,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         Page<User> page = new PageImpl<>(newArrayList(unsassignedUser), pageRequest, 1L);
         Profile unassignedProfile = newProfile()
                 .withSimpleOrganisation(
-                    newSimpleOrganisation()
-                        .withName("Simply an organisation")
-                        .build()
+                        newSimpleOrganisation()
+                                .withName("Simply an organisation")
+                                .build()
                 ).build();
         Profile assignedProfile = newProfile()
                 .withSimpleOrganisation(
@@ -269,5 +283,19 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         assertThat(result.getSuccess().getAssignedCofunders().get(0).getName(), equalTo("Assigned Guy"));
         assertThat(result.getSuccess().getAssignedCofunders().get(0).getUserId(), equalTo(assignedUser.getId()));
         assertThat(result.getSuccess().getAssignedCofunders().get(0).getOrganisation(), equalTo("Simply an assigned organisation"));
+    }
+
+    @Test
+    public void findAvailableCofundersUserIdsForApplication() {
+        long applicationId = 4L;
+        String filter = "w";
+        List<Long> ids = Arrays.asList(1L, 2L, 3L);
+
+        when(cofunderAssignmentRepository.usersAvailableForCofundingUserIds(applicationId, filter)).thenReturn(ids);
+
+        ServiceResult<List<Long>> result = service.findAvailableCofundersUserIdsForApplication(applicationId, filter);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        assertThat(result.getSuccess(), equalTo(ids));
     }
 }

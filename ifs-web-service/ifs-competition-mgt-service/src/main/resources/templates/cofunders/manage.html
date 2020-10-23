@@ -18,8 +18,10 @@
         <ul class="govuk-list link-list">
             <h3 class="govuk-heading-s">Actions</h3>
             <li>
-                <a th:href="@{/competition/{competitionId}/cofunders/allocate(competitionId=${model.competitionId})}"
+                <a th:if="${model.allocateLinkEnabled}" th:href="@{/competition/{competitionId}/cofunders/allocate(competitionId=${model.competitionId})}"
                     class="govuk-link">Allocate applications</a>
+                <a th:unless="${model.allocateLinkEnabled}"
+                   class="disabled govuk-link" aria-disabled="true">Allocate applications</a>
             </li>
             <li>
                 <a th:href="@{/competition/{competitionId}/cofunders/view(competitionId=${model.competitionId})}" class="govuk-link">View feedback</a>

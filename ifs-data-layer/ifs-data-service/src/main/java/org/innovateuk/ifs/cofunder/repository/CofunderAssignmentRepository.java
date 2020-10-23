@@ -42,6 +42,14 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
 
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 
+    String QUERY = "FROM User user " +
+            "JOIN user.roles role " +
+            "WHERE role = org.innovateuk.ifs.user.resource.Role.COFUNDER " +
+            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :filter, '%') " +
+            "AND NOT EXISTS (" +
+            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
+            ")";
+
     @Query(
             "SELECT CASE WHEN count(assignment)>0 THEN TRUE ELSE FALSE END " +
                     "FROM CofunderAssignment assignment " +
@@ -73,7 +81,6 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
                     "application.id, " +
                     "application.name, " +
                     "organisation.name, " +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL THEN 1 ELSE 0 END)," +
                     "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.REJECTED THEN 1 ELSE 0 END), " +
                     "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.ACCEPTED THEN 1 ELSE 0 END), " +
                     "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.CREATED THEN 1 ELSE 0 END) " +
@@ -83,21 +90,16 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
                     "JOIN ProcessRole pr on pr.applicationId = application.id " +
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
                     "WHERE application.competition.id = :competitionId " +
+                    "AND application.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED " +
                     "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id"
     )
     Page<ApplicationsForCofundingResource> findApplicationsForCofunding(long competitionId, String filter, Pageable pageable);
 
-    @Query(
-            "SELECT user " +
-            "FROM User user " +
-            "JOIN user.roles role " +
-            "WHERE role = org.innovateuk.ifs.user.resource.Role.COFUNDER " +
-            "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :filter, '%') " +
-            "AND NOT EXISTS (" +
-            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
-            ")"
-    )
+    @Query("SELECT user " + QUERY)
     Page<User> findUsersAvailableForCofunding(long applicationId, String filter, Pageable pageable);
+
+    @Query("SELECT user.id " + QUERY)
+    List<Long> usersAvailableForCofundingUserIds(long applicationId, String filter);
 }
