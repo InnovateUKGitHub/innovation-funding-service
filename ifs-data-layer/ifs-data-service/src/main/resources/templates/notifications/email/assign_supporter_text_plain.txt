@@ -6,7 +6,7 @@ You have been invited to review this application on the Innovation Funding Servi
 
 ${applicationId} : ${applicationName}
 
-You will be able to review the applications and decide if you want to co-fund it.
+You will be able to review the applications and decide if you want to support it.
 
 ${link}
 

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.supporter.resource.AssignSupportersResource;
-import org.innovateuk.ifs.supporter.resource.SupporterUserResource;
-import org.innovateuk.ifs.supporter.resource.SupportersAvailableForApplicationPageResource;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -24,10 +22,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;

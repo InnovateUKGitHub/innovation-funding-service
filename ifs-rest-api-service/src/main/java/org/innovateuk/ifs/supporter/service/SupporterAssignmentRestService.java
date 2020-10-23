@@ -7,8 +7,6 @@ import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 
 import java.util.List;
 
-import java.util.List;
-
 /**
  * Interface for CRUD operations on {@link AssessmentResource} related data.
  */

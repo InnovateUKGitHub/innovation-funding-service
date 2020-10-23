@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
-import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;

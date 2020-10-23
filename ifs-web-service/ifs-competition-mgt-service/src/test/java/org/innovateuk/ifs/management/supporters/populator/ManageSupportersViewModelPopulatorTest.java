@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.supporters.populator;
 
-import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.supporters.viewmodel.AllocateSupportersViewModel;
 import org.innovateuk.ifs.management.supporters.viewmodel.ManageSupportersViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
