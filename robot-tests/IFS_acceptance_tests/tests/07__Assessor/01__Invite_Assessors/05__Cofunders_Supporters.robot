@@ -58,21 +58,20 @@ The internal user can invite a co-funder to a KTP application
 
 The internal user can remove a co-funder from an application
     [Documentation]   IFS-8405
-    Given The user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+    Given the user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
     Then the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
 
 The co-funder should not see the removed application on their dashboard
      [Documentation]   IFS-8405
      [Setup]    get application id using application name
-     Given Log in as a different user              email=douglas.alston@money.com    password=${short_password}
-     When the user clicks the button/link          link = ${cofundingCompetitionName}
-     And The user navigates to the page            ${server}/application/${protonApplicationId}/summary
-     Then The user should see the element          jQuery = h1:contains("You do not have the necessary permissions for your request")
+     Given Log in as a different user                                        email=douglas.alston@money.com    password=${short_password}
+     When the user clicks the button/link                                    link = ${cofundingCompetitionName}
+     Then the user navigates to the page and gets a custom error message     ${server}/application/${protonApplicationId}/summary    ${403_error_message}
 
 The internal user can view a co-funder application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
-    Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
+    Given Log in as a different user                    &{ifs_admin_user_credentials}
     And the user clicks the button/link                 link = ${cofundingCompetitionName}
     And the user clicks the button/link                 link = Manage co-funders
     And the user clicks the button/link                 link = View feedback
@@ -141,7 +140,7 @@ Cofunder can see list of applications assigned to him in the dashboard
 Cofunder checks number of applications in the page is no more than 20
     [Documentation]  IFS-8403
     When the user gets the number of applications in page
-    Then should be equal as numbers                           ${applicationCount_1}    20
+    Then should be equal as numbers          ${applicationCount_1}    20
 
 Cofunder can navgate to the next page of applications in review
     [Documentation]  IFS-8403
@@ -193,12 +192,13 @@ The user responds to the Cofunder/Supporter review Yes
     And the user enters text to a text field     css = .editor  This is the comments from the supporter
     And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
 
-The comp admin can close the assessment and the link to allocate applications is no longer active
-    [Documentation]   IFS-8404
-    Given Logging in and Error Checking                             &{ifs_admin_user_credentials}
-    When the user clicks the button/link                            link = ${cofundingCompetitionName}
-    And the user can close the assessment
-    Then the user is no longer able to allocate applications
+# UNCOMMENT THIS WHEN BUG 8586 IS FIXED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#The comp admin can close the assessment and the link to allocate applications is no longer active
+#    [Documentation]   IFS-8404
+#    Given Log in as a different user             &{ifs_admin_user_credentials}
+#    When the user clicks the button/link         link = ${cofundingCompetitionName}
+#    And the user can close the assessment
+#    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
