@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Supporters' "/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Supporter overview' "/>
 </head>
 
 <body class="govuk-template__body competition-management">
@@ -11,14 +11,14 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block
-        th:insert="fragments/layout :: header-sub (linkTitle='Back to in assessment',linkUrl=@{/competition/{id}/supporters/view(id=${model.competitionId})})"/>
+        th:insert="fragments/layout :: header-sub (linkTitle='Back to supporter feedback',linkUrl=@{/competition/{id}/supporters/view(id=${model.competitionId})})"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Supporter review',subTitle=${model.applicationId + ': ' + model.applicationName}, size='govuk-heading-xl'"/>
+                  th:with="pageTitle='Supporter overview',subTitle=${model.applicationId + ': ' + model.applicationName}, size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.accepted}">
-            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Accepted (${model.AcceptedCount})|">Accepted</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Accepted (${model.AcceptedCount})|">Interested</h2>
 
             <ul class="govuk-list">
                 <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
@@ -64,7 +64,7 @@
 
         <div class="govuk-!-margin-top-6">
             <a th:href="@{/competition/{id}/supporters/view(id=${model.competitionId})}"
-               class="govuk-button govuk-button--secondary">Return to supporters
+               class="govuk-button govuk-button--secondary">Return to supporter feedback
             </a>
         </div>
 
