@@ -58,7 +58,7 @@ The internal user can invite a co-funder to a KTP application
 
 The internal user can remove a co-funder from an application
     [Documentation]   IFS-8405
-    Given The user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+    Given the user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
     Then the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
 
 The co-funder should not see the removed application on their dashboard
