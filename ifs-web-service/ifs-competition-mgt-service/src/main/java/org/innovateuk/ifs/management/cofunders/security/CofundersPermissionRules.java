@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.cofunders.security;
+package org.innovateuk.ifs.management.supporters.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -14,17 +14,17 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 @PermissionRules
 @Component
-public class CofundersPermissionRules {
+public class SupportersPermissionRules {
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PermissionRule(value = "COFUNDERS", description = "Only project finance or competition admin can see cofunders")
+    @PermissionRule(value = "SUPPORTERS", description = "Only project finance or competition admin can see supporters")
     public boolean cofunding(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         return isInternalAdmin(loggedInUser);
     }
 
-    @PermissionRule(value = "ASSIGN_COFUNDERS", description = "Only project finance or competition admin can assign cofunders " +
+    @PermissionRule(value = "ASSIGN_SUPPORTERS", description = "Only project finance or competition admin can assign supporters " +
             "if the competition is in the correct state.")
     public boolean assignment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();

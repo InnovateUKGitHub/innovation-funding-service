@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 /**
  * Events that can happen during the assessment process workflow.
  */
-public enum CofunderEvent implements ProcessEvent {
+public enum SupporterEvent implements ProcessEvent {
     CREATE("notify"),
     ACCEPT("accept"),
     REJECT("reject"),
@@ -14,7 +14,7 @@ public enum CofunderEvent implements ProcessEvent {
 
     String event;
 
-    CofunderEvent(String event) {
+    SupporterEvent(String event) {
         this.event = event;
     }
 

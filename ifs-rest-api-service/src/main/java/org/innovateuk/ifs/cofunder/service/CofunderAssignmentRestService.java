@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.cofunder.service;
+package org.innovateuk.ifs.supporter.service;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.cofunder.resource.*;
+import org.innovateuk.ifs.supporter.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 
@@ -12,25 +12,25 @@ import java.util.List;
 /**
  * Interface for CRUD operations on {@link AssessmentResource} related data.
  */
-public interface CofunderAssignmentRestService {
+public interface SupporterAssignmentRestService {
 
-    RestResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId);
+    RestResult<SupporterAssignmentResource> getAssignment(long userId, long applicationId);
 
-    RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId);
+    RestResult<List<SupporterAssignmentResource>> getAssignmentsByApplicationId(long applicationId);
 
-    RestResult<CofunderAssignmentResource> assign(long userId, long applicationId);
+    RestResult<SupporterAssignmentResource> assign(long userId, long applicationId);
 
-    RestResult<Void> assign(AssignCofundersResource assignCofundersResource);
+    RestResult<Void> assign(AssignSupportersResource assignSupportersResource);
 
     RestResult<Void> removeAssignment(long userId, long applicationId);
 
-    RestResult<Void> decision(long assignmentId, CofunderDecisionResource decision);
+    RestResult<Void> decision(long assignmentId, SupporterDecisionResource decision);
 
     RestResult<Void> edit(long assignmentId);
 
-    RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, String filter, int page);
+    RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingSupporters(long competitionId, String filter, int page);
 
-    RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, int page);
+    RestResult<SupportersAvailableForApplicationPageResource> findAvailableSupportersForApplication(long applicationId, String filter, int page);
 
-    RestResult<List<Long>> findAllAvailableCofunderUserIdsForApplication(long applicationId, String filter);
+    RestResult<List<Long>> findAllAvailableSupporterUserIdsForApplication(long applicationId, String filter);
 }

@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.cofunder.service;
+package org.innovateuk.ifs.supporter.service;
 
-import org.innovateuk.ifs.cofunder.resource.*;
+import org.innovateuk.ifs.supporter.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
@@ -10,52 +10,52 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.cofunderAssignmentResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.supporterAssignmentResourceListType;
 import static org.innovateuk.ifs.util.EncodingUtils.urlEncode;
 
 @Service
-public class CofunderAssignmentRestServiceImpl extends BaseRestService implements CofunderAssignmentRestService {
+public class SupporterAssignmentRestServiceImpl extends BaseRestService implements SupporterAssignmentRestService {
 
-    private String cofunderRestUrl = "/cofunder";
+    private String supporterRestUrl = "/supporter";
 
     @Override
-    public RestResult<CofunderAssignmentResource> getAssignment(long userId, long applicationId) {
-        return getWithRestResult(format("%s/assignment/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class);
+    public RestResult<SupporterAssignmentResource> getAssignment(long userId, long applicationId) {
+        return getWithRestResult(format("%s/assignment/user/%d/application/%d", supporterRestUrl, userId, applicationId), SupporterAssignmentResource.class);
     }
 
     @Override
-    public RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(long applicationId) {
-        return getWithRestResult(format("%s/assignment/application/%d", cofunderRestUrl, applicationId), cofunderAssignmentResourceListType());
+    public RestResult<List<SupporterAssignmentResource>> getAssignmentsByApplicationId(long applicationId) {
+        return getWithRestResult(format("%s/assignment/application/%d", supporterRestUrl, applicationId), supporterAssignmentResourceListType());
     }
 
     @Override
-    public RestResult<CofunderAssignmentResource> assign(long userId, long applicationId) {
-        return postWithRestResult(format("%s/user/%d/application/%d", cofunderRestUrl, userId, applicationId), CofunderAssignmentResource.class);
+    public RestResult<SupporterAssignmentResource> assign(long userId, long applicationId) {
+        return postWithRestResult(format("%s/user/%d/application/%d", supporterRestUrl, userId, applicationId), SupporterAssignmentResource.class);
     }
 
     @Override
-    public RestResult<Void> assign(AssignCofundersResource assignCofundersResource) {
-        return postWithRestResult(format("%s/assignment", cofunderRestUrl), assignCofundersResource, Void.class);
+    public RestResult<Void> assign(AssignSupportersResource assignSupportersResource) {
+        return postWithRestResult(format("%s/assignment", supporterRestUrl), assignSupportersResource, Void.class);
     }
 
     @Override
     public RestResult<Void> removeAssignment(long userId, long applicationId) {
-        return deleteWithRestResult(format("%s/user/%d/application/%d", cofunderRestUrl, userId, applicationId));
+        return deleteWithRestResult(format("%s/user/%d/application/%d", supporterRestUrl, userId, applicationId));
     }
 
     @Override
-    public RestResult<Void> decision(long assignmentId, CofunderDecisionResource decision) {
-        return postWithRestResult(format("%s/assignment/%d/decision", cofunderRestUrl, assignmentId), decision, Void.class);
+    public RestResult<Void> decision(long assignmentId, SupporterDecisionResource decision) {
+        return postWithRestResult(format("%s/assignment/%d/decision", supporterRestUrl, assignmentId), decision, Void.class);
     }
 
     @Override
     public RestResult<Void> edit(long assignmentId) {
-        return postWithRestResult(format("%s/assignment/%d/edit", cofunderRestUrl, assignmentId), Void.class);
+        return postWithRestResult(format("%s/assignment/%d/edit", supporterRestUrl, assignmentId), Void.class);
     }
 
     @Override
-    public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(long competitionId, String filter, int page) {
-        String baseUrl = format("%s/competition/%d", cofunderRestUrl, competitionId);
+    public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingSupporters(long competitionId, String filter, int page) {
+        String baseUrl = format("%s/competition/%d", supporterRestUrl, competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -66,20 +66,20 @@ public class CofunderAssignmentRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(long applicationId, String filter, int page) {
-        String baseUrl = format("%s/application/%d", cofunderRestUrl, applicationId);
+    public RestResult<SupportersAvailableForApplicationPageResource> findAvailableSupportersForApplication(long applicationId, String filter, int page) {
+        String baseUrl = format("%s/application/%d", supporterRestUrl, applicationId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
         if (filter != null) {
             builder = builder.queryParam("filter", urlEncode(filter));
         }
-        return getWithRestResult(builder.toUriString(), CofundersAvailableForApplicationPageResource.class);
+        return getWithRestResult(builder.toUriString(), SupportersAvailableForApplicationPageResource.class);
     }
 
     @Override
-    public RestResult<List<Long>> findAllAvailableCofunderUserIdsForApplication(long applicationId, String filter) {
-        String baseUrl = format("%s/application/%d/userIds", cofunderRestUrl, applicationId);
+    public RestResult<List<Long>> findAllAvailableSupporterUserIdsForApplication(long applicationId, String filter) {
+        String baseUrl = format("%s/application/%d/userIds", supporterRestUrl, applicationId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
 

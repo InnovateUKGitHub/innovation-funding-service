@@ -1,43 +1,43 @@
-package org.innovateuk.ifs.cofunder.builder;
+package org.innovateuk.ifs.supporter.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class CofunderAssignmentResourceBuilder extends BaseBuilder<CofunderAssignmentResource, CofunderAssignmentResourceBuilder> {
+public class SupporterAssignmentResourceBuilder extends BaseBuilder<SupporterAssignmentResource, SupporterAssignmentResourceBuilder> {
 
-    private CofunderAssignmentResourceBuilder(List<BiConsumer<Integer, CofunderAssignmentResource>> newMultiActions) {
+    private SupporterAssignmentResourceBuilder(List<BiConsumer<Integer, SupporterAssignmentResource>> newMultiActions) {
         super(newMultiActions);
     }
 
-    public static CofunderAssignmentResourceBuilder newCofunderAssignmentResource() {
-        return new CofunderAssignmentResourceBuilder(emptyList());
+    public static SupporterAssignmentResourceBuilder newSupporterAssignmentResource() {
+        return new SupporterAssignmentResourceBuilder(emptyList());
     }
 
     @Override
-    protected CofunderAssignmentResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CofunderAssignmentResource>> actions) {
-        return new CofunderAssignmentResourceBuilder(actions);
+    protected SupporterAssignmentResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, SupporterAssignmentResource>> actions) {
+        return new SupporterAssignmentResourceBuilder(actions);
     }
 
     @Override
-    protected CofunderAssignmentResource createInitial() {
-        return new CofunderAssignmentResource();
+    protected SupporterAssignmentResource createInitial() {
+        return new SupporterAssignmentResource();
     }
 
-    public CofunderAssignmentResourceBuilder withAssignmentId(long... assignmentIds) {
+    public SupporterAssignmentResourceBuilder withAssignmentId(long... assignmentIds) {
         return withArray((id, assignment) -> assignment.setAssignmentId(id), assignmentIds);
     }
 
-    public CofunderAssignmentResourceBuilder withState(CofunderState... cofunderStates) {
-        return withArray((cofunderState, assignment) -> assignment.setState(cofunderState), cofunderStates);
+    public SupporterAssignmentResourceBuilder withState(SupporterState... supporterStates) {
+        return withArray((supporterState, assignment) -> assignment.setState(supporterState), supporterStates);
     }
 
-    public CofunderAssignmentResourceBuilder withComments(String... comments) {
+    public SupporterAssignmentResourceBuilder withComments(String... comments) {
         return withArray((comment, assignment) -> assignment.setComments(comment), comments);
     }
 }

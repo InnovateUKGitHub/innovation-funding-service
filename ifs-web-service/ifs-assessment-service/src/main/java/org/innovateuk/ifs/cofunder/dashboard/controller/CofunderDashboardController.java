@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.cofunder.dashboard.controller;
+package org.innovateuk.ifs.supporter.dashboard.controller;
 
-import org.innovateuk.ifs.cofunder.dashboard.populator.CofunderDashboardModelPopulator;
+import org.innovateuk.ifs.supporter.dashboard.populator.SupporterDashboardModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.navigation.NavigationRoot;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * This controller will handle all requests that are related to the cofunder dashboard.
+ * This controller will handle all requests that are related to the supporter dashboard.
  */
 @Controller
-@RequestMapping(value = "/cofunder")
-@SecuredBySpring(value = "Controller", description = "Cofunders can view their dashboard", securedType = CofunderDashboardController.class)
-@PreAuthorize("hasAuthority('cofunder')")
-public class CofunderDashboardController {
+@RequestMapping(value = "/supporter")
+@SecuredBySpring(value = "Controller", description = "Supporters can view their dashboard", securedType = SupporterDashboardController.class)
+@PreAuthorize("hasAuthority('supporter')")
+public class SupporterDashboardController {
 
     @Autowired
-    private CofunderDashboardModelPopulator cofunderDashboardModelPopulator;
+    private SupporterDashboardModelPopulator supporterDashboardModelPopulator;
 
     @GetMapping("/dashboard")
     @NavigationRoot
     public String dashboard(Model model, UserResource loggedInUser) {
-        model.addAttribute("model", cofunderDashboardModelPopulator.populateModel(loggedInUser));
-        return "cofunder/cofunder-dashboard";
+        model.addAttribute("model", supporterDashboardModelPopulator.populateModel(loggedInUser));
+        return "supporter/supporter-dashboard";
     }
 }

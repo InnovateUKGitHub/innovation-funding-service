@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.management.cofunders.controller;
+package org.innovateuk.ifs.management.supporters.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.cofunders.populator.AllocateCofundersViewModelPopulator;
-import org.innovateuk.ifs.management.cofunders.viewmodel.AllocateCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.populator.AllocateSupportersViewModelPopulator;
+import org.innovateuk.ifs.management.supporters.viewmodel.AllocateSupportersViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,30 +14,30 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class AllocateCofundersControllerTest extends BaseControllerMockMVCTest<AllocateCofundersController> {
+public class AllocateSupportersControllerTest extends BaseControllerMockMVCTest<AllocateSupportersController> {
 
     @Mock
-    private AllocateCofundersViewModelPopulator allocateCofundersViewModelPopulator;
+    private AllocateSupportersViewModelPopulator allocateSupportersViewModelPopulator;
 
     @Override
-    protected AllocateCofundersController supplyControllerUnderTest() {
-        return new AllocateCofundersController();
+    protected AllocateSupportersController supplyControllerUnderTest() {
+        return new AllocateSupportersController();
     }
 
     @Test
-    public void allocateCofundersPage() throws Exception {
+    public void allocateSupportersPage() throws Exception {
         long competitionId = 4L;
         String filter = "w";
         int page = 1;
 
-        AllocateCofundersViewModel model = new AllocateCofundersViewModel(new CompetitionResource(), null, null);
-        when(allocateCofundersViewModelPopulator.populateModel(competitionId, filter, page)).thenReturn(model);
+        AllocateSupportersViewModel model = new AllocateSupportersViewModel(new CompetitionResource(), null, null);
+        when(allocateSupportersViewModelPopulator.populateModel(competitionId, filter, page)).thenReturn(model);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}/cofunders/allocate", competitionId)
+        mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}/supporters/allocate", competitionId)
                     .param("filter", filter)
                     .param("page", Integer.toString(page)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("cofunders/allocate"))
+                .andExpect(MockMvcResultMatchers.view().name("supporters/allocate"))
                 .andExpect(MockMvcResultMatchers.model().attribute("model", model))
                 .andReturn();
     }

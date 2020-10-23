@@ -25,15 +25,15 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${cofunderApplicationTitle}     	      Reconfiguring an immune response
+${supporterApplicationTitle}     	      Reconfiguring an immune response
 &{Supporter01_credentials}                email=mister.branches@money.com    password=${short_password}
-${KTP_Application_URL}                    ${SERVER}/assessment/cofunder/application/247/response
+${KTP_Application_URL}                    ${SERVER}/assessment/supporter/application/247/response
 ${ktpCofundingCompetitionNavigation}      Co funder dashboard - application level
-${cofunderUserUsername}                   Wallace.Mccormack@money.com
+${supporterUserUsername}                   Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
 ${cofundingCompetitionID}                 ${competition_ids['${cofundingCompetitionName}']}
 ${cofundingApplicationTitle}              How cancer invasion takes shape
-${cofunderOrg}                            The University of Surrey
+${supporterOrg}                            The University of Surrey
 ${newApplication}                         New application
 
 *** Test Cases ***
@@ -44,17 +44,17 @@ The internal user can allocate applications
     And the user clicks the button/link         link = Manage co-funders
     Then the user can allocate applictions
 
-The internal user can allocate co-funders and search for cofunder by first name and/or last name
+The internal user can allocate co-funders and search for supporter by first name and/or last name
     [Documentation]   IFS-8404
-    Given the user can allocate cofunders
-    When the user searches for cofunder by name      Douglas
-    And the user searches for cofunder by name       Alston
-    Then the user searches for cofunder by name      Douglas Alston
+    Given the user can allocate supporters
+    When the user searches for supporter by name      Douglas
+    And the user searches for supporter by name       Alston
+    Then the user searches for supporter by name      Douglas Alston
 
 The internal user can invite a co-funder to a KTP application
     [Documentation]   IFS-8404
     Given the user can view already assigned co-funders
-    Then the user can invite a cofunder to a KTP application
+    Then the user can invite a supporter to a KTP application
 
 The internal user can remove a co-funder from an application
     [Documentation]   IFS-8405
@@ -76,16 +76,16 @@ The internal user can view a co-funder application by searching with an applicat
     And the user clicks the button/link                 link = ${cofundingCompetitionName}
     And the user clicks the button/link                 link = Manage co-funders
     And the user clicks the button/link                 link = View feedback
-    When the user enters text to a text field           id=applicationFilter    ${cofunderApplicationID}
+    When the user enters text to a text field           id=applicationFilter    ${supporterApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
-    And the user clicks the button/link                 link = ${cofunderApplicationID}
+    And the user clicks the button/link                 link = ${supporterApplicationID}
     Then the user should see the element                jQuery = h1:contains("Application overview")
 
 The ifs admin views the feedback of the application
     [Documentation]   IFS-8407
     Given the user clicks the button/link           link = Back to co-funders
-    When the user clicks the button/link            jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
-    Then the user can view the cofunder review
+    When the user clicks the button/link            jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
+    Then the user can view the supporter review
 
 The comp admin views the feedback of the application
     [Documentation]   IFS-8407
@@ -93,10 +93,10 @@ The comp admin views the feedback of the application
     And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage co-funders
     And the user clicks the button/link             link = View feedback
-    When And the user clicks the button/link        link = ${cofunderApplicationID}
+    When And the user clicks the button/link        link = ${supporterApplicationID}
     And the user clicks the button/link             link = Back to co-funders
-    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
-    Then the user can view the cofunder review
+    And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
+    Then the user can view the supporter review
 
 The finance manager views the feedback of the application
     [Documentation]   IFS-8407
@@ -104,23 +104,23 @@ The finance manager views the feedback of the application
     And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage co-funders
     And the user clicks the button/link             link = View feedback
-    When And the user clicks the button/link        link = ${cofunderApplicationID}
+    When And the user clicks the button/link        link = ${supporterApplicationID}
     And the user clicks the button/link             link = Back to co-funders
-    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
-    Then the user can view the cofunder review
+    And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
+    Then the user can view the supporter review
 
-The cofunder can see the sections in the cofunding dashboard
+The supporter can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
     Given Log in as a different user            hubert.cumberdale@salad-fingers.com  Passw0rd
     When the user clicks the button/link        jQuery = h2:contains("Co-funding")
     Then the user should see the element        jQuery = h2:contains("Competitions to review")
     And the user should not see the element     jQuery = h2:contains("Upcoming competitions to review")
 
-The cofunder should see a newly created application from the dashboard
+The supporter should see a newly created application from the dashboard
     [Documentation]  IFS-8402
     Given the user select the competition and starts application     KTP new competition
-    input text                                                       id = knowledgeBase        ${cofunderOrg}
-    When the user clicks the button/link                             jQuery = ul li:contains("${cofunderOrg}")
+    input text                                                       id = knowledgeBase        ${supporterOrg}
+    When the user clicks the button/link                             jQuery = ul li:contains("${supporterOrg}")
     And the user clicks the button/link                              jQuery = button:contains("Confirm")
     Then the user clicks the button/link                             id = knowledge-base-confirm-organisation-cta
     And the user clicks the button/link                              link = Application details
@@ -131,31 +131,31 @@ The cofunder should see a newly created application from the dashboard
     Then the user clicks the button/link                             jQuery = h2:contains("Applications")
     And the user should see the element                              jQuery = a:contains("${newApplication}")
 
-Cofunder can see list of applications assigned to him in the dashboard
+Supporter can see list of applications assigned to him in the dashboard
     [Documentation]  IFS-8403
-    Given log in as a different user         ${cofunderUserUsername}   ${short_password}
-    When the user navigates to the page      ${server}/assessment/cofunder/dashboard/competition/${cofundingCompetitionID}
+    Given log in as a different user         ${supporterUserUsername}   ${short_password}
+    When the user navigates to the page      ${server}/assessment/supporter/dashboard/competition/${cofundingCompetitionID}
     Then the user should see the element     jQuery = h1:contains("Review applications") span:contains("${cofundingCompetitionName}")
     And the user should see the element      link = View competition brief (opens in a new window)
 
-Cofunder checks number of applications in the page is no more than 20
+Supporter checks number of applications in the page is no more than 20
     [Documentation]  IFS-8403
     When the user gets the number of applications in page
     Then should be equal as numbers                           ${applicationCount_1}    20
 
-Cofunder can navgate to the next page of applications in review
+Supporter can navgate to the next page of applications in review
     [Documentation]  IFS-8403
-    Given the user navigates to the page     ${server}/assessment/cofunder/dashboard/competition/${cofundingCompetitionID}
+    Given the user navigates to the page     ${server}/assessment/supporter/dashboard/competition/${cofundingCompetitionID}
     When the user clicks the button/link     link = Next
     Then the user should see the element     link = Previous
 
-Cofunder checks the number of applications count is correct
+Supporter checks the number of applications count is correct
     [Documentation]  IFS-8403
     When the user gets the actual number of applications in all pages
     And the user gets expected number of applications in the page
     Then should be equal as numbers                                       ${actualNumberOfApplications}   ${expectedNumberOfApplications}
 
-Cofunder can view read only view of an application and see the print application link
+Supporter can view read only view of an application and see the print application link
     [Documentation]  IFS-8408
     Given the user clicks the button/link       link = Previous
     And the user clicks the button/link         link = ${cofundingApplicationTitle}
@@ -164,7 +164,7 @@ Cofunder can view read only view of an application and see the print application
     And the user should not see the element     jQuery = button:contains("Edit")
     And the user should see the element         jQuery = a:contains("Print application")
 
-The user sees the validation when responding to the Cofunder/Supporter review
+The user sees the validation when responding to the Supporter/Supporter review
     [Documentation]   IFS-8409
     Given Log in as a different user                            &{Supporter01_credentials}
     When the user navigates to the page                         ${KTP_Application_URL}
@@ -177,7 +177,7 @@ The user sees the validation when responding to the Cofunder/Supporter review
     And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
     And the user should see a field error                       Maximum word count exceeded. Please reduce your word count to 250.
 
-The user responds to the Cofunder/Supporter review No
+The user responds to the Supporter/Supporter review No
     [Documentation]   IFS-8409
     Given the user selects the radio button           decision  decision-no
     When the user enters text to a text field         css = .editor  This is the comments from the supporter
@@ -185,7 +185,7 @@ The user responds to the Cofunder/Supporter review No
     And the user navigates to the page                ${KTP_Application_URL}
     And the user should see the element               jQuery = p:contains("This is the comments from the supporter")
 
-The user responds to the Cofunder/Supporter review Yes
+The user responds to the Supporter/Supporter review Yes
     [Documentation]   IFS-8409
     Given the user navigates to the page         ${KTP_Application_URL}
     When the user clicks the button/link         jQuery = button:contains("Edit")
@@ -210,10 +210,10 @@ Custom suite teardown
     Disconnect from database
 
 the user requesting the application id
-    ${cofunderApplicationID} =  get application id by name    ${cofunderApplicationTitle}
-    Set Suite Variable  ${cofunderApplicationID}
+    ${supporterApplicationID} =  get application id by name    ${supporterApplicationTitle}
+    Set Suite Variable  ${supporterApplicationID}
 
-the user can view the cofunder review
+the user can view the supporter review
     the user should see the element     jQuery = h1:contains("Co-funder review")
     the user should see the element     jQuery = h2:contains("Accepted")
     the user should see the element     jQuery = h2:contains("Declined")
@@ -226,7 +226,7 @@ the user can allocate applictions
     the user should see the element     link = View feedback
     the user clicks the button/link     link = Allocate applications
 
-the user can allocate cofunders
+the user can allocate supporters
     the user should see the element     jQuery = h1:contains("Allocate co-funders")
     the user should see the element     jQuery = p:contains("Assign co-funders to applications.")
     the user should see the element     jQuery = h2:contains("Filter applications")
@@ -239,7 +239,7 @@ the user can allocate cofunders
     the user clicks the button/link     link = Next
     the user clicks the button/link     jQuery = td:contains("The proton size") ~ td a:contains("Assign")
 
-the user searches for cofunder by name
+the user searches for supporter by name
     [Arguments]   ${name}
     the user should see the element         jQuery = h2:contains("Filter co-funders")
     the user should see the element         jQuery = label:contains("Search for a co-funder by first or last name")
@@ -259,7 +259,7 @@ Given the user can view already assigned co-funders
     the user should see the element         jQuery = th:contains("Organisation")
     the user should see the element         jQuery = th:contains("Email")
 
-the user can invite a cofunder to a KTP application
+the user can invite a supporter to a KTP application
     the user should see the element         jQuery = h2:contains("Available co-funders")
     the user should see the element         jQuery = th:contains("Select co-funder")
     the user should see the element         jQuery = th:contains("Co-funder name")
@@ -288,7 +288,7 @@ the user checks the feedback validation
 the user gets the number of applications in page
    ${pages} =   get element count      css = [class="pagination-links govuk-body"] a
         :FOR    ${i}    IN RANGE   1   ${pages}+1
-            \    the user navigates to the page   ${server}/assessment/cofunder/dashboard/competition/${cofundingCompetitionID}?page=${i}
+            \    the user navigates to the page   ${server}/assessment/supporter/dashboard/competition/${cofundingCompetitionID}?page=${i}
             \    ${applicationCount} =   get element count    jQuery = h2:contains("Applications for review") ~ ul li
             \    set suite variable    ${applicationCount_${i}}    ${applicationCount}
 

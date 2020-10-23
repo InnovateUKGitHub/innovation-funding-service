@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.cofunder.controller;
+package org.innovateuk.ifs.supporter.controller;
 
-import org.innovateuk.ifs.cofunder.resource.*;
-import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
+import org.innovateuk.ifs.supporter.resource.*;
+import org.innovateuk.ifs.supporter.transactional.SupporterAssignmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -12,65 +12,65 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cofunder")
-public class CofunderAssignmentController {
+@RequestMapping("/supporter")
+public class SupporterAssignmentController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Autowired
-    private CofunderAssignmentService cofunderAssignmentService;
+    private SupporterAssignmentService supporterAssignmentService;
 
     @GetMapping("/assignment/user/{userId}/application/{applicationId}")
-    public RestResult<CofunderAssignmentResource> getAssignment(@PathVariable long userId, @PathVariable long applicationId) {
-        return cofunderAssignmentService.getAssignment(userId, applicationId).toGetResponse();
+    public RestResult<SupporterAssignmentResource> getAssignment(@PathVariable long userId, @PathVariable long applicationId) {
+        return supporterAssignmentService.getAssignment(userId, applicationId).toGetResponse();
     }
 
     @GetMapping("/assignment/application/{applicationId}")
-    public RestResult<List<CofunderAssignmentResource>> getAssignmentsByApplicationId(@PathVariable long applicationId) {
-        return cofunderAssignmentService.getAssignmentsByApplicationId(applicationId).toGetResponse();
+    public RestResult<List<SupporterAssignmentResource>> getAssignmentsByApplicationId(@PathVariable long applicationId) {
+        return supporterAssignmentService.getAssignmentsByApplicationId(applicationId).toGetResponse();
     }
 
     @PostMapping("/user/{userId}/application/{applicationId}")
-    public RestResult<CofunderAssignmentResource> assign(@PathVariable long userId, @PathVariable long applicationId) {
-        return cofunderAssignmentService.assign(userId, applicationId).toGetResponse();
+    public RestResult<SupporterAssignmentResource> assign(@PathVariable long userId, @PathVariable long applicationId) {
+        return supporterAssignmentService.assign(userId, applicationId).toGetResponse();
     }
 
     @DeleteMapping("/user/{userId}/application/{applicationId}")
     public RestResult<Void> removeAssignment(@PathVariable long userId, @PathVariable long applicationId) {
-        return cofunderAssignmentService.removeAssignment(userId, applicationId).toGetResponse();
+        return supporterAssignmentService.removeAssignment(userId, applicationId).toGetResponse();
     }
 
     @PostMapping("assignment/{assignmentId}/decision")
-    public RestResult<Void> decision(@PathVariable long assignmentId, @RequestBody CofunderDecisionResource decision) {
-        return cofunderAssignmentService.decision(assignmentId, decision).toGetResponse();
+    public RestResult<Void> decision(@PathVariable long assignmentId, @RequestBody SupporterDecisionResource decision) {
+        return supporterAssignmentService.decision(assignmentId, decision).toGetResponse();
     }
 
     @PostMapping("assignment/{assignmentId}/edit")
     public RestResult<Void> edit(@PathVariable long assignmentId) {
-        return cofunderAssignmentService.edit(assignmentId).toGetResponse();
+        return supporterAssignmentService.edit(assignmentId).toGetResponse();
     }
 
     @PostMapping("assignment")
-    public RestResult<Void> assign(@RequestBody AssignCofundersResource assignCofundersResource) {
-        return cofunderAssignmentService.assign(assignCofundersResource.getCofunderIds(), assignCofundersResource.getApplicationId()).toPostResponse();
+    public RestResult<Void> assign(@RequestBody AssignSupportersResource assignSupportersResource) {
+        return supporterAssignmentService.assign(assignSupportersResource.getSupporterIds(), assignSupportersResource.getApplicationId()).toPostResponse();
     }
 
     @GetMapping("/competition/{competitionId}")
-    public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingCofunders(@PathVariable long competitionId,
+    public RestResult<ApplicationsForCofundingPageResource> findApplicationsNeedingSupporters(@PathVariable long competitionId,
                                                                                              @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
                                                                                              @RequestParam(defaultValue = "") String filter) {
-        return cofunderAssignmentService.findApplicationsNeedingCofunders(competitionId, filter, pageable).toGetResponse();
+        return supporterAssignmentService.findApplicationsNeedingSupporters(competitionId, filter, pageable).toGetResponse();
     }
 
     @GetMapping("/application/{applicationId}")
-    public RestResult<CofundersAvailableForApplicationPageResource> findAvailableCofundersForApplication(@PathVariable long applicationId,
+    public RestResult<SupportersAvailableForApplicationPageResource> findAvailableSupportersForApplication(@PathVariable long applicationId,
                                                                                                          @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
                                                                                                          @RequestParam(defaultValue = "") String filter) {
-        return cofunderAssignmentService.findAvailableCofundersForApplication(applicationId, filter, pageable).toGetResponse();
+        return supporterAssignmentService.findAvailableSupportersForApplication(applicationId, filter, pageable).toGetResponse();
     }
 
     @GetMapping("/application/{applicationId}/userIds")
-    public RestResult<List<Long>> findAvailableCofundersUserIdsForApplication(@PathVariable long applicationId,
+    public RestResult<List<Long>> findAvailableSupportersUserIdsForApplication(@PathVariable long applicationId,
                                                                               @RequestParam(defaultValue = "") String filter) {
-        return cofunderAssignmentService.findAvailableCofundersUserIdsForApplication(applicationId, filter).toGetResponse();
+        return supporterAssignmentService.findAvailableSupportersUserIdsForApplication(applicationId, filter).toGetResponse();
     }
 }

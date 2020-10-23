@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.management.cofunders.controller;
+package org.innovateuk.ifs.management.supporters.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.cofunders.form.AllocateCofundersForm;
-import org.innovateuk.ifs.management.cofunders.populator.AllocateCofundersViewModelPopulator;
-import org.innovateuk.ifs.management.cofunders.viewmodel.AllocateCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.form.AllocateSupportersForm;
+import org.innovateuk.ifs.management.supporters.populator.AllocateSupportersViewModelPopulator;
+import org.innovateuk.ifs.management.supporters.viewmodel.AllocateSupportersViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/competition/{competitionId}/cofunders/allocate")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AllocateCofundersController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSIGN_COFUNDERS')")
-public class AllocateCofundersController {
+@RequestMapping("/competition/{competitionId}/supporters/allocate")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AllocateSupportersController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSIGN_SUPPORTERS')")
+public class AllocateSupportersController {
 
     @Autowired
-    private AllocateCofundersViewModelPopulator allocateCofundersViewModelPopulator;
+    private AllocateSupportersViewModelPopulator allocateSupportersViewModelPopulator;
 
     @GetMapping
     public String allocation(Model model,
-                            @ModelAttribute AllocateCofundersForm allocateCofundersForm,
+                            @ModelAttribute AllocateSupportersForm allocateSupportersForm,
                             @SuppressWarnings("unused") BindingResult bindingResult,
                             @PathVariable("competitionId") long competitionId) {
 
-        AllocateCofundersViewModel allocateCofundersViewModel = allocateCofundersViewModelPopulator.populateModel(
+        AllocateSupportersViewModel allocateSupportersViewModel = allocateSupportersViewModelPopulator.populateModel(
                 competitionId,
-                allocateCofundersForm.getFilter(),
-                allocateCofundersForm.getPage());
+                allocateSupportersForm.getFilter(),
+                allocateSupportersForm.getPage());
 
-        model.addAttribute("model", allocateCofundersViewModel);
+        model.addAttribute("model", allocateSupportersViewModel);
 
-        return "cofunders/allocate";
+        return "supporters/allocate";
     }
 }

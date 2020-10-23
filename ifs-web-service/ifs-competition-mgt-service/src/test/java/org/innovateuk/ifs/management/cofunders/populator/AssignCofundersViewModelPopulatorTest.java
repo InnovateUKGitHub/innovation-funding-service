@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.management.cofunders.populator;
+package org.innovateuk.ifs.management.supporters.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
+import org.innovateuk.ifs.supporter.resource.SupportersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.cofunders.viewmodel.AssignCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.viewmodel.AssignSupportersViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -27,10 +27,10 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AssignCofundersViewModelPopulatorTest {
+public class AssignSupportersViewModelPopulatorTest {
 
     @InjectMocks
-    private AssignCofundersViewModelPopulator populator;
+    private AssignSupportersViewModelPopulator populator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -39,7 +39,7 @@ public class AssignCofundersViewModelPopulatorTest {
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @Mock
     private OrganisationRestService organisationRestService;
@@ -62,14 +62,14 @@ public class AssignCofundersViewModelPopulatorTest {
                 .withInnovationArea(newInnovationAreaResource().withSectorName(innovationAreaName).build()).build();
         given(applicationRestService.getApplicationById(applicationId)).willReturn(restSuccess(application));
 
-        CofundersAvailableForApplicationPageResource cofundersAvailableForApplication = new CofundersAvailableForApplicationPageResource();
-        given(cofunderAssignmentRestService.findAvailableCofundersForApplication(applicationId, filter, 0)).willReturn(restSuccess(cofundersAvailableForApplication));
+        SupportersAvailableForApplicationPageResource supportersAvailableForApplication = new SupportersAvailableForApplicationPageResource();
+        given(supporterAssignmentRestService.findAvailableSupportersForApplication(applicationId, filter, 0)).willReturn(restSuccess(supportersAvailableForApplication));
 
         List<OrganisationResource> organisations = newOrganisationResource().withName("first", "second", "third").build(3);
         given(organisationRestService.getOrganisationsByApplicationId(applicationId)).willReturn(restSuccess(organisations));
 
         // when
-        AssignCofundersViewModel result = populator.populateModel(competitionId, applicationId, filter, page);
+        AssignSupportersViewModel result = populator.populateModel(competitionId, applicationId, filter, page);
 
         // then
         assertThat(result.getApplicationId()).isEqualTo(applicationId);
@@ -78,7 +78,7 @@ public class AssignCofundersViewModelPopulatorTest {
         assertThat(result.getCompetitionName()).isEqualTo(competitionName);
         assertThat(result.getFilter()).isEqualTo(filter);
         assertThat(result.getInnovationArea()).isEqualTo(innovationAreaName);
-        assertThat(result.getCofundersAvailableForApplicationPage()).isEqualTo(cofundersAvailableForApplication);
+        assertThat(result.getSupportersAvailableForApplicationPage()).isEqualTo(supportersAvailableForApplication);
         assertThat(result.getPartners()).isEqualTo(asList("first", "second", "third"));
     }
 

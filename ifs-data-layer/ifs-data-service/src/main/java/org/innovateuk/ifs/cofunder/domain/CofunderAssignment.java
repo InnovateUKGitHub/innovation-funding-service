@@ -1,16 +1,16 @@
-package org.innovateuk.ifs.cofunder.domain;
+package org.innovateuk.ifs.supporter.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
 @Entity
-public class CofunderAssignment extends Process<User, Application, CofunderState> {
+public class SupporterAssignment extends Process<User, Application, SupporterState> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
@@ -21,19 +21,19 @@ public class CofunderAssignment extends Process<User, Application, CofunderState
     private Application target;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY, orphanRemoval = true)
-    private CofunderOutcome cofunderOutcome;
+    private SupporterOutcome supporterOutcome;
 
     @Column(name="activity_state_id")
-    private CofunderState activityState;
+    private SupporterState activityState;
 
-    public CofunderAssignment() {
+    public SupporterAssignment() {
         super();
     }
 
-    public CofunderAssignment(Application application, User user) {
+    public SupporterAssignment(Application application, User user) {
         this.participant = user;
         this.target = application;
-        this.activityState = CofunderState.CREATED;
+        this.activityState = SupporterState.CREATED;
     }
 
     @Override
@@ -57,24 +57,24 @@ public class CofunderAssignment extends Process<User, Application, CofunderState
     }
 
     @Override
-    public CofunderState getProcessState() {
+    public SupporterState getProcessState() {
         return activityState;
     }
 
     @Override
-    public void setProcessState(CofunderState status) {
+    public void setProcessState(SupporterState status) {
         this.activityState = status;
     }
 
-    public CofunderOutcome getCofunderOutcome() {
-        return cofunderOutcome;
+    public SupporterOutcome getSupporterOutcome() {
+        return supporterOutcome;
     }
 
-    public void setCofunderOutcome(CofunderOutcome cofunderOutcome) {
-        if (cofunderOutcome != null) {
-            cofunderOutcome.setProcess(this);
+    public void setSupporterOutcome(SupporterOutcome supporterOutcome) {
+        if (supporterOutcome != null) {
+            supporterOutcome.setProcess(this);
         }
-        this.cofunderOutcome = cofunderOutcome;
+        this.supporterOutcome = supporterOutcome;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class CofunderAssignment extends Process<User, Application, CofunderState
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CofunderAssignment that = (CofunderAssignment) o;
+        SupporterAssignment that = (SupporterAssignment) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

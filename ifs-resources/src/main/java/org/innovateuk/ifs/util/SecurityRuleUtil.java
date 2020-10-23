@@ -64,6 +64,6 @@ public final class SecurityRuleUtil {
     }
 
     public static boolean isCoFunder(UserResource user) {
-        return user.hasRole(COFUNDER);
+        return user.hasRole(SUPPORTER);
     }
 }

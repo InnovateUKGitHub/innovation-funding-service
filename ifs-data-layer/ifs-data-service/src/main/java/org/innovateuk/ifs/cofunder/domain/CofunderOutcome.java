@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.cofunder.domain;
+package org.innovateuk.ifs.supporter.domain;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
@@ -7,12 +7,12 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(value = "cofunder-outcome")
-public class CofunderOutcome extends ProcessOutcome<CofunderAssignment> {
-    public CofunderOutcome() {
+@DiscriminatorValue(value = "supporter-outcome")
+public class SupporterOutcome extends ProcessOutcome<SupporterAssignment> {
+    public SupporterOutcome() {
     }
 
-    public CofunderOutcome(boolean decision, String comment) {
+    public SupporterOutcome(boolean decision, String comment) {
         setFundingConfirmation(decision);
         setComment(comment);
     }

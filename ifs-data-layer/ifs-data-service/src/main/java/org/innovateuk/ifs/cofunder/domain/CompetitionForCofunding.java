@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.cofunder.domain;
+package org.innovateuk.ifs.supporter.domain;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -14,8 +14,8 @@ public class CompetitionForCofunding {
     private long competitionId;
     private String competitionName;
     private FundingType fundingType;
-    private ZonedDateTime cofunderDeadline;
-    private ZonedDateTime cofunderAcceptDate;
+    private ZonedDateTime supporterDeadline;
+    private ZonedDateTime supporterAcceptDate;
     private long assigned;
     private long rejected;
     private long accepted;
@@ -31,8 +31,8 @@ public class CompetitionForCofunding {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.fundingType = competition.getFundingType();
-        this.cofunderDeadline = competition.getAssessorDeadlineDate();
-        this.cofunderAcceptDate = competition.getAssessorAcceptsDate();
+        this.supporterDeadline = competition.getAssessorDeadlineDate();
+        this.supporterAcceptDate = competition.getAssessorAcceptsDate();
         this.assigned = assigned;
         this.rejected = rejected;
         this.accepted = accepted;
@@ -63,20 +63,20 @@ public class CompetitionForCofunding {
         this.fundingType = fundingType;
     }
 
-    public ZonedDateTime getCofunderDeadline() {
-        return cofunderDeadline;
+    public ZonedDateTime getSupporterDeadline() {
+        return supporterDeadline;
     }
 
-    public void setCofunderDeadline(ZonedDateTime cofunderDeadline) {
-        this.cofunderDeadline = cofunderDeadline;
+    public void setSupporterDeadline(ZonedDateTime supporterDeadline) {
+        this.supporterDeadline = supporterDeadline;
     }
 
-    public ZonedDateTime getCofunderAcceptDate() {
-        return cofunderAcceptDate;
+    public ZonedDateTime getSupporterAcceptDate() {
+        return supporterAcceptDate;
     }
 
-    public void setCofunderAcceptDate(ZonedDateTime cofunderAcceptDate) {
-        this.cofunderAcceptDate = cofunderAcceptDate;
+    public void setSupporterAcceptDate(ZonedDateTime supporterAcceptDate) {
+        this.supporterAcceptDate = supporterAcceptDate;
     }
 
     public long getAssigned() {

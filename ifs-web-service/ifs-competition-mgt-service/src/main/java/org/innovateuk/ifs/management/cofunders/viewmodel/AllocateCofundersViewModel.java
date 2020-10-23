@@ -1,17 +1,17 @@
-package org.innovateuk.ifs.management.cofunders.viewmodel;
+package org.innovateuk.ifs.management.supporters.viewmodel;
 
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
+import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 
-public class AllocateCofundersViewModel {
+public class AllocateSupportersViewModel {
     private final Long competitionId;
     private final String competitionName;
     private final String filter;
     private final ApplicationsForCofundingPageResource applicationsPage;
 
 
-    public AllocateCofundersViewModel(CompetitionResource competition, String filter, ApplicationsForCofundingPageResource applicationsPage) {
+    public AllocateSupportersViewModel(CompetitionResource competition, String filter, ApplicationsForCofundingPageResource applicationsPage) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.filter = filter;

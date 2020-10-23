@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.management.cofunders.controller;
+package org.innovateuk.ifs.management.supporters.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.cofunders.populator.ManageCofundersViewModelPopulator;
-import org.innovateuk.ifs.management.cofunders.viewmodel.ManageCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.populator.ManageSupportersViewModelPopulator;
+import org.innovateuk.ifs.management.supporters.viewmodel.ManageSupportersViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/competition/{competitionId}/cofunders")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ManageCofundersController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'COFUNDERS')")
-public class ManageCofundersController {
+@RequestMapping("/competition/{competitionId}/supporters")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ManageSupportersController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'SUPPORTERS')")
+public class ManageSupportersController {
 
     @Autowired
-    private ManageCofundersViewModelPopulator manageCofundersViewModelPopulator;
+    private ManageSupportersViewModelPopulator manageSupportersViewModelPopulator;
 
     @GetMapping
-    public String cofunders(@PathVariable("competitionId") long competitionId, Model model) {
+    public String supporters(@PathVariable("competitionId") long competitionId, Model model) {
 
-        ManageCofundersViewModel manageCofundersViewModel = manageCofundersViewModelPopulator.populateModel(competitionId);
+        ManageSupportersViewModel manageSupportersViewModel = manageSupportersViewModelPopulator.populateModel(competitionId);
 
-        model.addAttribute("model", manageCofundersViewModel);
+        model.addAttribute("model", manageSupportersViewModel);
 
-        return "cofunders/manage";
+        return "supporters/manage";
     }
 
 }

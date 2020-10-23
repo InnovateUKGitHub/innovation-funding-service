@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 public class ApplicationsForCofundingResource {
 

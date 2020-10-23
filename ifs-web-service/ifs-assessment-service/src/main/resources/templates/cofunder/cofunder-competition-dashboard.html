@@ -10,7 +10,7 @@
 
     <div class="govuk-width-container">
         <th:block th:insert="fragments/layout :: phase-banner" />
-        <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to competitions',linkUrl=@{/cofunder/dashboard}"></th:block>
+        <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to competitions',linkUrl=@{/supporter/dashboard}"></th:block>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review applications',subTitle=${model.competitionName},size='govuk-heading-xl'" />
@@ -61,13 +61,13 @@
                                    class="govuk-body status-msg msg-progress">Declined</p>
                                 <div class="action">
                                     <a class="govuk-link"
-                                       th:href="@{/cofunder/application/{applicationId}/response(applicationId=${app.id})}">Edit</a>
+                                       th:href="@{/supporter/application/{applicationId}/response(applicationId=${app.id})}">Edit</a>
                                 </div>
                             </div>
                             <div th:unless="${app.state.accepted or app.state.rejected}"
                                  class="status">
                                 <a class="govuk-link"
-                                   th:href="@{/cofunder/application/{applicationId}/response(applicationId=${app.id})}">Review</a>
+                                   th:href="@{/supporter/application/{applicationId}/response(applicationId=${app.id})}">Review</a>
                             </div>
                         </li>
                     </ul>

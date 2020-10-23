@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.cofunder.workflow;
+package org.innovateuk.ifs.supporter.workflow;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
-import org.innovateuk.ifs.cofunder.domain.CofunderOutcome;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.CofunderEvent;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.domain.SupporterOutcome;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.SupporterEvent;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -20,14 +20,14 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CofunderAssignmentWorkflowHandler extends BaseWorkflowEventHandler<CofunderAssignment, CofunderState, CofunderEvent, Application, User> {
+public class SupporterAssignmentWorkflowHandler extends BaseWorkflowEventHandler<SupporterAssignment, SupporterState, SupporterEvent, Application, User> {
 
     @Autowired
-    @Qualifier("cofunderAssignmentStateMachineFactory")
-    private StateMachineFactory<CofunderState, CofunderEvent> stateMachineFactory;
+    @Qualifier("supporterAssignmentStateMachineFactory")
+    private StateMachineFactory<SupporterState, SupporterEvent> stateMachineFactory;
 
     @Autowired
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -36,25 +36,25 @@ public class CofunderAssignmentWorkflowHandler extends BaseWorkflowEventHandler<
     private UserRepository userRepository;
 
     @Override
-    protected CofunderAssignment createNewProcess(Application target, User participant) {
-        return new CofunderAssignment(target, participant);
+    protected SupporterAssignment createNewProcess(Application target, User participant) {
+        return new SupporterAssignment(target, participant);
     }
 
-    public boolean reject(CofunderAssignment cofunderAssignment, CofunderOutcome outcome) {
-        return fireEvent(decisionMessage(cofunderAssignment, outcome, CofunderEvent.REJECT), cofunderAssignment);
+    public boolean reject(SupporterAssignment supporterAssignment, SupporterOutcome outcome) {
+        return fireEvent(decisionMessage(supporterAssignment, outcome, SupporterEvent.REJECT), supporterAssignment);
     }
 
-    public boolean accept(CofunderAssignment cofunderAssignment, CofunderOutcome outcome) {
-        return fireEvent(decisionMessage(cofunderAssignment, outcome, CofunderEvent.ACCEPT), cofunderAssignment);
+    public boolean accept(SupporterAssignment supporterAssignment, SupporterOutcome outcome) {
+        return fireEvent(decisionMessage(supporterAssignment, outcome, SupporterEvent.ACCEPT), supporterAssignment);
     }
 
-    public boolean edit(CofunderAssignment cofunderAssignment) {
-        return fireEvent(cofunderMessage(cofunderAssignment, CofunderEvent.EDIT), cofunderAssignment);
+    public boolean edit(SupporterAssignment supporterAssignment) {
+        return fireEvent(supporterMessage(supporterAssignment, SupporterEvent.EDIT), supporterAssignment);
     }
 
     @Override
-    protected ProcessRepository<CofunderAssignment> getProcessRepository() {
-        return cofunderAssignmentRepository;
+    protected ProcessRepository<SupporterAssignment> getProcessRepository() {
+        return supporterAssignmentRepository;
     }
 
     @Override
@@ -68,24 +68,24 @@ public class CofunderAssignmentWorkflowHandler extends BaseWorkflowEventHandler<
     }
 
     @Override
-    protected StateMachineFactory<CofunderState, CofunderEvent> getStateMachineFactory() {
+    protected StateMachineFactory<SupporterState, SupporterEvent> getStateMachineFactory() {
         return stateMachineFactory;
     }
 
     @Override
-    protected CofunderAssignment getOrCreateProcess(Message<CofunderEvent> message) {
-        return (CofunderAssignment) message.getHeaders().get("target");
+    protected SupporterAssignment getOrCreateProcess(Message<SupporterEvent> message) {
+        return (SupporterAssignment) message.getHeaders().get("target");
     }
 
-    private MessageBuilder<CofunderEvent> decisionMessage(CofunderAssignment cofunderAssignment, CofunderOutcome decision, CofunderEvent event) {
-        return cofunderMessage(cofunderAssignment, event)
+    private MessageBuilder<SupporterEvent> decisionMessage(SupporterAssignment supporterAssignment, SupporterOutcome decision, SupporterEvent event) {
+        return supporterMessage(supporterAssignment, event)
                 .setHeader("decision", decision);
     }
 
 
-    private MessageBuilder<CofunderEvent> cofunderMessage(CofunderAssignment cofunderAssignment, CofunderEvent event) {
+    private MessageBuilder<SupporterEvent> supporterMessage(SupporterAssignment supporterAssignment, SupporterEvent event) {
         return MessageBuilder
                 .withPayload(event)
-                .setHeader("target", cofunderAssignment);
+                .setHeader("target", supporterAssignment);
     }
 }

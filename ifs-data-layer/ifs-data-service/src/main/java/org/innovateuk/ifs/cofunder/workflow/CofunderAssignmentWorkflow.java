@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.cofunder.workflow;
+package org.innovateuk.ifs.supporter.workflow;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderEvent;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.resource.SupporterEvent;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,48 +16,48 @@ import java.util.LinkedHashSet;
 import static java.util.Arrays.asList;
 
 @Configuration
-@EnableStateMachineFactory(name = "cofunderAssignmentStateMachineFactory")
-public class CofunderAssignmentWorkflow extends StateMachineConfigurerAdapter<CofunderState, CofunderEvent> {
+@EnableStateMachineFactory(name = "supporterAssignmentStateMachineFactory")
+public class SupporterAssignmentWorkflow extends StateMachineConfigurerAdapter<SupporterState, SupporterEvent> {
 
     @Autowired
-    private CofunderDecisionAction cofunderDecisionAction;
+    private SupporterDecisionAction supporterDecisionAction;
 
     @Override
-    public void configure(StateMachineConfigurationConfigurer<CofunderState, CofunderEvent> config) throws Exception {
+    public void configure(StateMachineConfigurationConfigurer<SupporterState, SupporterEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
     }
 
     @Override
-    public void configure(StateMachineStateConfigurer<CofunderState, CofunderEvent> states) throws Exception {
+    public void configure(StateMachineStateConfigurer<SupporterState, SupporterEvent> states) throws Exception {
         states.withStates()
-                .initial(CofunderState.CREATED)
-                .states(new LinkedHashSet<>(asList(CofunderState.values())));
+                .initial(SupporterState.CREATED)
+                .states(new LinkedHashSet<>(asList(SupporterState.values())));
     }
 
     @Override
-    public void configure(StateMachineTransitionConfigurer<CofunderState, CofunderEvent> transitions) throws Exception {
+    public void configure(StateMachineTransitionConfigurer<SupporterState, SupporterEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                .source(CofunderState.CREATED)
-                .target(CofunderState.ACCEPTED)
-                .event(CofunderEvent.ACCEPT)
-                .action(cofunderDecisionAction)
+                .source(SupporterState.CREATED)
+                .target(SupporterState.ACCEPTED)
+                .event(SupporterEvent.ACCEPT)
+                .action(supporterDecisionAction)
             .and()
                 .withExternal()
-                .source(CofunderState.ACCEPTED)
-                .target(CofunderState.CREATED)
-                .event(CofunderEvent.EDIT)
+                .source(SupporterState.ACCEPTED)
+                .target(SupporterState.CREATED)
+                .event(SupporterEvent.EDIT)
             .and()
                 .withExternal()
-                .source(CofunderState.CREATED)
-                .target(CofunderState.REJECTED)
-                .event(CofunderEvent.REJECT)
-                .action(cofunderDecisionAction)
+                .source(SupporterState.CREATED)
+                .target(SupporterState.REJECTED)
+                .event(SupporterEvent.REJECT)
+                .action(supporterDecisionAction)
             .and()
                 .withExternal()
-                .source(CofunderState.REJECTED)
-                .target(CofunderState.CREATED)
-                .event(CofunderEvent.EDIT);
+                .source(SupporterState.REJECTED)
+                .target(SupporterState.CREATED)
+                .event(SupporterEvent.EDIT);
     }
 
 }

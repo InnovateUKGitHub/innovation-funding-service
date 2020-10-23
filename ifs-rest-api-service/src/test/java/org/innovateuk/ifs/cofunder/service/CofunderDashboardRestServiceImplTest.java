@@ -1,29 +1,29 @@
-package org.innovateuk.ifs.cofunder.service;
+package org.innovateuk.ifs.supporter.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
 import org.junit.Test;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
 
-public class CofunderDashboardRestServiceImplTest extends BaseRestServiceUnitTest<CofunderDashboardRestServiceImpl> {
+public class SupporterDashboardRestServiceImplTest extends BaseRestServiceUnitTest<SupporterDashboardRestServiceImpl> {
 
-    private String cofunderRestUrl = "/cofunder/dashboard";
+    private String supporterRestUrl = "/supporter/dashboard";
 
     @Override
-    protected CofunderDashboardRestServiceImpl registerRestServiceUnderTest() {
-        return new CofunderDashboardRestServiceImpl();
+    protected SupporterDashboardRestServiceImpl registerRestServiceUnderTest() {
+        return new SupporterDashboardRestServiceImpl();
     }
 
     @Test
-    public void getCofunderCompetitionDashboardApplications() {
+    public void getSupporterCompetitionDashboardApplications() {
         long userId = 1L;
         long competitionId = 2L;
         int page = 3;
-        CofunderDashboardApplicationPageResource expected = new CofunderDashboardApplicationPageResource();
+        SupporterDashboardApplicationPageResource expected = new SupporterDashboardApplicationPageResource();
 
-        setupGetWithRestResultExpectations(format("%s/user/%d/competition/%d?page=%d", cofunderRestUrl, userId, competitionId, page), CofunderDashboardApplicationPageResource.class, expected);
-        assertSame(expected, service.getCofunderCompetitionDashboardApplications(userId, competitionId, page).getSuccess());
+        setupGetWithRestResultExpectations(format("%s/user/%d/competition/%d?page=%d", supporterRestUrl, userId, competitionId, page), SupporterDashboardApplicationPageResource.class, expected);
+        assertSame(expected, service.getSupporterCompetitionDashboardApplications(userId, competitionId, page).getSuccess());
     }
 }

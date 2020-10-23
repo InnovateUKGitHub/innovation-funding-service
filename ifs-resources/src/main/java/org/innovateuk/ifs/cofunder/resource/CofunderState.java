@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
-public enum CofunderState implements ProcessState, IdentifiableEnum {
+public enum SupporterState implements ProcessState, IdentifiableEnum {
     CREATED(56, State.CREATED),
     ACCEPTED(57, State.ACCEPTED),
     REJECTED(58, State.REJECTED);
@@ -12,7 +12,7 @@ public enum CofunderState implements ProcessState, IdentifiableEnum {
     private final long id;
     private final State backingState;
 
-    CofunderState(long id, State backingState) {
+    SupporterState(long id, State backingState) {
         this.id = id;
         this.backingState = backingState;
     }

@@ -1,26 +1,26 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 
-public class CofundersAvailableForApplicationPageResource extends PageResource<CofunderUserResource> {
+public class SupportersAvailableForApplicationPageResource extends PageResource<SupporterUserResource> {
 
-    private List<CofunderUserResource> assignedCofunders;
+    private List<SupporterUserResource> assignedSupporters;
 
-    public CofundersAvailableForApplicationPageResource() {
+    public SupportersAvailableForApplicationPageResource() {
     }
 
-    public CofundersAvailableForApplicationPageResource(long totalElements, int totalPages, List<CofunderUserResource> content, int number, int size, List<CofunderUserResource> assignedCofunders) {
+    public SupportersAvailableForApplicationPageResource(long totalElements, int totalPages, List<SupporterUserResource> content, int number, int size, List<SupporterUserResource> assignedSupporters) {
         super(totalElements, totalPages, content, number, size);
-        this.assignedCofunders = assignedCofunders;
+        this.assignedSupporters = assignedSupporters;
     }
 
-    public List<CofunderUserResource> getAssignedCofunders() {
-        return assignedCofunders;
+    public List<SupporterUserResource> getAssignedSupporters() {
+        return assignedSupporters;
     }
 
-    public void setAssignedCofunders(List<CofunderUserResource> assignedCofunders) {
-        this.assignedCofunders = assignedCofunders;
+    public void setAssignedSupporters(List<SupporterUserResource> assignedSupporters) {
+        this.assignedSupporters = assignedSupporters;
     }
 }

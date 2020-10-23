@@ -64,7 +64,7 @@
                     <td class="govuk-table__cell" th:text="${entry.lead}" />
                     <td class="govuk-table__cell" th:text="${entry.total}" />
                     <td class="govuk-table__cell">
-                        <a th:href="@{/competition/{competitionId}/cofunders/assign/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
+                        <a th:href="@{/competition/{competitionId}/supporters/assign/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
                            class="govuk-button govuk-button--secondary">Assign
                         </a>
                     </td>

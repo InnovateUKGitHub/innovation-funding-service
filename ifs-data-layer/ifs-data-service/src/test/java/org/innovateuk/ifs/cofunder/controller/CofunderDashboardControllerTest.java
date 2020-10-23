@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.cofunder.controller;
+package org.innovateuk.ifs.supporter.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.transactional.CofunderDashboardService;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.transactional.SupporterDashboardService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +15,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CofunderDashboardControllerTest extends BaseControllerMockMVCTest<CofunderDashboardController> {
+public class SupporterDashboardControllerTest extends BaseControllerMockMVCTest<SupporterDashboardController> {
     @Mock
-    private CofunderDashboardService cofunderDashboardService;
+    private SupporterDashboardService supporterDashboardService;
 
     @Override
-    protected CofunderDashboardController supplyControllerUnderTest() {
-        return new CofunderDashboardController();
+    protected SupporterDashboardController supplyControllerUnderTest() {
+        return new SupporterDashboardController();
     }
 
     @Test
@@ -30,15 +30,15 @@ public class CofunderDashboardControllerTest extends BaseControllerMockMVCTest<C
         long competitionId = 2L;
         int page = 3;
         int size = 10;
-        CofunderDashboardApplicationPageResource expected = new CofunderDashboardApplicationPageResource();
+        SupporterDashboardApplicationPageResource expected = new SupporterDashboardApplicationPageResource();
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "activityState");
 
-        when(cofunderDashboardService.getApplicationsForCofunding(userId, competitionId, pageRequest)).thenReturn(serviceSuccess(expected));
+        when(supporterDashboardService.getApplicationsForCofunding(userId, competitionId, pageRequest)).thenReturn(serviceSuccess(expected));
 
-        mockMvc.perform(get("/cofunder/dashboard/user/{userId}/competition/{competition}?page={page}&size={size}", userId, competitionId, page, size))
+        mockMvc.perform(get("/supporter/dashboard/user/{userId}/competition/{competition}?page={page}&size={size}", userId, competitionId, page, size))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
 
-        verify(cofunderDashboardService, only()).getApplicationsForCofunding(userId, competitionId, pageRequest);
+        verify(supporterDashboardService, only()).getApplicationsForCofunding(userId, competitionId, pageRequest);
     }
 }

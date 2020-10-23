@@ -1,14 +1,14 @@
-package org.innovateuk.ifs.cofunder.controller;
+package org.innovateuk.ifs.supporter.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.cofunder.form.CofunderResponseForm;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
-import org.innovateuk.ifs.cofunder.viewmodel.CofunderResponseViewModel;
+import org.innovateuk.ifs.supporter.form.SupporterResponseForm;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDecisionResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
+import org.innovateuk.ifs.supporter.viewmodel.SupporterResponseViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.cofunder.builder.CofunderAssignmentResourceBuilder.newCofunderAssignmentResource;
+import static org.innovateuk.ifs.supporter.builder.SupporterAssignmentResourceBuilder.newSupporterAssignmentResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -27,41 +27,41 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<CofunderResponseController> {
+public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<SupporterResponseController> {
 
     @Mock
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @Mock
     private ApplicationRestService applicationRestService;
 
     @Override
-    protected CofunderResponseController supplyControllerUnderTest() {
-        return new CofunderResponseController();
+    protected SupporterResponseController supplyControllerUnderTest() {
+        return new SupporterResponseController();
     }
 
     @Test
     public void editResponse() throws Exception {
-        CofunderAssignmentResource cofunderAssignmentResource = newCofunderAssignmentResource()
+        SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
                 .withAssignmentId(100L)
-                .withState(CofunderState.CREATED)
+                .withState(SupporterState.CREATED)
                 .build();
         ApplicationResource application = newApplicationResource().build();
-        when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(cofunderAssignmentResource));
+        when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
 
-        MvcResult result = mockMvc.perform(get("/cofunder/application/{applicationId}/response", application.getId()))
+        MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("cofunder/response"))
+                .andExpect(view().name("supporter/response"))
                 .andReturn();
 
-        CofunderResponseForm form = (CofunderResponseForm) result.getModelAndView().getModel().get("form");
+        SupporterResponseForm form = (SupporterResponseForm) result.getModelAndView().getModel().get("form");
         assertThat(form.getComments(), nullValue());
         assertThat(form.getDecision(), nullValue());
-        assertThat(form.getAssignmentId(), equalTo(cofunderAssignmentResource.getAssignmentId()));
+        assertThat(form.getAssignmentId(), equalTo(supporterAssignmentResource.getAssignmentId()));
 
-        CofunderResponseViewModel viewModel = (CofunderResponseViewModel) result.getModelAndView().getModel().get("model");
+        SupporterResponseViewModel viewModel = (SupporterResponseViewModel) result.getModelAndView().getModel().get("model");
         assertThat(viewModel.getApplicationId(), equalTo(application.getId()));
         assertThat(viewModel.getApplicationName(), equalTo(application.getName()));
         assertThat(viewModel.isReadonly(), equalTo(false));
@@ -69,66 +69,66 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void editResponse_withPrevious() throws Exception {
-        CofunderAssignmentResource previous = newCofunderAssignmentResource()
+        SupporterAssignmentResource previous = newSupporterAssignmentResource()
                 .withAssignmentId(100L)
-                .withState(CofunderState.ACCEPTED)
+                .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
         ApplicationResource application = newApplicationResource().build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
-        MvcResult result = mockMvc.perform(get("/cofunder/application/{applicationId}/response", application.getId())
+        MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId())
                 .flashAttr("previousResponse", previous))
                 .andExpect(status().isOk())
-                .andExpect(view().name("cofunder/response"))
+                .andExpect(view().name("supporter/response"))
                 .andReturn();
 
-        CofunderResponseForm form = (CofunderResponseForm) result.getModelAndView().getModel().get("form");
+        SupporterResponseForm form = (SupporterResponseForm) result.getModelAndView().getModel().get("form");
         assertThat(form.getComments(), equalTo(previous.getComments()));
         assertThat(form.getDecision(), equalTo(true));
         assertThat(form.getAssignmentId(), equalTo(previous.getAssignmentId()));
-        verifyZeroInteractions(cofunderAssignmentRestService);
+        verifyZeroInteractions(supporterAssignmentRestService);
     }
 
     @Test
     public void editResponse_redirectWhenDecisionMade() throws Exception {
         long applicationId = 1L;
-        CofunderAssignmentResource cofunderAssignmentResource = newCofunderAssignmentResource()
+        SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
                 .withAssignmentId(100L)
-                .withState(CofunderState.ACCEPTED)
+                .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(cofunderAssignmentResource));
+        when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(supporterAssignmentResource));
 
-        mockMvc.perform(get("/cofunder/application/{applicationId}/response", applicationId))
+        mockMvc.perform(get("/supporter/application/{applicationId}/response", applicationId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/cofunder/application/%d/response/view", applicationId)));
+                .andExpect(redirectedUrl(String.format("/supporter/application/%d/response/view", applicationId)));
     }
 
 
     @Test
     public void viewResponse() throws Exception {
-        CofunderAssignmentResource cofunderAssignmentResource = newCofunderAssignmentResource()
+        SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
                 .withAssignmentId(100L)
-                .withState(CofunderState.ACCEPTED)
+                .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
         ApplicationResource application = newApplicationResource().build();
-        when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(cofunderAssignmentResource));
+        when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
 
-        MvcResult result = mockMvc.perform(get("/cofunder/application/{applicationId}/response/view", application.getId()))
+        MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response/view", application.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("cofunder/response"))
+                .andExpect(view().name("supporter/response"))
                 .andReturn();
 
-        CofunderResponseForm form = (CofunderResponseForm) result.getModelAndView().getModel().get("form");
-        assertThat(form.getComments(), equalTo(cofunderAssignmentResource.getComments()));
+        SupporterResponseForm form = (SupporterResponseForm) result.getModelAndView().getModel().get("form");
+        assertThat(form.getComments(), equalTo(supporterAssignmentResource.getComments()));
         assertThat(form.getDecision(), equalTo(true));
-        assertThat(form.getAssignmentId(), equalTo(cofunderAssignmentResource.getAssignmentId()));
+        assertThat(form.getAssignmentId(), equalTo(supporterAssignmentResource.getAssignmentId()));
 
-        CofunderResponseViewModel viewModel = (CofunderResponseViewModel) result.getModelAndView().getModel().get("model");
+        SupporterResponseViewModel viewModel = (SupporterResponseViewModel) result.getModelAndView().getModel().get("model");
         assertThat(viewModel.getApplicationId(), equalTo(application.getId()));
         assertThat(viewModel.getApplicationName(), equalTo(application.getName()));
         assertThat(viewModel.isReadonly(), equalTo(true));
@@ -137,31 +137,31 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void viewResponse_redirectWhenDecisionNotMade() throws Exception {
         long applicationId = 1L;
-        CofunderAssignmentResource cofunderAssignmentResource = newCofunderAssignmentResource()
+        SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
                 .withAssignmentId(100L)
-                .withState(CofunderState.CREATED)
+                .withState(SupporterState.CREATED)
                 .build();
-        when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(cofunderAssignmentResource));
+        when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(supporterAssignmentResource));
 
-        mockMvc.perform(get("/cofunder/application/{applicationId}/response/view", applicationId))
+        mockMvc.perform(get("/supporter/application/{applicationId}/response/view", applicationId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/cofunder/application/%d/response", applicationId)));
+                .andExpect(redirectedUrl(String.format("/supporter/application/%d/response", applicationId)));
     }
 
     @Test
     public void changeResponse() throws Exception {
         long applicationId = 1L;
-        CofunderAssignmentResource cofunderAssignmentResource = newCofunderAssignmentResource()
+        SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
                 .withAssignmentId(100L)
-                .withState(CofunderState.ACCEPTED)
+                .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(cofunderAssignmentResource));
-        when(cofunderAssignmentRestService.edit(cofunderAssignmentResource.getAssignmentId())).thenReturn(restSuccess());
+        when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(supporterAssignmentResource));
+        when(supporterAssignmentRestService.edit(supporterAssignmentResource.getAssignmentId())).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/cofunder/application/{applicationId}/response/view", applicationId))
+        mockMvc.perform(post("/supporter/application/{applicationId}/response/view", applicationId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/cofunder/application/%d/response", applicationId)));
+                .andExpect(redirectedUrl(String.format("/supporter/application/%d/response", applicationId)));
     }
 
     @Test
@@ -171,19 +171,19 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
         boolean decision = true;
         String comments = "comments";
 
-        CofunderDecisionResource resource = new CofunderDecisionResource();
+        SupporterDecisionResource resource = new SupporterDecisionResource();
         resource.setAccept(decision);
         resource.setComments(comments);
-        when(cofunderAssignmentRestService.decision(eq(assignmentId), refEq(resource))).thenReturn(restSuccess());
+        when(supporterAssignmentRestService.decision(eq(assignmentId), refEq(resource))).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/cofunder/application/{applicationId}/response", applicationId)
+        mockMvc.perform(post("/supporter/application/{applicationId}/response", applicationId)
                 .param("assignmentId", String.valueOf(assignmentId))
                 .param("decision", String.valueOf(decision))
                 .param("comments", comments))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        verify(cofunderAssignmentRestService).decision(eq(assignmentId), refEq(resource));
+        verify(supporterAssignmentRestService).decision(eq(assignmentId), refEq(resource));
     }
 
     @Test
@@ -191,11 +191,11 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
         ApplicationResource application = newApplicationResource().build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
-        mockMvc.perform(post("/cofunder/application/{applicationId}/response", application.getId()))
+        mockMvc.perform(post("/supporter/application/{applicationId}/response", application.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrorCode("form", "comments", "NotBlank"))
-                .andExpect(view().name("cofunder/response"));
+                .andExpect(view().name("supporter/response"));
 
-        verifyZeroInteractions(cofunderAssignmentRestService);
+        verifyZeroInteractions(supporterAssignmentRestService);
     }
 }

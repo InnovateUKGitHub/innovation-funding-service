@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COFUNDER;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 /**
@@ -78,7 +78,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber, role, organisation);
 
         UnaryOperator<S> verifyEmail = UnaryOperator.identity();
-        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, COFUNDER).contains(role)) {
+        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER).contains(role)) {
             verifyEmail = BaseUserDataBuilder::verifyEmail;
         }
 

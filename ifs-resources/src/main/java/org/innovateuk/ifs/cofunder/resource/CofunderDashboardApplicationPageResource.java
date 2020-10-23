@@ -1,14 +1,14 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 
-public class CofunderDashboardApplicationPageResource extends PageResource<CofunderDashboardApplicationResource> {
-    public CofunderDashboardApplicationPageResource() {
+public class SupporterDashboardApplicationPageResource extends PageResource<SupporterDashboardApplicationResource> {
+    public SupporterDashboardApplicationPageResource() {
     }
 
-    public CofunderDashboardApplicationPageResource(long totalElements, int totalPages, List<CofunderDashboardApplicationResource> content, int number, int size) {
+    public SupporterDashboardApplicationPageResource(long totalElements, int totalPages, List<SupporterDashboardApplicationResource> content, int number, int size) {
         super(totalElements, totalPages, content, number, size);
     }
 }

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import org.innovateuk.ifs.commons.resource.PageResource;
 

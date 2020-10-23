@@ -43,8 +43,8 @@ public class CompetitionInFlightModelPopulator {
     @Autowired
     private MilestoneRestService milestoneRestService;
 
-    @Value("${ifs.cofunder.enabled}")
-    private boolean cofunderEnabled;
+    @Value("${ifs.supporter.enabled}")
+    private boolean supporterEnabled;
 
     public CompetitionInFlightViewModel populateModel(Long competitionId, UserResource user) {
         CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -65,6 +65,6 @@ public class CompetitionInFlightModelPopulator {
                 changesSinceLastNotify,
                 statsViewModel,
                 user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER),
-                cofunderEnabled);
+                supporterEnabled);
     }
 }

@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.cofunder.dashboard.viewmodel;
+package org.innovateuk.ifs.supporter.dashboard.viewmodel;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 
@@ -10,15 +10,15 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class CofunderCompetitionDashboardViewModel {
+public class SupporterCompetitionDashboardViewModel {
 
     private final long competitionId;
     private final String competitionName;
     private final ZonedDateTime deadline;
-    private final List<CofunderDashboardApplicationResource> applications;
+    private final List<SupporterDashboardApplicationResource> applications;
     private final PaginationViewModel pagination;
 
-    public CofunderCompetitionDashboardViewModel(CofunderDashboardApplicationPageResource pageResource, CompetitionResource competition) {
+    public SupporterCompetitionDashboardViewModel(SupporterDashboardApplicationPageResource pageResource, CompetitionResource competition) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.deadline = toUkTimeZone(competition.getAssessorDeadlineDate());
@@ -38,7 +38,7 @@ public class CofunderCompetitionDashboardViewModel {
         return deadline;
     }
 
-    public List<CofunderDashboardApplicationResource> getApplications() {
+    public List<SupporterDashboardApplicationResource> getApplications() {
         return applications;
     }
 

@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import java.util.Objects;
 
-public class CofunderDecisionResource {
+public class SupporterDecisionResource {
     private boolean accept;
     private String comments;
 
@@ -26,7 +26,7 @@ public class CofunderDecisionResource {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CofunderDecisionResource that = (CofunderDecisionResource) o;
+        SupporterDecisionResource that = (SupporterDecisionResource) o;
         return accept == that.accept &&
                 Objects.equals(comments, that.comments);
     }

@@ -1,28 +1,28 @@
-package org.innovateuk.ifs.cofunder.dashboard.viewmodel;
+package org.innovateuk.ifs.supporter.dashboard.viewmodel;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardCompetitionResource;
 
 import java.util.List;
 
 /**
- * Holder of model attributes for the Cofunder Dashboard.
+ * Holder of model attributes for the Supporter Dashboard.
  */
-public class CofunderDashboardViewModel {
+public class SupporterDashboardViewModel {
 
-    private List<CofunderDashboardCompetitionResource> activeCompetitions;
-    private List<CofunderDashboardCompetitionResource> previousCompetitions;
+    private List<SupporterDashboardCompetitionResource> activeCompetitions;
+    private List<SupporterDashboardCompetitionResource> previousCompetitions;
 
-    public CofunderDashboardViewModel(List<CofunderDashboardCompetitionResource> activeCompetitions,
-                                      List<CofunderDashboardCompetitionResource> previousCompetitions) {
+    public SupporterDashboardViewModel(List<SupporterDashboardCompetitionResource> activeCompetitions,
+                                      List<SupporterDashboardCompetitionResource> previousCompetitions) {
         this.activeCompetitions = activeCompetitions;
         this.previousCompetitions = previousCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionResource> getActiveCompetitions() {
+    public List<SupporterDashboardCompetitionResource> getActiveCompetitions() {
         return activeCompetitions;
     }
 
-    public List<CofunderDashboardCompetitionResource> getPreviousCompetitions() {
+    public List<SupporterDashboardCompetitionResource> getPreviousCompetitions() {
         return previousCompetitions;
     }
 }

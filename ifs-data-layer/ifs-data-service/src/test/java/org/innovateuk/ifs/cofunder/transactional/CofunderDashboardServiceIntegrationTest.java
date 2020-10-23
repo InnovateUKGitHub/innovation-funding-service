@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.cofunder.transactional;
+package org.innovateuk.ifs.supporter.transactional;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -28,7 +28,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.cofunder.domain.builder.CofunderAssignmentBuilder.newCofunderAssignment;
+import static org.innovateuk.ifs.supporter.domain.builder.SupporterAssignmentBuilder.newSupporterAssignment;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -38,16 +38,16 @@ import static org.junit.Assert.assertThat;
 
 @Rollback
 @Transactional
-    public class CofunderDashboardServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
+    public class SupporterDashboardServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
 
     @Autowired
-    private CofunderDashboardService cofunderDashboardService;
+    private SupporterDashboardService supporterDashboardService;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -62,27 +62,27 @@ import static org.junit.Assert.assertThat;
     private OrganisationRepository organisationRepository;
 
     @Test
-    public void findApplicationsNeedingCofunders() {
+    public void findApplicationsNeedingSupporters() {
         loginSteveSmith();
         TestData data = setupTestData();
-        setLoggedInUser(newUserResource().withRoleGlobal(Role.COFUNDER).withId(data.cofunder.getId()).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.SUPPORTER).withId(data.supporter.getId()).build());
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("activityState"));
 
-        CofunderDashboardApplicationPageResource result = cofunderDashboardService.getApplicationsForCofunding(data.cofunder.getId(), data.competition.getId(), pageRequest).getSuccess();
+        SupporterDashboardApplicationPageResource result = supporterDashboardService.getApplicationsForCofunding(data.supporter.getId(), data.competition.getId(), pageRequest).getSuccess();
 
         assertThat(result.getTotalElements(), equalTo(3L));
         assertThat(result.getContent().get(0).getName(), equalTo("3"));
         assertThat(result.getContent().get(0).getLead(), equalTo("3"));
-        assertThat(result.getContent().get(0).getState(), equalTo(CofunderState.CREATED));
+        assertThat(result.getContent().get(0).getState(), equalTo(SupporterState.CREATED));
 
         assertThat(result.getContent().get(1).getName(), equalTo("2"));
         assertThat(result.getContent().get(1).getLead(), equalTo("2"));
-        assertThat(result.getContent().get(1).getState(), equalTo(CofunderState.ACCEPTED));
+        assertThat(result.getContent().get(1).getState(), equalTo(SupporterState.ACCEPTED));
 
         assertThat(result.getContent().get(2).getName(), equalTo("1"));
         assertThat(result.getContent().get(2).getLead(), equalTo("1"));
-        assertThat(result.getContent().get(2).getState(), equalTo(CofunderState.REJECTED));
+        assertThat(result.getContent().get(2).getState(), equalTo(SupporterState.REJECTED));
     }
 
 
@@ -101,35 +101,35 @@ import static org.junit.Assert.assertThat;
                         .build(3)
         );
 
-        User cofunder = userRepository.save(newUser()
+        User supporter = userRepository.save(newUser()
                 .withId(null)
                 .withUid("1")
-                .withEmailAddress("cofunder1@gmail.com")
+                .withEmailAddress("supporter1@gmail.com")
                 .withFirstName("Bob")
                 .withLastName("Bobberson")
-                .withRoles(newHashSet(Role.COFUNDER))
+                .withRoles(newHashSet(Role.SUPPORTER))
                 .build());
 
-        cofunderAssignmentRepository.saveAll(newCofunderAssignment()
-                .withParticipant(cofunder)
+        supporterAssignmentRepository.saveAll(newSupporterAssignment()
+                .withParticipant(supporter)
                 .withApplication(toArray(applications, Application.class))
-                .withProcessState(CofunderState.REJECTED, CofunderState.ACCEPTED, CofunderState.CREATED)
+                .withProcessState(SupporterState.REJECTED, SupporterState.ACCEPTED, SupporterState.CREATED)
                 .build(3));
 
         flushAndClearSession();
 
-        return new TestData(competition, applications, cofunder);
+        return new TestData(competition, applications, supporter);
     }
 
     private class TestData {
         Competition competition;
         List<Application> applications;
-        User cofunder;
+        User supporter;
 
-        public TestData(Competition competition, List<Application> applications, User cofunder) {
+        public TestData(Competition competition, List<Application> applications, User supporter) {
             this.competition = competition;
             this.applications = applications;
-            this.cofunder = cofunder;
+            this.supporter = supporter;
         }
     }
 }

@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.cofunder.dashboard.controller;
+package org.innovateuk.ifs.supporter.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.cofunder.dashboard.viewmodel.CofunderCompetitionDashboardViewModel;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
-import org.innovateuk.ifs.cofunder.service.CofunderDashboardRestService;
+import org.innovateuk.ifs.supporter.dashboard.viewmodel.SupporterCompetitionDashboardViewModel;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
+import org.innovateuk.ifs.supporter.service.SupporterDashboardRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.junit.Test;
@@ -28,24 +28,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CofunderCompetitionDashboardControllerTest extends BaseControllerMockMVCTest<CofunderCompetitionDashboardController> {
+public class SupporterCompetitionDashboardControllerTest extends BaseControllerMockMVCTest<SupporterCompetitionDashboardController> {
 
     @Mock
-    private CofunderDashboardRestService cofunderDashboardRestService;
+    private SupporterDashboardRestService supporterDashboardRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
 
     @Override
-    protected CofunderCompetitionDashboardController supplyControllerUnderTest() {
-        return new CofunderCompetitionDashboardController();
+    protected SupporterCompetitionDashboardController supplyControllerUnderTest() {
+        return new SupporterCompetitionDashboardController();
     }
 
     @Test
     public void viewPage() throws Exception {
         int page = 3;
-        List<CofunderDashboardApplicationResource> content = newArrayList(new CofunderDashboardApplicationResource());
-        CofunderDashboardApplicationPageResource pageResource = new CofunderDashboardApplicationPageResource(
+        List<SupporterDashboardApplicationResource> content = newArrayList(new SupporterDashboardApplicationResource());
+        SupporterDashboardApplicationPageResource pageResource = new SupporterDashboardApplicationPageResource(
                 41L,
                 3,
                 content,
@@ -56,16 +56,16 @@ public class CofunderCompetitionDashboardControllerTest extends BaseControllerMo
                 .withAssessorDeadlineDate(ZonedDateTime.now())
                 .build();
 
-        when(cofunderDashboardRestService.getCofunderCompetitionDashboardApplications(getLoggedInUser().getId(), competition.getId(), 2)).thenReturn(restSuccess(pageResource));
+        when(supporterDashboardRestService.getSupporterCompetitionDashboardApplications(getLoggedInUser().getId(), competition.getId(), 2)).thenReturn(restSuccess(pageResource));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
 
-        MvcResult result = mockMvc.perform(get("/cofunder/dashboard/competition/{competitionId}?page={page}", competition.getId(), page))
+        MvcResult result = mockMvc.perform(get("/supporter/dashboard/competition/{competitionId}?page={page}", competition.getId(), page))
                 .andExpect(status().isOk())
-                .andExpect(view().name("cofunder/cofunder-competition-dashboard"))
+                .andExpect(view().name("supporter/supporter-competition-dashboard"))
                 .andReturn();
 
-        CofunderCompetitionDashboardViewModel viewModel = (CofunderCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
+        SupporterCompetitionDashboardViewModel viewModel = (SupporterCompetitionDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         assertThat(viewModel.getApplications().size(), equalTo(1));
         assertThat(viewModel.getDeadline(), notNullValue());

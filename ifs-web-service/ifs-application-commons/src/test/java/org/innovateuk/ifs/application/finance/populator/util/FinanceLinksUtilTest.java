@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -55,7 +55,7 @@ public class FinanceLinksUtilTest {
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     @Mock
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @InjectMocks
     private FinanceLinksUtil financeLinksUtil;
@@ -217,19 +217,19 @@ public class FinanceLinksUtilTest {
     }
 
     @Test
-    public void financesLinkForCofunderWithAssignment() {
+    public void financesLinkForSupporterWithAssignment() {
         competition.setFundingType(FundingType.KTP);
 
         UserResource user = newUserResource()
                 .withId(userId)
-                .withRoleGlobal(Role.COFUNDER)
+                .withRoleGlobal(Role.SUPPORTER)
                 .build();
 
-        CofunderAssignmentResource cofunderAssignment = new CofunderAssignmentResource();
-        cofunderAssignment.setState(CofunderState.ACCEPTED);
+        SupporterAssignmentResource supporterAssignment = new SupporterAssignmentResource();
+        supporterAssignment.setState(SupporterState.ACCEPTED);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
-        when(cofunderAssignmentRestService.getAssignment(userId, applicationId)).thenReturn(RestResult.restSuccess(cofunderAssignment));
+        when(supporterAssignmentRestService.getAssignment(userId, applicationId)).thenReturn(RestResult.restSuccess(supporterAssignment));
 
         Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.emptyList(), user, application, competition);
 
@@ -238,19 +238,19 @@ public class FinanceLinksUtilTest {
     }
 
     @Test
-    public void noFinancesLinkForCofunderWithNoAssignment() {
+    public void noFinancesLinkForSupporterWithNoAssignment() {
         competition.setFundingType(FundingType.KTP);
 
         UserResource user = newUserResource()
                 .withId(userId)
-                .withRoleGlobal(Role.COFUNDER)
+                .withRoleGlobal(Role.SUPPORTER)
                 .build();
 
-        CofunderAssignmentResource cofunderAssignment = new CofunderAssignmentResource();
-        cofunderAssignment.setState(CofunderState.REJECTED);
+        SupporterAssignmentResource supporterAssignment = new SupporterAssignmentResource();
+        supporterAssignment.setState(SupporterState.REJECTED);
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
-        when(cofunderAssignmentRestService.getAssignment(userId, applicationId)).thenReturn(RestResult.restFailure(HttpStatus.NOT_FOUND));
+        when(supporterAssignmentRestService.getAssignment(userId, applicationId)).thenReturn(RestResult.restFailure(HttpStatus.NOT_FOUND));
 
         Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.emptyList(), user, application, competition);
 

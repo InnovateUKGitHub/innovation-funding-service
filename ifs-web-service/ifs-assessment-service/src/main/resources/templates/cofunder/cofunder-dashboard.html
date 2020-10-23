@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Cofunder Assessments'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Supporter Assessments'"/>
 </head>
 <body class="govuk-template__body assessor-dashboard">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -23,7 +23,7 @@
                         <li th:each="activeCompetition : ${model.activeCompetitions}">
                             <div class="task">
                                 <h3 class="govuk-heading-s"><a class="govuk-link"
-                                                               th:href="@{/cofunder/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
+                                                               th:href="@{/supporter/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                                                th:text="${activeCompetition.competitionName}"/></h3>
 
                                 <div th:if="${!activeCompetition.hasPendingAssessments()}">
@@ -49,9 +49,9 @@
                                     days left <br/>
                                     Deadline
                                     <span class="day"
-                                          th:text="${#temporals.day(activeCompetition.cofunderDeadlineDate)}">END DAY</span>
+                                          th:text="${#temporals.day(activeCompetition.supporterDeadlineDate)}">END DAY</span>
                                     <span class="month"
-                                          th:text="${#temporals.monthName(activeCompetition.cofunderDeadlineDate)}">END MONTH</span>
+                                          th:text="${#temporals.monthName(activeCompetition.supporterDeadlineDate)}">END MONTH</span>
                                 </div>
                             </div>
                         </li>
@@ -67,7 +67,7 @@
                     <li th:each="previousCompetition : ${model.previousCompetitions}">
                         <div class="task">
                             <h3 class="govuk-heading-s"><a class="govuk-link"
-                                                           th:href="@{/cofunder/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
+                                                           th:href="@{/supporter/dashboard/competition/{competitionId}(competitionId=${previousCompetition.competitionId})}"
                                                            th:text="${previousCompetition.competitionName}"/></h3>
                             <strong>
                             <span th:text="${previousCompetition.submitted}"

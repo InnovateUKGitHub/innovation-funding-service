@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.management.cofunders.populator;
+package org.innovateuk.ifs.management.supporters.populator;
 
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
+import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingPageResource;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.cofunders.viewmodel.AllocateCofundersViewModel;
-import org.innovateuk.ifs.management.cofunders.viewmodel.ManageCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.viewmodel.AllocateSupportersViewModel;
+import org.innovateuk.ifs.management.supporters.viewmodel.ManageSupportersViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,10 +18,10 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ManageCofundersViewModelPopulatorTest {
+public class ManageSupportersViewModelPopulatorTest {
 
     @InjectMocks
-    private ManageCofundersViewModelPopulator populator;
+    private ManageSupportersViewModelPopulator populator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -36,7 +36,7 @@ public class ManageCofundersViewModelPopulatorTest {
         given(competitionRestService.getCompetitionById(competitionId)).willReturn(restSuccess(competition));
 
         // when
-        ManageCofundersViewModel result = populator.populateModel(competitionId);
+        ManageSupportersViewModel result = populator.populateModel(competitionId);
 
         // then
         assertThat(result.getCompetitionId()).isEqualTo(competitionId);

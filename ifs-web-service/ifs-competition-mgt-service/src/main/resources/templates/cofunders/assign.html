@@ -36,15 +36,15 @@
         </div>
 
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Assigned co-funders
-            <th:block th:unless="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}"
-                      th:text="${' (' + model.cofundersAvailableForApplicationPage.assignedCofunders.size() + ')'}" />
+            <th:block th:unless="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}"
+                      th:text="${' (' + model.supportersAvailableForApplicationPage.assignedSupporters.size() + ')'}" />
         </h2>
-        <p th:if="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}">
+        <p th:if="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}">
             No co-funders have been assigned to this application.
         </p>
 
         <form
-            th:unless="${model.cofundersAvailableForApplicationPage.assignedCofunders.isEmpty()}"
+            th:unless="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}"
             th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/remove'}" novalidate="novalidate"
               method="post">
             <table class="govuk-table">
@@ -57,7 +57,7 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="entry : ${model.cofundersAvailableForApplicationPage.assignedCofunders}">
+                    <tr class="govuk-table__row" th:each="entry : ${model.supportersAvailableForApplicationPage.assignedSupporters}">
                         <td class="govuk-table__cell" th:text="${entry.name}" />
                         <td class="govuk-table__cell" th:text="${entry.organisation}" />
                         <td class="govuk-table__cell" th:text="${entry.email}" />
@@ -72,7 +72,7 @@
 
         <h2 class="govuk-heading-m">Available co-funders</h2>
 
-        <form method="GET" id="filter-cofunders-form">
+        <form method="GET" id="filter-supporters-form">
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
@@ -98,13 +98,13 @@
             </div>
         </form>
 
-        <h3 class="govuk-heading-s govuk-!-margin-top-6"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.cofundersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-top-6"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.supportersAvailableForApplicationPage.totalElements}"/> Co-funders</h3>
 
         <hr/>
 
         <form method="POST"
-              th:action="@{/competition/{competitionId}/cofunders/assign/{applicationId}/find/addSelected(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
-              th:object="${cofunderSelectionForm}"
+              th:action="@{/competition/{competitionId}/supporters/assign/{applicationId}/find/addSelected(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
+              th:object="${supporterSelectionForm}"
               data-multipage-select=""
               autocomplete="off"
               th:attr="data-total-checkboxes=${model.pagination.totalElements}">
@@ -117,7 +117,7 @@
                                    class="govuk-checkboxes__input"
                                    data-select-all=""
                                    id="select-all-check"
-                                   th:checked="${cofunderSelectionForm.isAllSelected()}"
+                                   th:checked="${supporterSelectionForm.isAllSelected()}"
                                    th:disabled="${model.pagination.totalElements == 0}"/>
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
@@ -126,12 +126,12 @@
                         </div>
                     </div>
                     <span class="govuk-hint">
-                        <span data-count-selected="" th:text="${#lists.size(cofunderSelectionForm.selectedCofunderIds)}"></span> co-funders selected
+                        <span data-count-selected="" th:text="${#lists.size(supporterSelectionForm.selectedSupporterIds)}"></span> co-funders selected
                     </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
                     <button class="govuk-button govuk-!-margin-bottom-4" name="addSelected" data-submit-el=""
-                            th:attr="disabled=${#lists.isEmpty(cofunderSelectionForm.selectedCofunderIds)}">
+                            th:attr="disabled=${#lists.isEmpty(supporterSelectionForm.selectedSupporterIds)}">
                         Add selected to application
                     </button>
                 </div>
@@ -147,16 +147,16 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="entry, index : ${model.cofundersAvailableForApplicationPage.content}">
+                    <tr class="govuk-table__row" th:each="entry, index : ${model.supportersAvailableForApplicationPage.content}">
                         <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
                                      <input type="checkbox"
                                            class="govuk-checkboxes__input"
-                                           th:id="|cofunder-row-${index.count}|"
-                                           th:field="*{selectedCofunderIds}"
+                                           th:id="|supporter-row-${index.count}|"
+                                           th:field="*{selectedSupporterIds}"
                                            th:value="${entry.userId}"/>
-                                    <label th:for="|cofunder-row-${index.count}|" class="govuk-label govuk-checkboxes__label">
+                                    <label th:for="|supporter-row-${index.count}|" class="govuk-label govuk-checkboxes__label">
                                         <span class="govuk-visually-hidden">Add</span>
                                     </label>
                                 </div>

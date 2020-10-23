@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import java.util.List;
 
-public class AssignCofundersResource {
+public class AssignSupportersResource {
     private long applicationId;
-    private List<Long> cofunderIds;
+    private List<Long> supporterIds;
 
     public long getApplicationId() {
         return applicationId;
@@ -14,11 +14,11 @@ public class AssignCofundersResource {
         this.applicationId = applicationId;
     }
 
-    public List<Long> getCofunderIds() {
-        return cofunderIds;
+    public List<Long> getSupporterIds() {
+        return supporterIds;
     }
 
-    public void setCofunderIds(List<Long> cofunderIds) {
-        this.cofunderIds = cofunderIds;
+    public void setSupporterIds(List<Long> supporterIds) {
+        this.supporterIds = supporterIds;
     }
 }

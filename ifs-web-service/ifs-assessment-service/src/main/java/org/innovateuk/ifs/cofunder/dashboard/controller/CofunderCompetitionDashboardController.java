@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.cofunder.dashboard.controller;
+package org.innovateuk.ifs.supporter.dashboard.controller;
 
-import org.innovateuk.ifs.cofunder.dashboard.viewmodel.CofunderCompetitionDashboardViewModel;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.service.CofunderDashboardRestService;
+import org.innovateuk.ifs.supporter.dashboard.viewmodel.SupporterCompetitionDashboardViewModel;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.service.SupporterDashboardRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/cofunder/dashboard/competition/{competitionId}")
-@SecuredBySpring(value = "Controller", description = "Cofunders can view their dashboard", securedType = CofunderCompetitionDashboardController.class)
-@PreAuthorize("hasAuthority('cofunder')")
-public class CofunderCompetitionDashboardController {
+@RequestMapping("/supporter/dashboard/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "Supporters can view their dashboard", securedType = SupporterCompetitionDashboardController.class)
+@PreAuthorize("hasAuthority('supporter')")
+public class SupporterCompetitionDashboardController {
 
     @Autowired
-    private CofunderDashboardRestService cofunderDashboardRestService;
+    private SupporterDashboardRestService supporterDashboardRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -33,9 +33,9 @@ public class CofunderCompetitionDashboardController {
                        @RequestParam(name = "page", defaultValue = "1") int page,
                        UserResource loggedInUser,
                        Model model) {
-        CofunderDashboardApplicationPageResource pageResource = cofunderDashboardRestService.getCofunderCompetitionDashboardApplications(loggedInUser.getId(), competitionId, page - 1).getSuccess();
+        SupporterDashboardApplicationPageResource pageResource = supporterDashboardRestService.getSupporterCompetitionDashboardApplications(loggedInUser.getId(), competitionId, page - 1).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        model.addAttribute("model", new CofunderCompetitionDashboardViewModel(pageResource, competition));
-        return "cofunder/cofunder-competition-dashboard";
+        model.addAttribute("model", new SupporterCompetitionDashboardViewModel(pageResource, competition));
+        return "supporter/supporter-competition-dashboard";
     }
 }

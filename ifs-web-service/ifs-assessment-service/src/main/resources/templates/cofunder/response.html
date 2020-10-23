@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Cofunder review - ${model.applicationName}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Supporter review - ${model.applicationName}|" />
 </head>
 <body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -18,7 +18,7 @@
         </div>
 
         <th:block>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Cofunder review',subTitle=${model.applicationId + ': ' + model.applicationName},size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Supporter review',subTitle=${model.applicationId + ': ' + model.applicationName},size='govuk-heading-xl'" />
         </th:block>
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -65,7 +65,7 @@
                                    type="radio"
                                    value="true"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.cofunder.response.decision.required}">
+                                   th:attr="data-required-errormessage=#{validation.supporter.response.decision.required}">
                             <label class="govuk-label govuk-radios__label" for="decision-yes">
                                 Yes
                             </label>
@@ -77,7 +77,7 @@
                                    type="radio"
                                    value="false"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.cofunder.response.decision.required}">
+                                   th:attr="data-required-errormessage=#{validation.supporter.response.decision.required}">
                             <label class="govuk-label govuk-radios__label" for="decision-no">
                                 No
                             </label>
@@ -100,7 +100,7 @@
                               data-maxwordslength=5000,
                               data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to ' + wordCount + '.'},
                               data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')},
-                              data-required-errormessage=#{validation.cofunder.response.comments.required}"
+                              data-required-errormessage=#{validation.supporter.response.comments.required}"
                               id="comments"></textarea>
                     <div class="textarea-footer" th:with="content=*{comments}" aria-live="polite" aria-atomic="true" role="status">
                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${250}, currentWordsLeft=${#ifsUtil.wordsRemaining(250, content)})" />
@@ -108,7 +108,7 @@
                 </div>
             </div>
 
-            <button id="save-cofunder-response" type="submit" class="govuk-button">
+            <button id="save-supporter-response" type="submit" class="govuk-button">
                 Save review and return to applications
             </button>
         </th:block>

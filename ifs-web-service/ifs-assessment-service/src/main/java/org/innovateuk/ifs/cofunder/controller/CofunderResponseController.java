@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.cofunder.controller;
+package org.innovateuk.ifs.supporter.controller;
 
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.cofunder.form.CofunderResponseForm;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
-import org.innovateuk.ifs.cofunder.viewmodel.CofunderResponseViewModel;
+import org.innovateuk.ifs.supporter.form.SupporterResponseForm;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDecisionResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
+import org.innovateuk.ifs.supporter.viewmodel.SupporterResponseViewModel;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -24,32 +24,32 @@ import java.util.function.Supplier;
 import static com.google.common.collect.Lists.newArrayList;
 
 @Controller
-@RequestMapping("cofunder/application/{applicationId}/response")
-@SecuredBySpring(value = "Controller", description = "Only cofunders can edit their responses", securedType = CofunderResponseController.class)
-@PreAuthorize("hasAnyAuthority('cofunder')")
-public class CofunderResponseController {
+@RequestMapping("supporter/application/{applicationId}/response")
+@SecuredBySpring(value = "Controller", description = "Only supporters can edit their responses", securedType = SupporterResponseController.class)
+@PreAuthorize("hasAnyAuthority('supporter')")
+public class SupporterResponseController {
 
     @Autowired
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @Autowired
     private ApplicationRestService applicationRestService;
 
     @GetMapping
     public String editResponse(@PathVariable long applicationId,
-                               @ModelAttribute("previousResponse") CofunderAssignmentResource previousAssignment,
+                               @ModelAttribute("previousResponse") SupporterAssignmentResource previousAssignment,
                                Model model,
                                UserResource user) {
-        CofunderAssignmentResource assignment;
+        SupporterAssignmentResource assignment;
         if (previousAssignment.getState() != null) {
             assignment = previousAssignment;
         } else {
-            assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
-            if (newArrayList(CofunderState.ACCEPTED, CofunderState.REJECTED).contains(assignment.getState())) {
-                return String.format("redirect:/cofunder/application/%d/response/view", applicationId);
+            assignment = supporterAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+            if (newArrayList(SupporterState.ACCEPTED, SupporterState.REJECTED).contains(assignment.getState())) {
+                return String.format("redirect:/supporter/application/%d/response/view", applicationId);
             }
         }
-        CofunderResponseForm form = new CofunderResponseForm(assignment);
+        SupporterResponseForm form = new SupporterResponseForm(assignment);
         model.addAttribute("form", form);
         return editView(model, applicationId);
     }
@@ -58,11 +58,11 @@ public class CofunderResponseController {
     public String viewResponse(@PathVariable long applicationId,
                                Model model,
                                UserResource user) {
-        CofunderAssignmentResource assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
-        if (assignment.getState() == CofunderState.CREATED) {
-            return String.format("redirect:/cofunder/application/%d/response", applicationId);
+        SupporterAssignmentResource assignment = supporterAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+        if (assignment.getState() == SupporterState.CREATED) {
+            return String.format("redirect:/supporter/application/%d/response", applicationId);
         }
-        CofunderResponseForm form = new CofunderResponseForm(assignment);
+        SupporterResponseForm form = new SupporterResponseForm(assignment);
         model.addAttribute("form", form);
         return readonlyView(model, applicationId);
     }
@@ -72,26 +72,26 @@ public class CofunderResponseController {
                                  Model model,
                                  UserResource user,
                                  RedirectAttributes redirectAttributes) {
-        CofunderAssignmentResource assignment = cofunderAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
-        cofunderAssignmentRestService.edit(assignment.getAssignmentId()).getSuccess();
+        SupporterAssignmentResource assignment = supporterAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
+        supporterAssignmentRestService.edit(assignment.getAssignmentId()).getSuccess();
         redirectAttributes.addFlashAttribute("previousResponse", assignment);
-        return String.format("redirect:/cofunder/application/%d/response", applicationId);
+        return String.format("redirect:/supporter/application/%d/response", applicationId);
     }
     @PostMapping
     public String saveResponse(@PathVariable long applicationId,
                            Model model,
                            UserResource user,
-                           @Valid @ModelAttribute("form") CofunderResponseForm form,
+                           @Valid @ModelAttribute("form") SupporterResponseForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
         Supplier<String> success = () -> "redirect:/";
         Supplier<String> failure = () -> editView(model, applicationId);
 
         return validationHandler.failNowOrSucceedWith(failure, () -> {
-            CofunderDecisionResource decision = new CofunderDecisionResource();
+            SupporterDecisionResource decision = new SupporterDecisionResource();
             decision.setAccept(form.getDecision());
             decision.setComments(form.getComments());
-            validationHandler.addAnyErrors(cofunderAssignmentRestService.decision(form.getAssignmentId(), decision));
+            validationHandler.addAnyErrors(supporterAssignmentRestService.decision(form.getAssignmentId(), decision));
             return validationHandler.failNowOrSucceedWith(failure, success);
         });
     }
@@ -104,7 +104,7 @@ public class CofunderResponseController {
     }
 
     private String view(Model model, long applicationId, boolean readonly) {
-        model.addAttribute("model", new CofunderResponseViewModel(applicationRestService.getApplicationById(applicationId).getSuccess(), readonly));
-        return "cofunder/response";
+        model.addAttribute("model", new SupporterResponseViewModel(applicationRestService.getApplicationById(applicationId).getSuccess(), readonly));
+        return "supporter/response";
     }
 }

@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.management.cofunders.form;
+package org.innovateuk.ifs.management.supporters.form;
 
-public class AllocateCofundersForm {
+public class AllocateSupportersForm {
     private int page = 1;
     private String filter;
 

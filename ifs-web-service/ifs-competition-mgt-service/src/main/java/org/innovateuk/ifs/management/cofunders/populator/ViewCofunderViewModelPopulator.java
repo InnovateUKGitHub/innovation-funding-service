@@ -1,29 +1,29 @@
-package org.innovateuk.ifs.management.cofunders.populator;
+package org.innovateuk.ifs.management.supporters.populator;
 
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
+import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingPageResource;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.cofunders.viewmodel.ViewCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.viewmodel.ViewSupportersViewModel;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ViewCofunderViewModelPopulator {
+public class ViewSupporterViewModelPopulator {
 
     @Autowired
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public ViewCofundersViewModel populateModel(long competitionId, String applicationFilter, int page) {
+    public ViewSupportersViewModel populateModel(long competitionId, String applicationFilter, int page) {
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ApplicationsForCofundingPageResource applicationsForCofundingPageResource =
-                cofunderAssignmentRestService.findApplicationsNeedingCofunders(competitionId, applicationFilter, page).getSuccess();
+                supporterAssignmentRestService.findApplicationsNeedingSupporters(competitionId, applicationFilter, page).getSuccess();
 
-        return new ViewCofundersViewModel(competitionResource, applicationsForCofundingPageResource.getContent(), new PaginationViewModel(applicationsForCofundingPageResource));
+        return new ViewSupportersViewModel(competitionResource, applicationsForCofundingPageResource.getContent(), new PaginationViewModel(applicationsForCofundingPageResource));
     }
 }

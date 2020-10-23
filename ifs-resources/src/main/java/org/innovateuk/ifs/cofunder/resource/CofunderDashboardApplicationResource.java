@@ -1,15 +1,15 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
-public class CofunderDashboardApplicationResource {
+public class SupporterDashboardApplicationResource {
 
     private long id;
     private String name;
     private String lead;
-    private CofunderState state;
+    private SupporterState state;
 
-    public CofunderDashboardApplicationResource() {}
+    public SupporterDashboardApplicationResource() {}
 
-    public CofunderDashboardApplicationResource(long id, String name, String lead, CofunderState state) {
+    public SupporterDashboardApplicationResource(long id, String name, String lead, SupporterState state) {
         this.id = id;
         this.name = name;
         this.lead = lead;
@@ -40,11 +40,11 @@ public class CofunderDashboardApplicationResource {
         this.lead = lead;
     }
 
-    public CofunderState getState() {
+    public SupporterState getState() {
         return state;
     }
 
-    public void setState(CofunderState state) {
+    public void setState(SupporterState state) {
         this.state = state;
     }
 }

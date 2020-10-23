@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.cofunder.repository;
+package org.innovateuk.ifs.supporter.repository;
 
-import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource;
-import org.innovateuk.ifs.cofunder.domain.CompetitionForCofunding;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingResource;
+import org.innovateuk.ifs.supporter.domain.CompetitionForCofunding;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.domain.Page;
@@ -19,16 +19,16 @@ import java.util.Optional;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CofunderAssignmentRepository extends ProcessRepository<CofunderAssignment>, PagingAndSortingRepository<CofunderAssignment, Long> {
+public interface SupporterAssignmentRepository extends ProcessRepository<SupporterAssignment>, PagingAndSortingRepository<SupporterAssignment, Long> {
 
     @Query(
-            "SELECT new org.innovateuk.ifs.cofunder.domain.CompetitionForCofunding( " +
+            "SELECT new org.innovateuk.ifs.supporter.domain.CompetitionForCofunding( " +
                     "competition, " +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.CREATED THEN 1 ELSE 0 END)," +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.REJECTED THEN 1 ELSE 0 END)," +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.ACCEPTED THEN 1 ELSE 0 END)" +
+                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.supporter.resource.SupporterState.CREATED THEN 1 ELSE 0 END)," +
+                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.supporter.resource.SupporterState.REJECTED THEN 1 ELSE 0 END)," +
+                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.supporter.resource.SupporterState.ACCEPTED THEN 1 ELSE 0 END)" +
                     ") " +
-                    "FROM CofunderAssignment assignment " +
+                    "FROM SupporterAssignment assignment " +
                     "INNER JOIN Application application ON application.id = assignment.target.id " +
                     "INNER JOIN Competition competition ON competition.id = application.competition " +
                     "WHERE assignment.participant.id = :userId " +
@@ -36,23 +36,23 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
     )
     List<CompetitionForCofunding> findCompetitionsForParticipant(long userId);
 
-    Optional<CofunderAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
+    Optional<SupporterAssignment> findByParticipantIdAndTargetId(long userId, long applicationId);
 
-    List<CofunderAssignment> findByParticipantId(long userId);
+    List<SupporterAssignment> findByParticipantId(long userId);
 
     boolean existsByParticipantIdAndTargetId(long userId, long applicationId);
 
     String QUERY = "FROM User user " +
             "JOIN user.roles role " +
-            "WHERE role = org.innovateuk.ifs.user.resource.Role.COFUNDER " +
+            "WHERE role = org.innovateuk.ifs.user.resource.Role.SUPPORTER " +
             "AND CONCAT(user.firstName, ' ', user.lastName) LIKE CONCAT('%', :filter, '%') " +
             "AND NOT EXISTS (" +
-            "   SELECT assignment.id FROM CofunderAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
+            "   SELECT assignment.id FROM SupporterAssignment assignment WHERE assignment.target.id = :applicationId AND assignment.participant.id = user.id" +
             ")";
 
     @Query(
             "SELECT CASE WHEN count(assignment)>0 THEN TRUE ELSE FALSE END " +
-                    "FROM CofunderAssignment assignment " +
+                    "FROM SupporterAssignment assignment " +
                     "INNER JOIN Application application ON application.id = assignment.target.id " +
                     "WHERE assignment.participant.id = :userId " +
                     "AND application.competition.id = :competitionId"
@@ -60,13 +60,13 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
     boolean existsByParticipantIdAndCompetitionId(long userId, long competitionId);
 
     @Query(
-            "SELECT new org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource( " +
+            "SELECT new org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource( " +
                     "application.id, " +
                     "application.name, " +
                     "organisation.name, " +
                     "assignment.activityState" +
                     ") " +
-                    "FROM CofunderAssignment assignment " +
+                    "FROM SupporterAssignment assignment " +
                     "JOIN assignment.target application " +
                     "JOIN ProcessRole pr on pr.applicationId = application.id " +
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
@@ -74,19 +74,19 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
                     "AND assignment.participant.id = :userId " +
                     "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT "
     )
-    Page<CofunderDashboardApplicationResource> findApplicationsForCofunderCompetitionDashboard(long userId, long competitionId, Pageable pageable);
+    Page<SupporterDashboardApplicationResource> findApplicationsForSupporterCompetitionDashboard(long userId, long competitionId, Pageable pageable);
 
     @Query(
-            "SELECT new org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingResource( " +
+            "SELECT new org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingResource( " +
                     "application.id, " +
                     "application.name, " +
                     "organisation.name, " +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.REJECTED THEN 1 ELSE 0 END), " +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.ACCEPTED THEN 1 ELSE 0 END), " +
-                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.cofunder.resource.CofunderState.CREATED THEN 1 ELSE 0 END) " +
+                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.supporter.resource.SupporterState.REJECTED THEN 1 ELSE 0 END), " +
+                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.supporter.resource.SupporterState.ACCEPTED THEN 1 ELSE 0 END), " +
+                    "SUM(CASE WHEN assignment.id IS NOT NULL AND assignment.activityState = org.innovateuk.ifs.supporter.resource.SupporterState.CREATED THEN 1 ELSE 0 END) " +
                     ") " +
                     "FROM Application application " +
-                    "LEFT JOIN CofunderAssignment assignment on application.id = assignment.target.id " +
+                    "LEFT JOIN SupporterAssignment assignment on application.id = assignment.target.id " +
                     "JOIN ProcessRole pr on pr.applicationId = application.id " +
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
                     "WHERE application.competition.id = :competitionId " +

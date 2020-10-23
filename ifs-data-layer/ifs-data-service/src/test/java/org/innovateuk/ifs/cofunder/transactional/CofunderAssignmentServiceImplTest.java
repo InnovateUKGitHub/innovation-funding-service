@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.cofunder.transactional;
+package org.innovateuk.ifs.supporter.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
-import org.innovateuk.ifs.cofunder.mapper.CofunderAssignmentMapper;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.*;
-import org.innovateuk.ifs.cofunder.workflow.CofunderAssignmentWorkflowHandler;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.mapper.SupporterAssignmentMapper;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.*;
+import org.innovateuk.ifs.supporter.workflow.SupporterAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -29,8 +29,8 @@ import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.cofunder.domain.builder.CofunderAssignmentBuilder.newCofunderAssignment;
-import static org.innovateuk.ifs.cofunder.domain.builder.CofunderOutcomeBuilder.newCofunderOutcome;
+import static org.innovateuk.ifs.supporter.domain.builder.SupporterAssignmentBuilder.newSupporterAssignment;
+import static org.innovateuk.ifs.supporter.domain.builder.SupporterOutcomeBuilder.newSupporterOutcome;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.SimpleOrganisationBuilder.newSimpleOrganisation;
@@ -41,12 +41,12 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<CofunderAssignmentService> {
+public class SupporterAssignmentServiceImplTest extends BaseServiceUnitTest<SupporterAssignmentService> {
     @Mock
-    private CofunderAssignmentWorkflowHandler cofunderAssignmentWorkflowHandler;
+    private SupporterAssignmentWorkflowHandler supporterAssignmentWorkflowHandler;
 
     @Mock
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Mock
     private ProfileRepository profileRepository;
@@ -61,39 +61,39 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     private NotificationService notificationService;
 
     @Mock
-    private CofunderAssignmentMapper cofunderAssignmentMapper;
+    private SupporterAssignmentMapper supporterAssignmentMapper;
 
     @Override
-    protected CofunderAssignmentService supplyServiceUnderTest() {
-        return new CofunderAssignmentServiceImpl();
+    protected SupporterAssignmentService supplyServiceUnderTest() {
+        return new SupporterAssignmentServiceImpl();
     }
 
     @Test
     public void getAssignment() {
         long userId = 1L;
         long applicationId = 2l;
-        CofunderAssignment cofunderAssignment = newCofunderAssignment()
-                .withProcessState(CofunderState.REJECTED)
-                .withCofunderOutcome(newCofunderOutcome()
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
+                .withProcessState(SupporterState.REJECTED)
+                .withSupporterOutcome(newSupporterOutcome()
                         .withComment("Terrible")
                         .build()
                 )
                 .build();
-        CofunderAssignmentResource resource = new CofunderAssignmentResource();
-        resource.setAssignmentId(cofunderAssignment.getId());
-        resource.setComments(cofunderAssignment.getCofunderOutcome().getComment());
-        resource.setState(cofunderAssignment.getProcessState());
+        SupporterAssignmentResource resource = new SupporterAssignmentResource();
+        resource.setAssignmentId(supporterAssignment.getId());
+        resource.setComments(supporterAssignment.getSupporterOutcome().getComment());
+        resource.setState(supporterAssignment.getProcessState());
 
-        when(cofunderAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(cofunderAssignment));
-        when(cofunderAssignmentMapper.mapToResource(cofunderAssignment)).thenReturn(resource);
+        when(supporterAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(supporterAssignment));
+        when(supporterAssignmentMapper.mapToResource(supporterAssignment)).thenReturn(resource);
 
 
-        ServiceResult<CofunderAssignmentResource> result = service.getAssignment(userId, applicationId);
+        ServiceResult<SupporterAssignmentResource> result = service.getAssignment(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        assertThat(result.getSuccess().getAssignmentId(), equalTo(cofunderAssignment.getId()));
+        assertThat(result.getSuccess().getAssignmentId(), equalTo(supporterAssignment.getId()));
         assertThat(result.getSuccess().getComments(), equalTo("Terrible"));
-        assertThat(result.getSuccess().getState(), equalTo(CofunderState.REJECTED));
+        assertThat(result.getSuccess().getState(), equalTo(SupporterState.REJECTED));
         assertThat(result.isSuccess(), equalTo(true));
     }
 
@@ -103,21 +103,21 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         long applicationId = 2l;
         User user = newUser().build();
         Application application = newApplication().withCompetition(newCompetition().build()).build();
-        when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId)).thenReturn(false);
+        when(supporterAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId)).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(of(user));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
-        when(cofunderAssignmentRepository.save(any())).thenAnswer(inv -> {
-            CofunderAssignment c = inv.getArgument(0);
+        when(supporterAssignmentRepository.save(any())).thenAnswer(inv -> {
+            SupporterAssignment c = inv.getArgument(0);
             c.setId(4L);
             return c;
         });
         when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
-        when(cofunderAssignmentMapper.mapToResource(any(CofunderAssignment.class))).thenReturn(new CofunderAssignmentResource());
+        when(supporterAssignmentMapper.mapToResource(any(SupporterAssignment.class))).thenReturn(new SupporterAssignmentResource());
 
-        ServiceResult<CofunderAssignmentResource> result = service.assign(userId, applicationId);
+        ServiceResult<SupporterAssignmentResource> result = service.assign(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(cofunderAssignmentRepository).save(any());
+        verify(supporterAssignmentRepository).save(any());
         verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
 
@@ -127,40 +127,40 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         long applicationId = 2l;
         User user = newUser().build();
         Application application = newApplication().withCompetition(newCompetition().build()).build();
-        CofunderAssignment cofunderAssignment = newCofunderAssignment()
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
                 .withApplication(application)
                 .build();
 
         when(userRepository.findById(userId)).thenReturn(of(user));
         when(applicationRepository.findById(applicationId)).thenReturn(of(application));
-        when(cofunderAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(cofunderAssignment));
+        when(supporterAssignmentRepository.findByParticipantIdAndTargetId(userId, applicationId)).thenReturn(of(supporterAssignment));
         when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.removeAssignment(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(cofunderAssignmentRepository).delete(cofunderAssignment);
+        verify(supporterAssignmentRepository).delete(supporterAssignment);
         verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
 
     @Test
     public void decision_reject() {
         long assignmentId = 1L;
-        CofunderDecisionResource decision = new CofunderDecisionResource();
+        SupporterDecisionResource decision = new SupporterDecisionResource();
         decision.setComments("Terrible");
         decision.setAccept(false);
         Application application = newApplication().withCompetition(newCompetition().build()).build();
-        CofunderAssignment cofunderAssignment = newCofunderAssignment()
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
                 .withApplication(application)
                 .build();
 
-        when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));
-        when(cofunderAssignmentWorkflowHandler.reject(eq(cofunderAssignment), any())).thenReturn(true);
+        when(supporterAssignmentRepository.findById(assignmentId)).thenReturn(of(supporterAssignment));
+        when(supporterAssignmentWorkflowHandler.reject(eq(supporterAssignment), any())).thenReturn(true);
 
         ServiceResult<Void> result = service.decision(assignmentId, decision);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(cofunderAssignmentWorkflowHandler).reject(eq(cofunderAssignment), argThat(lambdaMatches(outcome -> {
+        verify(supporterAssignmentWorkflowHandler).reject(eq(supporterAssignment), argThat(lambdaMatches(outcome -> {
             assertThat(outcome.getComment(), equalTo("Terrible"));
             assertThat(outcome.isFundingConfirmation(), equalTo(false));
             return true;
@@ -170,21 +170,21 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     @Test
     public void decision_accept() {
         long assignmentId = 1L;
-        CofunderDecisionResource decision = new CofunderDecisionResource();
+        SupporterDecisionResource decision = new SupporterDecisionResource();
         decision.setComments("Amazing");
         decision.setAccept(true);
         Application application = newApplication().withCompetition(newCompetition().build()).build();
-        CofunderAssignment cofunderAssignment = newCofunderAssignment()
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
                 .withApplication(application)
                 .build();
 
-        when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));
-        when(cofunderAssignmentWorkflowHandler.accept(eq(cofunderAssignment), any())).thenReturn(true);
+        when(supporterAssignmentRepository.findById(assignmentId)).thenReturn(of(supporterAssignment));
+        when(supporterAssignmentWorkflowHandler.accept(eq(supporterAssignment), any())).thenReturn(true);
 
         ServiceResult<Void> result = service.decision(assignmentId, decision);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(cofunderAssignmentWorkflowHandler).accept(eq(cofunderAssignment), argThat(lambdaMatches(outcome -> {
+        verify(supporterAssignmentWorkflowHandler).accept(eq(supporterAssignment), argThat(lambdaMatches(outcome -> {
             assertThat(outcome.getComment(), equalTo("Amazing"));
             assertThat(outcome.isFundingConfirmation(), equalTo(true));
             return true;
@@ -195,30 +195,30 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     public void edit() {
         long assignmentId = 1L;
         Application application = newApplication().withCompetition(newCompetition().build()).build();
-        CofunderAssignment cofunderAssignment = newCofunderAssignment()
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
                 .withApplication(application)
                 .build();
 
-        when(cofunderAssignmentRepository.findById(assignmentId)).thenReturn(of(cofunderAssignment));
-        when(cofunderAssignmentWorkflowHandler.edit(eq(cofunderAssignment))).thenReturn(true);
+        when(supporterAssignmentRepository.findById(assignmentId)).thenReturn(of(supporterAssignment));
+        when(supporterAssignmentWorkflowHandler.edit(eq(supporterAssignment))).thenReturn(true);
 
         ServiceResult<Void> result = service.edit(assignmentId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(cofunderAssignmentWorkflowHandler).edit(cofunderAssignment);
+        verify(supporterAssignmentWorkflowHandler).edit(supporterAssignment);
     }
 
     @Test
-    public void findApplicationsNeedingCofunders() {
+    public void findApplicationsNeedingSupporters() {
         long competitionId = 1L;
         String filter = "filter";
         PageRequest pageRequest = PageRequest.of(0, 1);
         ApplicationsForCofundingResource app = new ApplicationsForCofundingResource();
         Page<ApplicationsForCofundingResource> page = new PageImpl<>(newArrayList(app), pageRequest, 1L);
 
-        when(cofunderAssignmentRepository.findApplicationsForCofunding(competitionId, filter, pageRequest)).thenReturn(page);
+        when(supporterAssignmentRepository.findApplicationsForCofunding(competitionId, filter, pageRequest)).thenReturn(page);
 
-        ServiceResult<ApplicationsForCofundingPageResource> result = service.findApplicationsNeedingCofunders(competitionId, filter, pageRequest);
+        ServiceResult<ApplicationsForCofundingPageResource> result = service.findApplicationsNeedingSupporters(competitionId, filter, pageRequest);
 
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(result.getSuccess().getContent().get(0), equalTo(app));
@@ -229,7 +229,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
     }
 
     @Test
-    public void findAvailableCofundersForApplication() {
+    public void findAvailableSupportersForApplication() {
         long applicationId = 1L;
         long unassignedProfileId = 2L;
         long assignedProfileId = 3L;
@@ -247,7 +247,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
                 .withLastName("Guy")
                 .withProfileId(assignedProfileId)
                 .build();
-        CofunderAssignment cofunderAssignment = newCofunderAssignment()
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
                 .withParticipant(assignedUser)
                 .build();
         Page<User> page = new PageImpl<>(newArrayList(unsassignedUser), pageRequest, 1L);
@@ -263,12 +263,12 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
                                 .withName("Simply an assigned organisation")
                                 .build()
                 ).build();
-        when(cofunderAssignmentRepository.findUsersAvailableForCofunding(applicationId, filter, pageRequest)).thenReturn(page);
+        when(supporterAssignmentRepository.findUsersAvailableForCofunding(applicationId, filter, pageRequest)).thenReturn(page);
         when(profileRepository.findById(unassignedProfileId)).thenReturn(of(unassignedProfile));
         when(profileRepository.findById(assignedProfileId)).thenReturn(of(assignedProfile));
-        when(cofunderAssignmentRepository.findByTargetId(applicationId)).thenReturn(Arrays.asList(cofunderAssignment));
+        when(supporterAssignmentRepository.findByTargetId(applicationId)).thenReturn(Arrays.asList(supporterAssignment));
 
-        ServiceResult<CofundersAvailableForApplicationPageResource> result = service.findAvailableCofundersForApplication(applicationId, filter, pageRequest);
+        ServiceResult<SupportersAvailableForApplicationPageResource> result = service.findAvailableSupportersForApplication(applicationId, filter, pageRequest);
 
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(result.getSuccess().getContent().get(0).getEmail(), equalTo(unsassignedUser.getEmail()));
@@ -279,21 +279,21 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         assertThat(result.getSuccess().getTotalPages(), equalTo(1));
         assertThat(result.getSuccess().getNumber(), equalTo(0));
         assertThat(result.getSuccess().getSize(), equalTo(1));
-        assertThat(result.getSuccess().getAssignedCofunders().get(0).getEmail(), equalTo(assignedUser.getEmail()));
-        assertThat(result.getSuccess().getAssignedCofunders().get(0).getName(), equalTo("Assigned Guy"));
-        assertThat(result.getSuccess().getAssignedCofunders().get(0).getUserId(), equalTo(assignedUser.getId()));
-        assertThat(result.getSuccess().getAssignedCofunders().get(0).getOrganisation(), equalTo("Simply an assigned organisation"));
+        assertThat(result.getSuccess().getAssignedSupporters().get(0).getEmail(), equalTo(assignedUser.getEmail()));
+        assertThat(result.getSuccess().getAssignedSupporters().get(0).getName(), equalTo("Assigned Guy"));
+        assertThat(result.getSuccess().getAssignedSupporters().get(0).getUserId(), equalTo(assignedUser.getId()));
+        assertThat(result.getSuccess().getAssignedSupporters().get(0).getOrganisation(), equalTo("Simply an assigned organisation"));
     }
 
     @Test
-    public void findAvailableCofundersUserIdsForApplication() {
+    public void findAvailableSupportersUserIdsForApplication() {
         long applicationId = 4L;
         String filter = "w";
         List<Long> ids = Arrays.asList(1L, 2L, 3L);
 
-        when(cofunderAssignmentRepository.usersAvailableForCofundingUserIds(applicationId, filter)).thenReturn(ids);
+        when(supporterAssignmentRepository.usersAvailableForCofundingUserIds(applicationId, filter)).thenReturn(ids);
 
-        ServiceResult<List<Long>> result = service.findAvailableCofundersUserIdsForApplication(applicationId, filter);
+        ServiceResult<List<Long>> result = service.findAvailableSupportersUserIdsForApplication(applicationId, filter);
 
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(result.getSuccess(), equalTo(ids));

@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.cofunder.transactional;
+package org.innovateuk.ifs.supporter.transactional;
 
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDecisionResource;
+import org.innovateuk.ifs.supporter.resource.SupportersAvailableForApplicationPageResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -42,10 +42,10 @@ import static org.junit.Assert.assertThat;
 
 @Rollback
 @Transactional
-    public class CofunderAssignmentServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
+    public class SupporterAssignmentServiceIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
 
     @Autowired
-    private CofunderAssignmentService cofunderAssignmentService;
+    private SupporterAssignmentService supporterAssignmentService;
 
     @Autowired
     private UserRepository userRepository;
@@ -69,13 +69,13 @@ import static org.junit.Assert.assertThat;
     private SimpleOrganisationRepository simpleOrganisationRepository;
 
     @Test
-    public void findApplicationsNeedingCofunders() {
+    public void findApplicationsNeedingSupporters() {
         setLoggedInUser(getIfsAdmin());
         TestData data = setupTestData();
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
 
-        ApplicationsForCofundingPageResource resource = cofunderAssignmentService.findApplicationsNeedingCofunders(data.competition.getId(), "", pageRequest).getSuccess();
+        ApplicationsForCofundingPageResource resource = supporterAssignmentService.findApplicationsNeedingSupporters(data.competition.getId(), "", pageRequest).getSuccess();
 
         assertThat(resource.getTotalElements(), equalTo(2L));
         assertThat(resource.getContent().get(0).getLead(), equalTo("lead org"));
@@ -90,24 +90,24 @@ import static org.junit.Assert.assertThat;
         assertThat(resource.getContent().get(1).getAssigned(), equalTo(0L));
         assertThat(resource.getContent().get(1).getTotal(), equalTo(0L));
 
-        ApplicationsForCofundingPageResource filterResponse = cofunderAssignmentService.findApplicationsNeedingCofunders(data.competition.getId(), String.valueOf(data.application1.getId()), pageRequest).getSuccess();
+        ApplicationsForCofundingPageResource filterResponse = supporterAssignmentService.findApplicationsNeedingSupporters(data.competition.getId(), String.valueOf(data.application1.getId()), pageRequest).getSuccess();
 
         assertThat(filterResponse.getTotalElements(), equalTo(1L));
         assertThat(filterResponse.getContent().get(0).getName(), equalTo("App name 1"));
     }
 
     @Test
-    public void findAvailableCofundersForApplication() {
+    public void findAvailableSupportersForApplication() {
         setLoggedInUser(getIfsAdmin());
         TestData data = setupTestData();
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("firstName"));
 
-        CofundersAvailableForApplicationPageResource resource = cofunderAssignmentService.findAvailableCofundersForApplication(data.application1.getId(), "", pageRequest).getSuccess();
+        SupportersAvailableForApplicationPageResource resource = supporterAssignmentService.findAvailableSupportersForApplication(data.application1.getId(), "", pageRequest).getSuccess();
         assertThat(resource.getTotalElements(), equalTo(1L));
         assertThat(resource.getContent().get(0).getName(), equalTo("Bob unassigned"));
         assertThat(resource.getContent().get(0).getOrganisation(), equalTo("Simple 1"));
-        assertThat(resource.getContent().get(0).getEmail(), equalTo("cofunder1@gmail.com"));
+        assertThat(resource.getContent().get(0).getEmail(), equalTo("supporter1@gmail.com"));
     }
 
     private TestData setupTestData() {
@@ -134,34 +134,34 @@ import static org.junit.Assert.assertThat;
                 ).build(4);
         profiles = newArrayList(profileRepository.saveAll(profiles));
 
-        List<User> cofunders = newUser()
+        List<User> supporters = newUser()
                 .withId(null)
                 .withUid("1", "2", "3", "4")
-                .withEmailAddress("cofunder1@gmail.com", "cofunder2@gmail.com", "cofunder3@gmail.com", "cofunder4@gmail.com")
+                .withEmailAddress("supporter1@gmail.com", "supporter2@gmail.com", "supporter3@gmail.com", "supporter4@gmail.com")
                 .withFirstName("Bob", "Frank", "Jim", "Rob")
                 .withLastName("unassigned", "assigned", "accepted", "rejected")
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId(), profiles.get(2).getId(), profiles.get(3).getId())
-                .withRoles(newHashSet(Role.COFUNDER))
+                .withRoles(newHashSet(Role.SUPPORTER))
                 .withCreatedBy()
                 .build(4);
 
-        cofunders = newArrayList(userRepository.saveAll(cofunders));
+        supporters = newArrayList(userRepository.saveAll(supporters));
 
         flushAndClearSession();
 
-        cofunderAssignmentService.assign(cofunders.get(1).getId(), application.getId()).getSuccess();
-        CofunderAssignmentResource toAccept = cofunderAssignmentService.assign(cofunders.get(2).getId(), application.getId()).getSuccess();
-        CofunderAssignmentResource toReject = cofunderAssignmentService.assign(cofunders.get(3).getId(), application.getId()).getSuccess();
+        supporterAssignmentService.assign(supporters.get(1).getId(), application.getId()).getSuccess();
+        SupporterAssignmentResource toAccept = supporterAssignmentService.assign(supporters.get(2).getId(), application.getId()).getSuccess();
+        SupporterAssignmentResource toReject = supporterAssignmentService.assign(supporters.get(3).getId(), application.getId()).getSuccess();
 
-        CofunderDecisionResource acceptDecision = new CofunderDecisionResource();
+        SupporterDecisionResource acceptDecision = new SupporterDecisionResource();
         acceptDecision.setAccept(true);
         acceptDecision.setComments("Amazing");
-        cofunderAssignmentService.decision(toAccept.getAssignmentId(), acceptDecision).getSuccess();
+        supporterAssignmentService.decision(toAccept.getAssignmentId(), acceptDecision).getSuccess();
 
-        CofunderDecisionResource rejectDecision = new CofunderDecisionResource();
+        SupporterDecisionResource rejectDecision = new SupporterDecisionResource();
         acceptDecision.setAccept(false);
         acceptDecision.setComments("Terrible");
-        cofunderAssignmentService.decision(toReject.getAssignmentId(), rejectDecision).getSuccess();
+        supporterAssignmentService.decision(toReject.getAssignmentId(), rejectDecision).getSuccess();
 
         return new TestData(competition, application, application2);
     }

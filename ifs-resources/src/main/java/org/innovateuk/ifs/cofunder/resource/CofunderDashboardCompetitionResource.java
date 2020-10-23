@@ -1,19 +1,19 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public class CofunderDashboardCompetitionResource {
+public class SupporterDashboardCompetitionResource {
 
     private long competitionId;
     private String competitionName;
-    private ZonedDateTime cofunderDeadlineDate;
+    private ZonedDateTime supporterDeadlineDate;
     private long pendingAssessments;
     private FundingType fundingType;
     private long submitted;
-    private ZonedDateTime cofunderAcceptDate;
+    private ZonedDateTime supporterAcceptDate;
 
     public long getCompetitionId() {
         return competitionId;
@@ -31,12 +31,12 @@ public class CofunderDashboardCompetitionResource {
         this.competitionName = competitionName;
     }
 
-    public ZonedDateTime getCofunderDeadlineDate() {
-        return cofunderDeadlineDate;
+    public ZonedDateTime getSupporterDeadlineDate() {
+        return supporterDeadlineDate;
     }
 
-    public void setCofunderDeadlineDate(ZonedDateTime cofunderDeadlineDate) {
-        this.cofunderDeadlineDate = cofunderDeadlineDate;
+    public void setSupporterDeadlineDate(ZonedDateTime supporterDeadlineDate) {
+        this.supporterDeadlineDate = supporterDeadlineDate;
     }
 
     public long getPendingAssessments() {
@@ -63,16 +63,16 @@ public class CofunderDashboardCompetitionResource {
         this.submitted = submitted;
     }
 
-    public ZonedDateTime getCofunderAcceptDate() {
-        return cofunderAcceptDate;
+    public ZonedDateTime getSupporterAcceptDate() {
+        return supporterAcceptDate;
     }
 
-    public void setCofunderAcceptDate(ZonedDateTime cofunderAcceptDate) {
-        this.cofunderAcceptDate = cofunderAcceptDate;
+    public void setSupporterAcceptDate(ZonedDateTime supporterAcceptDate) {
+        this.supporterAcceptDate = supporterAcceptDate;
     }
 
     public long getDaysLeft() {
-        return ChronoUnit.DAYS.between(ZonedDateTime.now(), cofunderDeadlineDate);
+        return ChronoUnit.DAYS.between(ZonedDateTime.now(), supporterDeadlineDate);
     }
 
     public boolean hasPendingAssessments() {

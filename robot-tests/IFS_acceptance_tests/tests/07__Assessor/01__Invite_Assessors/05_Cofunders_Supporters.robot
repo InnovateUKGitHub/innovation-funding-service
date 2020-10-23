@@ -17,11 +17,11 @@ ${supporter01_email}                  mister.branches@money.com
 ${supporter02_email}                  horrace.horse@anarchy.com
 &{Supporter01_credentials}            email=${supporter01_email}  password=${short_password}
 &{Supporter02_credentials}            email=${supporter01_email}  password=${short_password}           
-${KTP_Application_URL}                ${SERVER}/assessment/cofunder/application/247/response
+${KTP_Application_URL}                ${SERVER}/assessment/supporter/application/247/response
 
 *** Test Cases ***
 
-The user sees the validation when responding to the Cofunder/Supprter review
+The user sees the validation when responding to the Supporter/Supprter review
     [Documentation]   IFS-8409
     Given the guest user inserts user email and password        ${supporter01_email}  ${short_password}
     And the guest user clicks the log-in button
@@ -35,7 +35,7 @@ The user sees the validation when responding to the Cofunder/Supprter review
     And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
     And the user should see a field error                       Maximum word count exceeded. Please reduce your word count to 250.
     
-The user responds to the Cofunder/Supporter review No
+The user responds to the Supporter/Supporter review No
     [Documentation]   IFS-8409
     Given the user selects the radio button           decision  decision-no
     When the user enters text to a text field         css = .editor  This is the comments from the supporter
@@ -43,7 +43,7 @@ The user responds to the Cofunder/Supporter review No
     And the user navigates to the page                ${KTP_Application_URL}
     And the user should see the element               jQuery = p:contains("This is the comments from the supporter")
 
-The user responds to the Cofunder/Supporter review Yes
+The user responds to the Supporter/Supporter review Yes
     [Documentation]   IFS-8409
     Given the user navigates to the page         ${KTP_Application_URL} 
     When the user clicks the button/link         jQuery = button:contains("Edit")

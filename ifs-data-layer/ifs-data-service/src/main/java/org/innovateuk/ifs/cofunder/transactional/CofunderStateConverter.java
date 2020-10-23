@@ -1,28 +1,28 @@
-package org.innovateuk.ifs.cofunder.transactional;
+package org.innovateuk.ifs.supporter.transactional;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
 
 import javax.persistence.Converter;
 
 /**
- * JPA {@link Converter} for {@link CofunderState} enums.
+ * JPA {@link Converter} for {@link SupporterState} enums.
  */
 @Converter(autoApply = true)
 @SuppressWarnings(value = "unused")
-public class CofunderStateConverter extends IdentifiableEnumConverter<CofunderState> {
+public class SupporterStateConverter extends IdentifiableEnumConverter<SupporterState> {
 
-    public CofunderStateConverter() {
-        super(CofunderState.class);
+    public SupporterStateConverter() {
+        super(SupporterState.class);
     }
 
     @Override
-    public Long convertToDatabaseColumn(CofunderState attribute) {
+    public Long convertToDatabaseColumn(SupporterState attribute) {
         return super.convertToDatabaseColumn(attribute);
     }
 
     @Override
-    public CofunderState convertToEntityAttribute(Long dbData) {
+    public SupporterState convertToEntityAttribute(Long dbData) {
         return super.convertToEntityAttribute(dbData);
     }
 }

@@ -1,18 +1,18 @@
-package org.innovateuk.ifs.management.cofunders.controller;
+package org.innovateuk.ifs.management.supporters.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.cofunder.resource.AssignCofundersResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderUserResource;
-import org.innovateuk.ifs.cofunder.resource.CofundersAvailableForApplicationPageResource;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
+import org.innovateuk.ifs.supporter.resource.AssignSupportersResource;
+import org.innovateuk.ifs.supporter.resource.SupporterUserResource;
+import org.innovateuk.ifs.supporter.resource.SupportersAvailableForApplicationPageResource;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.cofunders.form.CofunderSelectionForm;
-import org.innovateuk.ifs.management.cofunders.populator.AssignCofundersViewModelPopulator;
-import org.innovateuk.ifs.management.cofunders.viewmodel.AssignCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.form.SupporterSelectionForm;
+import org.innovateuk.ifs.management.supporters.populator.AssignSupportersViewModelPopulator;
+import org.innovateuk.ifs.management.supporters.viewmodel.AssignSupportersViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,20 +33,20 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 @Controller
-@RequestMapping("/competition/{competitionId}/cofunders/assign/{applicationId}")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssignCofundersController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSIGN_COFUNDERS')")
-public class AssignCofundersController extends CompetitionManagementCookieController<CofunderSelectionForm> {
+@RequestMapping("/competition/{competitionId}/supporters/assign/{applicationId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssignSupportersController.class)
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSIGN_SUPPORTERS')")
+public class AssignSupportersController extends CompetitionManagementCookieController<SupporterSelectionForm> {
 
-    private static final Log LOG = LogFactory.getLog(AssignCofundersController.class);
+    private static final Log LOG = LogFactory.getLog(AssignSupportersController.class);
 
-    private static final String SELECTION_FORM = "cofunderSelectionForm";
-
-    @Autowired
-    private AssignCofundersViewModelPopulator assignCofundersViewModelPopulator;
+    private static final String SELECTION_FORM = "supporterSelectionForm";
 
     @Autowired
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private AssignSupportersViewModelPopulator assignSupportersViewModelPopulator;
+
+    @Autowired
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @Override
     protected String getCookieName() {
@@ -54,19 +54,19 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
     }
 
     @Override
-    protected Class<CofunderSelectionForm> getFormType() {
-        return CofunderSelectionForm.class;
+    protected Class<SupporterSelectionForm> getFormType() {
+        return SupporterSelectionForm.class;
     }
 
     @GetMapping
-    public String cofunders(@PathVariable("competitionId") long competitionId,
+    public String supporters(@PathVariable("competitionId") long competitionId,
                             @PathVariable("applicationId") long applicationId) {
-        return format("redirect:/competition/%s/cofunders/assign/%s/find", competitionId, applicationId);
+        return format("redirect:/competition/%s/supporters/assign/%s/find", competitionId, applicationId);
     }
 
     @GetMapping("/find")
     public String find(Model model,
-                       @ModelAttribute(name = SELECTION_FORM, binding = false) CofunderSelectionForm selectionForm,
+                       @ModelAttribute(name = SELECTION_FORM, binding = false) SupporterSelectionForm selectionForm,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @PathVariable("applicationId") long applicationId,
@@ -76,37 +76,37 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
                        HttpServletResponse response) {
 
         updateSelectionForm(request, response, applicationId, selectionForm, filter);
-        AssignCofundersViewModel assignCofundersViewModel = assignCofundersViewModelPopulator.populateModel(competitionId, applicationId, filter, page);
+        AssignSupportersViewModel assignSupportersViewModel = assignSupportersViewModelPopulator.populateModel(competitionId, applicationId, filter, page);
 
-        model.addAttribute("model", assignCofundersViewModel);
+        model.addAttribute("model", assignSupportersViewModel);
 
-        return "cofunders/assign";
+        return "supporters/assign";
     }
 
     private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long applicationId,
-                                     CofunderSelectionForm selectionForm,
+                                     SupporterSelectionForm selectionForm,
                                      String filter) {
-        CofunderSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, applicationId).orElse(new CofunderSelectionForm());
+        SupporterSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, applicationId).orElse(new SupporterSelectionForm());
 
-        CofunderSelectionForm trimmedCofunderForm = trimSelectionByFilteredResult(storedSelectionForm, filter, applicationId);
-        selectionForm.setSelectedCofunderIds(trimmedCofunderForm.getSelectedCofunderIds());
-        selectionForm.setAllSelected(trimmedCofunderForm.isAllSelected());
+        SupporterSelectionForm trimmedSupporterForm = trimSelectionByFilteredResult(storedSelectionForm, filter, applicationId);
+        selectionForm.setSelectedSupporterIds(trimmedSupporterForm.getSelectedSupporterIds());
+        selectionForm.setAllSelected(trimmedSupporterForm.isAllSelected());
 
         saveFormToCookie(response, applicationId, selectionForm);
     }
 
-    private CofunderSelectionForm trimSelectionByFilteredResult(CofunderSelectionForm selectionForm,
+    private SupporterSelectionForm trimSelectionByFilteredResult(SupporterSelectionForm selectionForm,
                                                                 String filter,
                                                                 Long applicationId) {
-        List<Long> filteredResults = getAllCofunderIds(applicationId, filter);
-        CofunderSelectionForm updatedSelectionForm = new CofunderSelectionForm();
+        List<Long> filteredResults = getAllSupporterIds(applicationId, filter);
+        SupporterSelectionForm updatedSelectionForm = new SupporterSelectionForm();
 
-        selectionForm.getSelectedCofunderIds().retainAll(filteredResults);
-        updatedSelectionForm.setSelectedCofunderIds(selectionForm.getSelectedCofunderIds());
+        selectionForm.getSelectedSupporterIds().retainAll(filteredResults);
+        updatedSelectionForm.setSelectedSupporterIds(selectionForm.getSelectedSupporterIds());
 
-        if (updatedSelectionForm.getSelectedCofunderIds().equals(filteredResults) && !updatedSelectionForm.getSelectedCofunderIds().isEmpty()) {
+        if (updatedSelectionForm.getSelectedSupporterIds().equals(filteredResults) && !updatedSelectionForm.getSelectedSupporterIds().isEmpty()) {
             updatedSelectionForm.setAllSelected(true);
         } else {
             updatedSelectionForm.setAllSelected(false);
@@ -117,10 +117,10 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
 
     @PostMapping(value = "/find", params = {"selectionId"})
     public @ResponseBody
-    JsonNode selectCofunderForInviteList(
+    JsonNode selectSupporterForInviteList(
             @PathVariable("competitionId") long competitionId,
             @PathVariable("applicationId") long applicationId,
-            @RequestParam("selectionId") long cofunderId,
+            @RequestParam("selectionId") long supporterId,
             @RequestParam("isSelected") boolean isSelected,
             @RequestParam(defaultValue = "", required = false) String filter,
             HttpServletRequest request,
@@ -128,33 +128,33 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
 
         boolean limitExceeded = false;
         try {
-            List<Long> cofunderIds = getAllCofunderIds(applicationId, filter);
-            CofunderSelectionForm selectionForm = getSelectionFormFromCookie(request, applicationId).orElse(new CofunderSelectionForm());
+            List<Long> supporterIds = getAllSupporterIds(applicationId, filter);
+            SupporterSelectionForm selectionForm = getSelectionFormFromCookie(request, applicationId).orElse(new SupporterSelectionForm());
             if (isSelected) {
-                int predictedSize = selectionForm.getSelectedCofunderIds().size() + 1;
+                int predictedSize = selectionForm.getSelectedSupporterIds().size() + 1;
                 if (limitIsExceeded(predictedSize)) {
                     limitExceeded = true;
                 } else {
-                    selectionForm.getSelectedCofunderIds().add(cofunderId);
-                    if (selectionForm.getSelectedCofunderIds().containsAll(cofunderIds)) {
+                    selectionForm.getSelectedSupporterIds().add(supporterId);
+                    if (selectionForm.getSelectedSupporterIds().containsAll(supporterIds)) {
                         selectionForm.setAllSelected(true);
                     }
                 }
             } else {
-                selectionForm.getSelectedCofunderIds().remove(cofunderId);
+                selectionForm.getSelectedSupporterIds().remove(supporterId);
                 selectionForm.setAllSelected(false);
             }
             saveFormToCookie(response, applicationId, selectionForm);
-            return createJsonObjectNode(selectionForm.getSelectedCofunderIds().size(), selectionForm.isAllSelected(), limitExceeded);
+            return createJsonObjectNode(selectionForm.getSelectedSupporterIds().size(), selectionForm.isAllSelected(), limitExceeded);
         } catch (Exception e) {
-            LOG.error("exception thrown selecting cofunders for list", e);
+            LOG.error("exception thrown selecting supporters for list", e);
             return createFailureResponse();
         }
     }
 
     @PostMapping(value = "/find", params = {"addAll"})
     public @ResponseBody
-    JsonNode addAllCofundersToInviteList(Model model,
+    JsonNode addAllSupportersToInviteList(Model model,
                                          @PathVariable("competitionId") long competitionId,
                                          @PathVariable("applicationId") long applicationId,
                                          @RequestParam("addAll") boolean addAll,
@@ -163,48 +163,48 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
         try {
-            CofunderSelectionForm selectionForm = getSelectionFormFromCookie(request, applicationId).orElse(new CofunderSelectionForm());
+            SupporterSelectionForm selectionForm = getSelectionFormFromCookie(request, applicationId).orElse(new SupporterSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedCofunderIds(getAllCofunderIds(applicationId, filter));
+                selectionForm.setSelectedSupporterIds(getAllSupporterIds(applicationId, filter));
                 selectionForm.setAllSelected(true);
             } else {
-                selectionForm.getSelectedCofunderIds().clear();
+                selectionForm.getSelectedSupporterIds().clear();
                 selectionForm.setAllSelected(false);
             }
 
             saveFormToCookie(response, applicationId, selectionForm);
 
-            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedCofunderIds().size(), selectionForm.isAllSelected(), false);
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedSupporterIds().size(), selectionForm.isAllSelected(), false);
         } catch (Exception e) {
-            LOG.error("exception thrown adding cofunders to list", e);
+            LOG.error("exception thrown adding supporters to list", e);
 
             return createFailureResponse();
         }
     }
 
-    private List<Long> getAllCofunderIds(long applicationId, String filter) {
-        return cofunderAssignmentRestService.findAllAvailableCofunderUserIdsForApplication(applicationId, filter).getSuccess();
+    private List<Long> getAllSupporterIds(long applicationId, String filter) {
+        return supporterAssignmentRestService.findAllAvailableSupporterUserIdsForApplication(applicationId, filter).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
-    public String addSelectedCofundersToInviteList(Model model,
+    public String addSelectedSupportersToInviteList(Model model,
                                                    @PathVariable("competitionId") long competitionId,
                                                    @PathVariable("applicationId") long applicationId,
                                                    @RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "", required = false) String filter,
-                                                   @ModelAttribute(SELECTION_FORM) CofunderSelectionForm selectionForm,
+                                                   @ModelAttribute(SELECTION_FORM) SupporterSelectionForm selectionForm,
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response) {
 
-        CofunderSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, applicationId)
-                .filter(form -> !form.getSelectedCofunderIds().isEmpty())
+        SupporterSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, applicationId)
+                .filter(form -> !form.getSelectedSupporterIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToFind(competitionId, applicationId, page);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = cofunderAssignmentRestService.assign(
+            RestResult<Void> restResult = supporterAssignmentRestService.assign(
                     newSelectionFormToResource(submittedSelectionForm, applicationId));
 
             return validationHandler.addAnyErrors(restResult)
@@ -215,15 +215,15 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
         });
     }
 
-    private AssignCofundersResource newSelectionFormToResource(CofunderSelectionForm form, long applicationId) {
-        AssignCofundersResource resource = new AssignCofundersResource();
+    private AssignSupportersResource newSelectionFormToResource(SupporterSelectionForm form, long applicationId) {
+        AssignSupportersResource resource = new AssignSupportersResource();
         resource.setApplicationId(applicationId);
-        resource.setCofunderIds(form.getSelectedCofunderIds());
+        resource.setSupporterIds(form.getSelectedSupporterIds());
         return resource;
     }
 
     private String redirectToFind(long competitionId, long applicationId, int page) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/cofunders/assign/{applicationId}/find")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/supporters/assign/{applicationId}/find")
                 .queryParam("page", page);
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId, "applicationId", applicationId))
@@ -231,10 +231,10 @@ public class AssignCofundersController extends CompetitionManagementCookieContro
     }
 
     @PostMapping("/find/remove")
-    public String removeCofunder(@RequestParam("userId") long userId, @PathVariable("competitionId") long competitionId,
+    public String removeSupporter(@RequestParam("userId") long userId, @PathVariable("competitionId") long competitionId,
                                  @PathVariable("applicationId") long applicationId) {
-        cofunderAssignmentRestService.removeAssignment(userId, applicationId);
-        return String.format("redirect:/competition/%d/cofunders/assign/%d/find", competitionId, applicationId);
+        supporterAssignmentRestService.removeAssignment(userId, applicationId);
+        return String.format("redirect:/competition/%d/supporters/assign/%d/find", competitionId, applicationId);
     }
 
 }

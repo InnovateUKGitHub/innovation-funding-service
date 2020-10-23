@@ -1,31 +1,31 @@
-package org.innovateuk.ifs.cofunder.form;
+package org.innovateuk.ifs.supporter.form;
 
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class CofunderResponseForm {
+public class SupporterResponseForm {
 
     private long assignmentId;
-    @NotNull(message = "{validation.cofunder.response.decision.required}")
+    @NotNull(message = "{validation.supporter.response.decision.required}")
     private Boolean decision;
-    @NotBlank(message = "{validation.cofunder.response.comments.required}")
+    @NotBlank(message = "{validation.supporter.response.comments.required}")
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 250, message = "{validation.field.max.word.count}")
     private String comments;
 
-    public CofunderResponseForm() {
+    public SupporterResponseForm() {
     }
 
-    public CofunderResponseForm(CofunderAssignmentResource assignment) {
+    public SupporterResponseForm(SupporterAssignmentResource assignment) {
         this.assignmentId = assignment.getAssignmentId();
-        if (assignment.getState() == CofunderState.CREATED) {
+        if (assignment.getState() == SupporterState.CREATED) {
             this.decision = null;
-        } else if (assignment.getState() == CofunderState.ACCEPTED) {
+        } else if (assignment.getState() == SupporterState.ACCEPTED) {
             this.decision = true;
         } else {
             this.decision = false;

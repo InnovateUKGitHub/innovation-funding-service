@@ -1,14 +1,14 @@
-package org.innovateuk.ifs.cofunder.viewmodel;
+package org.innovateuk.ifs.supporter.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 
-public class CofunderResponseViewModel {
+public class SupporterResponseViewModel {
 
     private final long applicationId;
     private final String applicationName;
     private final boolean readonly;
 
-    public CofunderResponseViewModel(ApplicationResource application, boolean readonly) {
+    public SupporterResponseViewModel(ApplicationResource application, boolean readonly) {
         this.applicationId = application.getId();
         this.applicationName = application.getName();
         this.readonly = readonly;

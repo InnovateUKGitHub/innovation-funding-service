@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.cofunders.form;
+package org.innovateuk.ifs.management.supporters.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,10 +7,10 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CofunderSelectionForm extends BaseBindingResultTarget {
+public class SupporterSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
-    private List<Long> selectedCofunderIds = new ArrayList<>();
+    private List<Long> selectedSupporterIds = new ArrayList<>();
 
     public boolean isAllSelected() {
         return allSelected;
@@ -20,16 +20,16 @@ public class CofunderSelectionForm extends BaseBindingResultTarget {
         this.allSelected = allSelected;
     }
 
-    public List<Long> getSelectedCofunderIds() {
-        return selectedCofunderIds;
+    public List<Long> getSelectedSupporterIds() {
+        return selectedSupporterIds;
     }
 
-    public void setSelectedCofunderIds(List<Long> selectedCofunderIds) {
-        this.selectedCofunderIds = selectedCofunderIds;
+    public void setSelectedSupporterIds(List<Long> selectedSupporterIds) {
+        this.selectedSupporterIds = selectedSupporterIds;
     }
 
     public boolean anySelectionIsMade() {
-        return this.allSelected != false || !this.selectedCofunderIds.isEmpty();
+        return this.allSelected != false || !this.selectedSupporterIds.isEmpty();
     }
 
     @Override
@@ -38,11 +38,11 @@ public class CofunderSelectionForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CofunderSelectionForm that = (CofunderSelectionForm) o;
+        SupporterSelectionForm that = (SupporterSelectionForm) o;
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
-                .append(selectedCofunderIds, that.selectedCofunderIds)
+                .append(selectedSupporterIds, that.selectedSupporterIds)
                 .isEquals();
     }
 
@@ -50,7 +50,7 @@ public class CofunderSelectionForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
-                .append(selectedCofunderIds)
+                .append(selectedSupporterIds)
                 .toHashCode();
     }
 }

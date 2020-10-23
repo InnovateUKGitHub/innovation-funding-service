@@ -1,46 +1,46 @@
-package org.innovateuk.ifs.cofunder.domain.builder;
+package org.innovateuk.ifs.supporter.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
-import org.innovateuk.ifs.cofunder.domain.CofunderOutcome;
+import org.innovateuk.ifs.supporter.domain.SupporterOutcome;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class CofunderOutcomeBuilder
-        extends BaseBuilder<CofunderOutcome, CofunderOutcomeBuilder> {
+public class SupporterOutcomeBuilder
+        extends BaseBuilder<SupporterOutcome, SupporterOutcomeBuilder> {
 
-    private CofunderOutcomeBuilder(List<BiConsumer<Integer, CofunderOutcome>> multiActions) {
+    private SupporterOutcomeBuilder(List<BiConsumer<Integer, SupporterOutcome>> multiActions) {
         super(multiActions);
     }
 
-    public static CofunderOutcomeBuilder newCofunderOutcome() {
-        return new CofunderOutcomeBuilder(emptyList());
+    public static SupporterOutcomeBuilder newSupporterOutcome() {
+        return new SupporterOutcomeBuilder(emptyList());
     }
 
     @Override
-    protected CofunderOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer,
-            CofunderOutcome>> actions) {
-        return new CofunderOutcomeBuilder(actions);
+    protected SupporterOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer,
+            SupporterOutcome>> actions) {
+        return new SupporterOutcomeBuilder(actions);
     }
 
     @Override
-    protected CofunderOutcome createInitial() {
-        return new CofunderOutcome();
+    protected SupporterOutcome createInitial() {
+        return new SupporterOutcome();
     }
 
-    public CofunderOutcomeBuilder withId(Long... ids) {
+    public SupporterOutcomeBuilder withId(Long... ids) {
         return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
-    public CofunderOutcomeBuilder withFundingConfirmation(Boolean... fundingConfirmations) {
-        return withArray((value, CofunderOutcomeBuilder) -> CofunderOutcomeBuilder.setFundingConfirmation(value), fundingConfirmations);
+    public SupporterOutcomeBuilder withFundingConfirmation(Boolean... fundingConfirmations) {
+        return withArray((value, SupporterOutcomeBuilder) -> SupporterOutcomeBuilder.setFundingConfirmation(value), fundingConfirmations);
     }
 
-    public CofunderOutcomeBuilder withComment(String... comments) {
-        return withArray((value, CofunderOutcomeBuilder) -> CofunderOutcomeBuilder.setComment(value), comments);
+    public SupporterOutcomeBuilder withComment(String... comments) {
+        return withArray((value, SupporterOutcomeBuilder) -> SupporterOutcomeBuilder.setComment(value), comments);
     }
 
 }

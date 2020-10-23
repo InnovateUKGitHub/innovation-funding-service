@@ -1,25 +1,25 @@
-package org.innovateuk.ifs.management.cofunders.populator;
+package org.innovateuk.ifs.management.supporters.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.cofunders.viewmodel.ManageCofundersViewModel;
+import org.innovateuk.ifs.management.supporters.viewmodel.ManageSupportersViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ManageCofundersViewModelPopulator {
+public class ManageSupportersViewModelPopulator {
 
-    @Value("${ifs.cofunder.enabled}")
-    private boolean cofunderEnabled;
+    @Value("${ifs.supporter.enabled}")
+    private boolean supporterEnabled;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public ManageCofundersViewModel populateModel(long competitionId) {
+    public ManageSupportersViewModel populateModel(long competitionId) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return new ManageCofundersViewModel(competition, cofunderEnabled);
+        return new ManageSupportersViewModel(competition, supporterEnabled);
     }
 }

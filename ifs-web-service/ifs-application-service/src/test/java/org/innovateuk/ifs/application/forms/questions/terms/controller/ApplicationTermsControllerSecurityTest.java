@@ -28,7 +28,7 @@ public class ApplicationTermsControllerSecurityTest extends BaseControllerSecuri
         roles.add(Role.STAKEHOLDER);
         roles.add(Role.EXTERNAL_FINANCE);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        roles.add(Role.COFUNDER);
+        roles.add(Role.SUPPORTER);
 
         assertRolesCanPerform(() -> classUnderTest.getTerms(0L, 0L, null, null, null, false), roles);
     }

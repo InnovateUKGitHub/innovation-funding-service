@@ -45,7 +45,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
 
     @Before
     public void setUpData() {
-        UserResource userResource = newUserResource().withRoleGlobal(Role.COFUNDER).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.SUPPORTER).build();
         setLoggedInUser(userResource);
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -56,7 +56,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void downloadApplicationFinanceFileAsCofunder() throws Exception {
+    public void downloadApplicationFinanceFileAsSupporter() throws Exception {
         Long questionId = 1L;
         Long formInputId = 1L;
         Long fileEntryId = 1L;

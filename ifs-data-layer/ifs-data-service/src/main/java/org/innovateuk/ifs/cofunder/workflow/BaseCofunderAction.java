@@ -1,22 +1,22 @@
-package org.innovateuk.ifs.cofunder.workflow;
+package org.innovateuk.ifs.supporter.workflow;
 
-import org.innovateuk.ifs.cofunder.domain.CofunderAssignment;
-import org.innovateuk.ifs.cofunder.resource.CofunderEvent;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.resource.SupporterEvent;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.springframework.statemachine.StateContext;
 
-public abstract class BaseCofunderAction extends TestableTransitionWorkflowAction<CofunderState, CofunderEvent> {
+public abstract class BaseSupporterAction extends TestableTransitionWorkflowAction<SupporterState, SupporterEvent> {
 
     @Override
-    public void doExecute(StateContext<CofunderState, CofunderEvent> context) {
-        CofunderAssignment assessment = getAssessmentFromContext(context);
+    public void doExecute(StateContext<SupporterState, SupporterEvent> context) {
+        SupporterAssignment assessment = getAssessmentFromContext(context);
         doExecute(assessment, context);
     }
 
-    private CofunderAssignment getAssessmentFromContext(StateContext<CofunderState, CofunderEvent> context) {
-        return (CofunderAssignment) context.getMessageHeader("target");
+    private SupporterAssignment getAssessmentFromContext(StateContext<SupporterState, SupporterEvent> context) {
+        return (SupporterAssignment) context.getMessageHeader("target");
     }
 
-    protected abstract void doExecute(CofunderAssignment assessment, StateContext<CofunderState, CofunderEvent> context);
+    protected abstract void doExecute(SupporterAssignment assessment, StateContext<SupporterState, SupporterEvent> context);
 }

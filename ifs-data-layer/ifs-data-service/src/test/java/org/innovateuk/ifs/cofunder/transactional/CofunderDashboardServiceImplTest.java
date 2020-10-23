@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.cofunder.transactional;
+package org.innovateuk.ifs.supporter.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
+import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,13 +16,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class CofunderDashboardServiceImplTest extends BaseServiceUnitTest<CofunderDashboardService> {
+public class SupporterDashboardServiceImplTest extends BaseServiceUnitTest<SupporterDashboardService> {
     @Mock
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Override
-    protected CofunderDashboardService supplyServiceUnderTest() {
-        return new CofunderDashboardServiceImpl();
+    protected SupporterDashboardService supplyServiceUnderTest() {
+        return new SupporterDashboardServiceImpl();
     }
 
     @Test
@@ -30,12 +30,12 @@ public class CofunderDashboardServiceImplTest extends BaseServiceUnitTest<Cofund
         long userId = 1L;
         long competitionId = 2L;
         PageRequest pageRequest = PageRequest.of(0, 1);
-        CofunderDashboardApplicationResource content = new CofunderDashboardApplicationResource();
-        Page<CofunderDashboardApplicationResource> page = new PageImpl<>(newArrayList(content), pageRequest, 1L);
+        SupporterDashboardApplicationResource content = new SupporterDashboardApplicationResource();
+        Page<SupporterDashboardApplicationResource> page = new PageImpl<>(newArrayList(content), pageRequest, 1L);
 
-        when(cofunderAssignmentRepository.findApplicationsForCofunderCompetitionDashboard(userId, competitionId, pageRequest)).thenReturn(page);
+        when(supporterAssignmentRepository.findApplicationsForSupporterCompetitionDashboard(userId, competitionId, pageRequest)).thenReturn(page);
 
-        ServiceResult<CofunderDashboardApplicationPageResource> result = service.getApplicationsForCofunding(userId, competitionId, pageRequest);
+        ServiceResult<SupporterDashboardApplicationPageResource> result = service.getApplicationsForCofunding(userId, competitionId, pageRequest);
 
         assertThat(result.isSuccess(), equalTo(true));
         assertThat(result.getSuccess().getContent().get(0), equalTo(content));

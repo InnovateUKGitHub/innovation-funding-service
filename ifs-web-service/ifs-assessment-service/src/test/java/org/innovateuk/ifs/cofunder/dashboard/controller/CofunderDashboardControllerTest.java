@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.cofunder.dashboard.controller;
+package org.innovateuk.ifs.supporter.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.cofunder.dashboard.populator.CofunderDashboardModelPopulator;
-import org.innovateuk.ifs.cofunder.dashboard.viewmodel.CofunderDashboardViewModel;
+import org.innovateuk.ifs.supporter.dashboard.populator.SupporterDashboardModelPopulator;
+import org.innovateuk.ifs.supporter.dashboard.viewmodel.SupporterDashboardViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,28 +19,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class CofunderDashboardControllerTest extends BaseControllerMockMVCTest<CofunderDashboardController> {
+public class SupporterDashboardControllerTest extends BaseControllerMockMVCTest<SupporterDashboardController> {
 
     @Override
-    protected CofunderDashboardController supplyControllerUnderTest() {
-        return new CofunderDashboardController();
+    protected SupporterDashboardController supplyControllerUnderTest() {
+        return new SupporterDashboardController();
     }
 
     @Mock
-    private CofunderDashboardModelPopulator cofunderDashboardModelPopulator;
+    private SupporterDashboardModelPopulator supporterDashboardModelPopulator;
 
     @Test
     public void dashboard() throws Exception {
-        CofunderDashboardViewModel expected = mock(CofunderDashboardViewModel.class);
+        SupporterDashboardViewModel expected = mock(SupporterDashboardViewModel.class);
 
-        when(cofunderDashboardModelPopulator.populateModel(loggedInUser)).thenReturn(expected);
+        when(supporterDashboardModelPopulator.populateModel(loggedInUser)).thenReturn(expected);
 
-        MvcResult result = mockMvc.perform(get("/cofunder/dashboard"))
+        MvcResult result = mockMvc.perform(get("/supporter/dashboard"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("cofunder/cofunder-dashboard"))
+                .andExpect(view().name("supporter/supporter-dashboard"))
                 .andReturn();
 
-        CofunderDashboardViewModel actual = (CofunderDashboardViewModel) result.getModelAndView().getModel().get("model");
+        SupporterDashboardViewModel actual = (SupporterDashboardViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(expected, actual);
     }
 }

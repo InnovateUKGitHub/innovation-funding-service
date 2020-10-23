@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.cofunder.resource;
+package org.innovateuk.ifs.supporter.resource;
 
-public class CofunderAssignmentResource {
+public class SupporterAssignmentResource {
     private long assignmentId;
-    private CofunderState state;
+    private SupporterState state;
     private String comments;
     private String userName;
     private String userEmail;
@@ -16,11 +16,11 @@ public class CofunderAssignmentResource {
         this.assignmentId = assignmentId;
     }
 
-    public CofunderState getState() {
+    public SupporterState getState() {
         return state;
     }
 
-    public void setState(CofunderState state) {
+    public void setState(SupporterState state) {
         this.state = state;
     }
 

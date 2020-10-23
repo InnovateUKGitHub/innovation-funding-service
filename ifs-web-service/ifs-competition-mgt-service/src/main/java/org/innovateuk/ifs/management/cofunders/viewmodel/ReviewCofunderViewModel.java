@@ -1,27 +1,27 @@
-package org.innovateuk.ifs.management.cofunders.viewmodel;
+package org.innovateuk.ifs.management.supporters.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 
 import java.util.List;
 import java.util.Map;
 
-public class ReviewCofunderViewModel {
+public class ReviewSupporterViewModel {
 
-    private final Map<CofunderState, List<CofunderAssignmentResource>> assignments;
+    private final Map<SupporterState, List<SupporterAssignmentResource>> assignments;
     private final long applicationId;
     private final String applicationName;
     private final long competitionId;
 
-    public ReviewCofunderViewModel(Map<CofunderState, List<CofunderAssignmentResource>> assignments, ApplicationResource applicationResource) {
+    public ReviewSupporterViewModel(Map<SupporterState, List<SupporterAssignmentResource>> assignments, ApplicationResource applicationResource) {
         this.assignments = assignments;
         this.applicationId = applicationResource.getId();
         this.applicationName = applicationResource.getName();
         this.competitionId = applicationResource.getCompetition();
     }
 
-    public Map<CofunderState, List<CofunderAssignmentResource>> getAssignments() {
+    public Map<SupporterState, List<SupporterAssignmentResource>> getAssignments() {
         return assignments;
     }
 
@@ -39,27 +39,27 @@ public class ReviewCofunderViewModel {
 
     /*View model logic*/
     public boolean isAccepted() {
-        return this.assignments.containsKey(CofunderState.ACCEPTED);
+        return this.assignments.containsKey(SupporterState.ACCEPTED);
     }
 
     public boolean isPending() {
-        return this.assignments.containsKey(CofunderState.CREATED);
+        return this.assignments.containsKey(SupporterState.CREATED);
     }
 
     public boolean isDeclined() {
-        return this.assignments.containsKey(CofunderState.REJECTED);
+        return this.assignments.containsKey(SupporterState.REJECTED);
     }
 
     public int getAcceptedCount() {
-        return isAccepted() ? this.assignments.get(CofunderState.ACCEPTED).size() : 0;
+        return isAccepted() ? this.assignments.get(SupporterState.ACCEPTED).size() : 0;
     }
 
     public int getPendingCount() {
-        return isPending() ? this.assignments.get(CofunderState.CREATED).size() : 0;
+        return isPending() ? this.assignments.get(SupporterState.CREATED).size() : 0;
     }
 
     public int getDeclinedCount() {
-        return isDeclined() ? this.assignments.get(CofunderState.REJECTED).size() : 0;
+        return isDeclined() ? this.assignments.get(SupporterState.REJECTED).size() : 0;
     }
 }
 
