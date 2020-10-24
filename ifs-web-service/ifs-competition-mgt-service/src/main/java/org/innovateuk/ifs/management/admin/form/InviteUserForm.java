@@ -2,20 +2,19 @@ package org.innovateuk.ifs.management.admin.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
  * Form to capture the posted details of the newly invited user
  */
+@FieldRequiredIf(required = "organisation", argument = "coFunder", predicate = true, message = "{validation.invite.organisation.required}")
 @FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = true, message = "{validation.kta.invite.email.required}")
 @FieldRequiredIf(required = "emailAddress", argument = "ktpRole", predicate = false, message = "{validation.invite.email.required}")
 @FieldComparison(
@@ -53,6 +52,8 @@ public class InviteUserForm extends BaseBindingResultTarget {
 
     private Role role;
 
+    private String organisation;
+
     public InviteUserForm() {
         // for spring form binding
     }
@@ -89,8 +90,20 @@ public class InviteUserForm extends BaseBindingResultTarget {
         this.role = role;
     }
 
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
+    }
+
     public boolean isKtpRole() {
         return Role.KNOWLEDGE_TRANSFER_ADVISER == role;
+    }
+
+    public boolean isCoFunder() {
+        return Role.COFUNDER == role;
     }
 
     @Override
@@ -106,6 +119,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(lastName, form.lastName)
                 .append(emailAddress, form.emailAddress)
                 .append(role, form.role)
+                .append(organisation, form.organisation)
                 .isEquals();
     }
 
@@ -116,6 +130,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(lastName)
                 .append(emailAddress)
                 .append(role)
+                .append(organisation)
                 .toHashCode();
     }
 }

@@ -172,7 +172,8 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "A user can see an application resource which they are connected to")
     public boolean usersConnectedToTheApplicationCanView(ApplicationResource application, UserResource user) {
-        return userIsConnectedToApplicationResource(application, user);
+        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), application.getId())
+                || cofunderAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
@@ -298,10 +299,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return application.isInPublishedAssessorFeedbackCompetitionState() && isMemberOfProjectTeam(application.getId(), user);
     }
 
-    boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
-        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), application.getId());
-    }
-
     @PermissionRule(value = "CREATE",
             description = "Any logged in user with global roles or user with system registrar role can create an application but only for open competitions",
             particularBusinessState = "Competition is in Open state")
@@ -330,5 +327,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
+
 }
 
