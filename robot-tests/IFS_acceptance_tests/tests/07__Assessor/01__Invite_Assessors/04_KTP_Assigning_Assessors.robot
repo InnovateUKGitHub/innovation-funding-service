@@ -286,19 +286,21 @@ the user filters the KTA user
     the user clicks the button/link          id = assessor-filter-button
 
 KTA accepts the invitation to assess the application
-    [Arguments]    ${compettitionName}   ${ktaEmail}   ${short_password}
-    log in as a different user           ${ktaEmail}   ${short_password}
-    the user clicks the button/link      link = ${compettitionName}
-    the user selects the radio button    acceptInvitation   true
-    the user clicks the button/link      jQuery = button:contains("Confirm")
+    [Arguments]    ${compettitionName}                    ${ktaEmail}   ${short_password}
+    log in as a different user                            ${ktaEmail}   ${short_password}
+    the user clicks the assessment tile if displayed
+    the user clicks the button/link                       link = ${compettitionName}
+    the user selects the radio button                     acceptInvitation   true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
 
 KTA accepts to assess the KTP application
-    [Arguments]   ${compettitionName}    ${ktaEmail}  ${short_password}
+    [Arguments]   ${compettitionName}                    ${ktaEmail}  ${short_password}
     log in as a different user           ${ktaEmail}  ${short_password}
-    the user clicks the button/link      link = ${compettitionName}
-    the user clicks the button/link      link = Accept or reject
-    the user selects the radio button    assessmentAccept  true
-    the user clicks the button/link      jQuery = button:contains("Confirm")
+    the user clicks the assessment tile if displayed
+    the user clicks the button/link                       link = ${compettitionName}
+    the user clicks the button/link                       link = Accept or reject
+    the user selects the radio button                     assessmentAccept  true
+    the user clicks the button/link                       jQuery = button:contains("Confirm")
 
 Assessor completes the KTP category
     [Arguments]   ${feedbackText}
@@ -308,9 +310,8 @@ Assessor completes the KTP category
     mouse out  css = .editor
     the user should see the element                         jQuery = span:contains("Saved!")
     The user clicks the button/link                         jQuery = button:contains("Save and return to assessment overview")
-    #${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots     page should contain     An unexpected error occurred.
-    Run Keyword If    '${STATUS}' == 'TRUE'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 Assessor should see the category details
     [Arguments]   ${category}   ${score}   ${percentage}
@@ -327,9 +328,8 @@ Assessor completes the scope section of an application
     mouse out  css = .editor
     the user should see the element                         jQuery = span:contains("Saved!")
     the user clicks the button/link                         jQuery = button:contains("Save and return to assessment overview")
-    #${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots    page should contain     An unexpected error occurred.
-    Run Keyword If    '${STATUS}' == 'TRUE'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
+    ${error} =   Run Keyword and return status              page should contain     An unexpected error occurred.
+    Run Keyword If    '${error}' == 'True'                  the user clicks the button/link   jQuery = button:contains("Save and return to assessment overview")
 
 Assessor should review the assessment category details
     [Arguments]   ${sectionStatus}   ${score}   ${idSelector}   ${feedbackText}
@@ -356,7 +356,9 @@ Invite KTA to assess the competition
     [Arguments]   ${competitionID}   ${applicationTitle}   ${competitionName}   ${email}  ${short_password}
     Log in as a different user                               &{ifs_admin_user_credentials}
     the user navigates to the page                           ${server}/management/competition/${competitionID}/assessors/find
-    the user selects the checkbox                            assessor-row-1
+    ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = span:contains("Non KTP competition all finance overview")
+    Run Keyword If   '${status}' == 'PASS'    the user selects the checkbox     css = input[name="selectedAssessorIds"][value="315"]
+    ...                              ELSE     the user selects the checkbox     assessor-row-1
     the user clicks the button/link                          id = add-selected-assessors-to-invite-list-button
     the user clicks the button/link                          id = review-and-send-assessor-invites-button
     the user clicks the button/link                          jQuery = button:contains("Send invite")
