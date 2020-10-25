@@ -33,6 +33,7 @@ ${cofunderUserUsername}                   Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
 ${cofundingCompetitionID}                 ${competition_ids['${cofundingCompetitionName}']}
 ${cofundingApplicationTitle}              How cancer invasion takes shape
+${cofundingApplicationID}                 ${application_ids['${cofundingApplicationTitle}']}
 ${cofunderOrg}                            The University of Surrey
 ${newApplication}                         New application
 
@@ -156,8 +157,7 @@ Cofunder checks the number of applications count is correct
 
 Cofunder can view read only view of an application and see the print application link
     [Documentation]  IFS-8408
-    Given the user clicks the button/link       link = Previous
-    And the user clicks the button/link         link = ${cofundingApplicationTitle}
+    Given the user navigates to the page        ${server}/application/${cofundingApplicationID}/summary
     When the user clicks the button/link        jQuery = button:contains("Application team")
     Then the user should see the element        jQuery = h1:contains("Application overview") span:contains("${cofundingApplicationTitle}")
     And the user should not see the element     jQuery = button:contains("Edit")
@@ -193,12 +193,12 @@ The user responds to the Cofunder/Supporter review Yes
     And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
 
 # UNCOMMENT THIS WHEN BUG 8586 IS FIXED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#The comp admin can close the assessment and the link to allocate applications is no longer active
-#    [Documentation]   IFS-8404
-#    Given Log in as a different user             &{ifs_admin_user_credentials}
-#    When the user clicks the button/link         link = ${cofundingCompetitionName}
-#    And the user can close the assessment
-#    Then the user is no longer able to allocate applications
+The comp admin can close the assessment and the link to allocate applications is no longer active
+    [Documentation]   IFS-8404
+    Given Log in as a different user             &{ifs_admin_user_credentials}
+    When the user clicks the button/link         link = ${cofundingCompetitionName}
+    And the user can close the assessment
+    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
@@ -250,7 +250,7 @@ the user searches for cofunder by name
     the user clicks the button/link         link = Clear all filters
     the user should see the element         jQuery = .govuk-table__cell:contains("Keane Connolly")
 
-Given the user can view already assigned co-funders
+the user can view already assigned co-funders
     the user should see the element         jQuery = h1:contains(Assign to application)
     the user should see the element         jQuery = h3:contains("Partners")
     the user should see the element         jQuery = h3:contains("Innovation area")
@@ -272,7 +272,7 @@ the user can invite a cofunder to a KTP application
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
 
 the user can close the assessment
-    the user navigates to the page          ${server}/management/competition/109
+    the user navigates to the page          ${server}/management/competition/${cofundingCompetitionID}
     the user clicks the button/link         jQuery = button:contains("Close assessment")
 
 the user is no longer able to allocate applications
