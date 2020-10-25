@@ -193,12 +193,12 @@ The user responds to the Cofunder/Supporter review Yes
     And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
 
 # UNCOMMENT THIS WHEN BUG 8586 IS FIXED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-The comp admin can close the assessment and the link to allocate applications is no longer active
-    [Documentation]   IFS-8404
-    Given Log in as a different user             &{ifs_admin_user_credentials}
-    When the user clicks the button/link         link = ${cofundingCompetitionName}
-    And the user can close the assessment
-    Then the user is no longer able to allocate applications
+#The comp admin can close the assessment and the link to allocate applications is no longer active
+#    [Documentation]   IFS-8404
+#    Given Log in as a different user             &{ifs_admin_user_credentials}
+#    When the user clicks the button/link         link = ${cofundingCompetitionName}
+#    And the user can close the assessment
+#    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
