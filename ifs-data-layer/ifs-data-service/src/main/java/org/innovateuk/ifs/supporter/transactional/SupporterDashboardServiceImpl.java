@@ -9,16 +9,14 @@ import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResour
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardCompetitionResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -84,13 +82,19 @@ public class SupporterDashboardServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<SupporterDashboardApplicationPageResource> getApplicationsForCofunding(long userId, long competitionId, Pageable pageable) {
-        Page<SupporterDashboardApplicationResource> page =  supporterAssignmentRepository.findApplicationsForSupporterCompetitionDashboard(userId, competitionId, pageable);
-        return serviceSuccess(new SupporterDashboardApplicationPageResource(
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.getContent(),
-                page.getNumber(),
-                page.getSize()
-        ));
+        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            CompetitionStatus status = competition.getCompetitionStatus();
+            EnumSet<SupporterState> states = status.isLaterThan(CompetitionStatus.IN_ASSESSMENT)
+                    ? EnumSet.of(SupporterState.ACCEPTED, SupporterState.REJECTED)
+                    : EnumSet.allOf(SupporterState.class);
+            Page<SupporterDashboardApplicationResource> page =  supporterAssignmentRepository.findApplicationsForSupporterCompetitionDashboard(userId, competitionId, states, pageable);
+            return new SupporterDashboardApplicationPageResource(
+                    page.getTotalElements(),
+                    page.getTotalPages(),
+                    page.getContent(),
+                    page.getNumber(),
+                    page.getSize()
+            );
+        });
     }
 }

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageRe
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
 import org.innovateuk.ifs.supporter.service.SupporterDashboardRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,7 @@ public class SupporterCompetitionDashboardControllerTest extends BaseControllerM
         );
         CompetitionResource competition = newCompetitionResource()
                 .withAssessorDeadlineDate(ZonedDateTime.now())
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
                 .build();
 
         when(supporterDashboardRestService.getSupporterCompetitionDashboardApplications(getLoggedInUser().getId(), competition.getId(), 2)).thenReturn(restSuccess(pageResource));
@@ -71,6 +73,7 @@ public class SupporterCompetitionDashboardControllerTest extends BaseControllerM
         assertThat(viewModel.getDeadline(), notNullValue());
         assertThat(viewModel.getCompetitionName(), equalTo(competition.getName()));
         assertThat(viewModel.getCompetitionId(), equalTo(competition.getId()));
+        assertThat(viewModel.isAssessmentClosed(), equalTo(false));
         assertThat(viewModel.getPagination().getTotalElements(), equalTo(41L));
     }
 }
