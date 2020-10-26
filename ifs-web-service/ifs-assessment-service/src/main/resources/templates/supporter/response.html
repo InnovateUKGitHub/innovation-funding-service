@@ -18,7 +18,7 @@
         </div>
 
         <th:block>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Supporter review feedback',subTitle=${model.applicationId + ': ' + model.applicationName},size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Supporter review',subTitle=${model.applicationId + ': ' + model.applicationName},size='govuk-heading-xl'" />
         </th:block>
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -27,7 +27,7 @@
         <th:block th:if="${model.readonly}">
             <dl class="govuk-list">
                 <dl class="govuk-list">
-                    <dt>Do you want to fund this application?</dt>
+                    <dt>Are you interested in supporting this application?</dt>
                     <dd th:text="${form.decision ? 'Yes' : 'No'}">Yes</dd>
                     <dt>Your feedback</dt>
                     <dd data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${form.comments}" >Answer</dd>
