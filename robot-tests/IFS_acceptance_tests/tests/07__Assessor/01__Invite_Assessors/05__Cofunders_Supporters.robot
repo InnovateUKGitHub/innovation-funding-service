@@ -73,9 +73,7 @@ The internal user can view a co-funder application by searching with an applicat
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
     Given Log in as a different user                    &{ifs_admin_user_credentials}
-    And the user clicks the button/link                 link = ${cofundingCompetitionName}
-    And the user clicks the button/link                 link = Manage co-funders
-    And the user clicks the button/link                 link = View feedback
+    And the user clicks view feedback link
     When the user enters text to a text field           id=applicationFilter    ${cofunderApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
     And the user clicks the button/link                 link = ${cofunderApplicationID}
@@ -90,23 +88,15 @@ The ifs admin views the feedback of the application
 The comp admin views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{Comp_admin1_credentials}
-    And the user clicks the button/link             link = ${cofundingCompetitionName}
-    And the user clicks the button/link             link = Manage co-funders
-    And the user clicks the button/link             link = View feedback
-    When And the user clicks the button/link        link = ${cofunderApplicationID}
-    And the user clicks the button/link             link = Back to co-funders
-    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
+    And the user clicks view feedback link
+    When the user can view the feedback
     Then the user can view the cofunder review
 
 The finance manager views the feedback of the application
     [Documentation]   IFS-8407
     Given Log in as a different user                &{internal_finance_credentials}
-    And the user clicks the button/link             link = ${cofundingCompetitionName}
-    And the user clicks the button/link             link = Manage co-funders
-    And the user clicks the button/link             link = View feedback
-    When And the user clicks the button/link        link = ${cofunderApplicationID}
-    And the user clicks the button/link             link = Back to co-funders
-    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
+    And the user clicks view feedback link
+    When the user can view the feedback
     Then the user can view the cofunder review
 
 The cofunder can see the sections in the cofunding dashboard
@@ -303,3 +293,13 @@ the user gets expected number of applications in the page
 get application id using application name
     ${protonApplicationId} =    get application id by name      The proton size
     set suite variable     ${protonApplicationId}
+
+the user clicks view feedback link
+    And the user clicks the button/link             link = ${cofundingCompetitionName}
+    And the user clicks the button/link             link = Manage co-funders
+    And the user clicks the button/link             link = View feedback
+
+the user can view the feedback
+    When the user clicks the button/link            link = ${cofunderApplicationID}
+    And the user clicks the button/link             link = Back to co-funders
+    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")

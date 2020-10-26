@@ -15,6 +15,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.validation.Validator;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.junit.Assert.assertEquals;
@@ -35,6 +37,9 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
 
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private Validator validator;
 
     @Override
     protected ExternalUserRegistrationController supplyControllerUnderTest() {

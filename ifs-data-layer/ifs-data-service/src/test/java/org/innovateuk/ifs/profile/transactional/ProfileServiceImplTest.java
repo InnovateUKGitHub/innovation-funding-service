@@ -826,7 +826,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         inOrder.verify(userRepositoryMock).findById(userId);
         inOrder.verify(profileRepositoryMock).findById(originalProfile.getId());
         inOrder.verify(addressMapperMock).mapToDomain(addressResource);
-        inOrder.verify(profileRepositoryMock).save(updatedProfile);
+        inOrder.verify(profileRepositoryMock).save(any());
 
         inOrder.verifyNoMoreInteractions();
     }
