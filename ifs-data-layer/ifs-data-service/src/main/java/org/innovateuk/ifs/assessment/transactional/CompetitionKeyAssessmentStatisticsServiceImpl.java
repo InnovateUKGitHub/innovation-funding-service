@@ -7,9 +7,9 @@ import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStat
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImpl extends BaseTransacti
     private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Override
     public ServiceResult<CompetitionReadyToOpenKeyAssessmentStatisticsResource>
@@ -108,7 +108,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImpl extends BaseTransacti
                     .countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(SUBMITTED, competitionId, singletonList(UserStatus.ACTIVE)));
             if (competition.isKtp()) {
                 competitionInAssessmentKeyAssessmentStatisticsResource.setSupportersInvited(
-                        cofunderAssignmentRepository.countByTargetCompetitionId(competitionId)
+                        supporterAssignmentRepository.countByTargetCompetitionId(competitionId)
                 );
             }
             return competitionInAssessmentKeyAssessmentStatisticsResource;

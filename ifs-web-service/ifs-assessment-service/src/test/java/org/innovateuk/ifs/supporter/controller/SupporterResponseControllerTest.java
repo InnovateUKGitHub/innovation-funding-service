@@ -3,6 +3,7 @@ package org.innovateuk.ifs.supporter.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.supporter.form.SupporterResponseForm;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.supporter.resource.SupporterDecisionResource;
@@ -46,7 +47,10 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withAssignmentId(100L)
                 .withState(SupporterState.CREATED)
                 .build();
-        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
@@ -65,6 +69,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         assertThat(viewModel.getApplicationId(), equalTo(application.getId()));
         assertThat(viewModel.getApplicationName(), equalTo(application.getName()));
         assertThat(viewModel.isReadonly(), equalTo(false));
+        assertThat(viewModel.isCanEdit(), equalTo(true));
     }
 
     @Test
@@ -74,7 +79,10 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId())
@@ -113,7 +121,10 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
@@ -132,6 +143,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         assertThat(viewModel.getApplicationId(), equalTo(application.getId()));
         assertThat(viewModel.getApplicationName(), equalTo(application.getName()));
         assertThat(viewModel.isReadonly(), equalTo(true));
+        assertThat(viewModel.isCanEdit(), equalTo(false));
     }
 
     @Test
@@ -188,7 +200,10 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
 
     @Test
     public void saveResponse_failure() throws Exception {
-        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(post("/supporter/application/{applicationId}/response", application.getId()))

@@ -48,7 +48,7 @@ public class SupporterDashboardServiceImplTest extends BaseServiceUnitTest<Suppo
 
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(competition.getCompetitionStatus()).thenReturn(CompetitionStatus.IN_ASSESSMENT);
-        when(supporterAssignmentRepository.findApplicationsForSupporterCompetitionDashboard(userId, competitionId, pageRequest)).thenReturn(page);
+        when(supporterAssignmentRepository.findApplicationsForSupporterCompetitionDashboard(userId, competitionId, EnumSet.allOf(SupporterState.class), pageRequest)).thenReturn(page);
 
         ServiceResult<SupporterDashboardApplicationPageResource> result = service.getApplicationsForCofunding(userId, competitionId, pageRequest);
 

@@ -131,7 +131,7 @@ public class SupporterAssignmentServiceImplTest extends BaseServiceUnitTest<Supp
         long applicationId = 2l;
         User user = newUser().build();
         Application application = newApplication().withCompetition(newCompetition().build()).build();
-        long cofunderAssignmentId = 6L;
+        long supporterAssignmentId = 6L;
         SupporterAssignment supporterAssignment = newSupporterAssignment()
                 .withId(supporterAssignmentId)
                 .withApplication(application)
