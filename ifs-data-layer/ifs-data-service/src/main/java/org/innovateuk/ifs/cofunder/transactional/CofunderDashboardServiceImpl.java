@@ -3,22 +3,17 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.assessment.dashboard.transactional.ApplicationAssessmentService;
 import org.innovateuk.ifs.cofunder.domain.CompetitionForCofunding;
 import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
-import org.innovateuk.ifs.cofunder.resource.AssessorDashboardState;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationPageResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardApplicationResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderDashboardCompetitionResource;
+import org.innovateuk.ifs.cofunder.resource.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -84,13 +79,19 @@ public class CofunderDashboardServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<CofunderDashboardApplicationPageResource> getApplicationsForCofunding(long userId, long competitionId, Pageable pageable) {
-        Page<CofunderDashboardApplicationResource> page =  cofunderAssignmentRepository.findApplicationsForCofunderCompetitionDashboard(userId, competitionId, pageable);
-        return serviceSuccess(new CofunderDashboardApplicationPageResource(
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.getContent(),
-                page.getNumber(),
-                page.getSize()
-        ));
+        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            CompetitionStatus status = competition.getCompetitionStatus();
+            EnumSet<CofunderState> states = status.isLaterThan(CompetitionStatus.IN_ASSESSMENT)
+                    ? EnumSet.of(CofunderState.ACCEPTED, CofunderState.REJECTED)
+                    : EnumSet.allOf(CofunderState.class);
+            Page<CofunderDashboardApplicationResource> page =  cofunderAssignmentRepository.findApplicationsForCofunderCompetitionDashboard(userId, competitionId, states, pageable);
+            return new CofunderDashboardApplicationPageResource(
+                    page.getTotalElements(),
+                    page.getTotalPages(),
+                    page.getContent(),
+                    page.getNumber(),
+                    page.getSize()
+            );
+        });
     }
 }
