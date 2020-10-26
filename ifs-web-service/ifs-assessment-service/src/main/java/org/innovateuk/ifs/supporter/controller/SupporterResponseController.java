@@ -84,7 +84,7 @@ public class SupporterResponseController {
                            @Valid @ModelAttribute("form") SupporterResponseForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
-        Supplier<String> success = () -> "redirect:/";
+        Supplier<String> success = () -> String.format("redirect:/supporter/application/%d/response/view", applicationId);
         Supplier<String> failure = () -> editView(model, applicationId);
 
         return validationHandler.failNowOrSucceedWith(failure, () -> {

@@ -46,7 +46,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withAssignmentId(100L)
                 .withState(SupporterState.CREATED)
                 .build();
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
         when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
@@ -74,7 +74,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId())
@@ -113,7 +113,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withState(SupporterState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
         when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
@@ -181,14 +181,14 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .param("decision", String.valueOf(decision))
                 .param("comments", comments))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl(String.format("/supporter/application/%d/response/view", applicationId)));
 
         verify(supporterAssignmentRestService).decision(eq(assignmentId), refEq(resource));
     }
 
     @Test
     public void saveResponse_failure() throws Exception {
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource().withCompetition(2L).build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(post("/supporter/application/{applicationId}/response", application.getId()))

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -47,7 +49,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
     public void setUpData() {
         UserResource userResource = newUserResource().withRoleGlobal(Role.SUPPORTER).build();
         setLoggedInUser(userResource);
-        this.setupCompetition();
+        this.setupCompetition(FundingType.KTP, AssessorFinanceView.ALL);
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.setupFinances();

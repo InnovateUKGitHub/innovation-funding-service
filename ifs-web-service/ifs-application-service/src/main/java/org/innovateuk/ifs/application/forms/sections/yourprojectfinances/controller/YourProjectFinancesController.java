@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-finances/organisation/{organisationId}/section/{sectionId}")
 @Controller
 @SecuredBySpring(value = "YOUR_FINANCES", description = "Applicants or internal users or kta can view finances.")
-@PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder',  'external_finance', 'knowledge_transfer_adviser', 'supporter')")
+@PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder',  'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
 public class YourProjectFinancesController {
     private static final String VIEW = "application/sections/your-project-finances/your-project-finances";
 

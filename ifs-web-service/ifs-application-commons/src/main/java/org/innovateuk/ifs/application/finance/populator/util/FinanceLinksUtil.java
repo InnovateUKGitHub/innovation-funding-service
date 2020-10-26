@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.ALL;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
@@ -73,9 +74,12 @@ public class FinanceLinksUtil {
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
-            if (assessorProcessRoles().contains(currentUserRole.get().getRole())
-                    && DETAILED.equals(competitionAssessmentConfigResource.getAssessorFinanceView())) {
-                return Optional.of(assessorLink(application, organisation));
+            if (assessorProcessRoles().contains(currentUserRole.get().getRole())) {
+                if (DETAILED == competitionAssessmentConfigResource.getAssessorFinanceView()) {
+                    return Optional.of(assessorLink(application, organisation));
+                } else if (ALL == competitionAssessmentConfigResource.getAssessorFinanceView()) {
+                    return Optional.of(organisationIdInLink(application.getId(), organisation));
+                }
             }
         }
 
