@@ -77,6 +77,7 @@ public class CofunderResponseController {
         redirectAttributes.addFlashAttribute("previousResponse", assignment);
         return String.format("redirect:/cofunder/application/%d/response", applicationId);
     }
+
     @PostMapping
     public String saveResponse(@PathVariable long applicationId,
                            Model model,
