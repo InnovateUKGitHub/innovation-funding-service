@@ -22,6 +22,7 @@ public class YourFundingControllerSecurityTest extends BaseControllerSecurityTes
         roles.add(Role.EXTERNAL_FINANCE);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
         roles.add(Role.COFUNDER);
+        roles.add(Role.ASSESSOR);
 
         assertRolesCanPerform(() -> classUnderTest.viewYourFunding(null, null, null, 0L, 0L,0L), roles);
     }
