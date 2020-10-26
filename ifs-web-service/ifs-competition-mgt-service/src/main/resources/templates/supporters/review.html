@@ -18,7 +18,7 @@
                   th:with="pageTitle='Supporter overview',subTitle=${model.applicationId + ': ' + model.applicationName}, size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.accepted}">
-            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Accepted (${model.AcceptedCount})|">Interested</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Interested (${model.AcceptedCount})|">Interested</h2>
 
             <ul class="govuk-list">
                 <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
