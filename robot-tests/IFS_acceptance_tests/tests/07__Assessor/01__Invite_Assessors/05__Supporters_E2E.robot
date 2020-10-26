@@ -33,7 +33,8 @@ ${supporterUserUsername}                  Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
 ${cofundingCompetitionID}                 ${competition_ids['${cofundingCompetitionName}']}
 ${cofundingApplicationTitle}              How cancer invasion takes shape
-${supporterOrg}                           The University of Surrey
+${cofundingApplicationID}                 ${application_ids['${cofundingApplicationTitle}']}
+${supporterOrg}                            The University of Surrey
 ${newApplication}                         New application
 
 *** Test Cases ***
@@ -58,7 +59,7 @@ The internal user can invite a supporter to a KTP application
 
 The internal user can remove a supporter from an application
     [Documentation]   IFS-8405
-    Given The user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
+    Given the user clicks the button/link        jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
     Then the user should not see the element     jQuery = td:contains("Douglas Alston") ~ td button:contains("Remove")
 
 The supporter should not see the removed application on their dashboard
@@ -140,7 +141,7 @@ Supporter can see list of applications assigned to him in the dashboard
 Supporter checks number of applications in the page is no more than 20
     [Documentation]  IFS-8403
     When the user gets the number of applications in page
-    Then should be equal as numbers                           ${applicationCount_1}    20
+    Then should be equal as numbers          ${applicationCount_1}    20
 
 Supporter can navgate to the next page of applications in review
     [Documentation]  IFS-8403
@@ -156,8 +157,7 @@ Supporter checks the number of applications count is correct
 
 Supporter can view read only view of an application and see the print application link
     [Documentation]  IFS-8408
-    Given the user clicks the button/link       link = Previous
-    And the user clicks the button/link         link = ${cofundingApplicationTitle}
+    Given the user navigates to the page        ${server}/application/${cofundingApplicationID}/summary
     When the user clicks the button/link        jQuery = button:contains("Application team")
     Then the user should see the element        jQuery = h1:contains("Application overview") span:contains("${cofundingApplicationTitle}")
     And the user should not see the element     jQuery = button:contains("Edit")
@@ -192,12 +192,13 @@ The user responds to the Supporter/Supporter review Yes
     And the user enters text to a text field     css = .editor  This is the comments from the supporter
     And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
 
-The comp admin can close the assessment and the link to allocate applications is no longer active
-    [Documentation]   IFS-8404
-    Given Logging in and Error Checking                             &{ifs_admin_user_credentials}
-    When the user clicks the button/link                            link = ${cofundingCompetitionName}
-    And the user can close the assessment
-    Then the user is no longer able to allocate applications
+# UNCOMMENT THIS WHEN BUG 8586 IS FIXED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#The comp admin can close the assessment and the link to allocate applications is no longer active
+#    [Documentation]   IFS-8404
+#    Given Log in as a different user             &{ifs_admin_user_credentials}
+#    When the user clicks the button/link         link = ${cofundingCompetitionName}
+#    And the user can close the assessment
+#    Then the user is no longer able to allocate applications
 
 *** Keywords ***
 Custom suite setup
@@ -271,7 +272,7 @@ the user can invite a supporter to a KTP application
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
 
 the user can close the assessment
-    the user navigates to the page          ${server}/management/competition/109
+    the user navigates to the page          ${server}/management/competition/${cofundingCompetitionID}
     the user clicks the button/link         jQuery = button:contains("Close assessment")
 
 the user is no longer able to allocate applications
@@ -302,3 +303,13 @@ the user gets expected number of applications in the page
 get application id using application name
     ${protonApplicationId} =    get application id by name      The proton size
     set suite variable     ${protonApplicationId}
+
+the user clicks view feedback link
+    And the user clicks the button/link             link = ${cofundingCompetitionName}
+    And the user clicks the button/link             link = Manage co-funders
+    And the user clicks the button/link             link = View feedback
+
+the user can view the feedback
+    When the user clicks the button/link            link = ${cofunderApplicationID}
+    And the user clicks the button/link             link = Back to co-funders
+    And the user clicks the button/link             jQuery = td:contains("${cofunderApplicationTitle}") ~ td:contains("View feedback")
