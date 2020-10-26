@@ -71,7 +71,7 @@ The supporter should not see the removed application on their dashboard
 The internal user can view a supporter application by searching with an application number
     [Documentation]  IFS-8414
     [Setup]  the user requesting the application id
-    Given Logging in and Error Checking                 &{ifs_admin_user_credentials}
+    Given Log in as a different user                    &{ifs_admin_user_credentials}
     And the user clicks the button/link                 link = ${cofundingCompetitionName}
     And the user clicks the button/link                 link = Manage supporters
     And the user clicks the button/link                 link = View feedback
@@ -82,7 +82,7 @@ The internal user can view a supporter application by searching with an applicat
 
 The ifs admin views the feedback of the application
     [Documentation]   IFS-8407
-    Given the user clicks the button/link           link = Back to supporters
+    Given the user clicks the button/link           link = Back to supporter feedback
     When the user clicks the button/link            jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the supporter review
 
@@ -93,7 +93,7 @@ The comp admin views the feedback of the application
     And the user clicks the button/link             link = Manage supporters
     And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${supporterApplicationID}
-    And the user clicks the button/link             link = Back to supporters
+    And the user clicks the button/link             link = Back to supporter feedback
     And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the supporter review
 
@@ -104,15 +104,15 @@ The finance manager views the feedback of the application
     And the user clicks the button/link             link = Manage supporters
     And the user clicks the button/link             link = View feedback
     When And the user clicks the button/link        link = ${supporterApplicationID}
-    And the user clicks the button/link             link = Back to supporters
+    And the user clicks the button/link             link = Back to supporter feedback
     And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
     Then the user can view the supporter review
 
 The supporter can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
     Given Log in as a different user            hubert.cumberdale@salad-fingers.com  Passw0rd
-    When the user clicks the button/link        jQuery = h2:contains("Co-funding")
-    Then the user should see the element        jQuery = h2:contains("Competitions to review")
+    When the user clicks the button/link        jQuery = h2:contains("Supporter")
+    Then the user should see the element        jQuery = h1:contains("Competitions")
     And the user should not see the element     jQuery = h2:contains("Upcoming competitions to review")
 
 The supporter should see a newly created application from the dashboard
@@ -167,20 +167,20 @@ The user sees the validation when responding to the Supporter/Supporter review
     [Documentation]   IFS-8409
     Given Log in as a different user                            &{Supporter01_credentials}
     When the user navigates to the page                         ${KTP_Application_URL}
-    Then the user clicks the button/link                        jQuery = button:contains("Save review and return to applications")
+    Then the user clicks the button/link                        jQuery = button:contains("Save and return to applications")
     And the user should see a field error                       You must select an option.
     And the user should see a field and summary error           Please provide some feedback.
     And the user checks the feedback validation                 decision-no
     And the user checks the feedback validation                 decision-yes
     And the user enters multiple strings into a text field      css = .editor  a${SPACE}  252
-    And the user clicks the button/link                         jQuery = button:contains("Save review and return to applications")
+    And the user clicks the button/link                         jQuery = button:contains("Save and return to applications")
     And the user should see a field error                       Maximum word count exceeded. Please reduce your word count to 250.
 
 The user responds to the Supporter/Supporter review No
     [Documentation]   IFS-8409
     Given the user selects the radio button           decision  decision-no
     When the user enters text to a text field         css = .editor  This is the comments from the supporter
-    Then the user clicks the button/link              jQuery = button:contains("Save review and return to applications")
+    Then the user clicks the button/link              jQuery = button:contains("Save and return to applications")
     And the user navigates to the page                ${KTP_Application_URL}
     And the user should see the element               jQuery = p:contains("This is the comments from the supporter")
 
@@ -190,12 +190,12 @@ The user responds to the Supporter/Supporter review Yes
     When the user clicks the button/link         jQuery = button:contains("Edit")
     Then the user selects the radio button       decision  decision-yes
     And the user enters text to a text field     css = .editor  This is the comments from the supporter
-    And the user clicks the button/link          jQuery = button:contains("Save review and return to applications")
+    And the user clicks the button/link          jQuery = button:contains("Save and return to applications")
 
 The comp admin can close the assessment and the link to allocate applications is no longer active
     [Documentation]   IFS-8404
-    Given Logging in and Error Checking                             &{ifs_admin_user_credentials}
-    When the user clicks the button/link                            link = ${cofundingCompetitionName}
+    Given Logging in and Error Checking                          &{ifs_admin_user_credentials}
+    When the user clicks the button/link                         link = ${cofundingCompetitionName}
     And the user can close the assessment
     Then the user is no longer able to allocate applications
 
@@ -213,8 +213,8 @@ the user requesting the application id
     Set Suite Variable  ${supporterApplicationID}
 
 the user can view the supporter review
-    the user should see the element     jQuery = h1:contains("Supporter review")
-    the user should see the element     jQuery = h2:contains("Accepted")
+    the user should see the element     jQuery = h1:contains("Supporter overview")
+    the user should see the element     jQuery = h2:contains("Interested")
     the user should see the element     jQuery = h2:contains("Declined")
     the user should see the element     jQuery = h2:contains("Pending review")
 
@@ -281,7 +281,7 @@ the user is no longer able to allocate applications
 the user checks the feedback validation
     [Arguments]  ${decision}
     And the user selects the radio button                       decision  ${decision}
-    Then the user clicks the button/link                        jQuery = button:contains("Save review and return to applications")
+    Then the user clicks the button/link                        jQuery = button:contains("Save and return to applications")
     And the user should see a field and summary error           Please provide some feedback.
 
 the user gets the number of applications in page
