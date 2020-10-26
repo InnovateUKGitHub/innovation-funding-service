@@ -15,6 +15,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
 
     @Mock
     private CofunderAssignmentRepository cofunderAssignmentRepository;
+
+    @Mock
+    private ProcessHistoryRepository processHistoryRepository;
 
     @Mock
     private ProfileRepository profileRepository;
@@ -127,7 +131,9 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         long applicationId = 2l;
         User user = newUser().build();
         Application application = newApplication().withCompetition(newCompetition().build()).build();
+        long cofunderAssignmentId = 6L;
         CofunderAssignment cofunderAssignment = newCofunderAssignment()
+                .withId(cofunderAssignmentId)
                 .withApplication(application)
                 .build();
 
@@ -139,6 +145,7 @@ public class CofunderAssignmentServiceImplTest extends BaseServiceUnitTest<Cofun
         ServiceResult<Void> result = service.removeAssignment(userId, applicationId);
 
         assertThat(result.isSuccess(), equalTo(true));
+        verify(processHistoryRepository).deleteByProcessId(cofunderAssignmentId);
         verify(cofunderAssignmentRepository).delete(cofunderAssignment);
         verify(notificationService).sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL));
     }
