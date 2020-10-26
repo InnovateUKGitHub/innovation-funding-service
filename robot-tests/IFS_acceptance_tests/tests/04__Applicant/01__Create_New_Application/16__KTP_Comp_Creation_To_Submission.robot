@@ -296,7 +296,7 @@ New lead applicant opens the KTP Project costs Guidance links in the new window
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
     Given the user closes the last opened tab
-    And the user clicks the button/link                                    css = label[for="stateAidAgreed"]
+    And the user clicks the button/link                                      css = label[for="stateAidAgreed"]
     And the user clicks the button/link                                      jQuery = button:contains("Mark as complete")
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Your funding

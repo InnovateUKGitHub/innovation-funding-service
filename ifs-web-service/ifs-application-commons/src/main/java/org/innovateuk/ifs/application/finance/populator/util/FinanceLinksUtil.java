@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
+import org.innovateuk.ifs.cofunder.resource.CofunderState;
+import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.ALL;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
@@ -32,6 +36,9 @@ public class FinanceLinksUtil {
     @Autowired
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
+    @Autowired
+    private CofunderAssignmentRestService cofunderAssignmentRestService;
+
     public Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
@@ -42,6 +49,12 @@ public class FinanceLinksUtil {
                     return Optional.of(organisationIdInLink(application.getId(), organisation));
                 }
             } else {
+                return Optional.of(organisationIdInLink(application.getId(), organisation));
+            }
+        } else if (authenticatedUser.getRoles().contains(COFUNDER)) {
+            Optional<CofunderAssignmentResource> cofunderAssignment = cofunderAssignmentRestService.getAssignment(authenticatedUser.getId(), application.getId())
+                    .toOptionalIfNotFound().getSuccess();
+            if (cofunderAssignment.isPresent()) {
                 return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
         }
@@ -62,9 +75,12 @@ public class FinanceLinksUtil {
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
-            if (assessorProcessRoles().contains(currentUserRole.get().getRole())
-                    && DETAILED.equals(competitionAssessmentConfigResource.getAssessorFinanceView())) {
-                return Optional.of(assessorLink(application, organisation));
+            if (assessorProcessRoles().contains(currentUserRole.get().getRole())) {
+                if (DETAILED == competitionAssessmentConfigResource.getAssessorFinanceView()) {
+                    return Optional.of(assessorLink(application, organisation));
+                } else if (ALL == competitionAssessmentConfigResource.getAssessorFinanceView()) {
+                    return Optional.of(organisationIdInLink(application.getId(), organisation));
+                }
             }
         }
 

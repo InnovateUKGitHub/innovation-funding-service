@@ -1,5 +1,7 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -61,6 +63,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     @Mock
     protected ExternalFinanceRepository externalFinanceRepository;
+
+    @Mock
+    protected CofunderAssignmentRepository cofunderAssignmentRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
@@ -152,6 +157,16 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
 
     protected void setupUserNotAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, false);
+    }
+
+    protected void setupCofunderAssignmentExpectations(Long applicationId, Long userId, boolean userIsCofunder) {
+        when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId))
+                .thenReturn(userIsCofunder);
+    }
+
+    protected void setupCofunderAssignmentCompetitionExpectations(Long competitionId, Long userId, boolean userIsCofunder) {
+        when(cofunderAssignmentRepository.existsByParticipantIdAndCompetitionId(userId, competitionId))
+                .thenReturn(userIsCofunder);
     }
 
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {

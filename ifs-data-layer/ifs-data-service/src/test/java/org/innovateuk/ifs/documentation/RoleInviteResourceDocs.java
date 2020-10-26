@@ -13,5 +13,6 @@ public class RoleInviteResourceDocs {
             fieldWithPath("roleName").description("Role name of the role invite"),
             fieldWithPath("role").description("Role of the role invite"),
             fieldWithPath("hash").description("Hash of the role invite"),
+            fieldWithPath("organisation").description("The organisation"),
     };
 }

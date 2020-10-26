@@ -2,7 +2,8 @@ package org.innovateuk.ifs.competition.resource;
 
 public enum AssessorFinanceView {
     OVERVIEW("Overview"),
-    DETAILED("Detailed");
+    DETAILED("Detailed"),
+    ALL("All");
 
     String viewType;
 

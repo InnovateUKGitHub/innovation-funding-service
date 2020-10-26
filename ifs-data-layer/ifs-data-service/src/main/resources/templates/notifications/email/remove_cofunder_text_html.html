@@ -1,0 +1,10 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+<p style="margin: 0 0 1em 0;">You have been removed as a co-funder on this application:</p>
+<p style="margin: 0 0 1em 0;">${applicationId} : ${applicationName}</p>
+<p style="margin: 0 0 1em 0;">You will no longer be able to review the application and it will be removed from your dashboard.</p>
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+<@layout.senderHTML />
+</@layout.default>

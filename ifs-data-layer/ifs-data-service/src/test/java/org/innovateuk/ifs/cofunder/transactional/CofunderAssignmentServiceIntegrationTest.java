@@ -3,6 +3,7 @@ package org.innovateuk.ifs.cofunder.transactional;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.cofunder.resource.ApplicationsForCofundingPageResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
 import org.innovateuk.ifs.cofunder.resource.CofunderDecisionResource;
@@ -69,7 +70,7 @@ import static org.junit.Assert.assertThat;
 
     @Test
     public void findApplicationsNeedingCofunders() {
-        loginSteveSmith();
+        setLoggedInUser(getIfsAdmin());
         TestData data = setupTestData();
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
@@ -97,7 +98,7 @@ import static org.junit.Assert.assertThat;
 
     @Test
     public void findAvailableCofundersForApplication() {
-        loginSteveSmith();
+        setLoggedInUser(getIfsAdmin());
         TestData data = setupTestData();
 
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("firstName"));
@@ -111,8 +112,8 @@ import static org.junit.Assert.assertThat;
 
     private TestData setupTestData() {
         Competition competition = competitionRepository.save(newCompetition().withId(null).build());
-        Application application = applicationRepository.save(newApplication().withName("App name 1").withId(null).withCompetition(competition).build());
-        Application application2 = applicationRepository.save(newApplication().withName("App name 2").withId(null).withCompetition(competition).build());
+        Application application = applicationRepository.save(newApplication().withName("App name 1").withId(null).withCompetition(competition).withApplicationState(ApplicationState.SUBMITTED).build());
+        Application application2 = applicationRepository.save(newApplication().withName("App name 2").withId(null).withCompetition(competition).withApplicationState(ApplicationState.SUBMITTED).build());
 
         Organisation lead = organisationRepository.save(newOrganisation().withId(null).withName("lead org").build());
         processRoleRepository.saveAll(
