@@ -58,7 +58,7 @@ Administrator can sucessfully save the confunder details and return to the manag
 The user accepts the invite for supporter user role
     [Documentation]  IFS-8401
     When the user reads his email and clicks the link      ${validSupporterEmail}  ${emailInviteSubject}  ${coFunderEmailInviteText}
-    Then the user should see the element                   jQuery = h1:contains("Create supporter account")
+    Then the user should see the element                   jQuery = h1:contains("Create a supporter account")
 
 The supporter creates a new account
     [Documentation]  IFS-8401

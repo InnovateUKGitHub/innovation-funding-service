@@ -4,6 +4,7 @@ import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
 import org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingResource;
 import org.innovateuk.ifs.supporter.domain.CompetitionForCofunding;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,9 +74,10 @@ public interface SupporterAssignmentRepository extends ProcessRepository<Support
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
                     "WHERE application.competition.id = :competitionId " +
                     "AND assignment.participant.id = :userId " +
-                    "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT "
+                    "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
+                    "AND assignment.activityState in :states "
     )
-    Page<SupporterDashboardApplicationResource> findApplicationsForSupporterCompetitionDashboard(long userId, long competitionId, Pageable pageable);
+    Page<SupporterDashboardApplicationResource> findApplicationsForSupporterCompetitionDashboard(long userId, long competitionId, Collection<SupporterState> states, Pageable pageable);
 
     @Query(
             "SELECT new org.innovateuk.ifs.supporter.resource.ApplicationsForCofundingResource( " +
@@ -102,4 +105,9 @@ public interface SupporterAssignmentRepository extends ProcessRepository<Support
 
     @Query("SELECT user.id " + QUERY)
     List<Long> usersAvailableForCofundingUserIds(long applicationId, String filter);
+
+    @Query("SELECT COUNT(DISTINCT assignment.participant) " +
+            "FROM SupporterAssignment assignment " +
+            "WHERE assignment.target.competition.id = :competitionId")
+    int countByTargetCompetitionId(long competitionId);
 }
