@@ -34,7 +34,7 @@ ${cofundingCompetitionName}               KTP cofunding
 ${cofundingCompetitionID}                 ${competition_ids['${cofundingCompetitionName}']}
 ${cofundingApplicationTitle}              How cancer invasion takes shape
 ${cofundingApplicationID}                 ${application_ids['${cofundingApplicationTitle}']}
-${supporterOrg}                            The University of Surrey
+${supporterOrg}                           The University of Surrey
 ${newApplication}                         New application
 
 *** Test Cases ***
@@ -194,7 +194,7 @@ The user responds to the Supporter/Supporter review Yes
 
 The comp admin can close the assessment and the link to allocate applications is no longer active
     [Documentation]   IFS-8404
-    Given Logging in and Error Checking                          &{ifs_admin_user_credentials}
+    Given Log in as a different user                             &{ifs_admin_user_credentials}
     When the user clicks the button/link                         link = ${cofundingCompetitionName}
     And the user can close the assessment
     Then the user is no longer able to allocate applications
