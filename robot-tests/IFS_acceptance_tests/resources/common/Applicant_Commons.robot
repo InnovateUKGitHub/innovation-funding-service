@@ -714,6 +714,10 @@ the user clicks the project setup tile if displayed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-MONITORING_OFFICER
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-MONITORING_OFFICER
 
+the user clicks the assessment tile if displayed
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-ASSESSOR
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-ASSESSOR
+
 the user selected organisation if available
     [Arguments]   ${organisationID}   ${pageText}
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain     ${pageText}
