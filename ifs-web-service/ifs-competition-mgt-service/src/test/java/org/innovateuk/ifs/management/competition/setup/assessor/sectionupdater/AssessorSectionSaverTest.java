@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.ALL;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.OVERVIEW;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -180,12 +181,12 @@ public class AssessorSectionSaverTest {
 	}
 
 	@Test
-	public void testSaveSectionForKtpCompetitionSavesNullAssessorPay() {
+	public void testSaveSectionForKtpCompetition() {
 		AssessorsForm competitionSetupForm = new AssessorsForm();
 		competitionSetupForm.setAssessorCount(1);
 		competitionSetupForm.setHasAssessmentPanel(Boolean.FALSE);
 		competitionSetupForm.setHasInterviewStage(Boolean.FALSE);
-		competitionSetupForm.setAssessorFinanceView(OVERVIEW);
+		competitionSetupForm.setAssessorFinanceView(ALL);
 		competitionSetupForm.setAverageAssessorScore(Boolean.FALSE);
 
 		CompetitionResource competition = newCompetitionResource()
@@ -213,5 +214,6 @@ public class AssessorSectionSaverTest {
 		CompetitionAssessmentConfigResource assessmentConfigToUpdate = assessmentConfigArgumentCaptor.getValue();
 
 		assertNull(assessmentConfigToUpdate.getAssessorPay());
+		assertEquals(ALL, assessmentConfigToUpdate.getAssessorFinanceView());
 	}
 }

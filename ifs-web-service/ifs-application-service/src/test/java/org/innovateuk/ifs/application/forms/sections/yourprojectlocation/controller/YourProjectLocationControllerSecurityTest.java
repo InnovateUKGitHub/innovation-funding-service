@@ -24,6 +24,7 @@ public class YourProjectLocationControllerSecurityTest extends BaseControllerSec
         roles.add(EXTERNAL_FINANCE);
         roles.add(KNOWLEDGE_TRANSFER_ADVISER);
         roles.add(COFUNDER);
+        roles.add(ASSESSOR);
 
         assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, null, null), roles);
     }
