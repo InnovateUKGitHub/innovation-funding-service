@@ -9,8 +9,10 @@ import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStat
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
+import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -52,6 +54,9 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
 
     @Mock
     private AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
+    private CofunderAssignmentRepository cofunderAssignmentRepository;
 
     @Override
     protected CompetitionKeyAssessmentStatisticsServiceImpl supplyServiceUnderTest() {
@@ -144,6 +149,8 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
     public void getInAssessmentKeyStatisticsByCompetition() {
         long competitionId = 1L;
 
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(newCompetition().withFundingType(FundingType.KTP).build()));
+
         CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatisticsResource =
                 newCompetitionInAssessmentKeyAssessmentStatisticsResource()
                 .withAssessmentsStarted(1)
@@ -151,6 +158,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
                 .withAssignmentCount(3)
                 .withAssignmentsAccepted(4)
                 .withAssignmentsWaiting(5)
+                .withSupportersInvited(6)
                 .build();
 
 
@@ -165,6 +173,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
                 .getAssessmentsStarted());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(SUBMITTED, competitionId, singletonList(UserStatus.ACTIVE)))
                 .thenReturn(keyStatisticsResource.getAssessmentsSubmitted());
+        when(cofunderAssignmentRepository.countByTargetCompetitionId(competitionId)).thenReturn(keyStatisticsResource.getSupportersInvited());
 
         CompetitionInAssessmentKeyAssessmentStatisticsResource response = service
                 .getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccess();
