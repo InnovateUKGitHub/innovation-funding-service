@@ -29,11 +29,11 @@ ${supporterApplicationTitle}     	      Reconfiguring an immune response
 &{Supporter01_credentials}                email=mister.branches@money.com    password=${short_password}
 ${KTP_Application_URL}                    ${SERVER}/assessment/supporter/application/247/response
 ${ktpCofundingCompetitionNavigation}      Co funder dashboard - application level
-${supporterUserUsername}                   Wallace.Mccormack@money.com
+${supporterUserUsername}                  Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
 ${cofundingCompetitionID}                 ${competition_ids['${cofundingCompetitionName}']}
 ${cofundingApplicationTitle}              How cancer invasion takes shape
-${supporterOrg}                            The University of Surrey
+${supporterOrg}                           The University of Surrey
 ${newApplication}                         New application
 
 *** Test Cases ***
@@ -64,10 +64,9 @@ The internal user can remove a supporter from an application
 The supporter should not see the removed application on their dashboard
      [Documentation]   IFS-8405
      [Setup]    get application id using application name
-     Given Log in as a different user              email=douglas.alston@money.com    password=${short_password}
-     When the user clicks the button/link          link = ${cofundingCompetitionName}
-     And The user navigates to the page            ${server}/application/${protonApplicationId}/summary
-     Then The user should see the element          jQuery = h1:contains("You do not have the necessary permissions for your request")
+     Given Log in as a different user                                        email=douglas.alston@money.com    password=${short_password}
+     When the user clicks the button/link                                    link = ${cofundingCompetitionName}
+     Then the user navigates to the page and gets a custom error message     ${server}/application/${protonApplicationId}/summary    ${403_error_message}
 
 The internal user can view a supporter application by searching with an application number
     [Documentation]  IFS-8414
@@ -222,13 +221,13 @@ the user can view the supporter review
 the user can allocate applictions
     the user should see the element     jQuery = h1:contains("Manage supporters")
     the user should see the element     jQuery = h3:contains("Actions")
-    the user should see the element     link = Allocate applications
+    the user should see the element     link = Assign supporters to applications
     the user should see the element     link = View feedback
-    the user clicks the button/link     link = Allocate applications
+    the user clicks the button/link     link = Assign supporters to applications
 
 the user can allocate supporters
-    the user should see the element     jQuery = h1:contains("Allocate supporters")
-    the user should see the element     jQuery = p:contains("Assign supporters to applications.")
+    #the user should see the element     jQuery = h1:contains("Allocate supporters")
+    the user should see the element     jQuery = h1:contains("Assign supporters to applications")
     the user should see the element     jQuery = h2:contains("Filter applications")
     the user should see the element     jQuery = label:contains("Search by application number")
     the user should see the element     jQuery = th:contains("Application number")
@@ -241,8 +240,8 @@ the user can allocate supporters
 
 the user searches for supporter by name
     [Arguments]   ${name}
-    the user should see the element         jQuery = h2:contains("Filter supporters")
-    the user should see the element         jQuery = label:contains("Search for a supporter by first or last name")
+    the user should see the element         jQuery = h2:contains("Filter")
+    the user should see the element         jQuery = label:contains("Search by first or last name")
     the user enters text to a text field    id = filter    ${name}
     the user clicks the button/link         jQuery = button:contains("Filter")
     the user should see the element         jQuery = .govuk-table__cell:contains("Douglas Alston")
@@ -250,20 +249,20 @@ the user searches for supporter by name
     the user clicks the button/link         link = Clear all filters
     the user should see the element         jQuery = .govuk-table__cell:contains("Keane Connolly")
 
-Given the user can view already assigned supporters
-    the user should see the element         jQuery = h1:contains(Assign to application)
+the user can view already assigned supporters
+    the user should see the element         jQuery = h1:contains("Manage supporters for this application")
     the user should see the element         jQuery = h3:contains("Partners")
     the user should see the element         jQuery = h3:contains("Innovation area")
     the user should see the element         jQuery = h2:contains("Assigned supporters")
-    the user should see the element         jQuery = th:contains("Supporter")
+    the user should see the element         jQuery = th:contains("Name")
     the user should see the element         jQuery = th:contains("Organisation")
     the user should see the element         jQuery = th:contains("Email")
 
 the user can invite a supporter to a KTP application
     the user should see the element         jQuery = h2:contains("Available supporters")
-    the user should see the element         jQuery = th:contains("Select supporter")
-    the user should see the element         jQuery = th:contains("Supporter name")
-    the user should see the element         jQuery = span:contains("0 supporters selected")
+    the user should see the element         jQuery = th:contains("Select")
+    the user should see the element         jQuery = th:contains("Name")
+    the user should see the element         jQuery = span:contains("0 selected")
     the user should see the element         jQuery = button:contains("Add selected to application")
     the user should see the element         jQuery = [disabled="disabled"]
     the user selects the checkbox           select-all-check

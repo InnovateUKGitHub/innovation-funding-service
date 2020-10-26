@@ -11,7 +11,7 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${validSupporterEmail}                    jake.simor@gmail.com
+${validSupporterEmail}                   jake.simor@gmail.com
 ${organisationName}                      Example Organisation
 ${inviteExternalUserText}                Invite a new external user
 ${firstNameInvalidCharacterMessage}      Their first name should have at least 2 characters.
@@ -22,7 +22,7 @@ ${emailAddressValidationMessage}         Please enter an email address.
 ${organisationValidationMessage}         Please enter an organisation.
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${coFunderEmailInviteText}               You've been invited to become a supporter for the Innovation Funding Service.
-${emailInviteSubject}                    Invitation to Innovation Funding Service
+${emailInviteSubject}                    You have been invited to become a supporter
 
 *** Test Cases ***
 Select an external role field validations
