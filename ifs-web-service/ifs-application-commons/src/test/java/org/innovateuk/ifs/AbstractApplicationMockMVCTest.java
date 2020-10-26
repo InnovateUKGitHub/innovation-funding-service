@@ -173,7 +173,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
     }
 
-    public void setupCompetition() {
+    public void setupCompetition(FundingType fundingType, AssessorFinanceView assessorFinanceView) {
         competitionResource = newCompetitionResource()
                 .with(id(competitionId))
                 .with(name("Competition x"))
@@ -183,7 +183,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
-                .withFundingType(FundingType.GRANT)
+                .withFundingType(fundingType)
                 .build();
 
         competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
@@ -192,7 +192,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withAssessorPay(BigDecimal.valueOf(100))
                 .withHasAssessmentPanel(false)
                 .withHasInterviewStage(false)
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withAssessorFinanceView(assessorFinanceView)
                 .build();
 
         competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));

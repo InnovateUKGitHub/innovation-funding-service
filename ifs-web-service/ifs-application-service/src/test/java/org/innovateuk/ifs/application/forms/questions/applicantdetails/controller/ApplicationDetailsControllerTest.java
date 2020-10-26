@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static java.lang.Boolean.FALSE;
@@ -134,7 +135,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         long questionId = 1L;
         long applicationId = 2L;
         long competitionId = 3L;
-        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        ZonedDateTime competitionEndDate = ZonedDateTime.now(ZoneId.of("Europe/London"));
         LocalDate ktpProjectStartDate = competitionEndDate.plusMonths(12).toLocalDate();
 
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
@@ -231,7 +232,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         long questionId = 1L;
         long applicationId = 2L;
         long competitionId = 3L;
-        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        ZonedDateTime competitionEndDate = ZonedDateTime.now(ZoneId.of("Europe/London"));
         LocalDate ktpProjectStartDate = competitionEndDate.plusMonths(12).toLocalDate();
 
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();

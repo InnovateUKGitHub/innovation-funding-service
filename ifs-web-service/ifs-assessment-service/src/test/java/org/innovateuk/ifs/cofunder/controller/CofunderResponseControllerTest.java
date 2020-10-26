@@ -49,6 +49,7 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
                 .build();
         when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(cofunderAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
@@ -78,7 +79,10 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
                 .withState(CofunderState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        ApplicationResource application = newApplicationResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         MvcResult result = mockMvc.perform(get("/cofunder/application/{applicationId}/response", application.getId())
@@ -117,7 +121,10 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
                 .withState(CofunderState.ACCEPTED)
                 .withComments("Wonderful")
                 .build();
-        ApplicationResource application = newApplicationResource().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(cofunderAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
@@ -186,14 +193,17 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
                 .param("decision", String.valueOf(decision))
                 .param("comments", comments))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl(String.format("/cofunder/application/%d/response/view", applicationId)));
 
         verify(cofunderAssignmentRestService).decision(eq(assignmentId), refEq(resource));
     }
 
     @Test
     public void saveResponse_failure() throws Exception {
-        ApplicationResource application = newApplicationResource().withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT).build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(post("/cofunder/application/{applicationId}/response", application.getId()))

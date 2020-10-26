@@ -85,7 +85,7 @@ public class CofunderResponseController {
                            @Valid @ModelAttribute("form") CofunderResponseForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
-        Supplier<String> success = () -> "redirect:/";
+        Supplier<String> success = () -> String.format("redirect:/cofunder/application/%d/response/view", applicationId);
         Supplier<String> failure = () -> editView(model, applicationId);
 
         return validationHandler.failNowOrSucceedWith(failure, () -> {
