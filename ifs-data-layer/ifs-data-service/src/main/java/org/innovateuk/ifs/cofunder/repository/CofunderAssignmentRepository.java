@@ -102,4 +102,9 @@ public interface CofunderAssignmentRepository extends ProcessRepository<Cofunder
 
     @Query("SELECT user.id " + QUERY)
     List<Long> usersAvailableForCofundingUserIds(long applicationId, String filter);
+
+    @Query("SELECT COUNT(DISTINCT assignment.participant) " +
+            "FROM CofunderAssignment assignment " +
+            "WHERE assignment.target.competition.id = :competitionId")
+    int countByTargetCompetitionId(long competitionId);
 }
