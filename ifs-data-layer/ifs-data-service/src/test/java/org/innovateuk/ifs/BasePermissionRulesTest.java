@@ -187,4 +187,5 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     }
 
     protected abstract T supplyPermissionRulesUnderTest();
+
 }

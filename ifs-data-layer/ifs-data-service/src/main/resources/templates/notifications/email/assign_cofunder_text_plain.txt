@@ -1,0 +1,15 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+You have been invited to review this application on the Innovation Funding Service for co-funding opportunities:
+
+${applicationId} : ${applicationName}
+
+You will be able to review the applications and decide if you want to co-fund it.
+
+${link}
+
+Yours sincerely,
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

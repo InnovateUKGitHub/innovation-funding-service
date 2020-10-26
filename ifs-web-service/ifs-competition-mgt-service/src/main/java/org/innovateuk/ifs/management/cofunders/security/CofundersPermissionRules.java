@@ -19,9 +19,14 @@ public class CofundersPermissionRules {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PermissionRule(value = "COFUNDERS", description = "Only project finance or competition admin can see cofunders " +
+    @PermissionRule(value = "COFUNDERS", description = "Only project finance or competition admin can see cofunders")
+    public boolean cofunding(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+        return isInternalAdmin(loggedInUser);
+    }
+
+    @PermissionRule(value = "ASSIGN_COFUNDERS", description = "Only project finance or competition admin can assign cofunders " +
             "if the competition is in the correct state.")
-    public boolean assessment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+    public boolean assignment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
                 competitionIsInOpenOrLater(competition) &&

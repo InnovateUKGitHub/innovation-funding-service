@@ -43,6 +43,7 @@ Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
@@ -373,6 +374,7 @@ Invite a new external user field validations
     [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                                            link = Manage users
     When the user clicks the button/link                                             link = Invite a new external user
+    And the user selects a new external user role                                    KNOWLEDGE_TRANSFER_ADVISER
     And the user clicks the button/link                                              jQuery = button:contains("Send invitation")
     Then the user should see invite a new external user field validation message
 
@@ -391,6 +393,7 @@ Administrator can cancel the new external user details entered
 Administrator can sucessfully save and return to the manage users page
     [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                     link = Invite a new external user
+    And the user selects a new external user role             KNOWLEDGE_TRANSFER_ADVISER
     When the user fills invite a new external user fields     Jake  Rayan  ${validKTNDomainEmail}
     And the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see the element                      link = Invite a new external user
@@ -464,8 +467,9 @@ the user selects a user to edit details
     the user clicks the button/link     jQuery = .user-profile:contains("${email}") a:contains("Edit")
 
 the user adds a new external role profile of KTA
-    the user clicks the button/link     link = Add a new external role profile
-    the user clicks the button/link     css = button[type="submit"]
+    the user clicks the button/link               link = Add a new external role profile
+    the user selects a new external user role     KNOWLEDGE_TRANSFER_ADVISER
+    the user clicks the button/link               css = button[type="submit"]
 
 the KTA user enters the details to create account
     [Arguments]  ${firstName}  ${lastName}  ${email}
