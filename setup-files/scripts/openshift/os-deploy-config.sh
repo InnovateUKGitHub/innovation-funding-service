@@ -16,6 +16,7 @@ echo "Applying the config maps for $PROJECT Openshift project"
 
 function applyConfigMaps {
     oc apply -f $(getBuildLocation)/config-maps/cache-config.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/config-maps/feature-toggle-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/data-service-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/db-config.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/config-maps/docusign-config.yml ${SVC_ACCOUNT_CLAUSE}

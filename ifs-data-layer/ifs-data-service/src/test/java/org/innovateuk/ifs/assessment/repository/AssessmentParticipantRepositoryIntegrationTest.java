@@ -11,6 +11,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -40,9 +41,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -71,8 +70,10 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class AssessmentParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentParticipantRepository> {
 
     private Competition competition;
+    private Competition ktpCompetition;
     private InnovationArea innovationArea;
     private User user;
+    private User ktaUser;
 
     @Autowired
     private UserRepository userRepository;
@@ -125,14 +126,42 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
                 .withName("competition")
                 .build());
 
+        Competition ktp = newCompetition()
+                .with(id(null))
+                .withName("ktp-competition")
+                .build();
+        ktp.setFundingType(FundingType.KTP);
+        ktpCompetition = competitionRepository.save(ktp);
+
         innovationArea = innovationAreaRepository.save(newInnovationArea()
                 .with(id(null))
                 .withName("innovation area").build());
+
+        setupKtaUser();
 
         setLoggedInUser(null);
 
         user = userRepository.findByEmail("paul.plum@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Expected to find test user for email paul.plum@gmail.com"));
+
+    }
+
+    private void setupKtaUser() {
+        Set<Role> ktaRoles = new HashSet<>(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER));
+        User kta = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("KTA")
+                .withLastName("user")
+                .withProfileId()
+                .withEmailAddress("kta@test.uk")
+                .withStatus(UserStatus.ACTIVE)
+                .withRoles(ktaRoles)
+                .build();
+        userRepository.save(kta);
+
+        ktaUser = userRepository.findByRoles(Role.KNOWLEDGE_TRANSFER_ADVISER).stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("expected to find a user with the KTA role"));
     }
 
     @Test
@@ -1207,6 +1236,47 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         flushAndClearSession();
 
         List<AssessmentParticipant> retrievedParticipants = repository.findParticipantsNotOnAssessmentPanel(competition.getId());
+        assertEquals(1, retrievedParticipants.size());
+        assertEqualParticipants(availableParticipant, retrievedParticipants.get(0));
+    }
+
+    @Test
+    public void findKTAAvailableForAssessmentPanel() {
+        AssessmentParticipant availableParticipant = saveNewCompetitionParticipant(
+                newAssessmentInviteWithoutId()
+                        .withName("KTA user")
+                        .withEmail(ktaUser.getEmail())
+                        .withHash(generateInviteHash())
+                        .withCompetition(ktpCompetition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(ktaUser)
+                        .build()
+        );
+        availableParticipant.acceptAndAssignUser(ktaUser);
+
+        List<AssessmentParticipant> retrievedParticipants =
+                repository.findParticipantsNotOnAssessmentPanel(ktpCompetition.getId());
+        assertEquals(1, retrievedParticipants.size());
+        assertEqualParticipants(availableParticipant, retrievedParticipants.get(0));
+    }
+
+    @Test
+    public void findKTAAvailableForInterviewPanel() {
+        AssessmentParticipant availableParticipant = saveNewCompetitionParticipant(
+                newAssessmentInviteWithoutId()
+                        .withName("KTA user")
+                        .withEmail(ktaUser.getEmail())
+                        .withHash(generateInviteHash())
+                        .withCompetition(ktpCompetition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(ktaUser)
+                        .build()
+        );
+        availableParticipant.acceptAndAssignUser(ktaUser);
+        List<AssessmentParticipant> retrievedParticipants =
+                repository.findParticipantsNotOnInterviewPanel(ktpCompetition.getId());
         assertEquals(1, retrievedParticipants.size());
         assertEqualParticipants(availableParticipant, retrievedParticipants.get(0));
     }
