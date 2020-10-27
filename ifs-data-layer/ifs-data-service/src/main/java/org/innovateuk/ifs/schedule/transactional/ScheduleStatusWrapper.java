@@ -23,6 +23,8 @@ public class ScheduleStatusWrapper {
     private SlackReporter errorReporter;
 
     public void doScheduledJob(String jobName, Supplier<ServiceResult<ScheduleResponse>> runnable, Runnable failedToGetLock) {
+        authenticationHelper.loginSystemUser();
+        scheduleStatusService.clearTimedOutJobs();
         try {
             scheduleStatusService.startJob(jobName);
         } catch (Exception e) {
@@ -30,7 +32,6 @@ public class ScheduleStatusWrapper {
             return;
         }
         try {
-            authenticationHelper.loginSystemUser();
             ServiceResult<ScheduleResponse> response = runnable.get();
             if (response.isSuccess()) {
                 if (response.getSuccess().getResponse() != null) {

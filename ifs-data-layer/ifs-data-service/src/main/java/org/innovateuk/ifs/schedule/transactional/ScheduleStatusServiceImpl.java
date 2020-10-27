@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
@@ -24,11 +25,21 @@ public class ScheduleStatusServiceImpl implements ScheduleStatusService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void startJob(String jobName) {
+        clearTimedOutJobs();
         Optional<ScheduleStatus> scheduleStatus = scheduleStatusRepository.findByJobName(jobName);
         if (scheduleStatus.isPresent()) {
             throw new IFSRuntimeException(String.format("Error starting job %s another service may be running.", jobName));
         }
         scheduleStatusRepository.save(new ScheduleStatus(jobName));
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void clearTimedOutJobs() {
+        int timeoutMins = 5;
+        scheduleStatusRepository.deleteAll(
+                scheduleStatusRepository.findByCreatedOnBefore(ZonedDateTime.now().minusMinutes(timeoutMins))
+        );
     }
 
     @Override

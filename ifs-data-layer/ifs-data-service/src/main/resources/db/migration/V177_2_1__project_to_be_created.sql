@@ -1,6 +1,7 @@
-alter table schedule_status drop column version;
-alter table schedule_status drop column active;
-delete from schedule_status;
+ALTER TABLE schedule_status DROP COLUMN version;
+ALTER TABLE schedule_status DROP COLUMN active;
+DELETE FROM schedule_status;
+ALTER TABLE schedule_status ADD COLUMN created_on DATETIME NOT NULL;
 
 CREATE TABLE project_to_be_created (
 	id bigint(20) NOT NULL AUTO_INCREMENT,
