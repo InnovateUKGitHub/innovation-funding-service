@@ -349,6 +349,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         List<ApplicationResource> applicationsForCofunding = applications.stream()
                 .filter(app -> app.getCompetition().getFundingType() == FundingType.KTP)
+                .filter(app -> app.getApplication().isSubmitted())
                 .map(ApplicationData::getApplication)
                 .collect(toList());
 
