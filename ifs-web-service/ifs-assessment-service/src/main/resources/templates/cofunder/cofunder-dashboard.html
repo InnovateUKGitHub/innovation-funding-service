@@ -14,8 +14,11 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Co-fund competitions',size='govuk-heading-xl'"/>
         <div class="my-applications">
-            <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
+            <th:block th:if="${#lists.isEmpty(model.activeCompetitions) && #lists.isEmpty(model.previousCompetitions)}">
+                <div class="govuk-body">There are no applications for you to review. You will be notified when a new application is assigned to you.</div>
+            </th:block>
 
+            <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m govuk-!-margin-top-0">Competitions to review (<span
                         th:text="${#lists.size(model.activeCompetitions)}"/>)</h2>
@@ -60,7 +63,7 @@
             </th:block>
         </div>
 
-        <th:block th:if="${model.previousCompetitions.size() > 0}">
+        <th:block th:unless="${#lists.isEmpty(model.previousCompetitions)}">
             <div class="progress-list">
                 <h2 class="govuk-heading-m govuk-!-margin-top-0">Previous reviews</h2>
                 <ul>
