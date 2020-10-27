@@ -16,6 +16,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -51,6 +52,9 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private CofunderAssignmentRepository cofunderAssignmentRepository;
+
+    @Autowired
+    private ProcessHistoryRepository processHistoryRepository;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -144,6 +148,7 @@ public class CofunderAssignmentServiceImpl extends BaseTransactionalService impl
                                     if (assignment.getTarget().getCompetition().isAssessmentClosed()) {
                                         return serviceFailure(COFUNDER_AFTER_ASSESSMENT_CLOSE);
                                     }
+                                    processHistoryRepository.deleteByProcessId(assignment.getId());
                                     cofunderAssignmentRepository.delete(assignment);
                                     return notifyUserRemovedAsCofunder(user, application);
                                 }));

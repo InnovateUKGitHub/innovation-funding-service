@@ -7,6 +7,8 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8453  Assessor view of detailed finances
 ...
+...              IFS-8594  For KTP pre populate the assessor view finance config to 'All'
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -223,6 +225,15 @@ Assessor can submit the KTP application assessment
     And the user clicks the button/link             jQuery = button:contains("Yes I want to submit the assessments")
     Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
 
+Deafult value of assessor view finance config set to all for ktp competitions
+    [Documentation]   IFS-8594
+    Given Log in as a different user                 &{Comp_admin1_credentials}
+    When the user navigates to the page              ${CA_UpcomingComp}
+    And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
+    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  1  KTP
+    And the user clicks the button/link              link = Assessors
+    Then radio button should be set to               assessorFinanceView   ALL
+
 Assessor can see lead organisation detailed finances when detailed option selected in assessor view of fiannces in competition setup
     [Documentation]  IFS-8453
     Given Invite KTA to assess the competition     ${ktpDetailsFinanceCompetitionID}   ${ktpDetailsFinanceApplicationName}   ${ktpDetailsFinanceCompetitionName}   ${ktaEmail}  ${short_password}
@@ -278,6 +289,7 @@ Assessor can see partner organisation finances for non ktp compettition when all
 
 *** Keywords ***
 Custom suite setup
+    Set predefined date variables
     The user logs-in in new browser     &{ifs_admin_user_credentials}
 
 the user filters the KTA user

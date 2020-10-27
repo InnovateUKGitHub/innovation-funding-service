@@ -96,6 +96,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-7700 EDI application question configuration
 ...
+...               IFS-8522 Loans - Change of EDI survey link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -425,9 +427,10 @@ Application: Application details
     [Teardown]  the user clicks the button/link     link = Application
 
 External user edits the EDI question.
-    [Documentation]  IFS-7700
+    [Documentation]  IFS-7700  IFS-8522
     Given the user marks each question as complete     Equality, diversity and inclusion
     And the user clicks the button/link                link = Equality, diversity and inclusion
+    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']   
     When the user clicks the button/link               jQuery = a:contains("Edit this question")
     And the user clicks the button/link                jQuery = button:contains("Done")
     Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
