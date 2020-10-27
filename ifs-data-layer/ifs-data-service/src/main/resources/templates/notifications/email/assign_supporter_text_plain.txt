@@ -1,6 +1,6 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear ${notificationTarget.name},
+Dear ${notificationTarget.name}
 
 You have been invited to review this application for support opportunities:
 
@@ -10,6 +10,6 @@ You will be able to decide if your organisation wishes to offer support and prov
 
 ${link}
 
-Yours sincerely,
+Yours sincerely
 <@layout.senderPlainText />
 </@layout.defaultPlainText>
