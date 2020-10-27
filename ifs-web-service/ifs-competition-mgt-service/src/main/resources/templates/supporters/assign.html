@@ -39,7 +39,7 @@
             <th:block th:unless="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}"
                       th:text="${' (' + model.supportersAvailableForApplicationPage.assignedSupporters.size() + ')'}" />
         </h2>
-        <p th:if="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}">
+        <p class="govuk-body" th:if="${model.supportersAvailableForApplicationPage.assignedSupporters.isEmpty()}">
             No supporters have been assigned to this application.
         </p>
 

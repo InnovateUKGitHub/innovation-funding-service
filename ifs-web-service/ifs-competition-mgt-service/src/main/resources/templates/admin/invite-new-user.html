@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite a new ' + ${model.getTypeName()} + ' user',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite a new ' + ${model.getTypeName()},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
@@ -18,7 +18,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new ' + ${model.getTypeName()} + ' user',size='govuk-heading-l'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new ' + ${model.getTypeName()},size='govuk-heading-l'" />
 
         <p class="govuk-body" th:if="${model.external}" th:text="|Enter the new ${model.onlyRole.displayName.toLowerCase()}'s details:|"></p>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">

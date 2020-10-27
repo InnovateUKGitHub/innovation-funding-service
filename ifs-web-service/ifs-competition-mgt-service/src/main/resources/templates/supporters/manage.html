@@ -21,10 +21,10 @@
                 <a th:if="${model.allocateLinkEnabled}" th:href="@{/competition/{competitionId}/supporters/allocate(competitionId=${model.competitionId})}"
                     class="govuk-link">Assign supporters to applications</a>
                 <a th:unless="${model.allocateLinkEnabled}"
-                   class="disabled govuk-link" aria-disabled="true">View supporter feedback</a>
+                   class="disabled govuk-link" aria-disabled="true">Assign supporters to applications</a>
             </li>
             <li>
-                <a th:href="@{/competition/{competitionId}/supporters/view(competitionId=${model.competitionId})}" class="govuk-link">View feedback</a>
+                <a th:href="@{/competition/{competitionId}/supporters/view(competitionId=${model.competitionId})}" class="govuk-link">View supporter feedback</a>
             </li>
         </ul>
         <th:block th:insert="fragments/layout :: main-content-end" />

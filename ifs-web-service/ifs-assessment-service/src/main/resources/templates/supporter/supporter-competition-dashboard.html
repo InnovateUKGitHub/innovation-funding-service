@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review applications'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.assessmentClosed} ? 'Previous applications' : 'Review applications'" />
 </head>
 <body class="govuk-template__body">
     <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -13,11 +13,12 @@
         <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to competitions',linkUrl=@{/supporter/dashboard}"></th:block>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review applications',subTitle=${model.competitionName},size='govuk-heading-xl'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.assessmentClosed} ? 'Previous applications' : 'Review applications',subTitle=${model.competitionName},size='govuk-heading-xl'" />
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half competition details">
                     <dl class="govuk-list govuk-!-font-size-16">
-                        <dt>Review applications deadline:</dt>
+                        <dt th:if="${model.assessmentClosed}">Reviews closed:</dt>
+                        <dt th:unless="${model.assessmentClosed}">Review applications deadline:</dt>
                         <dd th:text="|${#strings.toLowerCase(#temporals.format(model.deadline, 'hh:mma'))} ${#temporals.format(model.deadline, 'EEEE d MMMM yyyy')}|"></dd>
                     </dl>
                 </div>
@@ -32,7 +33,7 @@
                 </div>
             </div>
 
-            <p class="govuk-body">
+            <p class="govuk-body" th:unless="${model.assessmentClosed}">
                 Applications will be removed from your dashboard if you don’t review them before the deadline.
             </p>
 
@@ -42,7 +43,7 @@
 
             <div class="in-progress" th:unless="${#lists.isEmpty(model.applications)}">
                 <div class="progress-list govuk-!-margin-bottom-4">
-                    <h2 class="govuk-heading-m govuk-!-margin-0">Applications for review (<span
+                    <h2 class="govuk-heading-m govuk-!-margin-0"><th:block th:text="${model.assessmentClosed} ? 'Previous applications' : 'Applications for review'">Applications for review</th:block> (<span
                     th:text="${model.pagination.totalElements}"/>)</h2>
 
                     <ul>

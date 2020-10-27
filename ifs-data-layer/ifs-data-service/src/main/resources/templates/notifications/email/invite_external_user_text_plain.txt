@@ -1,6 +1,6 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear ${notificationTarget.name},
+Dear ${notificationTarget.name}
 
 You've been invited to become a ${role} for the Innovation Funding Service.
 
