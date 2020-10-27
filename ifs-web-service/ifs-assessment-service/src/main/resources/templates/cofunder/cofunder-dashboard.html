@@ -14,7 +14,7 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Co-fund competitions',size='govuk-heading-xl'"/>
         <div class="my-applications">
-            <th:block th:if="${#lists.isEmpty(model.activeCompetitions)}">
+            <th:block th:if="${#lists.isEmpty(model.activeCompetitions) && #lists.isEmpty(model.previousCompetitions)}">
                 <div class="govuk-body">There are no applications for you to review. You will be notified when a new application is assigned to you.</div>
             </th:block>
 
