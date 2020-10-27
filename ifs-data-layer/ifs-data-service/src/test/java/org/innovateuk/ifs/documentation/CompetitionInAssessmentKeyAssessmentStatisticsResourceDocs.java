@@ -13,7 +13,8 @@ public class CompetitionInAssessmentKeyAssessmentStatisticsResourceDocs {
             fieldWithPath("assignmentsWaiting").description("The number of assignments waiting response"),
             fieldWithPath("assignmentsAccepted").description("The number of assignments accepted"),
             fieldWithPath("assessmentsStarted").description("The number of assignments started"),
-            fieldWithPath("assessmentsSubmitted").description("The number of assignments submitted")
+            fieldWithPath("assessmentsSubmitted").description("The number of assignments submitted"),
+            fieldWithPath("supportersInvited").description("The number of supporters invited"),
     };
 
     public static final CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder
