@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -421,7 +422,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
-        return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+        if (date.isAfter(now())) {
+            return with(data -> competitionService.closeAssessment(data.getCompetition().getId()));
+        } else {
+            return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+        }
     }
 
     public CompetitionDataBuilder withLineDrawDate(ZonedDateTime date) {
