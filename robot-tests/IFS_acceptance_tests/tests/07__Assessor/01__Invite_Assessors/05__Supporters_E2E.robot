@@ -165,7 +165,7 @@ Supporter can view read only view of an application and see the print applicatio
 
 The user sees the validation when responding to the Supporter/Supporter review
     [Documentation]   IFS-8409
-    Given Logging in and Error Checking                         &{Supporter01_credentials}
+    Given Log in as a different user                            &{Supporter01_credentials}
     When the user navigates to the page                         ${KTP_Application_URL}
     Then the user clicks the button/link                        jQuery = button:contains("Save and return to applications")
     And the user should see a field error                       You must select an option.
