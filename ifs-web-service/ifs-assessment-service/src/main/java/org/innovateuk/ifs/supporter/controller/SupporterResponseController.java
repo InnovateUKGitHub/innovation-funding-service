@@ -77,6 +77,7 @@ public class SupporterResponseController {
         redirectAttributes.addFlashAttribute("previousResponse", assignment);
         return String.format("redirect:/supporter/application/%d/response", applicationId);
     }
+
     @PostMapping
     public String saveResponse(@PathVariable long applicationId,
                            Model model,

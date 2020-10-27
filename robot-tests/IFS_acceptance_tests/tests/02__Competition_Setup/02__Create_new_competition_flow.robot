@@ -233,8 +233,8 @@ Funding information: calculations
     And the user enters text to an autocomplete field  id = funders[0].funder    Advanced Propulsion Centre (APC)
     And the user clicks the button/link         id = funders[0].funder
     And click element                           id = funders[0].funder__option--0
-    When the user clicks the button/link        jQuery = Button:contains("+Add supporter")
-    And the user should see the element         jQuery = Button:contains("+Add supporter")
+    When the user clicks the button/link        jQuery = Button:contains("+Add co-funder")
+    And the user should see the element         jQuery = Button:contains("+Add co-funder")
     And the user should see the element         jQuery = Button:contains("Remove")
     And the user enters text to an autocomplete field   id = funders[1].funder   Aerospace Technology Institute (ATI)
     And the user clicks the button/link         id = funders[1].funder
