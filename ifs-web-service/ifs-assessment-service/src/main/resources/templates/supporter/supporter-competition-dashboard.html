@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <p class="govuk-body">
+            <p class="govuk-body" th:unless="${model.assessmentClosed}">
                 Applications will be removed from your dashboard if you don’t review them before the deadline.
             </p>
 
