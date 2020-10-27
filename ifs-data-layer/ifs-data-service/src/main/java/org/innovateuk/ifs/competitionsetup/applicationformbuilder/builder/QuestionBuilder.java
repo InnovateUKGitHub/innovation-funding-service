@@ -103,6 +103,10 @@ public final class QuestionBuilder {
         return this;
     }
 
+    public QuestionSetupType getQuestionSetupType() {
+        return questionSetupType;
+    }
+
     public QuestionBuilder withAssessorMaximumScore(Integer assessorMaximumScore) {
         this.assessorMaximumScore = assessorMaximumScore;
         return this;
