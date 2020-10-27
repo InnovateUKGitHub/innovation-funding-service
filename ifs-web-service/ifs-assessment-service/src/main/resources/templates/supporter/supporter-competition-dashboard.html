@@ -61,8 +61,7 @@
                                    class="govuk-body status-msg msg-progress">Declined</p>
                                 <div class="action">
                                     <a class="govuk-link"
-                                       th:href="@{/supporter/application/{applicationId}/response(applicationId=${app.id})}"
-                                    th:text="${model.assessmentClosed ? 'View' : 'Edit'}">View feedback</a>
+                                       th:href="@{/supporter/application/{applicationId}/response(applicationId=${app.id})}">View feedback</a>
                                 </div>
                             </div>
                             <div th:unless="${app.state.accepted or app.state.rejected}"
