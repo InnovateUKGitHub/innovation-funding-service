@@ -57,7 +57,7 @@ public class FinanceContactController {
                                      Model model,
                                      @ModelAttribute(name = "form", binding = false) FinanceContactForm financeContactForm,
                                      UserResource loggedInUser) {
-        populateOriginalFinanceContactForm(projectId, financeContactForm);
+        populateOriginalFinanceContactForm(projectId, organisationIdm financeContactForm);
         return doViewFinanceContact(model, projectId, organisationId, loggedInUser, financeContactForm);
     }
 
@@ -80,14 +80,14 @@ public class FinanceContactController {
         });
     }
 
-    private void populateOriginalFinanceContactForm(final long projectId, FinanceContactForm financeContactForm) {
-        Optional<ProjectUserResource> existingFinanceContact = getFinanceContact(projectId);
+    private void populateOriginalFinanceContactForm(final long projectId, long organisationId, FinanceContactForm financeContactForm) {
+        Optional<ProjectUserResource> existingFinanceContact = getFinanceContact(projectId, organisationId);
         financeContactForm.setFinanceContact(existingFinanceContact.map(ProjectUserResource::getUser).orElse(null));
     }
 
-    private Optional<ProjectUserResource> getFinanceContact(final long projectId) {
+    private Optional<ProjectUserResource> getFinanceContact(final long projectId, final long organisationId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> FINANCE_CONTACT.getId() == pu.getRole());
+        return simpleFindFirst(projectUsers, pu -> FINANCE_CONTACT.getId() == pu.getRole() && pu.getOrganisation().equals(organisationId));
     }
 
     private String doViewFinanceContact(Model model, long projectId, long organisationId, UserResource loggedInUser, FinanceContactForm form) {
