@@ -95,11 +95,6 @@
                         <li th:if="${model.isManageCofundersLinkEnabled()}">
                             <a class="govuk-link" th:href="@{/competition/{competitionId}/cofunders(competitionId=${model.competitionId})}">Manage co-funders</a>
                         </li>
-                        <li th:unless="${model.isManageCofundersLinkEnabled()}">
-                            <a class="disabled govuk-link" aria-disabled="true">
-                                Manage assessment panel
-                            </a>
-                        </li>
                         <th:block th:unless="${model.competitionCompletionStage == T(org.innovateuk.ifs.competition.resource.CompetitionCompletionStage).COMPETITION_CLOSE}">
                             <li th:unless="${model.readOnly}">
                                 <a class="disabled govuk-link" aria-disabled="true"
