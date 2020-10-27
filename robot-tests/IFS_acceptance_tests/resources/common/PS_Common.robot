@@ -258,7 +258,7 @@ the user enters bank details
     the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
     the user clicks the button/link                      id = postcode-lookup
     the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
+    the user clicks the button/link                      id = submit-bank-details-button
     the user clicks the button/link                      id = submit-bank-details-model-button
 
 The user is able to complete project details section
@@ -270,10 +270,10 @@ The user is able to complete project details section
 The user completes the project team section
     the user selects their finance contact   financeContact1
     the user clicks the button/link          link = Project manager
-    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+#    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button        projectManager   projectManager1
     the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Set up your project
+    the user clicks the button/link          link = Return to setup your project
 
 The user uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
@@ -306,7 +306,7 @@ The user is able to complete the Documents section
 The user selects their finance contact
     [Arguments]  ${financeContactName}
     the user clicks the button/link     link = Your finance contact
-    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
+#    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
     the user selects the radio button   financeContact   ${financeContactName}
     the user clicks the button/link     jQuery = button:contains("Save finance contact")
 
@@ -622,6 +622,7 @@ the user goes to documents page
 
 Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
+    the user clicks the button/link     link = Change Monitoring Officer
     the element should be disabled      jQuery = button:contains("View Monitoring Officer")
     input text                          id = userId    ${MO_name}
     the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")

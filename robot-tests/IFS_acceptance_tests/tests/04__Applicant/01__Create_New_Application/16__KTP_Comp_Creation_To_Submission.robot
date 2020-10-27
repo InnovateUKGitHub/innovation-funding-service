@@ -538,10 +538,8 @@ The lead should see the Project manager & Finance contact (lead details) and Fin
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Project team
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-#    And the user should see the element             link = Project manager ~ jQuery = td:contains("${fname} ${lname}")
-#    And the user should see the element             link = Your finance contact ~ jQuery = td:contains("${fname} ${lname}")
-#    And the user sees the text in the element       link = Project manager    ${fname} ${lname}
-#    And the user sees the text in the element       link = Your finance contact    ${lead_ktp_email}
+    And the user should see the element             jQuery = td:contains("Project") + td:contains("${fname} ${lname}")
+    And the user should see the element             jQuery = td:contains("Your finance contact") + td:contains("${fname} ${lname}")
     And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
     [Teardown]  the user clicks the button/link     link = Return to setup your project
 
@@ -551,11 +549,11 @@ The lead should see the MO section with KTA details
     Then The user should see the element            jQuery = a:contains("${ktaEmail}")
     [Teardown]  the user clicks the button/link     link = Set up your project
 
-#The lead is able to complete Project team section
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    Given the user clicks the button/link                link = Project team
-#    When the user completes the project team section
-#    Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("To be completed")
+The lead is able to complete Project team section
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given the user clicks the button/link                link = Project team
+    When the user completes the project team section
+    Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The lead is able to complete the Documents section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -572,14 +570,14 @@ The lead is able to complete the Bank details section
     When the user clicks the button/link     link = Set up your project
     Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
 
-#The partner is able to complete Project team Section
-#    [Documentation]  IFS-7812
-#    [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
-#    Given the user clicks the button/link           link = ${ktpApplicationTitle}
-#    And the user clicks the button/link             link = Project team
-#    When The user selects their finance contact     financeContact1
-#    And the user clicks the button/link             link = Set up your project
-#    Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
+The partner is able to complete Project team Section
+    [Documentation]  IFS-7812
+    [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link           link = ${ktpApplicationTitle}
+    And the user clicks the button/link             link = Project team
+    When The user selects their finance contact     financeContact1
+    And the user clicks the button/link             link = Set up your project
+    Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The partner cannot see the project start date and can see the correspondance address
     [Documentation]  IFS-8070
@@ -595,7 +593,7 @@ The partner should see the Project manager & Finance contact (lead details) and 
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Project team
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-#    And the user sees the text in the element       link = Your finance contact    Emma Grant
+    And the user should see the element             jQuery = td:contains("Your finance contact") ~ td:contains("Emma Grant")
     And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
     [Teardown]  the user clicks the button/link     link = Return to setup your project
 
@@ -612,19 +610,25 @@ Internal user is able to approve documents
     When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
-Internal user cannot see the project start date
-    [Documentation]  IFS-7805
+Internal user cannot see the project start date and should see the correspondence address
+    [Documentation]  IFS-7805 IFS-8070
     When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     Then the user sees the text in the element      id = start-date    ${empty}
+    And the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
     [Teardown]  the user clicks the button/link     link = Back to project setup
 
-Internal user is able to assign an MO
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
-    Given Search for MO                             Orvill  Orville Gibbs
-    When The internal user assign project to MO     ${ApplicationID}  ${ktpApplicationTitle}
-    And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+Internal should see the Project manager & Finance contact (lead details) and Finance contact of the participant
+    [Documentation]  IFS-8070
+    When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
+    And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
+#    [Teardown]  the user clicks the button/link     link = Return to setup your project
+
+Internal user is able to view the KTA as an MO
+    [Documentation]  IFS-7146  IFS-7147  IFS-8070
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+    Then the user should see the element     css = input[name="emailAddress"][value = "${ktaEmail}"]
 
 Finance user approves bank details
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
