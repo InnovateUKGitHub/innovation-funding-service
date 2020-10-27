@@ -64,7 +64,7 @@ public class CompetitionInFlightViewModel {
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
-        this.cofunderEnabled = cofunderEnabled;
+        this.cofunderEnabled = cofunderEnabled && competitionResource.isKtp();
     }
 
     public Long getCompetitionId() {
