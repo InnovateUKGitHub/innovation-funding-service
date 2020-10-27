@@ -57,7 +57,7 @@ public class FinanceContactController {
                                      Model model,
                                      @ModelAttribute(name = "form", binding = false) FinanceContactForm financeContactForm,
                                      UserResource loggedInUser) {
-        populateOriginalFinanceContactForm(projectId, organisationIdm financeContactForm);
+        populateOriginalFinanceContactForm(projectId, organisationId, financeContactForm);
         return doViewFinanceContact(model, projectId, organisationId, loggedInUser, financeContactForm);
     }
 
