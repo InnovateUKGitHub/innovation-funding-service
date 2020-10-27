@@ -422,8 +422,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
-        if (date.isAfter(now())) {
-            return with(data -> competitionService.closeAssessment(data.getCompetition().getId()));
+        if (date.isBefore(now())) {
+            return asCompAdmin(data ->  competitionService.closeAssessment(data.getCompetition().getId()).getSuccess());
         } else {
             return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
         }
