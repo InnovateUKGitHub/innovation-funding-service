@@ -136,7 +136,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         projectFinanceResource.setCostChanges(costChanges);
     }
 
-    @ZeroDowntime(description = "remove this method", reference = "IFS-blah")
+    @ZeroDowntime(description = "remove this method", reference = "IFS-8610")
     private ServiceResult<ProjectFinance> generateFinanceCheckEntitiesForProjectOrganisation(long projectId, long organisationId) {
         return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project ->
             find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccess(organisation ->

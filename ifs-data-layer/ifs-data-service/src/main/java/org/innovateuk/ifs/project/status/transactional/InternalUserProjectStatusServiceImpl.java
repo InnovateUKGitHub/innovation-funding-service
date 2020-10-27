@@ -85,7 +85,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
 
     @Override
     @Transactional //Write transaction for first time creation of project finances.
-    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-blah")
+    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-8610")
     public ServiceResult<ProjectStatusPageResource> getCompetitionStatus(long competitionId,
                                                                          String applicationSearchString,
                                                                          int page,

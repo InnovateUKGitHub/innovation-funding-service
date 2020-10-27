@@ -96,7 +96,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Override
     @Transactional //Write transaction for first time creation of project finances.
-    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-blah")
+    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-8610")
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findById(projectId).get();
         PartnerOrganisation lead = project.getLeadOrganisation().get();
