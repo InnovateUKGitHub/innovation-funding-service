@@ -57,6 +57,7 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8212 KTP Assessments - applicant view
 ...
+...            IFS-8070 KTP Project setup - create projects
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -523,54 +524,54 @@ the project finance user cannot see the project start date
     And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
     And the user should see the element                jQuery = dt:contains("Duration in months")
 
-The lead is able to complete the Project details section
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user                           &{ktpLeadApplicantCredentials}
-    Given the user navigates to the page                          ${server}/project-setup/project/${ProjectID}
-    When the user is able to complete project details section
-    Then the user should see the element                          jQuery = .progress-list li:nth-child(1):contains("Completed")
-
 The lead cannot see the project start date and can see the correspondance address
     [Documentation]  IFS-7805 IFS-8070
+    [Setup]  log in as a different user             &{ktpLeadApplicantCredentials}
+    Given the user navigates to the page            ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link            link = Project details
     Then the user sees the text in the element      id = start-date    ${empty}
     And the user sees the text in the element       id = project-address    The Burroughs, London, NW4 4BT
+    And the user sees the text in the element       id = project-address-status    Complete
     [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
 The lead should see the Project manager & Finance contact (lead details) and Finance contact of the participant
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Project team
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-    And Then The user should see the element        jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
+#    And the user should see the element             link = Project manager ~ jQuery = td:contains("${fname} ${lname}")
+#    And the user should see the element             link = Your finance contact ~ jQuery = td:contains("${fname} ${lname}")
+#    And the user sees the text in the element       link = Project manager    ${fname} ${lname}
+#    And the user sees the text in the element       link = Your finance contact    ${lead_ktp_email}
+    And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
     [Teardown]  the user clicks the button/link     link = Return to setup your project
 
-#The lead should see the MO section with KTA details
-#    [Documentation]  IFS-8070
-#    When the user clicks the button/link            link = Monitoring Officer
-#    Then the user sees the text in the element      jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-#    [Teardown]  the user clicks the button/link     Button = Return to setup your project
-#
+The lead should see the MO section with KTA details
+    [Documentation]  IFS-8070
+    When the user clicks the button/link            link = Monitoring Officer
+    Then The user should see the element            jQuery = a:contains("${ktaEmail}")
+    [Teardown]  the user clicks the button/link     link = Set up your project
+
 #The lead is able to complete Project team section
 #    [Documentation]  IFS-7146  IFS-7147  IFS-7148
 #    Given the user clicks the button/link                link = Project team
 #    When the user completes the project team section
 #    Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("To be completed")
-#
-#The lead is able to complete the Documents section
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    Given the user clicks the button/link                link = Documents
-#    When the user uploads the exploitation plan
-#    And the user uploads the Test document type
-#    And the user uploads the Collaboration agreement
-#    And the user clicks the button/link                  link = Set up your project
-#    Then the user should see the element                 jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
-#
-#The lead is able to complete the Bank details section
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    Given the user enters bank details
-#    When the user clicks the button/link     link = Set up your project
-#    Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
-#
+
+The lead is able to complete the Documents section
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given the user clicks the button/link                link = Documents
+    When the user uploads the exploitation plan
+    And the user uploads the Test document type
+    And the user uploads the Collaboration agreement
+    And the user clicks the button/link                  link = Return to set up your project
+    Then the user should see the element                 jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+
+The lead is able to complete the Bank details section
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given the user enters bank details
+    When the user clicks the button/link     link = Set up your project
+    Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
+
 #The partner is able to complete Project team Section
 #    [Documentation]  IFS-7812
 #    [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
@@ -579,110 +580,130 @@ The lead should see the Project manager & Finance contact (lead details) and Fin
 #    When The user selects their finance contact     financeContact1
 #    And the user clicks the button/link             link = Set up your project
 #    Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
-#
-#Internal user is able to approve documents
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    [Setup]  log in as a different user                  &{Comp_admin1_credentials}
-#    Given Internal user is able to approve documents
-#    When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
-#    Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
-#
-#Internal user cannot see the project start date
-#    [Documentation]  IFS-7805
-#    When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
-#    Then the user sees the text in the element      id = start-date    ${empty}
-#    [Teardown]  the user clicks the button/link     link = Back to project setup
-#
-#Internal user should see the correspondence address
-#    [Documentation]  IFS-8040
-#
-#
-#Internal user is able to assign an MO
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    [Setup]  the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
-#    Given Search for MO                             Orvill  Orville Gibbs
-#    When The internal user assign project to MO     ${ApplicationID}  ${ktpApplicationTitle}
-#    And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
-#    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
-#
-#Finance user approves bank details
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    [Setup]  log in as a different user                         &{internal_finance_credentials}
-#    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
-#    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
-#    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
-#
-#Internal user is able to approve Finance checks and generate spend profile
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
-#    [Setup]  the user navigates to the page     ${server}/project-setup-management/project/${ProjectID}/finance-check
-#    Given the user approves Eligibility         ${ProjectID}
-#    And the user approves Viability             ${ProjectID}
-#    And the user approves Spend Profile
-#    When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
-#    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
-#    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
-#
-#The partner is able to submit the spend profile and should not see the project start date
-#    [Documentation]  IFS-7812  IFS-7805
-#    [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
-#    Given The partner submits the spend profile     ${ProjectID}  ${partnerOrgId}
-#    And the user should not see the element         jQuery = dt:contains("Project start date")
-#
-#The lead is able to submit the spend profile and should not see the project start date
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7805
-#    [Setup]  Requesting KTP Organisation ID
-#    Given log in as a different user            &{ktpLeadApplicantCredentials}
-#    When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
-#    And the user should not see the element     jQuery = dt:contains("Project start date")
-#    Then the user submits the spend profile
-#    And the user should see the element         jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
-#
-#Internal user is able to approve Spend profile and generates the GOL
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    Given proj finance approves the spend profiles     ${ProjectID}
-#    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-#    And internal user generates the GOL                ${ProjectID}
-#
-#Internal user sees correct label for T&C's
-#    [Documentation]  IFS-7894
-#    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
-#    Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
-#
-#Applicant is able to upload the GOL
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    Given log in as a different user         &{ktpLeadApplicantCredentials}
-#    When Applicant uploads the GOL           ${ProjectID}
-#    Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
-#
-#Internal user is able to approve the GOL and the project is now Live
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-#    Given the internal user approve the GOL                                    ${ProjectID}
-#    When log in as a different user                                            &{ktpLeadApplicantCredentials}
-#    And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
-#    Then the user should see project is live with review its progress link
-#
-#The applicants should not see knowledge based organisations when creating a non-ktp applications
-#    [Documentation]  IFS-8035
-#    Given log in as a different user                                &{ktpExistingLeadCredentials}
-#    When the user select the competition and starts application     ${nonKTPCompettitionName}
-#    And the user selects the radio button                           international   false
-#    And the user clicks the button/link                             id = international-organisation-cta
-#    Then the user should not see the element                        jQuery = dt:contains("${secondKTPOrgName}")
-#
-#The applicants should not see knowledge based organisations when joining a non-ktp applications
-#    [Documentation]  IFS-8035
-#    Given the user clicks the button/link                    id = save-organisation-button
-#    And the lead invites already registered user             ${lead_ktp_email}  ${nonKTPCompettitionName}
-#    When partner login to see your organisation details
-#    Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
-#
-#The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
-#    [Documentation]  IFS-8035
-#    Given log in as a different user                                        &{ifs_admin_user_credentials}
-#    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
-#    When admin adds a partner to non-ktp application from project setup
-#    And logging in and error checking                                       ${lead_ktp_email}   ${short_password}
-#    Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
+
+The partner cannot see the project start date and can see the correspondance address
+    [Documentation]  IFS-8070
+    [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
+    Given the user navigates to the page            ${server}/project-setup/project/${ProjectID}
+    When the user clicks the button/link            link = Project details
+    Then the user sees the text in the element      id = start-date    ${empty}
+    And the user sees the text in the element       id = project-address    The Burroughs, London, NW4 4BT
+    And the user sees the text in the element       id = project-address-status    Complete
+    [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
+
+The partner should see the Project manager & Finance contact (lead details) and Finance contact of the participant
+    [Documentation]  IFS-8070
+    When the user clicks the button/link            link = Project team
+    Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
+#    And the user sees the text in the element       link = Your finance contact    Emma Grant
+    And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
+    [Teardown]  the user clicks the button/link     link = Return to setup your project
+
+The partner should see the MO section with KTA details
+    [Documentation]  IFS-8070
+    When the user clicks the button/link            link = Monitoring Officer
+    Then The user should see the element            jQuery = a:contains("${ktaEmail}")
+    [Teardown]  the user clicks the button/link     link = Set up your project
+
+Internal user is able to approve documents
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  log in as a different user                  &{Comp_admin1_credentials}
+    Given Internal user is able to approve documents
+    When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+
+Internal user cannot see the project start date
+    [Documentation]  IFS-7805
+    When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    Then the user sees the text in the element      id = start-date    ${empty}
+    [Teardown]  the user clicks the button/link     link = Back to project setup
+
+Internal user is able to assign an MO
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    Given Search for MO                             Orvill  Orville Gibbs
+    When The internal user assign project to MO     ${ApplicationID}  ${ktpApplicationTitle}
+    And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+
+Finance user approves bank details
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  log in as a different user                         &{internal_finance_credentials}
+    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
+    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
+    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
+
+Internal user is able to approve Finance checks and generate spend profile
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
+    [Setup]  the user navigates to the page     ${server}/project-setup-management/project/${ProjectID}/finance-check
+    Given the user approves Eligibility         ${ProjectID}
+    And the user approves Viability             ${ProjectID}
+    And the user approves Spend Profile
+    When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+
+The partner is able to submit the spend profile and should not see the project start date
+    [Documentation]  IFS-7812  IFS-7805
+    [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
+    Given The partner submits the spend profile     ${ProjectID}  ${partnerOrgId}
+    And the user should not see the element         jQuery = dt:contains("Project start date")
+
+The lead is able to submit the spend profile and should not see the project start date
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7805
+    [Setup]  Requesting KTP Organisation ID
+    Given log in as a different user            &{ktpLeadApplicantCredentials}
+    When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
+    And the user should not see the element     jQuery = dt:contains("Project start date")
+    Then the user submits the spend profile
+    And the user should see the element         jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+
+Internal user is able to approve Spend profile and generates the GOL
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given proj finance approves the spend profiles     ${ProjectID}
+    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And internal user generates the GOL                ${ProjectID}
+
+Internal user sees correct label for T&C's
+    [Documentation]  IFS-7894
+    When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
+    Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+
+Applicant is able to upload the GOL
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given log in as a different user         &{ktpLeadApplicantCredentials}
+    When Applicant uploads the GOL           ${ProjectID}
+    Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
+
+Internal user is able to approve the GOL and the project is now Live
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given the internal user approve the GOL                                    ${ProjectID}
+    When log in as a different user                                            &{ktpLeadApplicantCredentials}
+    And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
+    Then the user should see project is live with review its progress link
+
+The applicants should not see knowledge based organisations when creating a non-ktp applications
+    [Documentation]  IFS-8035
+    Given log in as a different user                                &{ktpExistingLeadCredentials}
+    When the user select the competition and starts application     ${nonKTPCompettitionName}
+    And the user selects the radio button                           international   false
+    And the user clicks the button/link                             id = international-organisation-cta
+    Then the user should not see the element                        jQuery = dt:contains("${secondKTPOrgName}")
+
+The applicants should not see knowledge based organisations when joining a non-ktp applications
+    [Documentation]  IFS-8035
+    Given the user clicks the button/link                    id = save-organisation-button
+    And the lead invites already registered user             ${lead_ktp_email}  ${nonKTPCompettitionName}
+    When partner login to see your organisation details
+    Then the user should not see the element                 jQuery = dt:contains("${ktpOrgName}")
+
+The applicants should not see knowledge based organisations when joining a non-ktp applications from project setup
+    [Documentation]  IFS-8035
+    Given log in as a different user                                        &{ifs_admin_user_credentials}
+    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competition_ids['${nonKTPCompettittionInPS}']}/status/all
+    When admin adds a partner to non-ktp application from project setup
+    And logging in and error checking                                       ${lead_ktp_email}   ${short_password}
+    Then the user should not see the element                                jQuery = dt:contains("${ktpOrgName}")
 
 *** Keywords ***
 the lead applicant marks the KTP project costs & project location as complete
