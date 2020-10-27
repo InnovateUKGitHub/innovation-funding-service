@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.supporter.dashboard.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationPageResource;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardApplicationResource;
@@ -17,7 +16,6 @@ public class SupporterCompetitionDashboardViewModel {
     private final String competitionName;
     private final ZonedDateTime deadline;
     private final List<SupporterDashboardApplicationResource> applications;
-    private final boolean assessmentClosed;
     private final PaginationViewModel pagination;
 
     public SupporterCompetitionDashboardViewModel(SupporterDashboardApplicationPageResource pageResource, CompetitionResource competition) {
@@ -25,7 +23,6 @@ public class SupporterCompetitionDashboardViewModel {
         this.competitionName = competition.getName();
         this.deadline = toUkTimeZone(competition.getAssessorDeadlineDate());
         this.applications = pageResource.getContent();
-        this.assessmentClosed = competition.getCompetitionStatus().isLaterThan(CompetitionStatus.IN_ASSESSMENT);
         this.pagination = new PaginationViewModel(pageResource);
     }
 
@@ -43,10 +40,6 @@ public class SupporterCompetitionDashboardViewModel {
 
     public List<SupporterDashboardApplicationResource> getApplications() {
         return applications;
-    }
-
-    public boolean isAssessmentClosed() {
-        return assessmentClosed;
     }
 
     public PaginationViewModel getPagination() {
