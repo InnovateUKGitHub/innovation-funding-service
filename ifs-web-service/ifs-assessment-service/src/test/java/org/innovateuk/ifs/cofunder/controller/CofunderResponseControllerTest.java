@@ -122,7 +122,7 @@ public class CofunderResponseControllerTest extends BaseControllerMockMVCTest<Co
                 .withComments("Wonderful")
                 .build();
         ApplicationResource application = newApplicationResource()
-                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL)
                 .withCompetition(1L)
                 .build();
         when(cofunderAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(cofunderAssignmentResource));
