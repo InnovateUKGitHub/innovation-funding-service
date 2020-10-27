@@ -21,16 +21,17 @@ public class SupporterDataBuilder extends BaseDataBuilder<Void, SupporterDataBui
     public SupporterDataBuilder withDecision(String funderEmail, long applicationId, SupporterState decision) {
         return with(data -> {
             doAs(ifsAdmin(), () -> {
-                UserResource user = userService.findByEmail(funderEmail).getSuccess();
-                SupporterAssignmentResource resource = supporterAssignmentService.assign(user.getId(), applicationId).getSuccess();
+                if (applicationService.getApplicationById(applicationId).getSuccess().isSubmitted()) {
+                    UserResource user = userService.findByEmail(funderEmail).getSuccess();
+                    SupporterAssignmentResource resource = supporterAssignmentService.assign(user.getId(), applicationId).getSuccess();
 
-                if (decision != SupporterState.CREATED) {
-                    SupporterDecisionResource decisionResource = new SupporterDecisionResource();
-                    decisionResource.setAccept(decision == SupporterState.ACCEPTED);
-                    decisionResource.setComments("This application is extraordinary I'd " + (decision == SupporterState.ACCEPTED ? "love" : "hate") + " to fund it");
-                    supporterAssignmentService.decision(resource.getAssignmentId(), decisionResource).getSuccess();
+                    if (decision != SupporterState.CREATED) {
+                        SupporterDecisionResource decisionResource = new SupporterDecisionResource();
+                        decisionResource.setAccept(decision == SupporterState.ACCEPTED);
+                        decisionResource.setComments("This application is extraordinary I'd " + (decision == SupporterState.ACCEPTED ? "love" : "hate") + " to fund it");
+                        supporterAssignmentService.decision(resource.getAssignmentId(), decisionResource).getSuccess();
+                    }
                 }
-
             });
         });
     }

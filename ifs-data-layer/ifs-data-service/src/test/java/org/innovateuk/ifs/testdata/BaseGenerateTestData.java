@@ -190,7 +190,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:KTP cofunding}")
+    @Value("${ifs.generate.test.data.competition.filter.name:KTP cofunding single application}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -349,7 +349,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         List<ApplicationResource> applicationsForCofunding = applications.stream()
                 .filter(app -> app.getCompetition().getFundingType() == FundingType.KTP)
-                .filter(app -> app.getApplication().isSubmitted())
                 .map(ApplicationData::getApplication)
                 .collect(toList());
 
