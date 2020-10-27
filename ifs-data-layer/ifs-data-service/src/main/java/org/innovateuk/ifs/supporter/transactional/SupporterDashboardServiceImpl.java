@@ -42,16 +42,16 @@ public class SupporterDashboardServiceImpl extends BaseTransactionalService impl
                 case READY_TO_OPEN:
                 case COMPETITION_SETUP:
                     break;
+                case CLOSED:
+                case OPEN:
                 case IN_ASSESSMENT:
                     pending.add(createCompetitionResource(competition));
                     break;
-                case CLOSED:
-                case OPEN:
                 case PREVIOUS:
                 case PROJECT_SETUP:
                 case ASSESSOR_FEEDBACK:
                 case FUNDERS_PANEL:
-                    if (competition.getAccepted() != 0) {
+                    if (competition.getAccepted() != 0 && competition.getRejected() != 0) {
                         previous.add(createCompetitionResource(competition));
                     }
                     break;

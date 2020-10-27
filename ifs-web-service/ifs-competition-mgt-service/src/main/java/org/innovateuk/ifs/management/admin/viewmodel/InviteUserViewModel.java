@@ -33,7 +33,7 @@ public class InviteUserViewModel {
 
     public String getTypeName() {
         if (type == InviteUserView.INTERNAL_USER) {
-            return type.getName();
+            return type.getName() + " user";
         } else {
             return getOnlyRole().getDisplayName().toLowerCase();
         }

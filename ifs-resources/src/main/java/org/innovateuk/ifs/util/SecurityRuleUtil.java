@@ -63,7 +63,7 @@ public final class SecurityRuleUtil {
         return user.hasRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
-    public static boolean isCoFunder(UserResource user) {
+    public static boolean isSupporter(UserResource user) {
         return user.hasRole(SUPPORTER);
     }
 }
