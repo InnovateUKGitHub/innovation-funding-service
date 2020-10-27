@@ -122,7 +122,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withComments("Wonderful")
                 .build();
         ApplicationResource application = newApplicationResource()
-                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL)
                 .withCompetition(1L)
                 .build();
         when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
