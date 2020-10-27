@@ -73,6 +73,7 @@ public class SupporterCompetitionDashboardControllerTest extends BaseControllerM
         assertThat(viewModel.getDeadline(), notNullValue());
         assertThat(viewModel.getCompetitionName(), equalTo(competition.getName()));
         assertThat(viewModel.getCompetitionId(), equalTo(competition.getId()));
+        assertThat(viewModel.isAssessmentClosed(), equalTo(false));
         assertThat(viewModel.getPagination().getTotalElements(), equalTo(41L));
     }
 }
