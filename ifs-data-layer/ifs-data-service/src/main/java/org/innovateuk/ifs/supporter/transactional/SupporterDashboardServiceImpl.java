@@ -51,7 +51,7 @@ public class SupporterDashboardServiceImpl extends BaseTransactionalService impl
                 case PROJECT_SETUP:
                 case ASSESSOR_FEEDBACK:
                 case FUNDERS_PANEL:
-                    if (competition.getAccepted() != 0 && competition.getRejected() != 0) {
+                    if ((competition.getAccepted() + competition.getRejected()) != 0) {
                         previous.add(createCompetitionResource(competition));
                     }
                     break;
