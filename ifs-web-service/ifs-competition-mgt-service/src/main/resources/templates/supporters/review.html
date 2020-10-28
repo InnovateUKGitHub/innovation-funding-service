@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Supporter overview' "/>
+</head>
+
+<body class="govuk-template__body competition-management">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block
+        th:insert="fragments/layout :: header-sub (linkTitle='Back to supporter feedback',linkUrl=@{/competition/{id}/supporters/view(id=${model.competitionId})})"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Supporter overview',subTitle=${model.applicationId + ': ' + model.applicationName}, size='govuk-heading-xl'"/>
+
+        <th:block th:if="${model.accepted}">
+            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Interested (${model.AcceptedCount})|">Interested</h2>
+
+            <ul class="govuk-list">
+                <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
+                    <dl class="govuk-list govuk-!-font-size-16">
+                        <dt th:text="${assignment.userName}">name</dt>
+                        <dt th:text="${assignment.userSimpleOrganisation}">org</dt>
+                        <dd th:text="${assignment.userEmail}">email</dd>
+                        <dd th:text="${assignment.comments}">comments</dd>
+                    </dl>
+                </li>
+            </ul>
+        </th:block>
+
+        <th:block th:if="${model.declined}">
+            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Declined (${model.DeclinedCount})|">Declined</h2>
+
+            <ul class="govuk-list">
+                <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).REJECTED)}">
+                    <dl class="govuk-list govuk-!-font-size-16">
+                        <dt th:text="${assignment.userName}">name</dt>
+                        <dt th:text="${assignment.userSimpleOrganisation}">org</dt>
+                        <dd th:text="${assignment.userEmail}">email</dd>
+                        <dd th:text="${assignment.comments}">comments</dd>
+                    </dl>
+                </li>
+            </ul>
+        </th:block>
+
+        <th:block th:if="${model.pending}">
+            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Pending review (${model.PendingCount})|">Pending review</h2>
+
+            <ul class="govuk-list">
+                <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).CREATED)}">
+                    <dl class="govuk-list govuk-!-font-size-16">
+                        <dt th:text="${assignment.userName}">name</dt>
+                        <dt th:text="${assignment.userSimpleOrganisation}">org</dt>
+                        <dd th:text="${assignment.userEmail}">email</dd>
+                        <dd th:text="${assignment.comments}">comments</dd>
+                    </dl>
+                </li>
+            </ul>
+        </th:block>
+
+        <div class="govuk-!-margin-top-6">
+            <a th:href="@{/competition/{id}/supporters/view(id=${model.competitionId})}"
+               class="govuk-button govuk-button--secondary">Return to supporter feedback
+            </a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

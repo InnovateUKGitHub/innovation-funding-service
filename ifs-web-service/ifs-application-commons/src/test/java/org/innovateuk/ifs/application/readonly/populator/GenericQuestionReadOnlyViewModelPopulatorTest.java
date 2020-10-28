@@ -170,8 +170,8 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
     }
 
     @Test
-    public void populateForCofunderReturnsCorrectDownloadUrlForFiles() {
-        user = newUserResource().withRoleGlobal(Role.COFUNDER).build();
+    public void populateForSupporterReturnsCorrectDownloadUrlForFiles() {
+        user = newUserResource().withRoleGlobal(Role.SUPPORTER).build();
 
         FormInputResource appendix = newFormInputResource()
                 .withType(FormInputType.FILEUPLOAD)

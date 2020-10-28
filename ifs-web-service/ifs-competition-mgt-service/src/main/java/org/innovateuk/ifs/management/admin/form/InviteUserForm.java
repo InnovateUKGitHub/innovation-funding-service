@@ -103,7 +103,7 @@ public class InviteUserForm extends BaseBindingResultTarget {
     }
 
     public boolean isCoFunder() {
-        return Role.COFUNDER == role;
+        return Role.SUPPORTER == role;
     }
 
     @Override

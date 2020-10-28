@@ -14,13 +14,13 @@ public class InviteUserViewModel {
 
     private Set<Role> roles;
 
-    private boolean cofunderEnabled;
+    private boolean supporterEnabled;
 
-    public InviteUserViewModel(InviteUserView type, Set<Role> roles, boolean cofunderEnabled)
+    public InviteUserViewModel(InviteUserView type, Set<Role> roles, boolean supporterEnabled)
     {
         this.type = type;
         this.roles = roles;
-        this.cofunderEnabled = cofunderEnabled;
+        this.supporterEnabled = supporterEnabled;
     }
 
     public InviteUserView getType() {
@@ -32,7 +32,15 @@ public class InviteUserViewModel {
     }
 
     public String getTypeName() {
-        return type.getName();
+        if (type == InviteUserView.INTERNAL_USER) {
+            return type.getName() + " user";
+        } else {
+            return getOnlyRole().getDisplayName().toLowerCase();
+        }
+    }
+
+    public Role getOnlyRole() {
+        return roles.iterator().next();
     }
 
     public Set<Role> getRoles() {
@@ -43,12 +51,12 @@ public class InviteUserViewModel {
         this.roles = roles;
     }
 
-    public boolean isCofunderEnabled() {
-        return cofunderEnabled;
+    public boolean isSupporterEnabled() {
+        return supporterEnabled;
     }
 
-    public void setCofunderEnabled(boolean cofunderEnabled) {
-        this.cofunderEnabled = cofunderEnabled;
+    public void setSupporterEnabled(boolean supporterEnabled) {
+        this.supporterEnabled = supporterEnabled;
     }
 
     public boolean isInternal() {
@@ -63,17 +71,17 @@ public class InviteUserViewModel {
         return this.roles.size() == 1 &&
                 this.roles.stream().findFirst().get() == Role.KNOWLEDGE_TRANSFER_ADVISER;    }
 
-    public boolean isAddingCofunderRole() {
+    public boolean isAddingSupporterRole() {
         return this.roles.size() == 1 &&
-                this.roles.stream().findFirst().get() == Role.COFUNDER;
+                this.roles.stream().findFirst().get() == Role.SUPPORTER;
     }
 
     public String getLinkTitle() {
-        return cofunderEnabled ? "Back to select user role" : "Back to manage users";
+        return supporterEnabled ? "Back to select user role" : "Back to manage users";
     }
 
     public String getBackLink() {
-        return cofunderEnabled ? "/admin/select-external-role" : "/admin/users/active";
+        return supporterEnabled ? "/admin/select-external-role" : "/admin/users/active";
     }
 
     @Override
@@ -81,7 +89,7 @@ public class InviteUserViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(type)
                 .append(roles)
-                .append(cofunderEnabled)
+                .append(supporterEnabled)
                 .toHashCode();
     }
 
@@ -96,7 +104,7 @@ public class InviteUserViewModel {
         return new EqualsBuilder()
                 .append(type, this.type)
                 .append(roles, this.roles)
-                .append(cofunderEnabled, this.cofunderEnabled)
+                .append(supporterEnabled, this.supporterEnabled)
                 .isEquals();
     }
 

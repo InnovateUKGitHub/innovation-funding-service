@@ -177,7 +177,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void cofunderCanDownloadFilesInResponsesForOwnApplication() {
+    public void supporterCanDownloadFilesInResponsesForOwnApplication() {
         Competition competition = newCompetition()
                 .withFundingType(FundingType.KTP).build();
 
@@ -186,7 +186,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
                 .withApplicationState(ApplicationState.SUBMITTED).build();
 
         UserResource compAdmin = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
-        UserResource cofunder = newUserResource().withRolesGlobal(singletonList(COFUNDER)).build();
+        UserResource supporter = newUserResource().withRolesGlobal(singletonList(SUPPORTER)).build();
 
         FormInputResponseFileEntryId responseFileEntryId = new FormInputResponseFileEntryId(formInputId, application.getId(), processRoleId, fileEntryId);
 
@@ -194,10 +194,10 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
                 .withCompoundId(responseFileEntryId)
                 .build();
 
-        setupCofunderAssignmentExpectations(application.getId(), cofunder.getId(), true);
-        setupCofunderAssignmentExpectations(application.getId(), compAdmin.getId(), false);
+        setupSupporterAssignmentExpectations(application.getId(), supporter.getId(), true);
+        setupSupporterAssignmentExpectations(application.getId(), compAdmin.getId(), false);
 
-        assertTrue(fileUploadRules.cofunderCanDownloadFilesInResponsesForOwnApplication(fileEntryResource, cofunder));
-        assertFalse(fileUploadRules.cofunderCanDownloadFilesInResponsesForOwnApplication(fileEntryResource, compAdmin));
+        assertTrue(fileUploadRules.supporterCanDownloadFilesInResponsesForOwnApplication(fileEntryResource, supporter));
+        assertFalse(fileUploadRules.supporterCanDownloadFilesInResponsesForOwnApplication(fileEntryResource, compAdmin));
     }
 }

@@ -46,14 +46,14 @@ public class InviteUserController {
     @Autowired
     private InviteUserService inviteUserService;
 
-    @Value("${ifs.cofunder.enabled}")
-    private boolean cofunderEnabled;
+    @Value("${ifs.supporter.enabled}")
+    private boolean supporterEnabled;
 
     @GetMapping("/select-external-role")
     public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
                              Model model) {
 
-        if (!cofunderEnabled) {
+        if (!supporterEnabled) {
             return String.format("redirect:/admin/invite-external-user?role=%s", Role.KNOWLEDGE_TRANSFER_ADVISER.toString());
         }
 
@@ -79,7 +79,7 @@ public class InviteUserController {
     public String inviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), cofunderEnabled);
+        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), supporterEnabled);
     }
 
     @GetMapping("/invite-external-user")
@@ -87,11 +87,11 @@ public class InviteUserController {
                                         Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role), cofunderEnabled);
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role), supporterEnabled);
     }
 
-    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles, boolean cofunderEnabled) {
-        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles, cofunderEnabled);
+    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles, boolean supporterEnabled) {
+        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles, supporterEnabled);
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(Model_ATTR_NAME, viewModel);
@@ -103,7 +103,7 @@ public class InviteUserController {
     public String saveUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), cofunderEnabled);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), supporterEnabled);
 
         return saveInvite(form, validationHandler, failureView);
     }
@@ -125,7 +125,7 @@ public class InviteUserController {
     public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()), cofunderEnabled);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()), supporterEnabled);
 
         return saveInvite(form, validationHandler, failureView);
     }
