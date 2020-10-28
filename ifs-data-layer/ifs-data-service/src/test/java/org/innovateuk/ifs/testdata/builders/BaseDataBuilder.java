@@ -22,7 +22,7 @@ import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
-import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
+import org.innovateuk.ifs.supporter.transactional.SupporterAssignmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
@@ -224,7 +224,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
     protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
     protected InviteUserService inviteUserService;
-    protected CofunderAssignmentService cofunderAssignmentService;
+    protected SupporterAssignmentService supporterAssignmentService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -346,7 +346,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
         projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         inviteUserService = serviceLocator.getBean(InviteUserService.class);
-        cofunderAssignmentService = serviceLocator.getBean(CofunderAssignmentService.class);
+        supporterAssignmentService = serviceLocator.getBean(SupporterAssignmentService.class);
     }
 
     protected UserResource compAdmin() {

@@ -9,12 +9,12 @@ import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStat
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -56,7 +56,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
     private AssessmentRepository assessmentRepositoryMock;
 
     @Mock
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Override
     protected CompetitionKeyAssessmentStatisticsServiceImpl supplyServiceUnderTest() {
@@ -173,7 +173,7 @@ public class CompetitionKeyAssessmentStatisticsServiceImplTest extends
                 .getAssessmentsStarted());
         when(assessmentRepositoryMock.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(SUBMITTED, competitionId, singletonList(UserStatus.ACTIVE)))
                 .thenReturn(keyStatisticsResource.getAssessmentsSubmitted());
-        when(cofunderAssignmentRepository.countByTargetCompetitionId(competitionId)).thenReturn(keyStatisticsResource.getSupportersInvited());
+        when(supporterAssignmentRepository.countByTargetCompetitionId(competitionId)).thenReturn(keyStatisticsResource.getSupportersInvited());
 
         CompetitionInAssessmentKeyAssessmentStatisticsResource response = service
                 .getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccess();

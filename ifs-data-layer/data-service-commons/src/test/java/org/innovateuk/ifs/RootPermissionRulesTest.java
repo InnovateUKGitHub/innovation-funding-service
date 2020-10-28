@@ -88,8 +88,8 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
-    protected UserResource cofunderUser() {
-        return getUserWithRole(COFUNDER);
+    protected UserResource supporterUser() {
+        return getUserWithRole(SUPPORTER);
     }
 
     @Before

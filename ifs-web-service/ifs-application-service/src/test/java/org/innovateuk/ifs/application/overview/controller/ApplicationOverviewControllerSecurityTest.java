@@ -19,7 +19,7 @@ public class ApplicationOverviewControllerSecurityTest extends BaseControllerSec
         List<Role> roles = new ArrayList<>();
         roles.add(Role.APPLICANT);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        roles.add(Role.COFUNDER);
+        roles.add(Role.SUPPORTER);
 
         assertRolesCanPerform(() -> classUnderTest.applicationOverview(null, 0L, null), roles);
     }
@@ -29,7 +29,7 @@ public class ApplicationOverviewControllerSecurityTest extends BaseControllerSec
         List<Role> roles = new ArrayList<>();
         roles.add(Role.APPLICANT);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
-        roles.add(Role.COFUNDER);
+        roles.add(Role.SUPPORTER);
 
         assertRolesCanPerform(() -> classUnderTest.termsAndConditions(), roles);
     }

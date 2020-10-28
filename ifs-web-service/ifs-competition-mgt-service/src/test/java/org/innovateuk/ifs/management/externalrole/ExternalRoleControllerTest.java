@@ -35,7 +35,7 @@ public class ExternalRoleControllerTest extends BaseControllerMockMVCTest<Extern
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(new UserResource()));
 
-        mockMvc.perform(get("/admin/user/{userId}/external-role", userId).param("role", Role.COFUNDER.toString()))
+        mockMvc.perform(get("/admin/user/{userId}/external-role", userId).param("role", Role.SUPPORTER.toString()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("externalrole/external-role"));
 

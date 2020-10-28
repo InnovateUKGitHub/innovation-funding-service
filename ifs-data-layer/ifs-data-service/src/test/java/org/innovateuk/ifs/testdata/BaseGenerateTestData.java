@@ -174,7 +174,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private OrganisationDataBuilderService organisationDataBuilderService;
 
     @Autowired
-    private CofunderDataService cofunderDataService;
+    private SupporterDataService supporterDataService;
 
     private List<OrganisationLine> organisationLines;
     private List<CompetitionLine> competitionLines;
@@ -190,7 +190,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:KTP cofunding}")
+    @Value("${ifs.generate.test.data.competition.filter.name:KTP cofunding single application}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -276,8 +276,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createPublicContent(createCompetitionFutures), taskExecutor);
 
-        CompletableFuture<Void> cofunderFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
-                createCofunders(createCompetitionFutures, createApplicationsFutures), taskExecutor);
+        CompletableFuture<Void> supporterFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
+                createSupporters(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
                 createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
@@ -298,7 +298,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                                 assessorFutures,
                                 competitionsFinalisedFuture,
                                 competitionOrganisationConfigFutures,
-                                cofunderFutures
+                                supporterFutures
         ).join();
 
         long after = System.currentTimeMillis();
@@ -343,7 +343,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
-    private void createCofunders(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
+    private void createSupporters(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
         simpleMap(createCompetitionFutures, CompletableFuture::join);
         List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
@@ -352,9 +352,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .map(ApplicationData::getApplication)
                 .collect(toList());
 
-        List<ExternalUserLine> filteredCofunders = simpleFilter(this.externalUserLines, l -> l.role == Role.COFUNDER);
+        List<ExternalUserLine> filteredSupporters = simpleFilter(this.externalUserLines, l -> l.role == Role.SUPPORTER);
 
-        cofunderDataService.buildCofunders(applicationsForCofunding, filteredCofunders);
+        supporterDataService.buildSupporters(applicationsForCofunding, filteredSupporters);
     }
 
 
