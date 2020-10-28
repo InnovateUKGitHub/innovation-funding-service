@@ -41,15 +41,29 @@ T&c's section should be completed
     When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
-Applicant is able to see correct T&C's
+Partner is able to see correct T&C's
     [Documentation]  IFS-8164
     [Setup]  Update the competition with KTP africa T&C's     ${ktpAfricaCompId}
-    Given Log in as a different user         ${peter_styles_email}  ${short_password}
+    Given Log in as a different user         jessica.doe@ludlow.co.uk  ${short_password}
     when the user clicks the button/link     link = KTP africa application
     And the user clicks the button/link      link = ${ktpAfricatandcLink}
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
 
-Applicant can confirm t&c's
+Partner can confirm t&c's
+    [Documentation]  IFS-8164
+    Given the user selects the checkbox      agreed
+    When the user clicks the button/link     css = button[type="submit"]
+    And the user clicks the button/link      link = Back to application overview
+    Then the user should see the element     jQuery = li:contains("${ktpAfricatandcLink}") .task-status-complete
+
+Lead is able to see correct T&C's
+    [Documentation]  IFS-8164
+    Given Log in as a different user         bob@knowledge.base  ${short_password}
+    when the user clicks the button/link     link = KTP africa application
+    And the user clicks the button/link      link = ${ktpAfricatandcLink}
+    Then the user should see the element     jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
+
+Lead can confirm t&c's
     [Documentation]  IFS-8164
     Given the user selects the checkbox      agreed
     When the user clicks the button/link     css = button[type="submit"]
@@ -67,7 +81,7 @@ Internal user sees correct label for T&C's
 
 Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-8164
-    Given Log in as a different user         &{troy_ward_crendentials}
+    Given Log in as a different user         bob@knowledge.base  ${short_password}
     When The user navigates to the page      ${ktpAfricaFeedbackLink}
     Then the user clicks the button/link     link = View terms and conditions
     And the user should see the element      jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
