@@ -95,14 +95,14 @@ public class GrantClaimMaximumPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void cofunderAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden() {
+    public void supporterAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden() {
         CompetitionResource competition = newCompetitionResource().build();
         UserResource user = newUserResource().build();
 
-        setupCofunderAssignmentCompetitionExpectations(competition.getId(), user.getId(),true);
+        setupSupporterAssignmentCompetitionExpectations(competition.getId(), user.getId(),true);
 
-        assertTrue(rules.cofunderAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden(competition, user));
+        assertTrue(rules.supporterAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden(competition, user));
 
-        verify(cofunderAssignmentRepository, only()).existsByParticipantIdAndCompetitionId(user.getId(), competition.getId());
+        verify(supporterAssignmentRepository, only()).existsByParticipantIdAndCompetitionId(user.getId(), competition.getId());
     }
 }

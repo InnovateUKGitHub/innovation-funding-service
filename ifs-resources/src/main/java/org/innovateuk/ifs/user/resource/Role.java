@@ -41,7 +41,7 @@ public enum Role implements Identifiable {
     LIVE_PROJECTS_USER          (21, "live_projects_user",         "Live projects user"),
     EXTERNAL_FINANCE            (22, "external_finance",           "External finance reviewer"),
     KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser"),
-    COFUNDER                    (24, "cofunder",                    "Co-funder");
+    SUPPORTER                   (24, "supporter",                    "Supporter");
 
     final long id;
     final String name;
@@ -117,11 +117,11 @@ public enum Role implements Identifiable {
         return EnumSet.of(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER);
     }
     public static Set<Role> externalRoles() {
-        return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, COFUNDER));
+        return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER));
     }
 
     public static List<Role> multiDashboardRoles() {
-        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, COFUNDER);
+        return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
     }
 
     public List<String> getAuthorities() {
@@ -133,7 +133,7 @@ public enum Role implements Identifiable {
         return newArrayList(this.name);
     }
 
-    public static List<Role> externalRolesToInvite() {
-        return newArrayList(COFUNDER, KNOWLEDGE_TRANSFER_ADVISER);
+    public static Set<Role> externalRolesToInvite() {
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER);
     }
 }

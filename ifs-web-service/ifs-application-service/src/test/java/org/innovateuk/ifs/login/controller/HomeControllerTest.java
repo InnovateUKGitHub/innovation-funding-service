@@ -190,8 +190,8 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void multiDashboardForCofunderAdvisor() throws Exception {
-        setLoggedInUser(applicantAndCofunder);
+    public void multiDashboardForSupporterAdvisor() throws Exception {
+        setLoggedInUser(applicantAndSupporter);
 
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())

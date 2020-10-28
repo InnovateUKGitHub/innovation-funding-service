@@ -41,7 +41,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.user.resource.Role.COFUNDER;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
@@ -160,7 +160,7 @@ public class UserManagementController extends AsyncAdaptor {
 
     private boolean isOrgNameChange(EditUserForm form, UserResource user) {
         boolean orgNameChange = false;
-        if (user.getRoles().contains(COFUNDER)) {
+        if (user.getRoles().contains(SUPPORTER)) {
             UserProfileResource userProfileResource = profileRestService.getUserProfile(user.getId()).getSuccess();
             if (!userProfileResource.getSimpleOrganisation().equals(form.getOrganisation())) {
                 orgNameChange = true;
@@ -256,7 +256,7 @@ public class UserManagementController extends AsyncAdaptor {
             form.setRole(user.getRoles().stream().findFirst().get());
         }
 
-        if (user.getRoles().contains(COFUNDER)) {
+        if (user.getRoles().contains(SUPPORTER)) {
            UserProfileResource userProfileResource = profileRestService.getUserProfile(user.getId()).getSuccess();
            form.setOrganisation(userProfileResource.getSimpleOrganisation());
         }

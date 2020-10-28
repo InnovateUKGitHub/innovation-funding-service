@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.fundingtype;
 
+import org.apache.commons.lang.StringUtils;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
@@ -70,13 +71,16 @@ public class KtpTemplate implements FundingTypeTemplate {
                 .filter(sectionBuilder -> sectionBuilder.getName().equals("Application questions"))
                 .findFirst();
 
-        applicationQuestionSection.ifPresent(sectionBuilder -> sectionBuilder.getQuestions().forEach(questionBuilder -> {
-            questionBuilder.getFormInputs().forEach(formInputBuilder -> {
-                if (formInputBuilder.getScope() == FormInputScope.ASSESSMENT) {
-                    formInputBuilder.withActive(false);
-                }
+        applicationQuestionSection.ifPresent(sectionBuilder -> {
+            sectionBuilder.withAssessorGuidanceDescription(StringUtils.EMPTY);
+            sectionBuilder.getQuestions().forEach(questionBuilder -> {
+                questionBuilder.getFormInputs().forEach(formInputBuilder -> {
+                    if (formInputBuilder.getScope() == FormInputScope.ASSESSMENT) {
+                        formInputBuilder.withActive(false);
+                    }
+                });
             });
-        }));
+        });
 
         return sections;
     }
