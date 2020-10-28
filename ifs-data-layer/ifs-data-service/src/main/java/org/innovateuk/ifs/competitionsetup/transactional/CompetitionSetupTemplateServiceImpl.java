@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepo
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -183,6 +184,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.setAssessorCount(assessorCountOption.getOptionValue()));
             if (!competition.isKtp()) {
                 competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+            }
+
+            if (competition.isKtp()) {
+                competitionAssessmentConfig.setAssessorFinanceView(AssessorFinanceView.ALL);
             }
             competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         }

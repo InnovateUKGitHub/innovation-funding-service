@@ -73,7 +73,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource panelAssessor;
     private UserResource interviewAssessor;
     private UserResource kta;
-    private UserResource cofunder;
+    private UserResource supporter;
 
     private static final Set<Role> applicantRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
@@ -112,7 +112,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         panelAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
         interviewAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
         kta = ktaUser();
-        cofunder = cofunderUser();
+        supporter = supporterUser();
 
         applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPENED).build();
         applicationResource2 = newApplicationResource().build();
@@ -152,9 +152,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
                 .thenReturn(true);
 
-        setupCofunderAssignmentExpectations(applicationResource1.getId(), cofunder.getId(), true);
-        setupCofunderAssignmentExpectations(applicationResource2.getId(), cofunder.getId(), false);
-        setupCofunderAssignmentExpectations(applicationResource1.getId(), compAdmin.getId(), false);
+        setupSupporterAssignmentExpectations(applicationResource1.getId(), supporter.getId(), true);
+        setupSupporterAssignmentExpectations(applicationResource2.getId(), supporter.getId(), false);
+        setupSupporterAssignmentExpectations(applicationResource1.getId(), compAdmin.getId(), false);
     }
 
     @Test
@@ -166,10 +166,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void cofunderAssignedToTheApplicationCanView() {
-        assertTrue(rules.cofundersCanViewApplicationsAssigned(applicationResource1, cofunder));
-        assertFalse(rules.cofundersCanViewApplicationsAssigned(applicationResource2, cofunder));
-        assertFalse(rules.cofundersCanViewApplicationsAssigned(applicationResource1, compAdmin));
+    public void supporterAssignedToTheApplicationCanView() {
+        assertTrue(rules.supportersCanViewApplicationsAssigned(applicationResource1, supporter));
+        assertFalse(rules.supportersCanViewApplicationsAssigned(applicationResource2, supporter));
+        assertFalse(rules.supportersCanViewApplicationsAssigned(applicationResource1, compAdmin));
     }
 
     @Test
@@ -232,10 +232,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void cofunderCanSeeTheApplicationFinancesTotals() {
-        assertTrue(rules.cofunderCanSeeTheApplicationFinanceTotals(applicationResource1, cofunder));
-        assertFalse(rules.cofunderCanSeeTheApplicationFinanceTotals(applicationResource2, cofunder));
-        assertFalse(rules.cofunderCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
+    public void supporterCanSeeTheApplicationFinancesTotals() {
+        assertTrue(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, supporter));
+        assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource2, supporter));
+        assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
     }
 
     @Test
@@ -371,10 +371,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void cofunderCanSeeTheResearchParticipantPercentage() {
-        assertTrue(rules.cofunderCanSeeTheResearchParticipantPercentage(applicationResource1, cofunder));
-        assertFalse(rules.cofunderCanSeeTheResearchParticipantPercentage(applicationResource2, cofunder));
-        assertFalse(rules.cofunderCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
+    public void supporterCanSeeTheResearchParticipantPercentage() {
+        assertTrue(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource1, supporter));
+        assertFalse(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource2, supporter));
+        assertFalse(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
     }
 
     @Test
