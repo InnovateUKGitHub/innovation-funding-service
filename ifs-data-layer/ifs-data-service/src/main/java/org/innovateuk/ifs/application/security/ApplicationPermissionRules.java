@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -36,7 +36,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @Autowired
-    private CofunderAssignmentRepository cofunderAssignmentRepository;
+    private SupporterAssignmentRepository supporterAssignmentRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
@@ -54,8 +54,8 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The co funder can see the participation percentage for applications they assess")
-    public boolean cofunderCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
-        return isCofunderForApplication(applicationResource.getId(), user.getId());
+    public boolean supporterCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+        return isSupporterForApplication(applicationResource.getId(), user.getId());
     }
 
     private boolean isAssessorForApplication(ApplicationResource applicationResource, UserResource user) {
@@ -151,8 +151,8 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_FINANCE_TOTALS",
             description = "The co funder can see the application finance details",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
-    public boolean cofunderCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isCofunderForApplication(applicationResource.getId(), user.getId());
+    public boolean supporterCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isSupporterForApplication(applicationResource.getId(), user.getId());
     }
 
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
@@ -173,7 +173,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "A user can see an application resource which they are connected to")
     public boolean usersConnectedToTheApplicationCanView(ApplicationResource application, UserResource user) {
         return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), application.getId())
-                || cofunderAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
+                || supporterAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
@@ -196,9 +196,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return application != null && application.getCompetition() != null && projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Cofunder can see applications assigned to them")
-    public boolean cofundersCanSeeApplicationsAssigned(final ApplicationResource application, final UserResource user) {
-        return application != null && cofunderAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
+    @PermissionRule(value = "READ", description = "Supporter can see applications assigned to them")
+    public boolean supportersCanSeeApplicationsAssigned(final ApplicationResource application, final UserResource user) {
+        return application != null && supporterAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
     }
 
     @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
@@ -210,9 +210,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isPartner(linkedProject.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Cofunders can can see application resources for applications assigned to them.")
-    public boolean cofundersCanViewApplicationsAssigned(final ApplicationResource application, final UserResource user) {
-        return application != null && isCofunderForApplication(application.getId(), user.getId());
+    @PermissionRule(value = "READ", description = "Supporters can can see application resources for applications assigned to them.")
+    public boolean supportersCanViewApplicationsAssigned(final ApplicationResource application, final UserResource user) {
+        return application != null && isSupporterForApplication(application.getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")

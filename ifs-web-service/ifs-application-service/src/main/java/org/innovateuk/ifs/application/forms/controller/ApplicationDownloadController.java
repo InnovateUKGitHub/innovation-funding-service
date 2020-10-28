@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'cofunder')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'supporter')")
 public class ApplicationDownloadController {
 
     @Autowired
@@ -68,7 +68,7 @@ public class ApplicationDownloadController {
     }
 
     private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
-        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.COFUNDER)) {
+        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER)) {
                 return processRoles.stream()
                         .filter(pr -> pr.getRole().equals(Role.LEADAPPLICANT))
                         .findFirst()

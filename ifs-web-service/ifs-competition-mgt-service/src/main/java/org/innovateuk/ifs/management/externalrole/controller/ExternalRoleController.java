@@ -37,8 +37,8 @@ public class ExternalRoleController {
     @Autowired
     private ProfileRestService profileRestService;
 
-    @Value("${ifs.cofunder.enabled}")
-    private boolean cofunderEnabled;
+    @Value("${ifs.supporter.enabled}")
+    private boolean supporterEnabled;
 
     @GetMapping("/external-role")
     public String viewUser(@PathVariable long userId,
@@ -48,7 +48,7 @@ public class ExternalRoleController {
 
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
 
-        model.addAttribute("model", new ExternalRoleViewModel(userId, user.getName(), user.getEmail(), role, cofunderEnabled));
+        model.addAttribute("model", new ExternalRoleViewModel(userId, user.getName(), user.getEmail(), role, supporterEnabled));
         return "externalrole/external-role";
     }
 
@@ -77,7 +77,7 @@ public class ExternalRoleController {
                              @ModelAttribute(name = "form") SelectExternalRoleForm form,
                              Model model) {
 
-        if (!cofunderEnabled) {
+        if (!supporterEnabled) {
             return String.format("redirect:/admin/user/%d/external-role?role=%s", Role.KNOWLEDGE_TRANSFER_ADVISER.toString());
         }
 

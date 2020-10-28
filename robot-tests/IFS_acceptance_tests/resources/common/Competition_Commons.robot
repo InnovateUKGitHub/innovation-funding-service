@@ -615,7 +615,7 @@ ifs admin invites a KTA user to IFS
 
 KTA user creates an account and signed in to IFS
     [Arguments]   ${email}
-    the user reads his email and clicks the link           ${email}   Invitation to Innovation Funding Service   You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
+    the user reads his email and clicks the link           ${email}   You have been invited to become a knowledge transfer adviser   You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
     the user should see the element                        jQuery = h1:contains("Create knowledge transfer adviser account")
     the KTA user enters the details to create account      Amy  Colin
     the user clicks the button/link                        name = create-account

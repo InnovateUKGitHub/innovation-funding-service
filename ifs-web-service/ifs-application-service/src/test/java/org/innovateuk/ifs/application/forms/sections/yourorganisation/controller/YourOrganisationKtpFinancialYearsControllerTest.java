@@ -70,7 +70,7 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
     }
 
     @Test
-    public void viewPageAsCofunder() throws Exception {
+    public void viewPageAsSupporter() throws Exception {
         OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource = newOrganisationFinancesKtpYearsResource().build();
         CommonYourProjectFinancesViewModel commonYourProjectFinancesViewModel = mock(CommonYourProjectFinancesViewModel.class);
         YourOrganisationViewModel yourOrganisationViewModel = mock(YourOrganisationViewModel.class);
@@ -81,7 +81,7 @@ public class YourOrganisationKtpFinancialYearsControllerTest extends AbstractAsy
         when(yourOrganisationRestService.getOrganisationKtpYears(applicationId, organisationId)).thenReturn(ServiceResult.serviceSuccess(organisationFinancesKtpYearsResource));
         when(formPopulator.populate(organisationFinancesKtpYearsResource)).thenReturn(yourOrganisationKtpFinancialYearsForm);
 
-        setLoggedInUser(cofunder);
+        setLoggedInUser(supporter);
         mockMvc.perform(get("/application/{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}/ktp-financial-years",
                 applicationId, competitionId, organisationId, sectionId))
                 .andExpect(model().attributeExists("commonFinancesModel"))
