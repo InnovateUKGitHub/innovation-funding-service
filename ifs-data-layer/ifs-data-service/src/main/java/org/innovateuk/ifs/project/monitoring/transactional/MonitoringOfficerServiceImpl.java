@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
-        return serviceSuccess(userRepository.findByRolesInAndStatusIn(
+        return serviceSuccess(userRepository.findDistinctByRolesInAndStatusIn(
                 EnumSet.of(MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER), EnumSet.of(PENDING, ACTIVE))
                 .stream()
                 .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
@@ -65,8 +66,17 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     }
 
     private MonitoringOfficerAssignmentResource mapToProjectMonitoringOfficerResource(User user) {
-        List<MonitoringOfficerUnassignedProjectResource> unassignedProjects = monitoringOfficerRepository.findUnassignedProject();
-        List<MonitoringOfficerAssignedProjectResource> assignedProjects = monitoringOfficerRepository.findAssignedProjects(user.getId());
+        List<MonitoringOfficerUnassignedProjectResource> unassignedProjects = new ArrayList<>();
+        List<MonitoringOfficerAssignedProjectResource> assignedProjects = new ArrayList<>();
+        if (user.hasRole(MONITORING_OFFICER)) {
+            unassignedProjects.addAll(monitoringOfficerRepository.findUnassignedProject());
+            assignedProjects.addAll(monitoringOfficerRepository.findAssignedProjects(user.getId()));
+        }
+        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
+            unassignedProjects.addAll(monitoringOfficerRepository.findUnassignedKTPProject());
+            assignedProjects.addAll(monitoringOfficerRepository.findAssignedKTPProjects(user.getId()));
+        }
+
         return new MonitoringOfficerAssignmentResource(user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
@@ -148,6 +158,8 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     }
 
     private ServiceResult<User> getMonitoringOfficerUser(long userId) {
-        return find(userRepository.findByIdAndRoles(userId, MONITORING_OFFICER), notFoundError(User.class, userId));
+        return find(userRepository.findByIdAndRolesIn(userId, EnumSet.of(MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER)),
+                notFoundError(User.class, userId));
     }
+
 }
