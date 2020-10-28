@@ -175,6 +175,11 @@ the internal user navigates to the project setup competition
     \  ${i} =  Set Variable  ${i + 1}
     the user clicks the button/link       link=${comp_name}
 
+the user refreshes until element appears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     35s   2s   reload and check if element appears    ${selector}
 
-
-
+reload and check if element appears
+    [Arguments]  ${selector}
+    the user reloads the page
+    Wait Until Page Contains Element Without Screenshots    ${selector}     1s
