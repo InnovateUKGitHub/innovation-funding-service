@@ -31,7 +31,7 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
 
     @Override
     public ServiceResult<Void> sendBulkFundingNotifications(FundingNotificationResource fundingNotificationResource) {
-        if (isReleaseFeedbackCompletionStage(fundingNotificationResource.getFundingDecisions())) {
+        if (!fundingNotificationTriggersProjectSetup(fundingNotificationResource.getFundingDecisions())) {
             return applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         } else {
             Map<Long, FundingDecision> successfulDecisions = fundingNotificationResource.getFundingDecisions()
@@ -61,10 +61,11 @@ public class ApplicationFundingNotificationBulkServiceImpl implements Applicatio
                 .andOnSuccessReturnVoid();
     }
 
-    private boolean isReleaseFeedbackCompletionStage(Map<Long, FundingDecision> fundingDecisions) {
+    private boolean fundingNotificationTriggersProjectSetup(Map<Long, FundingDecision> fundingDecisions) {
         return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
             CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();
-            return CompetitionCompletionStage.RELEASE_FEEDBACK.equals(competition.getCompletionStage());
+            return CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage())
+                    && !competition.isKtp();
         }).orElse(false);
     }
 
