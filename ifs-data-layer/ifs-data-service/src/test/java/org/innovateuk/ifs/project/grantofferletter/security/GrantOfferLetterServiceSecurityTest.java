@@ -53,6 +53,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
                     getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).knowledgeTransferAdviserCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -79,6 +81,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).knowledgeTransferAdviserCanViewGrantOfferLetter(project,
                     getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
@@ -107,6 +111,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).knowledgeTransferAdviserCanViewGrantOfferLetter(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -271,6 +277,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
             verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).knowledgeTransferAdviserCanViewSendGrantOfferLetterStatus(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });

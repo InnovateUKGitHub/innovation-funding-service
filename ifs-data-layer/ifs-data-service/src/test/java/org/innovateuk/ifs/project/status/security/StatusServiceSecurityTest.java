@@ -31,7 +31,7 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
     }
 
     @Test
-    public void getProjectTeamStatus(){
+    public void getProjectTeamStatus() {
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
@@ -41,6 +41,7 @@ public class StatusServiceSecurityTest extends BaseServiceSecurityTest<StatusSer
             verify(statusPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).stakeholdersCanViewTeamStatus(project, getLoggedInUser());
             verify(statusPermissionRules).monitoringOfficersCanViewTeamStatus(project, getLoggedInUser());
+            verify(statusPermissionRules).knowledgeTransferAdvisersCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }
