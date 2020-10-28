@@ -51,6 +51,6 @@ public class ExternalRoleForm {
     }
 
     public boolean isCoFunder() {
-        return Role.COFUNDER == role;
+        return Role.SUPPORTER == role;
     }
 }

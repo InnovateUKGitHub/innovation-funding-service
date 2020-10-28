@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: feature-toggle-config
 data:
-  IFS_COFUNDER_ENABLED: "${IFS_COFUNDER_ENABLED}"
+  IFS_SUPPORTER_ENABLED: "${IFS_SUPPORTER_ENABLED}"

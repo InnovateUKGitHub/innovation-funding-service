@@ -35,7 +35,7 @@ public class CompetitionInFlightViewModel {
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
     private CompetitionCompletionStage competitionCompletionStage;
-    private boolean cofunderEnabled;
+    private boolean supporterEnabled;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
@@ -43,7 +43,7 @@ public class CompetitionInFlightViewModel {
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
                                         boolean readOnly,
-                                        boolean cofunderEnabled) {
+                                        boolean supporterEnabled) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionCompletionStage = competitionResource.getCompletionStage();
@@ -64,7 +64,7 @@ public class CompetitionInFlightViewModel {
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
-        this.cofunderEnabled = cofunderEnabled;
+        this.supporterEnabled = supporterEnabled && competitionResource.isKtp();
     }
 
     public Long getCompetitionId() {
@@ -160,7 +160,7 @@ public class CompetitionInFlightViewModel {
                 !asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus);
     }
 
-    public boolean isManageCofundersLinkEnabled() {
-        return cofunderEnabled;
+    public boolean isManageSupportersLinkEnabled() {
+        return supporterEnabled;
     }
 }

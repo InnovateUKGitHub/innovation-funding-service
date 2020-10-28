@@ -72,6 +72,7 @@ ${blankKTNDomainValidationMessage}       You must enter a Knowledge Transfer Net
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
+${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -401,7 +402,7 @@ Administrator can sucessfully save and return to the manage users page
 
 The user accepts the invite for KTA role
     [Documentation]  IFS-7934
-    When the user reads his email and clicks the link      ${validKTNDomainEmail}  ${emailInviteSubject}  ${KTAEmailInviteText}
+    When the user reads his email and clicks the link      ${validKTNDomainEmail}  ${ktpEmailInviteSubject}  ${KTAEmailInviteText}
     Then the user should see the element                   jQuery = h1:contains("Create knowledge transfer adviser account")
 
 The KTA creates a new account

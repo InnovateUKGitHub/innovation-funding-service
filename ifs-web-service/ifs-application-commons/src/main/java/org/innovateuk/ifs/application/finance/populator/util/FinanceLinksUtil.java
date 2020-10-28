@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderAssignmentResource;
-import org.innovateuk.ifs.cofunder.resource.CofunderState;
-import org.innovateuk.ifs.cofunder.service.CofunderAssignmentRestService;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -37,7 +36,7 @@ public class FinanceLinksUtil {
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     @Autowired
-    private CofunderAssignmentRestService cofunderAssignmentRestService;
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     public Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
@@ -51,10 +50,10 @@ public class FinanceLinksUtil {
             } else {
                 return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
-        } else if (authenticatedUser.getRoles().contains(COFUNDER)) {
-            Optional<CofunderAssignmentResource> cofunderAssignment = cofunderAssignmentRestService.getAssignment(authenticatedUser.getId(), application.getId())
+        } else if (authenticatedUser.getRoles().contains(SUPPORTER)) {
+            Optional<SupporterAssignmentResource> supporterAssignment = supporterAssignmentRestService.getAssignment(authenticatedUser.getId(), application.getId())
                     .toOptionalIfNotFound().getSuccess();
-            if (cofunderAssignment.isPresent()) {
+            if (supporterAssignment.isPresent()) {
                 return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
         }

@@ -352,7 +352,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
     }
 
     @Test
-    public void populateManagementForCofunder() {
+    public void populateManagementForSupporter() {
         long organisationId = 3L;
         long competitionId = 4L;
         CompetitionResource competition = newCompetitionResource().build();
@@ -370,7 +370,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource()
-                .withRoleGlobal(Role.COFUNDER).build());
+                .withRoleGlobal(Role.SUPPORTER).build());
 
         assertEquals(APPLICATION_ID, viewModel.getApplicationId());
         assertEquals(competitionId, viewModel.getCompetitionId());

@@ -76,8 +76,8 @@ public class NavigationUtilsTest {
     }
 
     @Test
-    public void getDirectDashboardUrlForCofunder() {
-        assertEquals("https://site:8080/assessment/cofunder/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, COFUNDER));
+    public void getDirectDashboardUrlForSupporter() {
+        assertEquals("https://site:8080/assessment/supporter/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, SUPPORTER));
     }
 
     @Test

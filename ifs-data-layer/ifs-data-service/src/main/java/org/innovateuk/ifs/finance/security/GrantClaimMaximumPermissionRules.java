@@ -37,10 +37,10 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",
-            description = "A cofunder can see the grant claim maximums if they attached to an application for the competition")
-    public boolean cofunderAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden
+            description = "A supporter can see the grant claim maximums if they attached to an application for the competition")
+    public boolean supporterAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden
             (CompetitionResource competition, UserResource user) {
-        return isCofunderForCompetition(competition.getId(), user.getId());
+        return isSupporterForCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",
