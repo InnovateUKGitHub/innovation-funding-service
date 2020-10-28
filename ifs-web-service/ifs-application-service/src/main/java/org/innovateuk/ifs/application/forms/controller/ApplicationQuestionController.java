@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'assessor', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'assessor', 'monitoring_officer', 'knowledge_transfer_adviser')")
 public class ApplicationQuestionController {
 
     @Autowired

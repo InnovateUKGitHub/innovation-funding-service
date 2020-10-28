@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @SecuredBySpring(value = "Controller", description = "Each monitoring officer has permission to view their own dashboard",
         securedType = MonitoringOfficerDashboardController.class)
-@PreAuthorize("hasAnyAuthority('monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('monitoring_officer', 'knowledge_transfer_adviser')")
 public class MonitoringOfficerDashboardController {
 
     private MonitoringOfficerDashboardViewModelPopulator monitoringOfficerDashboardViewModelPopulator;

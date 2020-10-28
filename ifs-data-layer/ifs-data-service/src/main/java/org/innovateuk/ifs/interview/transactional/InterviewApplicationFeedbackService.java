@@ -24,12 +24,12 @@ public interface InterviewApplicationFeedbackService {
             description = "Competition Admins and Project Finance users can delete feedback")
     ServiceResult<Void> deleteFeedback(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor', 'monitoring_officer', 'knowledge_transfer_adviser')")
     @SecuredBySpring(value = "DOWNLOAD_FEEDBACK",
             description = "Competition Admins, Project Finance users, applicants and assessors can download feedback")
     ServiceResult<FileAndContents> downloadFeedback(long applicationId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'applicant', 'assessor', 'monitoring_officer', 'knowledge_transfer_adviser')")
     @SecuredBySpring(value = "FIND_FEEDBACK",
             description = "Competition Admins, Project Finance users, applicants and assessors can find feedback")
     ServiceResult<FileEntryResource> findFeedback(long applicationId);
