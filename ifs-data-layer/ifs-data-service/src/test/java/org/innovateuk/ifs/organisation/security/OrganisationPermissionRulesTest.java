@@ -110,9 +110,9 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {
-                assertTrue(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().withId(organisationId).build(), monitoringOfficerUser()));
+                assertTrue(rules.monitoringOfficersCanSeeOrganisationsOnTheirProjects(newOrganisationResource().withId(organisationId).build(), monitoringOfficerUser()));
             } else {
-                assertFalse(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().withId(organisationId).build(), user));
+                assertFalse(rules.monitoringOfficersCanSeeOrganisationsOnTheirProjects(newOrganisationResource().withId(organisationId).build(), user));
             }
         });
     }

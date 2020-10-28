@@ -83,7 +83,7 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
         verify(userRules, times(numberOfUsers))
                 .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
-                .monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
+                .monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
