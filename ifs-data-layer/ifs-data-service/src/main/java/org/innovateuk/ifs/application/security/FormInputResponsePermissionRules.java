@@ -61,6 +61,11 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
         return monitoringOfficerCanViewApplication(response.getApplication(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can see the input responses for the applications they are assigned to")
+    public boolean knowledgeTransferAdvisersCanSeeTheInputResponsesInApplicationsAssignedToThem(final FormInputResponseResource response, final UserResource user) {
+        return isKta(response.getApplication(), user);
+    }
+
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
     public boolean assessorCanSeeTheInputResponsesInApplicationsTheyReview(final FormInputResponseResource response, final UserResource user) {
         return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository);

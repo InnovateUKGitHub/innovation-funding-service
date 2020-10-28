@@ -7,6 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -20,6 +21,14 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
     )
     public boolean monitoringOfficerCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
         return user.getId().equals(monitoringOfficerUser.getId()) && user.hasRole(MONITORING_OFFICER);
+    }
+
+    @PermissionRule(
+            value = "GET_MONITORING_OFFICER_PROJECTS",
+            description = "Knowledge transfer advisers can get their own projects."
+    )
+    public boolean knowledgeTransferAdviserCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
+        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @PermissionRule(
@@ -64,6 +73,13 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Monitoring Officers can view themselves on any Project")
     public boolean monitoringOfficersCanViewThemselves(ProjectResource project, UserResource user) {
         return isMonitoringOfficer(project.getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_MONITORING_OFFICER",
+            description = "Knowledge transfer advisers can view themselves on any Project")
+    public boolean knowledgeTransferAdvisersCanViewThemselves(ProjectResource project, UserResource user) {
+        return knowledgeTransferAdviserCanViewProject(project.getId(), user);
     }
 
     @PermissionRule(

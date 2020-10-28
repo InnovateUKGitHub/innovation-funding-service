@@ -50,6 +50,12 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         return monitoringOfficerCanViewApplication(applicationFinance.getApplication().getId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can read the cost for an application they are assigned to")
+    public boolean knowledgeTransferAdviserCanReadACostForTheApplication(final ApplicationFinanceRow cost, final UserResource user) {
+        final ApplicationFinance applicationFinance = cost.getTarget();
+        return isKta(applicationFinance.getApplication().getId(), user);
+    }
+
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
     public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final FinanceRowItem costItem, final UserResource user) {
         return isCollaborator(financeRowRepository.findById(costItem.getId()).get(), user);

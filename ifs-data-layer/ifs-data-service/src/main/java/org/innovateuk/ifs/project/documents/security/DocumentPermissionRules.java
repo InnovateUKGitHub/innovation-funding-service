@@ -35,6 +35,11 @@ public class DocumentPermissionRules extends BasePermissionRules {
         return isMonitoringOfficer(project.getId(), user.getId());
     }
 
+    @PermissionRule(value = "DOWNLOAD_DOCUMENT", description = "Monitoring officer can download document")
+    public boolean knowledgeTransferAdviserCanDownloadDocument(ProjectResource project, UserResource user) {
+        return knowledgeTransferAdviserCanViewProject(project.getId(), user);
+    }
+
     @PermissionRule(value = "DOWNLOAD_DOCUMENT", description = "Stakeholder can download document")
     public boolean stakeholderCanDownloadDocument(ProjectResource project, UserResource user) {
         return userIsStakeholderOnProject(project, user) && areDocumentsApproved(project);

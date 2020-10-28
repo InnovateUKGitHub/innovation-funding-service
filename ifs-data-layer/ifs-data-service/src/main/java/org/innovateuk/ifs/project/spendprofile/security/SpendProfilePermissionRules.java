@@ -71,6 +71,13 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "VIEW_SPEND_PROFILE",
+            description = "Knowledge transfer adviser can view Spend Profile data for the projects they are assigned to")
+    public boolean knowledgeTransferAdviserCanViewProjectsSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return knowledgeTransferAdviserCanViewProject(projectOrganisationCompositeId.getProjectId(), user);
+    }
+
+    @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",
             description = "Partners can view their own Spend Profile data")
     public boolean partnersCanViewTheirOwnSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {

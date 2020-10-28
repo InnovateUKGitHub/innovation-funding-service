@@ -76,6 +76,11 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return monitoringOfficerCanViewApplication(applicationFinanceResource.getApplication(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can see application finances for organisations")
+    public boolean knowledgeTransferAdvisersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isKta(applicationFinanceResource.getApplication(), user);
+    }
+
     @PermissionRule(value = "READ", description = "Stakeholders can see application finances for organisations on applications they are assigned to")
     public boolean stakeholdersCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         Application application = applicationRepository.findById(applicationFinanceResource.getApplication()).get();
