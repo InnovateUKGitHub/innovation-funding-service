@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
@@ -56,7 +57,8 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Override
     public ServiceResult<List<SimpleUserResource>> findAll() {
-        return serviceSuccess(userRepository.findByRolesAndStatusIn(MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE))
+        return serviceSuccess(userRepository.findByRolesInAndStatusIn(
+                EnumSet.of(MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER), EnumSet.of(PENDING, ACTIVE))
                 .stream()
                 .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
                 .collect(Collectors.toList()));

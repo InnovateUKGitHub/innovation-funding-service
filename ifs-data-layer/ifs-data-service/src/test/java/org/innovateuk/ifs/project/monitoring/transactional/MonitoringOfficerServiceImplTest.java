@@ -75,7 +75,9 @@ public class MonitoringOfficerServiceImplTest {
     @Test
     public void findAll() {
         User user = newUser().build();
-        when(userRepositoryMock.findByRolesAndStatusIn(Role.MONITORING_OFFICER, EnumSet.of(PENDING, ACTIVE))).thenReturn(singletonList(user));
+        when(userRepositoryMock.findByRolesInAndStatusIn(
+                EnumSet.of(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER), EnumSet.of(PENDING, ACTIVE)))
+                .thenReturn(singletonList(user));
 
         List<SimpleUserResource> result = service.findAll().getSuccess();
 

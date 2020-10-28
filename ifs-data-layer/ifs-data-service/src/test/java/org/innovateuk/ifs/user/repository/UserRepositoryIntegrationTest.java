@@ -6,6 +6,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.junit.Assert.*;
@@ -43,6 +44,22 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Autowired
     protected InnovationAreaRepository innovationAreaRepository;
+
+    @Test
+    public void findByRolesInAndStatusIn() {
+        EnumSet<Role> roles = EnumSet.of(APPLICANT, ASSESSOR);
+        EnumSet<UserStatus> statuses = EnumSet.of(ACTIVE, INACTIVE);
+
+        List<User> users = repository.findByRolesInAndStatusIn(roles, statuses);
+
+        assertTrue(users.stream()
+                .flatMap(user -> user.getRoles().stream())
+                .allMatch(roles::contains));
+
+        assertTrue(users.stream()
+                .map(User::getStatus)
+                .allMatch(statuses::contains));
+    }
 
     @Test
     public void findAll() {
