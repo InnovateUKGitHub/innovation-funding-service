@@ -27,7 +27,7 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 *** Variables ***
 ${supporterApplicationTitle}     	      Reconfiguring an immune response
 &{Supporter01_credentials}                email=mister.branches@money.com    password=${short_password}
-${KTP_Application_URL}                    ${SERVER}/assessment/supporter/application/247/response
+${KTP_Application_URL}                    ${server}/assessment/supporter/application/266/response
 ${ktpCofundingCompetitionNavigation}      Co funder dashboard - application level
 ${supporterUserUsername}                  Wallace.Mccormack@money.com
 ${cofundingCompetitionName}               KTP cofunding
@@ -75,7 +75,7 @@ The internal user can view a supporter application by searching with an applicat
     Given Log in as a different user                    &{ifs_admin_user_credentials}
     And the user clicks the button/link                 link = ${cofundingCompetitionName}
     And the user clicks the button/link                 link = Manage supporters
-    And the user clicks the button/link                 link = View feedback
+    And the user clicks the button/link                 link = View supporter feedback
     When the user enters text to a text field           id=applicationFilter    ${supporterApplicationID}
     And the user clicks the button/link                 jQuery = button:contains("Filter")
     And the user clicks the button/link                 link = ${supporterApplicationID}
@@ -92,7 +92,7 @@ The comp admin views the feedback of the application
     Given Log in as a different user                &{Comp_admin1_credentials}
     And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage supporters
-    And the user clicks the button/link             link = View feedback
+    And the user clicks the button/link             link = View supporter feedback
     When And the user clicks the button/link        link = ${supporterApplicationID}
     And the user clicks the button/link             link = Back to supporter feedback
     And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
@@ -103,7 +103,7 @@ The finance manager views the feedback of the application
     Given Log in as a different user                &{internal_finance_credentials}
     And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage supporters
-    And the user clicks the button/link             link = View feedback
+    And the user clicks the button/link             link = View supporter feedback
     When And the user clicks the button/link        link = ${supporterApplicationID}
     And the user clicks the button/link             link = Back to supporter feedback
     And the user clicks the button/link             jQuery = td:contains("${supporterApplicationTitle}") ~ td:contains("View feedback")
@@ -222,7 +222,7 @@ the user can allocate applictions
     the user should see the element     jQuery = h1:contains("Manage supporters")
     the user should see the element     jQuery = h3:contains("Actions")
     the user should see the element     link = Assign supporters to applications
-    the user should see the element     link = View feedback
+    the user should see the element     link = View supporter feedback
     the user clicks the button/link     link = Assign supporters to applications
 
 the user can allocate supporters
@@ -305,7 +305,7 @@ get application id using application name
 the user clicks view feedback link
     And the user clicks the button/link             link = ${cofundingCompetitionName}
     And the user clicks the button/link             link = Manage co-funders
-    And the user clicks the button/link             link = View feedback
+    And the user clicks the button/link             link = View supporter feedback
 
 the user can view the feedback
     When the user clicks the button/link            link = ${cofunderApplicationID}

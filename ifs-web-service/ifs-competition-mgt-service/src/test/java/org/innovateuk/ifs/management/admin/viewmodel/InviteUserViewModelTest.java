@@ -14,18 +14,18 @@ import static org.junit.Assert.assertTrue;
 public class InviteUserViewModelTest {
 
     @Test
-    public void InviteInternalUserViewModel() {
+    public void inviteInternalUserViewModel() {
 
         InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.INTERNAL_USER, Role.internalRoles(), true);
 
         assertEquals(InviteUserView.INTERNAL_USER, viewModel.getType());
-        assertEquals(InviteUserView.INTERNAL_USER.getName(), viewModel.getTypeName());
+        assertEquals("internal user", viewModel.getTypeName());
         assertTrue(viewModel.isInternal());
         assertEquals(viewModel.getRoles(), Role.internalRoles());
     }
 
     @Test
-    public void InviteExternalUserViewModelKta() {
+    public void inviteExternalUserViewModelKta() {
 
         InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<>(Arrays.asList(Role.KNOWLEDGE_TRANSFER_ADVISER)), false);
 
@@ -36,7 +36,7 @@ public class InviteUserViewModelTest {
     }
 
     @Test
-    public void InviteExternalUserViewModelSupporter() {
+    public void inviteExternalUserViewModelSupporter() {
 
         InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<Role>(Arrays.asList(Role.SUPPORTER)), false);
 
@@ -47,7 +47,7 @@ public class InviteUserViewModelTest {
     }
 
     @Test
-    public void InviteExternalUserViewModelAllExternalRoles() {
+    public void inviteExternalUserViewModelAllExternalRoles() {
 
         InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite().stream().collect(toSet()), false);
 
