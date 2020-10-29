@@ -46,13 +46,6 @@ public class StatusPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "VIEW_TEAM_STATUS",
-            description = "Knowledge transfer advisers can see a team's status for a project")
-    public boolean knowledgeTransferAdvisersCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return knowledgeTransferAdviserCanViewProject(project.getId(), user);
-    }
-
-    @PermissionRule(
             value = "VIEW_STATUS",
             description = "All partners can view the project status")
     public boolean partnersCanViewStatus(ProjectResource project, UserResource user) {

@@ -98,13 +98,6 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "VIEW_GRANT_OFFER",
-            description = "Knowledge transfer adviser can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
-    public boolean knowledgeTransferAdviserCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
-        return knowledgeTransferAdviserCanViewProject(project.getId(), user);
-    }
-
-    @PermissionRule(
             value = "UPLOAD_SIGNED_GRANT_OFFER",
             description = "Project manager or Lead partner can upload signed grant offer letter")
     public boolean leadPartnerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
@@ -158,13 +151,6 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Monitoring officers can view the send status of Grant Offer Letter for a project")
     public boolean monitoringOfficerCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isMonitoringOfficer(project.getId(), user.getId());
-    }
-
-    @PermissionRule(
-            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Knowledge transfer advisers can view the send status of Grant Offer Letter for a project")
-    public boolean knowledgeTransferAdviserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return knowledgeTransferAdviserCanViewProject(project.getId(), user);
     }
 
     @PermissionRule(

@@ -38,11 +38,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return project != null && isMonitoringOfficer(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "A knowledge transfer adviser can see projects that they are assigned to")
-    public boolean knowledgeTransferAdviserOnProjectCanView(final ProjectResource project, final UserResource user) {
-        return project != null && isKta(project.getApplication(), user);
-    }
-
     @PermissionRule(value = "ADD_PARTNER", description = "The System Registration user can add a partner to a project")
     public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
         return isSystemRegistrationUser(user)

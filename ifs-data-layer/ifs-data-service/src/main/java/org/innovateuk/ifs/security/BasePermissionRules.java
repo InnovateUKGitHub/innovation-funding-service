@@ -21,7 +21,6 @@ import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerReposit
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -86,11 +85,6 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean monitoringOfficerCanViewApplication(long applicationId, long userId) {
         Project project = projectRepository.findOneByApplicationId(applicationId);
         return project != null && isMonitoringOfficer(project.getId(), userId);
-    }
-
-    protected boolean knowledgeTransferAdviserCanViewProject(long projectId, UserResource user) {
-        Optional<Project> project = projectRepository.findById(projectId);
-        return project.isPresent() && isKta(project.get().getApplication().getId(), user);
     }
 
     protected boolean isSpecificProjectPartnerByProjectId(long projectId, long organisationId, long userId) {

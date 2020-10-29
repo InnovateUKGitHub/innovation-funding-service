@@ -63,11 +63,6 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
         return monitoringOfficerCanViewApplication(fileEntry.getCompoundId().getApplicationId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "A knowledge transfer adviser can download a file for an answer")
-    public boolean knowledgeTransferAdviserCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return isKta(fileEntry.getCompoundId().getApplicationId(), user);
-    }
-
     @PermissionRule(value = "READ", description = "A supporter can download a file for an answer to one of their own Applications")
     public boolean supporterCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return isSupporterForApplication(fileEntry.getCompoundId().getApplicationId(), user.getId());

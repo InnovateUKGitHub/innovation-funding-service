@@ -86,11 +86,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return monitoringOfficerCanViewApplication(applicationResource.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Knowledge transfer advisers can see the participation percentage for applications they are assigned to")
-    public boolean knowledgeTransferAdvisorsCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
-        return isKtaForApplication(applicationResource, user);
-    }
-
     @PermissionRule(value = "READ_FINANCE_DETAILS",
             description = "The consortium can see the application finance details",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
@@ -137,12 +132,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             description = "Monitoring officers can view the finance totals.")
     public boolean monitoringOfficersCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
         return monitoringOfficerCanViewApplication(applicationResource.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ_FINANCE_TOTALS",
-            description = "Knowledge transfer advisers can view the finance totals.")
-    public boolean knowledgeTransferAdvisersCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isKtaForApplication(applicationResource, user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -205,11 +194,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Monitoring officers can see application resources for projects assigned to them.")
     public boolean monitoringOfficerAssignedToProjectCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can see application resources assigned to them.")
-    public boolean knowledgeTransferAdviserAssignedToApplicationCanViewApplications(final ApplicationResource application, final UserResource user) {
-        return application != null && application.getCompetition() != null && isKtaForApplication(application, user);
     }
 
     @PermissionRule(value = "READ", description = "Supporter can see applications assigned to them")

@@ -336,18 +336,11 @@ public class UserPermissionRules {
                 user.hasRole(STAKEHOLDER);
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "A monitoring officer can request applicant role")
+    @PermissionRule(value = "GRANT_ROLE", description = "An monitoring officer can request applicant role")
     public boolean monitoringOfficerCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return roleCommand.getTargetRole().equals(APPLICANT) &&
                 user.getId().equals(roleCommand.getUserId()) &&
                 user.hasRole(MONITORING_OFFICER);
-    }
-
-    @PermissionRule(value = "GRANT_ROLE", description = "A knowledge transfer adviser can request applicant role")
-    public boolean knowledgeTransferAdviserCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
-        return roleCommand.getTargetRole().equals(APPLICANT) &&
-                user.getId().equals(roleCommand.getUserId()) &&
-                user.hasRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @PermissionRule(value = "CAN_VIEW_OWN_DASHBOARD", description = "User is requesting own dashboard")

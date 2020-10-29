@@ -37,11 +37,6 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isMonitoringOfficer(partnerOrganisation.getProject(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Knowledge Transfer Advisers can see partner organisations on a project they are assigned to")
-    public boolean knowledgeTransferAdvisersUsersCanView(PartnerOrganisationResource partnerOrganisation, UserResource user) {
-        return knowledgeTransferAdviserCanViewProject(partnerOrganisation.getProject(), user);
-    }
-
     @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Partners can read their own progress when setting up their organisation")
     public boolean partnersCanReadTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
