@@ -375,6 +375,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator), organisationRepository.findOneByName(usersOrganisations.get(collaborator)));
         }
 
+        if (competition.getCompetition().isKtp() && line.submittedDate != null) {
+            baseBuilder = baseBuilder.inviteKta();
+        }
+
         List<CsvUtils.InviteLine> pendingInvites = simpleFilter(inviteLines,
                 invite -> "APPLICATION".equals(invite.type) && line.title.equals(invite.targetName));
 
