@@ -121,7 +121,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
-    public boolean monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+    public boolean monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
         return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
     }
 

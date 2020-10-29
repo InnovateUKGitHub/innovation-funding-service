@@ -153,9 +153,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         allGlobalRoleUsers.forEach(user -> {
             if (isMonitoringOfficer(user)) {
-                assertTrue(rules.monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo(userResource, monitoringOfficerUser()));
+                assertTrue(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, monitoringOfficerUser()));
             } else {
-                assertFalse(rules.monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo(userResource, user));
+                assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, user));
             }
         });
     }

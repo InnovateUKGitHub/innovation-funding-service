@@ -1,10 +1,5 @@
 package org.innovateuk.ifs.organisation.security;
 
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -17,14 +12,12 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -50,12 +43,6 @@ public class OrganisationPermissionRules {
     @Autowired
     private SupporterAssignmentRepository supporterAssignmentRepository;
 
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
     @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
     public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isInternal(user);
@@ -77,29 +64,9 @@ public class OrganisationPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
-    public boolean monitoringOfficersCanSeeOrganisationsOnTheirProjects(OrganisationResource organisation, UserResource user) {
+    public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
         return getMonitoringOfficersOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can see Organisations on their applications or projects")
-    public boolean knowledgeTransferAdvisersCanSeeOrganisationsOnTheirApplicationsOrProjects(OrganisationResource organisation, UserResource user) {
-        return processRoleRepository.findByUserIdAndRole(user.getId(), Role.KNOWLEDGE_TRANSFER_ADVISER).stream().anyMatch(pr -> {
-
-            Optional<Application> application = applicationRepository.findById(pr.getApplicationId());
-            if (!application.isPresent()) {
-                return false;
-            }
-            boolean organisationInApplication = application.get().getProcessRoles().stream()
-                    .anyMatch(applicationProcessRole -> applicationProcessRole.getOrganisationId() == organisation.getId());
-
-            if (organisationInApplication) {
-                return true;
-            }
-            Optional<Project> project = projectRepository.findByApplicationId(pr.getApplicationId());
-            return project.isPresent() && project.get().getOrganisations().stream().map(Organisation::getId)
-                   .anyMatch(orgId -> orgId == organisation.getId());
-        });
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
