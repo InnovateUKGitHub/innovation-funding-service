@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -9,12 +10,11 @@ import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 
 /**
@@ -28,12 +28,12 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                                                       String companyRegistrationNumber,
                                                       OrganisationTypeEnum organisationType,
                                                       Boolean isInternational,
-                                                      String internationalRegistrationNumber) {
+                                                      String internationalRegistrationNumber,
+                                                      AddressResource address,
+                                                      List<OrganisationAddressType> types) {
 
         return with(data -> {
-
             doAs(systemRegistrar(), () -> {
-
                 OrganisationResource organisation = newOrganisationResource().
                         withId().
                         withName(organisationName).
@@ -42,11 +42,11 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         withIsInternational(isInternational).
                         withInternationalRegistrationNumber(internationalRegistrationNumber).
                         build();
-                List<OrganisationAddressResource> addresses = emptyList();
-                if (isInternational) {
-                    AddressResource address = new AddressResource("Street Line 1", "Street Line 2", "Barcelona", "Spain", "ZippyDo");
-                    addresses = singletonList(new OrganisationAddressResource(organisation, address, new AddressTypeResource(INTERNATIONAL.getId(), INTERNATIONAL.name())));
-
+                List<OrganisationAddressResource> addresses = new ArrayList<>();
+                if (address != null) {
+                    types.forEach(type -> {
+                        addresses.add(new OrganisationAddressResource(organisation, address, new AddressTypeResource(type.getId(), type.name())));
+                    });
                 }
                 organisation.setAddresses(addresses);
                 OrganisationResource created = organisationInitialCreationService.createOrMatch(organisation).getSuccess();
