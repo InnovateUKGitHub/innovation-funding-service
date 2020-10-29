@@ -7,6 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -19,7 +20,8 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Monitoring officers can get their own projects."
     )
     public boolean monitoringOfficerCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
-        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasRole(MONITORING_OFFICER);
+        return user.getId().equals(monitoringOfficerUser.getId()) &&
+                (user.hasRole(MONITORING_OFFICER) || user.hasRole(KNOWLEDGE_TRANSFER_ADVISER));
     }
 
     @PermissionRule(

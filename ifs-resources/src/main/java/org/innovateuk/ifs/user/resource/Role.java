@@ -126,7 +126,7 @@ public enum Role implements Identifiable {
 
     public List<String> getAuthorities() {
         if (this == KNOWLEDGE_TRANSFER_ADVISER) {
-            return newArrayList(this.name, ASSESSOR.name);
+            return newArrayList(this.name, ASSESSOR.name, MONITORING_OFFICER.name);
         }
         return newArrayList(this.name);
     }

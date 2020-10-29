@@ -36,6 +36,18 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, nonMonitoringOfficer));
     }
 
+    @Test
+    public void ktaCanSeeTheirOwnProjects() {
+        UserResource monitoringOfficer = newUserResource().withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+        UserResource otherMonitoringOfficer = newUserResource().withRoleGlobal(APPLICANT).build();
+        UserResource nonMonitoringOfficer = newUserResource().withRoleGlobal(APPLICANT).build();
+
+        assertTrue(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, monitoringOfficer));
+
+        assertFalse(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, otherMonitoringOfficer));
+        assertFalse(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, nonMonitoringOfficer));
+    }
+
 
     @Test
     public void internalUsersCanSeeMonitoringOfficerProjects() {
