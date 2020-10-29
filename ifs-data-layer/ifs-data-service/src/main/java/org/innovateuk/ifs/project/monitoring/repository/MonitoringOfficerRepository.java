@@ -50,7 +50,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   monitoringOfficer.user.id = :userId " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES;
 
-    String NOT_KTP = "AND project.application.competition.fundingType NOT IN (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
+    String NOT_KTP = "AND project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
     String IS_KTP = "AND project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP ";
 
     List<MonitoringOfficer> findByUserId(long userId);
