@@ -159,7 +159,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding);
-    @Query("SELECT a.id FROM Application a " + COMP_FUNDING_FILTER + " AND NOT (a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED)")
+
+    @Query("SELECT a.id FROM Application a LEFT JOIN a.projectToBeCreated projectToBeCreated " + COMP_FUNDING_FILTER + " AND NOT ((a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED) OR (projectToBeCreated IS NOT NULL AND a.competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP))")
     List<Long> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,

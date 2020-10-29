@@ -533,6 +533,7 @@ making the application a successful project
     the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
     the user clicks the button/link  css = [name="write-and-send-email"]
     the internal sends the descision notification email to all applicants  Successful!
+    the user refreshes until element appears on page         jQuery = td:contains("${appTitle}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 moving competition to Project Setup
     [Arguments]   ${compID}

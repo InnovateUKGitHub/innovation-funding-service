@@ -74,6 +74,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 
@@ -221,7 +222,8 @@ CompAdmin marks appplications as successful and releases competition feedback
     [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
-    Then the user marks applications as successful and send funding decision email
+    Then making the application a successful project     ${CLOSED_COMPETITION}  ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}
     And the user clicks the button/link       css = button[type="submit"]  #Release feedback
 
 Applicant can still see their feedback once the comp feedback has been released
@@ -345,17 +347,6 @@ the user checks for Manage interview panel key statistics
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/find
     ${Accepted} =  Get Text  css = div:nth-child(2) > div > span
     Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
-
-the user marks applications as successful and send funding decision email
-    the user selects the checkbox         select-all-1
-    the user clicks the button/link       jQuery = button:contains("Successful")
-    the user clicks the button/link       link = Competition
-    the user clicks the button/link       link = Manage funding notifications
-    the user selects the checkbox         select-all-1
-    the user clicks the button/link       css = button.govuk-button.button-notification   #Assessor clicks 'Write and send emails'
-    the user clicks the button/link       css = .govuk-button[data-js-modal="send-to-all-applicants-modal"]
-    the user clicks the button/link       css = button[name="send-emails"]
-    the user clicks the button/link       link = Competition
 
 the compAdmin can cancel resend inivte to an applicant
     the user should see the element    jQuery = h1:contains("Resend invites to interview panel")
