@@ -97,8 +97,9 @@ public class HomeController {
     private void addKtaRoles(UserResource user, Set<Role> dashboardRoles) {
         List<ProcessRoleResource> processRoleResources = userRestService.findProcessRoleByUserId(user.getId()).getSuccess();
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
-        boolean isApplicant = processRoleResources.stream().map(ProcessRoleResource::getRole)
-                .anyMatch(Role::isKta);
+        boolean isApplicant = processRoleResources.stream()
+                .map(ProcessRoleResource::getRole)
+                .anyMatch(applicantProcessRoles()::contains);
 
         if (isMonitoringOfficer) {
             dashboardRoles.add(MONITORING_OFFICER);
