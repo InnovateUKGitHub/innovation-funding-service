@@ -98,6 +98,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
@@ -358,7 +359,17 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(spendProfileWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(projectMapperMock.mapToResource(project)).thenReturn(new ProjectResource());
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
 
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(any(),
+                any())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(any(), any(), eq(costCategoryTypeForOrganisation))).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(any(), any())).thenReturn(serviceSuccess(null));
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(any(), any())).thenReturn(true);
 
         ServiceResult<ProjectResource> result = service.createProjectFromApplication(applicationId);
