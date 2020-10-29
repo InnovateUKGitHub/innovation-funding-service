@@ -28,8 +28,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Optional<User> findByIdAndRoles(Long id, Role role);
 
-    Optional<User> findByIdAndRolesIn(Long id, Collection<Role> roles);
-
     @Override
     List<User> findAll();
 

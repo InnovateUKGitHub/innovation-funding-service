@@ -95,8 +95,7 @@ public class MonitoringOfficerServiceImplTest {
                 new MonitoringOfficerAssignedProjectResource(1L, 1L, 1L, "assigned", "LeadyMcLeadFace");
         MonitoringOfficerUnassignedProjectResource unassigned = new MonitoringOfficerUnassignedProjectResource(2L, 2L, "unassigned");
 
-        when(userRepositoryMock.findByIdAndRolesIn(user.getId(), EnumSet.of(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)))
-                .thenReturn(Optional.of(user));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectMonitoringOfficerRepositoryMock.findAllAssignedProjects(user.getId())).thenReturn(singletonList(assigned));
         when(projectMonitoringOfficerRepositoryMock.findAllUnassignedProjects()).thenReturn(singletonList(unassigned));
 
@@ -118,8 +117,7 @@ public class MonitoringOfficerServiceImplTest {
                 new MonitoringOfficerAssignedProjectResource(1L, 1L, 1L, "assigned", "LeadyMcLeadFace");
         MonitoringOfficerUnassignedProjectResource unassigned = new MonitoringOfficerUnassignedProjectResource(2L, 2L, "unassigned");
 
-        when(userRepositoryMock.findByIdAndRolesIn(user.getId(), EnumSet.of(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)))
-                .thenReturn(Optional.of(user));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectMonitoringOfficerRepositoryMock.findAssignedKTPProjects(user.getId())).thenReturn(singletonList(assigned));
         when(projectMonitoringOfficerRepositoryMock.findUnassignedKTPProjects()).thenReturn(singletonList(unassigned));
 
@@ -142,8 +140,7 @@ public class MonitoringOfficerServiceImplTest {
                 new MonitoringOfficerAssignedProjectResource(1L, 1L, 1L, "assigned", "LeadyMcLeadFace");
         MonitoringOfficerUnassignedProjectResource unassigned = new MonitoringOfficerUnassignedProjectResource(2L, 2L, "unassigned");
 
-        when(userRepositoryMock.findByIdAndRolesIn(user.getId(), EnumSet.of(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)))
-                .thenReturn(Optional.of(user));
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectMonitoringOfficerRepositoryMock.findAssignedNonKTPProjects(user.getId())).thenReturn(singletonList(assigned));
         when(projectMonitoringOfficerRepositoryMock.findUnassignedNonKTPProjects()).thenReturn(singletonList(unassigned));
 
@@ -159,18 +156,17 @@ public class MonitoringOfficerServiceImplTest {
 
     @Test
     public void assignProjectToMonitoringOfficer() {
-        User moUser = newUser().build();
+        User moUser = newUser().withRoles(singleton(Role.MONITORING_OFFICER)).build();
         Project project = newProject().build();
 
-        when(userRepositoryMock.findByIdAndRolesIn(moUser.getId(), EnumSet.of(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)))
-                .thenReturn(Optional.of(moUser));
+        when(userRepositoryMock.findById(moUser.getId())).thenReturn(Optional.of(moUser));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(monitoringOfficerInviteServiceMock.inviteMonitoringOfficer(moUser, project)).thenReturn(serviceSuccess());
 
         service.assignProjectToMonitoringOfficer(moUser.getId(), project.getId()).getSuccess();
 
         InOrder inOrder = inOrder(userRepositoryMock, projectRepositoryMock, monitoringOfficerInviteServiceMock, projectMonitoringOfficerRepositoryMock);
-        inOrder.verify(userRepositoryMock).findByIdAndRolesIn(moUser.getId(), EnumSet.of(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER));
+        inOrder.verify(userRepositoryMock).findById(moUser.getId());
         inOrder.verify(projectRepositoryMock).findById(project.getId());
         inOrder.verify(monitoringOfficerInviteServiceMock).inviteMonitoringOfficer(moUser, project);
         inOrder.verify(projectMonitoringOfficerRepositoryMock).save(new MonitoringOfficer(moUser, project));

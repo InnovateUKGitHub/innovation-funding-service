@@ -161,7 +161,8 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     }
 
     private ServiceResult<User> getMonitoringOfficerUser(long userId) {
-        return find(userRepository.findByIdAndRolesIn(userId, EnumSet.of(MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER)),
+        return find(userRepository.findById(userId)
+                        .filter(u -> u.hasRole(KNOWLEDGE_TRANSFER_ADVISER) || u.hasRole(MONITORING_OFFICER)),
                 notFoundError(User.class, userId));
     }
 
