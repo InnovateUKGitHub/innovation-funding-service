@@ -162,7 +162,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         boolean isApplicant = data.getUsersProcessRole().map(pr -> applicantProcessRoles().contains(pr.getRole())).orElse(false);
         boolean isKta = data.getUsersProcessRole().map(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER).orElse(false);
         boolean isAssessor = data.getUsersProcessRole().map(pr -> pr.getRole() == ASSESSOR).orElse(false);
-        if (isApplicant || isKta || data.getUser().hasRole(Role.MONITORING_OFFICER)) {
+        if (isApplicant || isKta || data.getUser().hasRole(Role.MONITORING_OFFICER) || data.getUser().hasRole(SUPPORTER)) {
             return String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", data.getApplication().getId(), question.getId(), formInputId, fileEntryId);
         } else if (isAssessor && settings.isIncludeAssessment()) {
             return String.format("/assessment/%d/application/%d/formInput/%d/file/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId, fileEntryId);

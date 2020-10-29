@@ -3,6 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
@@ -53,6 +54,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     @Autowired
     protected InterviewRepository interviewRepository;
+
+    @Autowired
+    protected SupporterAssignmentRepository supporterAssignmentRepository;
 
     @Autowired
     private InnovationLeadRepository innovationLeadRepository;
@@ -158,5 +162,13 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isProjectActive(long projectId) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
         return projectProcess.getProcessState().isActive();
+    }
+
+    protected boolean isSupporterForApplication(long applicationId, long loggedInUserId) {
+        return supporterAssignmentRepository.existsByParticipantIdAndTargetId(loggedInUserId, applicationId);
+    }
+
+    protected boolean isSupporterForCompetition(long competitionId, long loggedInUserId) {
+        return supporterAssignmentRepository.existsByParticipantIdAndCompetitionId(loggedInUserId, competitionId);
     }
 }

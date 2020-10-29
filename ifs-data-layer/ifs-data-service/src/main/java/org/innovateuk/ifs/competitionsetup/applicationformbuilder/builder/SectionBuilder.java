@@ -86,6 +86,10 @@ public final class SectionBuilder {
         return name;
     }
 
+    public String getAssessorGuidanceDescription() {
+        return assessorGuidanceDescription;
+    }
+
     public Section build() {
         Section section = new Section();
         section.setName(name);

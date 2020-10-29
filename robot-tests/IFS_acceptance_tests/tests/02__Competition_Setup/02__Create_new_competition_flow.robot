@@ -25,7 +25,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               INFUND-4892 As a Competitions team member I want to be prevented from making amendments to some Competition Setup details so that I do not affect affect other setup details that have been saved so far for this competition
 ...
-...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added co-funder rows in the funding information section
+...               INFUND-4894 As a competition executive I want have a remove button in order to remove the new added supporter rows in the funding information section
 ...
 ...               INFUND-5639 As a Competitions team member I want to be able to view the Application process within the application question section in Competition Setup so that I can set up my competition using more convenient navigation
 ...
@@ -95,6 +95,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-7703 Applicant can answer multiple choice questions
 ...
 ...               IFS-7700 EDI application question configuration
+...
+...               IFS-8522 Loans - Change of EDI survey link
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -425,9 +427,10 @@ Application: Application details
     [Teardown]  the user clicks the button/link     link = Application
 
 External user edits the EDI question.
-    [Documentation]  IFS-7700
+    [Documentation]  IFS-7700  IFS-8522
     Given the user marks each question as complete     Equality, diversity and inclusion
     And the user clicks the button/link                link = Equality, diversity and inclusion
+    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']   
     When the user clicks the button/link               jQuery = a:contains("Edit this question")
     And the user clicks the button/link                jQuery = button:contains("Done")
     Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
@@ -515,7 +518,7 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]  HappyPath
-    Given the user clicks the button/link                                               jQuery = button:contains("Add question")  #Add question link
+    Given the user clicks the button/link                                               jQuery = button:contains("Add question")
     When the user is able to configure the new question                                 ${customQuestion}
     And the user clicks the button/link                                                 jQuery = li:contains("${customQuestion}")
     Then the user should be able to see the read only view of question correctly        ${customQuestion}

@@ -73,6 +73,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource panelAssessor;
     private UserResource interviewAssessor;
     private UserResource kta;
+    private UserResource supporter;
 
     private static final Set<Role> applicantRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
@@ -111,6 +112,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         panelAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
         interviewAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
         kta = ktaUser();
+        supporter = supporterUser();
 
         applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPENED).build();
         applicationResource2 = newApplicationResource().build();
@@ -149,6 +151,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
         when(projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
                 .thenReturn(true);
+
+        setupSupporterAssignmentExpectations(applicationResource1.getId(), supporter.getId(), true);
+        setupSupporterAssignmentExpectations(applicationResource2.getId(), supporter.getId(), false);
+        setupSupporterAssignmentExpectations(applicationResource1.getId(), compAdmin.getId(), false);
     }
 
     @Test
@@ -157,6 +163,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource2, user2));
         assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, user2));
         assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, leadOnApplication1));
+    }
+
+    @Test
+    public void supporterAssignedToTheApplicationCanView() {
+        assertTrue(rules.supportersCanViewApplicationsAssigned(applicationResource1, supporter));
+        assertFalse(rules.supportersCanViewApplicationsAssigned(applicationResource2, supporter));
+        assertFalse(rules.supportersCanViewApplicationsAssigned(applicationResource1, compAdmin));
     }
 
     @Test
@@ -216,6 +229,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void ktaCanSeeTheApplicationFinancesTotals() {
         assertTrue(rules.ktaCanSeeTheApplicationFinanceTotals(applicationResource1, kta));
         assertFalse(rules.ktaCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
+    }
+
+    @Test
+    public void supporterCanSeeTheApplicationFinancesTotals() {
+        assertTrue(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, supporter));
+        assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource2, supporter));
+        assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
     }
 
     @Test
@@ -327,7 +347,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void userIsConnectedToApplicationResource() {
-        assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, leadOnApplication1));
+        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
     }
 
     @Test
@@ -348,6 +368,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void ktaCanSeeTheResearchParticipantPercentage() {
         assertTrue(rules.ktaCanSeeTheResearchParticipantPercentage(applicationResource1, kta));
         assertFalse(rules.ktaCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
+    }
+
+    @Test
+    public void supporterCanSeeTheResearchParticipantPercentage() {
+        assertTrue(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource1, supporter));
+        assertFalse(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource2, supporter));
+        assertFalse(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
     }
 
     @Test

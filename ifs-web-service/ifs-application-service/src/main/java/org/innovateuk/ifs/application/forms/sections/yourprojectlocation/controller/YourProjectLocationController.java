@@ -80,7 +80,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @GetMapping
     @AsyncMethod
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROJECT_LOCATION", description = "Applicants, stakeholders, internal users and kta can view the Your project location page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,

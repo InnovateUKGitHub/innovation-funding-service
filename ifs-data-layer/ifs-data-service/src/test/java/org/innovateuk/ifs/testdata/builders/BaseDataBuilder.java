@@ -22,7 +22,7 @@ import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
-import org.innovateuk.ifs.cofunder.transactional.CofunderAssignmentService;
+import org.innovateuk.ifs.supporter.transactional.SupporterAssignmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
@@ -52,10 +52,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
-import org.innovateuk.ifs.invite.transactional.InviteUserService;
-import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
+import org.innovateuk.ifs.invite.transactional.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -156,6 +153,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenService tokenService;
     protected ApplicationInviteService applicationInviteService;
     protected AcceptApplicationInviteService acceptApplicationInviteService;
+    protected ApplicationKtaInviteService ktaInviteService;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected ApplicationNotificationService applicationNotificationService;
@@ -224,7 +222,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
     protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
     protected InviteUserService inviteUserService;
-    protected CofunderAssignmentService cofunderAssignmentService;
+    protected SupporterAssignmentService supporterAssignmentService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -262,6 +260,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         tokenService = serviceLocator.getBean(TokenService.class);
         applicationInviteService = serviceLocator.getBean(ApplicationInviteService.class);
         acceptApplicationInviteService = serviceLocator.getBean(AcceptApplicationInviteService.class);
+        ktaInviteService = serviceLocator.getBean(ApplicationKtaInviteService.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         applicationNotificationService = serviceLocator.getBean(ApplicationNotificationService.class);
@@ -346,7 +345,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
         projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         inviteUserService = serviceLocator.getBean(InviteUserService.class);
-        cofunderAssignmentService = serviceLocator.getBean(CofunderAssignmentService.class);
+        supporterAssignmentService = serviceLocator.getBean(SupporterAssignmentService.class);
     }
 
     protected UserResource compAdmin() {

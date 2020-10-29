@@ -15,6 +15,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance', 'supporter')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
         securedType = ApplicationTermsController.class)
@@ -43,7 +44,11 @@ public class ApplicationTermsController {
     private ApplicationRestService applicationRestService;
     private ApplicationTermsPartnerModelPopulator applicationTermsPartnerModelPopulator;
 
+    public ApplicationTermsController() {
 
+    }
+
+    @Autowired
     public ApplicationTermsController(UserRestService userRestService,
                                       QuestionStatusRestService questionStatusRestService,
                                       ApplicationRestService applicationRestService,

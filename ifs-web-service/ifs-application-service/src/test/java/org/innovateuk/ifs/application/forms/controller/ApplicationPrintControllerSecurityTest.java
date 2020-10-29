@@ -19,6 +19,7 @@ public class ApplicationPrintControllerSecurityTest extends BaseControllerSecuri
         List<Role> roles = new ArrayList<>();
         roles.add(Role.APPLICANT);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        roles.add(Role.SUPPORTER);
 
         assertRolesCanPerform(() -> classUnderTest.printApplication(0L, null, null), roles);
     }

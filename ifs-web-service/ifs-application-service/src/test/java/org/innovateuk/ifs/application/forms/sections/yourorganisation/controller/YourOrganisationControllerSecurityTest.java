@@ -21,6 +21,8 @@ public class YourOrganisationControllerSecurityTest extends BaseControllerSecuri
         roles.add(Role.STAKEHOLDER);
         roles.add(Role.EXTERNAL_FINANCE);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        roles.add(Role.SUPPORTER);
+        roles.add(Role.ASSESSOR);
 
         assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, 0L), roles);
     }

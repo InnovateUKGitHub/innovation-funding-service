@@ -16,11 +16,12 @@ public class RegistrationViewModel {
     private final String phoneGuidance;
     private final String postcodeGuidance;
     private final String buttonText;
+    private final String organisation;
     private final boolean phoneRequired;
     private final boolean termsRequired;
     private final boolean addressRequired;
 
-    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, boolean phoneRequired, boolean termsRequired, boolean addressRequired) {
+    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String guidance, String phoneGuidance, String postcodeGuidance, String buttonText, String organisation, boolean phoneRequired, boolean termsRequired, boolean addressRequired) {
         this.pageTitle = pageTitle == null ? DEFAULT_PAGE_TITLE : pageTitle;
         this.subTitle = subTitle == null ? DEFAULT_SUB_TITLE : subTitle;
         this.invitee = invitee;
@@ -30,6 +31,7 @@ public class RegistrationViewModel {
         this.phoneGuidance = phoneGuidance == null ? DEFAULT_PHONE_GUIDANCE : phoneGuidance;
         this.postcodeGuidance = postcodeGuidance == null ? DEFAULT_POSTCODE_GUIDANCE : postcodeGuidance;
         this.buttonText = buttonText == null ? DEFAULT_BUTTON_TEXT : buttonText;
+        this.organisation = organisation;
         this.phoneRequired = phoneRequired;
         this.termsRequired = termsRequired;
         this.addressRequired = addressRequired;
@@ -83,6 +85,10 @@ public class RegistrationViewModel {
         return addressRequired;
     }
 
+    public String getOrganisation() {
+        return organisation;
+    }
+
     public static RegistrationViewModel anInvitedUserViewModel() {
         return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true).build();
     }
@@ -100,6 +106,7 @@ public class RegistrationViewModel {
         private boolean phoneRequired;
         private boolean termsRequired;
         private boolean addressRequired;
+        private String organisation;
 
         private RegistrationViewModelBuilder() {
         }
@@ -138,6 +145,11 @@ public class RegistrationViewModel {
             return this;
         }
 
+        public RegistrationViewModelBuilder withOrganisation(String organisation) {
+            this.organisation = organisation;
+            return this;
+        }
+
         public RegistrationViewModelBuilder withPhoneGuidance(String phoneGuidance) {
             this.phoneGuidance = phoneGuidance;
             return this;
@@ -169,7 +181,7 @@ public class RegistrationViewModel {
         }
 
         public RegistrationViewModel build() {
-            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, phoneRequired, termsRequired, addressRequired);
+            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, guidance, phoneGuidance, postcodeGuidance, buttonText, organisation, phoneRequired, termsRequired, addressRequired);
         }
     }
 }
