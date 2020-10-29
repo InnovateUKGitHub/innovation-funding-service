@@ -33,15 +33,17 @@ public class PageHistoryService {
         if (handler.hasMethodAnnotation(NavigationRoot.class)) {
             history.clear();
         }
+        
+        if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
+            if (!history.isEmpty()) {
+                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
+                modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
+            }
 
-        if (!history.isEmpty()) {
-            modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
-            modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
-        }
-
-        if (!ERROR.equals(request.getDispatcherType())) {
-            history.push(new PageHistory(request.getRequestURI()));
-            encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+            if (!ERROR.equals(request.getDispatcherType())) {
+                history.push(new PageHistory(request.getRequestURI()));
+                encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+            }
         }
     }
 
