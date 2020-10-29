@@ -33,7 +33,7 @@ public class PageHistoryService {
         if (handler.hasMethodAnnotation(NavigationRoot.class)) {
             history.clear();
         }
-        
+
         if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
             if (!history.isEmpty()) {
                 modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
