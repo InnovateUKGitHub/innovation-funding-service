@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/project")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer', 'knowledge_transfer_adviser')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class SetupStatusController {
 
     @Autowired

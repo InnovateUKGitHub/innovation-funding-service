@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'knowledge_transfer_adviser', 'supporter')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'supporter')")
 public class ApplicationDownloadController {
 
     @Autowired
