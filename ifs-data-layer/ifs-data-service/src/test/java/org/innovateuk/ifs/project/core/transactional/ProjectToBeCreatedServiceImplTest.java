@@ -52,6 +52,9 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
     @Mock
     private ApplicationRepository applicationRepository;
 
+    @Mock
+    private ProjectNotificationService projectNotificationService;
+
     @Test
     public void findProjectToCreate() {
         int index = 0;
@@ -91,6 +94,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verify(applicationFundingService).notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         verify(projectService).createProjectFromApplication(application.getId());
+        verifyZeroInteractions(projectNotificationService);
     }
 
     @Test
@@ -104,6 +108,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
+        doNothing().when(projectNotificationService).sendProjectSetupNotification(application.getId());
 
         ServiceResult<ScheduleResponse> result = service.createProject(applicationId);
 
@@ -113,6 +118,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verifyZeroInteractions(applicationFundingService);
         verify(projectService).createProjectFromApplication(application.getId());
+        verify(projectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
     }
 
 
