@@ -36,13 +36,13 @@
                         <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Partner</span></th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric">Partner's costs (&pound;)</th>
 
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-left-cell">Current funding level (%)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-left-cell">Current funding level</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell">Current funding sought (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-right-cell">Current % of total grant value (%)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric shaded-cell border-right-cell">Current % of total grant value</th>
 
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised funding level (%)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised funding level</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised funding sought (&pound;)</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised % of total grant value (%)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Revised % of total grant value</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -53,10 +53,10 @@
                                 <strong th:text="${partner.name}">Organisation Name</strong>
                                 <small th:text="${partner.subtitle}">Lead, large, 30%</small>
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(partner.costs,1,'DEFAULT')}" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(partner.costs,1,'DEFAULT')}" /></td>
 
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatDecimal(partner.fundingLevel,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">&pound;<th:block th:text="${#numbers.formatInteger(partner.fundingSought,1,'DEFAULT')}" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell"><th:block th:text="${#numbers.formatInteger(partner.fundingSought,1,'DEFAULT')}" /></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:if="${!partner.totalGrantZero}"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</th:block></td>
 
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
@@ -89,7 +89,7 @@
                                            th:attr="data-calculation-fields=|${partner.costs},[id='__${path}__.fundingLevel'],100,${partner.otherFunding}|,
                                                     data-calculation-rawValue=${partner.calculateFundingSought(fundingLevel)}"
                                            th:value="'&pound;' + ${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel), 0,'DEFAULT')}"/>
-                                    <span th:text="|&pound;${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel),1,'DEFAULT')}|"
+                                    <span th:text="|${#numbers.formatInteger(partner.calculateFundingSought(fundingLevel),1,'DEFAULT')}|"
                                           th:attr="data-mirror=|[id='__${path}__.fundingSought']|"></span>
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
