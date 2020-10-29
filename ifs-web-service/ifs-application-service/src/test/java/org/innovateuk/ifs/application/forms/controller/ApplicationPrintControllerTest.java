@@ -4,6 +4,8 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +41,7 @@ public class ApplicationPrintControllerTest extends AbstractApplicationMockMVCTe
 
     @Before
     public void setUpData() {
-        this.setupCompetition();
+        this.setupCompetition(FundingType.GRANT, AssessorFinanceView.OVERVIEW);
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.setupFinances();

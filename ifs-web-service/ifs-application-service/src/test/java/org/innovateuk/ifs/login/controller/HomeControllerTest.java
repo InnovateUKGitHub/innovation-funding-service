@@ -188,4 +188,13 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("login/multiple-dashboard-choice"));
     }
+
+    @Test
+    public void multiDashboardForSupporterAdvisor() throws Exception {
+        setLoggedInUser(applicantAndSupporter);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/dashboard-selection"));
+    }
 }

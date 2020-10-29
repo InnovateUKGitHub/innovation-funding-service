@@ -120,7 +120,6 @@ The user should see competitions in project set up
     the user should see the element        jQuery = .govuk-heading-m:contains("Project setup ")
     ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  page should contain   Project setup loan comp
     Run Keyword If  '${status}' == 'FAIL'     the user clicks the button/link      jQuery = button:contains("Next")
-#    the user clicks the button/link        jQuery = button:contains('Next')
     the user should see the element        link = Project setup loan comp
     the user should see the element        jQuery =.govuk-body:contains("5 projects")
     the user should not see the element    link = ${READY_TO_OPEN_COMPETITION_NAME}

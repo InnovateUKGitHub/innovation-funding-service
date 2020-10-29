@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assign supporters to applications - ${model.competitionName}|" />
+</head>
+
+<body class="govuk-template__body competition-management competition-overview">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to manage supporters',linkUrl=@{/competition/{competitionId}/supporters(competitionId=${model.competitionId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign supporters to applications',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
+
+        <form method="GET" id="filter-applications-form">
+            <div class="search-filters govuk-!-margin-top-6">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                        <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                    </legend>
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds">
+                            <label class="govuk-label"
+                                   for="filter">Search by application number</label>
+                            <input class="govuk-input"
+                                   id="filter"
+                                   name="filter"
+                                   th:value="${model.filter}">
+                        </div>
+                        <div class="govuk-grid-column-one-third">
+                            <button class="govuk-button" id="application-filter-button">Filter</button>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="govuk-!-margin-top-6">
+                    <a href="?" class="govuk-link govuk-body">Clear all filters</a>
+                </div>
+            </div>
+        </form>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Knowledge base partner</th>
+                    <th class="govuk-table__header" scope="col">Supporters</th>
+                    <th class="govuk-table__header" scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="entry : ${model.applicationsPage.content}">
+                    <td class="govuk-table__cell">
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
+                           class="govuk-link"
+                           th:text="${entry.id}" />
+                    </td>
+                    <td class="govuk-table__cell" th:text="${entry.name}" />
+                    <td class="govuk-table__cell" th:text="${entry.lead}" />
+                    <td class="govuk-table__cell" th:text="${entry.total}" />
+                    <td class="govuk-table__cell">
+                        <a th:href="@{/competition/{competitionId}/supporters/assign/{applicationId}(competitionId=${model.competitionId},applicationId=${entry.id})}"
+                           class="govuk-button govuk-button--secondary">Assign
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <th:block th:insert="fragments/elements :: pagination(pagination=${model.pagination})" />
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

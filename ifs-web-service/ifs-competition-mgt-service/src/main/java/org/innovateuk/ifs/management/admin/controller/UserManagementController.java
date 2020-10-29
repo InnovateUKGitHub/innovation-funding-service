@@ -16,10 +16,8 @@ import org.innovateuk.ifs.management.admin.viewmodel.ConfirmEmailViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.ViewUserViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.profile.service.ProfileRestService;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -43,6 +41,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 
 /**
@@ -57,6 +56,7 @@ public class UserManagementController extends AsyncAdaptor {
     private static final String FORM_ATTR_NAME = "form";
     private static final String SEARCH_PAGE_TEMPLATE = "admin/search-external-users";
     private static final String NEW_EMAIL_COOKIE = "NEW_EMAIL_COOKIE";
+    private static final String NEW_ORG_COOKIE = "NEW_ORG_COOKIE";
 
     @Autowired
     private UserRestService userRestService;
@@ -75,6 +75,9 @@ public class UserManagementController extends AsyncAdaptor {
 
     @Autowired
     private RoleProfileStatusRestService roleProfileStatusRestService;
+
+    @Autowired
+    private ProfileRestService profileRestService;
 
     @Value("${ifs.external.role.enabled}")
     private boolean externalRoleLinkEnabled;
@@ -122,24 +125,48 @@ public class UserManagementController extends AsyncAdaptor {
                              ValidationHandler validationHandler,
                              HttpServletResponse response) {
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
+        boolean orgNameChange = isOrgNameChange(form, user);
+        boolean emailChange = !user.getEmail().equals(form.getEmail());
         validateUser(form, user);
 
         Supplier<String> failureView = () -> viewActiveUser(model, user, loggedInUser);
         Supplier<String> noEmailChangeSuccess = () -> redirectToActiveUsersTab();
         Supplier<String> emailChangeSuccess = () -> {
             cookieService.saveToCookie(response, NEW_EMAIL_COOKIE, form.getEmail());
+            if (orgNameChange) {
+                cookieService.saveToCookie(response, NEW_ORG_COOKIE, form.getOrganisation());
+            }
             return String.format("redirect:/admin/user/%d/active/confirm", userId);
         };
-        Supplier<String> successView = !user.getEmail().equals(form.getEmail()) ? emailChangeSuccess : noEmailChangeSuccess;
+        Supplier<String> successView = emailChange ? emailChangeSuccess : noEmailChangeSuccess;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = serviceSuccess();
             if (user.isInternalUser()) {
                 saveResult = internalUserService.editInternalUser(constructEditUserResource(form, userId));
+            } else if (orgNameChange && !emailChange) {
+                saveResult = profileRestService.updateUserProfile(userId, getUpdatedUserResource(form.getOrganisation(), userId)).toServiceResult();
             }
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, successView);
         });
+    }
+
+    private UserProfileResource getUpdatedUserResource(String organisation, long userId) {
+        UserProfileResource userProfileResource = profileRestService.getUserProfile(userId).getSuccess();
+        userProfileResource.setSimpleOrganisation(organisation);
+        return userProfileResource;
+    }
+
+    private boolean isOrgNameChange(EditUserForm form, UserResource user) {
+        boolean orgNameChange = false;
+        if (user.getRoles().contains(SUPPORTER)) {
+            UserProfileResource userProfileResource = profileRestService.getUserProfile(user.getId()).getSuccess();
+            if (!userProfileResource.getSimpleOrganisation().equals(form.getOrganisation())) {
+                orgNameChange = true;
+            }
+        }
+        return orgNameChange;
     }
 
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
@@ -152,11 +179,13 @@ public class UserManagementController extends AsyncAdaptor {
                                      @SuppressWarnings("unused") BindingResult bindingResult,
                                      HttpServletRequest request) {
         String email = cookieService.getCookieValue(request, NEW_EMAIL_COOKIE);
+        String org = cookieService.getCookieValue(request, NEW_ORG_COOKIE);
         if (email.isEmpty()) {
             return redirectToActivePage(userId);
         }
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
-        model.addAttribute("model", new ConfirmEmailViewModel(user, email));
+        UserProfileResource userProfileResource = profileRestService.getUserProfile(userId).getSuccess();
+        model.addAttribute("model", new ConfirmEmailViewModel(user, email, org, userProfileResource));
         return "admin/confirm-email";
     }
 
@@ -175,14 +204,19 @@ public class UserManagementController extends AsyncAdaptor {
         Supplier<String> failureView = () -> confirmEmailChange(userId, model, form, bindingResult, request);
         Supplier<String> successView = () -> {
             cookieService.removeCookie(response, NEW_EMAIL_COOKIE);
+            cookieService.removeCookie(response, NEW_ORG_COOKIE);
             redirectAttributes.addFlashAttribute("showEmailUpdateSuccess", true);
             return redirectToActiveUsersTab();
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             String email = cookieService.getCookieValue(request, NEW_EMAIL_COOKIE);
+            String organisation = cookieService.getCookieValue(request, NEW_ORG_COOKIE);
             if (email.isEmpty()) {
                 return redirectToActivePage(userId);
+            }
+            if (!organisation.isEmpty()) {
+                validationHandler.addAnyErrors(profileRestService.updateUserProfile(userId, getUpdatedUserResource(organisation, userId)));
             }
             validationHandler.addAnyErrors(userRestService.updateEmail(userId, email));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
@@ -220,6 +254,11 @@ public class UserManagementController extends AsyncAdaptor {
             form.setRole(IFS_ADMINISTRATOR);
         } else {
             form.setRole(user.getRoles().stream().findFirst().get());
+        }
+
+        if (user.getRoles().contains(SUPPORTER)) {
+           UserProfileResource userProfileResource = profileRestService.getUserProfile(user.getId()).getSuccess();
+           form.setOrganisation(userProfileResource.getSimpleOrganisation());
         }
         form.setEmail(user.getEmail());
         return form;

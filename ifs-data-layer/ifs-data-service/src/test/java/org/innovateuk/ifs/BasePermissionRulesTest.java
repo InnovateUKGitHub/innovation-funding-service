@@ -1,7 +1,6 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.cofunder.repository.CofunderAssignmentRepository;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -65,7 +64,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected ExternalFinanceRepository externalFinanceRepository;
 
     @Mock
-    protected CofunderAssignmentRepository cofunderAssignmentRepository;
+    protected SupporterAssignmentRepository supporterAssignmentRepository;
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
@@ -159,14 +158,14 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         setupLeadPartnerExpectations(project, user, false);
     }
 
-    protected void setupCofunderAssignmentExpectations(Long applicationId, Long userId, boolean userIsCofunder) {
-        when(cofunderAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId))
-                .thenReturn(userIsCofunder);
+    protected void setupSupporterAssignmentExpectations(Long applicationId, Long userId, boolean userIsSupporter) {
+        when(supporterAssignmentRepository.existsByParticipantIdAndTargetId(userId, applicationId))
+                .thenReturn(userIsSupporter);
     }
 
-    protected void setupCofunderAssignmentCompetitionExpectations(Long competitionId, Long userId, boolean userIsCofunder) {
-        when(cofunderAssignmentRepository.existsByParticipantIdAndCompetitionId(userId, competitionId))
-                .thenReturn(userIsCofunder);
+    protected void setupSupporterAssignmentCompetitionExpectations(Long competitionId, Long userId, boolean userIsSupporter) {
+        when(supporterAssignmentRepository.existsByParticipantIdAndCompetitionId(userId, competitionId))
+                .thenReturn(userIsSupporter);
     }
 
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
@@ -187,4 +186,5 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     }
 
     protected abstract T supplyPermissionRulesUnderTest();
+
 }

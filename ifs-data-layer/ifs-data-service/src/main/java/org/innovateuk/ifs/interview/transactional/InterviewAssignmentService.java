@@ -52,7 +52,7 @@ public interface InterviewAssignmentService {
             description = "The Competition Admin user and Project Finance users can unstage applications")
     ServiceResult<Void> unstageApplications(long competitionId);
 
-    @PreAuthorize("permitAll")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'external_finance', 'innovation_lead', 'stakeholder', 'support', 'monitoring_officer', 'knowledge_transfer_adviser', 'supporter')")
     @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
             description = "The applicants, assessors, comp admin, project finance, innovation lead, stakeholder, support users and kta can see if the application is assigned to interview")
     ServiceResult<Boolean> isApplicationAssigned(long applicationId);

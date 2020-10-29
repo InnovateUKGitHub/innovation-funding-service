@@ -229,9 +229,9 @@ public class UserPermissionRules {
         return profileDetails.getUser().equals(user.getId());
     }
 
-    @PermissionRule(value = "READ_USER_PROFILE", description = "A ifs admin user can read any user's profile")
-    public boolean ifsAdminCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
-        return user.hasRole(Role.IFS_ADMINISTRATOR);
+    @PermissionRule(value = "READ_USER_PROFILE", description = "An internal user can read any user's profile")
+    public boolean internalUserCanViewAnyUsersProfile(UserProfileResource profileDetails, UserResource user) {
+        return user.isInternalUser();
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")
@@ -322,6 +322,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a KTA role")
     public boolean isGrantingKTARoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(KNOWLEDGE_TRANSFER_ADVISER);
+    }
+
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a supporter role")
+    public boolean isGrantingCoFunderRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(SUPPORTER);
     }
 
     @PermissionRule(value = "GRANT_ROLE", description = "An stakeholder can request applicant role")
