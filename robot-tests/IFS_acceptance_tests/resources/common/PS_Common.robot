@@ -622,7 +622,6 @@ the user goes to documents page
 
 Search for MO
     [Arguments]  ${MO_name}  ${MO_fullname}
-    the user clicks the button/link     link = Change Monitoring Officer
     the element should be disabled      jQuery = button:contains("View Monitoring Officer")
     input text                          id = userId    ${MO_name}
     the user clicks the button/link     jQuery = ul li:contains("${MO_fullname}")

@@ -540,13 +540,13 @@ The lead should see the Project manager & Finance contact (lead details) and Fin
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
     And the user should see the element             jQuery = td:contains("Project") + td:contains("${fname} ${lname}")
     And the user should see the element             jQuery = td:contains("Your finance contact") + td:contains("${fname} ${lname}")
-    And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
     [Teardown]  the user clicks the button/link     link = Return to setup your project
 
 The lead should see the MO section with KTA details
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Monitoring Officer
-    Then The user should see the element            jQuery = a:contains("${ktaEmail}")
+    Then the user should see the element            jQuery = a:contains("${ktaEmail}")
     [Teardown]  the user clicks the button/link     link = Set up your project
 
 The lead is able to complete Project team section
@@ -575,7 +575,7 @@ The partner is able to complete Project team Section
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
     Given the user clicks the button/link           link = ${ktpApplicationTitle}
     And the user clicks the button/link             link = Project team
-    When The user selects their finance contact     financeContact1
+    When the user selects their finance contact     financeContact1
     And the user clicks the button/link             link = Set up your project
     Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
 
@@ -592,9 +592,9 @@ The partner cannot see the project start date and can see the correspondance add
 The partner should see the Project manager & Finance contact (lead details) and Finance contact of the participant
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Project team
-    Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
+    Then the user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
     And the user should see the element             jQuery = td:contains("Your finance contact") ~ td:contains("Emma Grant")
-    And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
     [Teardown]  the user clicks the button/link     link = Return to setup your project
 
 The partner should see the MO section with KTA details
@@ -617,12 +617,11 @@ Internal user cannot see the project start date and should see the correspondenc
     And the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
     [Teardown]  the user clicks the button/link     link = Back to project setup
 
-Internal should see the Project manager & Finance contact (lead details) and Finance contact of the participant
+Internal user should see the Project manager & Finance contact (lead details) and Finance contact of the participant
     [Documentation]  IFS-8070
     When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
-    Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-    And The user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
-#    [Teardown]  the user clicks the button/link     link = Return to setup your project
+    Then the user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
 
 Internal user is able to view the KTA as an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-8070
@@ -650,7 +649,7 @@ Internal user is able to approve Finance checks and generate spend profile
 The partner is able to submit the spend profile and should not see the project start date
     [Documentation]  IFS-7812  IFS-7805
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
-    Given The partner submits the spend profile     ${ProjectID}  ${partnerOrgId}
+    Given the partner submits the spend profile     ${ProjectID}  ${partnerOrgId}
     And the user should not see the element         jQuery = dt:contains("Project start date")
 
 The lead is able to submit the spend profile and should not see the project start date
