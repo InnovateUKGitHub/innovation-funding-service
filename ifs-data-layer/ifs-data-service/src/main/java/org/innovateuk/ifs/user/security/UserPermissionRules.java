@@ -125,6 +125,11 @@ public class UserPermissionRules {
         return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
     }
 
+    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can view users in projects they are assigned to")
+    public boolean knowledgeTransferAdvisersCanViewUsersInProjectsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInProjectAssignedToKnowledgeTransferAdviser(userToView, user);
+    }
+
     @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
     public boolean internalUsersCanViewUserOrganisation(UserOrganisationResource userToView, UserResource user) {
         return isInternal(user);
@@ -394,6 +399,17 @@ public class UserPermissionRules {
         List<Project> monitoringOfficerProjects = simpleMap(projectMonitoringOfficers, MonitoringOfficer::getProject);
 
         return !disjoint(monitoringOfficerProjects, projectsThisUserIsAMemberOf);
+    }
+
+    private boolean userIsInProjectAssignedToKnowledgeTransferAdviser(UserResource userToView, UserResource knowledgeTransferAdviser) {
+        List<Project> projectsThisUserIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
+
+        return projectsThisUserIsAMemberOf.stream().anyMatch(project ->
+            project.getApplication().getProcessRoles().stream()
+                    .anyMatch(processRole -> processRole.getUser().equals(knowledgeTransferAdviser)
+                            && (processRole.getRole() == KNOWLEDGE_TRANSFER_ADVISER))
+        );
     }
 
     private List<Competition> getUserCompetitions(List<Application> userApplications, List<Project> userProjects) {
