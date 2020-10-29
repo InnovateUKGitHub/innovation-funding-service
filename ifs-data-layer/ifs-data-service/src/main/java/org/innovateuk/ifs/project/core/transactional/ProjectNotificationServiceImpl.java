@@ -48,7 +48,7 @@ public class ProjectNotificationServiceImpl implements ProjectNotificationServic
                 .andOnSuccess(application -> {
                     NotificationSource from = systemNotificationSource;
                     List<NotificationTarget> notificationTargets = application.getProcessRoles().stream()
-                            .filter(processRole -> processRole.isLeadApplicant() || processRole.isKta())
+                            .filter(processRole -> processRole.isLeadApplicantOrCollaborator() || processRole.isKta())
                             .map(ProcessRole::getUser)
                             .filter(User::isActive)
                             .map(applicant -> new UserNotificationTarget(applicant.getName(), applicant.getEmail()))
