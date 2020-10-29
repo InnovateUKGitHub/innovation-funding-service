@@ -66,7 +66,6 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(() -> classUnderTest.getMonitoringOfficerProjects(user.getId()), () -> {
             verify(rules).internalUsersCanSeeMonitoringOfficerProjects(user, getLoggedInUser());
             verify(rules).monitoringOfficerCanSeeTheirOwnProjects(user, getLoggedInUser());
-            verify(rules).knowledgeTransferAdviserCanSeeTheirOwnProjects(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -82,7 +81,6 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
             verify(rules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verify(rules).stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verify(rules).monitoringOfficersCanViewThemselves(project, getLoggedInUser());
-            verify(rules).knowledgeTransferAdvisersCanViewThemselves(project, getLoggedInUser());
             verify(rules).competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
