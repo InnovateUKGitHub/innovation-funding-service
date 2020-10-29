@@ -95,6 +95,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         assertViewXUsersExpectations(1);
     }
 
+    private void assertViewMultipleUsersExpectations() {
+        assertViewXUsersExpectations(2);
+    }
+
     private void assertViewXUsersExpectations(int numberOfUsers) {
         verify(userRules, times(numberOfUsers))
                 .anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
@@ -111,8 +115,6 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
-                .knowledgeTransferAdvisersCanViewUsersInProjectsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
