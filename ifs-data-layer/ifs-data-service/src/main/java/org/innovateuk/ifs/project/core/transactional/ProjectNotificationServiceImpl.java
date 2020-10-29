@@ -47,7 +47,7 @@ public class ProjectNotificationServiceImpl implements ProjectNotificationServic
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
                     NotificationSource from = systemNotificationSource;
-                    List<NotificationTarget> notificationTargets = application.getApplicantProcessRoles().stream()
+                    List<NotificationTarget> notificationTargets = application.getProcessRoles().stream()
                             .filter(processRole -> processRole.isLeadApplicant() || processRole.isKta())
                             .map(ProcessRole::getUser)
                             .filter(User::isActive)

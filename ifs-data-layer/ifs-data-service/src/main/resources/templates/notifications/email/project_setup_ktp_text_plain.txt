@@ -15,7 +15,7 @@ after the funding decision has been made.
 
 ${dashboardUrl}
 
-Yours sincerely,
+Yours sincerely
 
 <@layout.senderPlainText/>
 </@layout.defaultPlainText>
