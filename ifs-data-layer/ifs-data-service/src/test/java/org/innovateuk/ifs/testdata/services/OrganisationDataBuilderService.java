@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 
@@ -37,12 +40,25 @@ public class OrganisationDataBuilderService {
     }
 
     public void createOrganisation(CsvUtils.OrganisationLine line) {
+        AddressResource address = null;
+        if (line.addressType.contains(OrganisationAddressType.INTERNATIONAL) || line.addressType.contains(OrganisationAddressType.KNOWLEDGE_BASE)) {
+            address = newAddressResource().
+                    withAddressLine1(line.addressLine1).
+                    withAddressLine2(line.addressLine2).
+                    withAddressLine3(line.addressLine3).
+                    withTown(line.town).
+                    withPostcode(line.postcode).
+                    withCounty(line.county).
+                    build();
+        }
         OrganisationDataBuilder organisation =
                 organisationDataBuilder.createOrganisation(line.name,
                         line.companyRegistrationNumber,
                         lookupOrganisationType(line.organisationType),
                         line.isInternational,
-                        line.internationalRegistrationNumber);
+                        line.internationalRegistrationNumber,
+                        address,
+                        line.addressType);
 
         organisation.build();
     }
