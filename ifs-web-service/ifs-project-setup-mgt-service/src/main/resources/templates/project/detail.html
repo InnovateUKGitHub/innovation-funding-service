@@ -35,7 +35,14 @@
         </div>
 
         <h2 class="govuk-heading-m">Project details</h2>
-        <p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
+
+        <th:block th:unless="${model.isIfsAdministrator() && model.ktpCompetition}">
+            <p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
+        </th:block>
+
+        <th:block th:if="${model.isIfsAdministrator() && model.ktpCompetition}">
+            <p class="govuk-body">The knowledge base partner provided these details for the overall project.</p>
+        </th:block>
 
         <table class="govuk-table" id="project-details">
             <thead class="govuk-table__head">
@@ -46,16 +53,18 @@
             </thead>
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <a th:if="${model.modifyStartDate()}" th:href="@{/competition/{competitionId}/project/{id}/details/start-date(competitionId=${model.project.getCompetition()},id=${model.project.getId()})}" class="govuk-link">Target start date</a>
-                        <th:block th:unless="${model.modifyStartDate()}">Target start date</th:block>
-                    </td>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <td class="govuk-table__cell">
+                            <a th:if="${model.modifyStartDate()}" th:href="@{/competition/{competitionId}/project/{id}/details/start-date(competitionId=${model.project.getCompetition()},id=${model.project.getId()})}" class="govuk-link">Target start date</a>
+                            <th:block th:unless="${model.modifyStartDate()}">Target start date</th:block>
+                        </td>
                     <td class="govuk-table__cell" id="start-date">
                         <th:block th:unless="${model.ktpCompetition}">
                             <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
                             <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
                         </th:block>
                     </td>
+                    </th:block>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
@@ -76,7 +85,13 @@
         <th:block th:if="${model.locationPerPartnerRequired}">
             <h2 class="govuk-heading-m">Partner details</h2>
 
-            <p class="govuk-body">Each partner must provide a project location. We will assign the Monitoring Officer based on the location.</p>
+            <th:block th:unless="${model.isIfsAdministrator() && model.ktpCompetition}">
+                <p class="govuk-body">Each partner must provide a project location. We will assign the Monitoring Officer based on the location.</p>
+            </th:block>
+
+            <th:block th:if="${model.isIfsAdministrator() && model.ktpCompetition}">
+                <p class="govuk-body">Each partner provided their own project location.</p>
+            </th:block>
 
             <table class="govuk-table" id="project-details-finance">
                 <thead class="govuk-table__head">
