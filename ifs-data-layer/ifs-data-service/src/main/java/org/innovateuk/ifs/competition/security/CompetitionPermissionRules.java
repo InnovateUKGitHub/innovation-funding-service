@@ -56,11 +56,6 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Knowledge transfer advisers can view competitions that are assigned to them")
-    public boolean knowledgeTransferAdvisersCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
-        return isKtaForCompetition(competition.getId(), user.getId());
-    }
-
     @PermissionRule(value = "READ", description = "Internal users other than innovation leads and stakeholders can see all competition search results")
     public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
         return isInternal(user) && !isInnovationLead(user) && !isStakeholder(user);
@@ -121,11 +116,6 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
     public boolean monitoringOfficerCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
         return userIsMonitoringOfficerInCompetition(competition.getId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
-    public boolean knowledgeTransferAdviserCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
-        return isKtaForCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")

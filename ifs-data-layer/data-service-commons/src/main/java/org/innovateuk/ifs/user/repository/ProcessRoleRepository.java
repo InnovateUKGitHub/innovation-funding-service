@@ -17,7 +17,6 @@ import java.util.Set;
 public interface ProcessRoleRepository extends PagingAndSortingRepository<ProcessRole, Long> {
     List<ProcessRole> findByUser(User user);
     List<ProcessRole> findByUserId(long userId);
-    List<ProcessRole> findByUserIdAndRole(long userId, Role role);
     List<ProcessRole> findByUserAndApplicationId(User user, long applicationId);
     ProcessRole findByUserIdAndRoleAndApplicationId(long userId, Role role, long applicationId);
     List<ProcessRole> findByUserIdAndRoleInAndApplicationId(long userId, Set<Role> role, long applicationId);

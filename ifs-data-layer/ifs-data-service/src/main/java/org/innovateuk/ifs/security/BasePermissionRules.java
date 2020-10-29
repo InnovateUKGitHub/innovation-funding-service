@@ -177,11 +177,4 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isSupporterForCompetition(long competitionId, long loggedInUserId) {
         return supporterAssignmentRepository.existsByParticipantIdAndCompetitionId(loggedInUserId, competitionId);
     }
-
-    protected boolean isKtaForCompetition(long competitionId, long loggedInUserId) {
-        return processRoleRepository.findByUserIdAndRole(loggedInUserId, Role.KNOWLEDGE_TRANSFER_ADVISER).stream().anyMatch(pr -> {
-            Optional<Application> application = applicationRepository.findById(pr.getApplicationId());
-            return application.isPresent() && (competitionId == application.get().getCompetition().getId());
-        });
-    }
 }
