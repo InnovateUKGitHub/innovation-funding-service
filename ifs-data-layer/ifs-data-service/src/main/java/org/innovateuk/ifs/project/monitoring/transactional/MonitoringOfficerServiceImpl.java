@@ -18,15 +18,14 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -68,13 +67,16 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     private MonitoringOfficerAssignmentResource mapToProjectMonitoringOfficerResource(User user) {
         List<MonitoringOfficerUnassignedProjectResource> unassignedProjects = new ArrayList<>();
         List<MonitoringOfficerAssignedProjectResource> assignedProjects = new ArrayList<>();
-        if (user.hasRole(MONITORING_OFFICER)) {
-            unassignedProjects.addAll(monitoringOfficerRepository.findUnassignedProject());
-            assignedProjects.addAll(monitoringOfficerRepository.findAssignedProjects(user.getId()));
-        }
-        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
-            unassignedProjects.addAll(monitoringOfficerRepository.findUnassignedKTPProject());
-            assignedProjects.addAll(monitoringOfficerRepository.findAssignedKTPProjects(user.getId()));
+
+        if (user.hasRole(MONITORING_OFFICER) && user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
+            unassignedProjects = monitoringOfficerRepository.findAllUnassignedProjects();
+            assignedProjects = monitoringOfficerRepository.findAllAssignedProjects(user.getId());
+        } else if (user.hasRole(MONITORING_OFFICER)) {
+            unassignedProjects = monitoringOfficerRepository.findUnassignedNonKTPProjects();
+            assignedProjects = monitoringOfficerRepository.findAssignedNonKTPProjects(user.getId());
+        } else if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
+            unassignedProjects = monitoringOfficerRepository.findUnassignedKTPProjects();
+            assignedProjects = monitoringOfficerRepository.findAssignedKTPProjects(user.getId());
         }
 
         return new MonitoringOfficerAssignmentResource(user.getId(),

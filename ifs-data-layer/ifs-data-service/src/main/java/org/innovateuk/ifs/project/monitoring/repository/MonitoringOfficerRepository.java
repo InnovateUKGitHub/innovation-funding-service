@@ -68,19 +68,27 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
     void deleteByUserIdAndProjectId(long userId, long projectId);
 
     @Query(GET_UNASSIGNED +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerUnassignedProjectResource> findAllUnassignedProjects();
+
+    @Query(GET_UNASSIGNED +
             NOT_KTP +
             "ORDER BY project.application.id")
-    List<MonitoringOfficerUnassignedProjectResource> findUnassignedProject();
+    List<MonitoringOfficerUnassignedProjectResource> findUnassignedNonKTPProjects();
 
     @Query(GET_UNASSIGNED +
             IS_KTP +
             "ORDER BY project.application.id")
-    List<MonitoringOfficerUnassignedProjectResource> findUnassignedKTPProject();
+    List<MonitoringOfficerUnassignedProjectResource> findUnassignedKTPProjects();
+
+    @Query(GET_ASSIGNED +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerAssignedProjectResource> findAllAssignedProjects(Long userId);
 
     @Query(GET_ASSIGNED +
             NOT_KTP +
             "ORDER BY project.application.id")
-    List<MonitoringOfficerAssignedProjectResource> findAssignedProjects(Long userId);
+    List<MonitoringOfficerAssignedProjectResource> findAssignedNonKTPProjects(Long userId);
 
     @Query(GET_ASSIGNED +
             IS_KTP +
