@@ -84,6 +84,7 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
 
         Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP);
         Project unassignedProject = aProjectIn(SETUP);
+        Project unassignedKTPProject = aProjectIn(SETUP, true);
         Project withdrawnProject = aProjectIn(WITHDRAWN, true);
         Project offlineProject = aProjectIn(HANDLED_OFFLINE);
         Project completeOfflineProject = aProjectIn(COMPLETED_OFFLINE, true);
@@ -97,6 +98,7 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
                 .collect(toList());
 
         assertTrue(unassignedProjectIds.contains(unassignedProject.getId()));
+        assertTrue(unassignedProjectIds.contains(unassignedKTPProject.getId()));
 
         assertFalse(unassignedProjectIds.contains(assignedProject.getId()));
         assertFalse(unassignedProjectIds.contains(withdrawnProject.getId()));
@@ -157,10 +159,11 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void findAllAssingedProjects() {
+    public void findAllAssignedProjects() {
         setLoggedInUser(getSteveSmith());
 
         Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP);
+        Project assignedKTPProject = aProjectWithMonitoringOfficerIn(SETUP, true);
         Project unassignedProject = aProjectIn(SETUP);
         Project withdrawnProject = aProjectWithMonitoringOfficerIn(WITHDRAWN, true);
         Project offlineProject = aProjectWithMonitoringOfficerIn(HANDLED_OFFLINE);
@@ -175,6 +178,7 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
                 .collect(toList());
 
         assertTrue(assignedProjectIds.contains(assignedProject.getId()));
+        assertTrue(assignedProjectIds.contains(assignedKTPProject.getId()));
 
         assertFalse(assignedProjectIds.contains(unassignedProject.getId()));
         assertFalse(assignedProjectIds.contains(withdrawnProject.getId()));
