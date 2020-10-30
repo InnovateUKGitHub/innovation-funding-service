@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 
 /**
@@ -62,6 +64,14 @@ public class FinanceCheckEligibilityResource {
 
     public BigDecimal getContributionToProject() {
         return contributionToProject;
+    }
+
+    @JsonIgnore
+    public BigDecimal getPercentageContributionToProject() {
+        if (totalCost.signum() == 0 || contributionToProject.signum() == 0) {
+            return BigDecimal.ZERO;
+        }
+        return contributionToProject.divide(totalCost).multiply(new BigDecimal(100));
     }
 
     public boolean isHasApplicationFinances() {

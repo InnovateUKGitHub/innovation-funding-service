@@ -88,7 +88,15 @@
                             <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other funding (&pound;)</th>
                         </div>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
-                            Contribution to project (&pound;)
+                            <th:block th:if="${model.ktpCompetition}">
+                                Company contribution (&pound;)
+                            </th:block>
+                            <th:block th:unless="${model.ktpCompetition}">
+                                Contribution to project (&pound;)
+                            </th:block>
+                        </th>
+                        <th th:if="${model.ktpCompetition}" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
+                            Company contribution (%)
                         </th>
                     </tr>
                 </thead>
@@ -100,6 +108,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">19,000</strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}">19,000</strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">19,000</strong></td>
+                        <td th:if="${model.ktpCompetition}" class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatDecimal(summaries.getPercentageTotalContributionToProject(),1,'DEFAULT',2,'DEFAULT')+'%'}"></strong></td>
                     </tr>
                 </tfoot>
                 <tbody class="govuk-table__body">
@@ -114,6 +123,7 @@
                             <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(summary.fundingSought,1,'DEFAULT')}" /></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(summary.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
                             <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(summary.contributionToProject,1,'DEFAULT')}" /></td>
+                            <td th:if="${model.ktpCompetition}" th:text="${#numbers.formatDecimal(summary.percentageContributionToProject,1,'DEFAULT',2,'DEFAULT')+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
                         </tr>
                     </th:block>
                 </tbody>

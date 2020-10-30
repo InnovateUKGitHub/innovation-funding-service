@@ -8,6 +8,7 @@ public class FinanceCheckOverviewViewModel {
     private final FinanceCheckSummariesViewModel summaries;
     private final ProjectFinanceCostBreakdownViewModel breakdown;
     private final boolean loanCompetition;
+    private final boolean ktpCompetition;
     private final boolean hasGrantClaimPercentage;
 
     private final long applicationId;
@@ -15,13 +16,14 @@ public class FinanceCheckOverviewViewModel {
     private final boolean canChangeFundingLevelPercentages;
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
-                                         boolean canChangeFundingSought, boolean loanCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage) {
+                                         boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
         this.applicationId = applicationId;
         this.canChangeFundingSought = canChangeFundingSought;
         this.loanCompetition = loanCompetition;
+        this.ktpCompetition = ktpCompetition;
         this.canChangeFundingLevelPercentages = canChangeFundingLevelPercentages;
         this.hasGrantClaimPercentage = hasGrantClaimPercentage;
     }
@@ -52,6 +54,10 @@ public class FinanceCheckOverviewViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     public boolean isCanChangeFundingLevelPercentages() {

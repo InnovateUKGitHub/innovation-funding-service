@@ -83,6 +83,7 @@ public class FinanceOverviewController {
                         applicationId,
                         canChangeFundingSought,
                         competition.isLoan(),
+                        competition.isKtp(),
                         canChangeFundingLevel,
                         competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE));
     }
