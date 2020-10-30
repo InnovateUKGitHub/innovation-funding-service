@@ -74,7 +74,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
-Resource          ../../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 

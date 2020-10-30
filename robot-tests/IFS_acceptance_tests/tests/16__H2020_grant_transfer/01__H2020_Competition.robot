@@ -221,7 +221,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link       jQuery = button:contains("Write and send email")
     the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
-    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent") ~ td:contains("${today}")
+    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link       link = Competition
     the user clicks the button/link       link = Manage funding notifications
 
@@ -467,8 +467,8 @@ The user is able to complete your project costs section
 
 The user is able to validate conversion spredsheet links works
     the user clicks the button/link                 link = funding conversion spreadsheet
-    Select Window                                   title = 404 - UK Research and Innovation
-    the user should see the element                 jQuery = p:contains("Go back")
+    Select Window                                   title = Page not found – UKRI
+    the user should see the element                 jQuery = h1:contains("404 Page not found")
     the user closes the last opened tab
 
 The user is able to submit the application
