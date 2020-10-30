@@ -179,14 +179,14 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void multiDashboardForKnowledgeTransferAdvisorWithApplicant() throws Exception {
+    public void multiDashboardForKnowledgeTransferAdvisorWithApplications() throws Exception {
         UserResource ktaUser = this.knowledgeTransferAdvisor;
-        kta.setRoles(newArrayList(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.LEADAPPLICANT));
+        kta.setRoles(newArrayList(Role.KNOWLEDGE_TRANSFER_ADVISER));
         setLoggedInUser(ktaUser);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.LEADAPPLICANT)
-                .build(2);
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .build(1);
 
         when(userRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(processRoleResources));
@@ -208,11 +208,12 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
-    public void multiDashboardForKnowledgeTransferAdvisorWithoutApplicant() throws Exception {
+    public void multiDashboardForKnowledgeTransferAdvisorNotAttachedToAnyApplications() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
+                .withRole(Role.APPLICANT)
+                .build(1);
 
         when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(processRoleResources));
