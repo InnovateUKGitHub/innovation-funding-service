@@ -36,6 +36,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean procurement;
     private final boolean projectIsActive;
     private final boolean loanCompetition;
+    private final boolean ktpCompetition;
     private final boolean collaborativeProject;
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
@@ -63,6 +64,7 @@ public class FinanceChecksEligibilityViewModel {
         this.h2020 = competition.isH2020();
         this.procurement = competition.isProcurement();
         this.loanCompetition = competition.isLoan();
+        this.ktpCompetition = competition.isKtp();
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -221,6 +223,10 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     public boolean isCollaborativeProject() {
