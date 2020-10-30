@@ -38,7 +38,14 @@
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
                 <th:block th:if="${model.hasGrantClaimPercentage}">
-                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">
+                        <th:block th:if="${model.ktpCompetition && !model.leadPartnerOrganisation}">
+                            Funding sought (&pound;)
+                        </th:block>
+                        <th:block th:unless="${model.ktpCompetition && !model.leadPartnerOrganisation}">
+                            Grant applied for (&pound;)
+                        </th:block>
+                    </th>
                 </th:block>
                 <th:block th:unless="${model.loanCompetition}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
