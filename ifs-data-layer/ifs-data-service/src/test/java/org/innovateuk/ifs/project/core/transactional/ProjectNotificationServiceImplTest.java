@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -75,12 +74,12 @@ public class ProjectNotificationServiceImplTest {
                 .withCompetition(competition).build();
 
         when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
-        when(notificationService.sendNotificationWithFlush(any(Notification.class), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> result = service.sendProjectSetupNotification(application.getId());
 
         verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
-            assertEquals(application.getId(), notification.getGlobalArguments().get("competitionNumber"));
+            assertEquals(competition.getId(), notification.getGlobalArguments().get("competitionNumber"));
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
             assertEquals(3, notification.getTo().size());
             assertThat(notification.getTo(), containsInAnyOrder(
