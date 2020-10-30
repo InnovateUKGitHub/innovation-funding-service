@@ -222,7 +222,8 @@ CompAdmin marks appplications as successful and releases competition feedback
     [Tags]  HappyPath
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
-    Then making the application a successful project     ${CLOSED_COMPETITION}  ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    Then making the application a successful project from correct state     ${CLOSED_COMPETITION}  ${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user marks applications as unsuccessful and send funding decision email
     When the user navigates to the page       ${SERVER}/management/competition/${CLOSED_COMPETITION}
     And the user clicks the button/link       css = button[type="submit"]  #Release feedback
 
@@ -347,6 +348,18 @@ the user checks for Manage interview panel key statistics
     the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/find
     ${Accepted} =  Get Text  css = div:nth-child(2) > div > span
     Should Be Equal As Integers   ${Accepted}  ${assessor_accepted}
+
+the user marks applications as unsuccessful and send funding decision email
+    When the user navigates to the page   ${SERVER}/management/competition/${CLOSED_COMPETITION}/funding
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       jQuery = button:contains("Unsuccessful")
+    the user clicks the button/link       link = Competition
+    the user clicks the button/link       link = Manage funding notifications
+    the user selects the checkbox         select-all-1
+    the user clicks the button/link       css = button.govuk-button.button-notification   #Assessor clicks 'Write and send emails'
+    the user clicks the button/link       css = .govuk-button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css = button[name="send-emails"]
+    the user clicks the button/link       link = Competition
 
 the compAdmin can cancel resend inivte to an applicant
     the user should see the element    jQuery = h1:contains("Resend invites to interview panel")
