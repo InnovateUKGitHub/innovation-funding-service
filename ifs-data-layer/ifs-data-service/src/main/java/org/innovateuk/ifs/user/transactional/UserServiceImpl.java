@@ -199,7 +199,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
-            Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
+            Notification notification = new Notification(from, to, Notifications.RESET_PASSWORD, notificationArguments);
             return notificationService.sendNotificationWithFlush(notification, EMAIL);
         } else if (userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
@@ -239,8 +239,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("newEmail", newEmail);
 
-        Notification oldNotification = new Notification(from, singletonList(oldEmailTarget), Notifications.EMAIL_CHANGE_OLD, notificationArguments);
-        Notification newNotification = new Notification(from, singletonList(newEmailTarget), Notifications.EMAIL_CHANGE_NEW, notificationArguments);
+        Notification oldNotification = new Notification(from, oldEmailTarget, Notifications.EMAIL_CHANGE_OLD, notificationArguments);
+        Notification newNotification = new Notification(from, newEmailTarget, Notifications.EMAIL_CHANGE_NEW, notificationArguments);
         ServiceResult<Void> oldResult = notificationService.sendNotificationWithFlush(oldNotification, EMAIL);
         ServiceResult<Void> newResult = notificationService.sendNotificationWithFlush(newNotification, EMAIL);
         return aggregate(oldResult, newResult).andOnSuccessReturnVoid();

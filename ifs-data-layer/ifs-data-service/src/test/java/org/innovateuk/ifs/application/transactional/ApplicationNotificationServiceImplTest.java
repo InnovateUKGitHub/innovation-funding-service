@@ -511,7 +511,7 @@ public class ApplicationNotificationServiceImplTest {
         NotificationTarget to = new UserNotificationTarget(fullName, email);
         Notification notification = new Notification(
                 from,
-                singletonList(to),
+                to,
                 ApplicationNotificationServiceImpl.Notifications
                         .APPLICATION_INELIGIBLE,
                 expectedNotificationArguments
