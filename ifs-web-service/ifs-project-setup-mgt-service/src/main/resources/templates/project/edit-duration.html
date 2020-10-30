@@ -31,8 +31,10 @@
       <dl class="govuk-list">
         <dt>Project title</dt>
         <dd th:text="${model.project.name}"></dd>
-        <dt>Start date</dt>
-        <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+        <th:block th:unless="${model.ktpCompetition}">
+            <dt>Start date</dt>
+            <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+        </th:block>
       </dl>
       <form th:action="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.competitionId},projectId=${model.project.id})}"
             th:object="${form}"
