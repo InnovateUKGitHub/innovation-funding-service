@@ -97,10 +97,6 @@ public enum Role implements Identifiable {
         return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
-    public static Set<Role> monitoringOfficerRoles() {
-        return EnumSet.of(MONITORING_OFFICER, KNOWLEDGE_TRANSFER_ADVISER);
-    }
-
     public static Set<Role> applicantProcessRoles() {
         return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
     }
