@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingService;
@@ -28,6 +30,7 @@ import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.*;
@@ -108,7 +111,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
-        doNothing().when(projectNotificationService).sendProjectSetupNotification(application.getId());
+        when(projectNotificationService.sendProjectSetupNotification(application.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<ScheduleResponse> result = service.createProject(applicationId);
 
@@ -121,6 +124,28 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
         verify(projectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
     }
 
+    @Test
+    public void createProject_ktp_failed_notification() {
+        long applicationId = 1L;
+        String emailMessage = "message";
+        Application application = newApplication()
+                .withCompetition(newCompetition().withFundingType(FundingType.KTP).build())
+                .build();
+        ProjectToBeCreated projectToBeCreated = new ProjectToBeCreated(application, emailMessage);
+
+        when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
+        when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
+        when(projectNotificationService.sendProjectSetupNotification(application.getId()))
+                .thenReturn(serviceFailure(new Error(CommonFailureKeys.GENERAL_NOT_FOUND)));
+
+        ServiceResult<ScheduleResponse> result = service.createProject(applicationId);
+
+        assertFalse(result.isSuccess());
+
+        verifyZeroInteractions(applicationFundingService);
+        verify(projectService).createProjectFromApplication(application.getId());
+        verify(projectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
+    }
 
     @Test
     public void markApplicationReadyToBeCreated() {
