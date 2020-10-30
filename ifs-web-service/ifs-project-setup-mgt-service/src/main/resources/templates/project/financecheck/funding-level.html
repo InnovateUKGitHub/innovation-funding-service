@@ -65,7 +65,13 @@
                                 </label>
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${path}__.fundingLevel}')}" th:text="${err}">Error</span>
 
-                                <input type="number"
+                                <th:block th:if="${model.ktpCompetition && !partner.lead}">
+                                    <input type="hidden" value="0" th:id="__${path}__.fundingLevel"
+                                           th:field="*{__${path}__.fundingLevel}" />
+                                    <th:block th:text="${#numbers.formatDecimal(partner.fundingLevel,1,'DEFAULT',2,'DEFAULT')}" />&percnt;
+                                </th:block>
+                                <input th:unless="${model.ktpCompetition && !partner.lead}"
+                                       type="number"
                                        class="govuk-input govuk-input--width-3"
                                        th:id="__${path}__.fundingLevel"
                                        th:field="*{__${path}__.fundingLevel}"

@@ -102,4 +102,8 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     public boolean isTotalGrantZero() {
         return (totalGrant.compareTo(BigDecimal.ZERO) == 0);
     }
+
+    public boolean isLead() {
+        return lead;
+    }
 }
