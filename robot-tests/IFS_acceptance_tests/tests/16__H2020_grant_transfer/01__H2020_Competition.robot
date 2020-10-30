@@ -466,8 +466,8 @@ The user is able to complete your project costs section
 
 The user is able to validate conversion spredsheet links works
     the user clicks the button/link                 link = funding conversion spreadsheet
-    Select Window                                   title = 404 - UK Research and Innovation
-    the user should see the element                 jQuery = p:contains("Go back")
+    Select Window                                   title = Page not found – UKRI
+    the user should see the element                 jQuery = h1:contains("404 Page not found")
     the user closes the last opened tab
 
 The user is able to submit the application
