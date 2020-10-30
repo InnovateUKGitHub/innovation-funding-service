@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.notifications.service;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
@@ -14,9 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
@@ -53,8 +53,8 @@ class EmailNotificationSender implements NotificationSender {
 
         return renderTemplates(notification).andOnSuccess(templates -> {
 
-            List<ServiceResult<List<EmailAddress>>> results = simpleMap(templates, (target, content) ->
-                    sendEmailWithContent(notification, target, content));
+            List<ServiceResult<List<EmailAddress>>> results = simpleMap(templates, (pair) ->
+                    sendEmailWithContent(notification, pair.getLeft(), pair.getRight()));
 
             return processAnyFailuresOrSucceed(results, failures -> {
                 Error error = new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, findStatusCode(failures));
@@ -75,9 +75,9 @@ class EmailNotificationSender implements NotificationSender {
         return sendNotification(notification);
     }
 
-    private ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {
+    private ServiceResult<List<Pair<NotificationTarget, EmailContent>>> renderTemplates(Notification notification) {
 
-        Map<NotificationTarget, EmailContent> contents = new HashMap<>();
+        List<Pair<NotificationTarget, EmailContent>> contents = new ArrayList<>();
 
         List<ServiceResult<Void>> results = simpleMap(notification.getTo(), recipient ->
 
@@ -85,7 +85,7 @@ class EmailNotificationSender implements NotificationSender {
                         getPlainTextBody(notification, recipient),
                         getHtmlBody(notification, recipient)).andOnSuccessReturnVoid((subject, text, html) -> {
 
-                    contents.put(recipient, new EmailContent(subject, text, html));
+                    contents.add(Pair.of(recipient, new EmailContent(subject, text, html)));
                 })
         );
 
