@@ -19,7 +19,7 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Monitoring officers can get their own projects."
     )
     public boolean monitoringOfficerCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
-        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasAuthority(MONITORING_OFFICER.name());
+        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasAuthority(MONITORING_OFFICER.getName());
     }
 
     @PermissionRule(
