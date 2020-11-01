@@ -222,6 +222,7 @@ Applicant uploads the GOL using Docusign
     the user should see the element           css=.page.page-loaded
     The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
     the user should see the element           css=.page.page-loaded
+    the user clicks the button/link           jQuery = span:contains("Fill In")
     The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
