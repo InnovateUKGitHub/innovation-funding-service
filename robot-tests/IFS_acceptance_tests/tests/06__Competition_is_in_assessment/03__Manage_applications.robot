@@ -197,7 +197,7 @@ the available assessors information is correct
     # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
-    the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Paul Plum") ~ td:contains("Academic") ~ td:contains("Urban living") ~ td:contains("8") + td:contains("8")
+     the user should see the element  jQuery = .assessors-assigned td:nth-child(1):contains("Paul Plum") ~ td:contains("Academic") ~ td:contains("Urban living") ~ td:contains("8") + td:contains("8")
 
 the previously assigned list is correct
     the user should see the element    jQuery = .assessors-previous td:contains("Paul Plum") + td:contains("Academic") + td:contains("Urban living")
@@ -206,6 +206,7 @@ the previously assigned list is correct
 the assessor list is correct before changes
     the user clicks the button/link  link = 21 to 40
     the user should see the element  jQuery = td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1") ~ td:contains("View progress")
+
 the user accepts the application
     the user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
     the user clicks the button/link  link = Molecular tree breeding
