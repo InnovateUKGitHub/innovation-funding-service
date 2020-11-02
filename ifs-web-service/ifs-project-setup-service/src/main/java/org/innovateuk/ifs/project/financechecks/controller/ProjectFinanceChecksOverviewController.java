@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
@@ -47,15 +49,18 @@ public class ProjectFinanceChecksOverviewController {
 
     private CompetitionRestService competitionRestService;
 
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
     ProjectFinanceChecksOverviewController() {}
 
     @Autowired
-    public ProjectFinanceChecksOverviewController(PartnerOrganisationRestService partnerOrganisationRestService, FinanceCheckService financeCheckService, ProjectFinanceService financeService, ProjectService projectService, CompetitionRestService competitionRestService) {
+    public ProjectFinanceChecksOverviewController(PartnerOrganisationRestService partnerOrganisationRestService, FinanceCheckService financeCheckService, ProjectFinanceService financeService, ProjectService projectService, CompetitionRestService competitionRestService, ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator) {
         this.partnerOrganisationRestService = partnerOrganisationRestService;
         this.financeCheckService = financeCheckService;
         this.financeService = financeService;
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
+        this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
@@ -63,7 +68,7 @@ public class ProjectFinanceChecksOverviewController {
     public String viewOverview(Model model, @P("projectId")@PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
-        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(project);
+        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(project, loggedInUser);
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
         model.addAttribute("project", project);
@@ -71,11 +76,13 @@ public class ProjectFinanceChecksOverviewController {
         return "project/finance-checks-overview";
     }
 
-    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project) {
+    private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project, final UserResource loggedInUser) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(project.getApplication(), loggedInUser);
+
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), competition.isKtp(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE));
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), competition.isKtp(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE), applicationFundingBreakdownViewModel);
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {

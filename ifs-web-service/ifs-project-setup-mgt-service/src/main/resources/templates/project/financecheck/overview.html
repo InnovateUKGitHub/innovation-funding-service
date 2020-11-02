@@ -51,8 +51,14 @@
             <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
         </div>
 
-        <h3 class="govuk-heading-m">Project cost breakdown</h3>
-        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})"/>
+        <th:block th:if="${model.ktpCompetition}">
+            <h3 class="govuk-heading-m">Project cost summary</h3>
+            <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+        </th:block>
+        <th:block th:unless="${model.ktpCompetition}">
+            <h3 class="govuk-heading-m">Project cost breakdown</h3>
+            <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})"/>
+        </th:block>
     </main>
 </div>
 <th:block th:insert="fragments/layout :: footer" />

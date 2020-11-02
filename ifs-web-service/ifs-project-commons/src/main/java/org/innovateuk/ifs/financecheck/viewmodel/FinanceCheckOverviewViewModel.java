@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.financecheck.viewmodel;
 
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+
 /**
  * View model for the finance checks overview page.
  */
@@ -15,8 +17,10 @@ public class FinanceCheckOverviewViewModel {
     private final boolean canChangeFundingSought;
     private final boolean canChangeFundingLevelPercentages;
 
+    private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
+
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
-                                         boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage) {
+                                         boolean canChangeFundingSought, boolean loanCompetition, boolean ktpCompetition, boolean canChangeFundingLevelPercentages, boolean hasGrantClaimPercentage, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel) {
         this.overview = overview;
         this.summaries = summaries;
         this.breakdown = breakdown;
@@ -26,6 +30,7 @@ public class FinanceCheckOverviewViewModel {
         this.ktpCompetition = ktpCompetition;
         this.canChangeFundingLevelPercentages = canChangeFundingLevelPercentages;
         this.hasGrantClaimPercentage = hasGrantClaimPercentage;
+        this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -62,5 +67,9 @@ public class FinanceCheckOverviewViewModel {
 
     public boolean isCanChangeFundingLevelPercentages() {
         return canChangeFundingLevelPercentages;
+    }
+
+    public ApplicationFundingBreakdownViewModel getApplicationFundingBreakdownViewModel() {
+        return applicationFundingBreakdownViewModel;
     }
 }
