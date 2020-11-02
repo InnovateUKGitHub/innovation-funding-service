@@ -86,8 +86,14 @@ public class LegacyMonitoringOfficerController {
 
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
-        return new LegacyMonitoringOfficerViewModel(project, innovationAreas, projectManagerName,
-                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, editable);
+        return new LegacyMonitoringOfficerViewModel(
+                project,
+                innovationAreas,
+                projectManagerName,
+                partnerOrganisationNames,
+                leadOrganisation.getName(),
+                competitionSummary, editable,
+                competition.isKtp());
     }
 
     private String getProjectManagerName(ProjectResource project) {

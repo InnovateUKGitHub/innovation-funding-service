@@ -138,7 +138,12 @@
 
                 <th:block th:if="${model.primaryAddressLines}">
                     <h3 class="govuk-heading-m govuk-!-margin-0">Primary address</h3>
-                    <p class="govuk-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <p class="govuk-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+                    </th:block>
+                    <th:block th:if="${model.ktpCompetition}">
+                        <p class="govuk-hint">This has been designated by the knowledge base partner as the main work location for the project.</p>
+                    </th:block>
                     <p class="govuk-body">
                         <th:block th:each="addressLine : ${model.primaryAddressLines}">
                         <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -147,12 +152,14 @@
                 </th:block>
 
                 <th:block th:if="${model.targetProjectStartDate}">
-                    <h3 class="govuk-heading-m govuk-!-margin-0">Target project start date</h3>
-                    <p class="govuk-hint">Planned start date for the project.</p>
-                    <p class="govuk-body" th:if="${model.targetProjectStartDate}">
-                      <th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-                      <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
-                    </p>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <h3 class="govuk-heading-m govuk-!-margin-0">Target project start date</h3>
+                        <p class="govuk-hint">Planned start date for the project.</p>
+                        <p class="govuk-body" th:if="${model.targetProjectStartDate}">
+                            <th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
+                            <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
+                        </p>
+                    </th:block>
                 </th:block>
 
                 <th:block th:if="${model.projectManagerName}">
@@ -161,7 +168,7 @@
                     <p class="govuk-body" th:text="${model.projectManagerName}">David Smith</p>
                 </th:block>
 
-                <th:block th:if="${model.partnerOrganisationNames != null && model.collaborativeProject}">
+                <th:block th:if="${model.partnerOrganisationNames != null && model.collaborativeProject && !model.ktpCompetition}">
                     <h3 class="govuk-heading-m govuk-!-margin-0">Project partners</h3>
                     <ul class="govuk-list govuk-list--bullet">
                         <li th:each="organisationName : ${model.partnerOrganisationNames}">

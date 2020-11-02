@@ -28,14 +28,21 @@ public class LegacyMonitoringOfficerViewModel {
     private boolean editable;
     private List<String> primaryAddressLines;
     private boolean collaborativeProject;
+    private boolean ktpCompetition;
 
-    public LegacyMonitoringOfficerViewModel(ProjectResource project, String area, String projectManagerName,
-                                            List<String> partnerOrganisationNames, String leadOrganisationName,
-                                            CompetitionSummaryResource competitionSummary, boolean editable) {
+    public LegacyMonitoringOfficerViewModel(ProjectResource project,
+                                            String area,
+                                            String projectManagerName,
+                                            List<String> partnerOrganisationNames,
+                                            String leadOrganisationName,
+                                            CompetitionSummaryResource competitionSummary,
+                                            boolean editable,
+                                            boolean ktpCompetition) {
         this.projectId = project.getId();
         this.projectTitle = project.getName();
         this.applicationId = project.getApplication();
         this.area = area;
+        this.ktpCompetition = ktpCompetition;
         AddressResource primaryAddress = project.getAddress();
         this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLinesInternational() : emptyList();
         this.targetProjectStartDate = project.getTargetStartDate();
@@ -47,6 +54,7 @@ public class LegacyMonitoringOfficerViewModel {
         this.editMode = false;
         this.editable = editable;
         this.collaborativeProject = project.isCollaborativeProject();
+        this.ktpCompetition = ktpCompetition;
     }
 
     public Long getProjectId() {
@@ -123,5 +131,9 @@ public class LegacyMonitoringOfficerViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }

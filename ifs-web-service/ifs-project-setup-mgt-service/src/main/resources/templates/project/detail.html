@@ -36,11 +36,11 @@
 
         <h2 class="govuk-heading-m">Project details</h2>
 
-        <th:block th:unless="${model.isIfsAdministrator() && model.ktpCompetition}">
+        <th:block th:unless="${model.ktpCompetition}">
             <p class="govuk-body">These project details were supplied by the lead partner on behalf of the project.</p>
         </th:block>
 
-        <th:block th:if="${model.isIfsAdministrator() && model.ktpCompetition}">
+        <th:block th:if="${model.ktpCompetition}">
             <p class="govuk-body">The knowledge base partner provided these details for the overall project.</p>
         </th:block>
 
@@ -85,11 +85,11 @@
         <th:block th:if="${model.locationPerPartnerRequired}">
             <h2 class="govuk-heading-m">Partner details</h2>
 
-            <th:block th:unless="${model.isIfsAdministrator() && model.ktpCompetition}">
+            <th:block th:unless="${model.ktpCompetition}">
                 <p class="govuk-body">Each partner must provide a project location. We will assign the Monitoring Officer based on the location.</p>
             </th:block>
 
-            <th:block th:if="${model.isIfsAdministrator() && model.ktpCompetition}">
+            <th:block th:if="${model.ktpCompetition}">
                 <p class="govuk-body">Each partner provided their own project location.</p>
             </th:block>
 
