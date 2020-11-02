@@ -322,7 +322,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private ServiceResult<ManageUserPageResource> findExternalUserPageResource(String filter, Pageable pageable, UserStatus userStatus) {
-        Page<User> pagedResult = userRepository.findByEmailContainingAndStatusAndRolesIn(
+        Page<User> pagedResult = userRepository.findDistinctByEmailContainingAndStatusAndRolesIn(
                 filter,
                 userStatus,
                 externalRoles()
