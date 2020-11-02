@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,7 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
                 assessmentParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
         );
         competitionSummaryResource.setAssessorDeadline(competition.getAssessorDeadlineDate());
+        competitionSummaryResource.setKtp(competition.getFundingType().equals(FundingType.KTP));
 
         return serviceSuccess(competitionSummaryResource);
     }

@@ -112,9 +112,17 @@
                                th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
                     </div>
 
-                    <a th:href="@{'/monitoring-officer/view-all'}" th:if="${model.displayChangeMonitoringOfficerLink}" class="govuk-link">
+                    <a th:href="@{'/monitoring-officer/view-all?ktp=false'}"
+                       th:if="${model.displayChangeMonitoringOfficerLink and !model.ktp}" class="govuk-link">
                         Change Monitoring Officer
                     </a>
+
+                    <a th:href="@{'/monitoring-officer/view-all?ktp=true'}"
+                       th:if="${model.ktp and model.displayChangeMonitoringOfficerLink}" class="govuk-link">
+                        Change Monitoring Officer
+                    </a>
+
+
                     <div class="govuk-form-group">
                         <button data-js-modal="modal-assign-mo" type="submit" class="govuk-button govuk-!-margin-top-6" th:if="${model.displayAssignMonitoringOfficerButton}">
                             Assign Monitoring Officer

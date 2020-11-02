@@ -113,6 +113,10 @@ public class LegacyMonitoringOfficerViewModel {
         return isReadOnly() && isEditable();
     }
 
+    public boolean isKtp() {
+        return this.competitionSummary.isKtp();
+    }
+
     public boolean isDisplayAssignMonitoringOfficerButton() {
         return isEditMode() && isEditable();
     }

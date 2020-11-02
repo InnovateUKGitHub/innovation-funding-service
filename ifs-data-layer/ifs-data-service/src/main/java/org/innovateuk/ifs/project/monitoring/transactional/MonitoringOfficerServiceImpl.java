@@ -65,13 +65,31 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
                 .collect(Collectors.toList()));
     }
 
+    @Override
+    public ServiceResult<List<SimpleUserResource>> findAllKtp() {
+        return serviceSuccess(userRepository.findDistinctByRolesInAndStatusIn(
+                EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER), EnumSet.of(PENDING, ACTIVE))
+                .stream()
+                .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
+                .collect(Collectors.toList()));
+    }
+
+    @Override
+    public ServiceResult<List<SimpleUserResource>> findAllNonKtp() {
+        return serviceSuccess(userRepository.findDistinctByRolesInAndStatusIn(
+                EnumSet.of(MONITORING_OFFICER), EnumSet.of(PENDING, ACTIVE))
+                .stream()
+                .map(user -> new SimpleUserResource(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()))
+                .collect(Collectors.toList()));
+    }
+
     private MonitoringOfficerAssignmentResource mapToProjectMonitoringOfficerResource(User user) {
         List<MonitoringOfficerUnassignedProjectResource> unassignedProjects = new ArrayList<>();
         List<MonitoringOfficerAssignedProjectResource> assignedProjects = new ArrayList<>();
 
         if (user.hasRole(MONITORING_OFFICER) && user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
             unassignedProjects = monitoringOfficerRepository.findAllUnassignedProjects();
-            assignedProjects = monitoringOfficerRepository.findAllAssignedProjects(user.getId());
+        assignedProjects = monitoringOfficerRepository.findAllAssignedProjects(user.getId());
         } else if (user.hasRole(MONITORING_OFFICER)) {
             unassignedProjects = monitoringOfficerRepository.findUnassignedNonKTPProjects();
             assignedProjects = monitoringOfficerRepository.findAssignedNonKTPProjects(user.getId());

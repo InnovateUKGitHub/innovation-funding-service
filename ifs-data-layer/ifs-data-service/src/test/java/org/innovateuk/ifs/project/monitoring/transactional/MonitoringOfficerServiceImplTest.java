@@ -88,6 +88,33 @@ public class MonitoringOfficerServiceImplTest {
     }
 
     @Test
+    public void findAllKtp() {
+        User user = newUser().build();
+        when(userRepositoryMock.findDistinctByRolesInAndStatusIn(
+                EnumSet.of(Role.KNOWLEDGE_TRANSFER_ADVISER), EnumSet.of(PENDING, ACTIVE)))
+                .thenReturn(singletonList(user));
+
+        List<SimpleUserResource> result = service.findAllKtp().getSuccess();
+
+        assertEquals(result.size(), 1);
+        assertEquals(result.get(0).getId(), (long) user.getId());
+    }
+
+    @Test
+    public void findAllNonKtp() {
+        User user = newUser().build();
+        when(userRepositoryMock.findDistinctByRolesInAndStatusIn(
+                EnumSet.of(Role.MONITORING_OFFICER), EnumSet.of(PENDING, ACTIVE)))
+                .thenReturn(singletonList(user));
+
+        List<SimpleUserResource> result = service.findAllNonKtp().getSuccess();
+
+        assertEquals(result.size(), 1);
+        assertEquals(result.get(0).getId(), (long) user.getId());
+    }
+
+
+    @Test
     public void getProjectMonitoringOfficerAsKTAAndMo() {
         User user = newUser().withFirstName("Tom").withLastName("Baldwin")
                 .withRoles(newHashSet(Role.MONITORING_OFFICER, Role.KNOWLEDGE_TRANSFER_ADVISER)).build();

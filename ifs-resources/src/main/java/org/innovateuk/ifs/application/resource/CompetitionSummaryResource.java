@@ -25,6 +25,7 @@ public class CompetitionSummaryResource {
     private int ineligibleApplications;
     private int assessorsInvited;
     private ZonedDateTime assessorDeadline;
+    private boolean isKtp;
 
     public long getCompetitionId() {
         return competitionId;
@@ -137,6 +138,14 @@ public class CompetitionSummaryResource {
         this.assessorDeadline = assessorDeadline;
     }
 
+    public void setKtp(boolean ktp) {
+        isKtp = ktp;
+    }
+
+    public boolean isKtp() {
+        return isKtp;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -159,6 +168,7 @@ public class CompetitionSummaryResource {
                 .append(ineligibleApplications, that.ineligibleApplications)
                 .append(assessorsInvited, that.assessorsInvited)
                 .append(assessorDeadline, that.assessorDeadline)
+                .append(isKtp, that.isKtp)
                 .isEquals();
     }
 
@@ -169,4 +179,5 @@ public class CompetitionSummaryResource {
                 .append(competitionName)
                 .toHashCode();
     }
+
 }
