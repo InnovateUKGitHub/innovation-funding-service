@@ -92,7 +92,8 @@ public class LegacyMonitoringOfficerController {
                 projectManagerName,
                 partnerOrganisationNames,
                 leadOrganisation.getName(),
-                competitionSummary, editable,
+                competitionSummary,
+                editable,
                 competition.isKtp());
     }
 

@@ -33,9 +33,11 @@
                   th:with="pageTitle='Project team',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.collaborativeProject && model.ktpCompetition}">
-            <p class="govuk-body">The knowledge base partner chooses a project manager who is responsible for
-                setting up the project, and a finance contact to answer finance queries.
-            </p>
+            <th:block th:if="${!model.userLeadPartner}">
+                <p class="govuk-body">The knowledge base partner chooses a project manager who is responsible for
+                    setting up the project, and a finance contact to answer finance queries.
+                </p>
+            </th:block>
             <p class="govuk-body">Each team member can view everything in the project setup section.</p>
             <p class="govuk-body">When a new person is invited to the team, their status will show as
                 'pending' until they create an Innovation Funding Service account. Their role can only
@@ -80,8 +82,11 @@
             </th:block>
         </th:block>
 
-        <th:block th:unless="${model.internal or model.readOnly}">
-            <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
+
+        <th:block th:if="${!model.ktpCompetition && !model.userLeadPartner}">
+            <th:block th:unless="${model.internal or model.readOnly}">
+                <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
+            </th:block>
         </th:block>
 
         <form id="project-team-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"

@@ -26,7 +26,9 @@
             <p class="govuk-body">You provided these details for the overall project.</p>
         </th:block>
 
-        <p class="govuk-body" th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
+        <p class="govuk-body" th:unless="${model.userLeadPartner}"
+           th:text="${model.ktpCompetition ? 'The knowledge base partner provided these details for the overall project.' : 'The lead has provided these details on behalf of the overall project.'}">..you</p>
+
         <p class="govuk-body"></p>
         <table class="govuk-table">
             <thead class="govuk-table__head">
