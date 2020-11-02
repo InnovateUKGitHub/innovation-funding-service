@@ -79,7 +79,7 @@ public class ProjectFinanceChecksOverviewController {
     private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final ProjectResource project, final UserResource loggedInUser) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(project.getApplication(), loggedInUser);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
 
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
                 getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), competition.isKtp(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE), applicationFundingBreakdownViewModel);

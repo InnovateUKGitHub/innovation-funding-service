@@ -84,7 +84,7 @@ public class FinanceOverviewController {
         boolean canChangeFundingLevel =
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE) && financeCheckSummary.isAllEligibilityAndViabilityInReview();
 
-        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(project.getApplication(), loggedInUser);
+        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populateFromProject(project, loggedInUser);
 
         return new FinanceCheckOverviewViewModel(
                         getProjectFinanceOverviewViewModel(projectId),

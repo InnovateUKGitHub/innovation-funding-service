@@ -9,12 +9,15 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -27,6 +30,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -40,6 +44,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -58,15 +65,32 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 
+        Map<Long, BaseFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
+                .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
+
+        return viewModel(applicationId, finances, user,
+                (application, competition) -> !application.isSubmitted() && !competition.isKtp());
+    }
+
+    public ApplicationFundingBreakdownViewModel populateFromProject(ProjectResource project, UserResource user) {
+
+        Map<Long, BaseFinanceResource> finances = projectFinanceRestService.getProjectFinances(project.getId()).getSuccess()
+                .stream().collect(toMap(ProjectFinanceResource::getOrganisation, Function.identity()));
+
+        return viewModel(project.getApplication(), finances, user, (a, c) -> false);
+    }
+
+    private ApplicationFundingBreakdownViewModel viewModel(long applicationId, Map<Long, BaseFinanceResource> finances, UserResource user,
+                                                           BiPredicate<ApplicationResource, CompetitionResource> addPendingOrganisations) {
+
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
 
-        Map<Long, ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
-                    .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
-
-        List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
+        boolean collaborativeProject = application.isCollaborativeProject();
         long leadOrganisationId = application.getLeadOrganisationId();
+
+        List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         List<FinanceRowType> types = competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
 
         List<BreakdownTableRow> rows = organisations.stream()
@@ -74,18 +98,19 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
                 .collect(toList());
 
-        if (!application.isSubmitted() && !competition.isKtp()) {
-            rows.addAll(pendingOrganisations(applicationId, types));
+        if (addPendingOrganisations.test(application, competition)) {
+            rows.addAll(pendingOrganisations(application.getId(), types));
         }
 
-        return new ApplicationFundingBreakdownViewModel(applicationId,
+        return new ApplicationFundingBreakdownViewModel(application.getId(),
                 competition.getName(),
                 rows,
-                application.isCollaborativeProject(),
+                collaborativeProject,
                 competition.getFundingType() == FundingType.KTP,
-                types,
-                finances.values().stream().anyMatch(ApplicationFinanceResource::isVatRegistered));
+                types);
     }
+
+
 
     private Collection<BreakdownTableRow> pendingOrganisations(long applicationId, List<FinanceRowType> types) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
@@ -96,8 +121,8 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .collect(toList());
     }
 
-    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
-        Optional<ApplicationFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
+    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, BaseFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
+        Optional<BaseFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
         Optional<String> financeLink = financeLinksUtil.financesLink(organisation, processRoles, user, application, competition);
         boolean lead = organisation.getId().equals(leadOrganisationId);
         return new BreakdownTableRow(
@@ -111,7 +136,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                         .collect(toMap(Function.identity(),
                                 type -> finance.map(f -> f.getFinanceOrganisationDetails().get(type).getTotal()).orElse(BigDecimal.ZERO)
                         )),
-                finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO)
+                finance.map(BaseFinanceResource::getTotal).orElse(BigDecimal.ZERO)
         );
     }
 
@@ -123,12 +148,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         } else {
             return "Partner";
         }
-    }
-
-    private BigDecimal getCategoryOrZero(ApplicationFinanceResource appFinance, FinanceRowType labour) {
-        return Optional.ofNullable(appFinance.getFinanceOrganisationDetails(labour))
-                .map(FinanceRowCostCategory::getTotal)
-                .orElse(BigDecimal.ZERO);
     }
 
 }
