@@ -331,7 +331,7 @@ the assessor adds score for every question
     The user selects the index from the drop-down menu            1    css = .research-category
     The user clicks the button/link                               jQuery = label:contains("Yes")
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
-      \    the user clicks the button/link                        jQuery = li:contains("Next")      #css = .next
+      \    the user clicks the button/link                        jQuery = li:contains("Next")
       \    The user selects the option from the drop-down menu    23    css = .assessor-question-score
     The user clicks the button with resubmission                  jquery = button:contains("Save and return to assessment overview")
 
