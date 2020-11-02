@@ -134,7 +134,6 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertFalse(model.isEditMode());
         assertTrue(model.isEditable());
         assertTrue(model.isReadOnly());
-        assertFalse(model.isKtp());
 
         // assert the form for the MO details have been pre-populated ok
         assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(modelMap);
