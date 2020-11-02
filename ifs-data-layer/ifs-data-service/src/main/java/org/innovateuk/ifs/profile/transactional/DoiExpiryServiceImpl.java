@@ -78,7 +78,7 @@ public class DoiExpiryServiceImpl extends BaseTransactionalService implements Do
 
         Notification notification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 Notifications.ASSESSOR_AFFILIATION_EXPIRED,
                 asMap("webBaseUrl", webBaseUrl,
                         "affiliationModifiedDate", user.getAffiliations().stream().findFirst().get().getModifiedOn().format(formatter))

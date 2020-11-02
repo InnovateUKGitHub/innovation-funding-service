@@ -578,7 +578,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", user.getName(),

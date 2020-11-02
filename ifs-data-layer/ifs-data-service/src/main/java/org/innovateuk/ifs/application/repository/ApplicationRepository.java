@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -249,11 +248,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
-    @Query("select a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
+    @Query("select distinct a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
             "where a.id in :ids" +
             " and  a.competition.id = :competitionId " +
-            " and (a.submittedDate is not null " +
-            " or (a.fundingDecision != org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is null))")
+            " and a.submittedDate is not null " +
+            " and not (a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is not null)")
     List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
 
 }

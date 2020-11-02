@@ -1121,7 +1121,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to = new UserNotificationTarget(name, email);
-        Notification notification = new Notification(from, singletonList(to), AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
+        Notification notification = new Notification(from, to, AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(assessmentParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);
         when(assessmentInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));
