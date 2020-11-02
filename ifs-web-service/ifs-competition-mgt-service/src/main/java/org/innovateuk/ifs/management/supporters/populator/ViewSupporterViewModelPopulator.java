@@ -22,7 +22,7 @@ public class ViewSupporterViewModelPopulator {
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ApplicationsForCofundingPageResource applicationsForCofundingPageResource =
-                supporterAssignmentRestService.findApplicationsNeedingSupporters(competitionId, applicationFilter, page).getSuccess();
+                supporterAssignmentRestService.findApplicationsNeedingSupporters(competitionId, applicationFilter, page - 1).getSuccess();
 
         return new ViewSupportersViewModel(competitionResource, applicationsForCofundingPageResource.getContent(), new PaginationViewModel(applicationsForCofundingPageResource));
     }
