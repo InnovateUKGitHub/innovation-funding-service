@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.ZonedDateTime;
@@ -25,7 +26,7 @@ public class CompetitionSummaryResource {
     private int ineligibleApplications;
     private int assessorsInvited;
     private ZonedDateTime assessorDeadline;
-    private boolean isKtp;
+    private FundingType fundingType;
 
     public long getCompetitionId() {
         return competitionId;
@@ -138,12 +139,12 @@ public class CompetitionSummaryResource {
         this.assessorDeadline = assessorDeadline;
     }
 
-    public void setKtp(boolean ktp) {
-        isKtp = ktp;
+    public FundingType getFundingType() {
+        return fundingType;
     }
 
-    public boolean isKtp() {
-        return isKtp;
+    public void setFundingType(FundingType fundingType) {
+        this.fundingType = fundingType;
     }
 
     @Override
@@ -168,7 +169,7 @@ public class CompetitionSummaryResource {
                 .append(ineligibleApplications, that.ineligibleApplications)
                 .append(assessorsInvited, that.assessorsInvited)
                 .append(assessorDeadline, that.assessorDeadline)
-                .append(isKtp, that.isKtp)
+                .append(fundingType, that.fundingType)
                 .isEquals();
     }
 
