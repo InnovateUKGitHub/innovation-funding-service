@@ -146,7 +146,7 @@ public class ProjectPartnerInviteServiceImplTest {
 
         NotificationTarget to = new UserNotificationTarget(userName, email);
 
-        Notification notification = new Notification(systemNotificationSource, singletonList(to), ProjectPartnerInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+        Notification notification = new Notification(systemNotificationSource, to, ProjectPartnerInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
         when(notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL)).thenReturn(serviceSuccess());
 
         User loggedInUser = newUser().build();
@@ -233,7 +233,7 @@ public class ProjectPartnerInviteServiceImplTest {
 
         NotificationTarget to = new UserNotificationTarget(userName, email);
 
-        Notification notification = new Notification(systemNotificationSource, singletonList(to), ProjectPartnerInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+        Notification notification = new Notification(systemNotificationSource, to, ProjectPartnerInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
         when(notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL)).thenReturn(serviceSuccess());
         User loggedInUser = newUser().build();
         when(loggedInUserSupplier.get()).thenReturn(loggedInUser);

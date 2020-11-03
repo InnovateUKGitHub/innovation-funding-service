@@ -22,6 +22,7 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private FileService fileService;
 
     @Autowired
-    private ProjectService projectService;
+    private ProjectToBeCreatedService projectToBeCreatedService;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
@@ -120,7 +121,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             result = aggregate(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, newArrayList(ApplicationState.SUBMITTED))
                     .stream()
                     .map(Application::getId)
-                    .map(projectService::createProjectFromApplication)
+                    .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
                     .collect(toList()));
         }
         competition.closeAssessment(ZonedDateTime.now());

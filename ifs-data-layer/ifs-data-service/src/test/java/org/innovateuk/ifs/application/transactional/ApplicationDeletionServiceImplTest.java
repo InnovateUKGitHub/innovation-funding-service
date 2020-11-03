@@ -22,13 +22,13 @@ import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -109,7 +109,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         notificationArguments.put("leadEmail", user.getEmail());
         NotificationTarget to = new UserNotificationTarget(format("%s %s", firstName, lastName), email);
         Notification notification = new Notification(systemNotificationSource,
-                emptyList(),
+                Collections.emptyList(),
                 ApplicationDeletionServiceImpl.Notifications.APPLICATION_DELETED,
                 notificationArguments);
 

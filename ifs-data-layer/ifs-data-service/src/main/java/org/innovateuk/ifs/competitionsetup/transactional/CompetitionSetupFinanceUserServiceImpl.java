@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -191,7 +190,7 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
         Map<String, Object> globalArgs = createGlobalArgsForCompetitionFinanceInvite(externalFinanceInvite, competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                singletonList(createCompetitionFinanceInviteNotificationTarget(externalFinanceInvite)),
+                createCompetitionFinanceInviteNotificationTarget(externalFinanceInvite),
                 Notifications.EXTERNAL_FINANCE_INVITE, globalArgs);
 
         ServiceResult<Void> compFinanceInviteEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -255,7 +254,7 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
         Map<String, Object> globalArgs = createGlobalArgsForAddCompFinance(competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                singletonList(createAddCompFinanceNotificationTarget(externalFinance)),
+                createAddCompFinanceNotificationTarget(externalFinance),
                 Notifications.ADD_EXTERNAL_FINANCE, globalArgs);
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);

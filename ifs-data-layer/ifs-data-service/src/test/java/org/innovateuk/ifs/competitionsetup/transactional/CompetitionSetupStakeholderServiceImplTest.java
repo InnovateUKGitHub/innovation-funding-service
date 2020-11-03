@@ -254,8 +254,8 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         assertEquals("competition1", sentNotification.getGlobalArguments().get("competitionName"));
         assertEquals("null/management/stakeholder/" + savedStakeholderInvite.getHash() + "/register",
                 sentNotification.getGlobalArguments().get("inviteUrl"));
-        assertEquals(expectedName, sentNotification.getTo().get(0).getName());
-        assertEquals(expectedEmail, sentNotification.getTo().get(0).getEmailAddress());
+        assertEquals(expectedName, sentNotification.getTo().get(0).getTo().getName());
+        assertEquals(expectedEmail, sentNotification.getTo().get(0).getTo().getEmailAddress());
         assertEquals(CompetitionSetupStakeholderServiceImpl.Notifications.STAKEHOLDER_INVITE, sentNotification.getMessageKey());
 
         //Assert that correct StakeholderInvite was saved after the notification was sent
@@ -351,8 +351,8 @@ public class CompetitionSetupStakeholderServiceImplTest extends BaseServiceUnitT
         Notification sentNotification = notificationCaptor.getValue();
         assertEquals(competitionName, sentNotification.getGlobalArguments().get("competitionName"));
         assertEquals("null/management/dashboard/live", sentNotification.getGlobalArguments().get("dashboardUrl"));
-        assertEquals(stakeholderFirstName + " " + stakeholderLastName, sentNotification.getTo().get(0).getName());
-        assertEquals(stakeholderUserEmail, sentNotification.getTo().get(0).getEmailAddress());
+        assertEquals(stakeholderFirstName + " " + stakeholderLastName, sentNotification.getTo().get(0).getTo().getName());
+        assertEquals(stakeholderUserEmail, sentNotification.getTo().get(0).getTo().getEmailAddress());
         assertEquals(CompetitionSetupStakeholderServiceImpl.Notifications.ADD_STAKEHOLDER, sentNotification.getMessageKey());
     }
 
