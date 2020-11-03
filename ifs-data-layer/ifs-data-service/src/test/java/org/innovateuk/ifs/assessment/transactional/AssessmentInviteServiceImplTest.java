@@ -44,7 +44,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -101,9 +100,8 @@ import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -929,7 +927,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
                 .withMessageKey(INVITE_ASSESSOR_GROUP, INVITE_ASSESSOR_GROUP)
-                .withTargets(singletonList(to1), singletonList(to2))
+                .withTargets(singletonList(new NotificationMessage(to1)), singletonList(new NotificationMessage(to2)))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 
@@ -1020,7 +1018,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
                 .withMessageKey(INVITE_ASSESSOR_GROUP, INVITE_ASSESSOR_GROUP)
-                .withTargets(singletonList(to1), singletonList(to2))
+                .withTargets(singletonList(new NotificationMessage(to1)), singletonList(new NotificationMessage(to2)))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 
@@ -1121,7 +1119,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to = new UserNotificationTarget(name, email);
-        Notification notification = new Notification(from, singletonList(to), AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
+        Notification notification = new Notification(from, to, AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(assessmentParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);
         when(assessmentInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));

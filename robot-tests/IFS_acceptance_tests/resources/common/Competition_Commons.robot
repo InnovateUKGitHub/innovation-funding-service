@@ -526,6 +526,11 @@ making the application a successful project
     Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css = button[type="submit"][formaction$="notify-assessors"]
     ...    AND  the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
     run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
+    making the application a successful project from correct state      ${compID}       ${appTitle}
+
+making the application a successful project from correct state
+    [Arguments]  ${compID}  ${appTitle}
+    the user navigates to the page      ${server}/management/competition/${compID}
     the user clicks the button/link  link = Input and review funding decision
     the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
     the user clicks the button/link  css = [type="submit"][value="FUNDED"]
@@ -533,6 +538,7 @@ making the application a successful project
     the user clicks the button/link  jQuery = tr:contains("${appTitle}") label
     the user clicks the button/link  css = [name="write-and-send-email"]
     the internal sends the descision notification email to all applicants  Successful!
+    the user refreshes until element appears on page         jQuery = td:contains("${appTitle}") ~ td:contains("Sent")
 
 moving competition to Project Setup
     [Arguments]   ${compID}

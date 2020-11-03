@@ -83,7 +83,7 @@ public class PendingPartnerNotificationServiceImpl implements PendingPartnerNoti
         notificationArguments.put("organisationName", organisation.getName());
         notificationArguments.put("projectTeamLink", getProjectTeamLink(project.getId()));
 
-        Notification notification = new Notification(from, singletonList(to), NEW_PARTNER_ORGANISATION_JOINED, notificationArguments);
+        Notification notification = new Notification(from, to, NEW_PARTNER_ORGANISATION_JOINED, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
