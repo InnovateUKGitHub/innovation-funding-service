@@ -194,12 +194,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             Pair<ViabilityState, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<EligibilityState, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
 
-            boolean anyQueryAwaitingResponse;
-            if (isKtp.test(org) && !org.isLeadOrganisation()) {
-                anyQueryAwaitingResponse = false;
-            } else {
-                anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
-            }
+            boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),

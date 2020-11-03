@@ -71,8 +71,12 @@
                 <dl class="standard-definition-list govuk-!-margin-bottom-0">
                     <dt>Project title:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.projectName}"></dd>
-                    <dt>Start date:</dt>
-                    <dd th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}"></dd>
+                    <dt th:unless="${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP }">
+                        Start date:
+                    </dt>
+                    <dd th:unless=" ${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP }"
+                        th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}">
+                    </dd>
                     <dt>Duration:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
                     <th:block th:if="${model.financeCheckSummaryResource.h2020}">
@@ -132,10 +136,15 @@
                               th:classappend="${'viability-rag-' + status.index}">Green</span>
                     </td>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                        <a th:unless="${orgDetails.eligibility.notApplicable}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                            th:classappend="${'eligibility-' + status.index}"
                            class="govuk-link"/>
+
+                        <span th:if="${orgDetails.eligibility.notApplicable}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.h2020.eligibility.' + orgDetails.eligibility) : #messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
+                              th:classappend="${'eligibility-' + status.index}"></span>
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
                     <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
@@ -143,9 +152,9 @@
                     </td>
                     <td class="govuk-table__cell aligncentre">
                         <span th:if="${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP &&
-                        orgDetails.eligibility == T(org.innovateuk.ifs.project.finance.resource.EligibilityState).NOT_APPLICABLE}">N/A</span>
+                        orgDetails.eligibility.notApplicable}">N/A</span>
                         <a th:unless="${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP &&
-                        orgDetails.eligibility == T(org.innovateuk.ifs.project.finance.resource.EligibilityState).NOT_APPLICABLE}"
+                        orgDetails.eligibility.notApplicable }"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="View"
                            class="govuk-link"/>

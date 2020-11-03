@@ -39,6 +39,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean collaborativeProject;
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
+    private final boolean isKtp;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -76,6 +77,7 @@ public class FinanceChecksEligibilityViewModel {
         this.isUsingJesFinances = isUsingJesFinances;
         this.canEditAcademicFinances = canEditAcademicFinances;
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
+        this.isKtp = competition.isKtp();
     }
 
     public boolean isApproved() {
@@ -233,6 +235,10 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isEligibilityReadyToConfirm() {
         return eligibilityReadyToConfirm;
+    }
+
+    public boolean isKtp(){
+        return isKtp;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
