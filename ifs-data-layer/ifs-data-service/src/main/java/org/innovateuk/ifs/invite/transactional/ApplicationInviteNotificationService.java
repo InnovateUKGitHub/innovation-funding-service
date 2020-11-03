@@ -172,7 +172,7 @@ class ApplicationInviteNotificationService {
 
         notificationArguments.put("participationAction", getParticipationAction(invite));
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
@@ -188,7 +188,7 @@ class ApplicationInviteNotificationService {
         }
         notificationArguments.put("applicationId", invite.getTarget().getId());
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.REMOVE_KTA, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.REMOVE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
@@ -205,7 +205,7 @@ class ApplicationInviteNotificationService {
         notificationArguments.put("applicationId", invite.getTarget().getId());
         notificationArguments.put("inviteUrl", getKtaInviteUrl(baseUrl, invite.getHash()));
 
-        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_KTA, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.INVITE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 

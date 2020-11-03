@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -159,7 +158,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding);
-    @Query("SELECT a.id FROM Application a " + COMP_FUNDING_FILTER + " AND NOT (a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED)")
+
+    @Query("SELECT a.id FROM Application a LEFT JOIN a.projectToBeCreated projectToBeCreated " + COMP_FUNDING_FILTER + " AND NOT ((a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED) OR (projectToBeCreated IS NOT NULL AND a.competition.fundingType != org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP))")
     List<Long> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
@@ -248,11 +248,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
-    @Query("select a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
+    @Query("select distinct a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
             "where a.id in :ids" +
             " and  a.competition.id = :competitionId " +
-            " and (a.submittedDate is not null " +
-            " or (a.fundingDecision != org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is null))")
+            " and a.submittedDate is not null " +
+            " and not (a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is not null)")
     List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
 
 }
