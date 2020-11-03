@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
@@ -80,9 +81,10 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
             withCompetition(competitionId).
             build();
 
-    private CompetitionResource competition = newCompetitionResource().
-            withInnovationAreaNames(CollectionFunctions.asLinkedSet("Some Area", "Some other area")).
-            build();
+    private CompetitionResource competition = newCompetitionResource()
+            .withFundingType(FundingType.GRANT)
+            .withInnovationAreaNames(CollectionFunctions.asLinkedSet("Some Area", "Some other area"))
+            .build();
 
     private CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
 
@@ -91,6 +93,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
             withName("My Project").
             withApplication(applicationId).
             withAddress(projectAddress).
+            withCompetition(competition.getId()).
             withTargetStartDate(LocalDate.of(2017, 01, 05));
 
     @Mock
@@ -110,8 +113,9 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
+
     @Test
-    public void testViewMonitoringOfficerPage() throws Exception {
+    public void viewMonitoringOfficerPage() throws Exception {
 
         ProjectResource project = projectBuilder.build();
 

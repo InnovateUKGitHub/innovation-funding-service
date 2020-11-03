@@ -61,7 +61,7 @@ public class LegacyMonitoringOfficerViewModel {
         return applicationId;
     }
 
-    public boolean getKtpCompetition() {
+    public boolean isKtpCompetition() {
         return ktpCompetition;
     }
 }
