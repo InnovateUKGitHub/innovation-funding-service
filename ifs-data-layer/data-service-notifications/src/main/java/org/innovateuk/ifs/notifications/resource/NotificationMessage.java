@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.notifications.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Map;
@@ -34,6 +36,28 @@ public class NotificationMessage {
 
     public Map<String, Object> getArguments() {
         return arguments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NotificationMessage that = (NotificationMessage) o;
+
+        return new EqualsBuilder()
+                .append(to, that.to)
+                .append(arguments, that.arguments)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(to)
+                .append(arguments)
+                .toHashCode();
     }
 
     @Override
