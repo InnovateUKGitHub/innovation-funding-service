@@ -22,6 +22,7 @@ public class ApplicationSummaryResource {
     private ZonedDateTime manageFundingEmailDate;
     private Boolean ineligibleInformed;
     private boolean inAssessmentPanel;
+    private boolean emailInQueue;
 
     public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
@@ -139,9 +140,26 @@ public class ApplicationSummaryResource {
         this.innovationArea = innovationArea;
     }
 
-    public Boolean applicationFundingDecisionIsChangeable() {
-        return this.manageFundingEmailDate == null || !fundingDecision.equals(FundingDecision.FUNDED);
+    public boolean isEmailInQueue() {
+        return emailInQueue;
+    }
 
+    public void setEmailInQueue(boolean emailInQueue) {
+        this.emailInQueue = emailInQueue;
+    }
+
+    public Boolean applicationFundingDecisionIsChangeable() {
+        return (this.manageFundingEmailDate == null || !fundingDecision.equals(FundingDecision.FUNDED)) && !emailInQueue;
+    }
+
+    public String emailStatus() {
+        if (manageFundingEmailDate != null) {
+            return "Sent";
+        } else if (emailInQueue) {
+            return "Pending";
+        } else {
+            return "-";
+        }
     }
 
     public boolean isInAssessmentPanel() {

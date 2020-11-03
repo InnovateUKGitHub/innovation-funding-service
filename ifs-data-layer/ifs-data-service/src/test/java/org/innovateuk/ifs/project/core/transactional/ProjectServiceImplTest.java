@@ -35,6 +35,8 @@ import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHan
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -42,6 +44,7 @@ import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -74,6 +77,7 @@ import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
@@ -86,14 +90,24 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
+
+    @Mock
+    private CostCategoryTypeStrategy costCategoryTypeStrategyMock;
+
+    @Mock
+    private FinanceChecksGenerator financeChecksGeneratorMock;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -263,6 +277,18 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
+
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
+                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess(null));
+
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -276,6 +302,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertEquals(newProjectResource, project.getSuccess());
         assertNotNull(competition.getProjectSetupStarted());
+
+        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
+        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
+        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
@@ -329,7 +359,17 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(spendProfileWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(projectMapperMock.mapToResource(project)).thenReturn(new ProjectResource());
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
 
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(any(),
+                any())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(any(), any(), eq(costCategoryTypeForOrganisation))).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(any(), any())).thenReturn(serviceSuccess(null));
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(any(), any())).thenReturn(true);
 
         ServiceResult<ProjectResource> result = service.createProjectFromApplication(applicationId);
@@ -373,6 +413,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectRepositoryMock).findOneByApplicationId(applicationId);
         verify(projectMapperMock).mapToResource(existingProject);
 
+        verify(costCategoryTypeStrategyMock, never()).getOrCreateCostCategoryTypeForSpendProfile(any(Long.class), any(Long.class));
+        verify(financeChecksGeneratorMock, never()).createMvpFinanceChecksFigures(any(Project.class), any(Organisation.class), any(CostCategoryType.class));
+        verify(financeChecksGeneratorMock, never()).createFinanceChecksFigures(any(Project.class), any(Organisation.class));
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
@@ -491,6 +534,18 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
 
+        CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
+                withCostCategoryGroup(newCostCategoryGroup().
+                        withCostCategories(newCostCategory().withName("Cat1", "Cat2").build(2)).
+                        build()).
+                build();
+
+        when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(),
+                organisation.getId())).thenReturn(serviceSuccess(costCategoryTypeForOrganisation));
+
+        when(financeChecksGeneratorMock.createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation)).thenReturn(serviceSuccess());
+        when(financeChecksGeneratorMock.createFinanceChecksFigures(savedProject, organisation)).thenReturn(serviceSuccess(null));
+
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
@@ -506,6 +561,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.isSuccess());
         assertNotNull(competition.getProjectSetupStarted());
 
+        verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
+        verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
+        verify(financeChecksGeneratorMock).createFinanceChecksFigures(savedProject, organisation);
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);

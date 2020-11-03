@@ -8,10 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -216,8 +213,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
         NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
-        Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
-        Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+        Notification notification1 = new Notification(systemNotificationSource, new NotificationMessage(to1), SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+        Notification notification2 = new Notification(systemNotificationSource, new NotificationMessage(to2), SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
         when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
         when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
@@ -578,7 +575,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     @Test
     public void generateSpendProfileCSV() {
-        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
+        Project project = newProject()
+                .withApplication(newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build())
+                .withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
                 // eligible costs
@@ -616,7 +615,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     @Test
     public void generateSpendProfileCSVWithCategoryGroupLabelEmpty() {
-        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
+        Project project = newProject()
+                .withApplication(newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build())
+                .withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         SpendProfile spendProfileInDB = createSpendProfile(project,
                 // eligible costs
@@ -927,6 +928,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         Project projectInDB = ProjectBuilder.newProject()
+                .withApplication(newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build())
                 .withDuration(3L)
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .withId(projectId)
@@ -967,6 +969,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         Project projectInDB = ProjectBuilder.newProject()
+                .withApplication(newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build())
                 .withDuration(3L)
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .build();
@@ -1004,6 +1007,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
         Project projectInDB = ProjectBuilder.newProject()
+                .withApplication(newApplication().withCompetition(newCompetition().withIncludeJesForm(true).build()).build())
                 .withDuration(3L)
                 .withTargetStartDate(LocalDate.of(2018, 3, 1))
                 .build();

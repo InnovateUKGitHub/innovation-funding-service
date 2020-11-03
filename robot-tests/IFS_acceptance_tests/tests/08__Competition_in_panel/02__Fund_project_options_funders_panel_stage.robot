@@ -196,8 +196,8 @@ the internal user sends an email notification
     the user should not see the element     jQuery = p:contains("Average assessor score")
     the user enters text to a text field    css = .editor  ${message}
     the user clicks the button/link         jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
-    the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
-    the user should see the element         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
+    the user clicks the button/link                          jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    the user refreshes until element appears on page         jQuery = td:contains("${application}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 the external user reads his email and can see the correct status
     [Arguments]  ${decision}  ${subject}  ${message}  ${application}  ${mail}
