@@ -29,7 +29,7 @@ public class ProjectFinanceChecksViewModel {
     private boolean loanCompetition;
     private final boolean procurementCompetition;
     private final boolean ktpCompetition;
-    private final boolean projectManager;
+    private final boolean leadOrganisation;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> pendingQueries,
@@ -45,7 +45,7 @@ public class ProjectFinanceChecksViewModel {
                                          boolean loanCompetition,
                                          boolean procurementCompetition,
                                          boolean ktpCompetition,
-                                         boolean projectManager) {
+                                         boolean leadOrganisation) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
@@ -62,7 +62,7 @@ public class ProjectFinanceChecksViewModel {
         this.loanCompetition = loanCompetition;
         this.procurementCompetition = procurementCompetition;
         this.ktpCompetition = ktpCompetition;
-        this.projectManager = projectManager;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public Long getProjectId() {
@@ -206,7 +206,7 @@ public class ProjectFinanceChecksViewModel {
         return ktpCompetition;
     }
 
-    public boolean isProjectManager() {
-        return projectManager;
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
     }
 }

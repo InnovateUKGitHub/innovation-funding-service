@@ -373,7 +373,10 @@ public class ProjectFinanceChecksController {
         List<ThreadViewModel> lastPostByExternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_EXTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_EXTERNAL_USER);
         List<ThreadViewModel> lastPostByInternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER);
 
-        boolean projectManager = projectUserResources.stream().anyMatch(user -> (Role.PROJECT_MANAGER.getId() == user.getRole()) && (user.getId() == loggedInUser.getId()));
+        boolean leadOrganisation = projectUserResources.stream().anyMatch(projectUser ->
+            projectUser.getRole().equals(Role.PROJECT_MANAGER.getId())
+                    && projectUser.getOrganisation().equals(organisationId)
+        );
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
@@ -389,7 +392,7 @@ public class ProjectFinanceChecksController {
                 competition.isLoan(),
                 competition.isProcurement(),
                 competition.isKtp(),
-                projectManager);
+                leadOrganisation);
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
