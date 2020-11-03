@@ -112,7 +112,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     @Test
     public void testResetPasswordPost() throws Exception {
         String hash = UUID.randomUUID().toString();
-        String password = "Passw0rd123";
+        String password = "Passw0rd1357123";
         when(userRestServiceMock.checkPasswordResetHash(hash)).thenReturn(restSuccess());
         when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restSuccess());
 
