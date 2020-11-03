@@ -134,4 +134,8 @@ public class ProjectTeamViewModel {
     public boolean isKtpCompetition() {
         return ktpCompetition;
     }
+
+    public boolean displayRoleHeader(boolean isLeadOrganisationRow) {
+        return !isKtpCompetition() || isInternal() && isLeadOrganisationRow || isUserLeadPartner() && isLeadOrganisationRow;
+    }
 }

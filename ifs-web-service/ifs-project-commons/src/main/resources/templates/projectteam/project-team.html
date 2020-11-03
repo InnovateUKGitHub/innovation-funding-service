@@ -33,7 +33,7 @@
                   th:with="pageTitle='Project team',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <th:block th:if="${model.collaborativeProject && model.ktpCompetition}">
-            <th:block th:if="${model.userLeadPartner}">
+            <th:block th:if="${model.userLeadPartner or model.internal}">
                 <p class="govuk-body">The knowledge base partner chooses a project manager who is responsible for
                     setting up the project, and a finance contact to answer finance queries.
                 </p>
@@ -120,7 +120,7 @@
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">
-                            <th:block th:if="${model.internal}">Role</th:block>
+                            <th:block th:if="${model.displayRoleHeader(organisation.lead)}">Role</th:block>
                             <span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
@@ -142,6 +142,8 @@
                 <th:block th:if="${organisation.canAddUsers}">
                     <th:block th:insert="projectteam/project-team-fragments :: invite-form(${model}, ${organisation})"/>
                 </th:block>
+
+                <th:block th:unless="${model.ktpCompetition && model.internal}">
                 <span th:if="${!organisation.lead and model.canRemovePartnerOrganisation and organisation.canAddUsers}"
                       class="vertical-align-baseline govuk-body govuk-!-margin-left-1 govuk-!-margin-right-1 hint">|</span>
                 <th:block th:if="${!organisation.lead and model.canRemovePartnerOrganisation}">
@@ -166,14 +168,17 @@
                     </button>
                 </th:block>
             </th:block>
+            </th:block>
         </form>
 
 
-        <p th:if="${model.canInvitePartnerOrganisation}"
-           class="govuk-body">
-            <a th:href="@{/competition/{competitionId}/project/{projectId}/team/partner(competitionId=${model.competitionId}, projectId=${model.projectId})}"
-               class="govuk-link">Add a partner organisation</a>
-        </p>
+        <th:block th:unless="${model.ktpCompetition && model.internal}">
+            <p th:if="${model.canInvitePartnerOrganisation}"
+                class="govuk-body">
+                    <a th:href="@{/competition/{competitionId}/project/{projectId}/team/partner(competitionId=${model.competitionId}, projectId=${model.projectId})}"
+                        class="govuk-link">Add a partner organisation</a>
+            </p>
+        </th:block>
         <th:block th:unless="${model.internal}">
             <a th:href="@{/project/{id}(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to setup your project</a>
         </th:block>

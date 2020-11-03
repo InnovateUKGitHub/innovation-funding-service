@@ -64,6 +64,7 @@ public class YourOrganisationViewModelPopulator {
                 true,
                 competition.isProcurement(),
                 user,
-                true);
+                true,
+                competition.isKtp());
     }
 }

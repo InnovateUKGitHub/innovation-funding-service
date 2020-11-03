@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.organisationdetails.view.viewmodel.OrganisationDetailsViewModel;
@@ -50,12 +51,14 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
+        boolean ktpCompetition = competition.isKtp();
 
         model.addAttribute("organisationDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
                 getAddress(organisation),
-                project.isCollaborativeProject()));
+                project.isCollaborativeProject(),
+                ktpCompetition));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(), competition.getName(),false,
@@ -93,6 +96,10 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
             }
         }
         return createNewAddress();
+    }
+
+    private boolean isKnowledgeBase(OrganisationResource organisation) {
+        return organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.KNOWLEDGE_BASE);
     }
 
     private AddressResource createNewAddress() {
