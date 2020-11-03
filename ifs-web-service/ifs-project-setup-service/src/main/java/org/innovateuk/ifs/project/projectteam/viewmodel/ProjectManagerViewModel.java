@@ -18,7 +18,8 @@ public class ProjectManagerViewModel {
     public ProjectManagerViewModel(List<ProjectUserResource> leadOrgUsers,
                                    long projectId,
                                    String projectName,
-                                   boolean loanCompetition, boolean ktpCompetition) {
+                                   boolean loanCompetition,
+                                   boolean ktpCompetition) {
         this.leadOrgUsers = leadOrgUsers;
         this.projectId = projectId;
         this.projectName = projectName;

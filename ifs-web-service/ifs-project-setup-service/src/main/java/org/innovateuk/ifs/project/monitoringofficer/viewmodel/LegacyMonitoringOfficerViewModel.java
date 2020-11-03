@@ -18,8 +18,11 @@ public class LegacyMonitoringOfficerViewModel {
     private String monitoringOfficerName;
     private String monitoringOfficerEmailAddress;
     private String monitoringOfficerPhoneNumber;
+    private boolean ktpCompetition;
 
-    public LegacyMonitoringOfficerViewModel(ProjectResource project, Optional<MonitoringOfficerResource> monitoringOfficer) {
+    public LegacyMonitoringOfficerViewModel(ProjectResource project,
+                                            Optional<MonitoringOfficerResource> monitoringOfficer,
+                                            boolean ktpCompetition) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -27,6 +30,7 @@ public class LegacyMonitoringOfficerViewModel {
         this.monitoringOfficerName = monitoringOfficer.map(mo -> mo.getFullName()).orElse("");
         this.monitoringOfficerEmailAddress = monitoringOfficer.map(mo -> mo.getEmail()).orElse("");
         this.monitoringOfficerPhoneNumber = monitoringOfficer.map(mo -> mo.getPhoneNumber()).orElse("");
+        this.ktpCompetition = ktpCompetition;
     }
 
     public Long getProjectId() {
@@ -55,5 +59,9 @@ public class LegacyMonitoringOfficerViewModel {
 
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public boolean getKtpCompetition() {
+        return ktpCompetition;
     }
 }

@@ -20,10 +20,27 @@
           <div class="success-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body"><strong>We have assigned a Monitoring Officer to your project.</strong></p>
             </div>
-          <p class="govuk-body govuk-!-margin-top-6">
-            No action needs to be taken by your team. The Monitoring Officer will make contact shortly.
-            If you have any questions about this appointment please contact Innovate UK.
-          </p>
+
+            <th:block th:if="${model.ktpCompetition}">
+                <p class="govuk-body govuk-!-margin-top-6">
+                    Your team does not need to do anything and the monitoring officer will contact you soon.
+                </p>
+                <p class="govuk-body govuk-!-margin-top-6">
+                    <strong>The monitoring officer is always a knowledge transfer adviser (KTA)</strong> and is the
+                    primary point of contact for the project. They will report on its progress to us.
+                </p>
+
+                <p class="govuk-body govuk-!-margin-top-6">
+                    Please <a href="mailto:tba">contact us</a> if you have any questions about this appointment.
+                </p>
+            </th:block>
+
+            <th:block th:unless="${model.ktpCompetition}">
+              <p class="govuk-body govuk-!-margin-top-6">
+                No action needs to be taken by your team. The Monitoring Officer will make contact shortly.
+                If you have any questions about this appointment please contact Innovate UK.
+              </p>
+            </th:block>
           <div class="govuk-body boxed">
               <th:block th:unless="${#strings.isEmpty(model.monitoringOfficerName)}">
                 <th:block th:text="${model.monitoringOfficerName}" /><br/>
@@ -41,9 +58,10 @@
           <p class="govuk-body">Your project has not yet been assigned a Monitoring Officer.</p>
         </th:block>
 
-        <h3 class="govuk-heading-m">Role of Monitoring Officer</h3>
-        <p class="govuk-body">The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.</p>
-
+        <th:block th:unless="${model.ktpCompetition}">
+            <h3 class="govuk-heading-m">Role of Monitoring Officer</h3>
+            <p class="govuk-body">The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.</p>
+        </th:block>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

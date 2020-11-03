@@ -83,10 +83,8 @@
         </th:block>
 
 
-        <th:block th:if="${!model.ktpCompetition && !model.userLeadPartner}">
-            <th:block th:unless="${model.internal or model.readOnly}">
-                <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
-            </th:block>
+        <th:block th:unless="${model.internal or model.readOnly or model.ktpCompetition && !model.userLeadPartner}">
+            <th:block th:insert="projectteam/project-team-fragments :: assign-role(${model})"/>
         </th:block>
 
         <form id="project-team-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"

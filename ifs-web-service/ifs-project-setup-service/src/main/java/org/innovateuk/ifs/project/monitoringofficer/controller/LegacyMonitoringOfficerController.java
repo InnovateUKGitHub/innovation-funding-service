@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.monitoringofficer.controller;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
@@ -27,6 +29,9 @@ public class LegacyMonitoringOfficerController {
     private ProjectService projectService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_MONITORING_OFFICER_SECTION')")
@@ -51,7 +56,8 @@ public class LegacyMonitoringOfficerController {
 
     private LegacyMonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerRestService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
-        return new LegacyMonitoringOfficerViewModel(project, monitoringOfficer);
+        return new LegacyMonitoringOfficerViewModel(project, monitoringOfficer, competition.isKtp());
     }
 }
