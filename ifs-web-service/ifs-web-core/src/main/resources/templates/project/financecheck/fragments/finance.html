@@ -72,7 +72,7 @@
     <!-- ===========================Project Finance Summaries =========================== -->
     <th:block th:fragment="project-finance-summaries(summaries)">
         <div class="table-overflow">
-            <table class="govuk-table">
+            <table class="govuk-table govuk-!-margin-bottom-0">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Partner</th>
@@ -104,7 +104,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">Total</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'DEFAULT')}" /></strong></td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatDecimal(summaries.getTotalPercentageGrant(),1,'DEFAULT',2,'DEFAULT')+'%'}"></strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">19,000</strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}">19,000</strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">19,000</strong></td>
@@ -116,7 +116,8 @@
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="col">
                                 <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
-                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
+                                <small th:if="${partner.leadOrganisation}">Lead organisation</small>
+                                <small th:unless="${partner.leadOrganisation}">Partner</small>
                             </th>
                             <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'DEFAULT')}" /></strong></td>
                             <td th:text="${#numbers.formatDecimal(summary.percentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
@@ -128,6 +129,7 @@
                     </th:block>
                 </tbody>
             </table>
+            <hr/>
         </div>
     </th:block>
 
