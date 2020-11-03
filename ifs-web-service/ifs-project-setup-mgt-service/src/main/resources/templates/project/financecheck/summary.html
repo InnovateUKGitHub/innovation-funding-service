@@ -142,7 +142,11 @@
                           th:classappend="${'eligibility-rag-' + status.index}">Green</span>
                     </td>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                        <span th:if="${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP &&
+                        orgDetails.eligibility == T(org.innovateuk.ifs.project.finance.resource.EligibilityState).NOT_APPLICABLE}">N/A</span>
+                        <a th:unless="${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP &&
+                        orgDetails.eligibility == T(org.innovateuk.ifs.project.finance.resource.EligibilityState).NOT_APPLICABLE}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="View"
                            class="govuk-link"/>
                     </td>

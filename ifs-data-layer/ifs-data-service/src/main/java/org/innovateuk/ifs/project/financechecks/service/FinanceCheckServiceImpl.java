@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -44,6 +45,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
@@ -192,7 +194,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             Pair<ViabilityState, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<EligibilityState, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
 
-            boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
+            boolean anyQueryAwaitingResponse;
+            if (isKtp.test(org) && !org.isLeadOrganisation()) {
+                anyQueryAwaitingResponse = false;
+            } else {
+                anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
+            }
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
@@ -318,12 +325,21 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long projectId = projectOrganisationCompositeId.getProjectId();
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getPartnerOrganisation(projectId, organisationId)
+        ServiceResult<PartnerOrganisation> result = getPartnerOrganisation(projectId, organisationId);
+        PartnerOrganisation partnerOrganisation = result.getSuccess();
+        if (isKtp.test(partnerOrganisation) && partnerOrganisation.isLeadOrganisation()) {
+            ViabilityResource viabilityResource = new ViabilityResource(ViabilityState.NOT_APPLICABLE,
+                    ViabilityRagStatus.UNSET);
+            return serviceSuccess(viabilityResource);
+        }
+        return serviceSuccess(partnerOrganisation)
                 .andOnSuccess(this::getViabilityProcess)
                 .andOnSuccess(viabilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildViabilityResource(viabilityProcess, projectFinance))
                 );
     }
+
+    Predicate<PartnerOrganisation> isKtp = partnerOrganisation -> partnerOrganisation.getProject().getApplication().getCompetition().getFundingType().equals(FundingType.KTP);
 
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
@@ -331,7 +347,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long projectId = projectOrganisationCompositeId.getProjectId();
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getPartnerOrganisation(projectId, organisationId)
+        ServiceResult<PartnerOrganisation> partnerOrganisation = getPartnerOrganisation(projectId, organisationId);
+        PartnerOrganisation organisation = partnerOrganisation.getSuccess();
+        if (isKtp.test(organisation) && !organisation.isLeadOrganisation()) {
+            EligibilityResource eligibilityResource = new EligibilityResource(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET);
+            return serviceSuccess(eligibilityResource);
+        }
+        return partnerOrganisation
                 .andOnSuccess(this::getEligibilityProcess)
                 .andOnSuccess(eligibilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildEligibilityResource(eligibilityProcess, projectFinance))
