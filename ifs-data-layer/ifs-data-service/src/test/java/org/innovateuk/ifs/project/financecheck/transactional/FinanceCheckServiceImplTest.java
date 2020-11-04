@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -112,7 +113,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private SpendProfileRepository spendProfileRepository;
-    
+
     @Mock
     private ProjectFinanceService projectFinanceService;
 
@@ -1065,9 +1066,36 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
+    public void getViabilityForKtpAsLeadOrg() {
+
+        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null, true, true);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertGetViabilityResults(result.getSuccess(), ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.UNSET,
+                null, null, null);
+    }
+
+    @Test
+    public void getViabilityForKtpAsNonLeadOrg() {
+
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, null, null, true, false);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertGetViabilityResults(result.getSuccess(), ViabilityState.APPROVED, ViabilityRagStatus.GREEN,
+                null, null, null);
+    }
+
+
+    @Test
     public void getViabilityWhenViabilityStateIsReviewInDB() {
 
-        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null);
+        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1083,7 +1111,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getViabilityWhenViabilityStateIsNotApplicableInDB() {
 
-        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null);
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1107,7 +1135,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 .withLastName("Bowman")
                 .build();
 
-        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now());
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now(), false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1121,9 +1149,15 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     private void setUpGetViabilityMocking(ViabilityState viabilityStateInDB, ViabilityRagStatus viabilityRagStatusInDB,
-                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate) {
+                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate, boolean isKtp, boolean withLead) {
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        Competition competition = newCompetition().withFundingType(isKtp ? FundingType.KTP : FundingType.LOAN).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withLeadOrganisation(withLead)
+                .build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB, viabilityStateInDB);
@@ -1170,7 +1204,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getEligibilityWhenEligibilityIsReviewInDB() {
 
-        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null);
+        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1187,7 +1221,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getEligibilityWhenEligibilityIsNotApplicableInDB() {
 
-        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null);
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1212,7 +1246,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 .withLastName("Bowman")
                 .build();
 
-        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now(), false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1226,10 +1260,41 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
-    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
-                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate) {
+    @Test
+    public void getEligibilityForKtpAsNonLeadOrg() {
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET, null, null, true, false);
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertGetEligibilityResults(result.getSuccess(), EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET,
+                null, null, null);
+    }
+
+    @Test
+    public void getEligibilityForKtpAsLeadOrg() {
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, null, null, true, true);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertGetEligibilityResults(result.getSuccess(), EligibilityState.APPROVED, EligibilityRagStatus.GREEN,
+                null, null, null);
+    }
+
+    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
+                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate, boolean isKtp, boolean withLead) {
+        Competition competition = newCompetition().withFundingType(isKtp ? FundingType.KTP : FundingType.LOAN).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withLeadOrganisation(withLead)
+                .build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         EligibilityProcess eligibilityProcess = new EligibilityProcess(eligibilityApprovalUser, partnerOrganisationInDB, eligibilityStateInDB);

@@ -107,6 +107,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
+    Predicate<PartnerOrganisation> isKtp = partnerOrganisation -> partnerOrganisation.getProject()
+            .getApplication().getCompetition().getFundingType().equals(FundingType.KTP);
+
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
@@ -320,21 +323,23 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long projectId = projectOrganisationCompositeId.getProjectId();
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        ServiceResult<PartnerOrganisation> result = getPartnerOrganisation(projectId, organisationId);
-        PartnerOrganisation partnerOrganisation = result.getSuccess();
-        if (isKtp.test(partnerOrganisation) && partnerOrganisation.isLeadOrganisation()) {
-            ViabilityResource viabilityResource = new ViabilityResource(ViabilityState.NOT_APPLICABLE,
-                    ViabilityRagStatus.UNSET);
-            return serviceSuccess(viabilityResource);
+        ServiceResult<PartnerOrganisation> partnerOrganisation = getPartnerOrganisation(projectId, organisationId);
+        if (partnerOrganisation.isSuccess()) {
+            PartnerOrganisation organisation = partnerOrganisation.getSuccess();
+            if (isKtp.test(organisation) && organisation.isLeadOrganisation()) {
+                ViabilityResource viabilityResource = new ViabilityResource(ViabilityState.NOT_APPLICABLE,
+                        ViabilityRagStatus.UNSET);
+                return serviceSuccess(viabilityResource);
+            }
         }
-        return serviceSuccess(partnerOrganisation)
+
+        return partnerOrganisation
                 .andOnSuccess(this::getViabilityProcess)
                 .andOnSuccess(viabilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildViabilityResource(viabilityProcess, projectFinance))
                 );
     }
 
-    Predicate<PartnerOrganisation> isKtp = partnerOrganisation -> partnerOrganisation.getProject().getApplication().getCompetition().getFundingType().equals(FundingType.KTP);
 
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
@@ -343,10 +348,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         ServiceResult<PartnerOrganisation> partnerOrganisation = getPartnerOrganisation(projectId, organisationId);
-        PartnerOrganisation organisation = partnerOrganisation.getSuccess();
-        if (isKtp.test(organisation) && !organisation.isLeadOrganisation()) {
-            EligibilityResource eligibilityResource = new EligibilityResource(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET);
-            return serviceSuccess(eligibilityResource);
+
+        if (partnerOrganisation.isSuccess()) {
+            PartnerOrganisation organisation = partnerOrganisation.getSuccess();
+            if (isKtp.test(organisation) && !organisation.isLeadOrganisation()) {
+                EligibilityResource eligibilityResource = new EligibilityResource(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET);
+                return serviceSuccess(eligibilityResource);
+            }
         }
         return partnerOrganisation
                 .andOnSuccess(this::getEligibilityProcess)
