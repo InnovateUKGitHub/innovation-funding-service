@@ -6,6 +6,7 @@ import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.supporter.resource.SupporterDecisionResource;
 import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
+import org.innovateuk.ifs.supporter.service.SupporterCookieService;
 import org.innovateuk.ifs.supporter.viewmodel.SupporterResponseViewModel;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -16,9 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -35,14 +38,18 @@ public class SupporterResponseController {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @Autowired
+    private SupporterCookieService supporterCookieService;
+
     @GetMapping
     public String editResponse(@PathVariable long applicationId,
-                               @ModelAttribute("previousResponse") SupporterAssignmentResource previousAssignment,
                                Model model,
+                               HttpServletRequest request,
                                UserResource user) {
         SupporterAssignmentResource assignment;
-        if (previousAssignment.getState() != null) {
-            assignment = previousAssignment;
+        Optional<SupporterAssignmentResource> previousAssignment = supporterCookieService.getSupporterPreviousResponseCookie(request);
+        if (previousAssignment.isPresent() &&  previousAssignment.get().getState() != null) {
+            assignment = previousAssignment.get();
         } else {
             assignment = supporterAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
             if (newArrayList(SupporterState.ACCEPTED, SupporterState.REJECTED).contains(assignment.getState())) {
@@ -70,11 +77,11 @@ public class SupporterResponseController {
     @PostMapping("/view")
     public String changeResponse(@PathVariable long applicationId,
                                  Model model,
-                                 UserResource user,
-                                 RedirectAttributes redirectAttributes) {
+                                 HttpServletResponse response,
+                                 UserResource user) {
         SupporterAssignmentResource assignment = supporterAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
         supporterAssignmentRestService.edit(assignment.getAssignmentId()).getSuccess();
-        redirectAttributes.addFlashAttribute("previousResponse", assignment);
+        supporterCookieService.saveToSupporterPreviousResponseCookie(assignment, response);
         return String.format("redirect:/supporter/application/%d/response", applicationId);
     }
 

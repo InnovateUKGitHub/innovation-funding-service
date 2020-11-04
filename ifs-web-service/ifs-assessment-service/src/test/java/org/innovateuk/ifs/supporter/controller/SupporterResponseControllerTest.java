@@ -9,12 +9,18 @@ import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.supporter.resource.SupporterDecisionResource;
 import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
+import org.innovateuk.ifs.supporter.service.SupporterCookieService;
 import org.innovateuk.ifs.supporter.viewmodel.SupporterResponseViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -36,6 +42,9 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
     @Mock
     private ApplicationRestService applicationRestService;
 
+    @Mock
+    private SupporterCookieService supporterCookieService;
+
     @Override
     protected SupporterResponseController supplyControllerUnderTest() {
         return new SupporterResponseController();
@@ -53,7 +62,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .build();
         when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-
+        when(supporterCookieService.getSupporterPreviousResponseCookie(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId()))
                 .andExpect(status().isOk())
@@ -70,6 +79,8 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         assertThat(viewModel.getApplicationName(), equalTo(application.getName()));
         assertThat(viewModel.isReadonly(), equalTo(false));
         assertThat(viewModel.isCanEdit(), equalTo(true));
+
+        verify(supporterCookieService, times(1)).getSupporterPreviousResponseCookie(any(HttpServletRequest.class));
     }
 
     @Test
@@ -84,9 +95,9 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
                 .withCompetition(1L)
                 .build();
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(supporterCookieService.getSupporterPreviousResponseCookie(any(HttpServletRequest.class))).thenReturn(Optional.of(previous));
 
-        MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId())
-                .flashAttr("previousResponse", previous))
+        MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("supporter/response"))
                 .andReturn();
@@ -96,6 +107,46 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         assertThat(form.getDecision(), equalTo(true));
         assertThat(form.getAssignmentId(), equalTo(previous.getAssignmentId()));
         verifyZeroInteractions(supporterAssignmentRestService);
+
+        verify(supporterCookieService, times(1)).getSupporterPreviousResponseCookie(any(HttpServletRequest.class));
+    }
+
+    @Test
+    public void editResponse_withPreviousNullState() throws Exception {
+        SupporterAssignmentResource previous = newSupporterAssignmentResource()
+                .withAssignmentId(100L)
+                .withComments("Wonderful")
+                .build();
+        SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
+                .withAssignmentId(100L)
+                .withState(SupporterState.CREATED)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .withCompetition(1L)
+                .build();
+
+        when(supporterAssignmentRestService.getAssignment(getLoggedInUser().getId(), application.getId())).thenReturn(restSuccess(supporterAssignmentResource));
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(supporterCookieService.getSupporterPreviousResponseCookie(any(HttpServletRequest.class))).thenReturn(Optional.of(previous));
+
+        MvcResult result = mockMvc.perform(get("/supporter/application/{applicationId}/response", application.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("supporter/response"))
+                .andReturn();
+
+        SupporterResponseForm form = (SupporterResponseForm) result.getModelAndView().getModel().get("form");
+        assertThat(form.getComments(), nullValue());
+        assertThat(form.getDecision(), nullValue());
+        assertThat(form.getAssignmentId(), equalTo(supporterAssignmentResource.getAssignmentId()));
+
+        SupporterResponseViewModel viewModel = (SupporterResponseViewModel) result.getModelAndView().getModel().get("model");
+        assertThat(viewModel.getApplicationId(), equalTo(application.getId()));
+        assertThat(viewModel.getApplicationName(), equalTo(application.getName()));
+        assertThat(viewModel.isReadonly(), equalTo(false));
+        assertThat(viewModel.isCanEdit(), equalTo(true));
+
+        verify(supporterCookieService, times(1)).getSupporterPreviousResponseCookie(any(HttpServletRequest.class));
     }
 
     @Test
@@ -111,8 +162,9 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         mockMvc.perform(get("/supporter/application/{applicationId}/response", applicationId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/supporter/application/%d/response/view", applicationId)));
-    }
 
+        verify(supporterCookieService, times(1)).getSupporterPreviousResponseCookie(any(HttpServletRequest.class));
+    }
 
     @Test
     public void viewResponse() throws Exception {
@@ -174,6 +226,8 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         mockMvc.perform(post("/supporter/application/{applicationId}/response/view", applicationId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/supporter/application/%d/response", applicationId)));
+
+        verify(supporterCookieService, times(1)).saveToSupporterPreviousResponseCookie( any(SupporterAssignmentResource.class), any(HttpServletResponse.class));
     }
 
     @Test
