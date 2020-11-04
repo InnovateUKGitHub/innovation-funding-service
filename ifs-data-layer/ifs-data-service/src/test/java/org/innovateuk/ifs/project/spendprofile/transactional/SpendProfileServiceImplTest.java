@@ -226,9 +226,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
         Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
+        when(spendProfileWorkflowHandler.spendProfileApproved(project, generatedBy)).thenReturn(true);
         when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
         when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
-
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());

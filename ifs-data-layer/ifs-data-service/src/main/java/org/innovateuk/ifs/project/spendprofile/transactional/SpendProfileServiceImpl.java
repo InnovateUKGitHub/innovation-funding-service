@@ -64,6 +64,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -144,6 +145,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
+    Predicate<Project> isProjectKtp = project ->
+            project.getApplication().getCompetition().isKtp();
+
     @Override
     @Transactional
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -197,7 +201,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
-        if (project.getApplication().getCompetition().isKtp()) {
+        if (isProjectKtp.test(project)) {
             partnerOrganisations = partnerOrganisations.stream()
                     .filter(org -> !org.isLeadOrganisation())
                     .collect(toList());
@@ -225,7 +229,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
-        if (project.getApplication().getCompetition().isKtp()) {
+        if (isProjectKtp.test(project)) {
             partnerOrganisations = partnerOrganisations.stream()
                     .filter(PartnerOrganisation::isLeadOrganisation)
                     .collect(toList());
@@ -270,9 +274,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             Calendar generatedDate) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess((project, organisation) ->
-                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries, project, organisation, generatedBy, generatedDate).andOnSuccess(() ->
-                        sendFinanceContactEmail(project, organisation)
-                )
+                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries, project, organisation, generatedBy, generatedDate)
+                        .andOnSuccess(() -> isProjectKtp.test(project) ?
+                                autoApproveSpendProfile(project, generatedBy) : serviceSuccess())
+                        .andOnSuccess(() -> sendFinanceContactEmail(project, organisation))
         );
     }
 
@@ -280,9 +285,18 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
         List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findById(spendProfileCostCategorySummaries.getCostCategoryType().getId()).orElse(null);
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
+
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts,
+                spendProfileCosts, generatedBy, generatedDate, isProjectKtp.test(project));
         spendProfileRepository.save(spendProfile);
+
         return serviceSuccess();
+    }
+
+    private ServiceResult<Void> autoApproveSpendProfile(Project project, User user) {
+        return spendProfileWorkflowHandler.spendProfileApproved(project, user) ?
+                serviceSuccess() :
+                serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
     }
 
     private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {
