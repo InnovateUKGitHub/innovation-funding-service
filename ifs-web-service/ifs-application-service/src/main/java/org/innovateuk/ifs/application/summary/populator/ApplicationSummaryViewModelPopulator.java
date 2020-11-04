@@ -46,7 +46,9 @@ public class ApplicationSummaryViewModelPopulator {
     private UserRestService userRestService;
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
-        ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user));
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user))
+                .setIncludeAllSupporterFeedback(shouldDisplayFeedback(competition, application, user));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;

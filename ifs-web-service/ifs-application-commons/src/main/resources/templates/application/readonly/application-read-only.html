@@ -128,4 +128,34 @@
     </div>
 </th:block>
 
+<th:block th:fragment="supporter_feedback(model)">
+    <div th:if="!${#lists.isEmpty(model.assignments)}">
+        <h2 class="govuk-heading-m govuk-!-margin-top-9">Supporter feedback</h2>
+
+        <th:block th:if="${model.accepted}">
+            <ul class="govuk-list boxed-list">
+                <h3 class="govuk-heading-s" th:text="|Interested (${model.AcceptedCount})|">Interested</h3>
+                <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
+                    <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+                </li>
+            </ul>
+        </th:block>
+
+        <th:block th:if="${model.declined}">
+            <h3 class="govuk-heading-s" th:text="|Declined (${model.DeclinedCount})|">Declined</h3>
+            <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).REJECTED)}">
+                <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+            </li>
+        </th:block>
+
+        <th:block th:if="${model.pending}">
+            <h3 class="govuk-heading-s" th:text="|'Didn\'t review' (${model.PendingCount})|">Didn't review</h3>
+            <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).CREATED)}">
+                <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+            </li>
+        </th:block>
+
+    </div>
+</th:block>
+
 </html>
