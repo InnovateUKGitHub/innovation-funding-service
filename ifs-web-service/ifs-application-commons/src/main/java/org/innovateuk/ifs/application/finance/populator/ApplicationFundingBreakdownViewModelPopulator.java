@@ -68,7 +68,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         Map<Long, BaseFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(applicationId).getSuccess()
                 .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
 
-        return viewModel(applicationId, finances, user,
+        return viewModel(applicationId, finances, user, true,
                 (application, competition) -> !application.isSubmitted() && !competition.isKtp());
     }
 
@@ -77,10 +77,10 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         Map<Long, BaseFinanceResource> finances = projectFinanceRestService.getProjectFinances(project.getId()).getSuccess()
                 .stream().collect(toMap(ProjectFinanceResource::getOrganisation, Function.identity()));
 
-        return viewModel(project.getApplication(), finances, user, (a, c) -> false);
+        return viewModel(project.getApplication(), finances, user, false, (a, c) -> false);
     }
 
-    private ApplicationFundingBreakdownViewModel viewModel(long applicationId, Map<Long, BaseFinanceResource> finances, UserResource user,
+    private ApplicationFundingBreakdownViewModel viewModel(long applicationId, Map<Long, BaseFinanceResource> finances, UserResource user, boolean canIncludeFinanceLink,
                                                            BiPredicate<ApplicationResource, CompetitionResource> addPendingOrganisations) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -95,7 +95,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         List<BreakdownTableRow> rows = organisations.stream()
                 .filter(organisation -> competition.isKtp() ? organisation.getId().equals(leadOrganisationId) : true)
-                .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
+                .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition, canIncludeFinanceLink))
                 .collect(toList());
 
         if (addPendingOrganisations.test(application, competition)) {
@@ -121,9 +121,16 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .collect(toList());
     }
 
-    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, BaseFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
+    private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, BaseFinanceResource> finances,
+                                                long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user,
+                                                ApplicationResource application, CompetitionResource competition, boolean canIncludeFinanceLink) {
         Optional<BaseFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
-        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, processRoles, user, application, competition);
+        Optional<String> financeLink;
+        if (canIncludeFinanceLink) {
+            financeLink = financeLinksUtil.financesLink(organisation, processRoles, user, application, competition);
+        }  else {
+            financeLink = Optional.empty();
+        }
         boolean lead = organisation.getId().equals(leadOrganisationId);
         return new BreakdownTableRow(
                 organisation.getId(),

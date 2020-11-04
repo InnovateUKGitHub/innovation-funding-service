@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -131,7 +130,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
 
-        Mockito.verify(inviteService, times(1)).getPendingInvitationsByApplicationId(applicationId);
+        verify(inviteService, times(1)).getPendingInvitationsByApplicationId(applicationId);
     }
 
     @Test
@@ -187,7 +186,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
 
-        Mockito.verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
+        verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
     }
 
     @Test
@@ -237,7 +236,6 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(organisations));
-        when(financeLinksUtil.financesLink(leadOrganisation, Collections.singletonList(processRole), user, application, competition)).thenReturn(Optional.of(financeLinkUrl));
 
         ApplicationFundingBreakdownViewModel model = populator.populateFromProject(project, user);
 
@@ -249,7 +247,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
 
-        Mockito.verifyZeroInteractions(inviteService);
+        verifyZeroInteractions(inviteService);
+        verifyZeroInteractions(financeLinksUtil);
     }
 
 }
