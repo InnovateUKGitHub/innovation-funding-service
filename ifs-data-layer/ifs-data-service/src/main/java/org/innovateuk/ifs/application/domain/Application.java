@@ -13,6 +13,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -98,6 +99,9 @@ public class Application implements ProcessActivity {
 
     @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
     private Project project;
+
+    @OneToOne(mappedBy = "application", fetch = FetchType.LAZY)
+    private ProjectToBeCreated projectToBeCreated;
 
     public Application() {
     }
@@ -442,5 +446,13 @@ public class Application implements ProcessActivity {
 
     public void setCompanyPrimaryFocus(CompanyPrimaryFocus companyPrimaryFocus) {
         this.companyPrimaryFocus = companyPrimaryFocus;
+    }
+
+    public ProjectToBeCreated getProjectToBeCreated() {
+        return projectToBeCreated;
+    }
+
+    public void setProjectToBeCreated(ProjectToBeCreated projectToBeCreated) {
+        this.projectToBeCreated = projectToBeCreated;
     }
 }
