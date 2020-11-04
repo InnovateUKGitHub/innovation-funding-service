@@ -222,7 +222,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         Notification notification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", user.getName(),
