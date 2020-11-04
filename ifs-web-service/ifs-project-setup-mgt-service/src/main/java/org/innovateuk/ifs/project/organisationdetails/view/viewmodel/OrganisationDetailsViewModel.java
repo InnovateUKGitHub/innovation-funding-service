@@ -102,7 +102,7 @@ public class OrganisationDetailsViewModel {
         return ktpCompetition;
     }
 
-    public boolean isKnowledgeBase(OrganisationResource organisation) {
+    private boolean isKnowledgeBase(OrganisationResource organisation) {
         return organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.KNOWLEDGE_BASE);
     }
 }
