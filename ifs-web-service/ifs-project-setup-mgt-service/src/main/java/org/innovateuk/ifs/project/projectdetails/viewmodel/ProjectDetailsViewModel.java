@@ -141,7 +141,6 @@ public class ProjectDetailsViewModel {
 
     public boolean isIfsAdministrator() {
         return userResource.hasRole(IFS_ADMINISTRATOR);
-
     }
 
     public String getLocationForPartnerOrganisation(Long organisationId) {
