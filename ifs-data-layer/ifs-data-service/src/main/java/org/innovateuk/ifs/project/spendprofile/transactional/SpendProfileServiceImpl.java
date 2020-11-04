@@ -170,7 +170,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                         )
                 )
                 .andOnSuccess(project -> {
-                    if (!competitionHasSpendProfileStage(project)) {
+                    if (!competitionHasSpendProfileStage(project) || isProjectKtp.test(project)) {
                         List<ServiceResult<Void>> markAsCompleteResults = project.getPartnerOrganisations()
                                 .stream()
                                 .map(po -> markSpendProfileComplete(ProjectOrganisationCompositeId.id(project.getId(), po.getOrganisation().getId())))
@@ -187,8 +187,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return project.getApplication()
                 .getCompetition()
                 .getProjectSetupStages()
-                .contains(ProjectSetupStage.SPEND_PROFILE) ||
-                !isProjectKtp.test(project);
+                .contains(ProjectSetupStage.SPEND_PROFILE);
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
