@@ -18,9 +18,7 @@
         <p class="govuk-body" th:if="${model.ktpCompetition}">This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.</p>
 
         <th:block th:unless="${model.summaries.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-            <h3 class="govuk-heading-m">Finances summary</h3>
-            <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
-
+            <h3 class="govuk-heading-m">Finance summary</h3>
             <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
         </th:block>
         <h3 class="govuk-heading-m">Project cost breakdown</h3>

@@ -36,7 +36,7 @@ public class ProjectFinanceFundingLevelViewModel {
         this.partners =  finances.stream()
                 .map(pf -> new ProjectFinancePartnerFundingLevelViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getOrganisation().equals(lead.getId()),
                         pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), pf.getGrantClaimPercentage(),
-                        pf.getTotalOtherFunding(), totalGrant))
+                        pf.getTotalOtherFunding(), totalGrant, competition.isKtp()))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
         this.loanCompetition = competition.isLoan();
