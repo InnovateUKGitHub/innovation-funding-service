@@ -23,6 +23,7 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -31,6 +32,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -95,6 +97,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
+
+    @Autowired
+    private CostCategoryTypeStrategy costCategoryTypeStrategy;
+
+    @Autowired
+    private FinanceChecksGenerator financeChecksGenerator;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -249,6 +257,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             Project savedProject = projectRepository.save(project);
 
             return createProcessEntriesForNewProject(savedProject).
+                    andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(savedProject)).
                     andOnSuccess(() -> handleFundingTypeSpecificSetup(savedProject)).
                     andOnSuccess(() -> setCompetitionProjectSetupStartedDate(savedProject)).
                     andOnSuccessReturn(() -> projectMapper.mapToResource(savedProject));
@@ -284,7 +293,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 }
                 project.getProjectUsers().add(createProjectUserForRole(project, pr.getUser(), organisation, PROJECT_FINANCE_CONTACT));
             });
-
             Optional<ProcessRole> ktaRole = project.getApplication().getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).findAny();
             ktaRole.ifPresent(role -> project.setProjectMonitoringOfficer(new MonitoringOfficer(role.getUser(), project)));
         }
@@ -400,4 +408,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private List<ProjectUser> getProjectUsersByProjectId(Long projectId, List<ProjectParticipantRole> projectParticipantRoles) {
         return projectUserRepository.findByProjectIdAndRoleIsIn(projectId, projectParticipantRoles);
     }
+
+    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
+        List<Organisation> organisations = newProject.getOrganisations();
+
+        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
+                financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
+                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
+                                financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
+
+        return processAnyFailuresOrSucceed(financeCheckResults);
+    }
+
 }

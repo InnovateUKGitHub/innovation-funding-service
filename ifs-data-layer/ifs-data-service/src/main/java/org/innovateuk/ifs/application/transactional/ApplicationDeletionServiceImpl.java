@@ -7,10 +7,7 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -96,11 +93,11 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
 
     private ServiceResult<Void> sendNotification(Application application, List<ProcessRole> processRoles) {
 
-        List<NotificationTarget> notificationTargets = processRoles.stream()
+        List<NotificationMessage> notificationMessages = processRoles.stream()
                 .filter(ProcessRole::isCollaborator)
                 .map(ProcessRole::getUser)
                 .filter(User::isActive)
-                .map(applicant -> new UserNotificationTarget(applicant.getName(), applicant.getEmail()))
+                .map(applicant -> new NotificationMessage(new UserNotificationTarget(applicant.getName(), applicant.getEmail())))
                 .collect(Collectors.toList());
 
         User leadApplicant = processRoles.stream()
@@ -115,7 +112,7 @@ public class ApplicationDeletionServiceImpl extends RootTransactionalService imp
         notificationArguments.put("leadEmail", leadApplicant.getEmail());
 
         Notification notification = new Notification(systemNotificationSource,
-                notificationTargets,
+                notificationMessages,
                 Notifications.APPLICATION_DELETED,
                 notificationArguments);
 

@@ -143,7 +143,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
             notificationArguments.put("projectName", projectPartnerInvite.getTarget().getName());
             notificationArguments.put("leadOrganisationName", leadOrganisation.getOrganisation().getName());
 
-            Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+            Notification notification = new Notification(from, to, Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
 
             return notificationService.sendNotificationWithFlush(notification, EMAIL)
                     .andOnSuccessReturn(() -> projectPartnerInvite);
