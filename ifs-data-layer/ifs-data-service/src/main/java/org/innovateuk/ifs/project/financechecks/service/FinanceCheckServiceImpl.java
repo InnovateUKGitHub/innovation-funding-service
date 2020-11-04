@@ -327,9 +327,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         if (partnerOrganisation.isSuccess()) {
             PartnerOrganisation organisation = partnerOrganisation.getSuccess();
             if (isKtp.test(organisation) && organisation.isLeadOrganisation()) {
-                ViabilityResource viabilityResource = new ViabilityResource(ViabilityState.NOT_APPLICABLE,
-                        ViabilityRagStatus.UNSET);
-                return serviceSuccess(viabilityResource);
+                return buildNotApplicableViabilityResource();
             }
         }
 
@@ -338,6 +336,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 .andOnSuccess(viabilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildViabilityResource(viabilityProcess, projectFinance))
                 );
+    }
+
+    private ServiceResult<ViabilityResource> buildNotApplicableViabilityResource() {
+        ViabilityResource viabilityResource = new ViabilityResource(ViabilityState.NOT_APPLICABLE,
+                ViabilityRagStatus.UNSET);
+        return serviceSuccess(viabilityResource);
     }
 
 
@@ -352,8 +356,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         if (partnerOrganisation.isSuccess()) {
             PartnerOrganisation organisation = partnerOrganisation.getSuccess();
             if (isKtp.test(organisation) && !organisation.isLeadOrganisation()) {
-                EligibilityResource eligibilityResource = new EligibilityResource(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET);
-                return serviceSuccess(eligibilityResource);
+                return buildNotApplicableEligibilityResource();
             }
         }
         return partnerOrganisation
@@ -361,6 +364,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 .andOnSuccess(eligibilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildEligibilityResource(eligibilityProcess, projectFinance))
                 );
+    }
+
+    private ServiceResult<EligibilityResource> buildNotApplicableEligibilityResource() {
+        EligibilityResource eligibilityResource = new EligibilityResource(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET);
+        return serviceSuccess(eligibilityResource);
     }
 
     @Override

@@ -187,7 +187,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return project.getApplication()
                 .getCompetition()
                 .getProjectSetupStages()
-                .contains(ProjectSetupStage.SPEND_PROFILE);
+                .contains(ProjectSetupStage.SPEND_PROFILE) ||
+                !isProjectKtp.test(project);
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
@@ -274,10 +275,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             Calendar generatedDate) {
 
         return find(project(projectId), organisation(organisationId)).andOnSuccess((project, organisation) ->
-                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries, project, organisation, generatedBy, generatedDate)
-                        .andOnSuccess(() -> isProjectKtp.test(project) ?
-                                autoApproveSpendProfile(project, generatedBy) : serviceSuccess())
-                        .andOnSuccess(() -> sendFinanceContactEmail(project, organisation))
+                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries, project, organisation, generatedBy, generatedDate).andOnSuccess(() ->
+                        sendFinanceContactEmail(project, organisation)
+                )
         );
     }
 
@@ -285,18 +285,9 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
         List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findById(spendProfileCostCategorySummaries.getCostCategoryType().getId()).orElse(null);
-
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts,
-                spendProfileCosts, generatedBy, generatedDate, isProjectKtp.test(project));
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
         spendProfileRepository.save(spendProfile);
-
         return serviceSuccess();
-    }
-
-    private ServiceResult<Void> autoApproveSpendProfile(Project project, User user) {
-        return spendProfileWorkflowHandler.spendProfileApproved(project, user) ?
-                serviceSuccess() :
-                serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
     }
 
     private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {

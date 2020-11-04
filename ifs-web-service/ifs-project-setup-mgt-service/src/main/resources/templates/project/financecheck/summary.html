@@ -71,10 +71,10 @@
                 <dl class="standard-definition-list govuk-!-margin-bottom-0">
                     <dt>Project title:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.projectName}"></dd>
-                    <dt th:unless="${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP }">
+                    <dt th:unless="${model.financeCheckSummaryResource.ktp}">
                         Start date:
                     </dt>
-                    <dd th:unless=" ${model.financeCheckSummaryResource.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP }"
+                    <dd th:unless=" ${model.financeCheckSummaryResource.ktp }"
                         th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}">
                     </dd>
                     <dt>Duration:</dt>
