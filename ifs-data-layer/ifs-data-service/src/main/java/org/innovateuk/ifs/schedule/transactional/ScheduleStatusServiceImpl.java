@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.schedule.transactional;
 
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.schedule.domain.ScheduleStatus;
 import org.innovateuk.ifs.schedule.repository.ScheduleStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
@@ -23,19 +25,30 @@ public class ScheduleStatusServiceImpl implements ScheduleStatusService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void startJob(String jobName) {
+        clearTimedOutJobs();
         Optional<ScheduleStatus> scheduleStatus = scheduleStatusRepository.findByJobName(jobName);
-        scheduleStatus
-                .filter(status -> !status.isActive())
-                .orElseThrow(() -> new RuntimeException(String.format("Inactive job not found for name %s", jobName)))
-                .setActive(true);
+        if (scheduleStatus.isPresent()) {
+            throw new IFSRuntimeException(String.format("Error starting job %s another service may be running.", jobName));
+        }
+        scheduleStatusRepository.save(new ScheduleStatus(jobName));
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void clearTimedOutJobs() {
+        int timeoutMins = 5;
+        scheduleStatusRepository.deleteAll(
+                scheduleStatusRepository.findByCreatedOnBefore(ZonedDateTime.now().minusMinutes(timeoutMins))
+        );
     }
 
     @Override
     @Transactional
     public void endJob(String jobName) {
         Optional<ScheduleStatus> scheduleStatus = scheduleStatusRepository.findByJobName(jobName);
-        scheduleStatus
-                .orElseThrow(() -> new RuntimeException(String.format("Job not found for name %s", jobName)))
-                .setActive(false);
+        if (!scheduleStatus.isPresent()) {
+            throw new IFSRuntimeException(String.format("Error ending job %s ", jobName));
+        }
+        scheduleStatusRepository.delete(scheduleStatus.get());
     }
 }

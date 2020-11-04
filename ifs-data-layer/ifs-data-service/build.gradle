@@ -137,6 +137,9 @@ dependencies {
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
     compile 'com.docusign:docusign-esign-java:3.2.0'
+    compile "com.newrelic.agent.java:newrelic-api:6.1.0"
+    compile "com.hubspot.slack:slack-base:1.12"
+    compile "com.hubspot.slack:slack-java-client:1.12"
 
     compile 'javax.mail:mail:1.4.7'
     compile "org.apache.httpcomponents:httpasyncclient"

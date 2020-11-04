@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -171,7 +170,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Map<String, Object> globalArgs = createGlobalArgsForStakeholderInvite(stakeholderInvite, competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                singletonList(createStakeholderInviteNotificationTarget(stakeholderInvite)),
+                createStakeholderInviteNotificationTarget(stakeholderInvite),
                 Notifications.STAKEHOLDER_INVITE, globalArgs);
 
         ServiceResult<Void> stakeholderInviteEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -250,7 +249,7 @@ public class CompetitionSetupStakeholderServiceImpl extends BaseTransactionalSer
         Map<String, Object> globalArgs = createGlobalArgsForAddStakeholder(competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                singletonList(createAddStakeholderNotificationTarget(stakeholder)),
+                createAddStakeholderNotificationTarget(stakeholder),
                 Notifications.ADD_STAKEHOLDER, globalArgs);
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);

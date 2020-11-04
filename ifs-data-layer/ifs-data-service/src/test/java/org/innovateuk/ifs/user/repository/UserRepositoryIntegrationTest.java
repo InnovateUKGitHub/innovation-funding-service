@@ -6,22 +6,24 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.controller.UserController.DEFAULT_USER_SORT;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.getByName;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.junit.Assert.*;
@@ -158,5 +160,86 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(2, users.size());
         assertEquals(getFelixWilson().getId(), users.get(0).getId());
         assertEquals(getPaulPlum().getId(), users.get(1).getId());
+    }
+
+    @Test
+    public void findDistinctUser() {
+        loginIfsAdmin();
+
+        String filter = "carolyn";
+        Pageable pageable = PageRequest.of(0, 20, DEFAULT_USER_SORT);
+        Set<Role> queryRoles = externalRoles()
+                .stream()
+                .map(r -> getByName(r.getName()))
+                .collect(toSet());
+
+        List<User> existing = repository.findDistinctByEmailContainingAndStatusAndRolesIn(filter,
+                ACTIVE, queryRoles, pageable).getContent();
+
+        assertTrue(existing.isEmpty());
+
+        Set<Role> userRoles = new HashSet<>(Arrays.asList(APPLICANT, ASSESSOR, STAKEHOLDER));
+        User user = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Carolyn")
+                .withLastName("Reed")
+                .withRoles(userRoles)
+                .withProfileId()
+                .withEmailAddress("carolyn.reed@example.com")
+                .withStatus(ACTIVE)
+                .build();
+        repository.save(user);
+
+        List<User> result = repository.findDistinctByEmailContainingAndStatusAndRolesIn(
+                filter, ACTIVE, queryRoles, pageable).getContent();
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void findDistinctUsers() {
+        loginIfsAdmin();
+
+        String filter = "carolyn";
+        Pageable pageable = PageRequest.of(0, 20, DEFAULT_USER_SORT);
+        Set<Role> queryRoles = externalRoles()
+                .stream()
+                .map(r -> getByName(r.getName()))
+                .collect(toSet());
+
+        List<User> existing = repository.findDistinctByEmailContainingAndStatusAndRolesIn(filter,
+                ACTIVE, queryRoles, pageable).getContent();
+
+        assertTrue(existing.isEmpty());
+
+        Set<Role> userRoles = new HashSet<>(Arrays.asList(APPLICANT, ASSESSOR, STAKEHOLDER));
+        User user1 = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Carolyn")
+                .withLastName("Reed")
+                .withRoles(userRoles)
+                .withProfileId()
+                .withEmailAddress("carolyn.reed@example.com")
+                .withStatus(ACTIVE)
+                .build();
+        User user2 = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Carolyn")
+                .withLastName("Rees")
+                .withRoles(userRoles)
+                .withProfileId()
+                .withEmailAddress("carolyn.rees@example.com")
+                .withStatus(ACTIVE)
+                .build();
+        repository.save(user1);
+        repository.save(user2);
+
+        List<User> result = repository.findDistinctByEmailContainingAndStatusAndRolesIn(
+                filter, ACTIVE, queryRoles, pageable).getContent();
+
+        assertEquals(2, result.size());
     }
 }
