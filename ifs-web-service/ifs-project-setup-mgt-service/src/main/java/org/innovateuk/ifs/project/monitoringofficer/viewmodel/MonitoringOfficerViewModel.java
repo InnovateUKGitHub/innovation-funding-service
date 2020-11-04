@@ -12,7 +12,7 @@ import static java.util.Collections.emptyList;
 /**
  * View model to back the Monitoring Officer page
  */
-public class LegacyMonitoringOfficerViewModel {
+public class MonitoringOfficerViewModel {
 
     private Long projectId;
     private String projectTitle;
@@ -30,14 +30,14 @@ public class LegacyMonitoringOfficerViewModel {
     private boolean collaborativeProject;
     private boolean ktpCompetition;
 
-    public LegacyMonitoringOfficerViewModel(ProjectResource project,
-                                            String area,
-                                            String projectManagerName,
-                                            List<String> partnerOrganisationNames,
-                                            String leadOrganisationName,
-                                            CompetitionSummaryResource competitionSummary,
-                                            boolean editable,
-                                            boolean ktpCompetition) {
+    public MonitoringOfficerViewModel(ProjectResource project,
+                                      String area,
+                                      String projectManagerName,
+                                      List<String> partnerOrganisationNames,
+                                      String leadOrganisationName,
+                                      CompetitionSummaryResource competitionSummary,
+                                      boolean editable,
+                                      boolean ktpCompetition) {
         this.projectId = project.getId();
         this.projectTitle = project.getName();
         this.applicationId = project.getApplication();

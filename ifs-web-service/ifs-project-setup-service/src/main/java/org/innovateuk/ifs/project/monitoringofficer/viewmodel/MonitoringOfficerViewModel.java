@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * View model to back the Partners' Assigned Monitoring Officer page
  */
-public class LegacyMonitoringOfficerViewModel {
+public class MonitoringOfficerViewModel {
 
     private Long projectId;
     private Long applicationId;
@@ -20,9 +20,9 @@ public class LegacyMonitoringOfficerViewModel {
     private String monitoringOfficerPhoneNumber;
     private boolean ktpCompetition;
 
-    public LegacyMonitoringOfficerViewModel(ProjectResource project,
-                                            Optional<MonitoringOfficerResource> monitoringOfficer,
-                                            boolean ktpCompetition) {
+    public MonitoringOfficerViewModel(ProjectResource project,
+                                      Optional<MonitoringOfficerResource> monitoringOfficer,
+                                      boolean ktpCompetition) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();

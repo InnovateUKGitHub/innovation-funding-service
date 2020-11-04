@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,8 +48,8 @@ public class LegacyMonitoringOfficerControllerMockMvcTest extends BaseController
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        LegacyMonitoringOfficerViewModel viewModel =
-                (LegacyMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        MonitoringOfficerViewModel viewModel =
+                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
@@ -74,8 +74,8 @@ public class LegacyMonitoringOfficerControllerMockMvcTest extends BaseController
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
-        LegacyMonitoringOfficerViewModel viewModel =
-                (LegacyMonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
+        MonitoringOfficerViewModel viewModel =
+                (MonitoringOfficerViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(Long.valueOf(123), viewModel.getProjectId());
         assertEquals(Long.valueOf(345), viewModel.getApplicationId());
