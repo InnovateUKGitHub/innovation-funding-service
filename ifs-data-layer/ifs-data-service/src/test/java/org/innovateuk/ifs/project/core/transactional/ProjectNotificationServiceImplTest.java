@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -83,12 +84,14 @@ public class ProjectNotificationServiceImplTest {
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
             assertEquals(3, notification.getTo().size());
             assertThat(notification.getTo(), containsInAnyOrder(
-                    allOf(hasProperty("emailAddress", equalTo(leadUser.getEmail())),
-                            hasProperty("name", equalTo(leadUser.getName()))),
-                    allOf(hasProperty("emailAddress", equalTo(collaborator.getEmail())),
-                            hasProperty("name", equalTo(collaborator.getName()))),
-                    allOf(hasProperty("emailAddress", equalTo(ktaUser.getEmail())),
-                            hasProperty("name", equalTo(ktaUser.getName())))));
+                    allOf(hasProperty("to",
+                            equalTo(new UserNotificationTarget(leadUser.getName(), leadUser.getEmail())))),
+                    allOf(hasProperty("to",
+                            equalTo(new UserNotificationTarget(collaborator.getName(), collaborator.getEmail())))),
+                    allOf(hasProperty("to",
+                            equalTo(new UserNotificationTarget(ktaUser.getName(), ktaUser.getEmail()))))
+                    )
+            );
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }
@@ -134,8 +137,8 @@ public class ProjectNotificationServiceImplTest {
 
         verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(1, notification.getTo().size());
-            assertEquals(ktaUser.getEmail(), notification.getTo().get(0).getEmailAddress());
-            assertEquals(ktaUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(ktaUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+            assertEquals(ktaUser.getName(), notification.getTo().get(0).getTo().getName());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }

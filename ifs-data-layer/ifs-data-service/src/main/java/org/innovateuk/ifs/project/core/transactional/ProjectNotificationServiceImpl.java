@@ -47,11 +47,11 @@ public class ProjectNotificationServiceImpl implements ProjectNotificationServic
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
                     NotificationSource from = systemNotificationSource;
-                    List<NotificationTarget> notificationTargets = application.getProcessRoles().stream()
+                    List<NotificationMessage> notificationTargets = application.getProcessRoles().stream()
                             .filter(processRole -> processRole.isLeadApplicantOrCollaborator() || processRole.isKta())
                             .map(ProcessRole::getUser)
                             .filter(User::isActive)
-                            .map(applicant -> new UserNotificationTarget(applicant.getName(), applicant.getEmail()))
+                            .map(applicant -> new NotificationMessage(new UserNotificationTarget(applicant.getName(), applicant.getEmail())))
                             .collect(Collectors.toList());
 
                     Competition competition = application.getCompetition();
@@ -61,7 +61,7 @@ public class ProjectNotificationServiceImpl implements ProjectNotificationServic
                 });
     }
 
-    private Notification projectSetupNotification(NotificationSource from, List<NotificationTarget> notificationTargets,
+    private Notification projectSetupNotification(NotificationSource from, List<NotificationMessage> notificationTargets,
                                                   Competition competition) {
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("competitionNumber", competition.getId());
