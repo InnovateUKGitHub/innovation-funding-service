@@ -77,6 +77,11 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     }
 
     private void runAsAllowedRoles(EnumSet<Role> allowedRoles, Runnable serviceCall) {
+        if (allowedRoles.contains(Role.ASSESSOR)) {
+            allowedRoles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        } else if (allowedRoles.contains(Role.PROJECT_FINANCE) || allowedRoles.contains(Role.IFS_ADMINISTRATOR)) {
+            allowedRoles.add(Role.SYSTEM_MAINTAINER);
+        }
         allowedRoles.forEach(roleType -> runAsRole(roleType, serviceCall));
         complementOf(allowedRoles).forEach(roleType -> assertAccessDeniedAsRole(roleType, serviceCall, () -> {}));
     }

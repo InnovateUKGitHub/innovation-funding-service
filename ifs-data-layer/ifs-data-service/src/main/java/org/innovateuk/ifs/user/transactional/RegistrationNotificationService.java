@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -18,13 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -85,8 +82,7 @@ class RegistrationNotificationService {
     }
 
     private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
-        final List<NotificationTarget> to = singletonList(new UserNotificationTarget(user.getName(), user.getEmail()));
-        return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
+        return new Notification(systemNotificationSource, new UserNotificationTarget(user.getName(), user.getEmail()), Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
     }
 
     private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId) {

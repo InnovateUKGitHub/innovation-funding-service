@@ -114,7 +114,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
         Notification notification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 Notifications.APPLICATION_INELIGIBLE,
                 asMap("subject", applicationIneligibleSendResource.getSubject(),
                         "applicationName", application.getName(),
@@ -136,7 +136,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
         Notification notification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                 asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
@@ -212,13 +212,13 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     }
 
     private void sendNotificationToLeadApplicant(NotificationSource from, NotificationTarget to, Map<String, Object> notificationArguments) {
-        Notification notification = new Notification(from, singletonList(to), Notifications.REOPEN_APPLICATION_LEAD, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.REOPEN_APPLICATION_LEAD, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
 
     }
 
     private void sendNotificationToPartner(NotificationSource from, NotificationTarget to, Map<String, Object> notificationArguments) {
-        Notification notification = new Notification(from, singletonList(to), Notifications.REOPEN_APPLICATION_PARTNER, notificationArguments);
+        Notification notification = new Notification(from, to, Notifications.REOPEN_APPLICATION_PARTNER, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
@@ -231,7 +231,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
         return new Notification(
                 from,
-                singletonList(to),
+                to,
                 Notifications.LOANS_APPLICATION_SUBMITTED,
                 notificationArguments
         );
@@ -243,7 +243,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
         return new Notification(
                 from,
-                singletonList(to),
+                to,
                 Notifications.HORIZON_2020_APPLICATION_SUBMITTED,
                 notificationArguments
         );
@@ -257,7 +257,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
         return new Notification(
                 from,
-                singletonList(to),
+                to,
                 Notifications.APPLICATION_SUBMITTED,
                 notificationArguments
         );
