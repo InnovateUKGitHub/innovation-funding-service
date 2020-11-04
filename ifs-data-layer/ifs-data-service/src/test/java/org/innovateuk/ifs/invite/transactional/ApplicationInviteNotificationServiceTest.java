@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.resource.NotificationMessage;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -326,7 +327,7 @@ public class ApplicationInviteNotificationServiceTest {
         );
 
         return createLambdaMatcher(notification -> {
-            assertEquals(singletonList(new UserNotificationTarget(invite.getName(), invite.getEmail())), notification.getTo());
+            assertEquals(singletonList(new NotificationMessage(new UserNotificationTarget(invite.getName(), invite.getEmail()))), notification.getTo());
             assertEquals(INVITE_COLLABORATOR, notification.getMessageKey());
             assertThat(notification.getGlobalArguments()).containsKey("inviteUrl");
             assertThat(notification.getGlobalArguments()).contains(expectedNotificationArguments.entrySet().toArray(new Map.Entry[0]));

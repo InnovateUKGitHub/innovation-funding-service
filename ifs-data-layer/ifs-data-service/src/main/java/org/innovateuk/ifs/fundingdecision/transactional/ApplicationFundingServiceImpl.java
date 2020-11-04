@@ -16,10 +16,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -45,7 +42,6 @@ import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundin
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
@@ -207,7 +203,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
-        List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(
+        List<NotificationMessage> notificationMessages = simpleMap(
                 notificationTargetsByApplicationId,
                 pair -> {
                     Long applicationId = pair.getKey();
@@ -222,14 +218,11 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                         averageAssessorScore.ifPresent(score -> perNotificationTargetArguments.put("averageAssessorScore", "Average assessor score: " + score.getScore() + "%"));
                     }
 
-                    return Pair.of(pair.getValue(), perNotificationTargetArguments);
+                    return new NotificationMessage(pair.getValue(), perNotificationTargetArguments);
                 });
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
-        List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
-
-        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
-        return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
+        return new Notification(systemNotificationSource, notificationMessages, notificationType, globalArguments);
     }
 
     private List<ServiceResult<Pair<Long, NotificationTarget>>> getApplicantNotificationTargets(List<Long> applicationIds) {
