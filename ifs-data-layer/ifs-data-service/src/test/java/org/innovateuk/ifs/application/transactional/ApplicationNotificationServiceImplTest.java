@@ -102,8 +102,8 @@ public class ApplicationNotificationServiceImplTest {
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
             assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
             assertEquals(1, notification.getTo().size());
-            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
-            assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
             assertEquals(APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
@@ -126,8 +126,8 @@ public class ApplicationNotificationServiceImplTest {
             assertEquals(competition.submissionDateDisplay(), notification.getGlobalArguments().get("compCloseDate"));
             assertEquals(EARLY_METRICS_URL, notification.getGlobalArguments().get("earlyMetricsUrl"));
             assertEquals(1, notification.getTo().size());
-            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
-            assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
             assertEquals(LOANS_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
@@ -147,8 +147,8 @@ public class ApplicationNotificationServiceImplTest {
         verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(1, notification.getTo().size());
-            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getEmailAddress());
-            assertEquals(leadUser.getName(), notification.getTo().get(0).getName());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
             assertEquals(HORIZON_2020_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
@@ -197,7 +197,7 @@ public class ApplicationNotificationServiceImplTest {
         List<Notification> notifications = asList(
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(0)),
+                        notificationTargets.get(0),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
@@ -207,7 +207,7 @@ public class ApplicationNotificationServiceImplTest {
                 ),
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(1)),
+                        notificationTargets.get(1),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
@@ -217,7 +217,7 @@ public class ApplicationNotificationServiceImplTest {
                 ),
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(2)),
+                        notificationTargets.get(2),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
@@ -302,7 +302,7 @@ public class ApplicationNotificationServiceImplTest {
         List<Notification> notifications = asList(
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(0)),
+                        notificationTargets.get(0),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
@@ -312,7 +312,7 @@ public class ApplicationNotificationServiceImplTest {
                 ),
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(1)),
+                        notificationTargets.get(1),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
@@ -322,7 +322,7 @@ public class ApplicationNotificationServiceImplTest {
                 ),
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(2)),
+                        notificationTargets.get(2),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
@@ -408,7 +408,7 @@ public class ApplicationNotificationServiceImplTest {
         List<Notification> notifications = asList(
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(0)),
+                        notificationTargets.get(0),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
                                 "applicationName", applications.get(0).getName(),
@@ -418,7 +418,7 @@ public class ApplicationNotificationServiceImplTest {
                 ),
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(1)),
+                        notificationTargets.get(1),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
                                 "applicationName", applications.get(1).getName(),
@@ -428,7 +428,7 @@ public class ApplicationNotificationServiceImplTest {
                 ),
                 new Notification(
                         systemNotificationSourceMock,
-                        singletonList(notificationTargets.get(2)),
+                        notificationTargets.get(2),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
                                 "applicationName", applications.get(2).getName(),
