@@ -19,11 +19,14 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
-        <p class="govuk-body" th:if="${model.userLeadPartner && !model.ktpCompetition}"
-           th:text="${model.procurementCompetition ? 'You must complete these details.' : 'As the lead you must complete these details on behalf of the overall project.'}">..you</p>
 
-        <th:block th:if="${model.userLeadPartner && model.ktpCompetition}">
-            <p class="govuk-body">You provided these details for the overall project.</p>
+        <th:block th:if="${model.userLeadPartner}">
+            <th:block th:if="${model.ktpCompetition}">
+                <p class="govuk-body">You provided these details for the overall project.</p>
+            </th:block>
+
+            <p class="govuk-body" th:unless="${model.ktpCompetition}"
+               th:text="${model.procurementCompetition ? 'You must complete these details.' : 'As the lead you must complete these details on behalf of the overall project.'}">..you</p>
         </th:block>
 
         <p class="govuk-body" th:unless="${model.userLeadPartner}"
