@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.ApplicationConfiguration;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -135,6 +136,109 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     @InjectMocks
     @Spy
     private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
+
+
+    @Test
+    public void generateKtpSpendProfile() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData()
+                .withKtp(true)
+                .build();
+
+        Project project = generateSpendProfileData.getProject();
+        Organisation knowledgeBase = generateSpendProfileData.getOrganisation1();
+        Organisation businessPartner = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation KBPartnerOrganisation = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation = project.getPartnerOrganisations().get(1);
+        CostCategoryType costCategoryType1 = generateSpendProfileData.getCostCategoryType1();
+        CostCategoryType costCategoryType2 = generateSpendProfileData.getCostCategoryType2();
+        CostCategory type1Cat1 = generateSpendProfileData.type1Cat1;
+        CostCategory type1Cat2 = generateSpendProfileData.type1Cat2;
+        CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, knowledgeBase, businessPartner);
+
+        when(viabilityWorkflowHandler.getState(KBPartnerOrganisation)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(viabilityWorkflowHandler.getState(partnerOrganisation)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(KBPartnerOrganisation)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandler.getState(partnerOrganisation)).thenReturn(EligibilityState.NOT_APPLICABLE);
+
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
+        when(spendProfileWorkflowHandler.projectHasNoPendingPartners(project)).thenReturn(true);
+        when(spendProfileWorkflowHandler.spendProfileGenerated(eq(project), any())).thenReturn(true);
+        User financeContactUser1 = newUser().withEmailAddress("z@abc.com").withFirstName("A").withLastName("Z").build();
+        ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
+        User financeContactUser2 = newUser().withEmailAddress("a@abc.com").withFirstName("A").withLastName("A").build();
+        ProjectUser financeContact2 = newProjectUser().withUser(financeContactUser2).build();
+
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
+                knowledgeBase.getId())).thenReturn(Optional.empty());
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(),
+                businessPartner.getId())).thenReturn(Optional.empty());
+
+        User generatedBy = generateSpendProfileData.getUser();
+
+        List<Cost> expectedOrganisation1EligibleCosts = asList(
+                new Cost("100").withCategory(type1Cat1),
+                new Cost("200").withCategory(type1Cat2));
+
+        List<Cost> expectedOrganisation1SpendProfileFigures = asList(
+                new Cost("34").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("33").withCategory(type1Cat1).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("33").withCategory(type1Cat1).withTimePeriod(2, MONTH, 1, MONTH),
+                new Cost("68").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("66").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("66").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
+
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile expectedOrganisation1Profile = new SpendProfile(knowledgeBase, project, costCategoryType1,
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
+
+        List<Cost> expectedOrganisation2EligibleCosts = singletonList(
+                new Cost("301").withCategory(type2Cat1));
+
+        List<Cost> expectedOrganisation2SpendProfileFigures = asList(
+                new Cost("101").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("100").withCategory(type2Cat1).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
+
+        SpendProfile expectedOrganisation2Profile = new SpendProfile(businessPartner, project, costCategoryType2,
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false);
+
+        when(spendProfileRepository.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
+        when(spendProfileRepository.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
+
+        when(projectUsersHelper.getFinanceContact(project.getId(), knowledgeBase.getId()))
+                .thenReturn(Optional.of(financeContact1));
+        when(projectUsersHelper.getFinanceContact(project.getId(), businessPartner.getId()))
+                .thenReturn(Optional.of(financeContact2));
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard",
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1"
+        );
+
+        NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
+        NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
+
+        Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+        Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
+
+        when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
+
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isSuccess());
+
+        verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation1Profile));
+        verify(spendProfileRepository).save(spendProfileExpectations(expectedOrganisation2Profile));
+
+        verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationService).sendNotificationWithFlush(notification2, EMAIL);
+    }
 
     @Test
     public void generateSpendProfile() {
@@ -1286,6 +1390,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         private CostCategory sbriPilotCategoryOtherCosts;
         private CostCategory sbriPilotCategoryVat;
         private User user;
+        private boolean isKtp = false;
 
         public Project getProject() {
             return project;
@@ -1315,6 +1420,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             return user;
         }
 
+        public GenerateSpendProfileData withKtp(boolean ktp) {
+            isKtp = ktp;
+            return this;
+        }
+
         public GenerateSpendProfileData build() {
 
             UserResource loggedInUser = newUserResource().build();
@@ -1331,6 +1441,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             Competition competition = newCompetition()
                     .withName("Competition 1")
                     .withProjectStages(newProjectStages().withProjectSetupStage(ProjectSetupStage.SPEND_PROFILE).build(1))
+                    .withFundingType(this.isKtp ? FundingType.KTP : FundingType.GRANT)
                     .build();
 
             Application application = newApplication()

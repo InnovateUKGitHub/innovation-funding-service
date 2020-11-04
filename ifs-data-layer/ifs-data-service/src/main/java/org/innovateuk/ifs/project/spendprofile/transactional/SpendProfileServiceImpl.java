@@ -197,6 +197,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
+        if (project.getApplication().getCompetition().isKtp()) {
+            partnerOrganisations = partnerOrganisations.stream()
+                    .filter(org -> !org.isLeadOrganisation())
+                    .collect(toList());
+        }
+
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
 
@@ -218,6 +224,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        if (project.getApplication().getCompetition().isKtp()) {
+            partnerOrganisations = partnerOrganisations.stream()
+                    .filter(PartnerOrganisation::isLeadOrganisation)
+                    .collect(toList());
+        }
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
