@@ -77,6 +77,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl.isPartnerOrgOfTypeKB;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -145,7 +146,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
-    Predicate<Project> isProjectKtp = project ->
+    private static final Predicate<Project> isProjectKtp = project ->
             project.getApplication().getCompetition().isKtp();
 
     @Override
@@ -203,7 +204,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         if (isProjectKtp.test(project)) {
             partnerOrganisations = partnerOrganisations.stream()
-                    .filter(org -> !org.isLeadOrganisation())
+                    .filter(partnerOrganisation -> !isPartnerOrgOfTypeKB.test(partnerOrganisation))
                     .collect(toList());
         }
 
@@ -231,7 +232,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         if (isProjectKtp.test(project)) {
             partnerOrganisations = partnerOrganisations.stream()
-                    .filter(PartnerOrganisation::isLeadOrganisation)
+                    .filter(isPartnerOrgOfTypeKB)
                     .collect(toList());
         }
 

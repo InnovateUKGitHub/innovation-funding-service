@@ -14,6 +14,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -107,8 +108,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
-    Predicate<PartnerOrganisation> isKtp = partnerOrganisation -> partnerOrganisation.getProject()
+    private static final Predicate<PartnerOrganisation> isPartnerOrgForKtpComp = partnerOrganisation -> partnerOrganisation.getProject()
             .getApplication().getCompetition().getFundingType().equals(FundingType.KTP);
+
+    public static final Predicate<PartnerOrganisation> isPartnerOrgOfTypeKB = partnerOrganisation -> partnerOrganisation.getOrganisation()
+            .getOrganisationTypeEnum().equals(OrganisationTypeEnum.KNOWLEDGE_BASE);
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -325,8 +329,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         ServiceResult<PartnerOrganisation> partnerOrganisation = getPartnerOrganisation(projectId, organisationId);
         if (partnerOrganisation.isSuccess()) {
-            PartnerOrganisation organisation = partnerOrganisation.getSuccess();
-            if (isKtp.test(organisation) && organisation.isLeadOrganisation()) {
+            PartnerOrganisation partnerOrg = partnerOrganisation.getSuccess();
+            if (isPartnerOrgExemptFromViabilityChecks(partnerOrg)) {
                 return buildNotApplicableViabilityResource();
             }
         }
@@ -336,6 +340,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 .andOnSuccess(viabilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildViabilityResource(viabilityProcess, projectFinance))
                 );
+    }
+
+    private boolean isPartnerOrgExemptFromViabilityChecks(PartnerOrganisation partnerOrg) {
+        return isPartnerOrgForKtpComp.test(partnerOrg) && isPartnerOrgOfTypeKB.test(partnerOrg);
     }
 
     private ServiceResult<ViabilityResource> buildNotApplicableViabilityResource() {
@@ -355,7 +363,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         if (partnerOrganisation.isSuccess()) {
             PartnerOrganisation organisation = partnerOrganisation.getSuccess();
-            if (isKtp.test(organisation) && !organisation.isLeadOrganisation()) {
+            if (isPartnerOrgExemptFromEligibilityChecks(organisation)) {
                 return buildNotApplicableEligibilityResource();
             }
         }
@@ -364,6 +372,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 .andOnSuccess(eligibilityProcess -> getProjectFinance(projectId, organisationId)
                         .andOnSuccess(projectFinance -> buildEligibilityResource(eligibilityProcess, projectFinance))
                 );
+    }
+
+    private boolean isPartnerOrgExemptFromEligibilityChecks(PartnerOrganisation partnerOrg) {
+        return isPartnerOrgForKtpComp.test(partnerOrg) && !isPartnerOrgOfTypeKB.test(partnerOrg);
     }
 
     private ServiceResult<EligibilityResource> buildNotApplicableEligibilityResource() {
