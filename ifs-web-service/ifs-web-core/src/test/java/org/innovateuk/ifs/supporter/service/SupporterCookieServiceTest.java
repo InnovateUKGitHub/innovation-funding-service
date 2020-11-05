@@ -68,7 +68,7 @@ public class SupporterCookieServiceTest  extends BaseServiceUnitTest<SupporterCo
         long wordCount = 250;
 
         SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
-                .withComments(Stream.generate(() -> "ABCDEFGHIJKLMNOPQRSTUVWXYZ ").limit(wordCount).collect(Collectors.joining()))
+                .withComments(Stream.generate(() -> "ABCDEFGHIJKLMNOPQ ").limit(wordCount).collect(Collectors.joining()))
                 .build();
 
         when(cookieUtil.getCookieValue(request, SUPPORTER_PREVIOUS_RESPONSE)).thenReturn(JsonUtil.getSerializedObject(supporterAssignmentResource));
