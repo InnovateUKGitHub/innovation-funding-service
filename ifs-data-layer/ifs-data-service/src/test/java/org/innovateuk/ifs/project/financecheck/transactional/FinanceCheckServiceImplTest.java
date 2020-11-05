@@ -1068,7 +1068,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getViabilityForKtpAsKB() {
 
-        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null, true, true);
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.UNSET, null, null, true, true);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);

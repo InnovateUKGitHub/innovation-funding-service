@@ -64,7 +64,6 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -77,7 +76,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl.isPartnerOrgOfTypeKB;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -146,9 +144,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
-    private static final Predicate<Project> isProjectKtp = project ->
-            project.getApplication().getCompetition().isKtp();
-
     @Override
     @Transactional
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -171,7 +166,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                         )
                 )
                 .andOnSuccess(project -> {
-                    if (!competitionHasSpendProfileStage(project) || isProjectKtp.test(project)) {
+                    if (!competitionHasSpendProfileStage(project)) {
                         List<ServiceResult<Void>> markAsCompleteResults = project.getPartnerOrganisations()
                                 .stream()
                                 .map(po -> markSpendProfileComplete(ProjectOrganisationCompositeId.id(project.getId(), po.getOrganisation().getId())))
@@ -202,12 +197,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
-        if (isProjectKtp.test(project)) {
-            partnerOrganisations = partnerOrganisations.stream()
-                    .filter(partnerOrganisation -> !isPartnerOrgOfTypeKB.test(partnerOrganisation))
-                    .collect(toList());
-        }
-
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
 
@@ -229,12 +218,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        if (isProjectKtp.test(project)) {
-            partnerOrganisations = partnerOrganisations.stream()
-                    .filter(isPartnerOrgOfTypeKB)
-                    .collect(toList());
-        }
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));

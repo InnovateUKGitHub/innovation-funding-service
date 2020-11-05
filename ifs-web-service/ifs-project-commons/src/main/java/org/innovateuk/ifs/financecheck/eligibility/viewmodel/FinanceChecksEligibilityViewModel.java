@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.math.BigDecimal;
@@ -40,6 +41,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
     private final boolean isKtp;
+    private final boolean hasSpendProfileStage;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -78,6 +80,7 @@ public class FinanceChecksEligibilityViewModel {
         this.canEditAcademicFinances = canEditAcademicFinances;
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.isKtp = competition.isKtp();
+        this.hasSpendProfileStage = competition.getProjectSetupStages().contains(ProjectSetupStage.SPEND_PROFILE);
     }
 
     public boolean isApproved() {
@@ -239,6 +242,10 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isKtp(){
         return isKtp;
+    }
+
+    public boolean isHasSpendProfileStage(){
+        return hasSpendProfileStage;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

@@ -169,29 +169,30 @@
         <form method="POST"
               th:action="@{/project/{projectId}/finance-check(projectId=${model.financeCheckSummaryResource.projectId})}"
               th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
-            <h3 class="govuk-heading-m" th:text="${model.financeCheckSummaryResource.ktp} ?
-                'Approve finance checks' : 'Generate spend profile'"></h3>
+            <h3 class="govuk-heading-m" th:text="${model.hasSpendProfileStage} ?
+                 'Generate spend profile' : 'Approve finance checks' "></h3>
             <p class="govuk-body"
-               th:text="${model.financeCheckSummaryResource.ktp} ?
-            'You must approve the viability and eligibility sections before you can generate the grant offer letter.' :
-                 'To generate your spend profile, the viability and eligibility sections must be approved for all partners. This will create their individual flat spend profiles. These spend profiles can be edited during the project.'"></p>
+               th:text="${model.hasSpendProfileStage} ?
+                 'To generate your spend profile, the viability and eligibility sections must be approved for all partners. This will create their individual flat spend profiles. These spend profiles can be edited during the project.' :
+            'You must approve the viability and eligibility sections before you can generate the grant offer letter.'"></p>
             <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled"
-                    th:text="${model.financeCheckSummaryResource.ktp} ?
-                    'Approve finance checks':'Generate spend profile'"
+                    th:text="${model.hasSpendProfileStage} ?
+                    'Generate spend profile' : 'Approve finance checks'"
                     class="govuk-button generate-spend-profile-main-button">
             </button>
             <button th:unless="${model.showDisabledGenerateSpendProfilesButton}"
-                    th:if="${model.financeCheckSummaryResource.ktp}"
+                    th:unless="${model.hasSpendProfileStage}"
                     type="submit"
                     class="govuk-button generate-spend-profile-main-button">
                 Approve finance checks
             </button>
-            <a th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.financeCheckSummaryResource.ktp}"
+            <a th:unless="${model.showDisabledGenerateSpendProfilesButton}}"
+               th:if="${model.hasSpendProfileStage}"
                th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}"
                data-js-modal="generate-spend-profile" class="govuk-button generate-spend-profile-main-button">
                 Generate spend profile</a>
             <th:block
-                th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.financeCheckSummaryResource.ktp}"
+                th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.hasSpendProfileStage}"
                 th:insert="fragments/modals :: generate-spend-profile"/>
         </form>
 
