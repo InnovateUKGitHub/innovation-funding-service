@@ -478,7 +478,7 @@ Partner can also see the KTA in Application team
     Then the user should not see the element     name = resend-kta
     And the user should see the element          jQuery = td:contains("${ktaEmail}")
 
-lead applicant can not assign application question to KTA user
+lFead applicant can not assign application question to KTA user
     [Documentation]  IFS-8311
     Given log in as a different user              &{ktpLeadApplicantCredentials}
     And the user clicks the button/link           link = ${ktpApplicationTitle}
