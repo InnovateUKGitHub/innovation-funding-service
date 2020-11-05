@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SERVICE_RESULT_NULL_RESULT_RETURNED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * This Advice targets public Service methods that return ServiceResults and ensure that the calling code will receive a ServiceResult.
@@ -54,7 +55,7 @@ public class ServiceFailureExceptionHandlingAdvice {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
 
-            if (method.isAnnotationPresent(Transactional.class)) {
+            if (findAnnotation(method, Transactional.class) != null || findAnnotation(method.getDeclaringClass(), Transactional.class) != null) {
                 topLevelTransactionalMethod.set(false);
             }
 
