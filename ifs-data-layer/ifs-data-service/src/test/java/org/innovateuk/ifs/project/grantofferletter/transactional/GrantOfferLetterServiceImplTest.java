@@ -15,10 +15,7 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.grant.service.GrantProcessService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -866,10 +863,10 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withTargetStartDate(LocalDate.now())
                 .build();
 
-        List<NotificationTarget> to = asList(
-                new UserNotificationTarget(projectManager.getUser().getName(), projectManager.getUser().getEmail()),
-                new UserNotificationTarget(financeContactOrg1.getUser().getName(), financeContactOrg1.getUser().getEmail()),
-                new UserNotificationTarget(financeContactOrg2.getUser().getName(), financeContactOrg2.getUser().getEmail())
+        List<NotificationMessage> to = asList(
+                new NotificationMessage(new UserNotificationTarget(projectManager.getUser().getName(), projectManager.getUser().getEmail())),
+                new NotificationMessage(new UserNotificationTarget(financeContactOrg1.getUser().getName(), financeContactOrg1.getUser().getEmail())),
+                new NotificationMessage(new UserNotificationTarget(financeContactOrg2.getUser().getName(), financeContactOrg2.getUser().getEmail()))
         );
 
         Map<String, Object> expectedNotificationArguments = asMap(

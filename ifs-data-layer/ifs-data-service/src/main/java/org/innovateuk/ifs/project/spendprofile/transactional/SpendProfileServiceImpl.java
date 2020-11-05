@@ -421,8 +421,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                     table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
                     checkTotalForMonthsAndAddToTable(table);
 
-                    boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
-                    if (isResearch) {
+                    boolean isJes = project.getApplication().getCompetition().applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+                    if (isJes) {
                         table.setCostCategoryGroupMap(groupCategories(table));
                     }
 

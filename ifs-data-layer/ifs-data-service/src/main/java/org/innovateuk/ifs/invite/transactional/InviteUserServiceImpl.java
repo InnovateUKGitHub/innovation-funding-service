@@ -194,7 +194,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
 
             Notification notification = new Notification(systemNotificationSource,
-                    singletonList(createUserNotificationTarget(roleInvite)),
+                    createUserNotificationTarget(roleInvite),
                     Notifications.INVITE_INTERNAL_USER, globalArgs);
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -215,7 +215,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             Map<String, Object> globalArgs = createGlobalArgsForExternalUserInvite(roleInvite);
 
             Notification notification = new Notification(systemNotificationSource,
-                    singletonList(createUserNotificationTarget(roleInvite)),
+                    createUserNotificationTarget(roleInvite),
                     Notifications.INVITE_EXTERNAL_USER, globalArgs);
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
