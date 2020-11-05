@@ -58,7 +58,9 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-8212 KTP Assessments - applicant view
 ...
 ...            IFS-8070 KTP Project setup - create projects
-
+...
+...            IFS-8478 KTP Project setup: KTA as monitoring officer
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -508,15 +510,38 @@ New lead applicant submits the application
     And the applicant completes Application Team
     Then the applicant submits the application
 
+MO can see the read only view of project assigned to him on closing the assessment
+    [Documentation]  IFS-8478
+    Given Internal user closes the assessment
+    When Log in as a different user                           ${ktaEmail}    ${short_password}
+    And the user clicks the button/link                       id = dashboard-link-MONITORING_OFFICER
+    And the user clicks the button/link                       link = ${ktpApplicationTitle}
+    And the user clicks the button/link                       link = Project details
+    Then MO should see read only viiew of project details
+
+MO can see application summary in view application feedback page before releasing the feedback
+    [Documentation]  IFS-8478
+    Given the user clicks the button/link     link = Set up your project
+    When the user clicks the button/link      link = view application feedback
+    Then the user should see the element      jQuery = h1:contains("Application overview")
+
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given Log in as a different user                        &{internal_finance_credentials}
-    Then moving competition to Closed                       ${competitionId}
-    And making the application a successful project         ${competitionId}  ${ktpApplicationTitle}
-    And moving competition to Project Setup                 ${competitionId}
-    And the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
-    And the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
+    Given Log in as a different user                          &{internal_finance_credentials}
+    When moving competition to Project Setup                  ${competitionId}
+    And the user navigates to the page                        ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
     [Teardown]  Requesting IDs of this Project
+
+MO can download the appendix file in the application
+    [Documentation]  IFS-8478
+    Given Log in as a different user                           ${ktaEmail}    ${short_password}
+    When the user clicks the button/link                       id = dashboard-link-MONITORING_OFFICER
+    And the user clicks the button/link                        link = ${ktpApplicationTitle}
+    And the user clicks the button/link                        link = view application feedback
+    #And the user clicks the button/link                        link = accordion-questions-heading-2-6
+    Then the user downloads the file                           ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
+    [Teardown]  remove the file from the operating system      ${valid_pdf}
 
 the project finance user cannot see the project start date
     [Documentation]  IFS-7805
@@ -1030,3 +1055,17 @@ the user switch to the new tab on click guidance links
     [Arguments]  ${link}
     the user clicks the button/link     link = ${link}
     Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
+
+MO should see read only viiew of project details
+    the user should see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
+    the user should see the element         jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
+    the user should see the element         jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
+    the user should see the element         jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
+    the user should not see the element     jQuery = button:contains("Edit")
+
+Internal user closes the assessment
+    moving competition to Closed                         ${competitionId}
+    Log in as a different user                           &{internal_finance_credentials}
+    making the application a successful project          ${competitionId}  ${ktpApplicationTitle}
+    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
+    the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
