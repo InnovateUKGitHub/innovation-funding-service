@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationMessage;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.user.domain.User;
@@ -62,7 +63,7 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
     private Notification notification = newNotification().
             withMessageKey(MessageKeys.DUMMY_MESSAGE_KEY).
             withSource(sender).
-            withTargets(asList(recipient1, recipient2)).
+            withTargets(asList(new NotificationMessage(recipient1), new NotificationMessage(recipient2))).
             build();
 
     @Test

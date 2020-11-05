@@ -26,6 +26,7 @@ public class AcademicCostsControllerSecurityTest extends BaseControllerSecurityT
         roles.add(Role.STAKEHOLDER);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
         roles.add(Role.ASSESSOR);
+        roles.add(Role.SYSTEM_MAINTAINER);
 
         assertRolesCanPerform(() -> classUnderTest.viewAcademicCosts(null, null, 0L, 0L, 0L, null), roles);
     }
