@@ -127,7 +127,7 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
         notifications = newNotification()
                 .withMessageKey(REMOVE_PROJECT_ORGANISATION)
                 .withSource(from)
-                .withTargets(singletonList(recipientPM), singletonList(recipientMO))
+                .withTargets(singletonList(new NotificationMessage(recipientPM)), singletonList(new NotificationMessage(recipientMO)))
                 .withGlobalArguments(notificationArguments)
                 .build(2);
 
@@ -161,7 +161,7 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
         notifications = singletonList(newNotification()
                 .withMessageKey(REMOVE_PROJECT_ORGANISATION)
                 .withSource(from)
-                .withTargets(singletonList(recipientPM))
+                .withTargets(singletonList(new NotificationMessage(recipientPM)))
                 .withGlobalArguments(notificationArguments)
                 .build());
 
@@ -194,7 +194,7 @@ public class RemovePartnerNotificationServiceImplTest extends BaseServiceUnitTes
         notifications = newNotification()
                 .withMessageKey(REMOVE_PROJECT_ORGANISATION)
                 .withSource(from)
-                .withTargets(singletonList(recipientPP), singletonList(recipientMO))
+                .withTargets(singletonList(new NotificationMessage(recipientPP)), singletonList(new NotificationMessage(recipientMO)))
                 .withGlobalArguments(notificationArguments)
                 .build(2);
 

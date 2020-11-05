@@ -16,10 +16,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -42,8 +39,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -370,7 +367,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
                 return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
                     Notification notification = new Notification(systemNotificationSource,
-                            singletonList(pmTarget),
+                            pmTarget,
                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
                             notificationArguments);
 
@@ -499,7 +496,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private List<NotificationTarget> getLiveProjectNotificationTargets(Project project) {
+    private List<NotificationMessage> getLiveProjectNotificationTargets(Project project) {
         List<NotificationTarget> notificationTargets = new ArrayList<>();
 
         User projectManager = getExistingProjectManager(project).get().getUser();
@@ -514,7 +511,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationTargets.add(projectManagerTarget);
         notificationTargets.addAll(uniqueFinanceContactTargets);
 
-        return notificationTargets;
+        return notificationTargets.stream().map(NotificationMessage::new).collect(Collectors.toList());
     }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
@@ -531,7 +528,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findById(projectId).get();
-        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTargets(project);
+        List<NotificationMessage> notificationTargets = getLiveProjectNotificationTargets(project);
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());
