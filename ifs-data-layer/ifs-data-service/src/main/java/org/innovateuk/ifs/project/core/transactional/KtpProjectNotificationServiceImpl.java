@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ProjectNotificationServiceImpl implements ProjectNotificationService {
+public class KtpProjectNotificationServiceImpl implements KtpProjectNotificationService {
 
     @Autowired
     private ApplicationRepository applicationRepository;

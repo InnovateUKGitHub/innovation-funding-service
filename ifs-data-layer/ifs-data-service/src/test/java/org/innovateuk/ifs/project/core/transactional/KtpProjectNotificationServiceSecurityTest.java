@@ -5,11 +5,11 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
 
-public class ProjectNotificationServiceSecurityTest extends BaseServiceSecurityTest<ProjectNotificationService> {
+public class KtpProjectNotificationServiceSecurityTest extends BaseServiceSecurityTest<KtpProjectNotificationService> {
 
     @Override
-    protected Class<? extends ProjectNotificationService> getClassUnderTest() {
-        return ProjectNotificationServiceImpl.class;
+    protected Class<? extends KtpProjectNotificationService> getClassUnderTest() {
+        return KtpProjectNotificationServiceImpl.class;
     }
 
     @Test

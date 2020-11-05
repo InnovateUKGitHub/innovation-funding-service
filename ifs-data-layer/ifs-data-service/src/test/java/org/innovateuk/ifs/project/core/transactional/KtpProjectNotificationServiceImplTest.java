@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ProjectNotificationServiceImplTest {
+public class KtpProjectNotificationServiceImplTest {
 
     @Mock
     private ApplicationRepository applicationRepository;
@@ -47,7 +47,7 @@ public class ProjectNotificationServiceImplTest {
     private SystemNotificationSource systemNotificationSource;
 
     @InjectMocks
-    private ProjectNotificationService service = new ProjectNotificationServiceImpl();
+    private KtpProjectNotificationService service = new KtpProjectNotificationServiceImpl();
 
     private static final String WEB_BASE_URL = "www.baseUrl.com" ;
 

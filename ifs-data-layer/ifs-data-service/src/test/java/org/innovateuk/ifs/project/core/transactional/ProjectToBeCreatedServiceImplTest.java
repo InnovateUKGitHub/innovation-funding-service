@@ -56,7 +56,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
     private ApplicationRepository applicationRepository;
 
     @Mock
-    private ProjectNotificationService projectNotificationService;
+    private KtpProjectNotificationService ktpProjectNotificationService;
 
     @Test
     public void findProjectToCreate() {
@@ -97,7 +97,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verify(applicationFundingService).notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         verify(projectService).createProjectFromApplication(application.getId());
-        verifyZeroInteractions(projectNotificationService);
+        verifyZeroInteractions(ktpProjectNotificationService);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
-        when(projectNotificationService.sendProjectSetupNotification(application.getId())).thenReturn(serviceSuccess());
+        when(ktpProjectNotificationService.sendProjectSetupNotification(application.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<ScheduleResponse> result = service.createProject(applicationId);
 
@@ -121,7 +121,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verifyZeroInteractions(applicationFundingService);
         verify(projectService).createProjectFromApplication(application.getId());
-        verify(projectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
+        verify(ktpProjectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         when(projectToBeCreatedRepository.findByApplicationId(applicationId)).thenReturn(of(projectToBeCreated));
         when(projectService.createProjectFromApplication(application.getId())).thenReturn(serviceSuccess(null));
-        when(projectNotificationService.sendProjectSetupNotification(application.getId()))
+        when(ktpProjectNotificationService.sendProjectSetupNotification(application.getId()))
                 .thenReturn(serviceFailure(new Error(CommonFailureKeys.GENERAL_NOT_FOUND)));
 
         ServiceResult<ScheduleResponse> result = service.createProject(applicationId);
@@ -144,7 +144,7 @@ public class ProjectToBeCreatedServiceImplTest extends BaseServiceUnitTest<Proje
 
         verifyZeroInteractions(applicationFundingService);
         verify(projectService).createProjectFromApplication(application.getId());
-        verify(projectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
+        verify(ktpProjectNotificationService, times(1)).sendProjectSetupNotification(application.getId());
     }
 
     @Test
