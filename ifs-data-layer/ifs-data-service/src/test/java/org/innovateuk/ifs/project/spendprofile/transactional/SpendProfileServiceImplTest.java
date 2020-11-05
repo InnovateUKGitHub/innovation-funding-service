@@ -61,6 +61,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -219,6 +220,19 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 "applicationId", project.getApplication().getId(),
                 "competitionName", "Competition 1"
         );
+        SpendProfile spendProfileInDB = createSpendProfile(project,
+                // eligible costs
+                asMap(
+                        1L, new BigDecimal("100"),
+                        2L, new BigDecimal("180"),
+                        3L, new BigDecimal("55")),
+
+                // Spend Profile costs
+                asMap(
+                        1L, asList(new BigDecimal("30"), new BigDecimal("30"), new BigDecimal("40")),
+                        2L, asList(new BigDecimal("70"), new BigDecimal("10"), new BigDecimal("60")),
+                        3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
+        );
 
         NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
         NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
@@ -226,9 +240,17 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Notification notification1 = new Notification(systemNotificationSource, to1, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
         Notification notification2 = new Notification(systemNotificationSource, to2, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
+        when(spendProfileWorkflowHandler.isReadyToApprove(project)).thenReturn(true);
         when(spendProfileWorkflowHandler.spendProfileApproved(project, generatedBy)).thenReturn(true);
         when(notificationService.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
         when(notificationService.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
+        when(userRepository.findById(generatedBy.getId())).thenReturn(Optional.of(generatedBy));
+        when(spendProfileWorkflowHandler.submit(project)).thenReturn(true);
+
+        when(spendProfileRepository.findOneByProjectIdAndOrganisationId(anyLong(), anyLong()))
+                .thenReturn(Optional.of(spendProfileInDB));
+
+        when(spendProfileWorkflowHandler.isAlreadyGenerated(project)).thenReturn(false);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
@@ -238,6 +260,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(notificationService).sendNotificationWithFlush(notification1, EMAIL);
         verify(notificationService).sendNotificationWithFlush(notification2, EMAIL);
+
+        verify(spendProfileRepository, times(2)).saveAll(any());
     }
 
     @Test
