@@ -92,6 +92,9 @@
                         </th>
 
                         <th:block th:unless="${summaryModel.loanCompetition}">
+                            <th th:if="${summaryModel.ktpCompetition}" class="govuk-table__header govuk-table__header--numeric" scope="col">
+                                Company contribution (%)
+                            </th>
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col">
                                 <th:block th:if="${summaryModel.ktpCompetition}">
                                     Company contribution (&pound;)
@@ -99,9 +102,6 @@
                                 <th:block th:unless="${summaryModel.ktpCompetition}">
                                     Contribution to project (&pound;)
                                 </th:block>
-                            </th>
-                            <th th:if="${summaryModel.ktpCompetition}" class="govuk-table__header govuk-table__header--numeric" scope="col">
-                                Company contribution (%)
                             </th>
                         </th:block>
                         <th:block th:if="${summaryModel.loanCompetition}">
@@ -133,15 +133,15 @@
                             th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">
                             2,468
                         </td>
+                        <td th:if="${summaryModel.ktpCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${#numbers.formatDecimal(summaryModel.eligibilityOverview.percentageContributionToProject,1,'DEFAULT',2,'DEFAULT')+'%'}">
+                            138,164
+                        </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">
                             138,164
                         </td>
                     </th:block>
-                    <td th:if="${summaryModel.ktpCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
-                        th:text="${#numbers.formatDecimal(summaryModel.eligibilityOverview.percentageContributionToProject,1,'DEFAULT',2,'DEFAULT')+'%'}">
-                        138,164
-                    </td>
                 </tr>
                 </tbody>
             </table>
