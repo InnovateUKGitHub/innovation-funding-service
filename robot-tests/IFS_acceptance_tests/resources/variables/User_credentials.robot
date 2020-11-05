@@ -20,6 +20,8 @@
 &{innovation_lead_two}                    email=peter.freeman@innovateuk.test    password=Passw0rd
 &{stakeholder_user}                       email=Rayon.Kevin@gmail.com    password=Passw0rd
 &{Multiple_user_credentials}              email=jo.peters@ntag.example.com    password=Passw0rd
+&{KTA_user_credentials}                   email=hermen.mermen@ktn-uk.test   password=Passw0rd
+&{MO_user_credentials}                    email=orville.gibbs@gmail.com     password=Passw0rd
 &{Ineligible_user}                        email=nancy.peterson@gmail.com    password=Passw0rd
 &{support_user_credentials}               email=support@innovateuk.test    password=Passw0rd
 &{ifs_admin_user_credentials}             email=arden.pimenta@innovateuk.test    password=Passw0rd
