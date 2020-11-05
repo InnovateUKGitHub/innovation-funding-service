@@ -16,6 +16,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -23,6 +24,8 @@ import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -56,6 +59,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -134,6 +138,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Competition competition = newCompetition()
                 .withCompetitionAssessmentConfig(competitionAssessmentConfig)
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         Application application1 = newApplication().withCompetition(competition).build();
@@ -195,6 +200,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
         ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
@@ -212,7 +218,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         competitionAssessmentConfig.setIncludeAverageAssessorScoreInNotifications(true);
 
-        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
+        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.GRANT).build();
 
         Application application1 = newApplication().withCompetition(competition).build();
         Application application2 = newApplication().withCompetition(competition).build();
@@ -267,6 +273,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
         List<Application> applications = asList(application1, application2, application3);
         when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
 
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepository.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
@@ -279,7 +286,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
 
         when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
-
         ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
@@ -295,7 +301,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     @Test
     public void testNotifyAllApplicantsOfFundingDecisions() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
-        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
+        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.GRANT).build();
 
         Application application1 = newApplication().withCompetition(competition).build();
         Application application2 = newApplication().withCompetition(competition).build();
@@ -345,6 +351,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
         ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
@@ -355,7 +362,66 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         verify(applicationService).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
         verifyNoMoreInteractions(applicationService);
     }
-    
+
+    @Test
+    public void testNotifyAllApplicantsOfFundingDecisions_Ktp_ProjectNotCreated() {}
+    @Test
+    public void testNotifyAllApplicantsOfFundingDecisions_Ktp() {
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.KTP).build();
+
+        Project project1 = newProject().build();
+        Project project2 = newProject().build();
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
+
+        User application1Participant = newUser().build();
+        User application2Particpant = newUser().build();
+
+        ProjectUser projectUser1 = newProject
+
+        UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
+        UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
+        UserNotificationTarget application1CollaboratorTarget = new UserNotificationTarget(application1Collaborator.getName(), application1Collaborator.getEmail());
+        UserNotificationTarget application2CollaboratorTarget = new UserNotificationTarget(application2Collaborator.getName(), application2Collaborator.getEmail());
+        List<NotificationTarget> expectedApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application1CollaboratorTarget, application2CollaboratorTarget);
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(
+                application1.getId(), FundingDecision.FUNDED,
+                application2.getId(), FundingDecision.UNFUNDED);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
+
+        Notification expectedFundingNotification =
+                new Notification(systemNotificationSource, expectedApplicants.stream().map(NotificationMessage::new).collect(Collectors.toList()), APPLICATION_FUNDING, emptyMap());
+
+        List<Long> applicationIds = asList(application1.getId(), application2.getId());
+        List<Application> applications = asList(application1, application2);
+        when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
+
+        asList(application1, application2).forEach(application ->
+                when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application))
+        );
+
+        allProcessRoles.forEach(processRole ->
+                when(processRoleRepository.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
+        );
+
+        when(notificationService.sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
+
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
+        ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
+        assertTrue(result.isSuccess());
+
+        verify(notificationService).sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
+        verifyNoMoreInteractions(notificationService);
+
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
+        verifyNoMoreInteractions(applicationService);
+    }
+
     @Test
     public void testSaveFundingDecisionData() {
     	
