@@ -109,6 +109,7 @@ public class SupporterResponseControllerTest extends BaseControllerMockMVCTest<S
         verifyZeroInteractions(supporterAssignmentRestService);
 
         verify(supporterCookieService, times(1)).getSupporterPreviousResponseCookie(any(HttpServletRequest.class));
+        verify(supporterCookieService, times(1)).removeSupporterPreviousResponseCookie(any(HttpServletResponse.class));
     }
 
     @Test

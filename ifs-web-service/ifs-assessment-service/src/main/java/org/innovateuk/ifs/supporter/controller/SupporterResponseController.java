@@ -45,11 +45,13 @@ public class SupporterResponseController {
     public String editResponse(@PathVariable long applicationId,
                                Model model,
                                HttpServletRequest request,
+                               HttpServletResponse response,
                                UserResource user) {
         SupporterAssignmentResource assignment;
         Optional<SupporterAssignmentResource> previousAssignment = supporterCookieService.getSupporterPreviousResponseCookie(request);
         if (previousAssignment.isPresent() &&  previousAssignment.get().getState() != null) {
             assignment = previousAssignment.get();
+            supporterCookieService.removeSupporterPreviousResponseCookie(response);
         } else {
             assignment = supporterAssignmentRestService.getAssignment(user.getId(), applicationId).getSuccess();
             if (newArrayList(SupporterState.ACCEPTED, SupporterState.REJECTED).contains(assignment.getState())) {

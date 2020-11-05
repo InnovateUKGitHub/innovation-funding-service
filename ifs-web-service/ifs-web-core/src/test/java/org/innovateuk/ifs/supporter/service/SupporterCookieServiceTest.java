@@ -2,7 +2,7 @@ package org.innovateuk.ifs.supporter.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
-import org.innovateuk.ifs.util.EncryptedCookieService;
+import org.innovateuk.ifs.util.CompressedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 public class SupporterCookieServiceTest  extends BaseServiceUnitTest<SupporterCookieService> {
 
     @Mock
-    private EncryptedCookieService cookieUtil;
+    private CompressedCookieService cookieUtil;
 
     private MockHttpServletResponse response;
     private MockHttpServletRequest request;
@@ -68,7 +68,7 @@ public class SupporterCookieServiceTest  extends BaseServiceUnitTest<SupporterCo
         long wordCount = 250;
 
         SupporterAssignmentResource supporterAssignmentResource = newSupporterAssignmentResource()
-                .withComments(Stream.generate(() -> "ABCDEFGHIJKLMNOPQ ").limit(wordCount).collect(Collectors.joining()))
+                .withComments(Stream.generate(() -> "ABCDEFGHIJKLMNOPQRS ").limit(wordCount).collect(Collectors.joining()))
                 .build();
 
         when(cookieUtil.getCookieValue(request, SUPPORTER_PREVIOUS_RESPONSE)).thenReturn(JsonUtil.getSerializedObject(supporterAssignmentResource));
@@ -83,5 +83,12 @@ public class SupporterCookieServiceTest  extends BaseServiceUnitTest<SupporterCo
         verify(cookieUtil, times(1)).saveToCookie(response, SUPPORTER_PREVIOUS_RESPONSE,
                 JsonUtil.getSerializedObject(supporterAssignmentResource));
         verify(cookieUtil, times(1)).getCookieValue(request, SUPPORTER_PREVIOUS_RESPONSE);
+    }
+
+    @Test
+    public void removeSupporterPreviousResponseCookie() {
+        service.removeSupporterPreviousResponseCookie(response);
+
+        verify(cookieUtil, times(1)).removeCookie(response, SUPPORTER_PREVIOUS_RESPONSE);
     }
 }
