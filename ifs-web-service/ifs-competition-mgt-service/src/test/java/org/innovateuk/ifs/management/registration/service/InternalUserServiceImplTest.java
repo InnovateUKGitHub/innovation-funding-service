@@ -26,7 +26,7 @@ public class InternalUserServiceImplTest extends BaseServiceUnitTest<InternalUse
 
     @Test
     public void testCreateInternalUser(){
-        RegistrationForm registrationForm = new RegistrationForm("Arden", "Pimenta", "Passw0rd");
+        RegistrationForm registrationForm = new RegistrationForm("Arden", "Pimenta", "Passw0rd1357");
         InternalUserRegistrationResource internalUserRegistrationResource =
                 newInternalUserRegistrationResource()
                         .withFirstName(registrationForm.getFirstName())
