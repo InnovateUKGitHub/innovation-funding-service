@@ -61,7 +61,7 @@ public class StakeholderRegistrationControllerTest extends BaseControllerMockMVC
     @Test
     public void submitYourDetails() throws Exception {
         setLoggedInUser(null);
-        RegistrationForm registrationForm = new RegistrationForm("Tyler", "Newall", "Passw0rd");
+        RegistrationForm registrationForm = new RegistrationForm("Tyler", "Newall", "Passw0rd1357");
         registrationForm.setEmail("tyler.newall@gmail.com");
 
         StakeholderInviteResource inviteResource = newStakeholderInviteResource()
