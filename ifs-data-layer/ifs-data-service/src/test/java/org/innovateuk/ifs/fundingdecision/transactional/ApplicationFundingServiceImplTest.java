@@ -25,11 +25,16 @@ import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
@@ -47,12 +52,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FUNDING_DECISION_KTP_PROJECT_NOT_YET_CREATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -60,8 +67,11 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -105,6 +115,12 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
     @Mock
     private AssessorFormInputResponseService assessorFormInputResponseService;
+
+    @Mock
+    private ProjectWorkflowHandler projectWorkflowHandler;
+
+    @Mock
+    private UserRepository userRepository;
 
     private Competition competition;
     
@@ -364,7 +380,22 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     }
 
     @Test
-    public void testNotifyAllApplicantsOfFundingDecisions_Ktp_ProjectNotCreated() {}
+    public void testNotifyAllApplicantsOfFundingDecisions_Ktp_ProjectNotCreated() {CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.KTP).build();
+
+        Application application = newApplication().withCompetition(competition).build();
+        when(applicationRepository.findAllById(newArrayList(application.getId()))).thenReturn(newArrayList(application));
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(
+                application.getId(), FundingDecision.FUNDED);
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
+        when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
+        assertTrue(result.isFailure());
+        assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), FUNDING_DECISION_KTP_PROJECT_NOT_YET_CREATED.name());
+
+    }
     @Test
     public void testNotifyAllApplicantsOfFundingDecisions_Ktp() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
@@ -372,19 +403,34 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Project project1 = newProject().build();
         Project project2 = newProject().build();
-        Application application1 = newApplication().withCompetition(competition).build();
-        Application application2 = newApplication().withCompetition(competition).build();
+        Application application1 = newApplication().withCompetition(competition).withProject(project1).build();
+        Application application2 = newApplication().withCompetition(competition).withProject(project2).build();
 
         User application1Participant = newUser().build();
-        User application2Particpant = newUser().build();
+        User application2Participant = newUser().build();
+        User application1Mo = newUser().build();
+        User application2Mo = newUser().build();
+        User loggedInUser = newUser().build();
+        UserResource loggedInUserResource = newUserResource().build();
+        setLoggedInUser(loggedInUserResource);
 
-        ProjectUser projectUser1 = newProject
+        ProjectUser projectUser1 = newProjectUser().withUser(application1Participant).withRole(ProjectParticipantRole.PROJECT_PARTNER).withProject(project1).build();
+        project1.addProjectUser(projectUser1);
+        MonitoringOfficer monitoringOfficer1 = newMonitoringOfficer().withUser(application1Mo).build();
+        project1.setProjectMonitoringOfficer(monitoringOfficer1);
 
-        UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
-        UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
-        UserNotificationTarget application1CollaboratorTarget = new UserNotificationTarget(application1Collaborator.getName(), application1Collaborator.getEmail());
-        UserNotificationTarget application2CollaboratorTarget = new UserNotificationTarget(application2Collaborator.getName(), application2Collaborator.getEmail());
-        List<NotificationTarget> expectedApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application1CollaboratorTarget, application2CollaboratorTarget);
+        ProjectUser projectUser2 = newProjectUser().withUser(application2Participant).withRole(ProjectParticipantRole.PROJECT_PARTNER).withProject(project2).build();
+        project2.addProjectUser(projectUser2);
+        MonitoringOfficer monitoringOfficer2 = newMonitoringOfficer().withUser(application2Mo).build();
+        project2.setProjectMonitoringOfficer(monitoringOfficer2);
+
+        UserNotificationTarget application1ParticipantTarget = new UserNotificationTarget(application1Participant.getName(), application1Participant.getEmail());
+        UserNotificationTarget application1MoTarget = new UserNotificationTarget(application1Mo.getName(), application1Mo.getEmail());
+
+        UserNotificationTarget application2ParticipantTarget = new UserNotificationTarget(application2Participant.getName(), application2Participant.getEmail());
+        UserNotificationTarget application2MoTarget = new UserNotificationTarget(application2Mo.getName(), application2Mo.getEmail());
+
+        List<NotificationTarget> expectedTargets = asList(application1ParticipantTarget, application1MoTarget, application2ParticipantTarget, application2MoTarget);
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
                 application1.getId(), FundingDecision.FUNDED,
@@ -392,7 +438,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
 
         Notification expectedFundingNotification =
-                new Notification(systemNotificationSource, expectedApplicants.stream().map(NotificationMessage::new).collect(Collectors.toList()), APPLICATION_FUNDING, emptyMap());
+                new Notification(systemNotificationSource, expectedTargets.stream().map(NotificationMessage::new).collect(Collectors.toList()), APPLICATION_FUNDING, emptyMap());
 
         List<Long> applicationIds = asList(application1.getId(), application2.getId());
         List<Application> applications = asList(application1, application2);
@@ -402,15 +448,13 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application))
         );
 
-        allProcessRoles.forEach(processRole ->
-                when(processRoleRepository.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
-        );
-
         when(notificationService.sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         when(applicationWorkflowHandler.notifyFromApplicationState(any(), any())).thenReturn(true);
+        when(projectWorkflowHandler.markAsUnsuccessful(project2, loggedInUser)).thenReturn(true);
+        when(userRepository.findById(loggedInUserResource.getId())).thenReturn(Optional.of(loggedInUser));
         ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
@@ -419,6 +463,9 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         verify(applicationService).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
         verify(applicationService).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
+        verify(projectWorkflowHandler).markAsUnsuccessful(project2, loggedInUser);
+        verifyNoMoreInteractions(projectWorkflowHandler);
+
         verifyNoMoreInteractions(applicationService);
     }
 
