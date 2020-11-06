@@ -147,17 +147,11 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
-                competition.isKtp() ? Notifications.KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED :
-                        Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
-                competition.isKtp()
-                        ? asMap("name", processRole.getUser().getName(),
+                competition.isKtp() ? Notifications.KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED
+                        : Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                asMap("name", processRole.getUser().getName(),
                         "applicationName", application.getName(),
                         "applicationId", application.getId(),
-                        "competitionName", application.getCompetition().getName(),
-                        "dashboardUrl", webBaseUrl)
-                        : asMap("name", processRole.getUser().getName(),
-                        "projectNumber", application.getProject().getId(),
-                        "projectName", application.getProject().getName(),
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl));
 
