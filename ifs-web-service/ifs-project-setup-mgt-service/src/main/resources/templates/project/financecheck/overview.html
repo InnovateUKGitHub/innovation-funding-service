@@ -30,7 +30,7 @@
         <th:block th:unless="${model.ktpCompetition}" th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
         <th:block th:unless="${model.summaries.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
-            <h3 class="govuk-heading-m">Finances summary</h3>
+            <h3 class="govuk-heading-m">Finance summary</h3>
             <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
         </th:block>
 
