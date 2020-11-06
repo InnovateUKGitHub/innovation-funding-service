@@ -1,0 +1,16 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+You can now view the feedback for this project:
+${projectNumber}: ${projectName}
+
+We have reviewed this feedback, which was provided by independent
+assessors and project supporters (where applicable).
+
+Please sign in to view your Innovation Funding Service dashboard (${dashboardUrl}).
+
+Yours sincerely
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>
