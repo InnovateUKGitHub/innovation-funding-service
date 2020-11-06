@@ -117,6 +117,10 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllAssessorFeedback(data.getAssessmentToApplicationAssessment().size() > 0);
         }
 
+        if (settings.isIncludeAllSupporterFeedback()) {
+            settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
+        }
+
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
@@ -131,7 +135,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream()
                         .map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList(),
                 settings.isIncludeAllSupporterFeedback() ? data.getFeedbackToApplicationSupport().values().stream()
-                        .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap()
+                        .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap(),
+                competition.isKtp()
         );
     }
 

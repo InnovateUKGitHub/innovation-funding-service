@@ -16,17 +16,20 @@ public class ApplicationReadOnlyViewModel {
     private final BigDecimal applicationScore;
     private List<String> overallFeedbacks;
     private Map<SupporterState, List<SupporterAssignmentResource>> assignments;
+    private boolean ktpCompetition;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
                                         BigDecimal applicationScore,
                                         List<String> overallFeedbacks,
-                                        Map<SupporterState, List<SupporterAssignmentResource>> assignments) {
+                                        Map<SupporterState, List<SupporterAssignmentResource>> assignments,
+                                        boolean ktpCompetition) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
         this.overallFeedbacks = overallFeedbacks;
         this.assignments = assignments;
+        this.ktpCompetition = ktpCompetition;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -45,6 +48,10 @@ public class ApplicationReadOnlyViewModel {
 
     public Map<SupporterState, List<SupporterAssignmentResource>> getAssignments() {
         return assignments;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     public boolean isAccepted() {
