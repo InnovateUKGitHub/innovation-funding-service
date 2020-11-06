@@ -234,7 +234,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowChangesLink() {
-        return isProcurement() ? false: eligibilityOverview.isHasApplicationFinances();
+        return isProcurement() ? false: !isExternalView() && eligibilityOverview.isHasApplicationFinances();
     }
 
     public boolean isEligibilityReadyToConfirm() {
