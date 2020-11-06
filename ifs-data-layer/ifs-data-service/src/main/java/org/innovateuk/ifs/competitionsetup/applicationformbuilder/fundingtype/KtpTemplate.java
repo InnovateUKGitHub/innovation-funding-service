@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.addProjectSetupStage;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 @Component
 public class KtpTemplate implements FundingTypeTemplate {
@@ -38,6 +40,19 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public FundingType type() {
         return FundingType.KTP;
+    }
+
+    @Override
+    public Competition initialiseProjectSetupColumns(Competition competition) {
+        addProjectSetupStage(competition, PROJECT_DETAILS);
+        addProjectSetupStage(competition, PROJECT_TEAM);
+        addProjectSetupStage(competition, DOCUMENTS);
+        addProjectSetupStage(competition, MONITORING_OFFICER);
+        addProjectSetupStage(competition, BANK_DETAILS);
+        addProjectSetupStage(competition, FINANCE_CHECKS);
+        //No Spend Profile for KTP
+        addProjectSetupStage(competition, GRANT_OFFER_LETTER);
+        return competition;
     }
 
     @Override

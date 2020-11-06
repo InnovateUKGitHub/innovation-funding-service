@@ -147,8 +147,12 @@
                               th:classappend="${'eligibility-' + status.index}"></span>
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
-                    <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
-                          th:classappend="${'eligibility-rag-' + status.index}">Green</span>
+                        <span th:if="${orgDetails.eligibility.notApplicable}"
+                              th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
+                              th:classappend="${'eligibility-rag-' + status.index}"></span>
+                        <span th:unless="${orgDetails.eligibility.notApplicable}"
+                              th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
+                              th:classappend="${'eligibility-rag-' + status.index}">Green</span>
                     </td>
                     <td class="govuk-table__cell aligncentre">
                         <span th:if="${model.financeCheckSummaryResource.ktp && orgDetails.eligibility.notApplicable}">N/A</span>
@@ -180,13 +184,12 @@
                     'Generate spend profile' : 'Approve finance checks'"
                     class="govuk-button generate-spend-profile-main-button">
             </button>
-            <button th:unless="${model.showDisabledGenerateSpendProfilesButton}"
-                    th:unless="${model.hasSpendProfileStage}"
+            <button th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.hasSpendProfileStage}"
                     type="submit"
                     class="govuk-button generate-spend-profile-main-button">
                 Approve finance checks
             </button>
-            <a th:unless="${model.showDisabledGenerateSpendProfilesButton}}"
+            <a th:unless="${model.showDisabledGenerateSpendProfilesButton}"
                th:if="${model.hasSpendProfileStage}"
                th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}"
                data-js-modal="generate-spend-profile" class="govuk-button generate-spend-profile-main-button">
