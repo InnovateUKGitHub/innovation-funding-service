@@ -107,7 +107,7 @@ public class MonitoringOfficerRegistrationControllerTest extends BaseControllerM
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.setFirstName("Tom");
         registrationForm.setLastName("Baldwin");
-        registrationForm.setPassword("Passw0rd");
+        registrationForm.setPassword("Passw0rd1357");
         registrationForm.setEmail("tom.baldwin@gmail.com");
         registrationForm.setPhoneNumber("0114 286 6356");
 

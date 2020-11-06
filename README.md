@@ -36,7 +36,7 @@ Build and deploy
 
     ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test
 
-Access https://ifs.local-dev with one of the following users (with password "Passw0rd")
+Access https://ifs.local-dev with one of the following users (with password "Passw0rd1357")
 
 * steve.smith@empire.com - lead applicant
 * john.doe@innovateuk.test - competition admin
