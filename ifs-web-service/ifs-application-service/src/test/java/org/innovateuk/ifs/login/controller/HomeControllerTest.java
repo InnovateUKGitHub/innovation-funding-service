@@ -233,6 +233,30 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     }
 
     @Test
+    public void projectSetupHiddenWhenNoProjectsForKTA() throws Exception {
+        setLoggedInUser(knowledgeTransferAdvisor);
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .build(1);
+
+        when(userRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(processRoleResources));
+        when(monitoringOfficerRestService.isMonitoringOfficer(this.knowledgeTransferAdvisor.getId()))
+                .thenReturn(restSuccess(false));
+
+        DashboardSelectionViewModel dashboard = (DashboardSelectionViewModel) Objects.requireNonNull(
+                mockMvc.perform(get("/dashboard-selection"))
+                        .andExpect(status().is2xxSuccessful())
+                        .andExpect(model().attributeExists("model"))
+                        .andExpect(view().name("login/multiple-dashboard-choice"))
+                        .andReturn().getModelAndView()).getModel().get("model");
+        List<DashboardPanel> availableDashboards = dashboard.getAvailableDashboards();
+        assertEquals(2, availableDashboards.size());
+        assertTrue(availableDashboards.stream()
+                .noneMatch(panel -> panel.getRole().equals(Role.MONITORING_OFFICER)));
+    }
+
+    @Test
     public void multiDashboardForSupporterAdvisor() throws Exception {
         setLoggedInUser(applicantAndSupporter);
 
