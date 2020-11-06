@@ -19,7 +19,7 @@ Cypress.Commands.add('logout', () => {
 Cypress.Commands.add('login', (user) => {
   cy.visit('/');
   cy.contains('div', 'Email address').find('input').first().type(user);
-  cy.contains('div', 'Password').find('input').first().type('Passw0rd');
+  cy.contains('div', 'Password').find('input').first().type('Passw0rd1357');
   cy.get('form').contains('Sign in').click();
 
 });
