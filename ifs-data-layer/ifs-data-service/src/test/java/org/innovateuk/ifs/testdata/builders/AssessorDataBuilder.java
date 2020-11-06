@@ -41,7 +41,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     withLastName(lastName).
                     withEmail(emailAddress).
                     withPhoneNumber(phoneNumber).
-                    withPassword("Passw0rd").
+                    withPassword("Passw0rd1357").
                     withRoles(singletonList(Role.ASSESSOR)).
                     build();
 

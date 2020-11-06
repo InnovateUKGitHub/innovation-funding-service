@@ -16,7 +16,7 @@ public class ChangePassword {
      */
     @JsonProperty(required = true)
     @NotBlank(message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.blank}")
-    @Size(min = 8, message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.min}")
+    @Size(min = 12, message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.min}")
     @Pattern.List({
         @Pattern(regexp = ".*\\p{N}+.*", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.complexity.number}"),
         @Pattern(regexp = ".*\\p{Lu}+.*", message = "{org.innovateuk.ifs.shibboleth.api.models.Identity.password.complexity.uppercase}"),
