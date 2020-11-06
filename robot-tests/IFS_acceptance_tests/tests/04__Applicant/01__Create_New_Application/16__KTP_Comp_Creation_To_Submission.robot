@@ -539,7 +539,6 @@ MO can download the appendix file in the application
     When the user clicks the button/link                       id = dashboard-link-MONITORING_OFFICER
     And the user clicks the button/link                        link = ${ktpApplicationTitle}
     And the user clicks the button/link                        link = view application feedback
-    #And the user clicks the button/link                        link = accordion-questions-heading-2-6
     Then the user downloads the file                           ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
     [Teardown]  remove the file from the operating system      ${valid_pdf}
 
