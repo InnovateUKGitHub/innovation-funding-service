@@ -54,7 +54,7 @@ public interface ApplicationConfiguration {
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {
         return isH2020() || applicantShouldUseJesFinances(organisationType) ||
-                organisationType.equals(OrganisationTypeEnum.KNOWLEDGE_BASE);
+                (organisationType.equals(OrganisationTypeEnum.KNOWLEDGE_BASE) && this.isKtp());
     }
 
     default boolean applicantNotRequiredForEligibilityChecks(OrganisationTypeEnum organisationTypeEnum) {
