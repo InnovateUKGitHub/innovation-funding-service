@@ -81,7 +81,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
         registrationForm.setEmail("blah@gmail.com");
         registrationForm.setFirstName("Bob");
         registrationForm.setLastName("Person");
-        registrationForm.setPassword("password");
+        registrationForm.setPassword("password1357");
         registrationForm.setPhoneNumber("123123123123");
         registrationForm.setTermsAndConditions("1");
         when(userRestService.createUser(refEq(registrationForm.constructUserCreationResource()

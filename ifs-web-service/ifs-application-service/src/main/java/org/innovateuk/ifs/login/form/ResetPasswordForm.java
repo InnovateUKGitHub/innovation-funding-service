@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 public class ResetPasswordForm {
     @NotBlank(message = "{validation.standard.password.required}")
-    @Size(min = 8, message = "{validation.standard.password.length.min}")
+    @Size(min = 12, message = "{validation.standard.password.length.min}")
     private String password;
 
     public String getPassword() {

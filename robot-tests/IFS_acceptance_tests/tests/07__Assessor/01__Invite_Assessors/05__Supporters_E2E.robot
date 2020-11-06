@@ -111,7 +111,7 @@ The finance manager views the feedback of the application
 
 The supporter can see the sections in the cofunding dashboard
     [Documentation]  IFS-8402
-    Given Log in as a different user            hubert.cumberdale@salad-fingers.com  Passw0rd
+    Given Log in as a different user            hubert.cumberdale@salad-fingers.com  ${short_password}
     When the user clicks the button/link        jQuery = h2:contains("Supporter")
     Then the user should see the element        jQuery = h1:contains("Competitions")
     And the user should not see the element     jQuery = h2:contains("Upcoming competitions to review")
