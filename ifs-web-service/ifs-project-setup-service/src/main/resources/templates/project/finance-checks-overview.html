@@ -21,9 +21,10 @@
             <h3 class="govuk-heading-m">Finance summary</h3>
             <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
         </th:block>
-        <h3 class="govuk-heading-m">Project cost breakdown</h3>
+        <h3 th:if="${model.ktpCompetition}" class="govuk-heading-m">Project cost summary</h3>
+        <h3 th:unless="${model.ktpCompetition}" class="govuk-heading-m">Project cost breakdown</h3>
 
-        <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})" />
+        <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
 
     </main>
 </div>

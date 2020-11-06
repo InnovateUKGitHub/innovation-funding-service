@@ -140,42 +140,4 @@
         </div>
     </th:block>
 
-    <!-- ===========================Project Finance Cost Breakdown =========================== -->
-    <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
-        <div class="table-overflow govuk-!-margin-bottom-6">
-            <table class="govuk-table">
-                <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Partner</th>
-                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total</th>
-                        <th th:each="type : ${breakdowns.financeRowTypes}" scope="col" class="govuk-table__header govuk-table__header--numeric width-80"
-                            th:text="|${type.displayName} (£)|">Labour (&pound;)</th>
-                    </tr>
-                </thead>
-                <tfoot class="govuk-table__foot">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">Total</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
-                        <th th:each="type : ${breakdowns.financeRowTypes}" class="govuk-table__cell govuk-table__cell--numeric"></th>
-                    </tr>
-                </tfoot>
-                <tbody class="govuk-table__body">
-                <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">
-                            <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
-                            <small th:if="${partner.isLeadOrganisation()}">Lead</small>
-                        </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
-                        <th:block th:each="rowType : ${breakdowns.financeRowTypes}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
-                            <td th:if="${rowType.isIncludedInSpendProfile()}" class="govuk-table__cell govuk-table__cell--numeric">
-                                <th:block th:text="${#numbers.formatInteger(row.total,1,'DEFAULT')}" />
-                            </td>
-                        </th:block>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
-        </div>
-    </th:block>
 </html>
