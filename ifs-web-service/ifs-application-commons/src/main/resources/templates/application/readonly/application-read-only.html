@@ -143,6 +143,7 @@
             <ul class="govuk-list boxed-list">
                 <h3 class="govuk-heading-s" th:text="|Interested (${model.AcceptedCount})|">Interested</h3>
                 <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
+                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
                     <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
                 </li>
             </ul>
@@ -152,6 +153,7 @@
             <ul class="govuk-list boxed-list">
                 <h3 class="govuk-heading-s" th:text="|Declined (${model.DeclinedCount})|">Declined</h3>
                 <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).REJECTED)}">
+                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
                     <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
                 </li>
             </ul>
@@ -161,7 +163,7 @@
             <ul class="govuk-list boxed-list">
                 <h3 class="govuk-heading-s" th:text="|'Didn\'t review' (${model.PendingCount})|">Didn't review</h3>
                 <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).CREATED)}">
-                    <div th:text="${assignment.userSimpleOrganisation}" data-text-to-html="" class="govuk-body wysiwyg-styles">Organisation name</div>
+                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
                 </li>
             </ul>
         </th:block>
@@ -206,24 +208,36 @@
                     <th:block th:if="${model.accepted}">
                         <ul class="govuk-list boxed-list">
                             <h3 class="govuk-heading-s" th:text="|Interested (${model.AcceptedCount})|">Interested</h3>
-                            <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
-                                <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+                            <li>
+                                <span th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).ACCEPTED)}">
+                                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
+                                    <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+                                </span>
                             </li>
                         </ul>
                     </th:block>
 
                     <th:block th:if="${model.declined}">
                         <h3 class="govuk-heading-s" th:text="|Declined (${model.DeclinedCount})|">Declined</h3>
-                        <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).REJECTED)}">
-                            <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
-                        </li>
+                        <ul class="govuk-list boxed-list">
+                            <li>
+                                <span th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).REJECTED)}">
+                                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
+                                    <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+                                </span>
+                            </li>
+                        </ul>
                     </th:block>
 
                     <th:block th:if="${model.pending}">
-                        <h3 class="govuk-heading-s" th:text="|'Didn\'t review' (${model.PendingCount})|">Didn't review</h3>
-                        <li th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).CREATED)}">
-                            <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
-                        </li>
+                        <h3 class="govuk-heading-s" th:text="|Didn&rsquo;t review (${model.PendingCount})|">Didn't review</h3>
+                        <ul class="govuk-list boxed-list">
+                            <li>
+                                <span th:each="assignment : ${model.assignments.get(T(org.innovateuk.ifs.supporter.resource.SupporterState).CREATED)}">
+                                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
+                                </span>
+                            </li>
+                        </ul>
                     </th:block>
                 </div>
             </div>
