@@ -140,7 +140,7 @@ the user should see the validation error in the create assessor form
     the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
     the user should see a field and summary error      Your last name should have at least 2 characters.
     the user should see a field and summary error      Your first name should have at least 2 characters.
-    the user should see a field and summary error      Password must be at least 8 characters.
+    the user should see a field and summary error      Password must be at least 12 characters.
 
 the user enters the postcode and password to create account
     The user enters text to a text field                  id = addressForm.postcodeInput    BS14NT
@@ -158,7 +158,7 @@ the user should not see the error messages after entering valid values
     the user should not see the validation error in the create assessor form   ${enter_a_phone_number_between_8_and_20_digits}
     the user enters text to a text field                                       id = password    ${correct_password}
     the user should not see the validation error in the create assessor form   Please enter your password.
-    the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
+    the user should not see the validation error in the create assessor form   Password must be at least 12 characters.
 
 the user checks for validations on reject invitation page
     the user navigates to the page                    ${Invitation_nonregistered_assessor2}
