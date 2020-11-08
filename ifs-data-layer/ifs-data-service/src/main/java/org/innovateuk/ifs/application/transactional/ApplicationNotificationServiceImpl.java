@@ -68,14 +68,10 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
-                .flatMap(x ->  {
-                    Stream<ProcessRole> processRoles = x.getProcessRoles().stream();
-                    if(x.getCompetition().isKtp()) {
-                        return processRoles.filter(ProcessRole::isKta);
-                    } else {
-                        return processRoles.filter(ProcessRole::isLeadApplicantOrCollaborator);
-                    }
-                })
+                .flatMap(x -> x.getProcessRoles().stream()
+                        .filter(x.getCompetition().isKtp()
+                                ? ProcessRole::isKta
+                                : ProcessRole::isLeadApplicantOrCollaborator))
                 .collect(toList());
 
         for (ProcessRole applicant : applicants) {
