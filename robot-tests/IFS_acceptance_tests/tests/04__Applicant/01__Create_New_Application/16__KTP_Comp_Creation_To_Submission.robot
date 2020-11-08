@@ -572,6 +572,27 @@ The lead is able to complete the Bank details section
     When the user clicks the button/link     link = Set up your project
     Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
 
+The lead is able to access Finance checks before approval
+    [Documentation]  IFS-8328
+    Given The user should see the element     jQuery = .progress-list li:nth-child(6):contains("Awaiting review")
+    When the user clicks the button/link      link = Finance checks
+    Then The user should see the element      link = your project finances
+    And The user should see the element       link = view the project finance overview
+
+The lead should be able to access the eligibility checks page before approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link                         link = Finance checks
+    Then the user should see the changes in the finance table
+    [Teardown]  the user clicks the button/link                  link = Back to finance checks
+
+The lead should be able to access the finance overview page before approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link                         link = your project finances
+    Then the user should see the changes in the finance table
+    And The user should see the element                          jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
+    And The user should not see the element                      link = Change funding level percentages
+    [Teardown]  the user clicks the button/link                  link = Back to finance checks
+
 The partner is able to complete Project team Section
     [Documentation]  IFS-7812
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
@@ -604,6 +625,21 @@ The partner should see the MO section with KTA details
     When the user clicks the button/link            link = Monitoring Officer
     Then The user should see the element            jQuery = a:contains("${ktaEmail}")
     [Teardown]  the user clicks the button/link     link = Set up your project
+
+The partner is able to access Finance checks before approval
+    [Documentation]  IFS-8328
+    Given the user should see the element        jQuery = .progress-list li:nth-child(6):contains("Awaiting review")
+    When the user clicks the button/link         link = Finance checks
+    Then the user should not see the element     link = your project finances
+    And the user should see the element          link = project finance overview
+
+The partner should be able to access the finance overview page before approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link                         link = your project finances
+    Then the user should see the changes in the finance table
+    And the user should see the element                          jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
+    And the user should not see the element                      link = Change funding level percentages
+    [Teardown]  the user clicks the button/link                  link = Back to finance checks
 
 Internal user is able to approve documents
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -647,6 +683,16 @@ Internal user is able to approve Finance checks and generate spend profile
     When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+
+The lead is able to access Finance checks after approval
+     [Documentation]  IFS-8328
+     [Setup]  log in as a different user       &{ktpLeadApplicantCredentials}
+     Given the user navigates to the page      ${server}/project-setup/project/${ProjectID}
+     And The user should see the element       jQuery = .progress-list li:nth-child(6):contains("Completed")
+     When the user clicks the button/link      link = Finance checks
+     Then The user should see the element      link = your project finances
+     And The user should see the element       link = view the project finance overview
+     And The user should see the element       jQuery = p:contains("The checks have been completed and your project finances approved.")
 
 The partner is able to submit the spend profile and should not see the project start date
     [Documentation]  IFS-7812  IFS-7805
@@ -781,9 +827,11 @@ the user fills financial overview section
 the user approves Eligibility
     [Arguments]  ${project}
     Requesting Organisation IDs
-    the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
+    the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
+    the user should see the changes in the finance table
     the user approves project costs
-    the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${partnerOrgId}/eligibility
+    the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${partnerOrgId}/eligibility
+    the user should see the changes in the finance table
     the user approves project costs
 
 the user approves viability
@@ -1030,3 +1078,8 @@ the user switch to the new tab on click guidance links
     [Arguments]  ${link}
     the user clicks the button/link     link = ${link}
     Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
+
+the user should see the changes in the finance table
+    the user should see the element     jQuery = th:contains("Other funding (£)")
+    the user should see the element     jQuery = th:contains("Company contribution (%)")
+    the user should see the element     jQuery = th:contains("Company contribution (£)")
