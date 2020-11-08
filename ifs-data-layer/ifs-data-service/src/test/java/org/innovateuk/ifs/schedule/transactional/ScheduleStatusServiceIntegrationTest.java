@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseAuthenticationAwareIntegrationTest;
 import org.innovateuk.ifs.schedule.repository.ScheduleStatusRepository;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,8 +26,13 @@ public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwar
 
     private static final String JOB_NAME = "INTEGRATION_TEST";
 
+    @After
+    public void teardown() {
+        scheduleStatusRepository.findByJobName(JOB_NAME).ifPresent(scheduleStatusRepository::delete);
+    }
+
     @Test
-    public void multipleServicesRunningSchedule() throws InterruptedException, ExecutionException {
+    public void multipleServicesRunningSchedule_DifferentTimes() throws InterruptedException, ExecutionException {
         CompletableFuture<Optional<Exception>> future1 = new CompletableFuture<>();
         CompletableFuture<Optional<Exception>> future2 = new CompletableFuture<>();
 
@@ -35,14 +41,14 @@ public class ScheduleStatusServiceIntegrationTest extends BaseAuthenticationAwar
         new Thread(new ScheduleTask(future2, "Task 2")).start();
 
         assertFalse(taskWasSuccessful(future2));
-        assertTrue(aTaskIsActive());
+        assertTrue(taskExists());
 
         assertTrue(taskWasSuccessful(future1));
-        assertFalse(aTaskIsActive());
+        assertFalse(taskExists());
     }
 
-    private boolean aTaskIsActive() {
-        return scheduleStatusRepository.findByJobName(JOB_NAME).get().isActive();
+    private boolean taskExists() {
+        return scheduleStatusRepository.findByJobName(JOB_NAME).isPresent();
     }
 
     private boolean taskWasSuccessful(CompletableFuture<Optional<Exception>> task) throws ExecutionException, InterruptedException {

@@ -221,6 +221,8 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link           css = div.initials-tab-content
     the user should see the element           css=.page.page-loaded
     The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    the user should see the element           css=.page.page-loaded
+    the user clicks the button/link           jQuery = span:contains("Fill In")
     The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
@@ -251,15 +253,7 @@ the applicant is able to see the rejected GOL
     the user clicks the button/link           link = Grant offer letter
     the user should see the element           jQuery = .fail-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
 
-the user enters bank details
-    the user clicks the button/link                      link = Bank details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      id = submit-bank-details-button
-    the user clicks the button/link                      id = submit-bank-details-model-button
+
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
@@ -288,6 +282,16 @@ The user uploads the Test document type
     the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
+
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      id = submit-bank-details-button
+    the user clicks the button/link                      id = submit-bank-details-model-button
 
 the user uploads the Collaboration agreement
     the user clicks the button/link     link = Collaboration agreement

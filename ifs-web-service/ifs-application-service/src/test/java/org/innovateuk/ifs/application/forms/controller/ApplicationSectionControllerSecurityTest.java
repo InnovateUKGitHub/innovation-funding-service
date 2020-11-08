@@ -23,6 +23,7 @@ public class ApplicationSectionControllerSecurityTest extends BaseControllerSecu
         roles.add(Role.APPLICANT);
         roles.add(Role.SUPPORTER);
         roles.add(Role.ASSESSOR);
+        roles.add(Role.SYSTEM_MAINTAINER);
 
         assertRolesCanPerform(() -> classUnderTest.redirectToSectionManagement(null, 0L, 0L), roles);
     }

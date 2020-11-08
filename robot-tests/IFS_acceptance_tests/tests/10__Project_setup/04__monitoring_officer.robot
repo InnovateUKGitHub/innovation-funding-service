@@ -359,7 +359,7 @@ The user should see server side validations
 
 The user should see server side validations triggered correctly
     the user should see server side validations      Create account
-    the user should see a field and summary error    Password must be at least 8 characters.
+    the user should see a field and summary error    Password must be at least 12 characters.
     the user should see a field and summary error    Please enter your password.
 
 Comp admin remove project assigned to MO
