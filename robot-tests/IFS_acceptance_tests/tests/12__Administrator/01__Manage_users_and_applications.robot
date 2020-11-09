@@ -453,7 +453,7 @@ IFS Admin can add a role profile of KTA to an applicant in KT Network
 
 Applicant that has been assigned a KTA role can see applications and assessment dashboard
     [Documentation]  IFS-8547
-    Given Log in as a different user     ${applicantKTAEmail}  ${short_password}
+    Given Log in as a different user     ${applicantKTACredentials}  ${short_password}
     Then the user should see the element    id = dashboard-link-APPLICANT
     And The user should see the element     id = dashboard-link-ASSESSOR
 
