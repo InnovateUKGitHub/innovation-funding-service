@@ -75,7 +75,7 @@ ${summaryError}                          Role profile cannot be created without 
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
 ${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
-${applicantKTACredentials}               john.fenton@ktn-uk.test
+${applicantKTACredentials}               joe.adams@ktn-uk.test
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -446,7 +446,7 @@ IFS Admin can add a role profile of KTA to an assessor in KT Network
 IFS Admin can add a role profile of KTA to an applicant in KT Network
     [Documentation]  IFS-7976
     Given the user navigates to the page                     ${server}/management/admin/users/active
-    When the user selects a user to edit details             fenton  ${applicantKTACredentials}
+    When the user selects a user to edit details             adams  ${applicantKTACredentials}
     And the user adds a new external role profile of KTA
     Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element                  link = Add a new external role profile
