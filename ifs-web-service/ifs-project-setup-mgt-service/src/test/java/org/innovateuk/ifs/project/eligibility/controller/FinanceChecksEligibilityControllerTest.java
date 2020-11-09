@@ -20,6 +20,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.financecheck.populator.FinanceCheckSummaryEntryViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
@@ -103,6 +104,9 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
     @Mock
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
+
+    @Mock
+    private FinanceCheckSummaryEntryViewModelPopulator financeCheckSummaryEntryViewModelPopulator;
 
     @Mock
     private ProjectAcademicCostsSaver projectAcademicCostsSaver;

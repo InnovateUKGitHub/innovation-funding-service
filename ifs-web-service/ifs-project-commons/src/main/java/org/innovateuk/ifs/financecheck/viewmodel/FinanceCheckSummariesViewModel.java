@@ -6,6 +6,8 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * View model for the finance checks summaries table.
@@ -27,8 +29,66 @@ public class FinanceCheckSummariesViewModel {
         return fundingType;
     }
 
-    public List<FinanceCheckEligibilityResource> getFinanceCheckSummariesResources() {
-        return financeCheckSummariesResources;
+    public List<FinanceCheckSummaryEntryViewModel> getFinanceCheckSummariesResources() {
+        if (FundingType.KTP == fundingType) {
+
+            Optional<PartnerOrganisationResource> leadOrg = organisationResources.stream()
+                    .filter(PartnerOrganisationResource::isLeadOrganisation)
+                    .findFirst();
+
+            Optional<FinanceCheckEligibilityResource> leadSummary = financeCheckSummariesResources.stream()
+                    .filter(summary -> isLead(summary, leadOrg.get()))
+                    .findFirst();
+
+            if (!leadOrg.isPresent() || !leadSummary.isPresent()) {
+                return map(financeCheckSummariesResources);
+            }
+
+            return financeCheckSummariesResources.stream().map(summary -> {
+                boolean isLead = isLead(summary, leadOrg.get());
+
+                BigDecimal contributionToProject;
+                BigDecimal percentageContributionToProject;
+                if (isLead) {
+                    contributionToProject = new BigDecimal("0.00");
+                    percentageContributionToProject = new BigDecimal("0.0");
+                } else {
+                    contributionToProject = leadSummary.get().getContributionToProject();
+                    percentageContributionToProject = getPercentageContributionToProject(leadSummary.get());
+                }
+
+                return new FinanceCheckSummaryEntryViewModel(
+                        summary.getProjectId(),
+                        summary.getOrganisationId(),
+                        summary.getDurationInMonths(),
+                        summary.getTotalCost(),
+                        summary.getPercentageGrant(),
+                        summary.getFundingSought(),
+                        summary.getOtherPublicSectorFunding(),
+                        contributionToProject,
+                        percentageContributionToProject,
+                        summary.isHasApplicationFinances());
+            }).collect(Collectors.toList());
+        }
+        return map(financeCheckSummariesResources);
+    }
+
+    private List<FinanceCheckSummaryEntryViewModel> map(List<FinanceCheckEligibilityResource> resources) {
+        return resources.stream().map(summary -> new FinanceCheckSummaryEntryViewModel(
+                summary.getProjectId(),
+                summary.getOrganisationId(),
+                summary.getDurationInMonths(),
+                summary.getTotalCost(),
+                summary.getPercentageGrant(),
+                summary.getFundingSought(),
+                summary.getOtherPublicSectorFunding(),
+                summary.getContributionToProject(),
+                getPercentageContributionToProject(summary),
+                summary.isHasApplicationFinances())).collect(Collectors.toList());
+    }
+
+    private boolean isLead(FinanceCheckEligibilityResource resource, PartnerOrganisationResource lead) {
+        return resource.getOrganisationId().equals(lead.getOrganisation());
     }
 
     public List<PartnerOrganisationResource> getOrganisationResources() {
@@ -67,4 +127,12 @@ public class FinanceCheckSummariesViewModel {
     public PartnerOrganisationResource getPartnerFromSummary(Long organisationId) {
         return getOrganisationResources().stream().filter(org -> organisationId.equals(org.getOrganisation())).findFirst().orElse(new PartnerOrganisationResource());
     }
+
+    private BigDecimal getPercentageContributionToProject(FinanceCheckEligibilityResource resource) {
+        if (resource.getTotalCost().signum() == 0 || resource.getContributionToProject().signum() == 0) {
+            return BigDecimal.ZERO;
+        }
+        return resource.getContributionToProject().divide(resource.getTotalCost()).multiply(new BigDecimal(100));
+    }
+
 }

@@ -20,6 +20,8 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.financecheck.populator.FinanceCheckSummaryEntryViewModelPopulator;
+import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummaryEntryViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
@@ -33,10 +35,8 @@ import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseF
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
 import org.innovateuk.ifs.project.financechecks.viewmodel.FinanceChecksProjectCostsViewModel;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
@@ -115,6 +115,9 @@ public class ProjectFinanceChecksController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Autowired
     private EncryptedCookieService cookieUtil;
 
     @Autowired
@@ -128,6 +131,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
+
+    @Autowired
+    private FinanceCheckSummaryEntryViewModelPopulator financeCheckSummaryEntryViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -475,7 +481,9 @@ public class ProjectFinanceChecksController {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
 
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
+        FinanceCheckSummaryEntryViewModel financeCheckSummaryEntry = financeCheckSummaryEntryViewModelPopulator.populate(competition, project, eligibilityOverview, organisation, isLeadPartnerOrganisation);
+
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, financeCheckSummaryEntry,
                 organisation.getName(),
                 isLeadPartnerOrganisation,
                 organisation.getId(),
