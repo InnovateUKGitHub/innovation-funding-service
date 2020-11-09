@@ -248,14 +248,14 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
     Given the user reads his email and clicks the link            ${email}  ${emailInviteSubject}  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                           jQuery = .govuk-button:contains("Create account")
-    And the use should see the validation error summary           Password must be at least 8 characters
+    And the use should see the validation error summary           Password must be at least 12 characters
     When the user enters the basic details to create account      New  Administrator  ${email}
     Set Focus To Element                                          css = #lastName
     Then the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
-    Given the user enters text to a text field  id = password  PASSWORD123
+    Given the user enters text to a text field  id = password  PASSWORD1357123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field   css = #password  ${short_password}
@@ -332,7 +332,7 @@ Deactivate external user
 
 Deactivated external user cannot login
     [Documentation]  IFS-6380
-    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd
+    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd1357
     When Logging in and Error Checking                          &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details   ${adminChangeEmailNew}  inactive
     And the IFS admin reactivate the user                       ${adminChangeEmailNew}

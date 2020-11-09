@@ -22,7 +22,7 @@ ${KTPapplication}  	               KTP application
 ${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
 ${KTPcompetiton}                   KTP new competition
 ${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                         email=bob@knowledge.base    password=Passw0rd
+&{KTPLead}                         email=bob@knowledge.base    password=Passw0rd1357
 ${estateValue}                     11000
 ${associateSalaryTable}            associate-salary-costs-table
 ${associateDevelopmentTable}       associate-development-costs-table

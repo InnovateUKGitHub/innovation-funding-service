@@ -144,7 +144,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updatePassword() throws Exception {
-        final String password = "Passw0rd";
+        final String password = "Passw0rd1357";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceSuccess(null));
         mockMvc.perform(post("/user/" + URL_PASSWORD_RESET + "/{hash}", hash).content(password)
@@ -201,7 +201,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void updatePasswordTokenNotFound() throws Exception {
-        final String password = "Passw0rd";
+        final String password = "Passw0rd1357";
         final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
         final Error error = notFoundError(Token.class, hash);
         when(userServiceMock.changePassword(hash, password)).thenReturn(serviceFailure(error));
@@ -276,7 +276,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
-                .withPassword("Passw0rd123")
+                .withPassword("Passw0rd1357123")
                 .build();
 
         when(registrationServiceMock.createUser(refEq(anUserCreationResource()
