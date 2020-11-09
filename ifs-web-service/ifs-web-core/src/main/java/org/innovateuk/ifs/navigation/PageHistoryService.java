@@ -35,19 +35,21 @@ public class PageHistoryService {
             history.clear();
         }
 
-        if (!history.isEmpty()) {
-            modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
-            modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
-        }
-
-        if (!ERROR.equals(request.getDispatcherType())) {
-            String requestURI = request.getRequestURI();
-            if (request.getQueryString() != null) {
-                requestURI = StringUtils.append(requestURI, "/?");
-                requestURI = StringUtils.append(requestURI, request.getQueryString());
+        if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
+            if (!history.isEmpty()) {
+                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
+                modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
             }
-            history.push(new PageHistory(requestURI));
-            encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+
+            if (!ERROR.equals(request.getDispatcherType())) {
+                String requestURI = request.getRequestURI();
+                if (request.getQueryString() != null) {
+                    requestURI = StringUtils.append(requestURI, "/?");
+                    requestURI = StringUtils.append(requestURI, request.getQueryString());
+                }
+                history.push(new PageHistory(requestURI));
+                encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+            }
         }
     }
 

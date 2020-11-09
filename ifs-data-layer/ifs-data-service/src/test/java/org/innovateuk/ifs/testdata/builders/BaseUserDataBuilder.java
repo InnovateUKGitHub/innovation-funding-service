@@ -66,7 +66,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withEmail(emailAddress).
                 withPhoneNumber(phoneNumber).
                 withRole(role).
-                withPassword("Passw0rd").
+                withPassword("Passw0rd1357").
                 withAgreedTerms(true).
                 withInviteHash(hash).
                 build()).

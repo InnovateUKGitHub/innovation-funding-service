@@ -80,6 +80,18 @@ public class PageHistoryServiceTest {
     }
 
     @Test
+    public void recordPageHistory_ExcludeFromPageHistory() {
+        when(request.getRequestURI()).thenReturn("/url/pageOne");
+        when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
+        when(handler.hasMethodAnnotation(ExcludeFromPageHistory.class)).thenReturn(true);
+
+        pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
+
+        assertEquals(2, history.size());
+        verify(encodedCookieService, never()).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
+    }
+
+    @Test
     public void recordPageHistory_alreadyVisitedPage() {
         Map<String, Object> model = new HashMap<>();
         when(modelAndView.getModel()).thenReturn(model);
