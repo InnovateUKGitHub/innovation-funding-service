@@ -581,9 +581,9 @@ The lead is able to access Finance checks before approval
 
 The lead should be able to access the eligibility checks page before approval
     [Documentation]  IFS-8328
-    When the user clicks the button/link                         link = Finance checks
-    Then the user should see the changes in the finance table
-    [Teardown]  the user clicks the button/link                  link = Back to finance checks
+    When the user clicks the button/link            link = your project finances
+    Then the user should see the element
+    [Teardown]  the user clicks the button/link     link = Back to finance checks
 
 The lead should be able to access the finance overview page before approval
     [Documentation]  IFS-8328
@@ -666,13 +666,30 @@ Internal user is able to view the KTA as an MO
     Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
     Then the user should see the element     css = input[name="emailAddress"][value = "${ktaEmail}"]
+    And The user clicks the button/link      link = Back to project setup
 
-Finance user approves bank details
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user                         &{internal_finance_credentials}
-    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
-    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
-    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
+#Finance user approves bank details
+#    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+#    [Setup]  log in as a different user                         &{internal_finance_credentials}
+#    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
+#    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
+#    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
+
+Internal user is able to access the finance overview page
+    [Documentation]  IFS-8328
+    [Setup]  log in as a different user                           &{Comp_admin1_credentials}
+    Given The user navigates to the page                          ${server}/project-setup-management/project/${ProjectID}/finance-check
+    When The user clicks the button/link                          link = View finances
+    Then the user should see the changes in the finance table
+    And The user should not see the element                       jQuery = h3:contains("Overview")
+    And the user should not see the element                       jQuery = h3:contains("Project cost breakdown")
+    And The user should see the element                           jQuery = h3:contains("Project cost summary")
+
+Internal user is able to access the funding level percentages screen
+    [Documentation]  IFS-8328
+    When The user clicks the button/link       link = Change funding level percentages
+    Then The user should see the element       jQuery = td:contains("Ludlow") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
+
 
 Internal user is able to approve Finance checks and generate spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
@@ -684,21 +701,20 @@ Internal user is able to approve Finance checks and generate spend profile
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
 
-The lead is able to access Finance checks after approval
-     [Documentation]  IFS-8328
-     [Setup]  log in as a different user       &{ktpLeadApplicantCredentials}
-     Given the user navigates to the page      ${server}/project-setup/project/${ProjectID}
-     And The user should see the element       jQuery = .progress-list li:nth-child(6):contains("Completed")
-     When the user clicks the button/link      link = Finance checks
-     Then The user should see the element      link = your project finances
-     And The user should see the element       link = view the project finance overview
-     And The user should see the element       jQuery = p:contains("The checks have been completed and your project finances approved.")
-
 The partner is able to submit the spend profile and should not see the project start date
     [Documentation]  IFS-7812  IFS-7805
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
     Given the partner submits the spend profile     ${ProjectID}  ${partnerOrgId}
     And the user should not see the element         jQuery = dt:contains("Project start date")
+    And The user clicks the button/link             link = Set up your project
+
+The partner is able to access Finance checks after approval
+     [Documentation]  IFS-8328
+     Given the user should see the element         jQuery = .progress-list li:nth-child(6):contains("Completed")
+     When the user clicks the button/link          link = Finance checks
+     Then The user should not see the element      link = review your project finances
+     And The user should see the element           link = project finance overview
+     And The user should see the element           jQuery = p:contains("The checks have been completed and your project finances approved.")
 
 The lead is able to submit the spend profile and should not see the project start date
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7805
@@ -708,6 +724,14 @@ The lead is able to submit the spend profile and should not see the project star
     And the user should not see the element     jQuery = dt:contains("Project start date")
     Then the user submits the spend profile
     And the user should see the element         jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+
+The lead is able to access Finance checks after approval
+     [Documentation]  IFS-8328
+     Given the user should see the element     jQuery = .progress-list li:nth-child(6):contains("Completed")
+     When the user clicks the button/link      link = Finance checks
+     Then The user should see the element      link = review your project finances
+     And The user should see the element       link = your project finance overview
+     And The user should see the element       jQuery = p:contains("The checks have been completed and your project finances approved.")
 
 Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -1083,3 +1107,6 @@ the user should see the changes in the finance table
     the user should see the element     jQuery = th:contains("Other funding (£)")
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
+    the user should see the element     jQuery = th:contains("A base of knowledge") + td:contains("£1,100")
+    the user should see the element     jQuery = th:contains("Ludlow") ~ td:contains("70.00%")
+    the user should see the element     jQuery = th:contains("Ludlow") ~ td:contains("770")
