@@ -32,8 +32,8 @@
     </th:block>
 
     <section class="portrait">
-        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
-        <th:block th:insert="application/readonly/application-read-only :: supporter_feedback (${model})" ></th:block>
+        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" />
+        <th:block th:if="${model.shouldDisplayKtpApplicationFeedback}" th:insert="application/readonly/application-read-only :: supporter_feedback (${model})" />
     </section>
 </th:block>
 
@@ -114,11 +114,11 @@
         </section>
     </th:block>
 
-    <th:block th:unless="${model.ktpCompetition}">
+    <th:block th:unless="${model.shouldDisplayKtpApplicationFeedback}">
         <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
     </th:block>
 
-    <th:block th:if="${model.ktpCompetition}">
+    <th:block th:if="${model.shouldDisplayKtpApplicationFeedback}">
         <th:block th:insert="application/readonly/application-read-only :: ktp_application_feedback (${model})" ></th:block>
     </th:block>
 </th:block>

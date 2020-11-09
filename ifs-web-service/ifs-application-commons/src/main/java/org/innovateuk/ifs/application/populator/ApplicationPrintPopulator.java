@@ -47,7 +47,7 @@ public class ApplicationPrintPopulator {
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
         return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement()) ||
-                (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER) && shouldDisplayFeedback(competition, application));
+                (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER, Role.KNOWLEDGE_TRANSFER_ADVISER) && shouldDisplayFeedback(competition, application));
     }
 
     private boolean userCanViewSupporterFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {

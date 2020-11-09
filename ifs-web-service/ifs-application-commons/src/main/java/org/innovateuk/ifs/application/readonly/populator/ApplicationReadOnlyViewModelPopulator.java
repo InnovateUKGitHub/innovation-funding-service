@@ -136,7 +136,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                         .map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList(),
                 settings.isIncludeAllSupporterFeedback() ? data.getFeedbackToApplicationSupport().values().stream()
                         .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap(),
-                competition.isKtp()
+                competition.isKtp() && user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
         );
     }
 
