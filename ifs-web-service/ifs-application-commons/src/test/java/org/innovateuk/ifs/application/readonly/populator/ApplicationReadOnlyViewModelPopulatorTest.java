@@ -270,14 +270,15 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withOverallFeedback("Overall Feedback")
                 .build();
 
-        SupporterAssignmentResource supporterResponseFuture = newSupporterAssignmentResource()
+        List<SupporterAssignmentResource> supporterResponseFuture = newSupporterAssignmentResource()
+                .withAssignmentId(1, 2, 3, 4, 5)
                 .withState(SupporterState.ACCEPTED, SupporterState.ACCEPTED, SupporterState.REJECTED, SupporterState.REJECTED, SupporterState.CREATED)
                 .withComments("accepted one", "accepted two", "rejected one", "rejected two", "created")
                 .withUserSimpleOrganisation("Org A", "Org B", "Org C", "Org D", "Org E")
-                .build();
+                .build(5);
 
         ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
-                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), singletonList(supporterResponseFuture));
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture);
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -292,7 +293,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
-        when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(singletonList(supporterResponseFuture)));
+        when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
 
         when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
