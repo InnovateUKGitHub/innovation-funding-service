@@ -21,6 +21,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.financecheck.populator.FinanceCheckSummaryEntryViewModelPopulator;
+import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummaryEntryViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
@@ -34,6 +36,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -95,7 +98,13 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
 
     @Autowired
+    private FinanceCheckSummaryEntryViewModelPopulator financeCheckSummaryEntryViewModelPopulator;
+
+    @Autowired
     private ProjectAcademicCostsSaver projectAcademicCostsSaver;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
@@ -139,7 +148,9 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
-            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
+            FinanceCheckSummaryEntryViewModel financeCheckSummaryEntry = financeCheckSummaryEntryViewModelPopulator.populate(competition.get(), project, eligibilityOverview.get(), organisation.get(), isLeadPartnerOrganisation);
+
+            model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), financeCheckSummaryEntry,
                     organisation.get().getName(),
                     isLeadPartnerOrganisation,
                     organisation.get().getId(),

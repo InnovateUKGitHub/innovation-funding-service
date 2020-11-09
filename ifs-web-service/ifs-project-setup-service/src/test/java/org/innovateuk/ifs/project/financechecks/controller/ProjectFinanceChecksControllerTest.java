@@ -14,6 +14,7 @@ import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.financecheck.populator.FinanceCheckSummaryEntryViewModelPopulator;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -99,6 +100,9 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     @Mock
     private ProjectFinanceChangesViewModelPopulator projectFinanceChangesViewModelPopulator;
+
+    @Mock
+    private FinanceCheckSummaryEntryViewModelPopulator financeCheckSummaryEntryViewModelPopulator;
 
     private OrganisationResource industrialOrganisation;
 
