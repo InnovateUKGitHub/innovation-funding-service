@@ -112,7 +112,7 @@
                                th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
                     </div>
 
-                    <a th:href="@{'/monitoring-officer/view-all?ktp={ktp}(ktp=${model.ktp})'}"
+                    <a th:href="@{/monitoring-officer/view-all(ktp=${model.ktp})}"
                        th:if="${model.displayChangeMonitoringOfficerLink}" class="govuk-link">
                         Change Monitoring Officer
                     </a>
