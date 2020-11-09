@@ -9,6 +9,8 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8594  For KTP pre populate the assessor view finance config to 'All'
 ...
+...              IFS-8617  Assessment overview - missing print link and spacing of score assessment
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -143,9 +145,11 @@ Assessor can score cohesiveness category in the KTP application
     Then Assessor should see the category details     Innovation   40   100%
 
 Assessor is presented with an error message when saving an assessment without guidance for funding sutability decision
-    [Documentation]   IFS-8295
-    Given the user clicks the button/link                  link = Review and complete your assessment
-    When the user clicks the button/link                   jQuery = button:contains("Save assessment")
+    [Documentation]   IFS-8295  IFS-8617
+    When the user should see the element                   jQuery = a:contains("Print or download the application")
+    And the user should see the element                    jQuery = p:contains("Total score:")
+    Then the user clicks the button/link                   link = Review and complete your assessment
+    And the user clicks the button/link                    jQuery = button:contains("Save assessment")
     Then the user should see a field and summary error     You must select an option.
     And the user should see the element                    jQuery = h1:contains("Assessment summary")
     And the user should see the element                    jQuery = h2:contains("Review assessment")
