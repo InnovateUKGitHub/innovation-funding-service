@@ -4,19 +4,29 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.net.URI;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 public class PageHistory {
     private String name;
-    private String url;
+    private String uri;
+    private String query;
 
-    private PageHistory() {}
-
-    public PageHistory(String url) {
-        this.url = url;
+    private PageHistory() {
     }
 
-    public PageHistory(String name, String url) {
+    public PageHistory(String uri) {
+        this.uri = uri;
+    }
+
+    public PageHistory(String name, String uri) {
         this.name = name;
-        this.url = url;
+        this.uri = uri;
+    }
+
+    public PageHistory(String name, String uri, String query) {
+        this.name = name;
+        this.uri = uri;
+        this.query = query;
     }
 
     public String getName() {
@@ -27,12 +37,12 @@ public class PageHistory {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUri() {
+        return uri;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public String getQuery() {
+        return query;
     }
 
     @Override
@@ -43,8 +53,8 @@ public class PageHistory {
 
         PageHistory that = (PageHistory) o;
 
-        String thisPath = removeTrailingSlash(URI.create(url).getPath());
-        String thatPath = removeTrailingSlash(URI.create(that.getUrl()).getPath());
+        String thisPath = removeTrailingSlash(URI.create(uri).getPath());
+        String thatPath = removeTrailingSlash(URI.create(that.getUri()).getPath());
 
         return thisPath.equals(thatPath);
     }
@@ -52,7 +62,7 @@ public class PageHistory {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(url)
+                .append(uri)
                 .toHashCode();
     }
 
@@ -61,5 +71,13 @@ public class PageHistory {
             return url.substring(0, url.length() - 1);
         }
         return url;
+    }
+
+    public String buildUrl() {
+        if (isNullOrEmpty(query)) {
+            return uri;
+        } else {
+            return uri + "?" + query;
+        }
     }
 }

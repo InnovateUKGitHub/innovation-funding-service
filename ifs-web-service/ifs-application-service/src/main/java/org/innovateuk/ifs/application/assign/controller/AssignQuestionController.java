@@ -91,7 +91,7 @@ public class AssignQuestionController {
     private String redirectToRelevantPage(long applicationId, long questionId, HttpServletRequest request, HttpServletResponse response) {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         String url = pageHistoryService.getPreviousPage(request)
-                .map(PageHistory::getUrl)
+                .map(PageHistory::buildUrl)
                 .orElse(String.format("/application/%d/form/question/%d", applicationId, questionId));
         return "redirect:" + url;
     }

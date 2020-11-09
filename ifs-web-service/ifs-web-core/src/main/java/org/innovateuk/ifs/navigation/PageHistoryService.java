@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,17 +36,12 @@ public class PageHistoryService {
 
         if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
             if (!history.isEmpty()) {
-                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
+                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().buildUrl());
                 modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
             }
 
             if (!ERROR.equals(request.getDispatcherType())) {
-                String requestURI = request.getRequestURI();
-                if (request.getQueryString() != null) {
-                    requestURI = StringUtils.append(requestURI, "/?");
-                    requestURI = StringUtils.append(requestURI, request.getQueryString());
-                }
-                history.push(new PageHistory(requestURI));
+                history.push(new PageHistory(null, request.getRequestURI(), request.getQueryString()));
                 encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
             }
         }
