@@ -1,6 +1,6 @@
 -- Useful query to regenerate the data in invites_data.csv after a change in the database.
 
-select concat_ws(',', u.email, 'Passw0rd', a.id, pr.organisation_id, application_team_question.id, application_details_question.id)
+select concat_ws(',', u.email, 'Passw0rd1357', a.id, pr.organisation_id, application_team_question.id, application_details_question.id)
             from user u
             join process_role pr
               on pr.user_id = u.id
