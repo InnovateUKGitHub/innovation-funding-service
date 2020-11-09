@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +41,12 @@ public class PageHistoryService {
         }
 
         if (!ERROR.equals(request.getDispatcherType())) {
-            history.push(new PageHistory(request.getRequestURI()));
+            String requestURI = request.getRequestURI();
+            if (request.getQueryString() != null) {
+                requestURI = StringUtils.append(requestURI, "/?");
+                requestURI = StringUtils.append(requestURI, request.getQueryString());
+            }
+            history.push(new PageHistory(requestURI));
             encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
         }
     }

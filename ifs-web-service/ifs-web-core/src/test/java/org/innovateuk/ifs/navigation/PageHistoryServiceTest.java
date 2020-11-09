@@ -18,6 +18,7 @@ import java.util.*;
 import static javax.servlet.DispatcherType.ERROR;
 import static org.innovateuk.ifs.navigation.PageHistoryService.PAGE_HISTORY_COOKIE_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -107,6 +108,24 @@ public class PageHistoryServiceTest {
         assertEquals("/url/pageSecond", model.get("cookieBackLinkUrl"));
         assertEquals("pageSecond", model.get("cookieBackLinkText"));
         verify(encodedCookieService, never()).saveToCookie(any(), any(), any());
+    }
+
+    @Test
+    public void recordPageHistoryWithQueryParams() {
+        Map<String, Object> model = new HashMap<>();
+
+        when(modelAndView.getModel()).thenReturn(model);
+        when(request.getRequestURI()).thenReturn("/url/pageSecond");
+        when(request.getQueryString()).thenReturn("ktp=true");
+        when(handler.hasMethodAnnotation(NavigationRoot.class)).thenReturn(false);
+
+        pageHistoryService.recordPageHistory(request, response, modelAndView, handler);
+
+        assertEquals(2, history.size());
+        assertEquals("/url/pageFirst", model.get("cookieBackLinkUrl"));
+        assertEquals("pageFirst", model.get("cookieBackLinkText"));
+        assertTrue(history.getFirst().getUrl().contains("/?ktp=true"));
+        verify(encodedCookieService).saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
     }
 
 }
