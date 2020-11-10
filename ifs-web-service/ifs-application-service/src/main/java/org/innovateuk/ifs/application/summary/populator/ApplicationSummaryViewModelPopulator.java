@@ -48,7 +48,7 @@ public class ApplicationSummaryViewModelPopulator {
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings()
                 .setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user))
-                .setIncludeAllSupporterFeedback(shouldDisplayFeedback(competition, application, user));
+                .setIncludeAllSupporterFeedback(shouldDisplaySupporterFeedback(competition, application, user));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
@@ -84,6 +84,11 @@ public class ApplicationSummaryViewModelPopulator {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
         boolean feedbackAvailable = feedbackReleased || isApplicationAssignedToInterview;
         return application.isSubmitted() && feedbackAvailable;
+    }
+
+    private boolean shouldDisplaySupporterFeedback(CompetitionResource competition, ApplicationResource application, UserResource user) {
+        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
+        return competition.isKtp() && user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && application.isSubmitted() && feedbackReleased;
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

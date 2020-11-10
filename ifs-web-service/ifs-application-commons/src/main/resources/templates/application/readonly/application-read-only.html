@@ -32,8 +32,8 @@
     </th:block>
 
     <section class="portrait">
-        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" />
-        <th:block th:if="${model.shouldDisplayKtpApplicationFeedback}" th:insert="application/readonly/application-read-only :: supporter_feedback (${model})" />
+        <th:block th:if="${model.settings.includeAllAssessorFeedback}" th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" />
+        <th:block th:if="${model.settings.includeAllSupporterFeedback}" th:insert="application/readonly/application-read-only :: supporter_feedback (${model})" />
     </section>
 </th:block>
 
@@ -182,7 +182,7 @@
 </th:block>
 
 <th:block th:fragment="ktp_application_feedback(model)">
-    <section>
+    <section th:if="${model.settings.includeAllAssessorFeedback || model.settings.includeAllSupporterFeedback}">
         <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">
             <span>
                 Application feedback
