@@ -447,14 +447,14 @@ IFS Admin can add a role profile of KTA to an assessor in KT Network
 IFS Admin can add a role profile of KTA to an applicant in KT Network
     [Documentation]  IFS-7976
     Given the user navigates to the page                     ${server}/management/admin/users/active
-    When the user selects a user to edit details             adams  ${applicantKTACredentials}
+    When the user selects a user to edit details             adams  ${newApplicantCredentials}
     And the user adds a new external role profile of KTA
     Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element                  link = Add a new external role profile
 
 Applicant that has been assigned a KTA role can see applications and assessment dashboard
     [Documentation]  IFS-8547
-     Given Log in as a different user     ${applicantKTACredentials}  ${short_password}
+     Given Log in as a different user     ${newApplicantCredentials}  ${short_password}
      When Then the user should see the element    id = dashboard-link-APPLICANT
      Then And The user should see the element     id = dashboard-link-ASSESSOR
 
