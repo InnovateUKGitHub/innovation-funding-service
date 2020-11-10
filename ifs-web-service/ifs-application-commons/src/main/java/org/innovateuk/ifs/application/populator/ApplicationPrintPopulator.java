@@ -37,7 +37,8 @@ public class ApplicationPrintPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         ApplicationReadOnlySettings settings = defaultSettings()
-                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application));
+                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application))
+                .setIncludeAllSupporterFeedback(userCanViewSupporterFeedback(user, competition, application));
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(applicationId, user, settings);
         model.addAttribute("model", applicationReadOnlyViewModel);
@@ -45,8 +46,13 @@ public class ApplicationPrintPopulator {
     }
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
-        return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement()) ||
-                (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER) && shouldDisplayFeedback(competition, application));
+        return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement())
+                || (user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER) && competition.isKtp() && shouldDisplayFeedback(competition, application))
+                || (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER) && !competition.isKtp() && shouldDisplayFeedback(competition, application));
+    }
+
+    private boolean userCanViewSupporterFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
+        return user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && shouldDisplaySupporterFeedback(competition, application);
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
@@ -54,5 +60,10 @@ public class ApplicationPrintPopulator {
         boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
         return application.isSubmitted()
                 && feedbackAvailable;
+    }
+
+    private boolean shouldDisplaySupporterFeedback(CompetitionResource competition, ApplicationResource application) {
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased();
+        return competition.isKtp() && application.isSubmitted() && feedbackAvailable;
     }
 }

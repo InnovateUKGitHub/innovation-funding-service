@@ -146,7 +146,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(),
                 asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
-                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture));
+                templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
@@ -209,7 +209,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
-                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList());
+                asList(appendix, templateDocument), asList(appendixResponse, templateDocumentResponse), emptyList(), emptyList(), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(3L));
@@ -236,7 +236,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
-                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList());
+                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList(), emptyList());
 
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));

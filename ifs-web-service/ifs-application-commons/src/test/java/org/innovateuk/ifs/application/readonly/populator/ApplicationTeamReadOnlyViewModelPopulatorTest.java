@@ -127,7 +127,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
         when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").build()));
         when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         ApplicationTeamReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
