@@ -22,6 +22,9 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               IFS-400 Filter by application number on Assessor progress dashboard - Closed and in assessments state
 ...
 ...               IFS-5915  Assessor Filter Option
+...
+...               IFS-8617  Assessment overview - missing print link and spacing of score assessment
+...
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -33,6 +36,7 @@ ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Cryptocurrencies_id}  ${application_ids['Living with Cryptocurrencies']}
 ${Paul_Plum_id}        ${user_ids['${assessor_credentials["email"]}']}
 ${Intelligent_water}   ${application_ids['Intelligent water system']}
+#Sustainable living models for the future
 
 *** Test Cases ***
 View the list of the applications
@@ -62,9 +66,17 @@ Selecting Review assessor link shows the assessor page
     Given the user clicks the button/link  link = Review assessor
     Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Paul Plum")
 
+Assessor can see the Print button and the score Total
+    [Documentation]  IFS-8617
+    [Setup]  Log in as a different user       &{assessor_credentials}
+    Given the user clicks the button/link     jQuery = a:contains("Sustainable living models for the future")
+    When the user clicks the button/link      jQuery = a:contains("Intelligent water system")
+    And the user should see the element       jQuery = a:contains("Print or download the application")
+    And the user should see the element       jQuery = p:contains("Total score:")
+    Then the user clicks the button/link      jQuery = a:contains("Dashboard")
+
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
-    [Setup]  Log in as a different user   &{assessor_credentials}
     Given the user accepts the application
     And Log in as a different user        &{Comp_admin1_credentials}
     When the user navigates to the page   ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}/assessors/${Paul_Plum_id}
