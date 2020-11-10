@@ -301,7 +301,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
 
         assertEquals(settings, viewModel.getSettings());
 
-        assertTrue(viewModel.isKtpCompetition());
+        assertTrue(viewModel.isShouldDisplayKtpApplicationFeedback());
 
         assertNotNull(viewModel.getOverallFeedbacks());
         assertEquals(1, viewModel.getOverallFeedbacks().size());
