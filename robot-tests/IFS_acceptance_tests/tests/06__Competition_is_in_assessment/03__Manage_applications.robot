@@ -36,7 +36,6 @@ ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Cryptocurrencies_id}  ${application_ids['Living with Cryptocurrencies']}
 ${Paul_Plum_id}        ${user_ids['${assessor_credentials["email"]}']}
 ${Intelligent_water}   ${application_ids['Intelligent water system']}
-#Sustainable living models for the future
 
 *** Test Cases ***
 View the list of the applications
