@@ -527,94 +527,46 @@ Moving KTP Competition to Project Setup
 Lead applicant can view the Project details project setup dashboard section
     [Documentation]  IFS-8329
     [Setup]    get project id using project name
-    Given log in as a different user                                    &{ktpLeadApplicantCredentials}
-    When the user navigates to the page                                 ${server}/project-setup/project/${ktpProjectId}
-    And the user should see the element                                 jQuery = h1:contains("Set up your project")
-    Then the user should view the project details dashboard section
+    Given log in as a different user              &{ktpLeadApplicantCredentials}
+    When the user navigates to the page           ${server}/project-setup/project/${ktpProjectId}
+    And the user should see the element           jQuery = h1:contains("Set up your project")
+    Then the user should see the element          jQuery = li:contains("Project details") span:contains("Completed")
 
 Lead applicant can view the Project team project setup dashboard section
     [Documentation]  IFS-8329
-    Given the user clicks the button/link                               link = Return to set up your project
-    Then the user should view the project team dashboard section
+    Then the user should see the element         jQuery = li:contains("Project team") span:contains("Completed")
 
 Lead applicant can view the MO project setup dashboard section
     [Documentation]  IFS-8329
-    Given the user clicks the button/link                   link = Return to setup your project
-    Then the user should view the MO dashboard section
+    Then the user should see the element         jQuery = li:contains("Monitoring Officer") span:contains("Completed")
 
 Lead applicant cannot view the sections for Documents, Bank details or Spend profile
     [Documentation]  IFS-8329
-    Given the user clicks the button/link          link = Set up your project
     Then the user should not see Documents, Bank details or Spend profile dashboard sections
 
 Monitoring officer can view the Project details project setup dashboard section
     [Documentation]  IFS-8329
     [Setup]    get project id using project name
-    Given log in as a different user                                    &{ktaUserCredentials}
-    When the user navigates to the page                                 ${server}/project-setup/project/${ktpProjectId}
-    And the user should see the element                                 jQuery = h1:contains("Monitor project")
-    Then the user should view the project details dashboard section
+    Given log in as a different user              &{ktaUserCredentials}
+    When the user navigates to the page           ${server}/project-setup/project/${ktpProjectId}
+    And the user should see the element           jQuery = h1:contains("Monitor project")
+    Then the user should see the element          jQuery = li:contains("Project details") span:contains("Completed")
 
 Monitoring officer can view the Project team project setup dashboard section
     [Documentation]  IFS-8329
-    Given the user clicks the button/link                               link = Return to set up your project
-    Then the user should view the project team dashboard section
+    Then the user should see the element         jQuery = li:contains("Project team") span:contains("Completed")
 
 Monitoring officer can view the MO project setup dashboard section
     [Documentation]  IFS-8329
-    Given the user clicks the button/link       link = Return to setup your project
-    Then the user should view the MO dashboard section
+    Then the user should see the element         jQuery = li:contains("Monitoring Officer") span:contains("Completed")
 
 Monitoring officer cannot view the sections for Documents, Bank details or Spend profile
     [Documentation]  IFS-8329
-    Given the user clicks the button/link          link = Set up your project
     Then the user should not see Documents, Bank details or Spend profile dashboard sections
-
-#IFS admin can view all applicaions as projects in the competition's project setup dashboard
-#    [Documentation]  IFS-8329
-#    Given log in as a different user             &{ifs_admin_user_credentials}
-#    When the user navigates to the page          ${server}/project-setup-management/competition/${competitionId}/status/all
-#    Then the user should see all projects in project setup dashboard
-#
-#IFS admin can view the section and status for Project details
-#    [Documentation]  IFS-8329
-#    Given the user should see the element       jQuery = th:contains("Project details")
-#    Then the admin should view the project details dashboard section
-#
-#IFS admin can view the section and status for Project team
-#    [Documentation]  IFS-8329
-#    Given the user clicks the button/link        link = Back to project setup
-#    When the user should see the element         jQuery = th:contains("Project team")
-#    Then the admin should view the project team dashboard section
-#
-#IFS admin can view the section and status for MO
-#    [Documentation]  IFS-8329
-#    Given the user clicks the button/link        link = Back to project setup
-#    When the user should see the element         jQuery = th:contains("MO")
-#    Then the admin should view the MO dashboard section
-#
-#IFS admin can edit the MO section
-#    [Documentation]  IFS-8329
-#    Given the user clicks the button/link         jQuery = a:contains("Change Monitoring Officer")
-#    When the user should see the element          jQuery = label:contains("Search for a first or last name")
-#    Then the admin should edit the monitoring officer
 
 IFS admin cannot view the sections for Documents, Bank details or Spend profile
     [Documentation]  IFS-8329
-    Given the user navigates to the page          ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the admin should not see Documents, Bank details or Spend profile dashboard sections
-
-#IFS admin can view the section and status for Finance checks
-#    [Documentation]  IFS-8329
-#    Given the user navigates to the page          ${server}/project-setup-management/competition/${competitionId}/status/all
-#    When the user should see the element          jQuery = th:contains("Finance checks")
-#    Then the admin should view the finance checks dashboard section
-
-
-
-
-
-
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
     [Documentation]  IFS-8547
@@ -1136,23 +1088,6 @@ get project id using project name
     ${ktpProjectId} =    get project id by name      ${ktpApplicationTitle}
     set suite variable     ${ktpProjectId}
 
-the user should view the project details dashboard section
-    the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
-    the user clicks the button/link     link = Project details
-    the user should see the element     jQuery = h2:contains("Project information")
-    the user should see the element     jQuery = h2:contains("Project location")
-
-the user should view the project team dashboard section
-    the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
-    the user clicks the button/link     link = Project team
-    the user should see the element     jQuery = h1:contains("Project team")
-
-the user should view the MO dashboard section
-    the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Completed")
-    the user clicks the button/link     link = Monitoring Officer
-    the user should see the element     jQuery = h1:contains("Monitoring Officer")
-    the user should see the element     jQuery = h3:contains("Role of Monitoring Officer")
-
 the user should not see Documents, Bank details or Spend profile dashboard sections
     the user should not see the element       jQuery = li:contains("Documents")
     the user should not see the element       jQuery = li:contains("Bank details")
@@ -1162,40 +1097,3 @@ the admin should not see Documents, Bank details or Spend profile dashboard sect
     the user should not see the element       jQuery = th:contains("Documents")
     the user should not see the element       jQuery = th:contains("Bank details")
     the user should not see the element       jQuery = th:contains("Spend profile")
-
-the user should see all projects in project setup dashboard
-    the user should see the element       jQuery = h1:contains("Project setup")
-    the user should see the element       jQuery = a:contains("All projects")
-    the user should see the element       jQuery = tr:contains("${ktpApplicationTitle}")
-
-the admin should view the project details dashboard section
-    the user clicks the button/link       jQuery = th:contains("Project details") ~ td:contains("Complete")
-    the user should see the element       jQuery = h2:contains("Project details")
-    the user should see the element       jQuery = h2:contains("Partner details")
-
-the admin should view the project team dashboard section
-    the user clicks the button/link       jQuery = th:contains("Project details") ~ td:contains("Complete")
-    the user should see the element       jQuery = h1:contains("Project team")
-
-the admin should view the MO dashboard section
-    the user clicks the button/link       jQuery = th:contains("MO") ~ td:contains("Assigned")
-    the user should see the element       jQuery = h1:contains("Monitoring Officer")
-
-the admin should edit the monitoring officer
-    the user selects the option from the drop-down menu    Rupesh Pereira   id = userId
-    the user clicks the button/link                        jQuery = button:contains("View Monitoring Officer")
-    the user should see the element                        jQuery = label:contains("Enter a project number or project name")
-    the user selects the option from the drop-down menu    112 - Magic material   id = projectId
-    the user clicks the button/link                        jQuery = button:contains("Assign")
-    the user should see the element                        span:contains("1") ~ span:contains("assigned projects")
-
-the admin should view the finance checks dashboard section
-    the user clicks the button/link       jQuery = th:contains("Finance checks") ~ td:contains("Review")
-    the user should see the element       jQuery = h2:contains("Project finances")
-    the user should see the element       jQuery = h2:contains("Partner finances")
-
-the user completes viability review for organisation one
-    the user should see the element       jQuery = h2:contains("Credit report")
-    the user selects the checkbox         costs-reviewed
-    the user selects the checkbox         project-viable
-    Then the user should see the dropdown option selected    Viability     id = section
