@@ -169,18 +169,27 @@
         <div class="success-alert"
              th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
             <th:block th:unless="${competition.isLoan()}">
-                <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-0"
+                    th:text="${competition.isKtp()
+                    ? 'This application was successful.'
+                    : 'Congratulations, your application has been successful'}">Congratulations, your application has been successful</h2>
             </th:block>
             <th:block th:if="${competition.isLoan()}">
                 <h2 class="govuk-heading-s govuk-!-margin-0">Your application has progressed to project setup.</h2>
             </th:block>
             <th:block>
                 <p class="govuk-body">
-                    <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
-                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                    <th:block
-                        th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
-                        th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
+                    <th:block th:unless="${competition.isKtp()}">
+                        <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
+                        <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                    </th:block>
+                    <th:block th:if="${competition.isKtp()}">
+                        <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}"
+                                  th:text="${'All application feedback will be available here from ' + #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy') + '.'}"/>
+                        <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">You can view all scores and application feedback in the relevant sections.</th:block>
+                    </th:block>
+                    <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
+                              th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy') +'.'}"/>
                 </p>
                 <p class="govuk-body" th:if="${currentProject}">
                     <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}"
@@ -190,12 +199,22 @@
         </div>
         <div class="warning-alert"
              th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
-            <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition.</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">
+                <th:block th:unless="${competition.isKtp()}">Your application has not been successful in this competition.</th:block>
+                <th:block th:if="${competition.isKtp()}">This application was unsuccessful.</th:block>
+            </h2>
+
             <p class="govuk-body">
-                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block
-                    th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
-                    th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
+                <th:block th:unless="${competition.isKtp()}">
+                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                </th:block>
+                <th:block th:if="${competition.isKtp()}">
+                    <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}"
+                              th:text="${'All application feedback will be available here from ' + #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy') + '.'}" />
+                    <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">You can view all scores and application feedback in the relevant sections.</th:block>
+                </th:block>
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}"
+                          th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.releaseFeedbackDate, 'd MMMM yyyy')+'.'}"/>
             </p>
         </div>
     </th:block>
@@ -208,7 +227,6 @@
             submission will go through our application system.</p>
     </div>
 </th:block>
-
 
 <!-- =========================== Element: global pagination ================ -->
 <th:block th:fragment="general-pagination(pagination)">
