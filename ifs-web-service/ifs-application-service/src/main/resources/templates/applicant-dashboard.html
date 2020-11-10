@@ -50,7 +50,8 @@
                 </div>
             </section>
 
-            <div class="govuk-body" th:if="${model.projects.empty}">
+            <div class="govuk-body"
+                 th:if="${model.euGrantTransfers.empty} and ${model.inProgress.empty} and ${model.inSetup.empty} and ${model.previous.empty}">
                 You have no applications in progress.
             </div>
 
