@@ -570,15 +570,15 @@ IFS admin cannot view the sections for Documents, Bank details or Spend profile
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
     [Documentation]  IFS-8547
-    Given The user logs-in in new browser    ${ktaEmail}  ${short_password}
-    Then the user should see the element     id = dashboard-link-APPLICANT
-    And the user should see the element      id = dashboard-link-ASSESSOR
-    And the user should see the element      id = dashboard-link-MONITORING_OFFICER
+     Given The user logs-in in new browser    ${ktaEmail}  ${short_password}
+     Then the user should see the element     id = dashboard-link-APPLICANT
+     And the user should see the element      id = dashboard-link-ASSESSOR
+     And the user should see the element      id = dashboard-link-MONITORING_OFFICER
 
 KTA cannot see the applicaiton in application tile after closing an assessment
     [Documentation]  IFS-8547
-    When The user clicks the button/link    id = dashboard-link-APPLICANT
-    Then The user should not see the element     link = ${ktpApplicationTitle}
+     Given When The user clicks the button/link    id = dashboard-link-APPLICANT
+     Then The user should not see the element     link = ${ktpApplicationTitle}
 
 the project finance user cannot see the project start date
     [Documentation]  IFS-7805
