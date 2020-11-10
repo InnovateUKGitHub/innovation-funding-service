@@ -91,6 +91,10 @@ public class ProcessRole {
         return isLeadApplicant() || isCollaborator();
     }
 
+    public boolean isKta() {
+        return role.isKta();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
