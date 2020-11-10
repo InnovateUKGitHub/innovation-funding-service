@@ -75,7 +75,8 @@ ${summaryError}                          Role profile cannot be created without 
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
 ${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
-${applicantKTACredentials}               joe.adams@ktn-uk.test
+${applicantKTACredentials}               john.fenton@ktn-uk.test
+${newApplicantCredentials}               joe.adams@ktn-uk.test
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -453,9 +454,9 @@ IFS Admin can add a role profile of KTA to an applicant in KT Network
 
 Applicant that has been assigned a KTA role can see applications and assessment dashboard
     [Documentation]  IFS-8547
-    Given Log in as a different user     ${applicantKTACredentials}  ${short_password}
-    Then the user should see the element    id = dashboard-link-APPLICANT
-    And The user should see the element     id = dashboard-link-ASSESSOR
+     Given Log in as a different user     ${applicantKTACredentials}  ${short_password}
+     When Then the user should see the element    id = dashboard-link-APPLICANT
+     Then And The user should see the element     id = dashboard-link-ASSESSOR
 
 Comp Admin should be able to see the details of assessor with new role profile of KTA
     [Documentation]  IFS-7976
