@@ -699,7 +699,7 @@ Finance user should not see the start date in the Edit Project screen
     Then The user should not see the element     jQuery = dt:contains("Start date")
 
 Internal user is able to approve Finance checks and generate spend profile
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812 IFS-8328
     [Setup]  the user navigates to the page     ${server}/project-setup-management/project/${ProjectID}/finance-check
     Given the user approves Eligibility         ${ProjectID}
     And the user approves Viability             ${ProjectID}
@@ -1122,4 +1122,4 @@ the user sees the changes in the finance summary table in Eligibility screen
     the user should see the element     jQuery = th:contains("Other funding (£)")
     the user should see the element     jQuery = th:contains("Company contribution (%)")
     the user should see the element     jQuery = th:contains("Company contribution (£)")
-    the user should see the element     jQuery = jQuery = td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
+    the user should see the element     jQuery = td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
