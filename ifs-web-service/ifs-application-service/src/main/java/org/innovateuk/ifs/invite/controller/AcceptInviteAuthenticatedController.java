@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 @Controller
 @SecuredBySpring(value="Controller", description = "Applicants, assessors, stakeholders and monitoring officers can accept invites to an application." +
         " assessors, stakeholders and monitoring officers will become applicants by accepting", securedType = AcceptInviteAuthenticatedController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer', 'live_projects_user')")
 public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteController {
 
     private InviteRestService inviteRestService;

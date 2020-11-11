@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 @Controller
 @RequestMapping("/application/create-authenticated")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer','live_projects_user')")
 public class ApplicationCreationAuthenticatedController {
 
     private static final String COMPETITION_ID = "competitionId";

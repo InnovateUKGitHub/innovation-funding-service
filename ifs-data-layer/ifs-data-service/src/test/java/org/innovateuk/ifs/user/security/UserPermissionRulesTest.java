@@ -929,6 +929,17 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void liveProjectsUserCanRequestApplicantRole() {
+        UserResource otherLiveProjectsUser = newUserResource().withRolesGlobal(singletonList(LIVE_PROJECTS_USER)).build();
+
+        assertFalse(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(otherLiveProjectsUser.getId(), APPLICANT), liveProjectsUser()));
+        assertFalse(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+
+        assertTrue(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), liveProjectsUser()));
+    }
+
+    @Test
     public void correctRolesCanGrantMonitoringOfficerRole() {
         GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
 
