@@ -39,10 +39,10 @@
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
                 <th:block th:if="${model.hasGrantClaimPercentage}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">
-                        <th:block th:if="${model.ktpCompetition && !model.leadPartnerOrganisation}">
+                        <th:block th:if="${model.ktpCompetition}">
                             Funding sought (&pound;)
                         </th:block>
-                        <th:block th:unless="${model.ktpCompetition && !model.leadPartnerOrganisation}">
+                        <th:block th:unless="${model.ktpCompetition}">
                             Grant applied for (&pound;)
                         </th:block>
                     </th>
