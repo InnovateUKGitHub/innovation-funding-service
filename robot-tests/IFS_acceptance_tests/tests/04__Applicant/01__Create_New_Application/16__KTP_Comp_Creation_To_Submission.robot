@@ -740,6 +740,11 @@ The lead is able to access Finance checks after approval
      And The user should see the element       link = your project finance overview
      And The user should see the element       jQuery = p:contains("The checks have been completed and your project finances approved.")
 
+The lead is able to access the Eligibility checks after approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link     link = review your project finances
+    Then The user should see the element     jQuery = p:contains("The partner's finance eligibility has been approved by ")
+
 Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given proj finance approves the spend profiles     ${ProjectID}
