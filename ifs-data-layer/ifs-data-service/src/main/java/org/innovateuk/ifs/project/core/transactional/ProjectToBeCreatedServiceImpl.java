@@ -37,6 +37,9 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
     @Autowired
     private ApplicationFundingService applicationFundingService;
 
+    @Autowired
+    private KtpProjectNotificationService ktpProjectNotificationService;
+
     @Override
     public Optional<Long> findProjectToCreate(int index) {
         Page<ProjectToBeCreated> page = projectToBeCreatedRepository.findByPendingIsTrue(PageRequest.of(index, 1, Direction.ASC, "application.id"));
@@ -77,11 +80,12 @@ public class ProjectToBeCreatedServiceImpl extends BaseTransactionalService impl
 
     private ServiceResult<Void> createProject(Application application, String emailBody) {
         if (application.getCompetition().isKtp()) {
-            return projectService.createProjectFromApplication(application.getId()).andOnSuccessReturnVoid();
+            return projectService.createProjectFromApplication(application.getId())
+                    .andOnSuccess(() -> ktpProjectNotificationService.sendProjectSetupNotification(application.getId()));
         } else {
-            return applicationFundingService.notifyApplicantsOfFundingDecisions(new FundingNotificationResource(emailBody, singleMap(application.getId(), FundingDecision.FUNDED)))
-                    .andOnSuccess(() -> projectService.createProjectFromApplication(application.getId()))
-                    .andOnSuccessReturnVoid();
+            return projectService.createProjectFromApplication(application.getId())
+                    .andOnSuccess(() -> applicationFundingService.notifyApplicantsOfFundingDecisions(
+                                    new FundingNotificationResource(emailBody, singleMap(application.getId(), FundingDecision.FUNDED))));
         }
     }
 

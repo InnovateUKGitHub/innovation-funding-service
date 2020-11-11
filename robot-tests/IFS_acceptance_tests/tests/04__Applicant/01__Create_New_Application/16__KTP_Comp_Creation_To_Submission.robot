@@ -59,6 +59,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8070 KTP Project setup - create projects
 ...
+...            IFS-8115 IFS Project setup: notification when project created
+...
 ...            IFS-8328 KTP Project Setup - finance checks (internal and external)
 
 Suite Setup       Custom Suite Setup
@@ -110,6 +112,8 @@ ${applicationQuestion}                What is the business opportunity that your
 ${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
+${compCompleteSubject}                 Competition assessment period is complete
+${compCompleteContent}                The assessment period for the competition 115:
 ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
@@ -511,13 +515,14 @@ New lead applicant submits the application
     Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8115
     Given Log in as a different user                        &{internal_finance_credentials}
     Then moving competition to Closed                       ${competitionId}
     And making the application a successful project         ${competitionId}  ${ktpApplicationTitle}
     And moving competition to Project Setup                 ${competitionId}
     And the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
     And the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
+    And the user reads his email                            ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
     [Teardown]  Requesting IDs of this Project
 
 the project finance user cannot see the project start date
