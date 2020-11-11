@@ -534,13 +534,11 @@ MO can see application summary in view application feedback page before releasin
 
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8115
-    Given Log in as a different user                        &{internal_finance_credentials}
-    Then moving competition to Closed                       ${competitionId}
-    And making the application a successful project         ${competitionId}  ${ktpApplicationTitle}
-    And moving competition to Project Setup                 ${competitionId}
-    And the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
-    And the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
-    And the user reads his email                            ${ktaEmail}  ${compCompleteSuject}  ${compCompleteContent}
+    Given Log in as a different user                         &{internal_finance_credentials}
+    When moving competition to Project Setup                 ${competitionId}
+    And the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
+    And the user reads his email                             ${ktaEmail}  ${compCompleteSuject}  ${compCompleteContent}
     [Teardown]  Requesting IDs of this Project
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
