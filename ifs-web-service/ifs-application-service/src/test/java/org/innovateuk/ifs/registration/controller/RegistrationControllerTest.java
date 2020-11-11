@@ -404,7 +404,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         UserCreationResource userResource = anUserCreationResource()
-                .withPassword("password123")
+                .withPassword("password135723")
                 .withFirstName("firstName")
                 .withLastName("lastName")
                 .withPhoneNumber("0123456789")

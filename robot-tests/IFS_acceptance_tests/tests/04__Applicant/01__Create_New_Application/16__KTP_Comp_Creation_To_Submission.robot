@@ -58,6 +58,12 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-8212 KTP Assessments - applicant view
 ...
 ...            IFS-8070 KTP Project setup - create projects
+...
+...            IFS-8547 KTA application and project dashboards
+...
+...            IFS-8329 KTP Project Setup Dashboards (internal and external)
+...
+...            IFS-8115 IFS Project setup: notification when project created
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -76,6 +82,7 @@ ${nonKTPCompettittionInPS}            Project Setup Comp 8
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
 &{ktpExistingPartnerCredentials}      email=${existing_partner_ktp_email}  password=${short_password}
 &{ktpExistingAcademicCredentials}     email=${existing_academic_email}  password=${short_password}
+&{ktaUserCredentials}                 email=${ktaEmail}  password=${short_password}
 ${ktpApplicationTitle}                KTP New Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         Middlesex University Higher Education Corporation
@@ -108,11 +115,14 @@ ${applicationQuestion}                What is the business opportunity that your
 ${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
+${compCompleteSuject}                 Competition assessment period is complete  
+${compCompleteContent}                The assessment period for the competition 115:
 ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
 ${financeBanerText}                   Only members from your organisation will be able to see a breakdown
 ${ktpTandC}                           Terms and conditions of a Knowledge Transfer Partnership award
+${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -509,14 +519,71 @@ New lead applicant submits the application
     Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8115
     Given Log in as a different user                        &{internal_finance_credentials}
     Then moving competition to Closed                       ${competitionId}
     And making the application a successful project         ${competitionId}  ${ktpApplicationTitle}
     And moving competition to Project Setup                 ${competitionId}
     And the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
     And the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
+    And the user reads his email                            ${ktaEmail}  ${compCompleteSuject}  ${compCompleteContent}
     [Teardown]  Requesting IDs of this Project
+
+Lead applicant can view the Project details project setup dashboard section
+    [Documentation]  IFS-8329
+    [Setup]    get project id using project name
+    Given log in as a different user              &{ktpLeadApplicantCredentials}
+    When the user navigates to the page           ${server}/project-setup/project/${ktpProjectId}
+    And the user should see the element           jQuery = h1:contains("Set up your project")
+    Then the user should see the element          jQuery = li:contains("Project details") span:contains("Completed")
+
+Lead applicant can view the Project team project setup dashboard section
+    [Documentation]  IFS-8329
+    Then the user should see the element         jQuery = li:contains("Project team") span:contains("Completed")
+
+Lead applicant can view the MO project setup dashboard section
+    [Documentation]  IFS-8329
+    Then the user should see the element         jQuery = li:contains("Monitoring Officer") span:contains("Completed")
+
+Lead applicant cannot view the sections for Documents, Bank details or Spend profile
+    [Documentation]  IFS-8329
+    Then the user should not see Documents, Bank details or Spend profile dashboard sections
+
+Monitoring officer can view the Project details project setup dashboard section
+    [Documentation]  IFS-8329
+    [Setup]    get project id using project name
+    Given log in as a different user              &{ktaUserCredentials}
+    When the user navigates to the page           ${server}/project-setup/project/${ktpProjectId}
+    And the user should see the element           jQuery = h1:contains("Monitor project")
+    Then the user should see the element          jQuery = li:contains("Project details") span:contains("Completed")
+
+Monitoring officer can view the Project team project setup dashboard section
+    [Documentation]  IFS-8329
+    Then the user should see the element         jQuery = li:contains("Project team") span:contains("Completed")
+
+Monitoring officer can view the MO project setup dashboard section
+    [Documentation]  IFS-8329
+    Then the user should see the element         jQuery = li:contains("Monitoring Officer") span:contains("Completed")
+
+Monitoring officer cannot view the sections for Documents, Bank details or Spend profile
+    [Documentation]  IFS-8329
+    Then the user should not see Documents, Bank details or Spend profile dashboard sections
+
+IFS admin cannot view the sections for Documents, Bank details or Spend profile
+    [Documentation]  IFS-8329
+    Then the admin should not see Documents, Bank details or Spend profile dashboard sections
+
+Multiple Role KTA can view application, assessments and project setup dashboard tiles
+    [Documentation]  IFS-8547
+     Given The user logs-in in new browser    ${ktaEmail}  ${short_password}
+     Then the user should see the element     id = dashboard-link-APPLICANT
+     And the user should see the element      id = dashboard-link-ASSESSOR
+     And the user should see the element      id = dashboard-link-MONITORING_OFFICER
+
+KTA cannot see the applicaiton in application tile after closing an assessment
+    [Documentation]  IFS-8547
+     Given When The user clicks the button/link    id = dashboard-link-APPLICANT
+     Then The user should not see the element     link = ${ktpApplicationTitle}
 
 the project finance user cannot see the project start date
     [Documentation]  IFS-7805
@@ -556,21 +623,6 @@ The lead is able to complete Project team section
     Given the user clicks the button/link                link = Project team
     When the user completes the project team section
     Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("Completed")
-
-The lead is able to complete the Documents section
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user clicks the button/link                link = Documents
-    When the user uploads the exploitation plan
-    And the user uploads the Test document type
-    And the user uploads the Collaboration agreement
-    And the user clicks the button/link                  link = Return to set up your project
-    Then the user should see the element                 jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
-
-The lead is able to complete the Bank details section
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user enters bank details
-    When the user clicks the button/link     link = Set up your project
-    Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
 
 The partner is able to complete Project team Section
     [Documentation]  IFS-7812
@@ -647,6 +699,12 @@ Internal user is able to approve Finance checks and generate spend profile
     When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+
+Monitoring officer can view the Finance checks project setup dashboard section
+    [Documentation]  IFS-8329
+    Given log in as a different user            &{ktaUserCredentials}
+    When the user navigates to the page         ${server}/project-setup/project/${ktpProjectId}
+    Then the user should see the element        jQuery = li:contains("Finance checks") span:contains("Completed")
 
 The partner is able to submit the spend profile and should not see the project start date
     [Documentation]  IFS-7812  IFS-7805
@@ -1030,3 +1088,17 @@ the user switch to the new tab on click guidance links
     [Arguments]  ${link}
     the user clicks the button/link     link = ${link}
     Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
+
+get project id using project name
+    ${ktpProjectId} =    get project id by name      ${ktpApplicationTitle}
+    set suite variable     ${ktpProjectId}
+
+the user should not see Documents, Bank details or Spend profile dashboard sections
+    the user should not see the element       jQuery = li:contains("Documents")
+    the user should not see the element       jQuery = li:contains("Bank details")
+    the user should not see the element       jQuery = li:contains("Spend profile")
+
+the admin should not see Documents, Bank details or Spend profile dashboard sections
+    the user should not see the element       jQuery = th:contains("Documents")
+    the user should not see the element       jQuery = th:contains("Bank details")
+    the user should not see the element       jQuery = th:contains("Spend profile")
