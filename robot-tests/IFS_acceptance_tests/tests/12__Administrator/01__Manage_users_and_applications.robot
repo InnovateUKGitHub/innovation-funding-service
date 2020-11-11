@@ -76,6 +76,7 @@ ${KTAEmailInviteText}                    You've been invited to become a knowled
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
 ${ktpEmailInviteSubject}                 You have been invited to become a knowledge transfer adviser
 ${applicantKTACredentials}               john.fenton@ktn-uk.test
+${newApplicantCredentials}               joe.adams@ktn-uk.test
 
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
@@ -251,14 +252,14 @@ Account creation validation checks - Blank
     [Documentation]  IFS-643  IFS-642
     Given the user reads his email and clicks the link            ${email}  ${emailInviteSubject}  Your Innovation Funding Service account has been created.
     And the user clicks the button/link                           jQuery = .govuk-button:contains("Create account")
-    And the use should see the validation error summary           Password must be at least 8 characters
+    And the use should see the validation error summary           Password must be at least 12 characters
     When the user enters the basic details to create account      New  Administrator  ${email}
     Set Focus To Element                                          css = #lastName
     Then the user cannot see a validation error in the page
 
 Account creation validation checks - Lowercase password
     [Documentation]  IFS-3554
-    Given the user enters text to a text field  id = password  PASSWORD123
+    Given the user enters text to a text field  id = password  PASSWORD1357123
     When The user clicks the button/link        jQuery = .govuk-button:contains("Create account")
     Then The user should see a field and summary error  Password must contain at least one lower case letter.
     [Teardown]  the user enters text to a text field   css = #password  ${short_password}
@@ -335,7 +336,7 @@ Deactivate external user
 
 Deactivated external user cannot login
     [Documentation]  IFS-6380
-    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd
+    Given the user cannot login with their new details          ${adminChangeEmailNew}  Passw0rd1357
     When Logging in and Error Checking                          &{ifs_admin_user_credentials}
     Then the user navigates to the View internal user details   ${adminChangeEmailNew}  inactive
     And the IFS admin reactivate the user                       ${adminChangeEmailNew}
@@ -446,16 +447,16 @@ IFS Admin can add a role profile of KTA to an assessor in KT Network
 IFS Admin can add a role profile of KTA to an applicant in KT Network
     [Documentation]  IFS-7976
     Given the user navigates to the page                     ${server}/management/admin/users/active
-    When the user selects a user to edit details             fenton  ${applicantKTACredentials}
+    When the user selects a user to edit details             joe.adams  ${newApplicantCredentials}
     And the user adds a new external role profile of KTA
     Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
     And the user should not see the element                  link = Add a new external role profile
 
 Applicant that has been assigned a KTA role can see applications and assessment dashboard
     [Documentation]  IFS-8547
-    Given Log in as a different user     ${applicantKTAEmail}  ${short_password}
-    Then the user should see the element    id = dashboard-link-APPLICANT
-    And The user should see the element     id = dashboard-link-ASSESSOR
+     Given Log in as a different user     ${newApplicantCredentials}  ${short_password}
+     When Then the user should see the element    id = dashboard-link-APPLICANT
+     Then And The user should see the element     id = dashboard-link-ASSESSOR
 
 Comp Admin should be able to see the details of assessor with new role profile of KTA
     [Documentation]  IFS-7976
