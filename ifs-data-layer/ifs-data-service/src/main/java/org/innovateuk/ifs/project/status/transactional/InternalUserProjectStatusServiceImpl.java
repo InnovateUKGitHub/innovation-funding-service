@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -362,7 +363,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         }
         if (COMPLETE.equals(documentsStatus)
                 && COMPLETE.equals(spendProfileStatus)
-                && COMPLETE.equals(bankDetailsStatus)) {
+                && COMPLETE.equals(bankDetailsStatus)
+                && project.getApplication().getApplicationProcess().getProcessState() == ApplicationState.APPROVED) {
             if (golWorkflowHandler.isApproved(project)) {
                 return COMPLETE;
             } else if (golWorkflowHandler.isRejected(project)) {
