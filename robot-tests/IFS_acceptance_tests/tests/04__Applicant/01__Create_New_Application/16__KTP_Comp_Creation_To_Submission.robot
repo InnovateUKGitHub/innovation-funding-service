@@ -113,7 +113,7 @@ ${questionTextGuidance}               Entering text to allow valid mark as compl
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
 ${compCompleteSuject}                 Competition assessment period is complete  
-${compCompleteContent}                The assessment period for the competition 115:
+${compCompleteContent}                The assessment period for the competition
 ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
