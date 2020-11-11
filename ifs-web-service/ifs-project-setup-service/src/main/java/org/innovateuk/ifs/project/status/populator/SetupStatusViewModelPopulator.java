@@ -263,7 +263,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private String getMonitoringOfficerText(boolean isKtp) {
-        return isKtp ? "Your Monitoring Officer for this project is" : "Your monitoring officer for this project is knowledge transfer advisor (KTA)";
+        return isKtp ?  "Your monitoring officer for this project is knowledge transfer advisor (KTA)" : "Your Monitoring Officer for this project is";
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {
