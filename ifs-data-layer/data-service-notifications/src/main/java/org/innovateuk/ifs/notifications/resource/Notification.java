@@ -4,12 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
 
 /**
@@ -20,7 +20,7 @@ public class Notification {
 
     private NotificationSource from;
 
-    private List<NotificationTarget> to;
+    private List<NotificationMessage> to;
 
     /**
      * A key with which the end "sending" services can use to find the appropriate message body for the medium they represent
@@ -32,35 +32,29 @@ public class Notification {
      */
     private Map<String, Object> globalArguments = emptyMap();
 
-    /**
-     * The arguments that are applicable per NotificationTarget that are available to use as replacement tokens in the message to be constructed by the end "sending" services
-     */
-    private Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments = emptyMap();
-
     private Notification() {
     }
 
-    public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments) {
+    public Notification(NotificationSource from, List<NotificationMessage> to, Enum<?> messageKey, Map<String, Object> globalArguments) {
         this.from = from;
         this.to = to;
         this.messageKey = messageKey;
         this.globalArguments = globalArguments;
     }
 
-    public Notification(NotificationSource from, NotificationTarget to, Enum<?> messageKey, Map<String, Object> globalArguments) {
-        this(from, Collections.singletonList(to), messageKey, globalArguments);
+    public Notification(NotificationSource from, NotificationMessage to, Enum<?> messageKey, Map<String, Object> globalArguments) {
+        this(from, singletonList(to), messageKey, globalArguments);
     }
 
-    public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments, Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments) {
-        this(from, to, messageKey, globalArguments);
-        this.perNotificationTargetArguments = perNotificationTargetArguments;
+    public Notification(NotificationSource from, NotificationTarget to, Enum<?> messageKey, Map<String, Object> globalArguments) {
+        this(from, new NotificationMessage(to), messageKey, globalArguments);
     }
 
     public NotificationSource getFrom() {
         return from;
     }
 
-    public List<NotificationTarget> getTo() {
+    public List<NotificationMessage> getTo() {
         return to;
     }
 
@@ -72,20 +66,16 @@ public class Notification {
         return globalArguments;
     }
 
-    public Map<String, Object> getTemplateArgumentsForRecipient(NotificationTarget recipient) {
+    public Map<String, Object> getTemplateArgumentsForRecipient(NotificationMessage recipient) {
 
         Map<String, Object> templateReplacements = new HashMap<>(getGlobalArguments());
-        Map<String, Object> recipientSpecificTemplateReplacements = getPerNotificationTargetArguments().get(recipient);
+        Map<String, Object> recipientSpecificTemplateReplacements = new HashMap<>(recipient.getArguments());
 
         if (recipientSpecificTemplateReplacements != null) {
             return combineMaps(templateReplacements, recipientSpecificTemplateReplacements);
         }
 
         return templateReplacements;
-    }
-
-    public Map<NotificationTarget, Map<String, Object>> getPerNotificationTargetArguments() {
-        return perNotificationTargetArguments;
     }
 
     @Override
@@ -101,7 +91,6 @@ public class Notification {
                 .append(to, that.to)
                 .append(messageKey, that.messageKey)
                 .append(globalArguments, that.globalArguments)
-                .append(perNotificationTargetArguments, that.perNotificationTargetArguments)
                 .isEquals();
     }
 
@@ -112,7 +101,6 @@ public class Notification {
                 .append(to)
                 .append(messageKey)
                 .append(globalArguments)
-                .append(perNotificationTargetArguments)
                 .toHashCode();
     }
 

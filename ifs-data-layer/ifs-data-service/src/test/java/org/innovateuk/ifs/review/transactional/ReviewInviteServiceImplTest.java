@@ -539,7 +539,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
                 .withMessageKey(INVITE_ASSESSOR_GROUP_TO_PANEL, INVITE_ASSESSOR_GROUP_TO_PANEL)
-                .withTargets(singletonList(to1), singletonList(to2))
+                .withTargets(singletonList(new NotificationMessage(to1)), singletonList(new NotificationMessage(to2)))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 
@@ -729,7 +729,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
                 .withMessageKey(INVITE_ASSESSOR_GROUP_TO_PANEL, INVITE_ASSESSOR_GROUP_TO_PANEL)
-                .withTargets(singletonList(to1), singletonList(to2))
+                .withTargets(singletonList(new NotificationMessage(to1)), singletonList(new NotificationMessage(to2)))
                 .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
                 .build(2);
 

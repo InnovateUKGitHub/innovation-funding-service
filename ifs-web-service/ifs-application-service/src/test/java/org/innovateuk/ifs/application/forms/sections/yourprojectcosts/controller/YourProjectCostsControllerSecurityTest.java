@@ -23,6 +23,7 @@ public class YourProjectCostsControllerSecurityTest extends BaseControllerSecuri
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
         roles.add(Role.SUPPORTER);
         roles.add(Role.ASSESSOR);
+        roles.add(Role.SYSTEM_MAINTAINER);
 
         assertRolesCanPerform(() -> classUnderTest.viewYourProjectCosts(null, null, 0L, 0L, 0L), roles);
     }

@@ -17,7 +17,7 @@
 # $5: db port (default 3306)
 
 # The infamous user password: Passw0rd
-password="e1NTSEF9b2lRZUF1OHNrR0VqQmhweUpmV01hOFF3M0dNK2xRd2Q="
+password="e1NTSEF9cDhicDVjcjJNeWZ1M1M2a0xGK29nKzJkTG9tbFhRVHM="
 
 host=$DB_HOST
 #host=mysql

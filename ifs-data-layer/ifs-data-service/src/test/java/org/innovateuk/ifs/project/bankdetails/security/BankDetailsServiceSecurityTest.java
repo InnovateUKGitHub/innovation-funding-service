@@ -3,13 +3,8 @@ package org.innovateuk.ifs.project.bankdetails.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsServiceImpl;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<BankDetailsService> {
@@ -21,20 +16,8 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
 
     @Test
     public void testGetProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
-
-        stream(Role.values()).forEach(role -> {
-            UserResource user = newUserResource().withRolesGlobal(singletonList(role))
-                    .build();
-            setLoggedInUser(user);
-
-            if (role == PROJECT_FINANCE) {
-                classUnderTest.getProjectBankDetailsStatusSummary(123L);
-            } else {
-                assertAccessDenied(() -> classUnderTest.getProjectBankDetailsStatusSummary(123L), () -> {
-                });
-            }
-        });
-
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getProjectBankDetailsStatusSummary(123L),
+                PROJECT_FINANCE);
     }
 
     @Test

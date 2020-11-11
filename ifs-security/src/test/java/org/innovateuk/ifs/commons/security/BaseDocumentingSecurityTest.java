@@ -33,6 +33,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static net.bytebuddy.matcher.ElementMatchers.*;
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.fail;
@@ -309,7 +310,13 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
     }
 
     protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, Role... roles){
-        EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
+        EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(newArrayList(roles));
+        if (rolesThatShouldSucceed.contains(Role.ASSESSOR)) {
+            rolesThatShouldSucceed.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        }
+        if (rolesThatShouldSucceed.contains(Role.PROJECT_FINANCE) || rolesThatShouldSucceed.contains(Role.IFS_ADMINISTRATOR)) {
+            rolesThatShouldSucceed.add(Role.SYSTEM_MAINTAINER);
+        }
         EnumSet<Role> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
             BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());

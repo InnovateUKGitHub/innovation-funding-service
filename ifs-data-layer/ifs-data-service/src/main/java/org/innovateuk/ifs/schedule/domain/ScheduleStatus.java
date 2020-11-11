@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.schedule.domain;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class ScheduleStatus {
 
     @Id
@@ -12,10 +16,14 @@ public class ScheduleStatus {
 
     private String jobName;
 
-    private boolean active;
+    @CreatedDate
+    private ZonedDateTime createdOn;
 
-    @Version
-    private ZonedDateTime version = ZonedDateTime.now();
+    ScheduleStatus() {}
+
+    public ScheduleStatus(String jobName) {
+        this.jobName = jobName;
+    }
 
     public Long getId() {
         return id;
@@ -33,19 +41,7 @@ public class ScheduleStatus {
         this.jobName = jobName;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public ZonedDateTime getVersion() {
-        return version;
-    }
-
-    public void setVersion(ZonedDateTime version) {
-        this.version = version;
+    public ZonedDateTime getCreatedOn() {
+        return createdOn;
     }
 }
