@@ -657,13 +657,6 @@ The partner should see the MO section with KTA details
     Then The user should see the element            jQuery = a:contains("${ktaEmail}")
     [Teardown]  the user clicks the button/link     link = Set up your project
 
-Internal user is able to approve documents
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user                  &{Comp_admin1_credentials}
-    Given Internal user is able to approve documents
-    When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
-
 Internal user cannot see the project start date and should see the correspondence address
     [Documentation]  IFS-7805 IFS-8070
     When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
