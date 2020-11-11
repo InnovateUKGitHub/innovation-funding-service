@@ -133,7 +133,7 @@ public class FinanceCheckSummariesViewModel {
         if (resource.getTotalCost().signum() == 0 || resource.getContributionToProject().signum() == 0) {
             return BigDecimal.ZERO;
         }
-        return resource.getContributionToProject().multiply(new BigDecimal(100).divide(resource.getTotalCost(), 1, RoundingMode.HALF_UP));
+        return resource.getContributionToProject().multiply(new BigDecimal(100)).divide(resource.getTotalCost(), 1, RoundingMode.HALF_UP);
     }
 
 }
