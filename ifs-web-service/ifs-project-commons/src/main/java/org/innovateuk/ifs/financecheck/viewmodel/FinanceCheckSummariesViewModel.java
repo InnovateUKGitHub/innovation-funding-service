@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -121,7 +122,7 @@ public class FinanceCheckSummariesViewModel {
         if (totalContribution.signum() == 0 || totalCost.signum() == 0) {
             return BigDecimal.ZERO;
         }
-        return totalContribution.divide(totalCost).multiply(new BigDecimal(100));
+        return totalContribution.multiply(new BigDecimal(100)).divide(totalCost, 10, RoundingMode.HALF_UP);
     }
 
     public PartnerOrganisationResource getPartnerFromSummary(Long organisationId) {
@@ -132,7 +133,7 @@ public class FinanceCheckSummariesViewModel {
         if (resource.getTotalCost().signum() == 0 || resource.getContributionToProject().signum() == 0) {
             return BigDecimal.ZERO;
         }
-        return resource.getContributionToProject().divide(resource.getTotalCost()).multiply(new BigDecimal(100));
+        return resource.getContributionToProject().multiply(new BigDecimal(100).divide(resource.getTotalCost(), 10, RoundingMode.HALF_UP));
     }
 
 }

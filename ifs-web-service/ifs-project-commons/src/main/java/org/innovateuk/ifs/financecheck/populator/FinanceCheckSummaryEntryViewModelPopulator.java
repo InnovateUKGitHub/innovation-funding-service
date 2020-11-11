@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Component
@@ -63,6 +64,6 @@ public class FinanceCheckSummaryEntryViewModelPopulator {
         if (resource.getTotalCost().signum() == 0 || resource.getContributionToProject().signum() == 0) {
             return BigDecimal.ZERO;
         }
-        return resource.getContributionToProject().divide(resource.getTotalCost()).multiply(new BigDecimal(100));
+        return resource.getContributionToProject().multiply(new BigDecimal(100)).divide(resource.getTotalCost(), 10, RoundingMode.HALF_UP);
     }
 }
