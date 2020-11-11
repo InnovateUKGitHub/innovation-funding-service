@@ -114,7 +114,7 @@ ${applicationQuestion}                What is the business opportunity that your
 ${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
-${compCompleteSuject}                 Competition assessment period is complete  
+${compCompleteSubject}                 Competition assessment period is complete  
 ${compCompleteContent}                The assessment period for the competition 115:
 ${fname}                              Indi
 ${lname}                              Gardiner
