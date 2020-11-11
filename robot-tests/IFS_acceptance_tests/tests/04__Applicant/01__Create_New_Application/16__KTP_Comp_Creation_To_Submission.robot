@@ -112,7 +112,7 @@ ${applicationQuestion}                What is the business opportunity that your
 ${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
-${compCompleteSuject}                 Competition assessment period is complete  
+${compCompleteSubject}                 Competition assessment period is complete  
 ${compCompleteContent}                The assessment period for the competition 115:
 ${fname}                              Indi
 ${lname}                              Gardiner
@@ -523,7 +523,7 @@ Moving KTP Competition to Project Setup
     And moving competition to Project Setup                 ${competitionId}
     And the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
     And the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
-    And the user reads his email                            ${ktaEmail}  ${compCompleteSuject}  ${compCompleteContent}
+    And the user reads his email                            ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
     [Teardown]  Requesting IDs of this Project
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
