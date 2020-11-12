@@ -560,8 +560,9 @@ Monitoring officer can view the Project details project setup dashboard section
 
 IFS admin cannot view the sections for Documents, Bank details or Spend profile
     [Documentation]  IFS-8329
-    Given log in as a different user     &{internal_finance_credentials}
-    Then the admin should not see Documents, Bank details or Spend profile dashboard sections
+    Given log in as a different user             &{internal_finance_credentials}
+    When When the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the admin should see project setup sections
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
     [Documentation]  IFS-8547
@@ -1070,3 +1071,10 @@ the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
     the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Completed")
     the user should not see Documents, Bank details or Spend profile dashboard sections
+
+the admin should see project setup sections
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(1):contains("Complete")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(2):contains("Complete")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(3):contains("Assigned")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+    the admin should not see Documents, Bank details or Spend profile dashboard sections
