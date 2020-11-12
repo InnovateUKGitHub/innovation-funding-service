@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -243,6 +244,51 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
+    public IndustrialCostDataBuilder withAssociateSalaryCosts(String role, Integer duration, BigInteger cost) {
+        return addCostItem("Associate Salary Costs", (finance) ->
+                new AssociateSalaryCost(null, null, role, duration, cost));
+    }
+
+    public IndustrialCostDataBuilder withAssociateDevelopmentCosts(String role, Integer duration, BigInteger cost) {
+        return addCostItem("Associate Development Costs", (finance) ->
+                new AssociateDevelopmentCost(null, null, role, duration, cost));
+    }
+
+    public IndustrialCostDataBuilder withConsumables(String item, BigInteger cost, Integer quantity) {
+        return addCostItem("Consumables", (finance) ->
+                new Consumable(null, item, cost, quantity, null));
+    }
+
+    public IndustrialCostDataBuilder withAssociateSupport(String description, BigInteger cost) {
+        return addCostItem("Associate Support Costs", (finance) ->
+                new AssociateSupportCost(null, null, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withKnowledgeBase(String description, BigInteger cost) {
+        return addCostItem("Associate Support Costs", (finance) ->
+                new KnowledgeBaseCost(null, null, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withEstateCosts(String description, BigInteger cost) {
+        return addCostItem("Estate Costs", (finance) ->
+                new EstateCost(null, null, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withKtpTravel(KtpTravelCost.KtpTravelCostType type, String description, BigDecimal cost, Integer quantity) {
+        return addCostItem("KTP Travel", (finance) ->
+                new KtpTravelCost(null, type, description, cost, quantity, null));
+    }
+
+    public IndustrialCostDataBuilder withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType type, String description, BigInteger cost) {
+        return addCostItem("Additional Company Costs", (finance) ->
+                new AdditionalCompanyCost(null, null, type, description, cost));
+    }
+
+    public IndustrialCostDataBuilder withPreviousFunding(String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
+        return addCostItem("Previous Funding", (finance) ->
+                new PreviousFunding(null, otherPublicFunding, fundingSource, securedDate, fundingAmount, null));
+    }
+
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS, existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate, existingCost.getTargetId());
@@ -304,10 +350,6 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     @Override
     protected IndustrialCostData createInitial() {
         return new IndustrialCostData();
-    }
-
-    private BigDecimal bd(String value) {
-        return new BigDecimal(value);
     }
 
     private BigDecimal bd(Integer value) {
