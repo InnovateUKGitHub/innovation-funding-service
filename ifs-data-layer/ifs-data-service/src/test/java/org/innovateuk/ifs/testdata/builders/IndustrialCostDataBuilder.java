@@ -246,47 +246,47 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
     public IndustrialCostDataBuilder withAssociateSalaryCosts(String role, Integer duration, BigInteger cost) {
         return addCostItem("Associate Salary Costs", (finance) ->
-                new AssociateSalaryCost(null, null, role, duration, cost));
+                new AssociateSalaryCost(finance.getId(), null, role, duration, cost));
     }
 
     public IndustrialCostDataBuilder withAssociateDevelopmentCosts(String role, Integer duration, BigInteger cost) {
         return addCostItem("Associate Development Costs", (finance) ->
-                new AssociateDevelopmentCost(null, null, role, duration, cost));
+                new AssociateDevelopmentCost(finance.getId(), null, role, duration, cost));
     }
 
     public IndustrialCostDataBuilder withConsumables(String item, BigInteger cost, Integer quantity) {
         return addCostItem("Consumables", (finance) ->
-                new Consumable(null, item, cost, quantity, null));
+                new Consumable(null, item, cost, quantity, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withAssociateSupport(String description, BigInteger cost) {
         return addCostItem("Associate Support Costs", (finance) ->
-                new AssociateSupportCost(null, null, description, cost));
+                new AssociateSupportCost(finance.getId(), null, description, cost));
     }
 
     public IndustrialCostDataBuilder withKnowledgeBase(String description, BigInteger cost) {
         return addCostItem("Associate Support Costs", (finance) ->
-                new KnowledgeBaseCost(null, null, description, cost));
+                new KnowledgeBaseCost(finance.getId(), null, description, cost));
     }
 
     public IndustrialCostDataBuilder withEstateCosts(String description, BigInteger cost) {
         return addCostItem("Estate Costs", (finance) ->
-                new EstateCost(null, null, description, cost));
+                new EstateCost(finance.getId(), null, description, cost));
     }
 
     public IndustrialCostDataBuilder withKtpTravel(KtpTravelCost.KtpTravelCostType type, String description, BigDecimal cost, Integer quantity) {
         return addCostItem("KTP Travel", (finance) ->
-                new KtpTravelCost(null, type, description, cost, quantity, null));
+                new KtpTravelCost(null, type, description, cost, quantity, finance.getId()));
     }
 
     public IndustrialCostDataBuilder withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType type, String description, BigInteger cost) {
         return addCostItem("Additional Company Costs", (finance) ->
-                new AdditionalCompanyCost(null, null, type, description, cost));
+                new AdditionalCompanyCost(finance.getId(), null, type, description, cost));
     }
 
     public IndustrialCostDataBuilder withPreviousFunding(String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
         return addCostItem("Previous Funding", (finance) ->
-                new PreviousFunding(null, otherPublicFunding, fundingSource, securedDate, fundingAmount, null));
+                new PreviousFunding(null, otherPublicFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
     }
 
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
