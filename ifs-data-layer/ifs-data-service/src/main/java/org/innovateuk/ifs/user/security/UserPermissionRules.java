@@ -307,14 +307,7 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "An assessor can request applicant role")
-    public boolean assessorCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
-        return roleCommand.getTargetRole().equals(APPLICANT) &&
-                user.getId().equals(roleCommand.getUserId()) &&
-                user.hasRole(ASSESSOR);
-    }
-
-    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
+   @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
     public boolean isGrantingMonitoringOfficerRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
     }
@@ -329,25 +322,10 @@ public class UserPermissionRules {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(SUPPORTER);
     }
 
-    @PermissionRule(value = "GRANT_ROLE", description = "An stakeholder can request applicant role")
-    public boolean stakeholderCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
-        return roleCommand.getTargetRole().equals(APPLICANT) &&
-                user.getId().equals(roleCommand.getUserId()) &&
-                user.hasRole(STAKEHOLDER);
-    }
-
-    @PermissionRule(value = "GRANT_ROLE", description = "An monitoring officer can request applicant role")
-    public boolean monitoringOfficerCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
-        return roleCommand.getTargetRole().equals(APPLICANT) &&
-                user.getId().equals(roleCommand.getUserId()) &&
-                user.hasRole(MONITORING_OFFICER);
-    }
-
-    @PermissionRule(value = "GRANT_ROLE", description = "An liveprojectsuser can request applicant role")
-    public boolean liveProjectsUserCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
-        return roleCommand.getTargetRole().equals(APPLICANT) &&
-                user.getId().equals(roleCommand.getUserId()) &&
-                user.hasRole(LIVE_PROJECTS_USER);
+   @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user and " +
+            "supporter can request applicant role")
+    public boolean isMultipleRoleDashboardUsersCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
+        return user.hasAnyRoles(Role.multiDashboardRoles());
     }
 
     @PermissionRule(value = "CAN_VIEW_OWN_DASHBOARD", description = "User is requesting own dashboard")
