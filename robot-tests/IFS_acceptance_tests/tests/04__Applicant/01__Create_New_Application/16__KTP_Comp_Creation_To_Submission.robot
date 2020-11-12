@@ -544,54 +544,31 @@ Moving KTP Competition to Project Setup
     And the user reads his email                             ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
     [Teardown]  Requesting IDs of this Project
 
-Lead applicant can view the Project details project setup dashboard section
+Lead applicant can view the project setup dashboard sections
     [Documentation]  IFS-8329
-    Given log in as a different user              &{ktpLeadApplicantCredentials}
-    When the user navigates to the page           ${server}/project-setup/project/${ProjectID}
-    And the user should see the element           jQuery = h1:contains("Set up your project")
-    Then the user should see the element          jQuery = li:contains("Project details") span:contains("Completed")
-
-Lead applicant can view the Project team project setup dashboard section
-    [Documentation]  IFS-8329
-    Then the user should see the element         jQuery = li:contains("Project team") span:contains("Completed")
-
-Lead applicant can view the MO project setup dashboard section
-    [Documentation]  IFS-8329
-    Then the user should see the element         jQuery = li:contains("Monitoring Officer") span:contains("Completed")
-
-Lead applicant cannot view the sections for Documents, Bank details or Spend profile
-    [Documentation]  IFS-8329
-    Then the user should not see Documents, Bank details or Spend profile dashboard sections
+    Given log in as a different user                    &{ktpLeadApplicantCredentials}
+    When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
+    And the user should see the element                 jQuery = h1:contains("Set up your project")
+    Then the user should see project setup sections
 
 Monitoring officer can view the Project details project setup dashboard section
     [Documentation]  IFS-8329
-    Given log in as a different user              &{ktaUserCredentials}
-    When the user navigates to the page           ${server}/project-setup/project/${ProjectID}
-    And the user should see the element           jQuery = h1:contains("Monitor project")
-    Then the user should see the element          jQuery = li:contains("Project details") span:contains("Completed")
-
-Monitoring officer can view the Project team project setup dashboard section
-    [Documentation]  IFS-8329
-    Then the user should see the element         jQuery = li:contains("Project team") span:contains("Completed")
-
-Monitoring officer can view the MO project setup dashboard section
-    [Documentation]  IFS-8329
-    Then the user should see the element         jQuery = li:contains("Monitoring Officer") span:contains("Completed")
-
-Monitoring officer cannot view the sections for Documents, Bank details or Spend profile
-    [Documentation]  IFS-8329
-    Then the user should not see Documents, Bank details or Spend profile dashboard sections
+    Given log in as a different user                    &{ktaUserCredentials}
+    When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
+    And the user should see the element                 jQuery = h1:contains("Monitor project")
+    Then the user should see project setup sections
 
 IFS admin cannot view the sections for Documents, Bank details or Spend profile
     [Documentation]  IFS-8329
+    Given log in as a different user     &{internal_finance_credentials}
     Then the admin should not see Documents, Bank details or Spend profile dashboard sections
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
     [Documentation]  IFS-8547
-     Given The user logs-in in new browser    ${ktaEmail}  ${short_password}
-     Then the user should see the element     id = dashboard-link-APPLICANT
-     And the user should see the element      id = dashboard-link-ASSESSOR
-     And the user should see the element      id = dashboard-link-MONITORING_OFFICER
+    Given The user logs-in in new browser    ${ktaEmail}  ${short_password}
+    Then the user should see the element     id = dashboard-link-APPLICANT
+    And the user should see the element      id = dashboard-link-ASSESSOR
+    And the user should see the element      id = dashboard-link-MONITORING_OFFICER
 
 KTA cannot see the applicaiton in application tile after closing an assessment
     [Documentation]  IFS-8547
@@ -1087,3 +1064,9 @@ Internal user closes the assessment
     making the application a successful project          ${competitionId}  ${ktpApplicationTitle}
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
     the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
+
+the user should see project setup sections
+    the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
+    the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
+    the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Completed")
+    the user should not see Documents, Bank details or Spend profile dashboard sections
