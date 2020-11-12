@@ -579,7 +579,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         builder[0] = builder[0].withKtpTravel(KtpTravelCost.KtpTravelCostType.ASSOCIATE, "desc", new BigDecimal("17.00"), 1);
                         break;
                     case ADDITIONAL_COMPANY_COSTS:
-                        builder[0] = builder[0].withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType.ASSOCIATE_SALARY, "desc", new BigInteger("17.00"));
+                        builder[0] = builder[0].withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType.ASSOCIATE_SALARY, "desc", new BigInteger("18"));
                         break;
                     case PREVIOUS_FUNDING:
                         builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
