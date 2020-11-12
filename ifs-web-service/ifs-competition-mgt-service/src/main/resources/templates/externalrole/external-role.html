@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle=${model.linkTitle},linkUrl=@{${model.backLink}},dynamicBackLink=${true}"/>
+              th:with="linkTitle='Back to invite a new external role',linkUrl=@{/admin/user/{userId}/select(userId=${model.userId})},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
