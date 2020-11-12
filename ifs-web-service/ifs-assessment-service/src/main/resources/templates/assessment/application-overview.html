@@ -27,12 +27,17 @@
                             <dd th:text="${model.competitionName}"/>
                         </dl>
                     </div>
+                    <div class="govuk-grid-column-one-half alignright">
+                        <span class="icon icon-print"></span>
+                        <a th:href="${'/application/' + model.applicationId + '/print'}"
+                           class="govuk-link">Print or download the application</a>
+                    </div>
                 </div>
 
                 <section th:each="section,iterStat : ${model.sections}">
                     <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <p class="govuk-hint" th:text="${section.guidance}" />
-                    <ul class="task-list">
+                    <ul class="task-list" th:classappend="${section.hasAnyScoredQuestions()} ? 'govuk-!-margin-bottom-6': ''">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'"
                             th:unless="${section.finance || section.termsAndConditions}">
                             <div class="task">
