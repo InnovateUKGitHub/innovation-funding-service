@@ -59,8 +59,10 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8070 KTP Project setup - create projects
 ...
+...            IFS-8547 KTA application and project dashboards
+...
 ...            IFS-8115 IFS Project setup: notification when project created
-
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -110,13 +112,14 @@ ${applicationQuestion}                What is the business opportunity that your
 ${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
-${compCompleteSubject}                 Competition assessment period is complete  
-${compCompleteContent}                The assessment period for the competition 115:
+${compCompleteSubject}                 Competition assessment period is complete
+${compCompleteContent}                The assessment period for the competition
 ${fname}                              Indi
 ${lname}                              Gardiner
 ${phone_number}                       01234567897
 ${financeBanerText}                   Only members from your organisation will be able to see a breakdown
 ${ktpTandC}                           Terms and conditions of a Knowledge Transfer Partnership award
+${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -522,6 +525,18 @@ Moving KTP Competition to Project Setup
     And the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
     And the user reads his email                            ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
     [Teardown]  Requesting IDs of this Project
+
+Multiple Role KTA can view application, assessments and project setup dashboard tiles
+    [Documentation]  IFS-8547
+     Given The user logs-in in new browser    ${ktaEmail}  ${short_password}
+     Then the user should see the element     id = dashboard-link-APPLICANT
+     And the user should see the element      id = dashboard-link-ASSESSOR
+     And the user should see the element      id = dashboard-link-MONITORING_OFFICER
+
+KTA cannot see the applicaiton in application tile after closing an assessment
+    [Documentation]  IFS-8547
+     Given When The user clicks the button/link    id = dashboard-link-APPLICANT
+     Then The user should not see the element     link = ${ktpApplicationTitle}
 
 the project finance user cannot see the project start date
     [Documentation]  IFS-7805

@@ -50,6 +50,11 @@
                 </div>
             </section>
 
+            <div class="govuk-body"
+                 th:if="${model.euGrantTransfers.empty} and ${model.inProgress.empty} and ${model.previous.empty} and ${model.projects.empty}">
+                You have no applications in progress.
+            </div>
+
             <section class="h2020" th:unless="${model.euGrantTransfers.empty}">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Horizon 2020 grant transfers</h2>
@@ -148,6 +153,7 @@
                         </li>
                     </ul>
                 </div>
+
             </section>
 
             <section class="previous" th:unless="${model.previous.empty}">
