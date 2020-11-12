@@ -532,7 +532,7 @@ MO can see the read only view of project assigned to him on closing the assessme
 MO can see application summary in view application feedback page before releasing the feedback
     [Documentation]  IFS-8478
     Given the user clicks the button/link     link = Set up your project
-    When the user clicks the button/link      link = view application feedback
+    When the user clicks the button/link      link = view application overview
     Then the user should see the element      jQuery = h1:contains("Application overview")
 
 Moving KTP Competition to Project Setup
@@ -603,7 +603,7 @@ MO can download the appendix file in the application
     Given the user clicks the button/link                      id = dashboard-navigation-link
     When the user clicks the button/link                       id = dashboard-link-MONITORING_OFFICER
     And the user clicks the button/link                        link = ${ktpApplicationTitle}
-    And the user clicks the button/link                        link = view application feedback
+    And the user clicks the button/link                        link = view application overview
     Then the user downloads the file                           ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
     [Teardown]  remove the file from the operating system      ${valid_pdf}
 
