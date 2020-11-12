@@ -551,14 +551,14 @@ Lead applicant can view the project setup dashboard sections
     And the user should see the element                 jQuery = h1:contains("Set up your project")
     Then the user should see project setup sections
 
-Monitoring officer can view the Project details project setup dashboard section
+Monitoring officer can view the project setup dashboard sections
     [Documentation]  IFS-8329
     Given log in as a different user                    &{ktaUserCredentials}
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
     And the user should see the element                 jQuery = h1:contains("Monitor project")
     Then the user should see project setup sections
 
-IFS admin cannot view the sections for Documents, Bank details or Spend profile
+IFS admin cannot view the project setup sections
     [Documentation]  IFS-8329
     Given log in as a different user             &{internal_finance_credentials}
     When When the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
@@ -1070,11 +1070,14 @@ the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
     the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
     the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Completed")
+    the user should see the element     jQuery = li:contains("Finance checks") span:contains("Awaiting review")
+    the user should see the element     jQuery = li:contains("Grant offer letter")
     the user should not see Documents, Bank details or Spend profile dashboard sections
 
 the admin should see project setup sections
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(1):contains("Complete")
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(2):contains("Complete")
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(3):contains("Assigned")
-    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(4):contains("Review")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("${empty}")
     the admin should not see Documents, Bank details or Spend profile dashboard sections
