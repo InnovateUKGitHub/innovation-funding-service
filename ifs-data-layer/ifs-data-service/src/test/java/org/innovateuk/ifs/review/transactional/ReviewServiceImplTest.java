@@ -201,7 +201,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
         Notification expectedNotification = createLambdaMatcher(n -> {
             Map<String, Object> globalArguments = n.getGlobalArguments();
-            assertEquals(assessor.getEmail(), n.getTo().get(0).getEmailAddress());
+            assertEquals(assessor.getEmail(), n.getTo().get(0).getTo().getEmailAddress());
             assertEquals(globalArguments.get("subject"), "Applications ready for review");
             assertEquals(globalArguments.get("name"), "Tom Baldwin");
             assertEquals(globalArguments.get("competitionName"),  competitionName);

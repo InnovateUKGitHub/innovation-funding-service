@@ -515,7 +515,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         String bodyHtml = plainTextToHtml(bodyPlain);
 
         NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
-        Notification notification = new Notification(systemNotificationSource, singletonList(recipient),
+        Notification notification = new Notification(systemNotificationSource, recipient,
                 Notifications.INVITE_ASSESSOR, asMap(
                 "subject", assessorInviteSendResource.getSubject(),
                 "bodyPlain", bodyPlain,

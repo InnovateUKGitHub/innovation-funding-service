@@ -213,7 +213,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 "applicationId", project.getApplication().getId(),
                 "competitionName", "Competition 1");
 
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
+        Notification notification = new Notification(systemNotificationSourceMock, target, FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -352,7 +352,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 "applicationId", project.getApplication().getId(),
                 "competitionName", "Competition 1");
 
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
+        Notification notification = new Notification(systemNotificationSourceMock, target, FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
@@ -497,7 +497,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 "competitionName", "Competition 1",
                 "applicationName", "Application 1");
 
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
+        Notification notification = new Notification(systemNotificationSourceMock, target,
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
@@ -680,7 +680,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 "competitionName", "Competition 1",
                 "applicationName", "Application 1");
 
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
+        Notification notification = new Notification(systemNotificationSourceMock, target,
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));

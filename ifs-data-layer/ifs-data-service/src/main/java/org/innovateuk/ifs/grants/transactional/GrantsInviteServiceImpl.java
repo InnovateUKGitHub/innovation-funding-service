@@ -189,7 +189,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-        return new Notification(from, singletonList(to), Notifications.INVITE_GRANTS_USER, notificationArguments);
+        return new Notification(from, to, Notifications.INVITE_GRANTS_USER, notificationArguments);
     }
 
 

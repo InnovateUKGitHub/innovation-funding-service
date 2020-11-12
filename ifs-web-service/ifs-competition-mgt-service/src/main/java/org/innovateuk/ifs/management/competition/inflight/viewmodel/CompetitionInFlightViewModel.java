@@ -42,8 +42,7 @@ public class CompetitionInFlightViewModel {
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
-                                        boolean readOnly,
-                                        boolean supporterEnabled) {
+                                        boolean readOnly) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionCompletionStage = competitionResource.getCompletionStage();
@@ -64,7 +63,7 @@ public class CompetitionInFlightViewModel {
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
-        this.supporterEnabled = supporterEnabled && competitionResource.isKtp();
+        this.supporterEnabled = competitionResource.isKtp();
     }
 
     public Long getCompetitionId() {

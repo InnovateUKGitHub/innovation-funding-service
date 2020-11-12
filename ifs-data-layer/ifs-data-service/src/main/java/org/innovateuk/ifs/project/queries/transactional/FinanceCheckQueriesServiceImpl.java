@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
@@ -156,7 +155,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("applicationName", application.getName());
 
-        Notification notification = new Notification(from, singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
+        Notification notification = new Notification(from, pmTarget, Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
 
     }
@@ -173,7 +172,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
         notificationArguments.put("applicationId", project.getApplication().getId());
 
-        Notification notification = new Notification(from, singletonList(pmTarget), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
+        Notification notification = new Notification(from, pmTarget, FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }
