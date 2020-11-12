@@ -115,7 +115,8 @@ public class SetupSectionInternalUser {
 
         if (documentsApproved()
                 && projectSetupProgressChecker.isSpendProfileApproved()
-                && projectSetupProgressChecker.isBankDetailsApproved()) {
+                && projectSetupProgressChecker.isBankDetailsApproved()
+                && projectSetupProgressChecker.isApplicationSuccessful()) {
             if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if (projectSetupProgressChecker.isGrantOfferLetterApproved()) {
                     return ACCESSIBLE;

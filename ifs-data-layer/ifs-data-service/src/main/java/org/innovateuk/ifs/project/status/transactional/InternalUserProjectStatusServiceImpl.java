@@ -153,6 +153,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
                 golWorkflowHandler.isSent(project),
                 project.getProjectState(),
+                project.getApplication().getApplicationProcess().getProcessState(),
                 sentToIfsPa);
     }
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectActivityStates partnerProjectLocationStatus) {
