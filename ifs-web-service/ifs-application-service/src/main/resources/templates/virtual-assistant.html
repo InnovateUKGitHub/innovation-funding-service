@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact'" />
+</head>
+<body class="govuk-template__body assessment-review">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${virtualAssistantServerAvailable}">
+            <iframe style="height:480px; width:402px"
+                    th:src="|https://webchat.botframework.com/embed/${virtualAssistantBotId}?s=${virtualAssistantClientToken}|"></iframe>
+        </div>
+        <div th:unless="${virtualAssistantServerAvailable}">
+            <!-- Request copy -->
+            <p><span th:text="${errorMessage}">Remote server error</span></p>
+        </div>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+
+</body>
+</html>
+
