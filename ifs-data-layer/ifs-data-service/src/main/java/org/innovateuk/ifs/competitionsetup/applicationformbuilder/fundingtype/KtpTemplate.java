@@ -43,19 +43,6 @@ public class KtpTemplate implements FundingTypeTemplate {
     }
 
     @Override
-    public Competition initialiseProjectSetupColumns(Competition competition) {
-        addProjectSetupStage(competition, PROJECT_DETAILS);
-        addProjectSetupStage(competition, PROJECT_TEAM);
-        addProjectSetupStage(competition, DOCUMENTS);
-        addProjectSetupStage(competition, MONITORING_OFFICER);
-        addProjectSetupStage(competition, BANK_DETAILS);
-        addProjectSetupStage(competition, FINANCE_CHECKS);
-        //No Spend Profile for KTP
-        addProjectSetupStage(competition, GRANT_OFFER_LETTER);
-        return competition;
-    }
-
-    @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
 
         competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
