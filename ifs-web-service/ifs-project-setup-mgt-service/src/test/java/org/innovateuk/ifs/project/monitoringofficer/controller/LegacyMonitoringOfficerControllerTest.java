@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
@@ -149,7 +150,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     }
 
     @Test
-    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficer() throws Exception {
+    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficerNonKtp() throws Exception {
 
         ProjectResource project = projectBuilder.build();
 
@@ -160,7 +161,27 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         String url = "/project/123/monitoring-officer";
 
         mockMvc.perform(get(url)).
-                andExpect(redirectedUrl("/monitoring-officer/view-all")).
+                andExpect(redirectedUrl("/monitoring-officer/view-all?ktp=false")).
+                andReturn();
+    }
+
+    @Test
+    public void testViewMonitoringOfficerPageWithNoExistingMonitoringOfficerKtp() throws Exception {
+
+        ProjectResource project = projectBuilder.build();
+
+        boolean existingMonitoringOfficer = false;
+
+
+        setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(
+                newCompetitionResource().withFundingType(FundingType.KTP).build()));
+
+        String url = "/project/123/monitoring-officer";
+
+        mockMvc.perform(get(url)).
+                andExpect(redirectedUrl("/monitoring-officer/view-all?ktp=true")).
                 andReturn();
     }
 
