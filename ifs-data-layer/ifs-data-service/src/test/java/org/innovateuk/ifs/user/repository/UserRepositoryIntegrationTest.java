@@ -47,6 +47,22 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected InnovationAreaRepository innovationAreaRepository;
 
     @Test
+    public void findByRolesInAndStatusIn() {
+        EnumSet<Role> roles = EnumSet.of(APPLICANT, ASSESSOR);
+        EnumSet<UserStatus> statuses = EnumSet.of(ACTIVE, INACTIVE);
+
+        List<User> users = repository.findDistinctByRolesInAndStatusIn(roles, statuses);
+
+        assertTrue(users.stream()
+                .flatMap(user -> user.getRoles().stream())
+                .allMatch(roles::contains));
+
+        assertTrue(users.stream()
+                .map(User::getStatus)
+                .allMatch(statuses::contains));
+    }
+
+    @Test
     public void findAll() {
         // Fetch the list of users
         List<User> users = repository.findAll();
