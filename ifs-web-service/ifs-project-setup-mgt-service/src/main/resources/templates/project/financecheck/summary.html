@@ -185,18 +185,22 @@
                     'Generate spend profile' : 'Approve finance checks'"
                     class="govuk-button generate-spend-profile-main-button">
             </button>
+
             <button th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.hasSpendProfileStage}"
                     type="submit"
                     class="govuk-button generate-spend-profile-main-button">
                 Approve finance checks
             </button>
-            <a th:unless="${model.showDisabledGenerateSpendProfilesButton}"
+
+            <a th:unless="${model.showDisabledGenerateSpendProfilesButton} "
                th:if="${model.hasSpendProfileStage}"
                th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}"
                data-js-modal="generate-spend-profile" class="govuk-button generate-spend-profile-main-button">
                 Generate spend profile</a>
+
             <th:block
-                th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.hasSpendProfileStage}"
+                th:unless="${model.showDisabledGenerateSpendProfilesButton}"
+                th:if="${model.hasSpendProfileStage}"
                 th:insert="fragments/modals :: generate-spend-profile"/>
         </form>
 
