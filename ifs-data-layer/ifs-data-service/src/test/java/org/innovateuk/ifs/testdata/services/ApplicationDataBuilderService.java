@@ -8,8 +8,10 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -34,6 +36,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 import static java.lang.Boolean.TRUE;
@@ -232,7 +235,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                                 applicationData.getApplication(),
                                 applicationData.getCompetition(),
                                 user,
-                                organisationName)
+                                organisationName,
+                                organisationType)
                 );
             }
 
@@ -509,11 +513,13 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationResource application,
             CompetitionResource competition,
             String user,
-            String organisationName) {
+            String organisationName,
+            OrganisationTypeEnum organisationType) {
 
         UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
             final IndustrialCostDataBuilder[] builder = {costs};
-            competition.getFinanceRowTypes().forEach(type -> {
+
+            Consumer<? super FinanceRowType> costPopulator = type -> {
                 switch(type) {
                     case LABOUR:
                         builder[0] = builder[0].withWorkingDaysPerYear(123).
@@ -585,9 +591,16 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
                         break;
                 }
-            });
+            };
 
-            if (!competition.isKtp()) {
+
+            if (competition.isKtp()) {
+                if (OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType) {
+                    competition.getFinanceRowTypes().forEach(costPopulator);
+                }
+            } else {
+                competition.getFinanceRowTypes().forEach(costPopulator);
+
                 if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
                     builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
                             60L,
