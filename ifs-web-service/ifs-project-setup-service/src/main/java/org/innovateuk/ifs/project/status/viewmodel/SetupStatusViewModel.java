@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -19,8 +20,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final long applicationId;
     private final String competitionName;
     private final long competitionId;
-    private final boolean loanCompetition;
-    private final boolean investorPartnershipCompetition;
+    private final FundingType fundingType;
     private final boolean collaborativeProject;
     private final boolean showApplicationSummaryLink;
     private final List<SetupStatusStageViewModel> stages;
@@ -32,9 +32,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
                                 List<SetupStatusStageViewModel> stages,
-                                boolean loanCompetition,
+                                FundingType fundingType,
                                 boolean showApplicationSummaryLink,
-                                boolean investorPartnershipCompetition,
                                 boolean projectManager,
                                 boolean projectFinanceContact,
                                 PostAwardService postAwardService,
@@ -47,8 +46,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.competitionName = project.getCompetitionName();
         this.competitionId = project.getCompetition();
         this.stages = stages;
-        this.loanCompetition = loanCompetition;
-        this.investorPartnershipCompetition = investorPartnershipCompetition;
+        this.fundingType = fundingType;
         this.collaborativeProject = project.isCollaborativeProject();
         this.showApplicationSummaryLink = showApplicationSummaryLink;
         this.projectManager = projectManager;
@@ -86,11 +84,15 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isLoanCompetition() {
-        return loanCompetition;
+        return this.fundingType == FundingType.LOAN;
     }
 
     public boolean isInvestorPartnershipCompetition() {
-        return investorPartnershipCompetition;
+        return this.fundingType == FundingType.INVESTOR_PARTNERSHIPS;
+    }
+
+    public boolean isKtpCompetition() {
+        return this.fundingType == FundingType.KTP;
     }
 
     public List<SetupStatusStageViewModel> getStages() {
@@ -127,5 +129,17 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public String getLiveProjectsLandingPageUrl() {
         return liveProjectsLandingPageUrl;
+    }
+
+    public boolean isApplicationFeedbackAvailable() {
+        return !isKtpCompetition();
+    }
+
+    public boolean isBannerVisible() {
+        return !isLoanCompetition() && !isKtpCompetition() && getProjectState().isActive();
+    }
+
+    public boolean isLiveProjectMessageVisible() {
+        return !isKtpCompetition() && getProjectState().isLive();
     }
 }
