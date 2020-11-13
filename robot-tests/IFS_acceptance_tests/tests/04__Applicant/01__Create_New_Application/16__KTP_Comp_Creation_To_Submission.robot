@@ -61,6 +61,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8329 KTP Project Setup Dashboards (internal and external)
 ...
+...            IFS-8261 KTA Assigning MOs
+...
 ...            IFS-8478 KTP Project setup: KTA as monitoring officer
 ...
 ...            IFS-8547 KTA application and project dashboards
@@ -675,6 +677,51 @@ Internal user is able to view the KTA as an MO
     Given the user navigates to the page     ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link     link = Monitoring Officer
     Then the user should see the element     jQuery = a:contains("${ktaEmail}")
+
+Internal user can only assign KTA as MO to KTP funding type projects
+    [Documentation]  IFS-8261
+    Given the user navigates to the page         ${server}/project-setup-management/monitoring-officer/view-all
+    When search for mo                           Hermen   Hermen Mermen
+    And input text                               id = projectId    204
+    Then the user should not see the element     jQuery = li:contains("204 - PSC application 7")
+
+Internal user can only assign standard MO to non KTP competitions
+    [Documentation]  IFS-8261
+    Given the user clicks the button/link        link = Back to assign monitoring officers
+    When search for mo                           Rupesh   Rupesh Pereira
+    And input text                               id = projectId    299
+    Then the user should not see the element     jQuery = li:contains("299 - KTP in panel application")
+
+Internal user can only see list of standard MO's if user follows link from project setup dashboard for non KTP competitions
+    [Documentation]  IFS-8261
+    Given the user navigates to the page        ${server}/project-setup-management/monitoring-officer/view-all?ktp=false
+    When the user clicks the button/link        id = userId
+    Then the user should see the element        jQuery = li:contains("Orville Gibbs")
+    And the user should not see the element     jQuery = li:contains("Hermen Mermen")
+
+Internal user can only see list of KTA if user follows link from project setup dashboard for KTP competitions
+    [Documentation]  IFS-8261
+    Given the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    And the user clicks the button/link          link = Change Monitoring Officer
+    When the user clicks the button/link         id = userId
+    Then the user should not see the element     jQuery = li:contains("Orville Gibbs")
+    And the user should see the element          jQuery = li:contains("Hermen Mermen")
+
+Internal user can change the default KTA assigned as MO to another KTA user
+    [Documentation]  IFS-8261
+    Given search for mo                            simon   Simon Smith
+    And the user clicks the button/link            jQuery = td:contains("${ApplicationID}") ~ td:contains("Remove")
+    When the user clicks the button/link           link = Back to assign monitoring officers
+    And search for mo                              Hermen   Hermen Mermen
+    And the internal user assign project to mo     ${ApplicationID}   ${ktpApplicationTitle}
+    Then the user should see the element           jQuery = td:contains("${ApplicationID}")+td:contains("${ktpApplicationTitle}")+td:contains("${ktpOrgName}")
+
+Finance user approves bank details
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  log in as a different user                         &{internal_finance_credentials}
+    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
+    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
+    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
 
 Internal user is able to approve Finance checks and generate spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
