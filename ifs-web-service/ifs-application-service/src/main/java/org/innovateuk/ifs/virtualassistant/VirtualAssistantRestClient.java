@@ -20,13 +20,13 @@ public class VirtualAssistantRestClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${ifs.virtualAssistant.tokenExchangeUrl:undefined}")
+    @Value("${ifs.web.virtualAssistant.tokenExchangeUrl}")
     private String tokenExchangeUrl;
 
-    @Value("${ifs.virtualAssistant.botId:undefined}")
+    @Value("${ifs.web.virtualAssistant.botId}")
     private String botId;
 
-    @Value("${ifs.virtualAssistant.botSecret}")
+    @Value("${ifs.web.virtualAssistant.botSecret}")
     private String botSecret;
 
     public VirtualAssistantModel obtainVirtualAssistantDetails() {
