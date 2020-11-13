@@ -294,7 +294,7 @@ The user should not see the validation error
 The user edits the MO details
     search for MO   Orvill  Orville Gibbs
     the user clicks the button/link    jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td a:contains("Remove")
-    the user clicks the button/link    link = Back
+    the user clicks the button/link    link = Back to assign monitoring officers
     search for MO  Nilesh  Nilesh Patti
     the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 

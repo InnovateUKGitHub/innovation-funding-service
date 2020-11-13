@@ -60,7 +60,8 @@ public class LegacyMonitoringOfficerController {
         ProjectResource project =  projectService.getById(projectId);
         Optional<MonitoringOfficerResource> existingMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(projectId).getOptionalSuccessObject();
         if (!existingMonitoringOfficer.isPresent()) {
-            return "redirect:/monitoring-officer/view-all";
+            boolean isKtp = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isKtp();
+            return "redirect:/monitoring-officer/view-all" + "?ktp=" + isKtp;
         }
         LegacyMonitoringOfficerForm form = new LegacyMonitoringOfficerForm(existingMonitoringOfficer);
         return viewMonitoringOfficer(model, project, form, loggedInUser);

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
@@ -119,6 +120,10 @@ public class MonitoringOfficerViewModel {
 
     public boolean isDisplayChangeMonitoringOfficerLink() {
         return isReadOnly() && isEditable();
+    }
+
+    public boolean isKtp() {
+        return this.competitionSummary.getFundingType().equals(FundingType.KTP);
     }
 
     public boolean isDisplayAssignMonitoringOfficerButton() {
