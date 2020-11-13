@@ -36,7 +36,6 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isVa
 @SecuredBySpring(value = "Controller", description = "An existing applicant can pick a previous organisation." +
         " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
         securedType = OrganisationSelectionController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'APPLICATION_CREATION')")
 @Controller
 public class OrganisationSelectionController extends AbstractOrganisationCreationController {
 
@@ -57,6 +56,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
                                             @ModelAttribute(FORM_ATTR_NAME) OrganisationSelectionForm form,
@@ -83,7 +83,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
         return "registration/organisation/select-organisation";
     }
-
+    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @PostMapping
     public String selectOrganisation(HttpServletRequest request,
                                      HttpServletResponse response,
