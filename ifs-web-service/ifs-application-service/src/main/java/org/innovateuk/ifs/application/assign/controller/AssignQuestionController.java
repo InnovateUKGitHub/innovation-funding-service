@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -90,7 +91,7 @@ public class AssignQuestionController {
     private String redirectToRelevantPage(long applicationId, long questionId, HttpServletRequest request, HttpServletResponse response) {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         String url = pageHistoryService.getPreviousPage(request)
-                .map(PageHistory::getUrl)
+                .map(PageHistory::buildUrl)
                 .orElse(String.format("/application/%d/form/question/%d", applicationId, questionId));
         return "redirect:" + url;
     }
