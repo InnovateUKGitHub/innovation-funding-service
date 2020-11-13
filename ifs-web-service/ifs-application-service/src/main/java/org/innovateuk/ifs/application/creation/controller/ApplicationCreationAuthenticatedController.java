@@ -40,7 +40,7 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
-    @PreAuthorize("hasPermission(#competitionId, 'APPLICATION_CREATION')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'APPLICATION_CREATION')")
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) long competitionId,
@@ -57,7 +57,7 @@ public class ApplicationCreationAuthenticatedController {
         }
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'APPLICATION_CREATION')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'APPLICATION_CREATION')")
     @PostMapping("/{competitionId}")
     public String post(@PathVariable(COMPETITION_ID) long competitionId,
                        @Valid @ModelAttribute(FORM_NAME) ApplicationCreationAuthenticatedForm form,

@@ -56,7 +56,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
                                             @ModelAttribute(FORM_ATTR_NAME) OrganisationSelectionForm form,
@@ -83,7 +83,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
         return "registration/organisation/select-organisation";
     }
-    @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
+    @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping
     public String selectOrganisation(HttpServletRequest request,
                                      HttpServletResponse response,
