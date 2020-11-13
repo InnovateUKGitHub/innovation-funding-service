@@ -21,10 +21,6 @@ ${ktpPartnerOrgId}                 ${organisation_ids["${ktpPartnerOrgName}"]}
 &{ifsAdmin}                        email=arden.pimenta@innovateuk.test     password=${short_password}
 &{ktpLead}                         email=bob@knowledge.base    password=${short_password}
 &{ktpPartner}                      email=jessica.doe@ludlow.co.uk    password=${short_password}
-${estateValue}                     11000
-${associateSalaryTable}            associate-salary-costs-table
-${associateDevelopmentTable}       associate-development-costs-table
-${limitFieldValidationMessage}     You must provide justifications for exceeding allowable cost limits.
 
 *** Test Cases ***
 Internal user can edit the duration of the project
