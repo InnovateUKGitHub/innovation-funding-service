@@ -276,6 +276,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2))
+                .withActivityState(ApplicationState.APPROVED)
                 .build(3);
 
         List<ProjectUser> projectUsers = newProjectUser()
