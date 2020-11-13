@@ -661,6 +661,7 @@ The partner should see the MO section with KTA details
 
 Internal user cannot see the project start date and should see the correspondence address
     [Documentation]  IFS-7805 IFS-8070
+    Given log in as a different user                &{Comp_admin1_credentials}
     When the user clicks the button/link            link = Project details
     Then the user sees the text in the element      id = start-date    ${empty}
     And the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
