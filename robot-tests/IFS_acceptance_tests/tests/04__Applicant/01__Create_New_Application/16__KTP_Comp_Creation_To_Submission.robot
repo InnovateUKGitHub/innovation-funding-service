@@ -657,27 +657,27 @@ The partner should see the MO section with KTA details
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Monitoring Officer
     Then The user should see the element            jQuery = a:contains("${ktaEmail}")
-    [Teardown]  the user clicks the button/link     link = Set up your project
 
 Internal user cannot see the project start date and should see the correspondence address
     [Documentation]  IFS-7805 IFS-8070
     Given log in as a different user                &{Comp_admin1_credentials}
-    When the user clicks the button/link            link = Project details
+    And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link            jQuery = tr:nth-of-type(1) td:nth-of-type(1)
     Then the user sees the text in the element      id = start-date    ${empty}
     And the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
-    [Teardown]  the user clicks the button/link     link = Set up your project
+    [Teardown]  the user clicks the button/link     link = Back to project setup
 
 Internal user should see the Project manager & Finance contact (lead details) and Finance contact of the participant
     [Documentation]  IFS-8070
-    When the user clicks the button/link            link = Project team
+    When the user clicks the button/link            jQuery = tr:nth-of-type(1) td:nth-of-type(2)
     Then the user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
     And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
 
 Internal user is able to view the KTA as an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-8070
-    Given the user navigates to the page     ${server}/project-setup/project/${ProjectID}
-    When the user clicks the button/link     link = Monitoring Officer
-    Then the user should see the element     jQuery = a:contains("${ktaEmail}")
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link     jQuery = tr:nth-of-type(1) td:nth-of-type(3)
+    Then the user should see the element     css = input[name="emailAddress"][value = "${ktaEmail}"]
 
 Internal user can only assign KTA as MO to KTP funding type projects
     [Documentation]  IFS-8261
@@ -717,13 +717,6 @@ Internal user can change the default KTA assigned as MO to another KTA user
     And the internal user assign project to mo     ${ApplicationID}   ${ktpApplicationTitle}
     Then the user should see the element           jQuery = td:contains("${ApplicationID}")+td:contains("${ktpApplicationTitle}")+td:contains("${ktpOrgName}")
 
-Finance user approves bank details
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user                         &{internal_finance_credentials}
-    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
-    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
-    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
-
 Internal user is able to approve Finance checks and generate spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
     [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
@@ -737,7 +730,7 @@ Internal user is able to approve Finance checks and generate spend profile
 
 Monitoring officer can view the Finance checks project setup dashboard section
     [Documentation]  IFS-8329
-    Given log in as a different user            &{ktaUserCredentials}
+    Given log in as a different user            email=hermen.mermen@ktn-uk.test  password=${short_password}
     When the user navigates to the page         ${server}/project-setup/project/${ProjectID}
     Then the user should see the element        jQuery = li:contains("Finance checks") span:contains("Completed")
 
