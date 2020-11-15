@@ -36,12 +36,12 @@ public class PageHistoryService {
 
         if (!handler.hasMethodAnnotation(ExcludeFromPageHistory.class)) {
             if (!history.isEmpty()) {
-                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().getUrl());
+                modelAndView.getModel().put("cookieBackLinkUrl", history.peek().buildUrl());
                 modelAndView.getModel().put("cookieBackLinkText", history.peek().getName());
             }
 
             if (!ERROR.equals(request.getDispatcherType())) {
-                history.push(new PageHistory(request.getRequestURI()));
+                history.push(new PageHistory(null, request.getRequestURI(), request.getQueryString()));
                 encodedCookieService.saveToCookie(response, PAGE_HISTORY_COOKIE_NAME, JsonUtil.getSerializedObject(history));
             }
         }
