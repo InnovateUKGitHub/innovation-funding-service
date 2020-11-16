@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:unless="${model.internal}">
         <th:block th:insert="fragments/layout :: header-sub"
-                  th:with="linkTitle='Set up your project',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
+                  th:with="linkTitle='Back to project setup',linkUrl=@{/project/{id}(id=${model.projectId})}"/>
     </th:block>
 
     <th:block th:if="${model.internal}">
@@ -180,7 +180,7 @@
             </p>
         </th:block>
         <th:block th:unless="${model.internal}">
-            <a th:href="@{/project/{id}(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to setup your project</a>
+            <a th:href="@{/project/{id}(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to set up your project</a>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

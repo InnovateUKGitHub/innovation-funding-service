@@ -16,7 +16,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.name}|,size='govuk-heading-xl'" />
 
         <div th:if="${resumedFromOnHold}" class="success-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">This project is no longer on hold.</p>
@@ -97,7 +97,7 @@
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-half">Partner</th>
-                    <th class="govuk-table__header govuk-!-width-one-quarter" scope="col">Project location</th>
+                    <th class="govuk-table__header govuk-!-width-one-half" scope="col">Project location</th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -139,7 +139,7 @@
                     <th:block th:if="${model.financeReviewerAssigned}" th:text="${model.financeReviewerEmail}"></th:block>
                 </td>
                 <td class="govuk-table__cell alignright">
-                    <a th:if="${model.modifyTheFinanceReviewer()}"
+                    <a class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0" th:if="${model.modifyTheFinanceReviewer()}"
                        th:href="@{/competition/{competitionId}/project/{projectId}/finance-reviewer(competitionId=${model.competitionId},projectId=${model.project.id})}">
                         Edit <span class="govuk-visually-hidden">finance reviewer</span></a>
                 </td>

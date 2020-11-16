@@ -21,7 +21,7 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Monitoring officer',subTitle=|${model.applicationId}: ${model.projectTitle}|,size='govuk-heading-xl'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Monitoring officer',subTitle=|${model.projectTitle}|,size='govuk-heading-xl'" />
                 </div>
             </div>
 
@@ -33,7 +33,7 @@
                 </div>
             </th:block>
 
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-half govuk-!-padding-top-4">
                 <h2 class="govuk-heading-l">Monitoring officer</h2>
                 <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
 
@@ -125,7 +125,7 @@
                     <th:block th:insert="fragments/modals :: modal-assign-mo" />
                 </form>
             </div>
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-half govuk-!-padding-top-4">
                 <h2 class="govuk-heading-l">Supporting information</h2>
 
                 <th:block th:if="${model.projectTitle}">

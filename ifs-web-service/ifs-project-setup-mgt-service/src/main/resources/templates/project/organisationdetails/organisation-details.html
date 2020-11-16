@@ -17,7 +17,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${organisationDetails.organisationName},subTitle=|${organisationDetails.projectId}: ${organisationDetails.projectName}|,size='govuk-heading-xl'"/>
+                  th:with="pageTitle=${organisationDetails.organisationName},subTitle=|${organisationDetails.projectName}|,size='govuk-heading-xl'"/>
 
         <th:block
             th:insert="project/fragments/organisation-details-fragment :: organisation-details-view (organisationDetails=${organisationDetails})"/>
