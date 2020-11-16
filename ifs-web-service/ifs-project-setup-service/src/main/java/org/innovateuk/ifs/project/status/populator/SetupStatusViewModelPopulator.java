@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -69,6 +68,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
+
         ProjectResource project = projectService.getById(projectId);
         boolean monitoringOfficer = monitoringOfficerService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
@@ -87,8 +87,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer, teamStatusRequest, organisationRequest))
                 .collect(toList());
 
-        boolean isInvestorPartnership = FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType();
-
         RestResult<CompetitionPostAwardServiceResource> competitionPostAwardServiceResource = competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition());
 
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
@@ -98,9 +96,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 project,
                 monitoringOfficer,
                 stages,
-                competition.isLoan(),
+                competition.getFundingType(),
                 showApplicationSummaryLink(project, loggedInUser, monitoringOfficer),
-                isInvestorPartnership,
                 isProjectManager,
                 isProjectFinanceContact,
                 competitionPostAwardServiceResource.getSuccess().getPostAwardService(),
@@ -196,7 +193,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 isProjectDetailsSubmitted,
                                 resolve(teamStatusRequest));
                 return new SetupStatusStageViewModel(stage, "Monitoring Officer",
-                        maybeMonitoringOfficer.isPresent() ? format("Your Monitoring Officer for this project is %s.", maybeMonitoringOfficer.get().getFullName())
+                        maybeMonitoringOfficer.isPresent() ? format(getMonitoringOfficerText(competition.isKtp()) + " %s.", maybeMonitoringOfficer.get().getFullName())
                                 : "We will assign the project a Monitoring Officer.",
                         projectComplete ? format("/project/%d/monitoring-officer/readonly", project.getId())
                                 : format("/project/%d/monitoring-officer", project.getId()),
@@ -238,7 +235,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case GRANT_OFFER_LETTER:
                 String title = competition.isProcurement() ? "Contract" : "Grant offer letter";
                 return new SetupStatusStageViewModel(stage, title,
-                        "Once all tasks are complete the Project Manager can review, sign and submit the " + title.toLowerCase() + " to us.",
+                        getGrantOfferLetterSubtitle(title, competition.isKtp()),
                         format("/project/%d/offer", project.getId()),
                         sectionStatus.grantOfferLetterSectionStatus(
                                 ownOrganisation.getGrantOfferLetterStatus(),
@@ -258,6 +255,15 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
         }
         throw new IllegalArgumentException("Unknown enum type " + stage.name());
+    }
+
+    private String getGrantOfferLetterSubtitle(String title, boolean isKtp) {
+        return isKtp ? "The project manager can review, sign and submit the grant offer letter to us once all tasks are complete."
+                : "Once all tasks are complete the Project Manager can review, sign and submit the " + title.toLowerCase() + " to us.";
+    }
+
+    private String getMonitoringOfficerText(boolean isKtp) {
+        return isKtp ?  "Your monitoring officer for this project is knowledge transfer advisor (KTA)" : "Your Monitoring Officer for this project is";
     }
 
     private boolean isLeadPartner(ProjectTeamStatusResource teamStatus, OrganisationResource organisation) {
