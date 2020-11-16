@@ -17,22 +17,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
                     "org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD," +
                     "org.innovateuk.ifs.project.resource.ProjectState.LIVE)";
 
-
-    List<MonitoringOfficer> findByUserId(long userId);
-
-    Optional<MonitoringOfficer> findOneByProjectIdAndRole(long projectId, ProjectParticipantRole role);
-
-    boolean existsByProjectIdAndUserId(long projectId, long userId);
-
-    boolean existsByUserId(long userId);
-
-    boolean existsByProjectApplicationIdAndUserId(long applicationId, long userId);
-
-    boolean existsByProjectApplicationCompetitionIdAndUserId(long competitionId, long userId);
-
-    void deleteByUserIdAndProjectId(long userId, long projectId);
-
-    @Query("SELECT NEW org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource(" +
+    String GET_UNASSIGNED = "SELECT NEW org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource(" +
             "   project.id," +
             "   project.application.id," +
             "   project.name" +
@@ -43,11 +28,9 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.id IS NULL " +
-            "   AND project.projectProcess.activityState in " + PROJECT_STATES +
-            "ORDER BY project.application.id")
-    List<MonitoringOfficerUnassignedProjectResource> findUnassignedProject();
+            "   AND project.projectProcess.activityState in " + PROJECT_STATES;
 
-    @Query("SELECT NEW org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource(" +
+    String GET_ASSIGNED = "SELECT NEW org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource(" +
             "   project.id," +
             "   project.application.id," +
             "   project.application.competition.id," +
@@ -65,7 +48,50 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.user.id = :userId " +
-            "   AND project.projectProcess.activityState in " + PROJECT_STATES +
+            "   AND project.projectProcess.activityState in " + PROJECT_STATES;
+
+    String NOT_KTP = "AND project.application.competition.fundingType != (org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP)";
+    String IS_KTP = "AND project.application.competition.fundingType = org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP ";
+
+    List<MonitoringOfficer> findByUserId(long userId);
+
+    Optional<MonitoringOfficer> findOneByProjectIdAndRole(long projectId, ProjectParticipantRole role);
+
+    boolean existsByProjectIdAndUserId(long projectId, long userId);
+
+    boolean existsByUserId(long userId);
+
+    boolean existsByProjectApplicationIdAndUserId(long applicationId, long userId);
+
+    boolean existsByProjectApplicationCompetitionIdAndUserId(long competitionId, long userId);
+
+    void deleteByUserIdAndProjectId(long userId, long projectId);
+
+    @Query(GET_UNASSIGNED +
             "ORDER BY project.application.id")
-    List<MonitoringOfficerAssignedProjectResource> findAssignedProjects(Long userId);
+    List<MonitoringOfficerUnassignedProjectResource> findAllUnassignedProjects();
+
+    @Query(GET_UNASSIGNED +
+            NOT_KTP +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerUnassignedProjectResource> findUnassignedNonKTPProjects();
+
+    @Query(GET_UNASSIGNED +
+            IS_KTP +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerUnassignedProjectResource> findUnassignedKTPProjects();
+
+    @Query(GET_ASSIGNED +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerAssignedProjectResource> findAllAssignedProjects(Long userId);
+
+    @Query(GET_ASSIGNED +
+            NOT_KTP +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerAssignedProjectResource> findAssignedNonKTPProjects(Long userId);
+
+    @Query(GET_ASSIGNED +
+            IS_KTP +
+            "ORDER BY project.application.id")
+    List<MonitoringOfficerAssignedProjectResource> findAssignedKTPProjects(Long userId);
 }
