@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface GolTemplateRepository extends CrudRepository<GolTemplate, Long> {
 
-    GolTemplate findTopByOrderByVersionDesc();
+    GolTemplate findFirstByNameOrderByVersionDesc(String name);
 }

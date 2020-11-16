@@ -66,6 +66,11 @@ public class KtpTemplate implements FundingTypeTemplate {
         return commonBuilders.overrideTermsAndConditions(competition);
     }
 
+    @Override
+    public Competition setGolTemplate(Competition competition) {
+        return commonBuilders.getGolTemplate(competition);
+    }
+
     private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {
         Optional<SectionBuilder> applicationQuestionSection = sections.stream()
                 .filter(sectionBuilder -> sectionBuilder.getName().equals("Application questions"))
