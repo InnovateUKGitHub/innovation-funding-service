@@ -29,8 +29,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
-@SecuredBySpring(value="Controller", description = "Applicants, assessors, stakeholders and monitoring officers can accept invites to an application." +
-        " assessors, stakeholders and monitoring officers will become applicants by accepting", securedType = AcceptInviteAuthenticatedController.class)
 public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteController {
 
     private InviteRestService inviteRestService;

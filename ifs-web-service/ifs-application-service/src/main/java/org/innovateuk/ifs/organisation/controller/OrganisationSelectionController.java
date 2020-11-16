@@ -33,9 +33,6 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isVa
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.isValidKtpCollaborator;
 
 @RequestMapping("/organisation/select")
-@SecuredBySpring(value = "Controller", description = "An existing applicant can pick a previous organisation." +
-        " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
-        securedType = OrganisationSelectionController.class)
 @Controller
 public class OrganisationSelectionController extends AbstractOrganisationCreationController {
 
