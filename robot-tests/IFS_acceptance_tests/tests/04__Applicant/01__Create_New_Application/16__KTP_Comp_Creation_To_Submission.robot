@@ -59,9 +59,6 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8070 KTP Project setup - create projects
 ...
-<<<<<<< HEAD
-...            IFS-8707 Allow Users with LIVE PROJECTS USER role to Create Application
-=======
 ...            IFS-8329 KTP Project Setup Dashboards (internal and external)
 ...
 ...            IFS-8261 KTA Assigning MOs
@@ -71,7 +68,6 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-8547 KTA application and project dashboards
 ...
 ...            IFS-8115 IFS Project setup: notification when project created
->>>>>>> 8a753de582580f32d4da51ef68478bf04081cc56
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -743,35 +739,6 @@ Internal user sees correct label for T&C's
     When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
 
-<<<<<<< HEAD
-Applicant is able to upload the GOL
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given log in as a different user         &{ktpLeadApplicantCredentials}
-    When Applicant uploads the GOL           ${ProjectID}
-    Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
-
-Internal user is able to approve the GOL and the project is now Live
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the internal user approve the GOL                                    ${ProjectID}
-    When log in as a different user                                            &{ktpLeadApplicantCredentials}
-    And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
-    Then the user should see project is live with review its progress link
-
-Live Project User is able to create a new application
-    [Documentation]  IFS-8707
-    Given the internal user approve the GOL     47
-    When User starts an application with a second organisation type
-    And The user clicks the button/link         id = "save-organisation"
-    Then The user should see the element        jQuery = h1:contains("Application overview")
-
-#Live Project User is able to join an application
-#    [Documentation]  IFS-8707
-#    Given the internal user approve the GOL
-#    When
-
-
-=======
->>>>>>> 8a753de582580f32d4da51ef68478bf04081cc56
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
     Given log in as a different user                                &{ktpExistingLeadCredentials}
