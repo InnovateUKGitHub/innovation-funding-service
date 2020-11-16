@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 @Controller
 @RequestMapping("/application/create-authenticated")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'APPLICATION_CREATION')")
 public class ApplicationCreationAuthenticatedController {
 
     private static final String COMPETITION_ID = "competitionId";
@@ -41,6 +40,7 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'APPLICATION_CREATION')")
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) long competitionId,
@@ -57,6 +57,7 @@ public class ApplicationCreationAuthenticatedController {
         }
     }
 
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'APPLICATION_CREATION')")
     @PostMapping("/{competitionId}")
     public String post(@PathVariable(COMPETITION_ID) long competitionId,
                        @Valid @ModelAttribute(FORM_NAME) ApplicationCreationAuthenticatedForm form,

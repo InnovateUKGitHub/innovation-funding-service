@@ -895,48 +895,29 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void assessorCanRequestApplicantRole() {
-        UserResource otherAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
-
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(otherAssessor.getId(), APPLICANT), assessorUser()));
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
-
+    public void isMultipleRoleDashboardUsersCanRequestApplicantRole() {
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), liveProjectsUser()));
     }
 
     @Test
     public void stakeholderCanRequestApplicantRole() {
         UserResource otherStakeholder = newUserResource().withRolesGlobal(singletonList(STAKEHOLDER)).build();
-
-        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(otherStakeholder.getId(), APPLICANT), stakeholderUser()));
-        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
     }
 
     @Test
     public void monitoringOfficerCanRequestApplicantRole() {
         UserResource otherMonitoringOfficer = newUserResource().withRolesGlobal(singletonList(MONITORING_OFFICER)).build();
-
-        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(otherMonitoringOfficer.getId(), APPLICANT), monitoringOfficerUser()));
-        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
     }
 
     @Test
     public void liveProjectsUserCanRequestApplicantRole() {
         UserResource otherLiveProjectsUser = newUserResource().withRolesGlobal(singletonList(LIVE_PROJECTS_USER)).build();
-
-        assertFalse(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(otherLiveProjectsUser.getId(), APPLICANT), liveProjectsUser()));
-        assertFalse(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.liveProjectsUserCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), liveProjectsUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), liveProjectsUser()));
     }
 
     @Test
