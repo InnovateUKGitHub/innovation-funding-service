@@ -197,6 +197,9 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project) {
+        if (!projectContainsStage(project, ProjectSetupStage.BANK_DETAILS)) {
+            return COMPLETE;
+        }
         List<Organisation> organisationsRequiringBankDetails = project.getOrganisations()
                 .stream()
                 .filter(org -> areBankDetailsRequired(project, org))

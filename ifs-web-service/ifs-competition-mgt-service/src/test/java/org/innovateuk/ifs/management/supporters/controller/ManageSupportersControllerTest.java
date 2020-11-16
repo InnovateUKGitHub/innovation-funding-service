@@ -28,7 +28,7 @@ public class ManageSupportersControllerTest extends BaseControllerMockMVCTest<Ma
     public void manageSupportersPage() throws Exception {
         long competitionId = 4L;
 
-        ManageSupportersViewModel model = new ManageSupportersViewModel(new CompetitionResource(), true);
+        ManageSupportersViewModel model = new ManageSupportersViewModel(new CompetitionResource());
         when(manageSupportersViewModelPopulator.populateModel(competitionId)).thenReturn(model);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}/supporters", competitionId))

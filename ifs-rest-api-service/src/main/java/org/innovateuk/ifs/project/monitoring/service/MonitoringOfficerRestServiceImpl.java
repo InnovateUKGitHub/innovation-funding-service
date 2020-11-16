@@ -40,6 +40,16 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<List<SimpleUserResource>> findAllKtp() {
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all-ktp"), simpleUserListType());
+    }
+
+    @Override
+    public RestResult<List<SimpleUserResource>> findAllNonKtp() {
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all-non-ktp"), simpleUserListType());
+    }
+
+    @Override
     public RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId) {
         return getWithRestResult(String.format("%s/%d/projects", PROJECT_MONITORING_OFFICER_REST_URL, userId), projectResourceListType());
     }

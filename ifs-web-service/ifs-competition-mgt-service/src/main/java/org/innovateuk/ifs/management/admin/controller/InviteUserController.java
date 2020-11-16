@@ -13,7 +13,6 @@ import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,16 +45,9 @@ public class InviteUserController {
     @Autowired
     private InviteUserService inviteUserService;
 
-    @Value("${ifs.supporter.enabled}")
-    private boolean supporterEnabled;
-
     @GetMapping("/select-external-role")
     public String selectRole(@ModelAttribute(name = "form") SelectExternalRoleForm form,
                              Model model) {
-
-        if (!supporterEnabled) {
-            return String.format("redirect:/admin/invite-external-user?role=%s", Role.KNOWLEDGE_TRANSFER_ADVISER.toString());
-        }
 
         model.addAttribute("roles", Role.externalRolesToInvite());
         return "admin/select-external-role";
@@ -79,7 +71,7 @@ public class InviteUserController {
     public String inviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), supporterEnabled);
+        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles());
     }
 
     @GetMapping("/invite-external-user")
@@ -87,11 +79,11 @@ public class InviteUserController {
                                         Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role), supporterEnabled);
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(role));
     }
 
-    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles, boolean supporterEnabled) {
-        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles, supporterEnabled);
+    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
+        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles);
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(Model_ATTR_NAME, viewModel);
@@ -103,7 +95,7 @@ public class InviteUserController {
     public String saveUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles(), supporterEnabled);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles());
 
         return saveInvite(form, validationHandler, failureView);
     }
@@ -125,7 +117,7 @@ public class InviteUserController {
     public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()), supporterEnabled);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, singleton(form.getRole()));
 
         return saveInvite(form, validationHandler, failureView);
     }
