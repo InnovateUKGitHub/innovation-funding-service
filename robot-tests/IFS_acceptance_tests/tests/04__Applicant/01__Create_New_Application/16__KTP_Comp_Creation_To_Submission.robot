@@ -780,15 +780,6 @@ Internal user should not see the start date in the Edit Project screen
     When The user clicks the button/link         link = Edit
     Then The user should not see the element     jQuery = dt:contains("Start date")
 
-#Internal user is able to approve Finance checks and generate spend profile
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
-#    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
-#    Given the user navigates to the page        ${server}/project-setup-management/project/${ProjectID}/finance-check
-#    And the user approves Eligibility           ${ProjectID}
-#    And the user approves Viability             ${ProjectID}
-#    And the user approves Spend Profile
-#    When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
-
 Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
     Given Log in as a different user            &{ifs_admin_user_credentials}
