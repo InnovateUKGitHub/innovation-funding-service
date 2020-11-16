@@ -25,7 +25,6 @@ ${ktpPartnerOrgId}                 ${organisation_ids["${ktpPartnerOrgName}"]}
 *** Test Cases ***
 Internal user can edit the duration of the project
     [Documentation]  IFS-8328
-#    [Setup]  Requesting KTP Organisation IDs
     Given The user navigates to the page          ${server}/project-setup-management/competition/${KTPcompetitonId}/project/${ktpProjectID}/duration
     When the user enters text to a text field     id = durationInMonths    30
     And The user clicks the button/link           jQuery = button:contains("Save and return to project finances")
@@ -49,13 +48,13 @@ Internal user approves the Viability of the lead applicant and partner
     [Documentation]  IFS-8328
     When The user navigates to the page     ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpLeadOrgID}/viability
     Then the user approves viability
-    When The user navigates to the page     ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpPartnerOrgId}/viability
-    Then the user approves viability
+    And The user navigates to the page      ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpPartnerOrgId}/viability
+    And the user approves viability
 
 Internal user checks the values in Finance checks page
     [Documentation]  IFS-8328
     When The user navigates to the page                                 ${server}/project-setup-management/project/${ktpProjectID}/finance-check
-    The user checks the project finances in the finance checks page
+    Then user checks the project finances in the finance checks page
 
 Internal user checks the Finance overview page
     [Documentation]  IFS-8328
