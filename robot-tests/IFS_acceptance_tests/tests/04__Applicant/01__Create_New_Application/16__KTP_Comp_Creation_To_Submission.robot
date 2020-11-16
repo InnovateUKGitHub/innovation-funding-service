@@ -68,7 +68,9 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-8547 KTA application and project dashboards
 ...
 ...            IFS-8115 IFS Project setup: notification when project created
-
+...
+...            IFS-8119 KTP Project Setup - GOL
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -522,11 +524,17 @@ New lead applicant submits the application
     And the applicant completes Application Team
     Then the applicant submits the application
 
-MO can see the read only view of project assigned to him on closing the assessment
+Internal user moves competition to project setup
+    Given moving competition to Closed                        ${competitionId}
+    When Log in as a different user                           &{internal_finance_credentials}
+    And the user closed ktp assesment                         ${competitionId}
+    And the user navigates to the page                        ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
+
+MO can see the read only view of project assigned to him
     [Documentation]  IFS-8478
-    Given Internal user closes the assessment
-    When Log in as a different user                           ${ktaEmail}    ${short_password}
-    And the user clicks the button/link                       id = dashboard-link-MONITORING_OFFICER
+    Given Log in as a different user                          ${ktaEmail}    ${short_password}
+    When the user clicks the button/link                      id = dashboard-link-MONITORING_OFFICER
     And the user clicks the button/link                       link = ${ktpApplicationTitle}
     And the user clicks the button/link                       link = Project details
     Then MO should see read only viiew of project details
@@ -537,17 +545,9 @@ MO can see application summary in view application feedback page before releasin
     When the user clicks the button/link      link = view application overview
     Then the user should see the element      jQuery = h1:contains("Application overview")
 
-Moving KTP Competition to Project Setup
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8115
-    Given Log in as a different user                         &{internal_finance_credentials}
-    When moving competition to Project Setup                 ${competitionId}
-    And the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user refreshes until element appears on page    jQuery = tr div:contains("${ktpApplicationTitle}")
-    And the user reads his email                             ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
-    [Teardown]  Requesting IDs of this Project
-
 Lead applicant can view the project setup dashboard sections
     [Documentation]  IFS-8329
+    [Setup]   Requesting IDs of this Project
     Given log in as a different user                    &{ktpLeadApplicantCredentials}
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
     And the user should see the element                 jQuery = h1:contains("Set up your project")
@@ -560,10 +560,10 @@ Monitoring officer can view the project setup dashboard sections
     And the user should see the element                 jQuery = h1:contains("Monitor project")
     Then the user should see project setup sections
 
-IFS admin cannot view the project setup sections
+IFS admin cannot view the non-ktp competition project setup sections
     [Documentation]  IFS-8329
-    Given log in as a different user             &{internal_finance_credentials}
-    When When the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
+    Given log in as a different user                     &{internal_finance_credentials}
+    When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the admin should see project setup sections
 
 Multiple Role KTA can view application, assessments and project setup dashboard tiles
@@ -717,16 +717,22 @@ Internal user can change the default KTA assigned as MO to another KTA user
     And the internal user assign project to mo     ${ApplicationID}   ${ktpApplicationTitle}
     Then the user should see the element           jQuery = td:contains("${ApplicationID}")+td:contains("${ktpApplicationTitle}")+td:contains("${ktpOrgName}")
 
-Internal user is able to approve Finance checks and generate spend profile
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
-    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
-    Given the user navigates to the page        ${server}/project-setup-management/project/${ProjectID}/finance-check
-    And the user approves Eligibility           ${ProjectID}
-    And the user approves Viability             ${ProjectID}
-    And the user approves Spend Profile
-    When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
+Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
+    Given Log in as a different user            &{ifs_admin_user_credentials}
+    When the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/finance-check
+    And the user approves finance checks        ${ProjectID}  ${competitionId}
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
-    And the user should see the element         jQuery = td:nth-child(6):contains("Review")
+    And the user should not see the element     jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+
+Internal user can view status of the GOL section on making application sucessful after finance checks have been approved
+    [Documentation]  IFS-8199  IFS-7146  IFS-7147  IFS-7148  IFS-8115
+    When making the application a successful project from correct state     ${competitionId}   ${ktpApplicationTitle}
+    And the user navigates to the page                                      ${server}/management/competition/${competitionId}
+    And the user clicks the button/link                                     css = button[type="submit"][formaction$="release-feedback"]
+    And the user navigates to the page                                      ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element                                    jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+    And the user reads his email                                            ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
 
 Monitoring officer can view the Finance checks project setup dashboard section
     [Documentation]  IFS-8329
@@ -1100,12 +1106,12 @@ MO should see read only viiew of project details
     the user should see the element         jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
     the user should not see the element     jQuery = button:contains("Edit")
 
-Internal user closes the assessment
-    moving competition to Closed                         ${competitionId}
-    Log in as a different user                           &{internal_finance_credentials}
-    making the application a successful project          ${competitionId}  ${ktpApplicationTitle}
-    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
-    the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
+#Internal user closes the assessment
+#    moving competition to Closed                         ${competitionId}
+#    Log in as a different user                           &{internal_finance_credentials}
+#    the user closed ktp assesment                        ${competitionId}
+#    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
+#    the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
 
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
@@ -1122,3 +1128,19 @@ the admin should see project setup sections
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(4):contains("Review")
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("${empty}")
     the admin should not see Documents, Bank details or Spend profile dashboard sections
+
+the user closed ktp assesment
+    [Arguments]  ${compID}
+    the user navigates to the page      ${server}/management/competition/${compID}
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css = button[type="submit"][formaction$="notify-assessors"]
+    ...    AND  the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
+    run keyword and ignore error without screenshots     the user clicks the button/link    css = button[type="submit"][formaction$="close-assessment"]
+
+the user approves finance checks
+    [Arguments]   ${ProjectID}  ${competitionId}
+    the user approves Eligibility       ${ProjectID}
+    the user approves Viability         ${ProjectID}
+    the user approves Spend Profile
+    the user navigates to the page      ${server}/project-setup-management/competition/${competitionId}/status/all
