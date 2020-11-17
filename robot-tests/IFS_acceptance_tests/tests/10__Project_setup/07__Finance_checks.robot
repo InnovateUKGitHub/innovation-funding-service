@@ -781,10 +781,10 @@ Project finance can see updated finance breakdown for different categories
     And all the categories are verified  1   £177,784 	 59,430  1,954 	80,000   5,050   10,600  10,000   10,750
     #check breakdown for academic user
     When the user should see the text in the element   css = .table-overflow tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
-    Then all the categories are verified  2   £990 	     286 	   154    66       0 	      0 	    44      440
+    Then all the categories are verified  3   £990 	     286 	   154    66       0 	      0 	    44      440
     #check breakdown for non lead partner
     When the user should see the text in the element   css = .table-overflow tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
-    Then all the categories are verified  3   £177,784   59,430  1,954  80,000    5,050   10,600  10,000   10,750
+    Then all the categories are verified  2   £177,784   59,430  1,954  80,000    5,050   10,600  10,000   10,750
     #Check total
     And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,558
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
