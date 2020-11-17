@@ -534,7 +534,7 @@ Internal user moves competition to project setup
     Then the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
 
 MO can see the read only view of project assigned to him
-    [Documentation]  IFS-8478
+    [Documentation]  IFS-8478 IFS-8116
     Given Log in as a different user                          ${ktaEmail}    ${short_password}
     When the user clicks the button/link                      id = dashboard-link-MONITORING_OFFICER
     And the user clicks the button/link                       link = ${ktpApplicationTitle}
@@ -597,14 +597,16 @@ the project finance user cannot see the project start date
     And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
     And the user should see the element                jQuery = dt:contains("Duration in months")
 
-The lead cannot see the project start date and can see the correspondance address
-    [Documentation]  IFS-7805 IFS-8070
+The lead cannot view the project start date and duration and can see the correspondance address
+    [Documentation]  IFS-7805 IFS-8070 IFS-8116
     [Setup]  log in as a different user             &{ktpLeadApplicantCredentials}
     Given the user navigates to the page            ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link            link = Project details
-    Then the user sees the text in the element      id = start-date    ${empty}
+    Then the user should not see the element        id = start-date
     And the user sees the text in the element       id = project-address    The Burroughs, London, NW4 4BT
     And the user sees the text in the element       id = project-address-status    Complete
+    And the user should see the element             jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
+    And the user should not see the element         jQuery = td:contains("${newPartnerOrgName}") ~ td:contains("Edit")
     [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
 The lead should see the Project manager & Finance contact (lead details) and Finance contact of the participant
