@@ -53,8 +53,8 @@ Internal user approves the Viability of the lead applicant and partner
 
 Internal user checks the values in Finance checks page
     [Documentation]  IFS-8328
-    When The user navigates to the page                                 ${server}/project-setup-management/project/${ktpProjectID}/finance-check
-    Then user checks the project finances in the finance checks page
+    When The user navigates to the page                                      ${server}/project-setup-management/project/${ktpProjectID}/finance-check
+    Then the user checks the project finances in the finance checks page
 
 Internal user checks the Finance overview page
     [Documentation]  IFS-8328

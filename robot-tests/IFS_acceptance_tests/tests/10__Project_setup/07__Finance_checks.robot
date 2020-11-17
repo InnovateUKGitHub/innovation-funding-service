@@ -112,7 +112,7 @@ Validation on duration of Project
     Then the user should see a field error              ${empty_field_warning_message}
     When the user clicks the button/link                jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error  ${empty_field_warning_message}
-    [Teardown]  the user clicks the button/link         link = Projects in setup
+    [Teardown]  the user clicks the button/link         link = Back to finance checks
 
 Project Finance can edit the duration of the Project
     [Documentation]  IFS-2313
@@ -169,7 +169,7 @@ Project finance can see the within limit research participation level
     And the user should see the text in the element    css = .list-eligibility dt:nth-of-type(2)    Current research participation
     And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(2)    0.25 %
     And the user should see the element                jQuery = .success-alert:contains("The research participation levels of this project are within the required range.")
-    When the user clicks the button/link               link = Finance checks
+    When the user clicks the button/link               link = Back to finance checks
     And the user should not see the element            jQuery = .success-alert:contains("The research participation levels of this project are within the required range.")
 
 Proj finance can see the maximum research participation level
@@ -188,7 +188,7 @@ Proj finance can see the maximum research participation level
     #TODO IFS-1134:    And the user should see the text in the element    css = .list-eligibility dd:nth-of-type(2)    57.34 %
     #TODO IFS-1134:    And the user should see the element                jQuery = .success-alert:contains("Maximum research participation exceeded")
     #TODO IFS-1134:    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
-    When the user clicks the button/link    link = Finance checks
+    When the user clicks the button/link    link = Back to finance checks
     #TODO IFS-1134:    And the user should see the text in the page        Maximum research participation exceeded
 
 Timestamp approval verification for viability and eligibility
@@ -202,7 +202,7 @@ Timestamp approval verification for viability and eligibility
     And the user clicks the button/link                      css = #confirm-button      #Page confirmation button
     And the user clicks the button/link                      name = confirm-viability   #Pop-up confirmation button
     Then the user should see the element                     jQuery = .success-alert p:contains(The partner's finance viability has been approved by Lee Bowman, ${today})
-    When the user clicks the button/link                     link = Finance checks
+    When the user clicks the button/link                     link = Back to finance checks
     When the user clicks the button/link                     css = table.table-progress a.eligibility-0
     And the user selects the checkbox                        project-eligible
     And the user selects the option from the drop-down menu  Green  id = rag-rating
@@ -237,13 +237,13 @@ Project finance user can view finance overview for the consortium
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
     [Tags]  HappyPath
-    Given the user should see the element                          jQuery = h3:contains("Finances summary")
+    Given the user should see the element                          jQuery = h3:contains("Finance summary")
     #Check finances summary for lead partner
-    Then the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${EMPIRE_LTD_NAME}
+    Then the user should see the text in the element               jQuery = h3:contains("Finance summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${EMPIRE_LTD_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section    1    200,903    30.00%    57,803    2,468    140,632
     #Check finances summary for academic user
-    When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
+    When the user should see the text in the element               jQuery = h3:contains("Finance summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
     Then the Categories Are Verified For Finances Summary Section    2    990    100.00%    990    0   0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery = h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
@@ -288,7 +288,7 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
 IFS Admin user can review partner's finances before the revisions made
     [Documentation]    INFUND-4837, IFS-603
     [Tags]  HappyPath
-    Given the user clicks the button/link              link = Finance checks
+    Given the user clicks the button/link              link = Back to finance checks
     When the user clicks the button/link               css = a.eligibility-2
     Then the user clicks the button/link               link = Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
@@ -304,7 +304,7 @@ Lead Partner can review the external version of Finance Checks eligibility table
     Given log in as a different user                          &{lead_applicant_credentials}
     And the user clicks the application tile if displayed
     When the user clicks the button/link                      jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user clicks the button/link                      link = Finance checks
+    Then the user clicks the button/link                      link = Back to finance checks
     When the user clicks the button/link                      link = your project finances
     Then the user should see the element                      jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
@@ -316,7 +316,7 @@ Partner can review only the external version of Finance Checks eligibility table
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user clicks the button/link    link = Finance checks
+    Then the user clicks the button/link    link = Back to finance checks
     When the user clicks the button/link    link = your project finances
     Then the user should see the element    jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     3,081    0     100,200    552    90,000    5,970     1,100
@@ -405,7 +405,7 @@ Confirming viability should show credit report info on a readonly page
 Confirming viability should update on the finance checks page
     [Documentation]    INFUND-4831, INFUND-4822
     [Tags]
-    When the user clicks the button/link    link = Finance checks
+    When the user clicks the button/link    link = Back to finance checks
     Then the user should see the element    jQuery = table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
 
 Project finance user can see the viability checks for the industrial partner
@@ -467,7 +467,7 @@ Confirming viability should show credit report info on a readonly page for partn
 Confirming viability should update on the finance checks page for partner
     [Documentation]    INFUND-4831, INFUND-4822
     [Tags]
-    When the user clicks the button/link    link = Finance checks
+    When the user clicks the button/link    link = Back to finance checks
     Then the user should see the element    jQuery = table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Approved")
 
 Eligibility checks are populated in the table
@@ -722,7 +722,7 @@ Project Finance user can enter overhead values for partner manually
 Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
     [Tags]
-    When the user clicks the button/link   link = Finance checks
+    When the user clicks the button/link   link = Back to finance checks
     And the user clicks the button/link    jQuery = table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the element   jQuery = h1:contains("${organisationLudlowName}")
 
@@ -756,7 +756,7 @@ Confirming eligibility should show info on a readonly page for partner
 Confirming partner eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
     [Tags]
-    When the user clicks the button/link    link = Finance checks
+    When the user clicks the button/link    link = Back to finance checks
     Then the user should see the element    jQuery = table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Approved")
     And The user should see the element     css = .generate-spend-profile-main-button
     And the user should see the element     jQuery = button[disabled = "disabled"]:contains("Generate spend profile")
@@ -804,7 +804,7 @@ Project finance can approve academic eligibility
     Then the user should see the element            jQuery = .success-alert:contains("The partner's finance eligibility has been approved by Lee Bowman, ${today}")
     And the user should not see the element         id = rag-rating
     And the user should not see the checkbox        project-eligible
-    And the user clicks the button/link             link = Finance checks
+    And the user clicks the button/link             link = Back to finance checks
 
 Project finance user can view Updated finance overview for the consortium
     [Documentation]    INFUND-4846
@@ -817,7 +817,7 @@ Project finance user can view Updated finance overview for the consortium
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the element   jQuery = h3:contains("Finances summary")
+    Given the user should see the element   jQuery = h3:contains("Finance summary")
     #check summary for lead partner
     Then the user should see the text in the element    jQuery = h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${EMPIRE_LTD_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
@@ -835,7 +835,7 @@ Project finance user can view updated finances summary for the consortium
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user clicks the button/link      link = Finance checks
+    Given the user clicks the button/link      link = Back to finance checks
     When the user clicks the button/link       css = a.eligibility-0
     And the user clicks the button/link        link = View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
@@ -915,7 +915,7 @@ Project finance user can view Lead partner's changes for Labour
 Project finance user can view Partner's changes to finances
     [Documentation]    INFUND-4837
     [Tags]
-    Given the user clicks the button/link       link = Finance checks
+    Given the user clicks the button/link       link = Back to finance checks
     When the user clicks the button/link        css = a.eligibility-2
     And the user clicks the button/link        link = View changes to finances
     When the categories are verified for Project finances section       1   £177,784    30.00%     50,867    2,468     124,449
@@ -1037,7 +1037,7 @@ Lead Partner can view finance checks page
     And the user clicks the application tile if displayed
     When the user clicks the button/link                      jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element                      jQuery = li.complete:contains("Finance")
-    When the user clicks the button/link                      link = Finance checks
+    When the user clicks the button/link                      link = Back to finance checks
     Then the user should see the element                      jQuery = .success-alert:contains("your project finances approved.")
 
 Lead partner can view only the external version of finance checks eligibility table
@@ -1077,7 +1077,7 @@ Non Lead Partner can view finance checks page
     When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user should see the element    jQuery = ul li.complete:nth-of-type(6):contains("We will review your financial information.")
     And the user should see the element     jQuery = ul li.complete:nth-of-type(6):contains("Completed")
-    When the user clicks the button/link    link = Finance checks
+    When the user clicks the button/link    link = Back to finance checks
     And the user should see the element     jQuery = .success-alert:contains("The checks have been completed and your project finances approved.")
 
 Non Lead-Partner can view only the external version of finance checks eligibility table

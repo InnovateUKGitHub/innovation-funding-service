@@ -529,7 +529,6 @@ The partner submits the spend profile
 project finance approves Viability for
     [Arguments]  ${partner}  ${project}
     the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
-    the user should see the element      jQuery = th:contains("Funding sought (£)")
     the user selects the checkbox        costs-reviewed
     the user selects the checkbox        project-viable
     Set Focus To Element                 link = Contact us

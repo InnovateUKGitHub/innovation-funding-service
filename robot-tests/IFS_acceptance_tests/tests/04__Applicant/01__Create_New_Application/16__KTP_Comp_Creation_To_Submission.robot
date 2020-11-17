@@ -933,10 +933,21 @@ the user approves Eligibility
     the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${partnerOrgId}/eligibility
     the user approves project costs
 
-the user approves viability
+the user approves KTP Viability
     [Arguments]  ${project}
-    project finance approves Viability for     ${leadOrgId}  ${project}
-    project finance approves Viability for     ${partnerOrgId}  ${project}
+    project finance approves KTP Viability for     ${leadOrgId}  ${project}
+    project finance approves KTP Viability for     ${partnerOrgId}  ${project}
+
+project finance approves KTP Viability for
+    [Arguments]  ${partner}  ${project}
+    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
+    the user should see the element      jQuery = th:contains("Funding sought (£)")
+    the user selects the checkbox        costs-reviewed
+    the user selects the checkbox        project-viable
+    Set Focus To Element                 link = Contact us
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link      css = #confirm-button
+    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
 
 the user approves spend profile
      the user clicks the button/link      link = Return to finance checks
@@ -1237,7 +1248,7 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility       ${ProjectID}
-    the user approves Viability         ${ProjectID}
+    the user approves Eligibility           ${ProjectID}
+    the user approves KTP Viability         ${ProjectID}
     the user approves Spend Profile
-    the user navigates to the page      ${server}/project-setup-management/competition/${competitionId}/status/all
+    the user navigates to the page          ${server}/project-setup-management/competition/${competitionId}/status/all
