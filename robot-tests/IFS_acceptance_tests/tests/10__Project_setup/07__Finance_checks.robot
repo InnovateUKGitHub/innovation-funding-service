@@ -1128,9 +1128,9 @@ project finance edits academic finances
     the user clicks the button/link          id = save-academic-costs
 
 Custom suite setup
-#    ${today}  get today
-#    set suite variable  ${today}
-#    Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    ${today}  get today
+    set suite variable  ${today}
+    Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the table row has expected values
     the user should see the element          jQuery = dt:contains("Total project cost:") + dd:contains("£402,796")   # Total project cost
