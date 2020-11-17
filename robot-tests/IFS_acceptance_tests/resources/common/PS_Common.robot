@@ -266,8 +266,8 @@ The user completes the project team section
     the user clicks the button/link          link = Project manager
 #    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button        projectManager   projectManager1
-    the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Return to setup your project
+    the user clicks the button/link          jQuery = button:contains("Save and continue")
+    the user clicks the button/link          link = Return to set up your project
 
 The user uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
@@ -312,7 +312,7 @@ The user selects their finance contact
     the user clicks the button/link     link = Your finance contact
 #    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
     the user selects the radio button   financeContact   ${financeContactName}
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 the user should see project manager/finance contact validations
     [Arguments]   ${save_CTA}  ${errormessage}

@@ -628,7 +628,7 @@ The lead is able to complete Project team section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-8116
     Given the user clicks the button/link                link = Project team
     When the user completes the project team section
-    Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("Completed")
+    Then the user should see the element                 jQuery = li:contains("Project team") span:contains("Completed")
 
 The partner views the Project team section as Complete at all times
     [Documentation]  IFS-8116
