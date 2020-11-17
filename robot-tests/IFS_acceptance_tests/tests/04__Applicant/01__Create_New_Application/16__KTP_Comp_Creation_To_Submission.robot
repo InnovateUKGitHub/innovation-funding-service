@@ -71,6 +71,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8119 KTP Project Setup - GOL
 ...
+...            IFS-8116 KTP Project Setup - Project details, Team and MO
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -537,7 +539,7 @@ MO can see the read only view of project assigned to him
     When the user clicks the button/link                      id = dashboard-link-MONITORING_OFFICER
     And the user clicks the button/link                       link = ${ktpApplicationTitle}
     And the user clicks the button/link                       link = Project details
-    Then MO should see read only viiew of project details
+    Then MO should see read only view of project details
 
 MO can see application summary in view application feedback page before releasing the feedback
     [Documentation]  IFS-8478
@@ -1099,12 +1101,12 @@ the admin should not see Documents, Bank details or Spend profile dashboard sect
     the user should not see the element       jQuery = th:contains("Bank details")
     the user should not see the element       jQuery = th:contains("Spend profile")
 
-MO should see read only viiew of project details
-    the user should see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
-    the user should see the element         jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
-    the user should see the element         jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
-    the user should see the element         jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
-    the user should not see the element     jQuery = button:contains("Edit")
+MO should see read only view of project details
+    the user should not see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
+    the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT") ~ td:contains("Complete")
+    the user should see the element             jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
+    the user should see the element             jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
+    the user should not see the element         jQuery = button:contains("Edit")
 
 #Internal user closes the assessment
 #    moving competition to Closed                         ${competitionId}
