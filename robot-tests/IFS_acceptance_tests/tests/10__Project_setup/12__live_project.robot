@@ -1,8 +1,16 @@
 *** Settings ***
 Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
+...
+...               IFS-8707 - Allow Users with LIVE PROJECTS USER role to Create Application
+...
+
 Resource          ../../resources/common/PS_Common.robot
 Suite Setup       Project fiance approves the grant offer letter
 Suite Teardown    Close browser and delete emails
+
+*** Variables ***
+${secondKTPOrgName}                   The University of Reading
+
 
 *** Test Cases ***
 Project dashboard shows message that the project is live
@@ -232,7 +240,34 @@ MO sould see project tab on dashboard once GOL is approved
     Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
     And the user should see the element      jQuery = h2:contains("Projects")
 
+Live Project User is able to create a new application
+    [Documentation]  IFS-8707
+     Given Log in as a different user            &{leadApplicantCredentials}
+     When the internal user approve the GOL      50
+     Then logged in user applies to competition     KTP new competition
+     And the user apply with knowledge base organisation    Reading  ${secondKTPOrgName}
+     When the user clicks the button/link                    link = Save and continue
+     Then The user should see the element        jQuery = h1:contains("Application overview")
+
+    #Live Project User is able to join an application
+    #    [Documentation]  IFS-8707
+    #    Given the internal user approve the GOL
+    #    When
+
+
 *** Keywords ***
+the user apply with knowledge base organisation
+    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
+    the user clicks the button/link                     jQuery = button:contains("Confirm")
+    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
+
+project setup is completed and project is now live
+    log in as a different user         &{leadApplicantCredentials}
+    the user navigates to the page     ${server}/project-setup-management/competition/44/compeition/85/status/all
+    the user clicks the button/link    xPath = /html/body/div[4]/main/div/section/div/table/tbody/tr[2]/td[6]/a
+    the user selects the radio button
+
 grant offer letter is sent to users
     the user logs-in in new browser    &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
