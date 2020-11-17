@@ -609,14 +609,14 @@ The lead cannot view the project start date and duration and can see the corresp
     And the user should not see the element         jQuery = td:contains("${newPartnerOrgName}") ~ td:contains("Edit")
     [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
-The lead should see the Project manager & Finance contact (lead details) and Finance contact of the participant
+The lead should see the Project manager & Finance contact (lead details) and contact of the participant
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Project team
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-    And the user should see the element             jQuery = td:contains("Project") + td:contains("${fname} ${lname}")
-    And the user should see the element             jQuery = td:contains("Your finance contact") + td:contains("${fname} ${lname}")
-    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
-    [Teardown]  the user clicks the button/link     link = Return to setup your project
+    And the user should see the element             jQuery = td:contains("Project manager") + td:contains("${fname} ${lname}") + td:contains("Complete")
+    And the user should see the element             jQuery = td:contains("Your finance contact") + td:contains("${fname} ${lname}") + td:contains("Complete")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}")
+    [Teardown]  the user clicks the button/link     link = Back to project setup
 
 The lead should see the MO section with KTA details
     [Documentation]  IFS-8070
@@ -662,13 +662,14 @@ The partner should see the MO section with KTA details
     When the user clicks the button/link            link = Monitoring Officer
     Then The user should see the element            jQuery = a:contains("${ktaEmail}")
 
-Internal user cannot see the project start date and should see the correspondence address
+Internal user cannot view the project start date and duration and should see the correspondence address
     [Documentation]  IFS-7805 IFS-8070
     Given log in as a different user                &{Comp_admin1_credentials}
     And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link            jQuery = tr:nth-of-type(1) td:nth-of-type(1)
-    Then the user sees the text in the element      id = start-date    ${empty}
+    Then the user should not see the element        id = start-date
     And the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
+    And the user should not see the element         id = project-address-status
     [Teardown]  the user clicks the button/link     link = Back to project setup
 
 Internal user should see the Project manager & Finance contact (lead details) and Finance contact of the participant
