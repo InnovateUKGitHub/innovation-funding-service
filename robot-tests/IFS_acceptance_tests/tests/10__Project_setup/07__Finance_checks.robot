@@ -263,10 +263,10 @@ Project finance can see finance breakdown for different categories
     And all the categories are verified    1    200,903    3,081    0    100,200    552    90,000    5,970    1,100
     #Check finances summary for academic user
     When the user should see the text in the element   css = .table-overflow tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
-    Then all the categories are verified  2   990      286 	 154 	66     0    0        44     440
+    Then all the categories are verified  3   990      286 	 154 	66     0    0        44     440
     #Check finances summary for non lead partner
     When the user should see the text in the element   css = .table-overflow tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
-    Then all the categories are verified  3   200,903 	3,081   0   100,200  552  90,000   5,970  1,100
+    Then all the categories are verified  2   200,903 	3,081   0   100,200  552  90,000   5,970  1,100
     #Check total
     And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,796
 
@@ -309,7 +309,7 @@ Lead Partner can review the external version of Finance Checks eligibility table
     Then the user should see the element                      jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
     Then the user should see the element                      css = input[id = "total-cost"][value = "£200,903"]
-    And the user clicks the button/link                       link = Finance checks
+    And the user clicks the button/link                       link = Back to finance checks
 
 Partner can review only the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -321,7 +321,7 @@ Partner can review only the external version of Finance Checks eligibility table
     Then the user should see the element    jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     3,081    0     100,200    552    90,000    5,970     1,100
     Then the user should see the element    css = input[id = "total-cost"][value = "£200,903"]
-    And the user clicks the button/link     link = Finance checks
+    And the user clicks the button/link     link = Back to finance checks
 
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095, INFUND-8778
@@ -1043,7 +1043,8 @@ Lead Partner can view finance checks page
 Lead partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-    When the user clicks the button/link    link = finances
+#    When the user clicks the button/link    link = finances
+    When the user clicks the button/link    link = review your project finances
     Then the user should see the element    jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £10,750
     And the user should see the element     css = input[id = "total-cost"][value = "£177,784"]
@@ -1083,7 +1084,8 @@ Non Lead Partner can view finance checks page
 Non Lead-Partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-    When the user clicks the button/link    link = finances
+#    When the user clicks the button/link    link = finances
+    When the user clicks the button/link    link = review your project finances
     Then the user should see the element    jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £10,750
     And the user should see the element     css = input[id = "total-cost"][value = "£177,784"]
@@ -1346,7 +1348,7 @@ the Total calculation for Finances summary are verified
 
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
-    the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}
+    the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${total}
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${labour}
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${overheads}
     the user should see the text in the element     jQuery = h3:contains("Project cost breakdown") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${materials}
