@@ -468,7 +468,8 @@ The user is able to complete your project costs section
 The user is able to validate conversion spredsheet links works
     the user clicks the button/link                 link = funding conversion spreadsheet
     Select Window                                   title = Page not found – UKRI
-    the user should see the element                 link = Who we fund
+    #the user should see the element                 link = Who we fund
+    the user should see the element                 link = The National Archives.
     the user closes the last opened tab
 
 The user is able to submit the application
