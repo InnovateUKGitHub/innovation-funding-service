@@ -71,6 +71,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8119 KTP Project Setup - GOL
 ...
+...            IFS-8455 KTP project setup: finance checks 
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -718,12 +720,11 @@ Internal user can change the default KTA assigned as MO to another KTA user
     Then the user should see the element           jQuery = td:contains("${ApplicationID}")+td:contains("${ktpApplicationTitle}")+td:contains("${ktpOrgName}")
 
 Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119 - IFS-8455
     Given Log in as a different user            &{ifs_admin_user_credentials}
     When the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/finance-check
     And the user approves finance checks        ${ProjectID}  ${competitionId}
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
-    And the user should not see the element     jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
 
 Internal user can view status of the GOL section on making application sucessful after finance checks have been approved
     [Documentation]  IFS-8199  IFS-7146  IFS-7147  IFS-7148  IFS-8115
@@ -841,19 +842,15 @@ the user approves Eligibility
     Requesting Organisation IDs
     the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
     the user approves project costs
-    the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${partnerOrgId}/eligibility
-    the user approves project costs
 
 the user approves viability
     [Arguments]  ${project}
-    project finance approves Viability for     ${leadOrgId}  ${project}
     project finance approves Viability for     ${partnerOrgId}  ${project}
 
 the user approves spend profile
      the user clicks the button/link      link = Return to finance checks
-     the user clicks the button/link      link = Generate spend profile
-     the user clicks the button/link      css = #generate-spend-profile-modal-button
-     the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
+     the user clicks the button/link      jQuery = button:contains('Approve finance checks')
+     the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved.")
 
 Requesting Organisation IDs
     ${leadOrgId} =    get organisation id by name     ${ktpOrgName}
