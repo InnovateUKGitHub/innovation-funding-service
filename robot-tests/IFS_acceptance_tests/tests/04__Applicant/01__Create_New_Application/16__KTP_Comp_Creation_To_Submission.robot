@@ -605,12 +605,16 @@ The lead cannot view the project start date and duration and can see the corresp
     Then the user should not see the element        id = start-date
     And the user sees the text in the element       id = project-address    The Burroughs, London, NW4 4BT
     And the user sees the text in the element       id = project-address-status    Complete
-    And the user should see the element             jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
+
+The lead can edit the project location
+    Given the user should see the element           jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
     And the user should not see the element         jQuery = td:contains("${newPartnerOrgName}") ~ td:contains("Edit")
-    [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
+    When the user clicks the button/link            jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
+    Then the user edits project location
 
 The lead should see the Project manager & Finance contact (lead details) and contact of the participant
     [Documentation]  IFS-8070 IFS-8116
+    Given the user clicks the button/link           id = return-to-set-up-your-project-button
     When the user clicks the button/link            link = Project team
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
     And the user should see the element             jQuery = td:contains("Project") + td:contains("Indi Gardiner") + td:contains("Complete")
@@ -1146,3 +1150,7 @@ the user approves finance checks
     the user approves Viability         ${ProjectID}
     the user approves Spend Profile
     the user navigates to the page      ${server}/project-setup-management/competition/${competitionId}/status/all
+
+the user edits project location
+    the user should see the element     jQuery = h1:contains("Project location")
+    the user clicks the button/link     jQuery = button:contains("Save project location")
