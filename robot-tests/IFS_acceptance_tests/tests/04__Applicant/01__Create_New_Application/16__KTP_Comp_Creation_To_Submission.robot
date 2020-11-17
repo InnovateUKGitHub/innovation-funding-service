@@ -609,7 +609,7 @@ The lead cannot view the project start date and duration and can see the corresp
 The lead can edit the project location
     Given the user should see the element           jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
     And the user should not see the element         jQuery = td:contains("${newPartnerOrgName}") ~ td:contains("Edit")
-    When the user clicks the button/link            jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
+    When the user clicks the button/link            jQuery = a:contains("Edit")
     Then the user edits project location
 
 The lead should see the Project manager & Finance contact (lead details) and contact of the participant
