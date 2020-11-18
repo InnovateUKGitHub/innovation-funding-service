@@ -1248,7 +1248,7 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility           ${ProjectID}
-    the user approves KTP Viability         ${ProjectID}
-    the user approves Spend Profile
-    the user navigates to the page          ${server}/project-setup-management/competition/${competitionId}/status/all
+    the user approves Eligibility                        ${ProjectID}
+    the user approves Viability                          ${ProjectID}
+    the user clicks the approve finance check button
+    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
