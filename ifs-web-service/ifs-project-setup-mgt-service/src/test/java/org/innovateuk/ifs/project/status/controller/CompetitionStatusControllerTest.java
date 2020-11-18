@@ -73,7 +73,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
-                .andExpect(model().attribute("competitionHasSpendProfile", true));
+                .andExpect(model().attributeExists("competitionHasSpendProfile"));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
-                .andExpect(model().attribute("competitionHasSpendProfile", true));
+                .andExpect(model().attributeExists("competitionHasSpendProfile" ));
 
         verify(competitionPostSubmissionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
         verify(competitionPostSubmissionRestService, never()).countPendingSpendProfiles(competitionId);
