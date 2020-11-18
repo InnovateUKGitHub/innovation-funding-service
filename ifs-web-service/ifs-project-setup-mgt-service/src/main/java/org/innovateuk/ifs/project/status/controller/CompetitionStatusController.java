@@ -66,6 +66,8 @@ public class CompetitionStatusController {
 
         CompetitionStatusViewModel viewModel = competitionStatusViewModelPopulator.populate(loggedInUser, competitionId, applicationSearchString, page - 1);
         model.addAttribute(MODEL, viewModel);
+        model.addAttribute("isKtp",
+                competitionRestService.getCompetitionById(viewModel.getCompetitionId()).getSuccess().isKtp());
 
         return "project/competition-status-all";
     }

@@ -78,7 +78,12 @@
                 </tbody>
                 <tfoot class="govuk-table__foot bank-export">
                 <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
-                    <td class="govuk-table__cell" colspan="5"></td>
+                    <th:block th:unless="${isKtp}">
+                        <td class="govuk-table__cell" colspan="5"></td>
+                    </th:block>
+                    <th:block th:if="${isKtp}">
+                        <td class="govuk-table__cell" colspan="4"></td>
+                    </th:block>
                     <td class="govuk-table__cell aligncentre">
                         <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionId})}" class="govuk-link">Export all bank details</a>
                     </td>
