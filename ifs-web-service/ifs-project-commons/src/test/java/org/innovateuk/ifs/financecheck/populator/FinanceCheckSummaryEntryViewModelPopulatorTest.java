@@ -55,7 +55,7 @@ public class FinanceCheckSummaryEntryViewModelPopulatorTest {
         FinanceCheckSummaryEntryViewModel result = populator.populate(competition, project, eligibilityOverview, organisation, lead);
 
         assertEquals(new BigDecimal("5.00"), result.getContributionToProject());
-        assertEquals(new BigDecimal("50.0"), result.getPercentageContributionToProject());
+        assertEquals(new BigDecimal("50.0"), result.getContributionPercentage());
         verifyZeroInteractions(partnerOrganisationRestService, financeCheckService);
     }
 
@@ -85,7 +85,7 @@ public class FinanceCheckSummaryEntryViewModelPopulatorTest {
         FinanceCheckSummaryEntryViewModel result = populator.populate(competition, project, eligibilityOverview, organisation, lead);
 
         assertEquals(new BigDecimal("0.00"), result.getContributionToProject());
-        assertEquals(new BigDecimal("0.0"), result.getPercentageContributionToProject());
+        assertEquals(new BigDecimal("0.0"), result.getContributionPercentage());
     }
 
     @Test
@@ -114,6 +114,6 @@ public class FinanceCheckSummaryEntryViewModelPopulatorTest {
         FinanceCheckSummaryEntryViewModel result = populator.populate(competition, project, eligibilityOverview, organisation, lead);
 
         assertEquals(new BigDecimal("5.00"), result.getContributionToProject());
-        assertEquals(new BigDecimal("50.0"), result.getPercentageContributionToProject());
+        assertEquals(new BigDecimal("50.0"), result.getContributionPercentage());
     }
 }

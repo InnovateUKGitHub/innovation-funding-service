@@ -12,13 +12,13 @@ public class FinanceCheckSummaryEntryViewModel {
     private BigDecimal fundingSought;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal contributionToProject;
-    private BigDecimal percentageContributionToProject;
+    private BigDecimal contributionPercentage;
     private boolean hasApplicationFinances;
 
     public FinanceCheckSummaryEntryViewModel(Long projectId, Long organisationId, Long durationInMonths, BigDecimal totalCost,
                                              BigDecimal percentageGrant, BigDecimal fundingSought,
                                              BigDecimal otherPublicSectorFunding, BigDecimal contributionToProject,
-                                             BigDecimal percentageContributionToProject, boolean hasApplicationFinances) {
+                                             BigDecimal contributionPercentage, boolean hasApplicationFinances) {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.durationInMonths = durationInMonths;
@@ -27,7 +27,7 @@ public class FinanceCheckSummaryEntryViewModel {
         this.fundingSought = fundingSought;
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.contributionToProject = contributionToProject;
-        this.percentageContributionToProject = percentageContributionToProject;
+        this.contributionPercentage = contributionPercentage;
         this.hasApplicationFinances = hasApplicationFinances;
     }
 
@@ -95,12 +95,12 @@ public class FinanceCheckSummaryEntryViewModel {
         this.contributionToProject = contributionToProject;
     }
 
-    public BigDecimal getPercentageContributionToProject() {
-        return percentageContributionToProject;
+    public BigDecimal getContributionPercentage() {
+        return contributionPercentage;
     }
 
-    public void setPercentageContributionToProject(BigDecimal percentageContributionToProject) {
-        this.percentageContributionToProject = percentageContributionToProject;
+    public void setContributionPercentage(BigDecimal contributionPercentage) {
+        this.contributionPercentage = contributionPercentage;
     }
 
     public boolean isHasApplicationFinances() {
