@@ -80,11 +80,11 @@ class GrantMapper {
         grant.setDuration(project.getDurationInMonths());
 
         FormInputResponse summaryResponse =
-                formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(applicationId, "Project summary");
+                formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(applicationId, "Project summary");
         grant.setSummary(summaryResponse != null ? summaryResponse.getValue() : NO_PROJECT_SUMMARY);
 
         FormInputResponse publicDescriptionResponse =
-                formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(applicationId, "Public description");
+                formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(applicationId, "Public description");
         grant.setPublicDescription(publicDescriptionResponse != null ? publicDescriptionResponse.getValue() : NO_PUBLIC_DESCRIPTION);
 
         List<Participant> financeContactParticipants = simpleMap(project.getPartnerOrganisations(), partnerOrganisation -> {
