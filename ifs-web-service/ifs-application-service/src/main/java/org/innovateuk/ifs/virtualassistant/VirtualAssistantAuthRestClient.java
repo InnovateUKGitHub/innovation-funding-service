@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.virtualassistant;
 
+import org.innovateuk.ifs.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class VirtualAssistantRestClient {
+public class VirtualAssistantAuthRestClient {
 
-    private final Logger LOG = LoggerFactory.getLogger(VirtualAssistantRestClient.class);
+    private final Logger LOG = LoggerFactory.getLogger(VirtualAssistantAuthRestClient.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -29,26 +30,26 @@ public class VirtualAssistantRestClient {
     @Value("${ifs.web.virtualAssistant.botSecret}")
     private String botSecret;
 
-    public VirtualAssistantModel obtainVirtualAssistantDetails() {
+    public VirtualAssistantModel obtainVirtualAssistantAuthDetails() {
         LOG.debug(botId);
         LOG.debug(tokenExchangeUrl);
         try {
-            HttpEntity<String> request = new HttpEntity<>(authHeader());
-            ResponseEntity<String> response = restTemplate.exchange(tokenExchangeUrl, HttpMethod.GET, request, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(tokenExchangeUrl, HttpMethod.GET, new HttpEntity<>(authHeader()), String.class);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 LOG.error("Status " + response.getStatusCode());
                 return new VirtualAssistantModel(response.getStatusCode().toString());
             }
-            return new VirtualAssistantModel(botId, response.getBody());
+            LOG.debug(JsonUtil.getObjectFromJson(response.getBody(), String.class));
+            return new VirtualAssistantModel(botId, JsonUtil.getObjectFromJson(response.getBody(), String.class));
         } catch (HttpClientErrorException ex) {
             LOG.error("Failed to obtain virtual assistant token", ex);
             return new VirtualAssistantModel(ex.getMessage());
         }
     }
 
-    private HttpHeaders authHeader(){
+    protected HttpHeaders authHeader(){
         return new HttpHeaders() {{
-            set( "Authorization", "BotConnector " + botSecret);
+            set("Authorization", "BotConnector " + botSecret);
         }};
     }
 

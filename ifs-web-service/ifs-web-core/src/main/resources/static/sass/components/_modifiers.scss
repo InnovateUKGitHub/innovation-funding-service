@@ -368,3 +368,13 @@ hr,
     @extend .govuk-input--error;
   }
 }
+
+/* virtual assistant requires javascript so only display the option if it is present */
+.virtual-assistant {
+  display:none;
+}
+.js-enabled {
+  .virtual-assistant {
+    display:block;
+  }
+}

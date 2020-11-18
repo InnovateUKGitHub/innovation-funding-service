@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/virtual-assistant")
-@SecuredBySpring(value = "Controller", description = "Set up virtual assistant bot", securedType = VirtualAssistantController.class)
+@SecuredBySpring(value = "Controller", description = "Set up virtual assistant auth", securedType = VirtualAssistantController.class)
 @PreAuthorize("permitAll")
 public class VirtualAssistantController {
 
     @Autowired
-    public VirtualAssistantRestClient virtualAssistantRestClient;
+    public VirtualAssistantAuthRestClient virtualAssistantAuthRestClient;
 
     @GetMapping
     public String virtualAssistant(Model model) {
-        VirtualAssistantModel virtualAssistantModel = virtualAssistantRestClient.obtainVirtualAssistantDetails();
+        VirtualAssistantModel virtualAssistantModel = virtualAssistantAuthRestClient.obtainVirtualAssistantAuthDetails();
         model.addAttribute("virtualAssistantBotId", virtualAssistantModel.getBotId());
         model.addAttribute("virtualAssistantClientToken", virtualAssistantModel.getClientToken());
-        model.addAttribute("errorMessage", virtualAssistantModel.getErrorMessage());
+        model.addAttribute("virtualAssistantErrorMessage", virtualAssistantModel.getErrorMessage());
         model.addAttribute("virtualAssistantServerAvailable", virtualAssistantModel.isServerAvailable());
         return "virtual-assistant";
     }

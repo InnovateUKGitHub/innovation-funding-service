@@ -1,30 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact'" />
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+    <link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
 </head>
-<body class="govuk-template__body assessment-review">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<body>
+<div id="bot"></div>
 
-<div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${virtualAssistantServerAvailable}">
-            <iframe style="height:480px; width:402px"
-                    th:src="|https://webchat.botframework.com/embed/${virtualAssistantBotId}?s=${virtualAssistantClientToken}|"></iframe>
-        </div>
-        <div th:unless="${virtualAssistantServerAvailable}">
-            <!-- Request copy -->
-            <p><span th:text="${errorMessage}">Remote server error</span></p>
-        </div>
-    </main>
-</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        var botSessionToken = /*[[${virtualAssistantClientToken}]]*/ 'unset';
+        var botId = /*[[${virtualAssistantClientToken}]]*/ 'unset';
+    /*]]>*/
+</script>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<script>
+    var user = {
+        id: 'user-id',
+        name: 'User'
+    };
+    var botConnection = new BotChat.DirectLine({
+        token: botSessionToken,
+    });
+    BotChat.App({
+        user: user,
+        botConnection: botConnection,
+        bot: { id: botId, name: 'InnovateChatbot' },
+        resize: 'detect'
+    }, document.getElementById("bot"));
+    botConnection
+        .postActivity({
+            from: user,
+            type : 'message',
+            name: 'requestWelcomeDialog',
+            text: 'Hello!',
+            value: 'WelcomeEvent'
+        }).subscribe(function (id) {console.log('"trigger requestWelcomeDialog" sent');
+    });
+</script>
 
 </body>
 </html>

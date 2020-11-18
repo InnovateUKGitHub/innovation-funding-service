@@ -22,6 +22,8 @@ afterEvaluate {
     }
 }
 
+ext.IFS_WEB_VIRTUALASSISTANT_BOTSECRET = ext.has('ifs.web.virtualAssistant.botSecret') ? ext.get('ifs.web.virtualAssistant.botSecret') : 'authSecretNotConfigured'
+
 group 'innovateuk'
 version project.version
 
