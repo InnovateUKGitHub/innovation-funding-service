@@ -197,7 +197,7 @@
         </div>
     </th:block>
     <th:block th:if="${competition.isKtp()}">
-        <th:block th:insert="fragments/elements :: ktp-competition-status-message (applicationState, competition, displayFeedback)" />
+        <th:block th:insert="fragments/elements :: ktp-competition-status-message (${applicationState}, ${competition}, ${displayFeedback})" />
     </th:block>
 </th:block>
 
