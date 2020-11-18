@@ -395,7 +395,6 @@ Generate spend profile
     confirm viability                   0
     confirm eligibility                 0
     the user clicks the button/link     css = .generate-spend-profile-main-button
-    #the user clicks the button/link     id = generate-spend-profile-modal-button
 
 internal user generates the contract
     [Arguments]  ${projectID}

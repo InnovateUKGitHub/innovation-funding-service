@@ -847,7 +847,7 @@ the user approves viability
     [Arguments]  ${project}
     project finance approves Viability for     ${partnerOrgId}  ${project}
 
-the user approves spend profile
+the user clicks the approve finance check button
      the user clicks the button/link      link = Return to finance checks
      the user clicks the button/link      jQuery = button:contains('Approve finance checks')
      the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved.")
@@ -1137,7 +1137,7 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility       ${ProjectID}
-    the user approves Viability         ${ProjectID}
-    the user approves Spend Profile
-    the user navigates to the page      ${server}/project-setup-management/competition/${competitionId}/status/all
+    the user approves Eligibility                        ${ProjectID}
+    the user approves Viability                          ${ProjectID}
+    the user clicks the approve finance check button
+    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
