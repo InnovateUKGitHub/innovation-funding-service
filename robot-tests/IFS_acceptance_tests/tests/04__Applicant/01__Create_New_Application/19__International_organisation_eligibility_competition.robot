@@ -899,7 +899,7 @@ Lead applicant submits project team details
     the user clicks the button/link             id = save-project-manager-button
     the user navigates to the page              ${server}/project-setup/project/${ProjectID}/team
     The user selects their finance contact      financeContact1
-    the user clicks the button/link             link = Set up your project
+    the user clicks the button/link             link = Back to project setup
 
 zero funding parter submits the project and team details
     Log in as a different user                &{partnerApplicantCredentialsZeroFunding}

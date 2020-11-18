@@ -392,12 +392,12 @@ Non lead partners complete the Project team section
     log in as a different user                &{collaborator2_alternative_user_credentials}
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
-    the user clicks the button/link           link = Set up your project
+    the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
     log in as a different user                &{collaborator1_credentials}
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
-    the user clicks the button/link           link = Set up your project
+    the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 Lead partner completes the Project team section
@@ -408,10 +408,10 @@ Lead partner completes the Project team section
     the user clicks the button/link                                    link = Project team
     the user selects their finance contact                             financeContact2
     the user clicks the button/link                                    link = Project manager
-    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+    the user should see project manager/finance contact validations    Save and continue   You need to select a Project Manager before you can continue.
     the user selects the radio button                                  projectManager   projectManager2
     the user clicks the button/link                                    jQuery = button:contains("Save and continue")
-    the user clicks the button/link                                    link = Set up your project
+    the user clicks the button/link                                    link = Back to project setup
     the user should see the element                                    jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user

@@ -59,7 +59,7 @@ Before Monitoring Officer is assigned
     And the user should not see the element             css = ul li.complete:nth-child(4)
     And the user should see the element                 css = ul li.waiting:nth-child(4)
     When the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
+    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a monitoring officer.")
     And the user should not see the element             jQuery = .success-alert:contains("We have assigned a monitoring officer to your project.")
     When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
@@ -102,7 +102,7 @@ MO details can be edited and viewed in the Set up your project page
     [Setup]    Log in as a different user              &{Comp_admin1_credentials}
     Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-    When the user clicks the button/link               link = Change Monitoring Officer
+    When the user clicks the button/link               link = Change monitoring officer
     And the user edits the MO details
     When Log in as a different user                    &{lead_applicant_credentials_bd}
     Then the user should see assigned MO details
