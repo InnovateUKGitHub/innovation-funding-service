@@ -85,27 +85,26 @@
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)
                     </th>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
-
-                        <th th:unless="${summaryModel.loanCompetition || summaryModel.ktpCompetition}" class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)
-                        </th>
-                        <th th:if="${summaryModel.loanCompetition || summaryModel.ktpCompetition}" class="govuk-table__header govuk-table__header--numeric" scope="col">Other funding (&pound;)
-                        </th>
-
                         <th:block th:unless="${summaryModel.loanCompetition}">
-                            <th th:if="${summaryModel.ktpCompetition}" class="govuk-table__header govuk-table__header--numeric" scope="col">
-                                Company contribution (%)
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col"
+                                th:text="${summaryModel.ktp ? 'Other funding (£)' : 'Other public sector funding (£)'}">
+                                Other public sector funding (&pound;)
                             </th>
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">
-                                <th:block th:if="${summaryModel.ktpCompetition}">
-                                    Company contribution (&pound;)
-                                </th:block>
-                                <th:block th:unless="${summaryModel.ktpCompetition}">
-                                    Contribution to project (&pound;)
-                                </th:block>
+                            <th th:if="${summaryModel.ktp}"
+                                class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col"
+                                th:text="${summaryModel.ktp ? 'Company Contribution (£)' : 'Contribution to project (£)'}">
+                                Contribution to project (&pound;)
                             </th>
                         </th:block>
-                        <th:block th:if="${summaryModel.loanCompetition}">
-                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
+                        <th:block th:unless="${summaryModel.ktp}"
+                                  th:if="${summaryModel.loanCompetition}">
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other funding (&pound;)
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to
+                                project (&pound;)
+                            </th>
                         </th:block>
                     </th:block>
                 </tr>
@@ -133,10 +132,8 @@
                             th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">
                             2,468
                         </td>
-                        <td th:if="${summaryModel.ktpCompetition}" class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatDecimal(summaryModel.eligibilityOverview.percentageContributionToProject,1,'DEFAULT',2,'DEFAULT')+'%'}">
-                            138,164
-                        </td>
+                        <td th:if="${summaryModel.ktp}" class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${#numbers.formatDecimal(summaryModel.eligibilityOverview.contributionPercentage, 1, 'DEFAULT', 2, 'DEFAULT')+'%'}"/>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">
                             138,164
@@ -181,12 +178,12 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted at the application stage.
-                            <th:block th:if="${summaryModel.collaborativeProject && !summaryModel.ktpCompetition}">The applicant will be able to see all saved changes.</th:block>
-                            <th:block th:unless="${summaryModel.collaborativeProject && !summaryModel.ktpCompetition}">The organisation will be able to see all saved changes to finances.</th:block>
+                            <th:block th:if="${summaryModel.collaborativeProject && !summaryModel.ktp}">The applicant will be able to see all saved changes.</th:block>
+                            <th:block th:unless="${summaryModel.collaborativeProject && !summaryModel.ktp}">The organisation will be able to see all saved changes to finances.</th:block>
                         </p>
-                        <p class="govuk-body" th:if="${summaryModel.collaborativeProject && !summaryModel.ktpCompetition}">All potential changes must be discussed with the lead applicant.
+                        <p class="govuk-body" th:if="${summaryModel.collaborativeProject && !summaryModel.ktp}">All potential changes must be discussed with the lead applicant.
                             You can do this by raising queries through the Innovation Funding Service.</p>
-                        <p class="govuk-body" th:unless="${summaryModel.collaborativeProject && !summaryModel.ktpCompetition}"> All potential changes must be discussed with the organisation.
+                        <p class="govuk-body" th:unless="${summaryModel.collaborativeProject && !summaryModel.ktp}"> All potential changes must be discussed with the organisation.
                             You can do this by raising queries through the Innovation Funding Service.</p>
                     </th:block>
 
@@ -196,7 +193,7 @@
                             application stage. They include all changes made during the eligibility checks.</p>
                     </th:block>
                 </th:block>
-                    <p class="govuk-body" th:unless="${summaryModel.isProcurement()}"><a
+                    <p class="govuk-body" th:unless="${summaryModel.isProcurement() || summaryModel.isKtp()}"><a
                         th:if="${summaryModel.showChangesLink}"
                         th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                         class="govuk-link"
