@@ -22,8 +22,13 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Finance checks',subTitle=|${model.financeCheckSummaryResource.applicationId}: ${model.financeCheckSummaryResource.projectName}|,size='govuk-heading-xl'" />
         <div th:if="${model.showSpendProfilesGeneratedMessage}" class="success-alert">
-            <p class="govuk-body"><strong
+            <p th:unless="${model.financeCheckSummaryResource.ktp}"
+                class="govuk-body"><strong
                 th:text="|The finance checks have been approved and profiles generated. ${model.financeCheckSummaryResource.spendProfileGeneratedBy}, ${#temporals.format(model.financeCheckSummaryResource.spendProfileGeneratedDate, 'd MMMM yyyy')}|">Generated
+                by</strong></p>
+            <p th:if="${model.financeCheckSummaryResource.ktp}"
+               class="govuk-body"><strong
+                th:text="|The finance checks have been approved. ${model.financeCheckSummaryResource.spendProfileGeneratedBy}, ${#temporals.format(model.financeCheckSummaryResource.spendProfileGeneratedDate, 'd MMMM yyyy')}|">Generated
                 by</strong></p>
         </div>
 
@@ -71,8 +76,13 @@
                 <dl class="standard-definition-list govuk-!-margin-bottom-0">
                     <dt>Project title:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.projectName}"></dd>
-                    <dt>Start date:</dt>
-                    <dd th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}"></dd>
+                    <th:block th:unless="${model.financeCheckSummaryResource.ktp}">
+                        <dt>
+                            Start date:
+                        </dt>
+                        <dd th:text="${#temporals.format(model.financeCheckSummaryResource.projectStartDate, 'd MMM yyyy')}">
+                        </dd>
+                    </th:block>
                     <dt>Duration:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
                     <th:block th:if="${model.financeCheckSummaryResource.h2020}">
@@ -132,17 +142,28 @@
                               th:classappend="${'viability-rag-' + status.index}">Green</span>
                     </td>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                        <a th:unless="${orgDetails.eligibility.notApplicable}"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                            th:classappend="${'eligibility-' + status.index}"
                            class="govuk-link"/>
+
+                        <span th:if="${orgDetails.eligibility.notApplicable}"
+                              th:text="${model.financeCheckSummaryResource.h2020 ? #messages.msg('ifs.project.setup.h2020.eligibility.' + orgDetails.eligibility) : #messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
+                              th:classappend="${'eligibility-' + status.index}"></span>
                     </td>
                     <td class="govuk-table__cell aligncentre cell-border-right">
-                    <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
-                          th:classappend="${'eligibility-rag-' + status.index}">Green</span>
+                        <span th:if="${orgDetails.eligibility.notApplicable}"
+                              th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
+                              th:classappend="${'eligibility-rag-' + status.index}"></span>
+                        <span th:unless="${orgDetails.eligibility.notApplicable}"
+                              th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
+                              th:classappend="${'eligibility-rag-' + status.index}">Green</span>
                     </td>
                     <td class="govuk-table__cell aligncentre">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                        <span th:if="${model.financeCheckSummaryResource.ktp && orgDetails.eligibility.notApplicable}">N/A</span>
+                        <a th:unless="${model.financeCheckSummaryResource.ktp && orgDetails.eligibility.notApplicable }"
+                           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="View"
                            class="govuk-link"/>
                     </td>
@@ -158,19 +179,34 @@
         <form method="POST"
               th:action="@{/project/{projectId}/finance-check(projectId=${model.financeCheckSummaryResource.projectId})}"
               th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
-            <h3 class="govuk-heading-m">Generate spend profile</h3>
-            <p class="govuk-body">To generate your spend profile, the viability and eligibility sections must be approved
-                for all partners. This will create their individual flat spend profiles. These spend profiles can be edited
-                during the project.</p>
+            <h3 class="govuk-heading-m" th:text="${model.hasSpendProfileStage} ?
+                 'Generate spend profile' : 'Approve finance checks' "></h3>
+            <p class="govuk-body"
+               th:text="${model.hasSpendProfileStage} ?
+                 'To generate your spend profile, the viability and eligibility sections must be approved for all partners. This will create their individual flat spend profiles. These spend profiles can be edited during the project.' :
+            'You must approve the viability and eligibility sections before you can generate the grant offer letter.'"></p>
             <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled"
-                    class="govuk-button generate-spend-profile-main-button">Generate spend profile
+                    th:text="${model.hasSpendProfileStage} ?
+                    'Generate spend profile' : 'Approve finance checks'"
+                    class="govuk-button generate-spend-profile-main-button">
             </button>
-            <a th:unless="${model.showDisabledGenerateSpendProfilesButton}"
+
+            <button th:unless="${model.showDisabledGenerateSpendProfilesButton} or ${model.hasSpendProfileStage}"
+                    type="submit"
+                    class="govuk-button generate-spend-profile-main-button">
+                Approve finance checks
+            </button>
+
+            <a th:unless="${model.showDisabledGenerateSpendProfilesButton} "
+               th:if="${model.hasSpendProfileStage}"
                th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}"
-               data-js-modal="generate-spend-profile" class="govuk-button generate-spend-profile-main-button">Generate spend
-                profile</a>
-            <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"
-                      th:insert="fragments/modals :: generate-spend-profile"/>
+               data-js-modal="generate-spend-profile" class="govuk-button generate-spend-profile-main-button">
+                Generate spend profile</a>
+
+            <th:block
+                th:unless="${model.showDisabledGenerateSpendProfilesButton}"
+                th:if="${model.hasSpendProfileStage}"
+                th:insert="fragments/modals :: generate-spend-profile"/>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
