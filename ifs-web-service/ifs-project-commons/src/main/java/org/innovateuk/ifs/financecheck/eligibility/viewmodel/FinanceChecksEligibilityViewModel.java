@@ -4,7 +4,6 @@ package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummaryEntryViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -17,7 +16,7 @@ import java.util.List;
  * View model backing the internal Finance Team members view of the Finance Check Eligibility page
  */
 public class FinanceChecksEligibilityViewModel {
-    private FinanceCheckSummaryEntryViewModel eligibilityOverview;
+    private FinanceCheckEligibilityResource eligibilityOverview;
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private String projectName;
@@ -44,7 +43,7 @@ public class FinanceChecksEligibilityViewModel {
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
-                                             FinanceCheckSummaryEntryViewModel eligibilityOverview,
+                                             FinanceCheckEligibilityResource eligibilityOverview,
                                              String organisationName,
                                              boolean leadPartnerOrganisation,
                                              Long organisationId,
@@ -98,12 +97,12 @@ public class FinanceChecksEligibilityViewModel {
         return StringUtils.trim(getApproverFirstName() + " " + getApproverLastName());
     }
 
-    public FinanceCheckSummaryEntryViewModel getEligibilityOverview() {
+    public FinanceCheckEligibilityResource getEligibilityOverview() {
         return eligibilityOverview;
     }
 
-    public void setEligibilityOverview(FinanceCheckSummaryEntryViewModel eligibilityOverview) {
-        this.eligibilityOverview = eligibilityOverview;
+    public void setEligibilityOverview(FinanceCheckEligibilityResource eligibilityResource) {
+        this.eligibilityOverview = eligibilityResource;
     }
 
     public String getOrganisationName() {

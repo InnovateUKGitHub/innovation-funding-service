@@ -20,8 +20,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
-import org.innovateuk.ifs.financecheck.populator.FinanceCheckSummaryEntryViewModelPopulator;
-import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummaryEntryViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
@@ -131,9 +129,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectAcademicCostFormPopulator projectAcademicCostFormPopulator;
-
-    @Autowired
-    private FinanceCheckSummaryEntryViewModelPopulator financeCheckSummaryEntryViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -481,9 +476,7 @@ public class ProjectFinanceChecksController {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
 
-        FinanceCheckSummaryEntryViewModel financeCheckSummaryEntry = financeCheckSummaryEntryViewModelPopulator.populate(competition, project, eligibilityOverview, organisation, isLeadPartnerOrganisation);
-
-        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, financeCheckSummaryEntry,
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
                 organisation.getName(),
                 isLeadPartnerOrganisation,
                 organisation.getId(),

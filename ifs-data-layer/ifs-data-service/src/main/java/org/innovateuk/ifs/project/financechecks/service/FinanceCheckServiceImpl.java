@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -186,6 +187,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             if (finance.getOrganisation().equals(leadOrganisation.get().getOrganisation().getId())) {
                 return ZERO; // Lead in KTP doesn't contribute
             }
+            ProjectFinanceResource leadOrgFinance = projectFinanceService.financeChecksDetails(project.getId(), leadOrganisation.get().getOrganisation().getId()).getSuccess();
+            return leadOrgFinance.getTotalContribution();
         }
         return finance.getTotalContribution();
     }
@@ -194,14 +197,21 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Competition competition = project.getApplication().getCompetition();
         if (competition.isKtp()) {
             Optional<PartnerOrganisation> leadOrganisation = project.getLeadOrganisation();
+
             if (!leadOrganisation.isPresent()) {
                 return ZERO;
             }
             if (finance.getOrganisation().equals(leadOrganisation.get().getOrganisation().getId())) {
                 return ZERO; // Lead in KTP doesn't contribute
-            } else {
-                return valueOf(100).subtract(finance.getGrantClaimPercentage());
             }
+
+            ProjectFinanceResource leadOrgFinance = projectFinanceService.financeChecksDetails(project.getId(), leadOrganisation.get().getOrganisation().getId()).getSuccess();
+            if (leadOrgFinance.getTotal().signum() == 0 || leadOrgFinance.getTotalContribution().signum() == 0) {
+                return ZERO;
+            }
+            return leadOrgFinance.getTotalContribution()
+                    .multiply(new BigDecimal(100))
+                    .divide(leadOrgFinance.getTotal(), 1, RoundingMode.HALF_UP);
         } else {
             return getTotalContribution(project, finance);
         }
