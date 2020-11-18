@@ -192,7 +192,6 @@ the user completes the project team details
     the user selects the radio button   projectManager   projectManager1
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Back to project setup
-    the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/monitoring-officer

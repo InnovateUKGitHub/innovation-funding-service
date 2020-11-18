@@ -642,10 +642,10 @@ the user completes the project team details
     the user clicks the button/link     link = Project team
     the user clicks the button/link     link = Your finance contact
     the user selects the radio button   financeContact   financeContact1
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Project manager
     the user selects the radio button   projectManager   projectManager1
-    the user clicks the button/link     jQuery = button:contains("Save project manager")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Set up your project
     #the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
 

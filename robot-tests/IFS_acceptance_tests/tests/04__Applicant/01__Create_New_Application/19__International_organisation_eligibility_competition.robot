@@ -436,7 +436,7 @@ Partner organisation is able to see organisation address details in project team
     [Tags]  HappyPath
     Given the user clicks the button/link                                                    link = Project team
     And the user completes project team and can see international organisation addresses
-    Then the user clicks the button/link                                                     link = Return to setup your project
+    Then the user clicks the button/link                                                     link = Return to set up your project
     And the user should see the element                                                      jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
 
 Lead organisation can see international organisation address details in project team and cannot edit it
@@ -454,7 +454,7 @@ Partner organisation can see international organisation address details in proje
     And the user clicks the button/link                                                       link = ${internationalApplicationTitle}
     And the user clicks the button/link                                                       link = Project team
     When the user completes project team and can see international organisation addresses
-    Then the user clicks the button/link                                                      link = Return to setup your project
+    Then the user clicks the button/link                                                      link = Return to set up your project
     [Teardown]  logout as user
 
 Internal user can view address details
@@ -977,7 +977,7 @@ lead and partner applicants completes the project and bank details
     zero funding parter submits the project and team details
     partner submits the project and team details                ${international_invite_email}  ${short_password}  ${ProjectID}
     partner submits the project and team details                ${partner_org}   ${correct_password}   ${ProjectID}
-    the user clicks the button/link                             link = Return to setup your project
+    the user clicks the button/link                             link = Return to set up your project
     the user enters bank details
 
 bank details not required message should display for non uk based and zero funding partner organisations
