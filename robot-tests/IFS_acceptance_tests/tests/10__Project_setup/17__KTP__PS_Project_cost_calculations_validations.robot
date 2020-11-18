@@ -37,17 +37,13 @@ Internal user can edit KTP finances in project setup
     Then The user edits the KTP costs section
     And the user confirms the values in the finance table
 
-Internal user approves the Eligibility of the lead applicant and partner
+Internal user approves the Eligibility of the lead applicant
     [Documentation]  IFS-8328
     When the user approves project costs
     Then the user should see the element     jQuery = p:contains("The partner's finance eligibility has been approved by ")
-    And the user navigates to the page       ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpPartnerOrgId}/eligibility
-    And the user approves project costs
 
-Internal user approves the Viability of the lead applicant and partner
+Internal user approves the Viability of the partner
     [Documentation]  IFS-8328
-    When The user navigates to the page     ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpLeadOrgID}/viability
-    Then the user approves viability
     And The user navigates to the page      ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpPartnerOrgId}/viability
     And the user approves viability
 

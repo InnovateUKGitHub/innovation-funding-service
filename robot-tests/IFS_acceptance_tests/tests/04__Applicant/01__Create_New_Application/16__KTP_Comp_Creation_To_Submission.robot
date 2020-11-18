@@ -768,7 +768,7 @@ Internal user is able to access the finance overview page
     And the user should not see the element                                          jQuery = h3:contains("Project cost breakdown")
     And The user should see the element                                              jQuery = h3:contains("Project cost summary")
 
-Internal user is able to access the funding level percentages screen
+Internal user is able to see the partner funding level percentages is read-only
     [Documentation]  IFS-8328
     When The user clicks the button/link         link = Change funding level percentages
     Then The user should not see the element     jQuery = td:contains("INNOVATE LTD") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
