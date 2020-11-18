@@ -828,7 +828,7 @@ Monitoring officer can view the Finance checks project setup dashboard section
     When the user navigates to the page         ${server}/project-setup/project/${ProjectID}
     Then the user should see the element        jQuery = li:contains("Finance checks") span:contains("Completed")
 
-Internal user sees correct label for T&C's
+Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
     When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
@@ -930,12 +930,9 @@ the user approves Eligibility
     the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
     the user sees the changes in the finance summary table in Eligibility screen
     the user approves project costs
-    the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${partnerOrgId}/eligibility
-    the user approves project costs
 
 the user approves KTP Viability
     [Arguments]  ${project}
-    project finance approves KTP Viability for     ${leadOrgId}  ${project}
     project finance approves KTP Viability for     ${partnerOrgId}  ${project}
 
 project finance approves KTP Viability for
@@ -1248,7 +1245,12 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility                        ${ProjectID}
-    the user approves Viability                          ${ProjectID}
+    the user approves Eligibility                            ${ProjectID}
+    the user approves KTP Viability                          ${ProjectID}
     the user clicks the approve finance check button
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
+
+the user clicks the approve finance check button
+     the user clicks the button/link      link = Return to finance checks
+     the user clicks the button/link      jQuery = button:contains("Approve finance checks")
+     the user should see the element      jQuery = p:contains("The finance checks have been approved")
