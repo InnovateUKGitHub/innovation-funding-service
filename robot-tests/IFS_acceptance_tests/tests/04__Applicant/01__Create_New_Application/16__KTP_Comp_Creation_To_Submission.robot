@@ -73,6 +73,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8455 KTP project setup: finance checks 
 ...
+...            IFS-8770 Bring back bank details for KTP
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -548,7 +550,7 @@ MO can see application summary in view application feedback page before releasin
     Then the user should see the element      jQuery = h1:contains("Application overview")
 
 Lead applicant can view the project setup dashboard sections
-    [Documentation]  IFS-8329
+    [Documentation]  IFS-8329  IFS-8770
     [Setup]   Requesting IDs of this Project
     Given log in as a different user                    &{ktpLeadApplicantCredentials}
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
@@ -556,14 +558,14 @@ Lead applicant can view the project setup dashboard sections
     Then the user should see project setup sections
 
 Monitoring officer can view the project setup dashboard sections
-    [Documentation]  IFS-8329
+    [Documentation]  IFS-8329  IFS-8770
     Given log in as a different user                    &{ktaUserCredentials}
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
     And the user should see the element                 jQuery = h1:contains("Monitor project")
     Then the user should see project setup sections
 
 IFS admin cannot view the non-ktp competition project setup sections
-    [Documentation]  IFS-8329
+    [Documentation]  IFS-8329  IFS-8770
     Given log in as a different user                     &{internal_finance_credentials}
     When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the admin should see project setup sections
@@ -628,6 +630,12 @@ The lead is able to complete Project team section
     When the user completes the project team section
     Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("Completed")
 
+The lead is able to complete the Bank details section
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8770
+    Given the user enters bank details
+    When the user clicks the button/link     link = Set up your project
+    Then the user should see the element     jQuery = .progress-list li:nth-child(4):contains("Awaiting review")
+
 The partner is able to complete Project team Section
     [Documentation]  IFS-7812
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
@@ -681,6 +689,13 @@ Internal user is able to view the KTA as an MO
     When the user clicks the button/link     jQuery = tr:nth-of-type(1) td:nth-of-type(3)
     Then the user should see the element     css = input[name="emailAddress"][value = "${ktaEmail}"]
 
+Finance user approves bank details
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8770
+    [Setup]  log in as a different user                         &{internal_finance_credentials}
+    When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
+    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
+    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+
 Internal user can only assign KTA as MO to KTP funding type projects
     [Documentation]  IFS-8261
     Given the user navigates to the page         ${server}/project-setup-management/monitoring-officer/view-all
@@ -732,7 +747,7 @@ Internal user can view status of the GOL section on making application sucessful
     And the user navigates to the page                                      ${server}/management/competition/${competitionId}
     And the user clicks the button/link                                     css = button[type="submit"][formaction$="release-feedback"]
     And the user navigates to the page                                      ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element                                    jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+    Then the user should see the element                                    jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("Review")
     And the user reads his email                                            ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
 
 Monitoring officer can view the Finance checks project setup dashboard section
@@ -1086,14 +1101,12 @@ the user switch to the new tab on click guidance links
     the user clicks the button/link     link = ${link}
     Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
 
-the user should not see Documents, Bank details or Spend profile dashboard sections
+the user should not see Documents and Spend profile dashboard sections
     the user should not see the element       jQuery = li:contains("Documents")
-    the user should not see the element       jQuery = li:contains("Bank details")
     the user should not see the element       jQuery = li:contains("Spend profile")
 
-the admin should not see Documents, Bank details or Spend profile dashboard sections
+the admin should not see Documents and Spend profile dashboard sections
     the user should not see the element       jQuery = th:contains("Documents")
-    the user should not see the element       jQuery = th:contains("Bank details")
     the user should not see the element       jQuery = th:contains("Spend profile")
 
 MO should see read only viiew of project details
@@ -1103,28 +1116,23 @@ MO should see read only viiew of project details
     the user should see the element         jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
     the user should not see the element     jQuery = button:contains("Edit")
 
-#Internal user closes the assessment
-#    moving competition to Closed                         ${competitionId}
-#    Log in as a different user                           &{internal_finance_credentials}
-#    the user closed ktp assesment                        ${competitionId}
-#    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
-#    the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
-
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
     the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
     the user should see the element     jQuery = li:contains("Monitoring Officer") span:contains("Completed")
+    the user should see the element     jQuery = li:contains("Bank details") span:contains("To be completed")
     the user should see the element     jQuery = li:contains("Finance checks") span:contains("Awaiting review")
     the user should see the element     jQuery = li:contains("Grant offer letter")
-    the user should not see Documents, Bank details or Spend profile dashboard sections
+    the user should not see Documents and Spend profile dashboard sections
 
 the admin should see project setup sections
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(1):contains("Complete")
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(2):contains("Complete")
     the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(3):contains("Assigned")
-    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(4):contains("Review")
-    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("${empty}")
-    the admin should not see Documents, Bank details or Spend profile dashboard sections
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(4):contains("${empty}")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
+    the user should see the element         jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("${empty}")
+    the admin should not see Documents and Spend profile dashboard sections
 
 the user closed ktp assesment
     [Arguments]  ${compID}
