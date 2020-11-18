@@ -178,7 +178,7 @@ public class ApplicationDetailsController {
                 ? TimeZoneUtil.toUkTimeZone(competition.getEndDate()).plusMonths(12).toLocalDate()
                 : convertMinLocalDateToNull(form.getStartDate());
 
-        application.setName(form.getName());
+        application.setName(getName(form));
         application.setStartDate(projectStartDate);
         application.setDurationInMonths(form.getDurationInMonths());
         application.setResubmission(form.getResubmission());
@@ -189,6 +189,10 @@ public class ApplicationDetailsController {
         application.setCompanyPrimaryFocus(form.getCompanyPrimaryFocus());
 
         return applicationRestService.saveApplication(application).toServiceResult();
+    }
+
+    private String getName(ApplicationDetailsForm form) {
+        return !form.getName().trim().isEmpty() ? form.getName() : "";
     }
 
     private void validate(ApplicationDetailsForm form, long applicationId, BindingResult bindingResult) {

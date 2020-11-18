@@ -53,4 +53,8 @@ public enum EligibilityState implements ProcessState, IdentifiableEnum {
     public boolean isInReviewOrNotApplicable() {
         return EnumSet.of(REVIEW, NOT_APPLICABLE).contains(this);
     }
+
+    public boolean isNotApplicable(){
+        return this == NOT_APPLICABLE;
+    }
 }

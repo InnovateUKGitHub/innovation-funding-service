@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
+import static java.math.BigDecimal.*;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -151,7 +151,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
-        BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
+        BigDecimal competitionMaximumResearchPercentage = valueOf(competition.getMaxResearchRatio());
 
         return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
                 totalProjectCost, totalFundingSought, fundingAppliedFor, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
@@ -170,9 +170,41 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                         projectFinance.getGrantClaimPercentage(),
                         projectFinance.getTotalFundingSought(),
                         projectFinance.getTotalOtherFunding(),
-                        projectFinance.getTotalContribution(),
-                        hasAnyApplicationFinances(application, projectFinance))
+                        getTotalContribution(project, projectFinance),
+                        hasAnyApplicationFinances(application, projectFinance),
+                        calculateContributionPercentage(project, projectFinance))
         );
+    }
+
+    private BigDecimal getTotalContribution(Project project, ProjectFinanceResource finance) {
+        Competition competition = project.getApplication().getCompetition();
+        if (competition.isKtp()) {
+            Optional<PartnerOrganisation> leadOrganisation = project.getLeadOrganisation();
+            if (!leadOrganisation.isPresent()) {
+                return finance.getTotalContribution();
+            }
+            if (finance.getOrganisation().equals(leadOrganisation.get().getOrganisation().getId())) {
+                return ZERO; // Lead in KTP doesn't contribute
+            }
+        }
+        return finance.getTotalContribution();
+    }
+
+    private BigDecimal calculateContributionPercentage(Project project, ProjectFinanceResource finance) {
+        Competition competition = project.getApplication().getCompetition();
+        if (competition.isKtp()) {
+            Optional<PartnerOrganisation> leadOrganisation = project.getLeadOrganisation();
+            if (!leadOrganisation.isPresent()) {
+                return ZERO;
+            }
+            if (finance.getOrganisation().equals(leadOrganisation.get().getOrganisation().getId())) {
+                return ZERO; // Lead in KTP doesn't contribute
+            } else {
+                return valueOf(100).subtract(finance.getGrantClaimPercentage());
+            }
+        } else {
+            return getTotalContribution(project, finance);
+        }
     }
 
     private boolean hasAnyApplicationFinances(Application application, ProjectFinanceResource projectFinance) {
@@ -291,13 +323,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             return ZERO;
         }
 
-        return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, MAX_DECIMAL_PLACES, HALF_EVEN);
+        return totalFundingSought.multiply(valueOf(100)).divide(projectTotal, MAX_DECIMAL_PLACES, HALF_EVEN);
     }
 
     private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
-        BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
+        BigDecimal researchParticipationPercentageValue = ZERO;
         if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccess() != null) {
-            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccess());
+            researchParticipationPercentageValue = valueOf(researchParticipationPercentage.getSuccess());
         }
         return researchParticipationPercentageValue;
     }

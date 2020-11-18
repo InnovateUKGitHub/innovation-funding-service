@@ -127,7 +127,7 @@ the applicant inserts a valid date
     Clear Element Text    id = application_details-startdate_month
     The user enters text to a text field    id = application_details-startdate_month    11
     Clear Element Text    id = application_details-startdate_year
-    The user enters text to a text field    id = application_details-startdate_year    2020
+    The user enters text to a text field    id = application_details-startdate_year    2021
 
 the applicant inserts an invalid date
     Clear Element Text    id = startDate

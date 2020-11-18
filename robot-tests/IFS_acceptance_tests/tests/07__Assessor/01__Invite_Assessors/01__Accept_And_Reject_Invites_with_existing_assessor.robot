@@ -40,7 +40,7 @@ ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competiti
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
 ${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
 ${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
-${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_DATE}  to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}
+${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DAY_MONTH_YEAR}
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 # ${IN_ASSESSMENT_COMPETITION_NAME} is the Sustainable living models for the future
