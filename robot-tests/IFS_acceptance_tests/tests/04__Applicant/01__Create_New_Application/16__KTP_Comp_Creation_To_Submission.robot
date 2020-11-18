@@ -1110,13 +1110,6 @@ MO should see read only view of project details
     the user should see the element             jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
     the user should not see the element         jQuery = button:contains("Edit")
 
-#Internal user closes the assessment
-#    moving competition to Closed                         ${competitionId}
-#    Log in as a different user                           &{internal_finance_credentials}
-#    the user closed ktp assesment                        ${competitionId}
-#    the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
-#    the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
-
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
     the user should see the element     jQuery = li:contains("Project team") span:contains("Completed")
