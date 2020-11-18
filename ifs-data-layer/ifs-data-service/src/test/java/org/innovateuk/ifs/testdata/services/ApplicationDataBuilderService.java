@@ -8,7 +8,11 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -26,11 +30,13 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 import static java.lang.Boolean.TRUE;
@@ -229,7 +235,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                                 applicationData.getApplication(),
                                 applicationData.getCompetition(),
                                 user,
-                                organisationName)
+                                organisationName,
+                                organisationType)
                 );
             }
 
@@ -506,11 +513,13 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationResource application,
             CompetitionResource competition,
             String user,
-            String organisationName) {
+            String organisationName,
+            OrganisationTypeEnum organisationType) {
 
         UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
             final IndustrialCostDataBuilder[] builder = {costs};
-            competition.getFinanceRowTypes().forEach(type -> {
+
+            Consumer<? super FinanceRowType> costPopulator = type -> {
                 switch(type) {
                     case LABOUR:
                         builder[0] = builder[0].withWorkingDaysPerYear(123).
@@ -554,10 +563,44 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     case YOUR_FINANCE:
                         //none for industrial costs.
                         break;
+                    case ASSOCIATE_SALARY_COSTS:
+                        builder[0] = builder[0].withAssociateSalaryCosts("role", 4, new BigInteger("6"));
+                        break;
+                    case ASSOCIATE_DEVELOPMENT_COSTS:
+                        builder[0] = builder[0].withAssociateDevelopmentCosts("role", 4, new BigInteger("7"));
+                        break;
+                    case CONSUMABLES:
+                        builder[0] = builder[0].withConsumables("item", new BigInteger("8"), 3);
+                        break;
+                    case ASSOCIATE_SUPPORT:
+                        builder[0] = builder[0].withAssociateSupport("supp", new BigInteger("13"));
+                        break;
+                    case KNOWLEDGE_BASE:
+                        builder[0] = builder[0].withKnowledgeBase("desc", new BigInteger("15"));
+                        break;
+                    case ESTATE_COSTS:
+                        builder[0] = builder[0].withEstateCosts("desc", new BigInteger("16"));
+                        break;
+                    case KTP_TRAVEL:
+                        builder[0] = builder[0].withKtpTravel(KtpTravelCost.KtpTravelCostType.ASSOCIATE, "desc", new BigDecimal("17.00"), 1);
+                        break;
+                    case ADDITIONAL_COMPANY_COSTS:
+                        builder[0] = builder[0].withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType.ASSOCIATE_SALARY, "desc", new BigInteger("18"));
+                        break;
+                    case PREVIOUS_FUNDING:
+                        builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
+                        break;
                 }
-            });
+            };
 
-            if (!competition.isKtp()) {
+
+            if (competition.isKtp()) {
+                if (OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType) {
+                    competition.getFinanceRowTypes().forEach(costPopulator);
+                }
+            } else {
+                competition.getFinanceRowTypes().forEach(costPopulator);
+
                 if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
                     builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
                             60L,

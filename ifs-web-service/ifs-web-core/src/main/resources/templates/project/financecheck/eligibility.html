@@ -14,9 +14,9 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null"/>
+              th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null"/>
     <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"/>
+              th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
@@ -73,7 +73,7 @@
             </th:block>
         </th:block>
 
-        <h2 th:unless="${summaryModel.isH2020() OR summaryModel.isProcurement()}" class="govuk-heading-m">Finances overview</h2>
+        <h2 th:unless="${summaryModel.isH2020() OR summaryModel.isProcurement()}" class="govuk-heading-m">Finance summary</h2>
         <div th:unless="${summaryModel.isH2020() OR summaryModel.isProcurement()}" class="table-overflow">
             <table class="govuk-table table-overview">
                 <thead class="govuk-table__head">
@@ -94,7 +94,7 @@
                                 class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)
                             </th>
                             <th class="govuk-table__header govuk-table__header--numeric" scope="col"
-                                th:text="${summaryModel.ktp ? 'Company Contribution (£)' : 'Contribution to project (£)'}">
+                                th:text="${summaryModel.ktp ? 'Company contribution (£)' : 'Contribution to project (£)'}">
                                 Contribution to project (&pound;)
                             </th>
                         </th:block>
@@ -178,12 +178,12 @@
                     <th:block th:unless="${summaryModel.isApproved()}">
                         <h2 class="govuk-heading-m">Project finance overview</h2>
                         <p class="govuk-body">These finances were initially submitted at the application stage.
-                            <th:block th:if="${summaryModel.collaborativeProject}">The applicant will be able to see all saved changes.</th:block>
-                            <th:block th:unless="${summaryModel.collaborativeProject}">The organisation will be able to see all saved changes to finances.</th:block>
+                            <th:block th:if="${summaryModel.collaborativeProject && !summaryModel.ktp}">The applicant will be able to see all saved changes.</th:block>
+                            <th:block th:unless="${summaryModel.collaborativeProject && !summaryModel.ktp}">The organisation will be able to see all saved changes to finances.</th:block>
                         </p>
-                        <p class="govuk-body" th:if="${summaryModel.collaborativeProject}">All potential changes must be discussed with the lead applicant.
+                        <p class="govuk-body" th:if="${summaryModel.collaborativeProject && !summaryModel.ktp}">All potential changes must be discussed with the lead applicant.
                             You can do this by raising queries through the Innovation Funding Service.</p>
-                        <p class="govuk-body" th:unless="${summaryModel.collaborativeProject}"> All potential changes must be discussed with the organisation.
+                        <p class="govuk-body" th:unless="${summaryModel.collaborativeProject && !summaryModel.ktp}"> All potential changes must be discussed with the organisation.
                             You can do this by raising queries through the Innovation Funding Service.</p>
                     </th:block>
 
