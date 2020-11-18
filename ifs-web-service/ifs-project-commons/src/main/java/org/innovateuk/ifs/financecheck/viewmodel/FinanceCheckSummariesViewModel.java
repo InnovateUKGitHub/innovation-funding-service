@@ -56,13 +56,8 @@ public class FinanceCheckSummariesViewModel {
         return financeCheckSummariesResources.stream().map(FinanceCheckEligibilityResource::getContributionToProject).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal getPercentageTotalContributionToProject() {
-        BigDecimal totalContribution = getTotalContributionToProject();
-        BigDecimal totalCost = getTotalCost();
-        if (totalContribution.signum() == 0 || totalCost.signum() == 0) {
-            return BigDecimal.ZERO;
-        }
-        return totalContribution.multiply(new BigDecimal(100)).divide(totalCost, 1, RoundingMode.HALF_UP);
+    public BigDecimal getTotalContributionPercentage() {
+        return financeCheckSummariesResources.stream().map(FinanceCheckEligibilityResource::getContributionPercentage).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public PartnerOrganisationResource getPartnerFromSummary(Long organisationId) {

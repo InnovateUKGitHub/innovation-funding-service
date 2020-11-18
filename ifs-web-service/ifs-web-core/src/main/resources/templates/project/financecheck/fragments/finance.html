@@ -114,7 +114,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatDecimal(summaries.getTotalPercentageGrant(),1,'DEFAULT',2,'DEFAULT')+'%'}"></strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">19,000</strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}">19,000</strong></td>
-                        <td th:if="${model.ktpCompetition}" class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatDecimal(summaries.getPercentageTotalContributionToProject(),1,'DEFAULT',2,'DEFAULT')+'%'}"></strong></td>
+                        <td th:if="${model.ktpCompetition}" class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatDecimal(summaries.getTotalContributionPercentage(),1,'DEFAULT',2,'DEFAULT')+'%'}"></strong></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">19,000</strong></td>
                     </tr>
                 </tfoot>
