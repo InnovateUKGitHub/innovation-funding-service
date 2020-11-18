@@ -63,39 +63,31 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void viewCompetitionStatusPageAllProjectFinance() throws Exception {
         Long competitionId = 123L;
         String applicationSearchString = "12";
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withId(competitionId)
-                .withFundingType(FundingType.GRANT).build();
 
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
         CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
 
         when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString(), eq(0))).thenReturn(competitionStatusViewModel);
-        when(competitionRestServiceMock.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
-                .andExpect(model().attribute("isKtp", false));
+                .andExpect(model().attribute("competitionHasSpendProfile", true));
     }
 
     @Test
     public void viewCompetitionStatusPageAllCompAdmin() throws Exception {
         long competitionId = 123L;
         String applicationSearchString = "12";
-        CompetitionResource competitionResource = newCompetitionResource()
-                .withId(competitionId)
-                .withFundingType(FundingType.KTP).build();
 
         CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
         when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString(), eq(0))).thenReturn(competitionStatusViewModel);
-        when(competitionRestServiceMock.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
-                .andExpect(model().attribute("isKtp", true));
+                .andExpect(model().attribute("competitionHasSpendProfile", true));
 
         verify(competitionPostSubmissionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
         verify(competitionPostSubmissionRestService, never()).countPendingSpendProfiles(competitionId);

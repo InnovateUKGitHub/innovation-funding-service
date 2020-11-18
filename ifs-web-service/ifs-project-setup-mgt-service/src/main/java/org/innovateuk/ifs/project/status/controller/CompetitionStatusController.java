@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.status.populator.CompetitionStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
@@ -66,8 +67,7 @@ public class CompetitionStatusController {
 
         CompetitionStatusViewModel viewModel = competitionStatusViewModelPopulator.populate(loggedInUser, competitionId, applicationSearchString, page - 1);
         model.addAttribute(MODEL, viewModel);
-        model.addAttribute("isKtp",
-                competitionRestService.getCompetitionById(viewModel.getCompetitionId()).getSuccess().isKtp());
+        model.addAttribute("competitionHasSpendProfile", viewModel.getColumns().contains(ProjectSetupStage.SPEND_PROFILE));
 
         return "project/competition-status-all";
     }
