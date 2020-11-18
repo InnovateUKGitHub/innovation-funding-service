@@ -410,7 +410,7 @@ Lead partner completes the Project team section
     the user clicks the button/link                                    link = Project manager
     the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button                                  projectManager   projectManager2
-    the user clicks the button/link                                    jQuery = button:contains("Save project manager")
+    the user clicks the button/link                                    jQuery = button:contains("Save and continue")
     the user clicks the button/link                                    link = Set up your project
     the user should see the element                                    jQuery = .progress-list li:nth-child(2):contains("Completed")
 
@@ -554,7 +554,7 @@ the user can join the project
     the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
 the applicant fills in bank details
-    the user clicks the button/link                      link = Return to setup your project
+    the user clicks the button/link                      link = Return to set up your project
     the user clicks the button/link                      link = Bank details
     the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
     the user clicks the button/link                      id = postcode-lookup
