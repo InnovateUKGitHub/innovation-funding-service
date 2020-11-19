@@ -360,8 +360,8 @@ the user can change funding sought
     the user clicks the button/link        link = Change funding sought
     the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  2100
     the user clicks the button/link        jQuery = button:contains("Save and return to project finances")
-    the user should see the element        jQuery = h3:contains("Finances summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
-    the user clicks the button/link        link = Finance checks
+    the user should see the element        jQuery = h3:contains("Finance summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
+    the user clicks the button/link        link = Back to finance checks
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDdeminimusapplicationTitle1}

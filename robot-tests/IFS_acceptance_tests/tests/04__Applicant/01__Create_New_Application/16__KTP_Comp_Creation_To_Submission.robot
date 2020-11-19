@@ -21,7 +21,7 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
-...            IFS-8147 Partners have the visibility of KTA on application
+...            IFS-8147  Partners have the visibility of KTA on application
 ...
 ...            IFS-8104  KTP application overview content review
 ...
@@ -29,51 +29,53 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7958  KTP Your Project Finances - Funding Breakdown
 ...
-...            IFS-7956 KTP Your Project Finances - Other Funding
-...
-...            IFS-7983 KTP Your Project Finances - KTA view
-...
-...            IFS-8154 KTP Project Costs - consumables
-...
-...            IFS-7894 KTP terms & conditions
-...
-...            IFS-8035 KTP ineligible screen for non-lead applicant
+...            IFS-7956  KTP Your Project Finances - Other Funding
 ...
 ...            IFS-7983  KTP Your Project Finances - KTA view
 ...
-...            IFS-8154 KTP Project Costs - consumables
+...            IFS-8154  KTP Project Costs - consumables
 ...
-...            IFS-8313 Other funding (Team member of KB)
+...            IFS-7894  KTP terms & conditions
 ...
-...            IFS-8311 KTP - ISE when assigning a Q to a KTA
+...            IFS-8035  KTP ineligible screen for non-lead applicant
 ...
-...            IFS-8095 Content improvement for KTA journey
+...            IFS-7983  KTP Your Project Finances - KTA view
 ...
-...            IFS-8318 Opens in new window link missing on select a knowledge base organisation screen
+...            IFS-8154  KTP Project Costs - consumables
 ...
-...            IFS-8312 KTA profile access permissions
+...            IFS-8313  Other funding (Team member of KB)
 ...
-...            IFS-8325 Write Acceptance tests for 8312
+...            IFS-8311  KTP - ISE when assigning a Q to a KTA
 ...
-...            IFS-8212 KTP Assessments - applicant view
+...            IFS-8095  Content improvement for KTA journey
 ...
-...            IFS-8070 KTP Project setup - create projects
+...            IFS-8318  Opens in new window link missing on select a knowledge base organisation screen
 ...
-...            IFS-8329 KTP Project Setup Dashboards (internal and external)
+...            IFS-8312  KTA profile access permissions
 ...
-...            IFS-8261 KTA Assigning MOs
+...            IFS-8325  Write Acceptance tests for 8312
 ...
-...            IFS-8478 KTP Project setup: KTA as monitoring officer
+...            IFS-8212  KTP Assessments - applicant view
 ...
-...            IFS-8547 KTA application and project dashboards
+...            IFS-8070  KTP Project setup - create projects
 ...
-...            IFS-8115 IFS Project setup: notification when project created
+...            IFS-8329  KTP Project Setup Dashboards (internal and external)
 ...
-...            IFS-8119 KTP Project Setup - GOL
+...            IFS-8261  KTA Assigning MOs
+...
+...            IFS-8478  KTP Project setup: KTA as monitoring officer
+...
+...            IFS-8547  KTA application and project dashboards
+...
+...            IFS-8115  IFS Project setup: notification when project created
+...
+...            IFS-8328  KTP Project Setup - finance checks (internal and external)
 ...
 ...            IFS-8116 KTP Project Setup - Project details, Team and MO
 ...
 ...            IFS-8455 KTP project setup: finance checks
+...
+...            IFS-8119  KTP Project Setup - GOL
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -529,6 +531,7 @@ New lead applicant submits the application
     Then the applicant submits the application
 
 Internal user moves competition to project setup
+    [Documentation]  IFS-8119
     Given moving competition to Closed                        ${competitionId}
     When Log in as a different user                           &{internal_finance_credentials}
     And the user closed ktp assesment                         ${competitionId}
@@ -637,6 +640,27 @@ The lead is able to complete Project team section
     When the user completes the project team section
     Then the user should see the element                 jQuery = li:contains("Project team") span:contains("Completed")
 
+The lead is able to access Finance checks before approval
+    [Documentation]  IFS-8328
+    Given The user should see the element     jQuery = .progress-list li:nth-child(4):contains("Awaiting review")
+    When the user clicks the button/link      link = Finance checks
+    Then The user should see the element      link = your project finances
+    And The user should see the element       link = view the project finance overview
+
+The lead should be able to access the eligibility checks page before approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link                                                 link = your project finances
+    Then the user sees the changes in the finance summary table in Eligibility screen
+    And the user clicks the button/link                                                  link = Back to finance checks
+
+The lead should be able to access the finance overview page before approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link                                             link = view the project finance overview
+    Then the user should see the changes in the finance table in Overview screen
+    And The user should see the element                                              jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
+    And The user should not see the element                                          link = Change funding level percentages
+    [Teardown]  the user clicks the button/link                                      link = Back to finance checks
+
 The partner views the Project team section as Complete at all times
     [Documentation]  IFS-8116
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
@@ -665,6 +689,22 @@ The partner should see the MO section with KTA details
     [Documentation]  IFS-8070
     When the user clicks the button/link            link = Monitoring Officer
     Then The user should see the element            jQuery = a:contains("${ktaEmail}")
+    [Teardown]  the user clicks the button/link     link = Set up your project
+
+The partner is able to access Finance checks before approval
+    [Documentation]  IFS-8328
+    Given the user should see the element        jQuery = .progress-list li:nth-child(4):contains("Awaiting review")
+    When the user clicks the button/link         link = Finance checks
+    Then the user should not see the element     link = your project finances
+    And the user should see the element          link = project finance overview
+
+The partner should be able to access the finance overview page before approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link                                             link = project finance overview
+    Then the user should see the changes in the finance table in Overview screen
+    And the user should see the element                                              jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
+    And the user should not see the element                                          link = Change funding level percentages
+    [Teardown]  the user clicks the button/link                                      link = Back to finance checks
 
 Internal user cannot view the project start date and duration and should see the correspondence address
     [Documentation]  IFS-7805 IFS-8070 IFS-8116
@@ -687,6 +727,7 @@ Internal user is able to view the KTA as an MO
     Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link     jQuery = tr:nth-of-type(1) td:nth-of-type(3)
     Then the user should see the element     css = input[name="emailAddress"][value = "${ktaEmail}"]
+    And The user clicks the button/link      link = Back to project setup
 
 Internal user can only assign KTA as MO to KTP funding type projects
     [Documentation]  IFS-8261
@@ -726,12 +767,35 @@ Internal user can change the default KTA assigned as MO to another KTA user
     And the internal user assign project to mo     ${ApplicationID}   ${ktpApplicationTitle}
     Then the user should see the element           jQuery = td:contains("${ApplicationID}")+td:contains("${ktpApplicationTitle}")+td:contains("${ktpOrgName}")
 
+Internal user is able to access the finance overview page
+    [Documentation]  IFS-8328
+    [Setup]  log in as a different user                                              &{ifs_admin_user_credentials}
+    Given The user navigates to the page                                             ${server}/project-setup-management/project/${ProjectID}/finance-check
+    When The user clicks the button/link                                             link = View finances
+    Then the user should see the changes in the finance table in Overview screen
+    And The user should not see the element                                          jQuery = h3:contains("Overview")
+    And the user should not see the element                                          jQuery = h3:contains("Project cost breakdown")
+    And The user should see the element                                              jQuery = h3:contains("Project cost summary")
+
+Internal user is able to see the partner funding level percentages is read-only
+    [Documentation]  IFS-8328
+    When The user clicks the button/link         link = Change funding level percentages
+    Then The user should not see the element     jQuery = td:contains("INNOVATE LTD") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
+    And The user clicks the button/link          link = Back to finance overview
+
+Internal user should not see the start date in the Edit Project screen
+    [Documentation]  IFS-8328
+    Given The user clicks the button/link        link = Back to finance checks
+    When The user clicks the button/link         link = Edit
+    Then The user should not see the element     jQuery = dt:contains("Start date")
+
 Internal user can not view status of the GOL section if the application not sucessful but finance checks have been approved
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119 - IFS-8455
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-8119
     Given Log in as a different user            &{ifs_admin_user_credentials}
     When the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/finance-check
     And the user approves finance checks        ${ProjectID}  ${competitionId}
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+    And the user should not see the element     jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
 
 Internal user can view status of the GOL section on making application sucessful after finance checks have been approved
     [Documentation]  IFS-8199  IFS-7146  IFS-7147  IFS-7148  IFS-8115
@@ -742,13 +806,38 @@ Internal user can view status of the GOL section on making application sucessful
     Then the user should see the element                                    jQuery = tr:nth-of-type(1) td:nth-of-type(5):contains("Review")
     And the user reads his email                                            ${ktaEmail}  ${compCompleteSubject}  ${compCompleteContent}
 
+The partner is able to access Finance checks after approval
+     [Documentation]  IFS-8328
+     [Setup]  log in as a different user           &{ktpNewPartnerCredentials}
+     Given The user navigates to the page          ${server}/project-setup/project/${ProjectID}
+     And the user should see the element           jQuery = .progress-list li:nth-child(4):contains("Completed")
+     When the user clicks the button/link          link = Finance checks
+     Then The user should not see the element      link = review your project finances
+     And The user should see the element           link = project finance overview
+     And The user should see the element           jQuery = p:contains("The checks have been completed and your project finances approved.")
+
+The lead is able to access Finance checks after approval
+     [Documentation]  IFS-8328
+     [Setup]  log in as a different user       &{ktpLeadApplicantCredentials}
+     Given The user navigates to the page      ${server}/project-setup/project/${ProjectID}
+     And the user should see the element       jQuery = .progress-list li:nth-child(4):contains("Completed")
+     When the user clicks the button/link      link = Finance checks
+     Then The user should see the element      link = review your project finances
+     And The user should see the element       link = your project finance overview
+     And The user should see the element       jQuery = p:contains("The checks have been completed and your project finances approved.")
+
+The lead is able to access the Eligibility checks after approval
+    [Documentation]  IFS-8328
+    When the user clicks the button/link     link = review your project finances
+    Then The user should see the element     jQuery = p:contains("The partner's finance eligibility has been approved by ")
+
 Monitoring officer can view the Finance checks project setup dashboard section
     [Documentation]  IFS-8329
     Given log in as a different user            email=hermen.mermen@ktn-uk.test  password=${short_password}
     When the user navigates to the page         ${server}/project-setup/project/${ProjectID}
     Then the user should see the element        jQuery = li:contains("Finance checks") span:contains("Completed")
 
-Internal user sees correct label for T&C's
+Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
     When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
@@ -847,17 +936,30 @@ the user fills financial overview section
 the user approves Eligibility
     [Arguments]  ${project}
     Requesting Organisation IDs
-    the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
+    the user navigates to the page                          ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
+    the user sees the changes in the finance summary table in Eligibility screen
     the user approves project costs
 
-the user approves viability
+the user approves KTP Viability
     [Arguments]  ${project}
-    project finance approves Viability for     ${partnerOrgId}  ${project}
+    project finance approves KTP Viability for     ${partnerOrgId}  ${project}
 
-the user clicks the approve finance check button
+project finance approves KTP Viability for
+    [Arguments]  ${partner}  ${project}
+    the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
+    the user should see the element      jQuery = th:contains("Funding sought (£)")
+    the user selects the checkbox        costs-reviewed
+    the user selects the checkbox        project-viable
+    Set Focus To Element                 link = Contact us
+    the user selects the option from the drop-down menu  Green  id = rag-rating
+    the user clicks the button/link      css = #confirm-button
+    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
+
+the user approves spend profile
      the user clicks the button/link      link = Return to finance checks
-     the user clicks the button/link      jQuery = button:contains('Approve finance checks')
-     the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved.")
+     the user clicks the button/link      link = Generate spend profile
+     the user clicks the button/link      css = #generate-spend-profile-modal-button
+     the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
 
 Requesting Organisation IDs
     ${leadOrgId} =    get organisation id by name     ${ktpOrgName}
@@ -1093,6 +1195,21 @@ the user switch to the new tab on click guidance links
     the user clicks the button/link     link = ${link}
     Select Window                       title = Costs guidance for knowledge transfer partnership projects - GOV.UK
 
+the user should see the changes in the finance table in Overview screen
+    the user should see the element     jQuery = th:contains("Other funding (£)")
+    the user should see the element     jQuery = th:contains("Company contribution (%)")
+    the user should see the element     jQuery = th:contains("Company contribution (£)")
+    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") + td:contains("£246")
+    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
+    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("90.00%")
+    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("221")
+
+the user sees the changes in the finance summary table in Eligibility screen
+    the user should see the element     jQuery = th:contains("Other funding (£)")
+    the user should see the element     jQuery = th:contains("Company contribution (%)")
+    the user should see the element     jQuery = th:contains("Company contribution (£)")
+    the user should see the element     jQuery = td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
+
 the user should not see Documents, Bank details or Spend profile dashboard sections
     the user should not see the element       jQuery = li:contains("Documents")
     the user should not see the element       jQuery = li:contains("Bank details")
@@ -1137,11 +1254,16 @@ the user closed ktp assesment
 
 the user approves finance checks
     [Arguments]   ${ProjectID}  ${competitionId}
-    the user approves Eligibility                        ${ProjectID}
-    the user approves Viability                          ${ProjectID}
+    the user approves Eligibility                            ${ProjectID}
+    the user approves KTP Viability                          ${ProjectID}
     the user clicks the approve finance check button
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
 
 the user edits project location
     the user should see the element     jQuery = h1:contains("Project location")
     the user clicks the button/link     jQuery = button:contains("Save project location")
+
+the user clicks the approve finance check button
+     the user clicks the button/link      link = Return to finance checks
+     the user clicks the button/link      jQuery = button:contains("Approve finance checks")
+     the user should see the element      jQuery = p:contains("The finance checks have been approved")
