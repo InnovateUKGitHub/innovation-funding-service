@@ -258,7 +258,6 @@ Live Project User is able to join an application within the same organisation
     And the user accepts invitation to join application under same organisation
     Then The user should see the element                                            jQuery = td:contains("Troy Ward")
 
-
 Live project user is able to join an application as a different organisation
     [Documentation]  IFS-8707
     Given Log in as a different user                                ${applicantKTACredentials}  ${short_password}
@@ -289,7 +288,7 @@ the user accepts invitation to join application under same organisation
 
 the user logs in
     [Arguments]   ${email}   ${short_password}
-     the guest user inserts user email and password   ${email}  ${short_password}
+     the guest user inserts user email and password    ${email}  ${short_password}
      the guest user clicks the log-in button
 
 the user selects a knowledge based organisation
