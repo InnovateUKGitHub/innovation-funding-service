@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.grantofferletter.template.resource;
 
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.VersionedTemplateResource;
 
 /**
  * Resource representation of GolTemplate
  */
-public class GolTemplateResource extends TermsAndConditionsResource {
+public class GolTemplateResource extends VersionedTemplateResource {
 
     public GolTemplateResource() {
     }

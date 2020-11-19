@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class GrantTermsAndConditionsBuilder extends AbstractTermsAndConditionsBuilder<GrantTermsAndConditions,
+public class GrantTermsAndConditionsBuilder extends AbstractVersionedTemplateBuilder<GrantTermsAndConditions,
         GrantTermsAndConditionsBuilder> {
 
     private GrantTermsAndConditionsBuilder(List<BiConsumer<Integer, GrantTermsAndConditions>> multiActions) {
