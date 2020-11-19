@@ -28,6 +28,8 @@ public class ProjectFinanceChecksViewModel {
     private boolean isAcademic;
     private boolean loanCompetition;
     private final boolean procurementCompetition;
+    private final boolean ktpCompetition;
+    private final boolean leadOrganisation;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> pendingQueries,
@@ -41,7 +43,9 @@ public class ProjectFinanceChecksViewModel {
                                          String baseUrl,
                                          boolean isAcademic,
                                          boolean loanCompetition,
-                                         boolean procurementCompetition) {
+                                         boolean procurementCompetition,
+                                         boolean ktpCompetition,
+                                         boolean leadOrganisation) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
@@ -57,6 +61,8 @@ public class ProjectFinanceChecksViewModel {
         this.isAcademic = isAcademic;
         this.loanCompetition = loanCompetition;
         this.procurementCompetition = procurementCompetition;
+        this.ktpCompetition = ktpCompetition;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public Long getProjectId() {
@@ -194,5 +200,13 @@ public class ProjectFinanceChecksViewModel {
 
     public boolean isProcurementCompetition() {
         return procurementCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public boolean isLeadOrganisation() {
+        return leadOrganisation;
     }
 }

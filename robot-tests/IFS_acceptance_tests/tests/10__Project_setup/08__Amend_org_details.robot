@@ -63,7 +63,7 @@ New funding percentage is applied on finance overview
 
 New funding percentage is applied on finance checks
     [Documentation]  IFS-6695
-    Given the user clicks the button/link                link = Finance checks
+    Given the user clicks the button/link                link = Back to finance checks
     Then the user should see the element                 jQuery = dt:contains("Total percentage grant") ~ dd:contains("23.96%")
     And the user should see the correct funding values   £116,596  £96,506
 
@@ -71,7 +71,7 @@ Approving any eligibility removes the link
     [Documentation]  IFS-6712
     [Setup]  the user clicks the button/link     css = a.eligibility-2
     Given the user approves project costs
-    When the user clicks the button/link      link = Finance checks
+    When the user clicks the button/link      link = Back to finance checks
     And the user clicks the button/link       link = View finances
     Then the user should not see the element  link = Change funding level percentages
 
