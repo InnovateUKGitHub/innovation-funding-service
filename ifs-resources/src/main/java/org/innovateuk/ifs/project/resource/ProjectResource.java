@@ -43,16 +43,18 @@ public class ProjectResource {
     private boolean spendProfileGenerated;
     private boolean useDocusignForGrantOfferLetter;
 
-    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
+    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message = "{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
 
     @JsonIgnore
-    public boolean isOfferSubmitted(){
+    public boolean isOfferSubmitted() {
         return offerSubmittedDate != null;
     }
 
     @JsonIgnore
-    public boolean isWithdrawn() { return projectState.equals(ProjectState.WITHDRAWN); }
+    public boolean isWithdrawn() {
+        return projectState.equals(ProjectState.WITHDRAWN);
+    }
 
     @JsonIgnore
     public boolean isCompleted() {
