@@ -20,8 +20,6 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
     private final String innovationSector;
     private final boolean competitionCanHaveProjects;
     private final List<PreviousApplicationResource> applications;
-    private int columnsBeforeBankDetails;
-    private int columnsAfterBankDetails;
 
     public PreviousCompetitionViewModel(CompetitionResource competition,
                                         List<PreviousApplicationResource> applications,
@@ -36,14 +34,6 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
         this.innovationSector = competition.getInnovationSectorName();
         this.competitionCanHaveProjects = CompetitionCompletionStage.PROJECT_SETUP.equals(competition.getCompletionStage());
         this.applications = applications;
-
-        resolveBankDetailsTableColumns();
-    }
-
-    private void resolveBankDetailsTableColumns() {
-        int bankDetailsIndex = this.getColumns().indexOf(ProjectSetupStage.BANK_DETAILS) + 1;
-        this.columnsBeforeBankDetails = bankDetailsIndex;
-        this.columnsAfterBankDetails = this.getColumns().size() - bankDetailsIndex;
     }
 
     @Override
@@ -75,11 +65,4 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
         return competitionCanHaveProjects;
     }
 
-    public int getColumnsBeforeBankDetails() {
-        return columnsBeforeBankDetails;
-    }
-
-    public int getColumnsAfterBankDetails() {
-        return columnsAfterBankDetails;
-    }
 }
