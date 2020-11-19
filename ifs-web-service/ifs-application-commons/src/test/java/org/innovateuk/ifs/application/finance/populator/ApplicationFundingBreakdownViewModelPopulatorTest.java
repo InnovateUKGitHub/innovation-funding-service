@@ -8,10 +8,13 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -21,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -36,7 +38,9 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -51,6 +55,9 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Mock
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Mock
     private OrganisationRestService organisationRestService;
@@ -123,7 +130,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
 
-        Mockito.verify(inviteService, times(1)).getPendingInvitationsByApplicationId(applicationId);
+        verify(inviteService, times(1)).getPendingInvitationsByApplicationId(applicationId);
     }
 
     @Test
@@ -179,7 +186,69 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
 
-        Mockito.verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
+        verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
+    }
+
+    @Test
+    public void populateProjectFinanceBreakdown() {
+        long applicationId = 1L;
+        long competitionId = 2L;
+        long leadOrganisationId = 3L;
+        long partnerOrganisationId = 4L;
+        long projectId = 5L;
+        long userId = 4L;
+        String financeLinkUrl = "some url";
+
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationId)
+                .withCompetition(competitionId)
+                .build();
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.APPLICANT)
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(GRANT)
+                .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId())
+                .withLeadOrganisationId(leadOrganisationId)
+                .build();
+        OrganisationResource leadOrganisation = newOrganisationResource().withId(leadOrganisationId).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().withId(partnerOrganisationId).build();
+        List<OrganisationResource> organisations = Arrays.asList(leadOrganisation, partnerOrganisation);
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withUserId(userId)
+                .withRole(Role.LEADAPPLICANT)
+                .withOrganisation(leadOrganisationId)
+                .build();
+        ProjectFinanceResource projectFinance = newProjectFinanceResource()
+                .withOrganisation(leadOrganisationId)
+                .withGrantClaimPercentage(BigDecimal.valueOf(100))
+                .build();
+
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
+        when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
+        when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(organisations));
+
+        ApplicationFundingBreakdownViewModel model = populator.populateFromProject(project, user);
+
+        assertNotNull(model);
+        assertEquals(2, model.getRows().size());
+
+        BreakdownTableRow leadOrganisationFinanceBreakdown = model.getRows().get(0);
+
+        assertNotNull(leadOrganisationFinanceBreakdown);
+        assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
+
+        verifyZeroInteractions(inviteService);
+        verifyZeroInteractions(financeLinksUtil);
     }
 
 }
