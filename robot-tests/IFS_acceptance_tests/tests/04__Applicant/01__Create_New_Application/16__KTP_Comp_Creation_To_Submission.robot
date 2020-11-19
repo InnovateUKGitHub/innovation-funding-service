@@ -1233,14 +1233,6 @@ the admin should not see Documents and Spend profile dashboard sections
     the user should not see the element       jQuery = th:contains("Documents")
     the user should not see the element       jQuery = th:contains("Spend profile")
 
-#<<<<<<< HEAD
-#MO should see read only viiew of project details
-#    the user should see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
-#    the user should see the element         jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
-#    the user should see the element         jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
-#    the user should see the element         jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
-#    the user should not see the element     jQuery = button:contains("Edit")
-#=======
 MO should see read only view of project details
     the user should not see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT") ~ td:contains("Complete")
