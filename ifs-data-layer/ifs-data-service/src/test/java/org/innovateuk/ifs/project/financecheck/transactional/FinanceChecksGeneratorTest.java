@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.junit.Before;
@@ -77,6 +79,9 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+
+    @Mock
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Mock
     private ProjectFinanceRepository projectFinanceRepositoryMock;
@@ -226,6 +231,65 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
     }
 
+    @Test
+    public void createFinanceChecksWithKtpKBWithNoViabilityChecks() {
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withOrganisation(
+                        OrganisationBuilder.newOrganisation()
+                                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build()).
+                        build();
+
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build());
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(viabilityWorkflowHandlerMock.viabilityNotApplicable(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        competition.setFundingType(FundingType.KTP);
+
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
+
+    @Test
+    public void createFinanceChecksWithKtpPartnerWithNoEligibilityChecks() {
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withOrganisation(
+                        OrganisationBuilder.newOrganisation()
+                                .withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).
+                        build();
+
+        organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        competition.setFundingType(FundingType.KTP);
+
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(eligibilityWorkflowHandler).notRequestingFunding(partnerOrganisation, null);
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
 
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
         ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(SMALL).withApplication(newApplication().withCompetition(newCompetition().build()).build()).build();

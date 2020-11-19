@@ -16,7 +16,7 @@ public class InviteUserViewModelTest {
     @Test
     public void inviteInternalUserViewModel() {
 
-        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.INTERNAL_USER, Role.internalRoles(), true);
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.INTERNAL_USER, Role.internalRoles());
 
         assertEquals(InviteUserView.INTERNAL_USER, viewModel.getType());
         assertEquals("internal user", viewModel.getTypeName());
@@ -27,7 +27,7 @@ public class InviteUserViewModelTest {
     @Test
     public void inviteExternalUserViewModelKta() {
 
-        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<>(Arrays.asList(Role.KNOWLEDGE_TRANSFER_ADVISER)), false);
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<>(Arrays.asList(Role.KNOWLEDGE_TRANSFER_ADVISER)));
 
         assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
         assertEquals("knowledge transfer adviser", viewModel.getTypeName());
@@ -38,7 +38,7 @@ public class InviteUserViewModelTest {
     @Test
     public void inviteExternalUserViewModelSupporter() {
 
-        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<Role>(Arrays.asList(Role.SUPPORTER)), false);
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, new HashSet<Role>(Arrays.asList(Role.SUPPORTER)));
 
         assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
         assertEquals("supporter", viewModel.getTypeName());
@@ -49,7 +49,7 @@ public class InviteUserViewModelTest {
     @Test
     public void inviteExternalUserViewModelAllExternalRoles() {
 
-        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite().stream().collect(toSet()), false);
+        InviteUserViewModel viewModel = new InviteUserViewModel(InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite().stream().collect(toSet()));
 
         assertEquals(InviteUserView.EXTERNAL_USER, viewModel.getType());
         assertTrue(Arrays.asList("knowledge transfer adviser", "supporter").contains(viewModel.getTypeName()));

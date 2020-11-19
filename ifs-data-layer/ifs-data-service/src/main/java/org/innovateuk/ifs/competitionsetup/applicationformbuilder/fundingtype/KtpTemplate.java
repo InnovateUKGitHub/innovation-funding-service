@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.addProjectSetupStage;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 
 @Component
 public class KtpTemplate implements FundingTypeTemplate {
@@ -56,6 +58,12 @@ public class KtpTemplate implements FundingTypeTemplate {
     }
 
     @Override
+    public Competition initialiseProjectSetupColumns(Competition competition) {
+        addKtpProjectSetupColumns(competition);
+        return competition;
+    }
+
+    @Override
     public Competition initialiseFinanceTypes(Competition competition) {
         List<FinanceRowType> types = newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING);
         return commonBuilders.saveFinanceRows(competition, types);
@@ -64,6 +72,15 @@ public class KtpTemplate implements FundingTypeTemplate {
     @Override
     public Competition overrideTermsAndConditions(Competition competition) {
         return commonBuilders.overrideTermsAndConditions(competition);
+    }
+
+    private void addKtpProjectSetupColumns(Competition competition) {
+        commonBuilders.addProjectSetupStage(competition, PROJECT_DETAILS);
+        commonBuilders.addProjectSetupStage(competition, PROJECT_TEAM);
+        commonBuilders.addProjectSetupStage(competition, MONITORING_OFFICER);
+        commonBuilders.addProjectSetupStage(competition, BANK_DETAILS);
+        commonBuilders.addProjectSetupStage(competition, FINANCE_CHECKS);
+        commonBuilders.addProjectSetupStage(competition, GRANT_OFFER_LETTER);
     }
 
     private List<SectionBuilder> overrideApplicationQuestionFormInputs(List<SectionBuilder> sections) {

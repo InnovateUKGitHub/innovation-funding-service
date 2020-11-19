@@ -10,6 +10,9 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...               INFUND-9243 Add marketing email option tick box to 'Your details' page in the 'Create your account' journey
 ...
 ...               INFUND-1040: As an applicant I want to be able to create more than one application so..
+...
+...               IFS-8646 Comp 730 - App 97191 - Unable to access application
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -44,12 +47,18 @@ Non registered users sign-up companies house route
     Then the user directed to correct dashboard       ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user reads his email and clicks the link  ${test_mailbox_one}+business@gmail.com    Innovate UK applicant questionnaire    diversity survey
 
+Applicant can still access the application from dashboard on saving the apllication with an empty application name
+    [Documentation]  IFS-8646
+    Given the user navigates to the page         ${SERVER}
+    When Logging in and Error Checking           ${test_mailbox_one}+business@gmail.com    ${correct_password}
+    And the user edits the application title     ${empty}
+    And the user clicks the button/link          link = Dashboard
+    Then the user should see the element         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
     [Tags]  HappyPath
-    [Setup]    the user navigates to the page                     ${SERVER}
-    When Logging in and Error Checking                            ${test_mailbox_one}+business@gmail.com    ${correct_password}
-    And the user edits the application title
+    When the user edits the application title                      ${test_title}
     Then the user should see the element                          jQuery = h1 span:contains("${test_title}")
     And the progress indicator should show 0
     And the user clicks the button/link                           link = Application team
@@ -69,10 +78,11 @@ the new application should be visible in the dashboard page
     the user should see the element      jQuery = dt:contains("Application number:")
 
 the user edits the application title
+    [Arguments]   ${applicationName}
     the user clicks the button/link         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link         link = Application details
     The project start date is blank
-    The user enters text to a text field    css = [id = "name"]    ${test_title}
+    The user enters text to a text field    css = [id = "name"]    ${applicationName}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save and return")
 
 the progress indicator should show 0

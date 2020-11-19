@@ -27,6 +27,7 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isKta;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 
 /**
@@ -208,7 +209,7 @@ public class SetupSectionsPermissionRules {
                 return false;
             }
 
-            boolean isMonitoringOfficer = isMonitoringOfficer(user);
+            boolean isMonitoringOfficer = isMonitoringOfficer(user) || isKta(user);
 
             long organisationId = isMonitoringOfficer ?
                     projectService.getLeadOrganisation(projectId).getId() : projectService.getOrganisationIdFromUser(projectId, user);

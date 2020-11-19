@@ -253,15 +253,7 @@ the applicant is able to see the rejected GOL
     the user clicks the button/link           link = Grant offer letter
     the user should see the element           jQuery = .fail-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
 
-the user enters bank details
-    the user clicks the button/link                      link = Bank details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      id = submit-bank-details-button
-    the user clicks the button/link                      id = submit-bank-details-model-button
+
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
@@ -274,8 +266,8 @@ The user completes the project team section
     the user clicks the button/link          link = Project manager
 #    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button        projectManager   projectManager1
-    the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Return to setup your project
+    the user clicks the button/link          jQuery = button:contains("Save and continue")
+    the user clicks the button/link          link = Return to set up your project
 
 The user uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
@@ -290,6 +282,16 @@ The user uploads the Test document type
     the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
+
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      id = submit-bank-details-button
+    the user clicks the button/link                      id = submit-bank-details-model-button
 
 the user uploads the Collaboration agreement
     the user clicks the button/link     link = Collaboration agreement
@@ -310,7 +312,7 @@ The user selects their finance contact
     the user clicks the button/link     link = Your finance contact
 #    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
     the user selects the radio button   financeContact   ${financeContactName}
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 the user should see project manager/finance contact validations
     [Arguments]   ${save_CTA}  ${errormessage}
@@ -640,11 +642,11 @@ the user completes the project team details
     the user clicks the button/link     link = Project team
     the user clicks the button/link     link = Your finance contact
     the user selects the radio button   financeContact   financeContact1
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Project manager
     the user selects the radio button   projectManager   projectManager1
-    the user clicks the button/link     jQuery = button:contains("Save project manager")
-    the user clicks the button/link     link = Set up your project
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     link = Back to project setup
     #the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 PM uploads the project documents

@@ -214,10 +214,10 @@ Internal user can set VAT to yes
 
 Internal user viability page
     [Documentation]    IFS-8127
-    Given the user clicks the button/link           link = Finance checks
+    Given the user clicks the button/link           link = Back to finance checks
     When the user clicks the button/link            css = .viability-0
     Then the user should not see the element        css = .table-overview
-    [Teardown]  The user clicks the button/link     link = Finance checks
+    [Teardown]  The user clicks the button/link     link = Back to finance checks
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048
@@ -362,13 +362,13 @@ the user should see the correct data on finance check page
 
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
-    the user clicks the button/link         link = Finance checks
+    the user clicks the button/link         link = Back to finance checks
     the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${revisedFunding}")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
     the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
-    the user clicks the button/link     link = Finance checks
+    the user clicks the button/link     link = Back to finance checks
     the user should see the element     jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
     the user clicks the button/link     css = .eligibility-0
 
@@ -395,7 +395,6 @@ Generate spend profile
     confirm viability                   0
     confirm eligibility                 0
     the user clicks the button/link     css = .generate-spend-profile-main-button
-    the user clicks the button/link     id = generate-spend-profile-modal-button
 
 internal user generates the contract
     [Arguments]  ${projectID}
@@ -407,12 +406,3 @@ internal user generates the contract
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send contract to project team")
     the user clicks the button/link    jQuery = button:contains("Send contract")
-
-#the internal user approve the contract
-#    [Arguments]  ${projectID}
-#    log in as a different user          &{internal_finance_credentials}
-#    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-#    the user selects the radio button   APPROVED  acceptGOL
-#    the user clicks the button/link     id = submit-button
-#    the user clicks the button/link     id = accept-signed-gol
-#    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")

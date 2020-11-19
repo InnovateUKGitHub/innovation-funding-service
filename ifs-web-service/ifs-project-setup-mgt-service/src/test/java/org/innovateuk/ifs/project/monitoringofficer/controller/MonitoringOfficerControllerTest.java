@@ -7,7 +7,9 @@ import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerAssignRoleForm;
 import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerSearchByEmailForm;
 import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerAssignRoleViewModelPopulator;
+import org.innovateuk.ifs.project.monitoringofficer.populator.MonitoringOfficerViewAllViewModelPopulator;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerAssignRoleViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewAllViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -16,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -28,13 +31,8 @@ import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,11 +52,38 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     @Mock
     private MonitoringOfficerAssignRoleViewModelPopulator monitoringOfficerAssignRoleViewModelPopulator;
 
+    @Mock
+    private MonitoringOfficerViewAllViewModelPopulator monitoringOfficerViewAllViewModelPopulator;
+
     private static final String EMAIL_ADDRESS = "emailAddress";
 
     @Before
     public void logInCompAdminUser() {
         setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
+    }
+
+    @Test
+    public void viewAllKtp() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/view-all?ktp=true")).andReturn();
+        when(monitoringOfficerViewAllViewModelPopulator.populate(true))
+                .thenReturn(new MonitoringOfficerViewAllViewModel(new ArrayList<>()));
+        assertEquals("project/monitoring-officer-view-all", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
+    public void viewAllNonKtp() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/view-all?ktp=false")).andReturn();
+        when(monitoringOfficerViewAllViewModelPopulator.populate(false))
+                .thenReturn(new MonitoringOfficerViewAllViewModel(new ArrayList<>()));
+        assertEquals("project/monitoring-officer-view-all", mvcResult.getModelAndView().getViewName());
+    }
+
+    @Test
+    public void viewAll() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/monitoring-officer/view-all")).andReturn();
+        when(monitoringOfficerViewAllViewModelPopulator.populate())
+                .thenReturn(new MonitoringOfficerViewAllViewModel(new ArrayList<>()));
+        assertEquals("project/monitoring-officer-view-all", mvcResult.getModelAndView().getViewName());
     }
 
     @Test

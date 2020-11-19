@@ -56,7 +56,8 @@ public class FinanceCheckDocs {
             fieldWithPath("fundingSought").description("The funding sought for the organisation for the project"),
             fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the organisation for the project"),
             fieldWithPath("contributionToProject").description("The contribution that the organisation is  making to the project"),
-            fieldWithPath("hasApplicationFinances").description("Did the organisation have finances on the application to the project.")
+            fieldWithPath("hasApplicationFinances").description("Did the organisation have finances on the application to the project."),
+            fieldWithPath("contributionPercentage").description("The percentage contribution that the organisation is making to the project")
     };
 
     public static final FieldDescriptor[] financeCheckResourceFields = {
