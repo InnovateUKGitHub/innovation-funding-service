@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.status.viewmodel.BaseCompetitionStatusTableViewModel;
 
 import java.time.ZonedDateTime;
@@ -64,5 +63,4 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
     public boolean isCompetitionCanHaveProjects() {
         return competitionCanHaveProjects;
     }
-
 }
