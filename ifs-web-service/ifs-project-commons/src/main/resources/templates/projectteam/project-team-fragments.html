@@ -14,8 +14,8 @@
                    th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
                    class="govuk-link">Remove</a>
             </th:block>
-            <th:block th:if="${user.hasRole}">
-                <span th:text="${user.getRolesNames()}">Roles</span>
+            <th:block th:if="${model.displayRoleHeader(organisation.lead) && user.hasRole}">
+                    <span th:text="${user.getRolesNames()}">Roles</span>
             </th:block>
         </td>
 </th:block>

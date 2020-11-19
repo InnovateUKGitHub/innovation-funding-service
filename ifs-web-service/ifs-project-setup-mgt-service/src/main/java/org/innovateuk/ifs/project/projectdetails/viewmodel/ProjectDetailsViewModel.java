@@ -139,6 +139,10 @@ public class ProjectDetailsViewModel {
         return userResource.hasRole(PROJECT_FINANCE);
     }
 
+    public boolean isIfsAdministrator() {
+        return userResource.hasRole(IFS_ADMINISTRATOR);
+    }
+
     public String getLocationForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))

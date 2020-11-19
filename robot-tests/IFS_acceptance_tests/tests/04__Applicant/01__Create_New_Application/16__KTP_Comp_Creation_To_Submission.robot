@@ -71,6 +71,10 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8328  KTP Project Setup - finance checks (internal and external)
 ...
+...            IFS-8116 KTP Project Setup - Project details, Team and MO
+...
+...            IFS-8455 KTP project setup: finance checks
+...
 ...            IFS-8119  KTP Project Setup - GOL
 ...
 Suite Setup       Custom Suite Setup
@@ -535,12 +539,12 @@ Internal user moves competition to project setup
     Then the user refreshes until element appears on page     jQuery = tr div:contains("${ktpApplicationTitle}")
 
 MO can see the read only view of project assigned to him
-    [Documentation]  IFS-8478
+    [Documentation]  IFS-8478 IFS-8116
     Given Log in as a different user                          ${ktaEmail}    ${short_password}
     When the user clicks the button/link                      id = dashboard-link-MONITORING_OFFICER
     And the user clicks the button/link                       link = ${ktpApplicationTitle}
     And the user clicks the button/link                       link = Project details
-    Then MO should see read only viiew of project details
+    Then MO should see read only view of project details
 
 MO can see application summary in view application feedback page before releasing the feedback
     [Documentation]  IFS-8478
@@ -598,24 +602,31 @@ the project finance user cannot see the project start date
     And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
     And the user should see the element                jQuery = dt:contains("Duration in months")
 
-The lead cannot see the project start date and can see the correspondance address
-    [Documentation]  IFS-7805 IFS-8070
+The lead cannot view the project start date and duration and can see the correspondance address
+    [Documentation]  IFS-7805 IFS-8070 IFS-8116
     [Setup]  log in as a different user             &{ktpLeadApplicantCredentials}
     Given the user navigates to the page            ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link            link = Project details
-    Then the user sees the text in the element      id = start-date    ${empty}
+    Then the user should not see the element        id = start-date
     And the user sees the text in the element       id = project-address    The Burroughs, London, NW4 4BT
     And the user sees the text in the element       id = project-address-status    Complete
-    [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
-The lead should see the Project manager & Finance contact (lead details) and Finance contact of the participant
-    [Documentation]  IFS-8070
+The lead can edit the project location
+    [Documentation]  IFS-8116
+    Given the user should see the element           jQuery = td:contains("${ktpOrgName}") ~ td:contains("Edit")
+    And the user should not see the element         jQuery = td:contains("${newPartnerOrgName}") ~ td:contains("Edit")
+    When the user clicks the button/link            jQuery = a:contains("Edit")
+    Then the user edits project location
+
+The lead should see the Project manager & Finance contact (lead details) and contact of the participant
+    [Documentation]  IFS-8070 IFS-8116
+    Given the user clicks the button/link           id = return-to-set-up-your-project-button
     When the user clicks the button/link            link = Project team
     Then The user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-    And the user should see the element             jQuery = td:contains("Project") + td:contains("${fname} ${lname}")
-    And the user should see the element             jQuery = td:contains("Your finance contact") + td:contains("${fname} ${lname}")
-    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
-    [Teardown]  the user clicks the button/link     link = Return to setup your project
+    And the user should see the element             jQuery = td:contains("Project") + td:contains("Indi Gardiner") + td:contains("Complete")
+    And the user should see the element             jQuery = td:contains("Your finance contact") + td:contains("${fname} ${lname}") + td:contains("Complete")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}")
+    [Teardown]  the user clicks the button/link     link = Back to project setup
 
 The lead should see the MO section with KTA details
     [Documentation]  IFS-8070
@@ -624,10 +635,10 @@ The lead should see the MO section with KTA details
     [Teardown]  the user clicks the button/link     link = Set up your project
 
 The lead is able to complete Project team section
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-8116
     Given the user clicks the button/link                link = Project team
     When the user completes the project team section
-    Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("Completed")
+    Then the user should see the element                 jQuery = li:contains("Project team") span:contains("Completed")
 
 The lead is able to access Finance checks before approval
     [Documentation]  IFS-8328
@@ -650,32 +661,29 @@ The lead should be able to access the finance overview page before approval
     And The user should not see the element                                          link = Change funding level percentages
     [Teardown]  the user clicks the button/link                                      link = Back to finance checks
 
-The partner is able to complete Project team Section
-    [Documentation]  IFS-7812
+The partner views the Project team section as Complete at all times
+    [Documentation]  IFS-8116
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
     Given the user clicks the button/link           link = ${ktpApplicationTitle}
-    And the user clicks the button/link             link = Project team
-    When the user selects their finance contact     financeContact1
-    And the user clicks the button/link             link = Set up your project
-    Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
+    Then the user should see the element            jQuery = li:contains("Project team") span:contains("Completed")
 
-The partner cannot see the project start date and can see the correspondance address
-    [Documentation]  IFS-8070
+The partner cannot view the project start date and duration and can see the correspondance address
+    [Documentation]  IFS-8070 IFS-8116
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
     Given the user navigates to the page            ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link            link = Project details
-    Then the user sees the text in the element      id = start-date    ${empty}
+    Then the user should not see the element        id = start-date
     And the user sees the text in the element       id = project-address    The Burroughs, London, NW4 4BT
     And the user sees the text in the element       id = project-address-status    Complete
     [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
-The partner should see the Project manager & Finance contact (lead details) and Finance contact of the participant
-    [Documentation]  IFS-8070
+The partner should see the lead details and contact of the participant
+    [Documentation]  IFS-8070 IFS-8116
     When the user clicks the button/link            link = Project team
-    Then the user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-    And the user should see the element             jQuery = td:contains("Your finance contact") ~ td:contains("Emma Grant")
-    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
-    [Teardown]  the user clicks the button/link     link = Return to setup your project
+    Then the user should see the element            jQuery = td:contains("${lead_ktp_email}")
+    And the user should see the element             jQuery = td:contains("Emma Grant")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}")
+    [Teardown]  the user clicks the button/link     link = Return to set up your project
 
 The partner should see the MO section with KTA details
     [Documentation]  IFS-8070
@@ -698,20 +706,21 @@ The partner should be able to access the finance overview page before approval
     And the user should not see the element                                          link = Change funding level percentages
     [Teardown]  the user clicks the button/link                                      link = Back to finance checks
 
-Internal user cannot see the project start date and should see the correspondence address
-    [Documentation]  IFS-7805 IFS-8070
+Internal user cannot view the project start date and duration and should see the correspondence address
+    [Documentation]  IFS-7805 IFS-8070 IFS-8116
     Given log in as a different user                &{Comp_admin1_credentials}
     And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link            jQuery = tr:nth-of-type(1) td:nth-of-type(1)
-    Then the user sees the text in the element      id = start-date    ${empty}
+    Then the user should not see the element        id = start-date
     And the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
+    And the user should not see the element         id = project-address-status
     [Teardown]  the user clicks the button/link     link = Back to project setup
 
-Internal user should see the Project manager & Finance contact (lead details) and Finance contact of the participant
-    [Documentation]  IFS-8070
+Internal user should see the Project manager & Finance contact (lead details)
+    [Documentation]  IFS-8070 IFS-8116
     When the user clicks the button/link            jQuery = tr:nth-of-type(1) td:nth-of-type(2)
     Then the user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
-    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}") ~ td:contains("Finance contact")
+    And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}")
 
 Internal user is able to view the KTA as an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-8070
@@ -744,7 +753,7 @@ Internal user can only see list of standard MO's if user follows link from proje
 Internal user can only see list of KTA if user follows link from project setup dashboard for KTP competitions
     [Documentation]  IFS-8261
     Given the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
-    And the user clicks the button/link          link = Change Monitoring Officer
+    And the user clicks the button/link          link = Change monitoring officer
     When the user clicks the button/link         id = userId
     Then the user should not see the element     jQuery = li:contains("Orville Gibbs")
     And the user should see the element          jQuery = li:contains("Hermen Mermen")
@@ -1211,12 +1220,12 @@ the admin should not see Documents, Bank details or Spend profile dashboard sect
     the user should not see the element       jQuery = th:contains("Bank details")
     the user should not see the element       jQuery = th:contains("Spend profile")
 
-MO should see read only viiew of project details
-    the user should see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
-    the user should see the element         jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT")
-    the user should see the element         jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
-    the user should see the element         jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
-    the user should not see the element     jQuery = button:contains("Edit")
+MO should see read only view of project details
+    the user should not see the element         jQuery = td:contains("Target start date")+td:contains("${empty}")
+    the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("The Burroughs, London, NW4 4BT") ~ td:contains("Complete")
+    the user should see the element             jQuery = td:contains("${ktpOrgName}") + td:contains("BS1 4NT")
+    the user should see the element             jQuery = td:contains("${newPartnerOrgName}") + td:contains("BS1 4NT")
+    the user should not see the element         jQuery = button:contains("Edit")
 
 the user should see project setup sections
     the user should see the element     jQuery = li:contains("Project details") span:contains("Completed")
@@ -1249,6 +1258,10 @@ the user approves finance checks
     the user approves KTP Viability                          ${ProjectID}
     the user clicks the approve finance check button
     the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/status/all
+
+the user edits project location
+    the user should see the element     jQuery = h1:contains("Project location")
+    the user clicks the button/link     jQuery = button:contains("Save project location")
 
 the user clicks the approve finance check button
      the user clicks the button/link      link = Return to finance checks

@@ -101,7 +101,7 @@ public class FinanceContactController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        FinanceContactViewModel viewModel = new FinanceContactViewModel(organisationProjectUsers, projectId, projectResource.getName(), competition.isLoan());
+        FinanceContactViewModel viewModel = new FinanceContactViewModel(organisationProjectUsers, projectId, projectResource.getName(), competition.isLoan(), competition.isKtp());
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModel);
