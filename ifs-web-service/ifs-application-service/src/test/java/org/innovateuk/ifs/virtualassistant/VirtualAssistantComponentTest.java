@@ -49,7 +49,7 @@ public class VirtualAssistantComponentTest {
                 .thenReturn(new ResponseEntity<>(FAKE_AUTH_STRING_JSON, HttpStatus.OK));
         String thymeleafMapping = virtualAssistantController.virtualAssistant(model);
 
-        assertThat(thymeleafMapping, equalTo(REQUEST_MAPPING));
+        assertThat(thymeleafMapping, equalTo(THYMELEAF_MAPPING));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_BOT_ID), equalTo(TEST_BOT_ID));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_CLIENT_TOKEN), equalTo(FAKE_AUTH_STRING));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_ERROR_MESSAGE), equalTo(""));
@@ -64,7 +64,7 @@ public class VirtualAssistantComponentTest {
                 .thenReturn(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
         String thymeleafMapping = virtualAssistantController.virtualAssistant(model);
 
-        assertThat(thymeleafMapping, equalTo(REQUEST_MAPPING));
+        assertThat(thymeleafMapping, equalTo(THYMELEAF_MAPPING));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_BOT_ID), equalTo(NO_REMOTE_SERVER_MSG));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_CLIENT_TOKEN), equalTo(NO_REMOTE_SERVER_MSG));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_ERROR_MESSAGE), equalTo(HttpStatus.UNAUTHORIZED.toString()));
@@ -79,7 +79,7 @@ public class VirtualAssistantComponentTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.BAD_GATEWAY));
         String thymeleafMapping = virtualAssistantController.virtualAssistant(model);
 
-        assertThat(thymeleafMapping, equalTo(REQUEST_MAPPING));
+        assertThat(thymeleafMapping, equalTo(THYMELEAF_MAPPING));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_BOT_ID), equalTo(NO_REMOTE_SERVER_MSG));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_CLIENT_TOKEN), equalTo(NO_REMOTE_SERVER_MSG));
         assertThat(model.asMap().get(VIRTUAL_ASSISTANT_ERROR_MESSAGE),
