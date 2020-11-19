@@ -7,6 +7,8 @@ public class VirtualAssistantModel {
     private final String errorMessage;
     private final boolean isServerAvailable;
 
+    public static final String NO_REMOTE_SERVER_MSG = "noRemoteServer";
+
     public VirtualAssistantModel(String botId, String clientToken) {
         this.botId = botId;
         this.clientToken = clientToken;
@@ -15,8 +17,8 @@ public class VirtualAssistantModel {
     }
 
     public VirtualAssistantModel(String errorMessage) {
-        this.botId = "noRemoteServer";
-        this.clientToken = "noRemoteServer";
+        this.botId = NO_REMOTE_SERVER_MSG;
+        this.clientToken = NO_REMOTE_SERVER_MSG;
         this.errorMessage = errorMessage;
         this.isServerAvailable = false;
     }

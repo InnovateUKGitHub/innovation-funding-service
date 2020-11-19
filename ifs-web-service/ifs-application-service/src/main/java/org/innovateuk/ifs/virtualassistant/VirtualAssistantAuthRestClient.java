@@ -10,13 +10,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class VirtualAssistantAuthRestClient {
 
     private final Logger LOG = LoggerFactory.getLogger(VirtualAssistantAuthRestClient.class);
+    private static final String AUTH_BOT_CONNECTOR_HEADER = "BotConnector ";
 
     @Autowired
     private RestTemplate restTemplate;
@@ -34,14 +34,14 @@ public class VirtualAssistantAuthRestClient {
         LOG.debug(botId);
         LOG.debug(tokenExchangeUrl);
         try {
-            ResponseEntity<String> response = restTemplate.exchange(tokenExchangeUrl, HttpMethod.GET, new HttpEntity<>(authHeader()), String.class);
+            ResponseEntity<String> response = restTemplate.exchange(tokenExchangeUrl,
+                    HttpMethod.GET, new HttpEntity<>(authHeader()), String.class);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 LOG.error("Status " + response.getStatusCode());
                 return new VirtualAssistantModel(response.getStatusCode().toString());
             }
-            LOG.debug(JsonUtil.getObjectFromJson(response.getBody(), String.class));
             return new VirtualAssistantModel(botId, JsonUtil.getObjectFromJson(response.getBody(), String.class));
-        } catch (HttpClientErrorException ex) {
+        } catch (Exception ex) {
             LOG.error("Failed to obtain virtual assistant token", ex);
             return new VirtualAssistantModel(ex.getMessage());
         }
@@ -49,7 +49,7 @@ public class VirtualAssistantAuthRestClient {
 
     protected HttpHeaders authHeader(){
         return new HttpHeaders() {{
-            set("Authorization", "BotConnector " + botSecret);
+            set(HttpHeaders.AUTHORIZATION, AUTH_BOT_CONNECTOR_HEADER + botSecret);
         }};
     }
 
