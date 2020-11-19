@@ -22,38 +22,45 @@
         <form id="grant-offer-letter-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
             <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
-                <p class="govuk-body" th:text="|We have receieved the signed ${model.title.toLowerCase()} and it is waiting to be reviewed.|"></p>
-                <p class="govuk-body" th:text="|The unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
+                <p class="govuk-body" th:unless="${model.ktp}" th:text="|We have received the signed ${model.title.toLowerCase()} and it is waiting to be reviewed.|"></p>
+                <p class="govuk-body" th:unless="${model.ktp}" th:text="|The unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
+                <p class="govuk-body" th:if="${model.ktp}" th:text="|We have received signed copies of the ${model.title.toLowerCase()} and the annex, which are now awaiting review.|"></p>
+                <p class="govuk-body" th:if="${model.ktp}">You may download the documents below for your records.</p>
             </th:block>
 
             <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body" th:text="|Your signed ${model.title.toLowerCase()} has been received and accepted by Innovate UK.|"></p>
+                <p class="govuk-body" th:unless="${model.ktp}" th:text="|Your signed ${model.title.toLowerCase()} has been received and accepted by Innovate UK.|"></p>
+                <p class="govuk-body" th:if="${model.ktp}" th:text="|We have received and approved your signed ${model.title.toLowerCase()} and annex.|"></p>
             </div>
 
             <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
                 <div class="fail-alert govuk-!-margin-bottom-6">
-                    <h2 class="govuk-heading-s" th:text="|Your signed ${model.title.toLowerCase()} has been rejected by Innovate UK|"></h2>
-                    <p class="govuk-body">Someone will be in touch with you soon.</p>
+                    <h2 class="govuk-heading-s" th:unless="${model.ktp}" th:text="|Your signed ${model.title.toLowerCase()} has been rejected by Innovate UK|"></h2>
+                    <p class="govuk-body" th:unless="${model.ktp}">Someone will be in touch with you soon.</p>
+                    <h2 class="govuk-heading-s" th:if="${model.ktp}" th:text="|Your signed ${model.title.toLowerCase()} and annex have been reviewed and rejected|"></h2>
+                    <p class="govuk-body" th:if="${model.ktp}">We will contact you with our reasons for rejecting soon.</p>
                 </div>
             </th:block>
 
             <th:block th:if="${model.leadPartner}">
-                <p class="govuk-body" th:unless="${model.submitted}" th:text="|We have provided the ${model.title.toLowerCase()}, which was created using information provided during project setup.|"></p>
+                <p class="govuk-body" th:unless="${model.submitted}" th:text="|The ${model.title.toLowerCase()} has been created using the information provided during project setup.|"></p>
 
                 <th:block th:unless="${model.submitted}">
                     <h2 class="govuk-heading-m">Next steps</h2>
                     <ul class="govuk-list govuk-list--number">
                         <th:block th:unless="${model.procurement}">
-                            <li>All partners can review grant offer letter and annex (if provided).</li>
-                            <li>The Project Manager must review and sign the letter.</li>
-                            <li>The signed letter is sent to Innovate UK.</li>
+                            <li>All partners can view the GOL and the annex (if provided).</li>
+                            <li>The Project Manager must review and sign the GOL.</li>
+                            <li>The finance contact must review and sign the annex when required.</li>
+                            <li>Signed documents are sent to Innovate UK.</li>
                         </th:block>
                         <th:block th:if="${model.procurement}">
                             <li>The Project Manager must review and sign the contract.</li>
                             <li>The signed contract is sent to us.</li>
                         </th:block>
                     </ul>
-                    <p class="govuk-body" th:text="|Project setup will be complete after the signed ${model.title.toLowerCase()} has been received and approved by us.|"></p>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|Project setup will be complete after the signed ${model.title.toLowerCase()} has been received and approved by us.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}" th:text="|Project setup will be complete after we have received and approved the signed documents.|"></p>
                 </th:block>
 
 
@@ -102,7 +109,8 @@
 
                 <th:block th:if="${model.additionalContractFile != null}">
                     <h2 class="govuk-heading-m">Annex</h2>
-                    <p class="govuk-body" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.title.toLowerCase()} you also agree to any conditions set out in the annex.|"></p>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application.|"></p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
@@ -158,8 +166,10 @@
 
             <th:block th:if="${!model.leadPartner}">
                 <th:block th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">
-                    <p class="govuk-body" th:text="|The ${model.title.toLowerCase()} has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.|"></p>
-                    <p class="govuk-body" th:text="|A copy of the unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The ${model.title.toLowerCase()} has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.|"></p>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|A copy of the unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The ${model.title.toLowerCase()} has been created using the information provided during project setup.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}">You may download the unsigned documents below for your records.</p>
                 </th:block>
 
                 <h2 class="govuk-heading-m" th:text="|${model.title}|"></h2>
@@ -172,7 +182,8 @@
 
                 <th:block th:if="${model.additionalContractFile}">
                     <h2 class="govuk-heading-m">Annex</h2>
-                    <p class="govuk-body" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.title.toLowerCase()} you also agree to any conditions set out in the annex.|"></p>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.title.toLowerCase()} you also agree to any conditions set out in the annex.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application.|"></p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"

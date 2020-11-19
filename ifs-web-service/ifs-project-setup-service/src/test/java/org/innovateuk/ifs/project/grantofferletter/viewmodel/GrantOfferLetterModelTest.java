@@ -393,6 +393,6 @@ public class GrantOfferLetterModelTest {
                 null;
         
         return new GrantOfferLetterModel("Grant offer letter", 123L, "Project name", leadPartner,
-                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false, false);
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false, false, false);
     }
 }

@@ -48,6 +48,7 @@ public class GrantOfferLetterModelPopulator {
                 projectManager,
                 state,
                 project.isUseDocusignForGrantOfferLetter(),
-                competition.isProcurement());
+                competition.isProcurement(),
+                competition.isKtp());
     }
 }

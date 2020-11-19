@@ -20,11 +20,12 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private GrantOfferLetterStateResource golState;
     private boolean useDocusign;
     private boolean procurement;
+    private boolean ktp;
 
     public GrantOfferLetterModel(String title, Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
                                  boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign,
-                                 boolean procurement) {
+                                 boolean procurement, boolean ktp) {
         this.title = title;
         this.projectId = projectId;
         this.projectName = projectName;
@@ -36,6 +37,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.golState = golState;
         this.useDocusign = useDocusign;
         this.procurement = procurement;
+        this.ktp = ktp;
     }
 
     @Override
@@ -90,6 +92,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isProcurement() {
         return procurement;
+    }
+
+    public boolean isKtp() {
+        return ktp;
     }
 
     public boolean isShowSubmitButton() {
