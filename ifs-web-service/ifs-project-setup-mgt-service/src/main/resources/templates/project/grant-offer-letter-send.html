@@ -64,7 +64,7 @@
         </p>
 
         <ol class="govuk-list govuk-list--number">
-            <li><th:block th:text="|Copy the whole ${model.title.toLowerCase()} and paste it into the|"></th:block> <a href="/files/GOL_template.docx" class="govuk-link">template document</a>.</li>
+            <li><th:block th:text="|Copy the ${model.title.toLowerCase()} and paste it into the relevant section of the|"></th:block> <a href="/files/GOL_template.docx" class="govuk-link">template document</a>.</li>
             <li>Edit it only if your changes have been fully approved.</li>
             <li>Use the additional information box to get details for your edits.</li>
             <li>Delete the additional information box.</li>
@@ -107,14 +107,13 @@
 
         <h2 class="govuk-heading-m">Annex</h2>
         <p class="govuk-body" th:unless="${model.additionalContractFile}">The annex contains any additional contracts
-            that were agreed upon during the application. In signing the <th:block th:text="|${model.title.toLowerCase()}|"></th:block> you also agree to any
-            conditions stated in the annex.</p>
+            that were agreed upon during the application. Any supporting documents should be uploaded with the annex.</p>
 
         <div class="upload-section">
 
             <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
                   th:object="${form}" method="post" enctype="multipart/form-data">
-                <p class="govuk-body">Any additional supporting materials should be uploaded to the annex.</p>
+                <p class="govuk-body">Annex upload</p>
                 <details th:unless="${model.isSentToProjectTeam()}"
                          class="govuk-details">
                     <summary class="govuk-details__summary">
@@ -162,8 +161,8 @@
                                        th:attr="data-required-errormessage=#{validation.project.grant.offer.letter.confirmation}"
                                        type="checkbox">
                                 <label class="govuk-label govuk-checkboxes__label" for="confirmation">
-                                    I confirm the <th:block th:text="|${model.title.toLowerCase()}|"></th:block> has been thoroughly checked and approved by another
-                                    member of my team. Once sent to the project team and signed, it becomes a legally binding document.
+                                    I confirm the <th:block th:text="|${model.title.toLowerCase()}|"></th:block> and any annex has been thoroughly checked and approved by another
+                                    member of my team. I understand that these become legally binding documents once they have been received and signed by the project team.
                                 </label>
                             </div>
                         </div>
@@ -196,7 +195,7 @@
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend id="decisionGOL" class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-6">
-                            <h2 class="govuk-fieldset__heading" th:text="|Please confirm that these documents meet the requirements for the ${model.title.toLowerCase()}.|"></h2>
+                            <h2 class="govuk-fieldset__heading">Approve or reject the signed documents</h2>
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
