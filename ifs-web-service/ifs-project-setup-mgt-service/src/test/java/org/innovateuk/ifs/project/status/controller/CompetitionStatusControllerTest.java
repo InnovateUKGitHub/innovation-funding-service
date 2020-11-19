@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -86,7 +85,6 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)));
-
 
         verify(competitionPostSubmissionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
         verify(competitionPostSubmissionRestService, never()).countPendingSpendProfiles(competitionId);
