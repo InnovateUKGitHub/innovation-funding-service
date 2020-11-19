@@ -67,7 +67,6 @@ public class CompetitionStatusController {
 
         CompetitionStatusViewModel viewModel = competitionStatusViewModelPopulator.populate(loggedInUser, competitionId, applicationSearchString, page - 1);
         model.addAttribute(MODEL, viewModel);
-        model.addAttribute("competitionHasSpendProfile", viewModel.getColumns().contains(ProjectSetupStage.SPEND_PROFILE));
 
         return "project/competition-status-all";
     }
