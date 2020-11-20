@@ -1,6 +1,6 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear ${notificationTarget.name},
+Dear ${notificationTarget.name}
 
 You can now view the feedback for this application:
 ${applicationId}: ${applicationName}
