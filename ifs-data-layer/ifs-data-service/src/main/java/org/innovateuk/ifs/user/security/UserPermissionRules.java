@@ -161,7 +161,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "Comp admins and project finance can view assessors")
-    public boolean compAdminAndProjectFinanceCanViewAssessors(UserPageResource usersToView,  UserResource user) {
+    public boolean compAdminAndProjectFinanceCanViewAssessors(UserPageResource usersToView, UserResource user) {
         return usersToView.getContent().stream().allMatch(u -> u.hasAnyRoles(ASSESSOR_ROLES)) &&
                 user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -307,7 +307,7 @@ public class UserPermissionRules {
         return userToUpdate.getId().equals(user.getId());
     }
 
-   @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
     public boolean isGrantingMonitoringOfficerRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
     }
@@ -322,7 +322,7 @@ public class UserPermissionRules {
         return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(SUPPORTER);
     }
 
-   @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user and " +
+    @PermissionRule(value = "GRANT_ROLE", description = "Users such as assessor, stakeholder, monitoring_officer, live_projects_user and " +
             "supporter can request applicant role")
     public boolean isMultipleRoleDashboardUsersCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
         return user.hasAnyRoles(Role.multiDashboardRoles());
@@ -379,8 +379,8 @@ public class UserPermissionRules {
         competitions.addAll(simpleMap(userApplications, Application::getCompetition));
         competitions.addAll(
                 userProjects.stream()
-                    .map(project -> project.getApplication().getCompetition())
-                    .collect(Collectors.toList())
+                        .map(project -> project.getApplication().getCompetition())
+                        .collect(Collectors.toList())
         );
         return competitions;
     }

@@ -80,6 +80,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
         return "registration/organisation/select-organisation";
     }
+
     @PreAuthorize("hasPermission(#user,'APPLICATION_CREATION')")
     @PostMapping
     public String selectOrganisation(HttpServletRequest request,
