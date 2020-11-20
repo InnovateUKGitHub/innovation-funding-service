@@ -13,15 +13,18 @@ public class FinanceContactViewModel {
     private final long projectId;
     private final String projectName;
     private final boolean loanCompetition;
+    private final boolean ktpCompetition;
 
     public FinanceContactViewModel(List<ProjectUserResource> orgUsers,
                                    long projectId,
                                    String projectName,
-                                   boolean loanCompetition) {
+                                   boolean loanCompetition,
+                                   boolean ktpCompetition) {
         this.orgUsers = orgUsers;
         this.projectId = projectId;
         this.projectName = projectName;
         this.loanCompetition = loanCompetition;
+        this.ktpCompetition = ktpCompetition;
     }
 
     public List<ProjectUserResource> getOrgUsers() {
@@ -38,5 +41,9 @@ public class FinanceContactViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }

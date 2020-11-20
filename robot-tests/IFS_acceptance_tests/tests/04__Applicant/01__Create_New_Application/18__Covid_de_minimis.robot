@@ -111,7 +111,7 @@ External project finance can edit funding sought
 External project finance can generate spend profile and complete PS
     [Documentation]  IFS-7357
     Given the user clicks the button/link    css = .generate-spend-profile-main-button
-    When the user clicks the button/link    css = #generate-spend-profile-modal-button
+    When the user clicks the button/link     css = #generate-spend-profile-modal-button
     Then the internal user can complete PS
 
 Internal user is able to approve Spend profile and generates the GOL
@@ -195,7 +195,7 @@ the project finance approves all steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Back to project setup
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}

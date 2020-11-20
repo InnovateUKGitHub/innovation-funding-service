@@ -248,7 +248,7 @@ Applicant not able to update project location after GOL generated
     When the user enters text to a text field              css = #postcode  AB2 1AB
     And the user clicks the button/link                    css = button[type = "submit"]
     Then the user should see a field and summary error     You cannot edit the organisation's project location because we have already generated the grant offer letter.
-    And the user clicks the button/link                    link = Project details
+    And the user clicks the button/link                    link = Back to project details
 
 Project finance cannot access the GOL before it is sent by PM
     [Documentation]    INFUND-7361
