@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.form.LegacyMonitoringOfficerForm;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -68,14 +68,14 @@ public class LegacyMonitoringOfficerController {
     }
 
     private String viewMonitoringOfficer(Model model, ProjectResource project, LegacyMonitoringOfficerForm form, UserResource user) {
-        LegacyMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(project, user);
+        MonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(project, user);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/monitoring-officer";
     }
 
-    private LegacyMonitoringOfficerViewModel populateMonitoringOfficerViewModel(ProjectResource project, UserResource user) {
+    private MonitoringOfficerViewModel populateMonitoringOfficerViewModel(ProjectResource project, UserResource user) {
         boolean editable = isInternalAdmin(user) && project.getProjectState().isActive();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(project.getCompetition()).getSuccess();
@@ -87,8 +87,15 @@ public class LegacyMonitoringOfficerController {
 
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
-        return new LegacyMonitoringOfficerViewModel(project, innovationAreas, projectManagerName,
-                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, editable);
+        return new MonitoringOfficerViewModel(
+                project,
+                innovationAreas,
+                projectManagerName,
+                partnerOrganisationNames,
+                leadOrganisation.getName(),
+                competitionSummary,
+                editable,
+                competition.isKtp());
     }
 
     private String getProjectManagerName(ProjectResource project) {
