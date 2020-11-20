@@ -22,7 +22,7 @@ public class VirtualAssistantAuthRestClient {
 
     @Autowired
     @Qualifier(AZURE_CHAT_BOT_REST_TEMPLATE_QUALIFIER)
-    private RestTemplate restTemplate;
+    private RestTemplate azureChatBotRestTemplate;
 
     @Value("${ifs.web.virtualAssistant.tokenExchangeUrl}")
     private String tokenExchangeUrl;
@@ -37,7 +37,7 @@ public class VirtualAssistantAuthRestClient {
         LOG.debug(botId);
         LOG.debug(tokenExchangeUrl);
         try {
-            ResponseEntity<String> response = restTemplate.exchange(tokenExchangeUrl,
+            ResponseEntity<String> response = azureChatBotRestTemplate.exchange(tokenExchangeUrl,
                     HttpMethod.GET, new HttpEntity<>(authHeader()), String.class);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 LOG.error("Status " + response.getStatusCode());

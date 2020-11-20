@@ -3,6 +3,7 @@ package org.innovateuk.ifs.virtualassistant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.innovateuk.ifs.virtualassistant.VirtualAssistantAuthRestClient.AZURE_CHAT_BOT_REST_TEMPLATE_QUALIFIER;
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantAuthRestClientTest.*;
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantController.THYMELEAF_MAPPING;
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantModel.NO_REMOTE_SERVER_MSG;
@@ -40,12 +42,13 @@ public class VirtualAssistantComponentTest {
     private VirtualAssistantController virtualAssistantController;
 
     @MockBean
-    private RestTemplate restTemplate;
+    @Qualifier(AZURE_CHAT_BOT_REST_TEMPLATE_QUALIFIER)
+    private RestTemplate azureChatBotRestTemplate;
 
     @Test
     public void testObtainAuthToken() {
         Model model = new ExtendedModelMap();
-        when(restTemplate.exchange(TEST_URL, HttpMethod.GET,
+        when(azureChatBotRestTemplate.exchange(TEST_URL, HttpMethod.GET,
             new HttpEntity<>(virtualAssistantAuthRestClient.authHeader()), String.class))
                 .thenReturn(new ResponseEntity<>(FAKE_AUTH_STRING_JSON, HttpStatus.OK));
 
@@ -56,7 +59,7 @@ public class VirtualAssistantComponentTest {
     @Test
     public void testObtainAuthTokenFailedAuth() {
         Model model = new ExtendedModelMap();
-        when(restTemplate.exchange(TEST_URL, HttpMethod.GET,
+        when(azureChatBotRestTemplate.exchange(TEST_URL, HttpMethod.GET,
             new HttpEntity<>(virtualAssistantAuthRestClient.authHeader()), String.class))
                 .thenReturn(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
 
@@ -68,7 +71,7 @@ public class VirtualAssistantComponentTest {
     @Test
     public void testObtainAuthTokenClientError() {
         Model model = new ExtendedModelMap();
-        when(restTemplate.exchange(TEST_URL, HttpMethod.GET,
+        when(azureChatBotRestTemplate.exchange(TEST_URL, HttpMethod.GET,
             new HttpEntity<>(virtualAssistantAuthRestClient.authHeader()), String.class))
                 .thenThrow(new HttpClientErrorException(HttpStatus.BAD_GATEWAY));
 
