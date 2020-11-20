@@ -10,8 +10,7 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-        var botSessionToken = /*[[${virtualAssistantClientToken}]]*/ 'unset';
-        var botId = /*[[${virtualAssistantClientToken}]]*/ 'unset';
+        var virtualAssistantModel = /*[[${model}]]*/ 'unset';
     /*]]>*/
 </script>
 
@@ -21,12 +20,12 @@
         name: 'User'
     };
     var botConnection = new BotChat.DirectLine({
-        token: botSessionToken,
+        token: virtualAssistantModel.botSessionToken,
     });
     BotChat.App({
         user: user,
         botConnection: botConnection,
-        bot: { id: botId, name: 'InnovateChatbot' },
+        bot: { id: virtualAssistantModel.botId, name: 'InnovateChatbot' },
         resize: 'detect'
     }, document.getElementById("bot"));
     botConnection

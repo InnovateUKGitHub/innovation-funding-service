@@ -19,8 +19,9 @@ import org.springframework.web.client.RestTemplate;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantAuthRestClientTest.*;
-import static org.innovateuk.ifs.virtualassistant.VirtualAssistantController.*;
+import static org.innovateuk.ifs.virtualassistant.VirtualAssistantController.THYMELEAF_MAPPING;
 import static org.innovateuk.ifs.virtualassistant.VirtualAssistantModel.NO_REMOTE_SERVER_MSG;
+import static org.innovateuk.ifs.virtualassistant.VirtualAssistantTestHelper.assertVirtualAssistantModel;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,13 +48,9 @@ public class VirtualAssistantComponentTest {
         when(restTemplate.exchange(TEST_URL, HttpMethod.GET,
             new HttpEntity<>(virtualAssistantAuthRestClient.authHeader()), String.class))
                 .thenReturn(new ResponseEntity<>(FAKE_AUTH_STRING_JSON, HttpStatus.OK));
-        String thymeleafMapping = virtualAssistantController.virtualAssistant(model);
 
-        assertThat(thymeleafMapping, equalTo(THYMELEAF_MAPPING));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_BOT_ID), equalTo(TEST_BOT_ID));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_CLIENT_TOKEN), equalTo(FAKE_AUTH_STRING));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_ERROR_MESSAGE), equalTo(""));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_SERVER_AVAILABLE), equalTo(true));
+        assertThat(virtualAssistantController.virtualAssistant(model), equalTo(THYMELEAF_MAPPING));
+        assertVirtualAssistantModel(model, TEST_BOT_ID, FAKE_AUTH_STRING, "", true);
     }
 
     @Test
@@ -62,13 +59,10 @@ public class VirtualAssistantComponentTest {
         when(restTemplate.exchange(TEST_URL, HttpMethod.GET,
             new HttpEntity<>(virtualAssistantAuthRestClient.authHeader()), String.class))
                 .thenReturn(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
-        String thymeleafMapping = virtualAssistantController.virtualAssistant(model);
 
-        assertThat(thymeleafMapping, equalTo(THYMELEAF_MAPPING));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_BOT_ID), equalTo(NO_REMOTE_SERVER_MSG));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_CLIENT_TOKEN), equalTo(NO_REMOTE_SERVER_MSG));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_ERROR_MESSAGE), equalTo(HttpStatus.UNAUTHORIZED.toString()));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_SERVER_AVAILABLE), equalTo(false));
+        assertThat(virtualAssistantController.virtualAssistant(model), equalTo(THYMELEAF_MAPPING));
+        assertVirtualAssistantModel(model, NO_REMOTE_SERVER_MSG,
+                NO_REMOTE_SERVER_MSG, HttpStatus.UNAUTHORIZED.toString(), false);
     }
 
     @Test
@@ -77,14 +71,10 @@ public class VirtualAssistantComponentTest {
         when(restTemplate.exchange(TEST_URL, HttpMethod.GET,
             new HttpEntity<>(virtualAssistantAuthRestClient.authHeader()), String.class))
                 .thenThrow(new HttpClientErrorException(HttpStatus.BAD_GATEWAY));
-        String thymeleafMapping = virtualAssistantController.virtualAssistant(model);
 
-        assertThat(thymeleafMapping, equalTo(THYMELEAF_MAPPING));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_BOT_ID), equalTo(NO_REMOTE_SERVER_MSG));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_CLIENT_TOKEN), equalTo(NO_REMOTE_SERVER_MSG));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_ERROR_MESSAGE),
-                equalTo(HttpStatus.BAD_GATEWAY.value() + " " + HttpStatus.BAD_GATEWAY.name()));
-        assertThat(model.asMap().get(VIRTUAL_ASSISTANT_SERVER_AVAILABLE), equalTo(false));
+        assertThat(virtualAssistantController.virtualAssistant(model), equalTo(THYMELEAF_MAPPING));
+        assertVirtualAssistantModel(model, NO_REMOTE_SERVER_MSG, NO_REMOTE_SERVER_MSG,
+                HttpStatus.BAD_GATEWAY.value() + " " + HttpStatus.BAD_GATEWAY.name(), false);
     }
 
 }

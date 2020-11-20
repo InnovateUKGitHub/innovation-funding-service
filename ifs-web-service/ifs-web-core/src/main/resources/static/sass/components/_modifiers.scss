@@ -369,12 +369,12 @@ hr,
   }
 }
 
-/* virtual assistant requires javascript so only display the option if it is present */
-.virtual-assistant {
+/* Only display if javascript is present via css */
+.hide-without-javascript {
   display:none;
 }
 .js-enabled {
-  .virtual-assistant {
+  .hide-without-javascript {
     display:block;
   }
 }

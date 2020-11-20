@@ -15,22 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class VirtualAssistantController {
 
     protected static final String THYMELEAF_MAPPING = "virtual-assistant";
-    protected static final String REQUEST_MAPPING = "/virtual-assistant";
-    protected static final String VIRTUAL_ASSISTANT_BOT_ID = "virtualAssistantBotId";
-    protected static final String VIRTUAL_ASSISTANT_CLIENT_TOKEN = "virtualAssistantClientToken";
-    protected static final String VIRTUAL_ASSISTANT_ERROR_MESSAGE = "virtualAssistantErrorMessage";
-    protected static final String VIRTUAL_ASSISTANT_SERVER_AVAILABLE = "virtualAssistantServerAvailable";
+    protected static final String REQUEST_MAPPING = "/info/contact/virtual-assistant";
+    protected static final String MODEL = "model";
 
     @Autowired
     private VirtualAssistantAuthRestClient virtualAssistantAuthRestClient;
 
     @GetMapping
     public String virtualAssistant(Model model) {
-        VirtualAssistantModel virtualAssistantModel = virtualAssistantAuthRestClient.obtainVirtualAssistantAuthDetails();
-        model.addAttribute(VIRTUAL_ASSISTANT_BOT_ID, virtualAssistantModel.getBotId());
-        model.addAttribute(VIRTUAL_ASSISTANT_CLIENT_TOKEN, virtualAssistantModel.getClientToken());
-        model.addAttribute(VIRTUAL_ASSISTANT_ERROR_MESSAGE, virtualAssistantModel.getErrorMessage());
-        model.addAttribute(VIRTUAL_ASSISTANT_SERVER_AVAILABLE, virtualAssistantModel.isServerAvailable());
+        model.addAttribute(MODEL, virtualAssistantAuthRestClient.obtainVirtualAssistantAuthDetails());
         return THYMELEAF_MAPPING;
     }
 
