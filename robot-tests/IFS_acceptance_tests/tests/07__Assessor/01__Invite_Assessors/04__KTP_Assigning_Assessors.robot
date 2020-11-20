@@ -22,7 +22,6 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-#${ktpAssessmentCompetitionName}             KTP assessment
 ${ktpAssessmentCompetitionID}               ${competition_ids['${ktpAssessmentCompetitionName}']}
 ${ktpAssessmentApplicationName}             KTP assessment application
 ${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
@@ -327,10 +326,6 @@ KTA can see application unsuccessful banner and feedback information after the f
     Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
     And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
 
-
-
-
-
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -459,6 +454,3 @@ MO navigates to application overview page
     the user refreshes until element appears on page     link = ${applicationName}
     the user clicks the button/link                      link = ${applicationName}
     the user clicks the button/link                      link = view application overview
-
-
-
