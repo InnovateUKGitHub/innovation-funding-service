@@ -9,34 +9,34 @@
 <div id="bot"></div>
 
 <script th:inline="javascript">
-    /*<![CDATA[*/
-        var virtualAssistantModel = /*[[${model}]]*/ 'unset';
-    /*]]>*/
-</script>
+    (function() {
+        /*<![CDATA[*/
+            var virtualAssistantModel = /*[[${model}]]*/ 'unset';
+        /*]]>*/
 
-<script>
-    var user = {
-        id: 'user-id',
-        name: 'User'
-    };
-    var botConnection = new BotChat.DirectLine({
-        token: virtualAssistantModel.clientToken,
-    });
-    BotChat.App({
-        user: user,
-        botConnection: botConnection,
-        bot: { id: virtualAssistantModel.botId, name: 'InnovateChatbot' },
-        resize: 'detect'
-    }, document.getElementById("bot"));
-    botConnection
-        .postActivity({
-            from: user,
-            type : 'message',
-            name: 'requestWelcomeDialog',
-            text: 'Hello!',
-            value: 'WelcomeEvent'
-        }).subscribe(function (id) {console.log('"trigger requestWelcomeDialog" sent');
-    });
+        var user = {
+            id: 'user-id',
+            name: 'User'
+        };
+        var botConnection = new BotChat.DirectLine({
+            token: virtualAssistantModel.clientToken,
+        });
+        BotChat.App({
+            user: user,
+            botConnection: botConnection,
+            bot: { id: virtualAssistantModel.botId, name: 'InnovateChatbot' },
+            resize: 'detect'
+        }, document.getElementById("bot"));
+        botConnection
+            .postActivity({
+                from: user,
+                type : 'message',
+                name: 'requestWelcomeDialog',
+                text: 'Hello!',
+                value: 'WelcomeEvent'
+            }).subscribe(function (id) {console.log('"trigger requestWelcomeDialog" sent');
+        });
+    })()
 </script>
 
 </body>
