@@ -253,8 +253,6 @@ the applicant is able to see the rejected GOL
     the user clicks the button/link           link = Grant offer letter
     the user should see the element           jQuery = .fail-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
 
-
-
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
     the user clicks the button/link         link = Correspondence address

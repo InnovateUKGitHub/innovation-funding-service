@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -15,7 +16,6 @@ import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -78,6 +78,7 @@ import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.ne
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -112,7 +113,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private SpendProfileRepository spendProfileRepository;
-    
+
     @Mock
     private ProjectFinanceService projectFinanceService;
 
@@ -196,7 +197,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
@@ -281,7 +282,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertFalse(organisation3Results.isAwaitingResponse());
     }
 
-    private <T> boolean organisationsOrderedWithLeadOnTopAndPartnersAlphabetically(List<PartnerOrganisation> beforeOrdered, List<String> organisationsNames) {
+    private boolean organisationsOrderedWithLeadOnTopAndPartnersAlphabetically(List<PartnerOrganisation> beforeOrdered, List<String> organisationsNames) {
         PartnerOrganisation leadPartner = simpleFindFirst(beforeOrdered, PartnerOrganisation::isLeadOrganisation).get();
         List<PartnerOrganisation> orderedPartnerOrganisations = new PrioritySorting<>(beforeOrdered, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         return organisationsNames.equals(simpleMap(orderedPartnerOrganisations, po -> po.getOrganisation().getName()));
@@ -329,7 +330,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId).withName("Organisation1").build();
 
         Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
         projectFinances.forEach((type, category) -> category.calculateTotal());
@@ -365,7 +366,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisationId)).thenReturn(Optional.of(organisation));
@@ -384,7 +385,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
@@ -405,7 +406,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
@@ -426,7 +427,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, ZonedDateTime.now(), null, null);
         List<QueryResource> queries = Collections.singletonList(fakeQuery);
@@ -446,7 +447,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
         List<QueryResource> queries = Collections.emptyList();
 
@@ -466,7 +467,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
         when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
@@ -485,7 +486,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation organisation = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+                withOrganisationType(BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
 
         when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
@@ -504,7 +505,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -571,7 +572,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -638,7 +639,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(BUSINESS, RESEARCH, BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -1065,9 +1066,36 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
+    public void getViabilityForKtpAsKB() {
+
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.UNSET, null, null, true, true);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertGetViabilityResults(result.getSuccess(), ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.UNSET,
+                null, null, null);
+    }
+
+    @Test
+    public void getViabilityForKtpAsNonKBOrg() {
+
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, null, null, true, false);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+        assertGetViabilityResults(result.getSuccess(), ViabilityState.APPROVED, ViabilityRagStatus.GREEN,
+                null, null, null);
+    }
+
+
+    @Test
     public void getViabilityWhenViabilityStateIsReviewInDB() {
 
-        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null);
+        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1083,7 +1111,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getViabilityWhenViabilityStateIsNotApplicableInDB() {
 
-        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null);
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1107,7 +1135,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 .withLastName("Bowman")
                 .build();
 
-        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now());
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now(), false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
@@ -1121,9 +1149,17 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     private void setUpGetViabilityMocking(ViabilityState viabilityStateInDB, ViabilityRagStatus viabilityRagStatusInDB,
-                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate) {
+                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate, boolean isKtp, boolean asKB) {
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        Competition competition = newCompetition().withFundingType(isKtp ? FundingType.KTP : FundingType.LOAN).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(asKB ? KNOWLEDGE_BASE : BUSINESS)
+                        .build())
+                .build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB, viabilityStateInDB);
@@ -1170,7 +1206,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getEligibilityWhenEligibilityIsReviewInDB() {
 
-        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null);
+        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1187,7 +1223,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void getEligibilityWhenEligibilityIsNotApplicableInDB() {
 
-        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null);
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null, false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1212,7 +1248,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 .withLastName("Bowman")
                 .build();
 
-        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now(), false, false);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
@@ -1226,10 +1262,43 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
-    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
-                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate) {
+    @Test
+    public void getEligibilityForKtpAsNonKB() {
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET, null, null, true, false);
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertGetEligibilityResults(result.getSuccess(), EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.UNSET,
+                null, null, null);
+    }
+
+    @Test
+    public void getEligibilityForKtpAsKB() {
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, null, null, true, true);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        assertGetEligibilityResults(result.getSuccess(), EligibilityState.APPROVED, EligibilityRagStatus.GREEN,
+                null, null, null);
+    }
+
+    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
+                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate, boolean isKtp, boolean asKB) {
+        Competition competition = newCompetition().withFundingType(isKtp ? FundingType.KTP : FundingType.LOAN).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(asKB ? KNOWLEDGE_BASE : BUSINESS)
+                        .build())
+                .build();
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         EligibilityProcess eligibilityProcess = new EligibilityProcess(eligibilityApprovalUser, partnerOrganisationInDB, eligibilityStateInDB);
