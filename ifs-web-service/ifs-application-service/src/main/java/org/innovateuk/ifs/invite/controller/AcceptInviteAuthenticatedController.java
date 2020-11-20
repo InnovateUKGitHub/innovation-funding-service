@@ -81,9 +81,9 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
     public String confirmExistingUserAndOrganisation(HttpServletResponse response,
-                                  HttpServletRequest request,
-                                  UserResource loggedInUser,
-                                  Model model) {
+                                                     HttpServletRequest request,
+                                                     UserResource loggedInUser,
+                                                     Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
                     String validateView = validate(invite, response, loggedInUser, model);
@@ -103,12 +103,13 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();
     }
+
     @PreAuthorize("hasPermission(#loggedInUser,'APPLICATION_CREATION')")
     @GetMapping("/accept-invite-authenticated/confirm-new-organisation")
     public String existingUserAndNewOrganisation(HttpServletResponse response,
-                                    HttpServletRequest request,
-                                    UserResource loggedInUser,
-                                    Model model) {
+                                                 HttpServletRequest request,
+                                                 UserResource loggedInUser,
+                                                 Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
                     String validateView = validate(invite, response, loggedInUser, model);
