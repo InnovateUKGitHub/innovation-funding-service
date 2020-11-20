@@ -4,6 +4,7 @@ import org.innovateuk.ifs.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +18,10 @@ public class VirtualAssistantAuthRestClient {
 
     private final Logger LOG = LoggerFactory.getLogger(VirtualAssistantAuthRestClient.class);
     private static final String AUTH_BOT_CONNECTOR_HEADER = "BotConnector ";
+    public static final String AZURE_CHAT_BOT_REST_TEMPLATE_QUALIFIER = "azureChatBotRestTemplate";
 
     @Autowired
+    @Qualifier(AZURE_CHAT_BOT_REST_TEMPLATE_QUALIFIER)
     private RestTemplate restTemplate;
 
     @Value("${ifs.web.virtualAssistant.tokenExchangeUrl}")
