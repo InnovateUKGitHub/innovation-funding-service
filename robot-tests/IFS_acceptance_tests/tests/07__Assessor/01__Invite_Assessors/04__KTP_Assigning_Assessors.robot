@@ -11,6 +11,8 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8617  Assessment overview - missing print link and spacing of score assessment
 ...
+...              IFS-8548  KTP project setup banners
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -20,7 +22,7 @@ Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${ktpAssessmentCompetitionName}             KTP assessment
+#${ktpAssessmentCompetitionName}             KTP assessment
 ${ktpAssessmentCompetitionID}               ${competition_ids['${ktpAssessmentCompetitionName}']}
 ${ktpAssessmentApplicationName}             KTP assessment application
 ${ktpAssessmentApplicationID}               ${application_ids['${ktpAssessmentApplicationName}']}
@@ -38,6 +40,7 @@ ${nonKTPOverviewFinanceApplicationName}     Non KTP Application
 ${nonKTPOverviewFinanceApplicationID}       ${application_ids['${nonKTPOverviewFinanceApplicationName}']}
 ${ktaEmail}                                 Amy.Colin@ktn-uk.test
 ${existingKTAEmail}                         john.fenton@ktn-uk.test
+${monitoringOfficerEmail}                   hermen.mermen@ktn-uk.test
 
 *** Test Cases ***
 Comp admin can find the registered KTA in system
@@ -294,6 +297,40 @@ Assessor can see partner organisation finances for non ktp compettition when all
     And the user should see the element       link = Your project location
     And the user should see the element       link = Your funding
 
+KTA can see application successfull banner and feedback information with date on making the application successful, before the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS Admin makes the application decision           ${ktpAssessmentCompetitionName}  Successful
+    And IFS Admin notifies all applicants
+    When MO navigates to application overview page           ${ktpAssessmentApplicationName}
+    Then the user should see the element                     jQuery = h2:contains("This application was successful.")
+    And the user should see the element                      jQuery = p:contains("All application feedback will be available here from ${ktpAssessmentCompetitionReleaseFeedbackDayMonthYear}.")
+
+KTA can see application successful banner and feedback information after the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS admin releases feedback to the applicant    ${ktpAssessmentCompetitionName}
+    When MO navigates to application overview page        ${ktpAssessmentApplicationName}
+    Then the user should see the element                  jQuery = h2:contains("This application was successful.")
+    And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
+
+KTA can see application unsuccessful banner and feedback information with date on making the application unsuccessful, before the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS Admin makes the application decision        ${ktpDetailsFinanceCompetitionName}  Unsuccessful
+    And IFS Admin notifies all applicants
+    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}
+    Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
+    And the user should see the element                   jQuery = p:contains("All application feedback will be available here from ${ktpDetailsFinanceCompetitionReleaseFeedbackDayMonthYear}.")
+
+KTA can see application unsuccessful banner and feedback information after the feedback is released
+    [Documentation]  IFS-8548
+    Given IFS admin releases feedback to the applicant    ${ktpDetailsFinanceCompetitionName}
+    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}
+    Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
+    And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
+
+
+
+
+
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
@@ -391,3 +428,37 @@ Invite KTA to assess the competition
     the user clicks the button/link                          id = notify-assessors-changes-since-last-notify-button
     KTA accepts to assess the KTP application                ${competitionName}    ${email}  ${short_password}
     the user clicks the button/link                          link = ${applicationTitle}
+
+IFS Admin makes the application decision
+    [Arguments]   ${competitionName}  ${decision}
+    log in as a different user          &{ifs_admin_user_credentials}
+    the user clicks the button/link     link = ${competitionName}
+    the user clicks the button/link     id = close-assessment-button
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     id = select-all-1
+    the user clicks the button/link     jQuery = button:contains("${decision}")
+    the user clicks the button/link     link = Competition
+
+IFS Admin notifies all applicants
+    the user clicks the button/link     link = Manage funding notifications
+    the user clicks the button/link     id = select-all-1
+    the user clicks the button/link     id = write-and-send-email
+    the user clicks the button/link     id = send-email-to-all-applicants
+    the user clicks the button/link     id = send-email-to-all-applicants-button
+
+IFS admin releases feedback to the applicant
+    [Arguments]  ${competitionName}
+    log in as a different user          &{ifs_admin_user_credentials}
+    the user clicks the button/link     link = ${competitionName}
+    the user clicks the button/link     id = release-feedback-button
+
+MO navigates to application overview page
+    [Arguments]  ${applicationName}
+    log in as a different user                           ${monitoringOfficerEmail}  ${short_password}
+    the user navigates to the page                       ${server}/project-setup/monitoring-officer/dashboard
+    the user refreshes until element appears on page     link = ${applicationName}
+    the user clicks the button/link                      link = ${applicationName}
+    the user clicks the button/link                      link = view application overview
+
+
+
