@@ -10,7 +10,7 @@ import java.util.List;
 
 import static java.util.Comparator.comparingLong;
 
-public class  OrganisationResource {
+public class OrganisationResource {
     private Long id;
     private String name;
     private String companiesHouseNumber;

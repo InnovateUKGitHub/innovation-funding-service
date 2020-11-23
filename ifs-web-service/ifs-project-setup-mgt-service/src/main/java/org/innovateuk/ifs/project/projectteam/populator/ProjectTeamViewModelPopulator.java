@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectteam.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
@@ -49,6 +50,8 @@ public class ProjectTeamViewModelPopulator {
 
         ProjectResource project = projectService.getById(projectId);
 
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+
         List<ProjectUserResource> projectUsers = projectService.getDisplayProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -86,7 +89,8 @@ public class ProjectTeamViewModelPopulator {
                 true,
                 !project.getProjectState().isActive(),
                 userCanAddAndRemoveOrganisations,
-                canInvitePartnerOrganisation(project, loggedInUser));
+                canInvitePartnerOrganisation(project, loggedInUser),
+                competition.isKtp());
     }
 
     private List<ProjectTeamOrganisationViewModel> partnerOrganisationInvites(long projectId, boolean userCanAddAndRemoveOrganisations) {
