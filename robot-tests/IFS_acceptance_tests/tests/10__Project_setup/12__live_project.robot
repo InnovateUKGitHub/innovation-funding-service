@@ -244,7 +244,7 @@ MO sould see project tab on dashboard once GOL is approved
 
 Live Project User is able to create a new application
     [Documentation]  IFS-8707
-    Given the internal user approve the GOL                        47
+    Given the internal user approve the GOL                        50
     When Log in as a different user                                &{leadApplicantCredentials}
     And the user select the competition and starts application     KTP new competition
     And the user selects a knowledge based organisation            Reading   The University of Reading
