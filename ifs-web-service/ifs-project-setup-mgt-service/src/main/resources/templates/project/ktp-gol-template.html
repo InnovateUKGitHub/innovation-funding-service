@@ -26,6 +26,9 @@
         .letter-logo {
             margin: 0 auto;
         }
+        .letter-page-break {
+            page-break-before: always
+        }
         .letter-size,
         .letter-size * {
             font-family: "Arial", "Helvetica", sans-serif;
@@ -122,34 +125,31 @@
 
     <div class="letter-size">
         <p>
-            <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" /><br>
+            For the attention of <th:block th:text="${model.projectManagerFirstName}" /> <th:block th:text="${model.projectManagerLastName}" /><br>
             <th:block th:text="${model.leadOrgName}" /><br>
             <th:block th:each="addressLine : ${model.projectAddress}">
                 <th:block th:text="${addressLine}" /><br th:unless="${addressLine == ''}" />
             </th:block>
         </p>
         <p>
-            <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
-            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
+            <strong>Ref No</strong> <th:block th:text="${model.applicationId}" /><br>
         </p>
         <p>
             Dear <th:block th:text="${model.projectManagerFirstName}" />,
         </p>
         <p>
-            <strong>Grant offer letter</strong>
+            <strong>KTP between <th:block th:text="${model.leadOrgName}" /> and <th:block th:text="${model.partnerOrgName}" /></strong>
         </p>
         <p>
-            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" />
-            <br>
-            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
+            By accepting this award, you agree to be bound by the terms and conditions of this grant offer letter.
         </p>
         <p>
-            We are pleased to confirm your award. It is subject to the terms and conditions you agreed to by submitting your application in the Innovation Funding Service.
-            This award is given under Article 25/26, De Minimis or a No Aid basis.
-            <br/> By accepting your award you agree to these additional terms and conditions:
+            To confirm your acceptance, you must return a completed and signed Annex 1. Your award will be withdrawn if you do not confirm your acceptance.
         </p>
-
+        <p>
+            Schedule 1 details your individual award allocations. These are final and cannot be negotiated.  Any costs incurred before the Associate commences work will not be eligible for grant funding.
+        </p>
+        <!--/* TODO do we want the notes?
         <table th:if="${not #lists.isEmpty(model.notes)}">
             <tr>
                 <td style="padding:10px; border: 10px solid #c0c0c0;">
@@ -167,13 +167,7 @@
                 </td>
             </tr>
         </table>
-
-        <h2 class="heading-medium">Accepting your award </h2>
-        <p>To confirm you wish to accept, please complete and sign Annex 1 attached to this letter, then return it through the Innovation Funding Service.</p>
-        <p>Acceptance includes confirming your project start and end dates. Once your acceptance is approved these can only be changed by submitting a request through your Monitoring Officer.</p>
-        <p>Annex 1 also details your individual award allocations. These are final and cannot be negotiated. This grant offer letter provides the maximum project costs which could be claimed under this award. All participants must make sure that project costs are incremental and directly attributable to the project. In signing this letter you confirm that they will provide evidence to support the eligibility of these costs with each claim made.</p>
-        <p>Your award will be withdrawn if you do not confirm your start date within a calendar month of this letter. Any costs incurred before that start date will not be eligible for grant funding.</p>
-        <p>We wish you every success with your project.</p>
+        */-->
 
         <p>Yours sincerely</p>
         <p>Barry Shaw<br>
@@ -182,56 +176,383 @@
                 Innovate UK<br>
                 part of UK Research and Innovation
             </strong>
-
         </p>
-        <h2 class="heading-medium">Annex 1: acceptance of award</h2>
-        <p>
-            <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
-            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
-            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
-            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
-        </p>
+        <div class="letter-page-break"></div>
 
-        <p>I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. </p>
-        <p>For the purposes of the offer:</p>
-        <p >
-            (i)	Project start date	______________________________________________ <br><br>
-            (ii)	Project end date	______________________________________________ <br>
-        </p>
+        <h2 class="heading-medium">Terms and conditions of a knowledge transfer partnership (KTP) grant award</h2>
+        <strong>Ref No</strong> <th:block th:text="${model.applicationId}" /><br>
+        <strong>Knowledge transfer partnership between <th:block th:text="${model.leadOrgName}" /> and <th:block th:text="${model.partnerOrgName}" /></strong>
+        <p>Offer of grant funded by</p>
+        <div class="terms-and-conditions letter-size letter-size--terms">
 
-        <p>Please note: to make administration simpler, the project start date must be the first day of a calendar month. Please also make sure the project end date falls on the last day of a calendar month, by selecting an appropriate project length.</p>
+            <ol class="govuk-list ifs-list--number">
+                <li>
+                    I am pleased to inform you that Innovate UK, part of UK Research and Innovation (“Innovate UK”) acting on behalf of government funding organisations, is prepared to offer <th:block th:text="${model.leadOrgName}" />  ("the Knowledge Base Partner") a grant not exceeding [£Value30 (fEC) or £Value33 (non-fEC)] under Section 96 of the Higher Education and Research Act 2017. This is towards the Knowledge Base Partner’s costs of undertaking with <th:block th:text="${model.partnerOrgName}" /> (“the Business”) a Knowledge Transfer Partnership (“the Partnership”) in accordance with the application submitted to Innovate UK. This award is subject to the terms and conditions of this grant offer letter (GOL) and its Schedules.
+                </li>
+                <li>
+                    The funding organisation(s) that have agreed to fund the grant to the Partnership at the time of issuing this GOL are identified above.  During the Partnership, some or all of the funding may be reallocated to other funding organisations.
+                    At the time of preparing any publicity material, you should always check which funding organisations are currently funding the Partnership; this can be confirmed by using the online search facility provided on the KTP website http://ktp.innovateuk.org/.  Any reallocation of funding must not be interpreted as changing the terms of this offer of grant.
+                </li>
+                <li>General terms and conditions
+                    <ol class="govuk-list ifs-list--number">
+                        <li>This grant offer is conditional on the Knowledge Base Partner awarding a contract of employment to a potential KTP Associate and this being accepted. This must follow completion of a demonstrably open and fair recruitment process conducted jointly by the Knowledge Base Partner and the Business.
+                            The Associate must start work on the Partnership (“the Associate Start Date”) within a period of 9 months after the date of this GOL. The Associate will inform Innovate UK of their Start Date by completing the online Associate registration form.
+                            In the case of a Partnership involving more than one Associate project, this GOL is conditional on only the first Associate Start Date being within a period of 9 months after the date of this GOL.  If these conditions are not met, this grant offer will automatically lapse.</li>
+                        <li>We have the unilateral right to change these grant terms and conditions at any time, giving 3 months’ notice.</li>
+                        <li>You cannot assign, transfer or sub-contract any of your rights or obligations under this agreement without Innovate UK’s express permission.</li>
+                        <li>Rights and/or remedies under this GOL, whether exercised or not, remain available throughout the term of this GOL.</li>
+                        <li>This agreement does not create any partnership or joint venture between us at law.</li>
+                        <li>We:
+                            •	Accept no liability for any consequences, whether direct or indirect, that result from you undertaking the Partnership, using the grant, or Innovate UK terminating this agreement or grant;
+                            •	Limit our liability to the amount of grant payable for which you can provide evidence of eligible costs incurred and defrayed, provided you are not in breach of its terms.</li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
 
-        <br><br><br><br>
 
-        <p>
-            <strong>Signed:</strong> ______________________________________________ <br><br>
-            Director for and on behalf of <th:block th:text="${model.leadOrgName}" /><br><br>
-        </p>
+        <table class="letter-table">
+            <thead>
+            <tr>
+                <th>Costs eligible for support</th>
+                <th>Partnership Budget</th>
+                <th>Business's Contribution</th>
+                <th>Government Contribution</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th></th>
+                <th>£</th>
+                <th>£</th>
+                <th>£</th>
+            </tr>
+            <tr>
+                <th>Directly incurred costs</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>a. Associate employment</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
+            </tr>
+            <tr>
+                <td>b. Associate development</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
+            </tr>
+            <tr>
+                <td>c. Travel and subsistence</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.travelAndSubsistence')"></th:block>
+            </tr>
+            <tr>
+                <td>d. Consumables</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.consumables')"></th:block>
+            </tr>
+            <tr>
+                <th>Directly Allocated Costs</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>e. Knowledge base supervisor</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.knowledgeBaseSupervisor')"></th:block>
+            </tr>
+            <tr>
+                <td>f.  Associate estates costs</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEstateCosts')"></th:block>
+            </tr>
+            <tr>
+                <td>g. Other costs</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
+            </tr>
+            <tr>
+                <th>Indirect Costs</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>h. Additional associate support</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.additionalSupportCosts')"></th:block>
+            </tr>
+            <tr>
+                <th>TOTAL</th>
+                <th th:text="${model.ktpFinanceModel.getTable1TotalCost()}">TOTAL</th>
+                <th th:text="${model.ktpFinanceModel.getTable1TotalContribution()}">TOTAL</th>
+                <th th:text="${model.ktpFinanceModel.getTable1TotalFunding()}">TOTAL</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Government Contribution(%)</th>
+                <th colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
+            </tr>
+            </tbody>
+        </table>
 
-        <br><br>
+        <table class="letter-table">
+            <thead>
+            <tr>
+                <th>Costs eligible for support</th>
+                <th>Partnership Budget</th>
+                <th>Business's Contribution</th>
+                <th>Government Contribution</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th></th>
+                <th>£</th>
+                <th>£</th>
+                <th>£</th>
+            </tr>
+            <tr>
+                <th>Directly incurred costs</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>a. Associate employment</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateEmployment')"></th:block>
+            </tr>
+            <tr>
+                <td>b. Academic and secretarial support</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.academicAndSecretarialSupport')"></th:block>
+            </tr>
+            <tr>
+                <td>c. Associate development</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.associateDevelopment')"></th:block>
+            </tr>
+            <tr>
+                <td>d. Travel and subsistence</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.travelAndSubsistence')"></th:block>
+            </tr>
+            <tr>
+                <td>e. Consumables</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.consumables')"></th:block>
+            </tr>
+            <tr>
+                <td>f. Other costs</td>
+                <th:block th:insert="project/fragments/fragments :: ktp-gol-finance-row('model.ktpFinanceModel.otherCosts')"></th:block>
+            </tr>
+            <tr>
+                <th>TOTAL</th>
+                <th th:text="${model.ktpFinanceModel.getTable2TotalCost()}">TOTAL</th>
+                <th th:text="${model.ktpFinanceModel.getTable2TotalContribution()}">TOTAL</th>
+                <th th:text="${model.ktpFinanceModel.getTable2TotalFunding()}">TOTAL</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>Government Contribution(%)</th>
+                <th colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
+            </tr>
+            </tbody>
+        </table>
 
-        <p>
-            <strong>Print name:</strong> ______________________________________________ <br><br>
+        <table class="letter-table">
+            <tbody>
+            <tr>
+                <td colspan="2">Contribution to the Knowledge Base Partner’s overheads calculated at 46% of the Government contribution to direct staff costs (column 3 figures at a. and b. above).</td>
+                <td th:text="${model.ktpFinanceModel.contributionToKbPartnerOverheads}"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Maximum amount of Government Grant</strong>
+                    Total of Government contribution, including the ‘Indirect costs’ element</td>
+                <td th:text="${model.ktpFinanceModel.maximumAmountOfGovtGrant}"></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
 
-        </p>
+<!--/*
+                2.	3.
+                3.1.	3.2.
+                3.3.
+                3.4.
+                3.5.
+                3.6.
+                3.7.	This agreement is subject to the laws of England and Wales.
+                3.8.	The grant cannot be used for any political or lobbying activity, or for any purpose other than the Partnership referred to in this GOL.
+                3.9.	Innovate UK has the right to not consider new grant applications from a Knowledge Base Partner or Business Partner where either have failed to return required financial reports (including claims) on any current or previous projects funded by Innovate UK.
+                4.	Status
+                4.1.	Innovate UK is not and is not to be represented as an employer in connection with this GOL or any grant paid under its terms.
+                5.	Your obligations
+                5.1.	The grant must be used solely and exclusively for those costs connected with the Partnership and which are eligible for support as listed in Schedule 1. Costs must be incurred after the date upon which the Associate commences work on the project. Grant towards direct costs as identified in Schedule 1 are only paid in respect of eligible expenditure met by the Knowledge Base Partner on the Partnership.  For expenditure to be paid, liabilities must have been incurred and defrayed by the Knowledge Base Partner.
+                5.2.	As a successful applicant, you will:
+                •	Manage the Partnership in accordance with the terms of the application as awarded by us, and this GOL;
+                •	Inform us promptly, through your Knowledge Transfer Adviser (KTA) of any issue or material change that could affect the progress, delivery or exploitation of the Partnership;
+                •	Fully co-operate with us, responding to any requests for information promptly and comprehensively and allowing reasonable (audit) access to your sites and staff when asked;
+                •	Take out and maintain insurance covering your risks and liabilities for appropriate amounts and in keeping with good commercial practice;
+                •	Comply with all the laws and regulations of England and Wales in carrying out your activities under this GOL;
+                •	As a minimum, advertise the Associate post in accordance with your institutional guidelines and on the KTP recruitment site https://www.ktp-uk.org/academics/ (scroll down to Post a Vacancy);
+                •	Provide the project secretariat and take all reasonable steps to ensure that the academic Knowledge Base Partner, Associate, Business Partner and KTA are not required to fulfil this role at Local Management Committee (LMC) meetings;
+                •	Submit within 1 calendar month of the end of the Partnership, the Partnership Final Report together with any supporting documentation;
+                •	Submit within 3 calendar months of the end of the Partnership the final claim and Schedule 3.
+                5.3.	Successful and unsuccessful applicants must give us, and any data-sharing partner we appoint, any information we need to create an evaluation report. For successful applicants this will be during the term of the Partnership and for a further 5 years following the end of the Partnership.
+                5.4 	You are responsible for maintaining detailed records and documentation relating to the use of your Grant. These should provide evidence sufficient to support the submission of timely and accurate claims and to demonstrate that your eligible project costs comply with all State Aid Rules, as outlined in paragraph 24. These records must be kept for at least 6 years following your receipt of the Grant.
+                6.	Expenditure
+                6.1.	After Innovate UK has set up the Partnership on the online platform, the Knowledge Base Partner must enter an initial forecast of eligible expenditure. The forecast must reasonably be incurred during each claim period and updated throughout the Partnership to the last date on which an Associate is expected to be engaged on the Partnership.
+                7.	Equipment and materials
+                7.1.	Equipment and materials purchased by the Knowledge Base Partner for the Partnership with grant funding, can be used by the Business Partner without charge for the duration of the Partnership. At the end of the Partnership the equipment must be returned to the Knowledge Base Partner.
+                8.	Revisions (virements, additional funding and finishing off)
+                8.1.	The Knowledge Base Partner may vire between the Travel & Subsistence and Consumables categories only. Funds can also be vired from either of these 2 categories into the Associate Development category.  Funds cannot be vired from the Associate Development category or other budget categories.
+                Virements are subject to the agreement of the LMC. Requests for virements, must be submitted using the online platform and must be approved in advance of the related costs being incurred. Requests for virements must not be submitted after the Partnership has finished.
+                8.2.	Requests for ‘Additional Funding’ and ‘Finishing Off’ revisions must be submitted using the online platform. They must be approved in advance of the related costs being incurred and submitted no later than two months after the last date on which an Associate is engaged for work on the Partnership.
+                9.	Payment of grant
+                9.1.	Innovate UK will only pay your grant claim into your business account at a UK clearing bank or one of its subsidiary banks within the UK. Innovate UK may accept an account at an alternative bank in exceptional circumstances at our discretion and by prior agreement.
+                Your grant will be paid by instalments quarterly (unless otherwise agreed by Innovate UK) and in arrears on submission of a claim. This will be for your net eligible costs incurred, invoiced and paid in the quarter (or other period) covered by the claim.
+                You accept that the eligible costs you can claim are limited to those as detailed in Schedule 1 of this GOL.
+                9.2.	Your claims must be supported by a revised forecast of eligible Partnership costs. These should detail expected costs for each future claim period and highlight any variations from the last forecast. Your claim may be subject to audit review as set out in Paragraph 9.11 below.
+                9.3.	Only one claim per Quarter can be submitted. Claims must be incurred and defrayed in the Quarter in which they are incurred.  The only exception to this condition is the claim for the final quarter where the costs may be incurred but not necessarily defrayed.  Additional conditions relating to the final report are set out in Paragraph 9.7 below.
+                9.4.	Claims for payment of grant on eligible expenditure actually defrayed on the Partnership must be submitted on the online platform every 3 months following the Associate Start Date. These must be submitted within one month of the end of the period to which the claim refers.
+                9.5.	You shall discuss and provide evidence on request for each grant claim with your KTA before they can approve and submit your claim for payment to Innovate UK. Claims on the online platform must be supported by a current forecast as at the claim date to the end of the Partnership. It must detail the expected expenditure for each future claim period.  In addition, claims must be supported by the minutes of an LMC meeting (“LMC Minutes”) covering part or all of the period of the claim. Alternatively you can send by way of emails from one each of the knowledge base and business LMC team members and the KTA, approving a financial statement covering the period of the claim when there has been no LMC meeting during or immediately after the period of the claim (“Virtual LMCs”). These documents must be emailed to ktp_claims@innovateuk.ukri.org <<mailto:ktp_claims@innovateuk.ukri.org>> within one month of the end of the period to which the claim refers.
+                9.6.	In the event of an Associate not being available for work for an extended period or they resign from their position as an Associate, then the Knowledge Base Partner shall inform Innovate UK promptly by email to KTP_Partnerships@innovateuk.ukri.org.
+                In this event, during the period in which work on the Partnership is suspended, the Knowledge Base Partner will continue to submit claims every 3 months, which may include periods of zero expenditure. Claims for expenditure incurred may restart once work on the Partnership recommences.
+                9.7.	Innovate UK will normally pay claims within 30 days of its receipt by Innovate UK, unless we need any further information to support the claim. We agree to request any further information within 14 days of receiving the claim and will pay claims within 30 days of receipt of such information.
+                Innovate UK is not obliged to pay any amount if:
+                •	The claim does not meet the terms and conditions of this GOL;
+                •	Innovate UK is not satisfied that the amount is properly due and payable to the Knowledge Base Partner;
+                •	If any claim is received more than 30 days after the end of the quarter to which it relates;
+                •	If any claim is received later than 3 months after Partnership completion.
+                9.8.	The final claim for payment of grant on eligible expenditure paid under the terms of this GOL must be submitted no later than 3 months after the last date on which an Associate was deemed to be engaged for work on the Partnership.  When a project is “finishing off” the final claim should be submitted within 3 months of the agreed end date.
+                The final claim must be accompanied by a Certificate of Total Expenditure (Schedule 3) and signed by the Finance Director or an alternative with senior financial responsibility at the Knowledge Base Partner. Schedule 3 must be emailed to ktp_claims@innovateuk.ukri.org <<mailto:ktp_claims@innovateuk.ukri.org>> accompanied by supporting documentation such as final LMC Minutes, written approval (email) from one each of the knowledge base and business LMC team members and the KTA), and any other information requested by Innovate UK.
+                If the final claim has not been submitted with the required supporting documentation within the required period, the claim will not be paid by Innovate UK.
+                9.9.	Innovate UK will retain 15% of your maximum grant value until the Partnership is complete and we have received:
+                •	Any outstanding claims;
+                •	Supporting information;
+                •	Partnership Final Report.
+                9.10.	Payment of the retained value will not be made until the Partnership has been completed to Innovate UK’s satisfaction and is subject to the contents of the Certificate of Total Expenditure (Schedule 3) completed by the Finance Officer.  Adjustments may mean that you are not entitled to receive all of the retained value.
+                9.11.	You are responsible for maintaining detailed records and documentation relating to the use of your grant. These should provide sufficient evidence to support the submission of timely and accurate claims. These records must be kept for 10 years following your receipt of the grant and must be supplied to satisfy National Audit Office (NAO) requests for evidence of compliance within 20 days if requested.
+                9.12	Innovate UK may appoint an auditor, at our expense, to ensure you are complying with the terms and conditions of this GOL. You agree to give the auditor access to your Partnership records within 2 weeks’ notice of their appointment. If the auditor determines that all or part of the grant has been misapplied or that you should repay all or part of the grant to Innovate UK. We may recover the cost of the auditor’s work from you.
+                10.	Partnership management
+                10.1.	Any amount due to Innovate UK including overpayment of grant, however disclosed, must be repaid to Innovate UK immediately or, if notified by Innovate UK, at the time specified in any such notification whichever first occurs.
+                If any overpayment is not repaid, the Knowledge Base Partner will pay interest to Innovate UK on the sum. This is on a daily basis at an annual rate equal to 1.5% above the Bank of England Base Rate. This is calculated from the date of the statement disclosing the overpayment to the date of receipt by Innovate UK of payment in full of such amount plus any such interest.
+                10.2.	Innovate UK or representatives of Innovate UK have the right to:
+                •	Monitor and inspect the Partnership at any time;
+                •	Require from time to time such documentation concerning the Partnership as Innovate UK or the representatives of Innovate UK may consider necessary in order to ensure that the Partnership conforms to the terms and conditions of this letter;
+                •	Attend any meetings regarding the Partnership and, if Innovate UK or the representatives of Innovate UK consider it necessary, to call for such a meeting.
+                10.3.	The management of the Partnership and the working relationship between the Business Partner and the Knowledge Base Partner must be as agreed in the Joint Commitment Statement signed on behalf of the partners, which forms part of the grant application in respect of the KTP.
+                10.4.	Innovate UK is the primary point of contact with the Knowledge Base Partner.
+                11. Suspension, termination and repayment of grant
+                11.1.	We have the right to take all reasonable steps to reclaim any, or all, of the grant already claimed by you, should it be necessary for Innovate UK to suspend or terminate your grant or terminate this agreement for any reason.  We will take appropriate care in how we do this, but in certain circumstances we can immediately suspend grant payments.
+                11.2.	If we have concerns that mean we might need to suspend, terminate or reclaim the grant, we will write to inform you and you will then have 30 days to address our concerns.
+                11.3.	Examples of events that may result in Innovate UK suspending grant payments include, without limitation:
+                •	Misuse of the grant funds, including, in a fraudulent or financially misleading way or for purposes not declared in your application or agreed to subsequently by Innovate UK;
+                •	False statements in any part of your application for grant or Partnership documentation;
+                •	Failure to maintain satisfactory progress on the Partnership in the opinion of Innovate UK;
+                •	Any significant changes, without prior approval from the KTA at the LMC, to the proposed outcomes of the Partnership;
+                •	Failure to comply with any terms and conditions of this agreement;
+                •	Failure to deliver the agreed project support as set out in the application form;
+                •	Behaviour or activity by you, your staff, representatives or contractors which, in the reasonable opinion of Innovate UK, is non-compliant with legislation or HM Government policies, or is detrimental to the reputation of Innovate UK, UK Research and Innovation or the Department for Business, Energy and Industrial Strategy, or is otherwise detrimental to the public interest.
+                11.4.	Examples of events that may result in Innovate UK terminating the grant include, without limitation:
+                •	Failure to resolve to Innovate UK's satisfaction, or not being able to resolve, the reasons for suspension;
+                •	Being found to have applied for and secured multiple awards from Innovate UK or UK Research and Innovation for the same or largely interchangeable project scopes;
+                •	Being found to have breached any of Innovate UK’s policies with which you had previously been required to comply as a condition of the award of the grant;
+                •	Becoming insolvent, declared bankrupt, placed into receivership, administration or liquidation, or having a petition presented for winding up, or any similar arrangements that may affect you financially;
+                •	A change to your legal status which you have failed to declare or have misrepresented to us
+                •	You are in breach of any of the warranties contained in Paragraph 12;
+                •	You use the grant for purposes other than those contained within the application and description of the Partnership without the consent of Innovate UK;
+                •	You have failed completely to provide or, in the reasonable opinion of Innovate UK, failed to make reasonable effort to collect and/or provide the information requested of you by Innovate UK in accordance with Paragraph 13;
+                •	Behaviour or activity by you, your staff, your auditor, your accountant, representatives,  contractors and the Business Partner involving an act of fraud, dishonesty, malfeasance (wrongdoing by a public official), misrepresentation or any serious financial irregularity in respect of you or your operations which has or could have a serious adverse effect on you, Innovate UK or both;
+                11.5.	If you do not resolve an issue causing suspension or if we terminate the grant, you may be required to repay some or all, of the grant.
+                11.6.	Where there is an underspend in grant funds paid to or claimed by you at the Partnership end date, the full value of the underspend will be returned to Innovate UK immediately.
+                11.7.	The Knowledge Base Partner must inform Innovate UK promptly by email to KTP_Partnerships@innovateuk.ukri.org <<mailto:KTP_Partnerships@innovateuk.ukri.org>> detailing the occurrence of the event and the action, if any, it proposes to take in order that progress is resumed.
+                12.	Warranties
+                12.1	As of the effective date of this GOL, the Knowledge Base Partner warrants to Innovate UK that:
+                •	When responding to requests for information about the Partnership your response will state that Innovate UK accepts no liability whatsoever for any information or advice provided by any party to the Partnership. We will not have any liability for any loss or damage of any kind, whether arising out of negligence or otherwise, which is suffered by the recipient or any other person in consequence of the provision of the information or advice;
+                •	You have all necessary resources and expertise to deliver the Partnership (this assumes your reliance on and timely receipt of the grant and any conditions specified in this GOL);
+                •	You are not subject to any contractual or other restriction imposed by your or any other organisation's rules or regulations or otherwise which may prevent or impede you from meeting your obligations in connection with the grant;
+                •	You have not committed any offence under the Bribery Act 2010;
+                •	You have adequate procedures in place for dealing with any conflicts of interest;
+                •	All financial and other information concerning you which has been disclosed to Innovate UK is, to your reasonable knowledge and belief, true and accurate;
+                •	You are not aware of anything in your own affairs, which you have not disclosed to Innovate UK, which might reasonably have influenced the decision of Innovate UK to make the grant on the terms contained in this agreement;
+                •	Since the date of your last accounts (if any) there has been no significant change in your financial position or prospects which you have not declared to Innovate UK.
 
-        <br><br>
+                13. 		Final reporting
+                13.1.	The Knowledge Base Partner will, no later than one month after the last date on which an Associate was engaged on the Partnership, submit a Final Report.  This must be submitted via the online platform unless otherwise advised by Innovate UK.  The Knowledge Base Partner must aim to secure an appropriate contribution from the Business Partner to the Final Report.  If the Final Report has not been submitted within one month of the last date on which an Associate was deemed to be engaged on the Partnership, the final claim detailed in paragraph 9.8 will not be paid by Innovate UK.
 
-        <p>
-            <strong>Date:</strong> ______________________________________________ <br><br>
+                14.		Financial reporting and accounting
+                14.1.	The Knowledge Base Partner will keep proper records of all expenditure incurred and defrayed on the Partnership. All original documentation, correspondence and invoices necessary (or if not originals, certified copies that conform with the originals on the commonly accepted data carriers including photocopies of the original, electronic versions of the documents as defined in paragraph 4 of Article 19 of Commission Regulation (EC) No 1828/2006 of 8 December 2006) will, on demand, be produced to Innovate UK or the National Audit Office, the European Commission or European Court of Auditors along with all such information as they may reasonably require.
+                15.	Confidentiality and information management
+                15.1.	Innovate UK has the right to request access to any additional information we feel necessary in connection with this award. You must provide or allow access to such information within 10 working days of our request. We will treat your confidential and personal information in accordance with our policies and data protection legislation.
+                15.2.	All your information disclosed deliberately or otherwise will be treated by Innovate UK as confidential information and commercially sensitive as exempted under the Freedom of Information Act 2000 or any related legislation, unless otherwise marked or agreed in writing. For the avoidance of doubt, it is at your discretion and must be with the agreement of the relevant third parties, if you choose to disclose confidential information of third parties to Innovate UK, at which point it will be treated as confidential information by Innovate UK unless marked otherwise.
+                15.3.	You acknowledge and accept the terms of Innovate UK’s privacy notice and information management policy <<https://www.gov.uk/government/publications/privacy-notice-and-information-management-policy-innovate-uk>> and personal information charter <<https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter>> which should be read in addition to UKRI’s privacy notice << https://www.ukri.org/privacy-notice/>>. This policy explains Innovate UK’s specific arrangements for collecting, storing, using and sharing your information. This can include personal data or confidential or commercially sensitive information. It provides details on how we use this information to support our ability to fund, support and connect innovative businesses and encourage sustainable economic growth for the UK.
+                15.4.	Any information we collect from you, through our online platforms, grant applications and administration, events or elsewhere, will be managed according to this policy and is subject to data protection. This policy complies with the General Data Protection Regulation <<https://gdpr-info.eu/>> (EU 2016/679), or GDPR, introduced on 25 May 2018.
+                15.5.	As a public sector organisation we are also subject to some further data protection obligations under the UK Data Protection Act 2018 <<http://www.legislation.gov.uk/ukpga/2018/12/contents>>.
+                16.	Collaboration
+                16.1.	This grant offer is also conditional on an appropriate KTP agreement being in place before an Associate begins working on the Partnership.  This must be confirmed to the satisfaction of the KTA and in place before the Associate Start Date.  If this condition is not met, this grant offer will automatically lapse.
 
-        </p>
+                17.	Exploitation of partnership results
+                17.1.	Innovate UK requires you to establish an exploitation plan together with your KTA at the start of your Partnership, and to refine and update it at least once every 6 months (or at other intervals as agreed with Innovate UK) throughout the Partnership’s lifetime.
+                17.2.	For a period of 5 years from the end of the Partnership, Innovate UK expects you to take reasonable steps to exploit the results of the Partnership in the UK or wider European Economic Area. In some cases, exploitation outside of the EEA will be part of a tactical plan to deliver the overall opportunity for the applicant.  In these cases, the Knowledge Base Partner or Business Partner should seek written consent from the KTP Programme Manager. Innovate UK will continuously evaluate the impact of funding awarded to the Partnership and you will cooperate fully in this process.
+                18.	UK statutory framework
+                18.1.	Innovate UK is required to comply with all legislation in England and Wales.
+                18.2.	You must also comply with all legislation (including in the devolved administrations) where they apply to you and to act in a way that does not affect our ability to comply.
+                18.3.	The Knowledge Base Partner shall comply with all legislation in England and Wales, which includes the Data Protection Act 2018, the Bribery Act 2010, the Fraud Act 2006 and the Modern Slavery Act 2015, Health and Safety at Work Act 1974, Equality Act 2010 and the Procurement Regulations 2015.
+                19.	Publication of information
+                19.1.	Innovate UK encourages you to seek your own publicity in respect of the Partnership. If you want to publicise the Partnership in any way whatsoever, please consult the Innovate UK guide ‘Publicising your project: guidelines from Innovate UK’ available from Innovate UK’s Press Office by emailing  pressoffice@innovateuk.ukri.org <<mailto:pressoffice@innovateuk.ukri.org>>.
+                20.	Dispute resolution
+                20.1.	Where a dispute arises between you and Innovate UK, we would encourage you to contact us to discuss a resolution. If a mutually acceptable resolution cannot be achieved within 30 days of you contacting us, we have the right:
+                •	Either, unilaterally to terminate the grant and potentially to seek repayment of all or part of the grant funds previously paid to you; or
+                •	If both parties agree, to refer the matter to the London Court of International Arbitration (LCIA), whose decision will be binding. Any arbitration will be conducted in accordance with LCIA Arbitration Rules before one arbitrator seated in London.
+                21.	Force majeure
+                21.1.	Where an event of force majeure, or a change to the laws of England and Wales, UK government or devolved administration policy and/or the legal acts of the European Union occurs which affects Innovate UK’s ability to continue funding your Partnership, we can terminate this agreement by giving you as much written notice as reasonably possible. In such circumstances, Innovate UK will meet any eligible costs in respect of the Partnership that you have reasonably incurred and paid before the date of termination of this agreement.
+                22.	 Entire agreement
+                22.1.	This GOL together with the signed Joint Commitment Statement constitutes the whole agreement between Innovate UK and the Partnership. Each party acknowledges that, in entering into this agreement, it has not relied on and has no right or remedy in respect of any statement, representation, assurance or warranty (whether made negligently or innocently) other than as expressly set out in this agreement. Nothing in this paragraph will limit or exclude any liability for fraud or for fraudulent misrepresentation.
+                23. State Aid obligations and procurement
+                23.1	Innovate UK awards grant funding through its Research, Development and Innovation Scheme operating under Commission Regulation (EU) No 651/2014 (“the General Block Exemption Regulation (GBER)”).
 
-        <h2 class="heading-medium">Eligible costs and grant allocations</h2>
+                23.2	You must inform Innovate UK of any other public funding applied for or awarded against the eligible costs covered by this award of Grant. It is Your responsibility to ensure that the cumulative total of public funding You are receiving for the Funded Activities does not exceed those limits stated in GBER.
 
-        <p>
-            <strong>File reference:</strong> [file_reference]<br>
-            <strong>Application number:</strong> <th:block th:text="${model.applicationId}" /><br>
-            <strong>Date:</strong> <th:block th:text="${#temporals.format(model.getNow(), 'd MMMM yyyy')}" /><br>
-            <strong>Competition:</strong> <th:block th:text="${model.competitionName}" /><br>
-            <strong>Project title:</strong> <th:block th:text="${model.projectName}" />
-        </p>
+                23.3	Innovate UK will stop Grant payments if You become subject to a recovery order that follows on from a previous European Commission decision, which declares any aid You have received illegal and incompatible with the internal market.
+
+                23.4	Where you are required by an order of the European Commission to repay any grant to Innovate UK that is found to be unlawful state aid, interest will be charged on the amount being reclaimed from the date of payment at the applicable legislated rate.
+
+                23.5	No subcontract may be made which would constitute a breach of state aid obligations.
+
+                23.6	Where you are a contracting authority within the meaning of the Public Contracts Regulations 2015, Concession Contracts Regulations 2016, Utilities and Contracts Regulations 2016 and Defence Security Public Contracts Regulations 2011, You warrant that You will comply, as necessary, with the applicable procurement laws when procuring goods and services.
+
+                23.7	Where you reasonably consider that there is an objective justification for not complying with procurement rules and seek to rely on such justification, You will seek Our prior approval for doing so, setting out the reasons for non-compliance in a structured business case.
+
+                23.8	You must not confer either directly or indirectly any Selective Advantage in breach of State Aid Regulations.
+
+                23.9	You must notify Innovate UK in the event that you are proposing to confer selective advantage and if you have conferred selective advantage either directly or indirectly
+                23.10	You must seek independent legal advice regarding State Aid and your compliance with these obligations as part of the grant funding.
+
+                24.	Acceptance of grant offer
+                24.1.	This offer remains open for acceptance for a period of one month from the date of this letter.  Acceptance of this offer letter constitutes agreement in full to the terms and conditions set out in this letter.  Acceptance must be signified by a person duly authorised to sign on behalf of the Knowledge Base Partner, signing and dating the attached Statement of acceptance and uploading a scanned copy to the Innovation Funding Service (IFS).
+                24.2.	All project team members can view a copy of this letter in IFS.
+
+*/-->
+
+
+
+<!--/*
+
+
+
+
+
+            <h2 class="heading-medium">Annex 1</h2>
+            <p>Statement of acceptance in respect of an offer of grant</p>
+            <p>For a knowledge transfer partnership between <th:block th:text="${model.leadOrgName}" /> and <th:block th:text="${model.partnerOrgName}" /></p>
+
+
+
+
 
         <th:block th:if="${model.industrialFinanceTable}">
             <table class="letter-table">
@@ -760,12 +1081,8 @@
 
         <br><br><br>
     </div>
-    <!-- terms start -->
-    <div class="terms-and-conditions letter-size letter-size--terms">
-        <h2 style="font-size: 24px">Terms and conditions</h2>
-        <th:block th:insert="competition/info/__${model.termsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+        */-->
     </div>
-    <!-- terms end  -->
 </main>
 </body>
 </html>

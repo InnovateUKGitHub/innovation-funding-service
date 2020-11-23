@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
+import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
@@ -62,6 +63,9 @@ public class GrantOfferLetterController {
 
     @Autowired
     private GrantOfferLetterTemplatePopulator grantOfferLetterTemplatePopulator;
+
+    @Autowired
+    private KtpGrantOfferLetterTemplatePopulator ktpGrantOfferLetterTemplatePopulator;
 
     private static final String FORM_ATTR = "form";
     private static final String APPROVAL_FORM_ATTR = "approvalForm";
@@ -275,8 +279,13 @@ public class GrantOfferLetterController {
                                                    Model model) {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
-        return "project/" + competition.getGolTemplate().getTemplate();
+        String template = competition.getGolTemplate().getTemplate();
+        if (template.equals("default-gol-template")) {
+            model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
+        } else if (template.equals("ktp-gol-template")) {
+            model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project, competition));
+        }
+        return "project/" + template;
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

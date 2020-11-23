@@ -108,6 +108,10 @@ public abstract class BaseFinanceResource {
         this.financeOrganisationDetails = financeOrganisationDetails;
     }
 
+    public FinanceRowCostCategory getCostCategory(FinanceRowType type) {
+        return financeOrganisationDetails.get(type);
+    }
+
     public FinancialYearAccountsResource getFinancialYearAccounts() {
         return financialYearAccounts;
     }
