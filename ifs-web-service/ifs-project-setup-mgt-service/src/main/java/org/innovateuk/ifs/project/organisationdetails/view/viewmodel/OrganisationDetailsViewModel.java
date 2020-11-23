@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.organisationdetails.view.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 public class OrganisationDetailsViewModel {
@@ -19,12 +20,15 @@ public class OrganisationDetailsViewModel {
     private final String town;
     private final String county;
     private final String postcode;
+    private final boolean knowledgeBase;
+    private final boolean ktpCompetition;
 
     public OrganisationDetailsViewModel(ProjectResource project,
                                         long competitionId,
                                         OrganisationResource organisation,
                                         AddressResource address,
-                                        boolean hasPartners) {
+                                        boolean hasPartners,
+                                        boolean ktpCompetition) {
         this.projectId = project.getId();
         this.competitionId = competitionId;
         this.projectName = project.getName();
@@ -38,6 +42,8 @@ public class OrganisationDetailsViewModel {
         this.town = address.getTown();
         this.county = address.getCounty();
         this.postcode = address.getPostcode();
+        this.knowledgeBase = isKnowledgeBase(organisation);
+        this.ktpCompetition = ktpCompetition;
     }
 
     public long getProjectId() {
@@ -86,5 +92,17 @@ public class OrganisationDetailsViewModel {
 
     public String getPostcode() {
         return postcode;
+    }
+
+    public boolean isKnowledgeBase() {
+        return knowledgeBase;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    private boolean isKnowledgeBase(OrganisationResource organisation) {
+        return organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.KNOWLEDGE_BASE);
     }
 }

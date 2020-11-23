@@ -4,6 +4,7 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -225,8 +226,12 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
-                                    if (project.getApplication().getCompetition().applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+                                    Competition competition = project.getApplication().getCompetition();
+                                    if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
+                                    }
+                                    if(competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())){
+                                        eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
                                     }
                                     invite.open();
 

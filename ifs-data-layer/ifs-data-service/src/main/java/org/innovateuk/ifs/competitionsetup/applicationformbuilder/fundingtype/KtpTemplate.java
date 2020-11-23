@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.addProjectSetupStage;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
@@ -77,6 +78,7 @@ public class KtpTemplate implements FundingTypeTemplate {
         commonBuilders.addProjectSetupStage(competition, PROJECT_DETAILS);
         commonBuilders.addProjectSetupStage(competition, PROJECT_TEAM);
         commonBuilders.addProjectSetupStage(competition, MONITORING_OFFICER);
+        commonBuilders.addProjectSetupStage(competition, BANK_DETAILS);
         commonBuilders.addProjectSetupStage(competition, FINANCE_CHECKS);
         commonBuilders.addProjectSetupStage(competition, GRANT_OFFER_LETTER);
     }

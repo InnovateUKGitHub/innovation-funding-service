@@ -240,8 +240,8 @@ public class FinanceSummaryTableViewModelPopulator {
             }
         } else {
             return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
-        }    }
-
+        }
+    }
 
     private String organisationText(ApplicationResource application, boolean lead) {
         if (!application.isCollaborativeProject()) {

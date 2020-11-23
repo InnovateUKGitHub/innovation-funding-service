@@ -293,7 +293,7 @@ internal user generate SP
     the user selects the option from the drop-down menu  Green  id = rag-rating
     the user clicks the button/link          css = #confirm-button
     the user clicks the button/link          css = [name="confirm-viability"]
-    the user clicks the button/link         link = Finance checks
+    the user clicks the button/link         link = Back to finance checks
     the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
     the user selects the checkbox            project-eligible
     the user selects the option from the drop-down menu  Green  id = rag-rating

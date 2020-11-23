@@ -11,12 +11,14 @@ public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewMo
     private Long projectId;
     private String projectName;
     private boolean collaborativeProject;
+    private boolean ktpCompetition;
 
-    public ProjectDetailsAddressViewModel(ProjectResource projectResource) {
+    public ProjectDetailsAddressViewModel(ProjectResource projectResource, boolean ktpCompetition) {
         this.projectId = projectResource.getId();
         this.projectName = projectResource.getName();
         this.applicationId = projectResource.getApplication();
         this.collaborativeProject = projectResource.isCollaborativeProject();
+        this.ktpCompetition = ktpCompetition;
     }
 
     public String getProjectName() {
@@ -37,5 +39,9 @@ public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewMo
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }
