@@ -15,8 +15,6 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
     private long pendingSpendProfilesCount;
     private String applicationSearchString;
     private PaginationViewModel paginationViewModel;
-    private int columnsBeforeBankDetails;
-    private int columnsAfterBankDetails;
 
     public CompetitionStatusViewModel(CompetitionResource competition,
                                       boolean hasProjectFinanceRole,
@@ -33,14 +31,6 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.applicationSearchString = applicationSearchString;
         this.paginationViewModel = paginationViewModel;
-
-        resolveBankDetailsTableColumns();
-    }
-
-    private void resolveBankDetailsTableColumns() {
-        int bankDetailsIndex = this.getColumns().indexOf(ProjectSetupStage.BANK_DETAILS) + 1;
-        this.columnsBeforeBankDetails = bankDetailsIndex;
-        this.columnsAfterBankDetails = this.getColumns().size() - bankDetailsIndex;
     }
 
     @Override
@@ -66,13 +56,5 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
 
     public PaginationViewModel getPaginationViewModel() {
         return paginationViewModel;
-    }
-
-    public int getColumnsBeforeBankDetails() {
-        return columnsBeforeBankDetails;
-    }
-
-    public int getColumnsAfterBankDetails() {
-        return columnsAfterBankDetails;
     }
 }
