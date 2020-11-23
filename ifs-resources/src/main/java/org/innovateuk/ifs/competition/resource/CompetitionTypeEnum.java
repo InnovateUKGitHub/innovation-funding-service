@@ -11,7 +11,8 @@ public enum CompetitionTypeEnum {
     ADVANCED_PROPULSION_CENTRE("Advanced Propulsion Centre"),
     AEROSPACE_TECHNOLOGY_INSTITUTE("Aerospace Technology Institute"),
     THE_PRINCES_TRUST("The Prince's Trust"),
-    HORIZON_2020("Horizon 2020");
+    HORIZON_2020("Horizon 2020"),
+    HESTA("Hesta");
 
 
     CompetitionTypeEnum(String text) {

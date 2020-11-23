@@ -33,6 +33,7 @@ import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.HESTA_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
@@ -763,6 +764,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isHesta() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(HESTA_TYPE_NAME))
+                .orElse(false);
+    }
+
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
@@ -976,7 +985,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isHasAssessmentStage() {
-        return hasAssessmentStage && !isH2020() && (ofNullable(completionStage)
+        return hasAssessmentStage && !isH2020() || !isHesta() && (ofNullable(completionStage)
                 .map(stage -> !stage.equals(CompetitionCompletionStage.COMPETITION_CLOSE))
                 .orElse(true)) ;
     }
