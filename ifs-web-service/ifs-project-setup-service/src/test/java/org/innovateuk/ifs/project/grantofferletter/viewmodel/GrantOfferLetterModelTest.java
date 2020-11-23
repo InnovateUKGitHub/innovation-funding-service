@@ -387,12 +387,14 @@ public class GrantOfferLetterModelTest {
         FileDetailsViewModel additionalContractFile = state.isGeneratedGrantOfferLetterAlreadySentToProjectTeam() ?
                 new FileDetailsViewModel("grant-offer", 1000L) :
                 null;
+
+        FileDetailsViewModel signedAdditionalContractFile = null;
         
         FileDetailsViewModel signedGrantOfferLetterFile = signedGrantOfferUploaded ?
                 new FileDetailsViewModel("grant-offer", 1000L) :
                 null;
         
         return new GrantOfferLetterModel("Grant offer letter", 123L, "Project name", leadPartner,
-                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false, false, false);
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, signedAdditionalContractFile, projectManager, state, false, false, false);
     }
 }

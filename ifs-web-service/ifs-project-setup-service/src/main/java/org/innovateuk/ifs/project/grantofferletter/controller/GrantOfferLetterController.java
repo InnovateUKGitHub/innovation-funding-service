@@ -115,6 +115,24 @@ public class GrantOfferLetterController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+    @PostMapping(params = "uploadSignedAdditionalContractFileClicked")
+    public String uploadSignedAdditionalContractFile(
+            @P("projectId")@PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            UserResource loggedInUser) {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedAdditionalContract", form, () -> {
+
+            MultipartFile signedAdditionalContract = form.getSignedAdditionalContract();
+
+            return grantOfferLetterService.addSignedAdditionalContract(projectId, signedAdditionalContract.getContentType(), signedAdditionalContract.getSize(),
+                    signedAdditionalContract.getOriginalFilename(), getMultipartFileBytes(signedAdditionalContract));
+        });
+    }
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
     @PostMapping(params = "removeSignedGrantOfferLetterClicked")
     public String removeSignedGrantOfferLetterFile(
@@ -162,6 +180,19 @@ public class GrantOfferLetterController {
 
         final Optional<ByteArrayResource> content = grantOfferLetterService.getAdditionalContractFile(projectId);
         final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+    @GetMapping("/signed-additional-contract")
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadSignedAdditionalContractFile(
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
+
+        final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedAdditionalContractFile(projectId);
+        final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
 
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }

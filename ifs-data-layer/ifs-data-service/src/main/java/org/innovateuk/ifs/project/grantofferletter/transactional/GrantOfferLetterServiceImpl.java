@@ -113,6 +113,14 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         });
     }
 
+    @Override
+    public ServiceResult<FileAndContents> getSignedAdditionalContractFileAndContents(long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+            FileEntry fileEntry = project.getSignedAdditionalContractFile();
+            return getFileAndContentsResult(fileEntry);
+        });
+    }
+
     private FailingOrSucceedingResult<FileAndContents, ServiceFailure> getFileAndContentsResult(FileEntry fileEntry) {
         if (fileEntry == null) {
             return serviceFailure(notFoundError(FileEntry.class));
@@ -156,6 +164,21 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getProject(projectId).andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getAdditionalContractFile();
+
+            if (fileEntry == null) {
+                return serviceFailure(notFoundError(FileEntry.class));
+            }
+
+            return serviceSuccess(fileEntryMapper.mapToResource(fileEntry));
+        });
+
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getSignedAdditionalContractFileEntryDetails(Long projectId) {
+        return getProject(projectId).andOnSuccess(project -> {
+
+            FileEntry fileEntry = project.getSignedAdditionalContractFile();
 
             if (fileEntry == null) {
                 return serviceFailure(notFoundError(FileEntry.class));
@@ -301,6 +324,20 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         project.setAdditionalContractFile(fileEntry);
         return fileEntryMapper.mapToResource(fileEntry);
     }
+
+    @Override
+    public ServiceResult<FileEntryResource> createSignedAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
+        return getProject(projectId).
+                andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
+                        andOnSuccessReturn(fileDetails -> linkSignedAdditionalContractFileToProject(project, fileDetails)));
+    }
+
+    private FileEntryResource linkSignedAdditionalContractFileToProject(Project project, Pair<File, FileEntry> fileDetails) {
+        FileEntry fileEntry = fileDetails.getValue();
+        project.setSignedAdditionalContractFile(fileEntry);
+        return fileEntryMapper.mapToResource(fileEntry);
+    }
+
 
     @Override
     @Transactional

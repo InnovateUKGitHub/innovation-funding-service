@@ -23,6 +23,8 @@ public interface GrantOfferLetterRestService {
 
     RestResult<FileEntryResource> addGrantOfferLetterFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
+    RestResult<FileEntryResource> addSignedAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
     RestResult<Void> removeGrantOfferLetter(Long projectId);
 
     RestResult<Void> removeAdditionalContractFile(Long projectId);
@@ -43,7 +45,11 @@ public interface GrantOfferLetterRestService {
 
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
 
+    RestResult<Optional<ByteArrayResource>> getSignedAdditionalContractFile(Long projectId);
+
     RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
+
+    RestResult<Optional<FileEntryResource>> getSignedAdditionalContractFileDetails(Long projectId);
 
     RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 

@@ -34,6 +34,7 @@ public class GrantOfferLetterModelPopulator {
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
         Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
         Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
+        Optional<FileEntryResource> signedAdditionalContractFile = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
         GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
@@ -45,6 +46,7 @@ public class GrantOfferLetterModelPopulator {
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
+                signedAdditionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectManager,
                 state,
                 project.isUseDocusignForGrantOfferLetter(),

@@ -17,6 +17,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
+    private FileDetailsViewModel signedAdditionalContractFile;
     private GrantOfferLetterStateResource golState;
     private boolean useDocusign;
     private boolean procurement;
@@ -24,8 +25,8 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public GrantOfferLetterModel(String title, Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign,
-                                 boolean procurement, boolean ktp) {
+                                 FileDetailsViewModel signedAdditionalContractFile, boolean projectManager,
+                                 GrantOfferLetterStateResource golState, boolean useDocusign, boolean procurement, boolean ktp) {
         this.title = title;
         this.projectId = projectId;
         this.projectName = projectName;
@@ -33,6 +34,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
+        this.signedAdditionalContractFile = signedAdditionalContractFile;
         this.projectManager = projectManager;
         this.golState = golState;
         this.useDocusign = useDocusign;
@@ -72,6 +74,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public FileDetailsViewModel getAdditionalContractFile() {
         return additionalContractFile;
+    }
+
+    public FileDetailsViewModel getSignedAdditionalContractFile() {
+        return signedAdditionalContractFile;
     }
 
     public boolean isOfferSigned() {

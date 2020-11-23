@@ -44,9 +44,16 @@ public interface GrantOfferLetterService {
 
     Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
 
+    Optional<ByteArrayResource> getSignedAdditionalContractFile(Long projectId);
+
+    Optional<FileEntryResource> getSignedAdditionalContractFileDetails(Long projectId);
+
     ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
+
+    ServiceResult<FileEntryResource> addSignedAdditionalContract(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
     ServiceResult<StringResource> getDocusignUrl(long projectId);
 
     ServiceResult<Void> importSignedOfferLetter(long projectId);
+
 }
