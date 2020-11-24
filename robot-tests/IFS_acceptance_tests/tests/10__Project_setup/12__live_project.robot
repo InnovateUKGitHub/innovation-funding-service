@@ -9,9 +9,10 @@ Suite Setup       Project fiance approves the grant offer letter
 Suite Teardown    Close browser and delete emails
 
 *** Variables ***
-${secondKTPOrgName}                   The University of Reading
+${secondKTPOrgName}                      The University of Reading
 ${applicantKTACredentials}               john.fenton@ktn-uk.test
 ${email}                                 steve.smith@empire.com
+${liveProjectName}                       Live project application
 
 
 *** Test Cases ***
@@ -244,7 +245,7 @@ MO sould see project tab on dashboard once GOL is approved
 
 Live Project User is able to create a new application
     [Documentation]  IFS-8707
-    Given the internal user approve the GOL                        50
+    Given the internal user approve the GOL                        ${project_ids["${liveProjectName}"]}
     When Log in as a different user                                &{leadApplicantCredentials}
     And the user select the competition and starts application     KTP new competition
     And the user selects a knowledge based organisation            Reading   The University of Reading
