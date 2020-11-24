@@ -8,8 +8,10 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationTypeRepository;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.template.EoiTemplate.eoiDefaultQuestions;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 
 @Component
 public class HestaTemplate implements CompetitionTemplate {
@@ -74,24 +76,21 @@ public class HestaTemplate implements CompetitionTemplate {
         return newArrayList(
                 projectDetails()
                         .withQuestions(newArrayList(
+                                applicationDetails()
+                                        .withQuestionSetupType(QuestionSetupType.GRANT_TRANSFER_DETAILS),
                                 applicationTeam(),
-                                applicationDetails(),
-                                researchCategory(),
-                                equalityDiversityAndInclusion(),
-                                projectSummary(),
-                                scope()
+                                aQuestion()
+                                        .withShortName("Hesta grant agreement")
+                                        .withName("Hesta grant agreement")
+                                        .withAssignEnabled(false)
+                                        .withMultipleStatuses(false)
+                                        .withMarkAsCompletedEnabled(true)
+                                        .withType(QuestionType.LEAD_ONLY)
+                                        .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
+                                publicDescription(),
+                                equalityDiversityAndInclusion()
                         )),
-                applicationQuestions()
-                        .withQuestions(eoiDefaultQuestions()),
-                eoiTermsAndConditions()
+                termsAndConditions()
         );
-    }
-
-    private SectionBuilder eoiTermsAndConditions() {
-        SectionBuilder termsSection = termsAndConditions();
-        termsSection.getQuestions().get(0)
-                .withMultipleStatuses(false);
-        return termsSection
-                .withDescription("You are agreeing to these by submitting your application.");
     }
 }
