@@ -39,7 +39,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         // Test ordering.
         assertThat(competitionTypes)
                 .extracting(CompetitionTypeResource::getName)
-                .hasSize(11)
+                .hasSize(12)
                 .containsExactly(
                         "Programme",
                         "Additive Manufacturing",
@@ -55,5 +55,4 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Hesta"
                 );
     }
-
 }
