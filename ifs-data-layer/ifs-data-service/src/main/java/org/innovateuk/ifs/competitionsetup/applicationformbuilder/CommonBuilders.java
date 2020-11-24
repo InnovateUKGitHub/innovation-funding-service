@@ -4,6 +4,7 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
+import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
@@ -395,6 +396,16 @@ public class CommonBuilders {
         GrantTermsAndConditions grantTermsAndConditions =
                 grantTermsAndConditionsRepository.getLatestForFundingType(competition.getFundingType());
         competition.setTermsAndConditions(grantTermsAndConditions);
+        return competition;
+    }
+
+    public static Competition setDefaultOrganisationConfig(Competition competition) {
+        if (competition.getCompetitionOrganisationConfig() == null) {
+            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
+            competitionOrganisationConfig.setCompetition(competition);
+            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
+        }
+
         return competition;
     }
 }

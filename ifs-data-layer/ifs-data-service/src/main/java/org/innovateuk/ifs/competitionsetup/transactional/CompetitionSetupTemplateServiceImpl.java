@@ -99,7 +99,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competition.setCompetitionType(competitionType.get());
         setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
-        setDefaultOrganisationConfig(competition);
         setDefaultApplicationConfig(competition);
 
         setDefaultProjectDocuments(competition);
@@ -111,20 +110,13 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
+        competition = template.initializeOrganisationConfig(competition);
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
         template.copyTemplatePropertiesToCompetition(competition);
         competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
-    }
-
-    private void setDefaultOrganisationConfig(Competition competition) {
-        if (competition.getCompetitionOrganisationConfig() == null) {
-            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
-            competitionOrganisationConfig.setCompetition(competition);
-            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
-        }
     }
 
     private void setDefaultApplicationConfig(Competition competition) {

@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.setDefaultOrganisationConfig;
+
 public interface CompetitionTemplate {
 
     CompetitionTypeEnum type();
@@ -14,4 +16,7 @@ public interface CompetitionTemplate {
 
     Competition copyTemplatePropertiesToCompetition(Competition competition);
 
+    default Competition initializeOrganisationConfig(Competition competition) {
+        return setDefaultOrganisationConfig(competition);
+    }
 }
