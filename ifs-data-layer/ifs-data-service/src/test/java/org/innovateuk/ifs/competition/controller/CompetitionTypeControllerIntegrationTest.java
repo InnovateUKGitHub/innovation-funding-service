@@ -51,7 +51,8 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Advanced Propulsion Centre",
                         "Aerospace Technology Institute",
                         "The Prince's Trust",
-                        "Horizon 2020"
+                        "Horizon 2020",
+                        "Hesta"
                 );
     }
 
