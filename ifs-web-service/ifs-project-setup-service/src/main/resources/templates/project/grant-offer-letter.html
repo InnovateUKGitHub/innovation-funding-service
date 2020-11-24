@@ -137,12 +137,6 @@
                             <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                         </th:block>
                     </div>
-                    <th:block th:if="${model.grantOfferLetterSent}">
-                        <a th:if="${model.additionalContractFile == null || model.signedAdditionalContractFile != null}" th:attr="aria-hidden=${!model.showSubmitButton}"
-                           data-js-toggle-on-file-upload=""
-                           th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
-                           data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
-                    </th:block>
                 </th:block>
 
                 <th:block th:if="${model.additionalContractFile != null and model.projectManager and !model.useDocusign}">
@@ -203,6 +197,12 @@
                     </th:block>
                 </th:block>
 
+                <th:block th:if="${model.projectManager and !model.useDocusign and model.grantOfferLetterSent}">
+                    <a th:attr="aria-hidden=${!model.showSubmitButton}"
+                       data-js-toggle-on-file-upload=""
+                       th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
+                       data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
+                </th:block>
 
                 <th:block th:insert="fragments/modals :: modal-overlay" />
                 <th:block th:insert="fragments/modals :: modal-confirm-grant-offer-letter" />
