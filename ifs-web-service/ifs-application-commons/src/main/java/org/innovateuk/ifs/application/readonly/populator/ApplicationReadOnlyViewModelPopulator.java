@@ -26,7 +26,6 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
-import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -124,7 +123,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
