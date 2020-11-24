@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -55,6 +56,9 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
 
     @Test
     public void views() throws Exception {

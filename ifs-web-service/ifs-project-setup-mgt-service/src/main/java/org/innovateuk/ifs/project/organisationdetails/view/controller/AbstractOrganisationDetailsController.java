@@ -50,12 +50,14 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean includeYourOrganisationSection = isIncludeYourOrganisationSection(competitionId, organisation);
+        boolean ktpCompetition = competition.isKtp();
 
         model.addAttribute("organisationDetails", new OrganisationDetailsViewModel(project,
                 competitionId,
                 organisation,
                 getAddress(organisation),
-                project.isCollaborativeProject()));
+                project.isCollaborativeProject(),
+                ktpCompetition));
 
         if (includeYourOrganisationSection) {
             model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(), competition.getName(),false,
