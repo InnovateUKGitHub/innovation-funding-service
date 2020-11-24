@@ -48,6 +48,10 @@ ${Assign_Project_ID}   ${application_ids["${Assign_Project}"]}
 ${Assign_Project2}     High Performance Gasoline Stratified
 ${Assign_Project2_ID}  ${application_ids["${Assign_Project2}"]}
 ${New_Mo}          tom@poly.io
+${PSCapplicationID}   212
+${PSCapplicationTitle}   PSC application 15
+${PSC_Competition_Name}     Project Setup Comp 15
+${PSC_Competition_Id}       ${competition_ids["${PSC_Competition_Name}"]}
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -244,6 +248,25 @@ Comp admin assign project existing IFS user MO
     Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
     And logout as user
     Then the user logs in and checks for assigned projects
+
+Internal user assigns a MO to a new project
+    [Documentation]    IFS-8753
+    When Log in as a different user                  &{internal_finance_credentials}
+    Then Internal user assigns MO to application     ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
+
+Internal user removes a partner organisation
+    [Documentation]    IFS-8753
+    Given the user navigates to the page      ${server}/project-setup-management/competition/${PSC_Competition_Id}/status/all
+    And The user clicks the button/link       jQuery = tbody tr:nth-of-type(1) td:nth-of-type(2)
+    Then The user clicks the button/link      jQuery = h2:contains("SmithZone")~ button:contains("Remove organisation"):first
+    And the user clicks the button/link       jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    And the user should not see the element   jQuery = h2:contains("SmithZone")
+
+MO can now check the application feedback
+    Given Log in as a different user         Orville.Gibbs@gmail.com    Passw0rd1357
+    When The user clicks the button/link     link = ${PSCapplicationTitle}
+    and the user clicks the button/link      link = view application feedback
+    Then The user should see the element     jQuery = h1:contains("Application overview")
 
 *** Keywords ***
 The MO user is able to access all of the links
