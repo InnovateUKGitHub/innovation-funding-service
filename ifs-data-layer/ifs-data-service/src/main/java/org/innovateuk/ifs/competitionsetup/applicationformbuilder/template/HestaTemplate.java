@@ -2,8 +2,10 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
@@ -65,6 +67,14 @@ public class HestaTemplate implements CompetitionTemplate {
         Iterable<OrganisationType> organisationTypes = organisationTypeRepository.findAll();
         List<OrganisationType> organisationTypesList = Lists.newArrayList(organisationTypes);
 
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        competitionAssessmentConfig.setCompetition(competition);
+        competitionAssessmentConfig.setAssessorCount(0);
+        competitionAssessmentConfig.setHasAssessmentPanel(false);
+        competitionAssessmentConfig.setHasInterviewStage(false);
+        competitionAssessmentConfig.setIncludeAverageAssessorScoreInNotifications(false);
+        competitionAssessmentConfig.setAssessorFinanceView(AssessorFinanceView.OVERVIEW);
+
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Hesta"));
         competition.setLeadApplicantTypes(organisationTypesList);
         competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
@@ -78,6 +88,7 @@ public class HestaTemplate implements CompetitionTemplate {
         competition.setHasAssessmentStage(false);
         competition.setHasAssessmentPanel(false);
         competition.setHasInterviewStage(false);
+        competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
 
         return competition;
     }
