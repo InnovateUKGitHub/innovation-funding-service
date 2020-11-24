@@ -29,6 +29,13 @@ Guest user navigates to Front Door
     And the user should not see an error in the page
     And the user should see the element        jQuery = a:contains("feedback")
 
+Guest user can open chatbot on contact us page
+    [Documentation]     IFS-8463
+    When The user clicks the button/link     link = Use our virtual assistant (opens in new window)
+    And Select Window                        URL = ${server}/info/contact/virtual-assistant
+    Then The user should see the element     css = [class='wc-message-pane']
+    And the user closes the last opened tab
+
 Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
