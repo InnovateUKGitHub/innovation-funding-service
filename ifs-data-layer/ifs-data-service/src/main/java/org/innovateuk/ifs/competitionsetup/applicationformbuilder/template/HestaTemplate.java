@@ -1,16 +1,20 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder.template;
 
 import com.google.common.collect.Lists;
-import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
+import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationTypeRepository;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +25,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aDefaultAssessedQuestion;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 
 @Component
 public class HestaTemplate implements CompetitionTemplate {
@@ -34,7 +40,7 @@ public class HestaTemplate implements CompetitionTemplate {
     private OrganisationTypeRepository organisationTypeRepository;
 
     @Autowired
-    private ResearchCategoryRepository researchCategoryRepository;
+    private CommonBuilders commonBuilders;
 
     @Override
     public CompetitionTypeEnum type() {
@@ -61,6 +67,7 @@ public class HestaTemplate implements CompetitionTemplate {
 
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Hesta"));
         competition.setLeadApplicantTypes(organisationTypesList);
+        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
         competition.setMaxProjectDuration(60);
@@ -92,7 +99,6 @@ public class HestaTemplate implements CompetitionTemplate {
                         .withQuestions(newArrayList(
                                 genericQuestion()
                         )),
-                finances(),
                 termsAndConditions()
         );
     }
@@ -103,6 +109,7 @@ public class HestaTemplate implements CompetitionTemplate {
                         defaultAssessedQuestionFormInputs(Function.identity(),
                                 assessorInputBuilder ->
                                         assessorInputBuilder
+                                                .withActive(false)
                                                 .withGuidanceRows(newArrayList(
                                                 aGuidanceRow()
                                                         .withSubject("9,10"),
@@ -117,5 +124,55 @@ public class HestaTemplate implements CompetitionTemplate {
                                         ))
                         )
                 );
+    }
+
+    public static QuestionBuilder scope() {
+        return aQuestion()
+                .withShortName("Scope")
+                .withName("How does your project align with the scope of this competition?")
+                .withDescription("If your application doesn't align with the scope, we will not assess it.")
+                .withAssignEnabled(true)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.SCOPE)
+                .withFormInputs(newArrayList(
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(true)
+                                .withGuidanceTitle("What should I include in the project scope?")
+                                .withGuidanceAnswer("<p>It is important that you read the following guidance.</p><p>To show how your project aligns with the scope of this competition, you need to:</p><ul class=\"list-bullet\">         <li>read the competition brief in full</li><li>understand the background, challenge and scope of the competition</li><li>address the research objectives in your application</li><li>match your project's objectives and activities to these</li></ul> <p>Once you have submitted your application, you should not change this section unless:</p><ul class=\"list-bullet\">         <li>we ask you to provide more information</li><li>we ask you to make it clearer</li></ul>")
+                                .withWordCount(400),
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(false),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withDescription("Is the application in scope?"),
+                        aFormInput()
+                                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withDescription("Please select the research category for this project"),
+                        aFormInput()
+                                .withType(FormInputType.TEXTAREA)
+                                .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(false)
+                                .withGuidanceTitle("Guidance for assessing scope")
+                                .withGuidanceAnswer("You should still assess this application even if you think that it is not in scope. Your answer should be based upon the following:")
+                                .withWordCount(100)
+                                .withGuidanceRows(newArrayList(
+                                        aGuidanceRow()
+                                                .withSubject("Yes")
+                                                .withJustification("The application contains the following: Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?"),
+                                        aGuidanceRow()
+                                                .withSubject("No")
+                                                .withJustification("One or more of the above requirements have not been satisfied.")
+                                ))
+                ));
     }
 }
