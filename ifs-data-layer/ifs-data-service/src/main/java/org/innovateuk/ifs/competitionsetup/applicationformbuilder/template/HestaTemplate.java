@@ -56,7 +56,7 @@ public class HestaTemplate implements CompetitionTemplate {
         Iterable<OrganisationType> organisationTypes = organisationTypeRepository.findAll();
         List<OrganisationType> organisationTypesList = Lists.newArrayList(organisationTypes);
 
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Innovate UK"));
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Hesta"));
         competition.setLeadApplicantTypes(organisationTypesList);
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
