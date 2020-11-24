@@ -104,7 +104,7 @@ Project Setup - Post award service link should not display for any other fund ty
 Emails - Project manager and finance contacts should receive an email notification stating project is live with a link to setup project page
      [Documentation]   IFS-7017
      [Setup]  Request a project id of post award service application
-     Given the internal user approve the GOL                                          ${postAwardServiceProjectID}
+     Given the GOL has already been approved                                           ${postAwardServiceProjectID}
      Then project manager and finance contact should receive an email notification
 
 Applicant - Other team members should see message project is live on GOL approval

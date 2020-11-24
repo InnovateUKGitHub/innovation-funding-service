@@ -230,6 +230,7 @@ Applicant uploads the GOL using Docusign
 
 the GOL has already been approved
     [Arguments]  ${projectID}
+    log in as a different user          &{internal_finance_credentials}
     the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
 
