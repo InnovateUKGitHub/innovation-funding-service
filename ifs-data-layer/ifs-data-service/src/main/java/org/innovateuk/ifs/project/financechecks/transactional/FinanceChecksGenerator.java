@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,6 +56,9 @@ public class FinanceChecksGenerator {
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
@@ -101,9 +105,14 @@ public class FinanceChecksGenerator {
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
-        if(competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
+        if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
+        }
+
+        if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
+            PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
+            eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
         }
 
         ProjectFinance projectFinanceForOrganisation =

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.documentation.ProjectPartnerStatusResourceDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
@@ -62,6 +63,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
                         withProjectSetupCompleteStatus(PENDING, PENDING, PENDING).
                         withProjectState(LIVE).
+                        withApplicationState(ApplicationState.APPROVED).
                         build(3);
         ProjectStatusPageResource page = new ProjectStatusPageResource(10, 2, projectStatusResources, 0, 5);
 
@@ -101,6 +103,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withSpendProfileStatus(PENDING, ACTION_REQUIRED, COMPLETE).
                         withGrantOfferLetterStatus(PENDING, PENDING, PENDING).
                         withProjectState(LIVE).
+                        withApplicationState(ApplicationState.APPROVED).
                         build(3);
 
         when(internalUserProjectStatusService.getPreviousCompetitionStatus(competitionId)).thenReturn(serviceSuccess(projectStatusResources));

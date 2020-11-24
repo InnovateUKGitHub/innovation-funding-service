@@ -106,11 +106,11 @@ Funding sought validations
     And the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error  Enter the amount of funding sought.
 
-Found sought changes
+Fund sought changes
     [Documentation]  IFS-6293  IFS-6298
     Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
     When the user clicks the button/link         jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element         jQuery = h3:contains("Finances summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
+    Then the user should see the element         jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
     And the internal user should see the funding changes
     And the external user should see the funding changes
 
@@ -187,12 +187,11 @@ the user completes the project team details
     the user clicks the button/link     link = Project team
     the user clicks the button/link     link = Your finance contact
     the user selects the radio button   financeContact   financeContact1
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Project manager
     the user selects the radio button   projectManager   projectManager1
-    the user clicks the button/link     jQuery = button:contains("Save project manager")
-    the user clicks the button/link     link = Set up your project
-    the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     link = Back to project setup
 
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${loan_PS_project_Id}/monitoring-officer

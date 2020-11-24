@@ -19,16 +19,14 @@ public class ApplicationFundingBreakdownViewModel implements BaseAnalyticsViewMo
     private final boolean collaborativeProject;
     private final boolean ktpCompetition;
     private final List<FinanceRowType> financeRowTypes;
-    private final boolean anyApplicantHasVat;
 
-    public ApplicationFundingBreakdownViewModel(long applicationId, String competitionName, List<BreakdownTableRow> rows, boolean collaborativeProject, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean anyApplicantHasVat) {
+    public ApplicationFundingBreakdownViewModel(long applicationId, String competitionName, List<BreakdownTableRow> rows, boolean collaborativeProject, boolean ktpCompetition, List<FinanceRowType> financeRowTypes) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.rows = rows;
         this.collaborativeProject = collaborativeProject;
         this.ktpCompetition = ktpCompetition;
         this.financeRowTypes = financeRowTypes;
-        this.anyApplicantHasVat = anyApplicantHasVat;
     }
 
     @Override

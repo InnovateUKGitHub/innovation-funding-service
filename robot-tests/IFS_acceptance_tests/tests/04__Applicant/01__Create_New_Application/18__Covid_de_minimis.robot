@@ -111,7 +111,7 @@ External project finance can edit funding sought
 External project finance can generate spend profile and complete PS
     [Documentation]  IFS-7357
     Given the user clicks the button/link    css = .generate-spend-profile-main-button
-    When the user clicks the button/link    css = #generate-spend-profile-modal-button
+    When the user clicks the button/link     css = #generate-spend-profile-modal-button
     Then the internal user can complete PS
 
 Internal user is able to approve Spend profile and generates the GOL
@@ -195,7 +195,7 @@ the project finance approves all steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Back to project setup
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}
@@ -360,8 +360,8 @@ the user can change funding sought
     the user clicks the button/link        link = Change funding sought
     the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  2100
     the user clicks the button/link        jQuery = button:contains("Save and return to project finances")
-    the user should see the element        jQuery = h3:contains("Finances summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
-    the user clicks the button/link        link = Finance checks
+    the user should see the element        jQuery = h3:contains("Finance summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
+    the user clicks the button/link        link = Back to finance checks
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDdeminimusapplicationTitle1}
