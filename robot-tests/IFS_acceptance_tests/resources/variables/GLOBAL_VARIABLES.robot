@@ -115,6 +115,12 @@ ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH_DATE}   ${getPrettyMilest
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_DAY_MONTH}   ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDayMth(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_DAY_MONTH_YEAR}  ${getPrettyMilestoneDayMthYear(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+${ktpAssessmentCompetitionName}                               KTP assessment
+${ktpAssessmentCompetitionId}                                 ${competition_ids['${ktpAssessmentCompetitionName}']}
+${ktpAssessmentCompetitionReleaseFeedbackDayMonthYear}        ${getPrettyMilestoneDate(${ktpAssessmentCompetitionId}, "RELEASE_FEEDBACK")}
+${ktpDetailsFinanceCompetitionName}                           KTP assessment Detailed Finances
+${ktpDetailsFinanceCompetitionId}                             ${competition_ids['${ktpDetailsFinanceCompetitionName}']}
+${ktpDetailsFinanceCompetitionReleaseFeedbackDayMonthYear}    ${getPrettyMilestoneDate(${ktpDetailsFinanceCompetitionId}, "RELEASE_FEEDBACK")}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_TITLE}      Intelligent Building

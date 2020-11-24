@@ -3,7 +3,16 @@ UPDATE competition SET covid_type='ADDITIONAL_FUNDING' WHERE name = '596 Covid g
 UPDATE competition SET covid_type='DE_MINIMIS_ROUND_2' WHERE name = '599 Covid de minimis round 2';
 
 UPDATE competition SET use_docusign_for_grant_offer_letter=1 WHERE covid_type IS NOT NULL;
-UPDATE project p inner join application a on a.id = p.application_id INNER JOIN competition c on c.id = a.competition SET p.use_docusign_for_grant_offer_letter=1 WHERE c.covid_type is not null;
+UPDATE project
+SET use_docusign_for_grant_offer_letter=1
+WHERE id in (
+    SELECT proj_id FROM (
+        SELECT p.id as proj_id FROM project p
+        INNER JOIN application a ON a.id = p.application_id
+        INNER JOIN competition comp on comp.id = a.competition
+        WHERE comp.covid_type is not null
+    ) AS proj
+);
 
 -- ADDITIONAL_FUNDING
 SET @additional_funding_id = (SELECT id FROM competition WHERE covid_type = 'ADDITIONAL_FUNDING');
