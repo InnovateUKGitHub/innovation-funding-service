@@ -275,6 +275,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 andOnSuccessReturnVoid()));
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeSignedAdditionalContractFileEntry(long projectId) {
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectIsActive).
+                andOnSuccess(project -> getCurrentlyLoggedInUser().
+                        andOnSuccess(user -> removeSignedAdditionalContractIfAllowed(project, user).
+                                andOnSuccessReturnVoid()));
+    }
+
     private ServiceResult<FileEntry> removeSignedGrantOfferLetterIfAllowed(Project project, User user) {
 
         if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
@@ -285,10 +295,27 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId()));
     }
 
+    private ServiceResult<FileEntry> removeSignedAdditionalContractIfAllowed(Project project, User user) {
+        if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
+            return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
+        }
+
+        return removeSignedAdditionalContractFromProject(project).
+                andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId()));
+    }
+
     private ServiceResult<FileEntry> removeSignedGrantOfferLetterFileFromProject(Project project) {
         return validateProjectIsActive(project).andOnSuccessReturn(() -> {
             FileEntry fileEntry = project.getSignedGrantOfferLetter();
             project.setSignedGrantOfferLetter(null);
+            return fileEntry;
+        });
+    }
+
+    private ServiceResult<FileEntry> removeSignedAdditionalContractFromProject(Project project) {
+        return validateProjectIsActive(project).andOnSuccessReturn(() -> {
+            FileEntry fileEntry = project.getSignedAdditionalContractFile();
+            project.setSignedAdditionalContractFile(null);
             return fileEntry;
         });
     }
@@ -326,6 +353,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
+    @Transactional
     public ServiceResult<FileEntryResource> createSignedAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).

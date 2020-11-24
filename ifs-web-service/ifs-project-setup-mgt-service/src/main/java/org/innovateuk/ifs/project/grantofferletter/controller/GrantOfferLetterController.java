@@ -219,6 +219,19 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @GetMapping("/signed-additional-contract")
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadSignedAdditionalContractFile(
+            @P("projectId") @PathVariable("projectId") final Long projectId) {
+
+        final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedAdditionalContractFile(projectId);
+        final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
+
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(params = "uploadAnnexClicked", value = "/upload-annex")
     public String uploadAnnexFile(
             @P("projectId") @PathVariable("projectId") final Long projectId,
@@ -248,6 +261,8 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
+        Optional<FileEntryResource> signedAdditionalContractFile = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
+
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
         return new GrantOfferLetterModel(
@@ -255,6 +270,7 @@ public class GrantOfferLetterController {
                 competition.isProcurement() ? "Contract" : "Letter",
                 competition.getId(),
                 competition.isH2020(),
+                competition.isKtp(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectId,
@@ -263,6 +279,7 @@ public class GrantOfferLetterController {
                 grantOfferFileDetails.isPresent(),
                 additionalContractFile.isPresent(),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
+                signedAdditionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 golState,
                 project.getGrantOfferLetterRejectionReason(),
                 project.getProjectState(),

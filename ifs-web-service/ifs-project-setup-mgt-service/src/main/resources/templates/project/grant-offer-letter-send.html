@@ -188,6 +188,23 @@
                     <p class="govuk-body">Awaiting upload by the Project Manager</p>
                 </th:block>
             </div>
+
+            <th:block th:if="${model.ktp}">
+                <h2 class="govuk-heading-m govuk-!-margin-0" >Signed annex</h2>
+                <div class="upload-section">
+                    <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+                        <p class="uploaded-file govuk-body">
+                            <a class="govuk-link"
+                               target="_blank"
+                               th:href="@{/project/{id}/grant-offer-letter/signed-additional-contract(id=${model.projectId})}"
+                               th:text="|${model.signedAdditionalContractFile?.filename} (opens in a new window)|">signed-annex.PDF</a>
+                        </p>
+                    </th:block>
+                    <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                        <p class="govuk-body">Awaiting upload by the Project Manager</p>
+                    </th:block>
+                </div>
+            </th:block>
         </th:block>
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
             <h2 class="govuk-heading-m" th:text="|Confirm signed ${model.title.toLowerCase()}|"></h2>

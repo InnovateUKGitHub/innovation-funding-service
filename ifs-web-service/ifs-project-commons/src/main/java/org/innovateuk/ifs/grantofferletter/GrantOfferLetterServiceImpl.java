@@ -67,6 +67,11 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
+    public ServiceResult<Void> removeSignedAdditionalContract(Long projectId) {
+        return grantOfferLetterRestService.removeSignedAdditionalContractFile(projectId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return grantOfferLetterRestService.submitGrantOfferLetter(projectId).toServiceResult();
     }

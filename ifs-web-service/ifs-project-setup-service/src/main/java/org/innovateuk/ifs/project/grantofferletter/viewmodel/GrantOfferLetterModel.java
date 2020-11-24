@@ -84,6 +84,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return signedGrantOfferLetterFile != null;
     }
 
+    public boolean isAdditionalContractSigned() {
+        return signedAdditionalContractFile != null;
+    }
+
     public FileDetailsViewModel getSignedGrantOfferLetterFile() {
         return signedGrantOfferLetterFile;
     }
@@ -105,7 +109,11 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isShowSubmitButton() {
-        return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
+        return projectManager
+                && !isSubmitted()
+                && isOfferSigned()
+                && grantOfferLetterFile != null
+                && (ktp ? additionalContractFile != null && isAdditionalContractSigned() : true);
     }
 
     public boolean isProjectManager() {
@@ -132,6 +140,26 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     public boolean isAbleToRemoveSignedGrantOffer() {
 
         if (getSignedGrantOfferLetterFile() == null) {
+            return false;
+        }
+
+        if (isGrantOfferLetterApproved()) {
+            return false;
+        }
+
+        if (isGrantOfferLetterRejected()) {
+            return isProjectManager();
+        }
+
+        if (!isSubmitted()) {
+            return isLeadPartner();
+        }
+
+        return false;
+    }
+
+    public boolean isAbleToRemoveSignedAdditionalContractFile() {
+        if (getSignedAdditionalContractFile() == null) {
             return false;
         }
 

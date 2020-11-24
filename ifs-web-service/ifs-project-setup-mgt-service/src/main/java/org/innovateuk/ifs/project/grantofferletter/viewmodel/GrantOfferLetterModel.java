@@ -17,6 +17,7 @@ public class GrantOfferLetterModel {
     private final String shortTitle;
     private final long competitionId;
     private final boolean h2020;
+    private final boolean ktp;
     private final FileDetailsViewModel grantOfferLetterFile;
     private final FileDetailsViewModel additionalContractFile;
     private final long projectId;
@@ -25,6 +26,7 @@ public class GrantOfferLetterModel {
     private final boolean grantOfferLetterFileContentAvailable;
     private final boolean additionalContractFileContentAvailable;
     private final FileDetailsViewModel signedGrantOfferLetterFile;
+    private final FileDetailsViewModel signedAdditionalContractFile;
     private final GrantOfferLetterStateResource grantOfferState;
     private final String grantOfferLetterRejectionReason;
     private final ProjectState projectState;
@@ -34,6 +36,7 @@ public class GrantOfferLetterModel {
                                  String shortTitle,
                                  long competitionId,
                                  boolean h2020,
+                                 boolean ktp,
                                  FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel additionalContractFile,
                                  Long projectId,
@@ -42,6 +45,7 @@ public class GrantOfferLetterModel {
                                  boolean grantOfferLetterFileContentAvailable,
                                  boolean additionalContractFileContentAvailable,
                                  FileDetailsViewModel signedGrantOfferLetterFile,
+                                 FileDetailsViewModel signedAdditionalContractFile,
                                  GrantOfferLetterStateResource grantOfferState,
                                  String grantOfferLetterRejectionReason,
                                  ProjectState projectState,
@@ -50,6 +54,7 @@ public class GrantOfferLetterModel {
         this.shortTitle = shortTitle;
         this.competitionId = competitionId;
         this.h2020 = h2020;
+        this.ktp = ktp;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
         this.projectId = projectId;
@@ -58,6 +63,7 @@ public class GrantOfferLetterModel {
         this.grantOfferLetterFileContentAvailable = grantOfferLetterFileContentAvailable;
         this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
+        this.signedAdditionalContractFile = signedAdditionalContractFile;
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
         this.projectState = projectState;
@@ -78,6 +84,10 @@ public class GrantOfferLetterModel {
 
     public boolean isH2020() {
         return h2020;
+    }
+
+    public boolean isKtp() {
+        return ktp;
     }
 
     public GrantOfferLetterStateResource getGrantOfferState() {
@@ -109,6 +119,10 @@ public class GrantOfferLetterModel {
     public Boolean getAdditionalContractFileContentAvailable() { return additionalContractFileContentAvailable; }
 
     public FileDetailsViewModel getSignedGrantOfferLetterFile() { return signedGrantOfferLetterFile; }
+
+    public FileDetailsViewModel getSignedAdditionalContractFile() {
+        return signedAdditionalContractFile;
+    }
 
     public boolean getSignedGrantOfferLetterApproved() { return grantOfferState.isSignedGrantOfferLetterApproved(); }
 

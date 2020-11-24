@@ -32,6 +32,8 @@ public interface GrantOfferLetterService {
 
     ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId);
 
+    ServiceResult<Void> removeSignedAdditionalContract(Long projectId);
+
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 
     ServiceResult<Void> sendGrantOfferLetter(Long projectId);
@@ -55,5 +57,6 @@ public interface GrantOfferLetterService {
     ServiceResult<StringResource> getDocusignUrl(long projectId);
 
     ServiceResult<Void> importSignedOfferLetter(long projectId);
+
 
 }

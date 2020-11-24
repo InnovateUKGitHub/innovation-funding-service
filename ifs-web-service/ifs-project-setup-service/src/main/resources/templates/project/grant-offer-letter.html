@@ -106,19 +106,6 @@
                     </p>
                 </th:block>
 
-
-                <th:block th:if="${model.additionalContractFile != null}">
-                    <h2 class="govuk-heading-m">Annex</h2>
-                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
-                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application.|"></p>
-                    <p class="govuk-body">
-                        <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
-                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
-                           class="govuk-link"
-                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
-                    </p>
-                </th:block>
-
                 <th:block th:if="${model.projectManager and !model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
                         <h2 class="govuk-heading-m" th:text="|Sending your signed ${model.title.toLowerCase()} to Innovate UK|"></h2>
@@ -151,7 +138,65 @@
                         </th:block>
                     </div>
                     <th:block th:if="${model.grantOfferLetterSent}">
-                        <a th:attr="aria-hidden=${!model.showSubmitButton}"
+                        <a th:if="${model.additionalContractFile == null || model.signedAdditionalContractFile != null}" th:attr="aria-hidden=${!model.showSubmitButton}"
+                           data-js-toggle-on-file-upload=""
+                           th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
+                           data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${model.additionalContractFile != null and model.projectManager and !model.useDocusign}">
+                    <h2 class="govuk-heading-m">Annex</h2>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application.|"></p>
+                    <p class="govuk-body">
+                        <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
+                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
+                           class="govuk-link"
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
+                    </p>
+
+                    <th:block th:if="${model.signedAdditionalContractFile != null && model.signedAdditionalContractFile.filename != null}">
+                        <h2 class="govuk-heading-m">Signed annex</h2>
+                        <p class="govuk-body">
+                            <a th:href="@{/project/{id}/offer/signed-additional-contract(id=${model.projectId})}"
+                               th:text="|${model.signedAdditionalContractFile.filename} (opens in a new window)|"
+                               class="govuk-link"
+                               target="_blank">Signed annex.PDF</a>
+                        </p>
+                    </th:block>
+
+                    <div th:if="${model.grantOfferLetterSent and !model.submitted}" class="upload-section">
+                        <h2 class="govuk-heading-m" th:text="|Sending your signed annex to Innovate UK|"></h2>
+                        <h2 class="govuk-heading-s govuk-!-margin-0">Upload signed annex</h2>
+                        <p class="govuk-body">The finance contact must provide a signed copy of the annex.</p>
+                        <details class="govuk-details">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">What are the requirements for upload?</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">The annex should:</p>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>be in a portable document format (.pdf)</li>
+                                    <li>be less than 10MB in file size</li>
+                                </ul>
+                                <p class="govuk-body">Unable to upload? Contact Customer Support on 0300 321 4357.</p>
+                            </div>
+                        </details>
+                        <th:block th:with="uploadViewmode='edit',
+                                       downloadUrl=@{/project/{id}/offer/signed-additional-contract(id=${model.projectId})},
+                                       filename=${model.signedAdditionalContractFile?.filename},
+                                       inputField='signedAdditionalContract',
+                                       validationField=${inputField},
+                                       mayRemove=${model.ableToRemoveSignedAdditionalContractFile},
+                                       removeName='removeSignedAdditionalContractFileClicked',
+                                       saveName='uploadSignedAdditionalContractFileClicked'">
+                            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                        </th:block>
+                    </div>
+
+                    <th:block th:if="${model.grantOfferLetterSent}">
+                        <a th:if="${model.signedGrantOfferLetterFile != null}" th:attr="aria-hidden=${!model.showSubmitButton}"
                            data-js-toggle-on-file-upload=""
                            th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
                            data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
