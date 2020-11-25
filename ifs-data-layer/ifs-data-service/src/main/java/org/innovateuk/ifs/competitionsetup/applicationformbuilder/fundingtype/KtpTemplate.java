@@ -78,6 +78,7 @@ public class KtpTemplate implements FundingTypeTemplate {
         commonBuilders.addProjectSetupStage(competition, PROJECT_DETAILS);
         commonBuilders.addProjectSetupStage(competition, PROJECT_TEAM);
         commonBuilders.addProjectSetupStage(competition, MONITORING_OFFICER);
+        commonBuilders.addProjectSetupStage(competition, BANK_DETAILS);
         commonBuilders.addProjectSetupStage(competition, FINANCE_CHECKS);
         commonBuilders.addProjectSetupStage(competition, GRANT_OFFER_LETTER);
     }

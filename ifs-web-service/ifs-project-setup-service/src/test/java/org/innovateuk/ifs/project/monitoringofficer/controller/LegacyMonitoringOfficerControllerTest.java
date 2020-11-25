@@ -6,18 +6,19 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
-import org.innovateuk.ifs.project.monitoringofficer.viewmodel.LegacyMonitoringOfficerViewModel;
+import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.status.StatusService;
-import org.innovateuk.ifs.util.CollectionFunctions;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -50,48 +52,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-/**
- *
- **/
 public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVCTest<LegacyMonitoringOfficerController> {
-
-    private long projectId = 123L;
-    private long applicationId = 456L;
-    private long competitionId = 789L;
-
-    private MonitoringOfficerResource mo = newMonitoringOfficerResource().
-            withFirstName("First").
-            withLastName("Last").
-            withEmail("asdf@asdf.com").
-            withPhoneNumber("1234567890").
-            build();
-
-    private AddressResource projectAddress = newAddressResource().
-            withAddressLine1("Line 1").
-            withAddressLine2().
-            withAddressLine3("Line 3").
-            withTown("Line 4").
-            withCounty("Line 5").
-            withPostcode("").
-            build();
-
-    private ApplicationResource application = newApplicationResource().
-            withId(applicationId).
-            withCompetition(competitionId).
-            build();
-
-    private CompetitionResource competition = newCompetitionResource().
-            withInnovationAreaNames(CollectionFunctions.asLinkedSet("Some Area", "Some other area")).
-            build();
-
-    private CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
-
-    ProjectResourceBuilder projectBuilder = newProjectResource().
-            withId(projectId).
-            withName("My Project").
-            withApplication(applicationId).
-            withAddress(projectAddress).
-            withTargetStartDate(LocalDate.of(2017, 01, 05));
 
     @Mock
     private ProjectService projectService;
@@ -110,10 +71,60 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
-    @Test
-    public void testViewMonitoringOfficerPage() throws Exception {
 
-        ProjectResource project = projectBuilder.build();
+    private long projectId = 123L;
+    private long applicationId = 456L;
+    private long competitionId = 789L;
+
+    private MonitoringOfficerResource monitoringOfficer;
+    private AddressResource projectAddress;
+    private ApplicationResource application;
+    private CompetitionResource competition;
+    private CompetitionSummaryResource competitionSummary;
+    private ProjectResourceBuilder projectResourceBuilder;
+
+    @Before
+    public void setUp() {
+        monitoringOfficer = newMonitoringOfficerResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withEmail("asdf@asdf.com")
+                .withPhoneNumber("1234567890")
+                .build();
+
+        projectAddress = newAddressResource()
+                .withAddressLine1("Line 1")
+                .withAddressLine2()
+                .withAddressLine3("Line 3")
+                .withTown("Line 4")
+                .withCounty("Line 5")
+                .withPostcode("")
+                .build();
+
+        application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competitionId)
+                .build();
+
+        competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withInnovationAreaNames(asLinkedSet("Some Area", "Some other area"))
+                .build();
+
+        competitionSummary = newCompetitionSummaryResource().build();
+
+        projectResourceBuilder = newProjectResource()
+                .withId(projectId)
+                .withName("My Project")
+                .withApplication(applicationId)
+                .withAddress(projectAddress)
+                .withCompetition(competitionId)
+                .withTargetStartDate(LocalDate.of(2017, 01, 05));
+    }
+
+    @Test
+    public void viewMonitoringOfficerPage() throws Exception {
+        ProjectResource project = projectResourceBuilder.build();
 
         boolean existingMonitoringOfficer = true;
 
@@ -124,8 +135,10 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andReturn();
 
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
 
         // assert the project details are correct
         assertProjectDetailsPrepopulatedOk(model);
@@ -135,7 +148,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
     @Test
     public void viewMonitoringOfficerInReadOnly() throws Exception {
-        ProjectResource project = projectBuilder.build();
+        ProjectResource project = projectResourceBuilder.build();
 
         boolean existingMonitoringOfficer = true;
 
@@ -148,7 +161,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                 andReturn();
 
         Map<String, Object> modelMap = result.getModelAndView().getModel();
-        LegacyMonitoringOfficerViewModel model = (LegacyMonitoringOfficerViewModel) modelMap.get("model");
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
         Boolean readOnlyView = (Boolean) modelMap.get("readOnlyView");
 
         // assert the project details are correct
@@ -158,10 +171,10 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
         assertTrue(readOnlyView);
     }
 
-    private void assertProjectDetailsPrepopulatedOk(LegacyMonitoringOfficerViewModel model) {
+    private void assertProjectDetailsPrepopulatedOk(MonitoringOfficerViewModel model) {
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectName());
-        assertEquals(competition.getInnovationAreaNames(), CollectionFunctions.asLinkedSet("Some Area", "Some other area"));
+        assertEquals(competition.getInnovationAreaNames(), asLinkedSet("Some Area", "Some other area"));
     }
 
     private void setupViewMonitoringOfficerTestExpectations(ProjectResource project, boolean existingMonitoringOfficer) {
@@ -173,7 +186,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
                         build()).
                 build();
 
-        when(monitoringOfficerService.findMonitoringOfficerForProject(projectId)).thenReturn(existingMonitoringOfficer ? restSuccess(mo) : restFailure(HttpStatus.NOT_FOUND));
+        when(monitoringOfficerService.findMonitoringOfficerForProject(projectId)).thenReturn(existingMonitoringOfficer ? restSuccess(monitoringOfficer) : restFailure(HttpStatus.NOT_FOUND));
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
