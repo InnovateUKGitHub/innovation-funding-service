@@ -19,7 +19,8 @@ import java.util.Set;
 public class ScoreAssessmentQuestionReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<ScoreAssessmentQuestionReadOnlyViewModel> {
 
     @Override
-    public ScoreAssessmentQuestionReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public ScoreAssessmentQuestionReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question,
+                                                             ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         return new ScoreAssessmentQuestionReadOnlyViewModel(data, question, allFeedback(data, question, settings), allScores(data, question, settings));
     }
 
