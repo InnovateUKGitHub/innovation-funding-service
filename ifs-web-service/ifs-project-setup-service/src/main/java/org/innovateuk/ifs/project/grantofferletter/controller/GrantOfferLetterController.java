@@ -118,7 +118,7 @@ public class GrantOfferLetterController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @PostMapping(params = "uploadSignedAdditionalContractFileClicked")
     public String uploadSignedAdditionalContractFile(
-            @P("projectId")@PathVariable("projectId") final Long projectId,
+            @PathVariable final long projectId,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
@@ -136,7 +136,7 @@ public class GrantOfferLetterController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
     @PostMapping(params = "removeSignedAdditionalContractFileClicked")
     public String removeSignedAdditionalContractFile(
-            @P("projectId")@PathVariable("projectId") final Long projectId,
+            @PathVariable final long projectId,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,

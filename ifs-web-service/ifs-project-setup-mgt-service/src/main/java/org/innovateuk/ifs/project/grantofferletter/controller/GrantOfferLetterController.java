@@ -223,7 +223,7 @@ public class GrantOfferLetterController {
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadSignedAdditionalContractFile(
-            @P("projectId") @PathVariable("projectId") final Long projectId) {
+            @PathVariable final long projectId) {
 
         final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedAdditionalContractFile(projectId);
         final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
