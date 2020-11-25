@@ -69,7 +69,7 @@ public class YourFundingViewModelPopulator {
     private UserRestService userRestService;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        boolean userCanEdit = !(user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .orElse(false);
         if (userCanEdit) {
