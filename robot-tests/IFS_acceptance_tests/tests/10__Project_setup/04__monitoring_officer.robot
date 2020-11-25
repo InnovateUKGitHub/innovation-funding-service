@@ -260,10 +260,11 @@ Internal user assigns a MO to a new project and removes a partner organisation
 
 MO can now check the application feedback
     [Documentation]    IFS-8753
-    Given Log in as a different user         Orville.Gibbs@gmail.com    Passw0rd1357
-    When The user clicks the button/link     link = ${PSCapplicationTitle}
-    and the user clicks the button/link      link = view application feedback
-    Then The user should see the element     jQuery = h1:contains("Application overview")
+    Given Log in as a different user                           Orville.Gibbs@gmail.com    Passw0rd1357
+    And the user clicks the project setup tile if displayed
+    When The user clicks the button/link                       link = ${PSCapplicationTitle}
+    and the user clicks the button/link                        link = view application feedback
+    Then The user should see the element                       jQuery = h1:contains("Application overview")
 
 *** Keywords ***
 The MO user is able to access all of the links
