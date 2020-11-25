@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class ScoreAssessmentQuestionReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<ScoreAssessmentQuestionReadOnlyViewModel> {
@@ -30,32 +31,28 @@ public class ScoreAssessmentQuestionReadOnlyPopulator implements QuestionReadOnl
     }
 
     private List<String> allFeedback(ApplicationReadOnlyData data, QuestionResource question, ApplicationReadOnlySettings settings) {
-        List<String> feedback = new ArrayList<>();
-
         if (settings.isIncludeAssessment()) {
-            data.getAssessmentToApplicationAssessment().values()
+            return data.getAssessmentToApplicationAssessment().values()
                     .stream()
                     .map(ApplicationAssessmentResource::getFeedback)
                     .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
                     .map(feedbackMap -> feedbackMap.get(question.getId()))
-                    .forEach(feedback::add);
+                    .collect(Collectors.toList());
         }
 
-        return feedback;
+        return Collections.emptyList();
     }
 
     private List<BigDecimal> allScores(ApplicationReadOnlyData data, QuestionResource question, ApplicationReadOnlySettings settings) {
-        List<BigDecimal> scores = new ArrayList<>();
-
         if (settings.isIncludeAssessment()) {
-            data.getAssessmentToApplicationAssessment().values()
+            return data.getAssessmentToApplicationAssessment().values()
                     .stream()
                     .map(ApplicationAssessmentResource::getScores)
                     .filter(scoresMap -> scoresMap.containsKey(question.getId()))
                     .map(scoresMap -> scoresMap.get(question.getId()))
-                    .forEach(scores::add);
+                    .collect(Collectors.toList());
         }
 
-        return scores;
+        return Collections.emptyList();
     }
 }

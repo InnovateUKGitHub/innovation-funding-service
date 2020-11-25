@@ -8,13 +8,18 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 @Component
 public class ApplicationPrintPopulator {
@@ -30,6 +35,9 @@ public class ApplicationPrintPopulator {
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     public String print(final Long applicationId,
                         Model model, UserResource user) {
@@ -47,8 +55,24 @@ public class ApplicationPrintPopulator {
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
         return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement())
-                || (user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER) && competition.isKtp() && shouldDisplayFeedback(competition, application))
-                || (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER) && !competition.isKtp() && shouldDisplayFeedback(competition, application));
+                || ktpUserCanViewFeedback(user, competition, application)
+                || nonKtpUserCanViewFeedback(user, competition, application);
+    }
+
+    private boolean nonKtpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
+        return user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER)
+                && !competition.isKtp()
+                && shouldDisplayFeedback(competition, application);
+    }
+
+    private boolean ktpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        boolean isKta = processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
+
+        return isKta
+                && competition.isKtp()
+                && shouldDisplayFeedback(competition, application);
     }
 
     private boolean userCanViewSupporterFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {

@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 @Component
 public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
@@ -108,7 +109,9 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         Future<List<SupporterAssignmentResource>> supporterResponseFuture = async(() -> getSupporterFeedbackResponses(application, settings));
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRolesFuture),
+        List<ProcessRoleResource> processRoles = resolve(processRolesFuture);
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, processRoles,
                 resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture),
                 resolve(assessorResponseFuture), resolve(supporterResponseFuture));
 
@@ -120,7 +123,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
         }
 
-        boolean shouldDisplayKtpApplicationFeedback = competition.isKtp() && user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER);
+        boolean shouldDisplayKtpApplicationFeedback = shouldDisplayKtpApplicationFeedback(competition, user, processRoles);
 
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
@@ -139,6 +142,12 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                         .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap(),
                 shouldDisplayKtpApplicationFeedback
         );
+    }
+
+    private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {
+        boolean isKta = processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
+        return competition.isKtp() && isKta;
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
