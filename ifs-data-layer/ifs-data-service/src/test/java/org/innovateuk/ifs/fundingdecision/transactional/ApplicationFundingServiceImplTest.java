@@ -157,9 +157,9 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 .withFundingType(FundingType.GRANT)
                 .build();
 
-        Application application1 = newApplication().withCompetition(competition).build();
-        Application application2 = newApplication().withCompetition(competition).build();
-        Application application3 = newApplication().withCompetition(competition).build();
+        Application application1 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
+        Application application2 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
+        Application application3 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -236,9 +236,9 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.GRANT).build();
 
-        Application application1 = newApplication().withCompetition(competition).build();
-        Application application2 = newApplication().withCompetition(competition).build();
-        Application application3 = newApplication().withCompetition(competition).build();
+        Application application1 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
+        Application application2 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
+        Application application3 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -319,8 +319,8 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.GRANT).build();
 
-        Application application1 = newApplication().withCompetition(competition).build();
-        Application application2 = newApplication().withCompetition(competition).build();
+        Application application1 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
+        Application application2 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
 
         // add some collaborators into the mix - they should receive Notifications, and applicants who should not
         User application1LeadApplicant = newUser().build();
@@ -383,7 +383,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     public void testNotifyAllApplicantsOfFundingDecisions_Ktp_ProjectNotCreated() {CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).withFundingType(FundingType.KTP).build();
 
-        Application application = newApplication().withCompetition(competition).build();
+        Application application = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
         when(applicationRepository.findAllById(newArrayList(application.getId()))).thenReturn(newArrayList(application));
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(
@@ -403,8 +403,8 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         Project project1 = newProject().build();
         Project project2 = newProject().build();
-        Application application1 = newApplication().withCompetition(competition).withProject(project1).build();
-        Application application2 = newApplication().withCompetition(competition).withProject(project2).build();
+        Application application1 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).withProject(project1).build();
+        Application application2 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).withProject(project2).build();
 
         User application1Participant = newUser().build();
         User application2Participant = newUser().build();
