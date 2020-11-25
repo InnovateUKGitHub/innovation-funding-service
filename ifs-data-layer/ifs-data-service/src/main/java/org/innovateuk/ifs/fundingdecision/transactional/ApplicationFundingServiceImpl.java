@@ -190,7 +190,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         return aggregate(applications.stream().map(app -> {
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
             ApplicationState state = stateFromDecision(applicationFundingDecision);
-            if (applicationWorkflowHandler.notifyFromApplicationState(app, state)) {
+            if (state == app.getApplicationProcess().getProcessState() || applicationWorkflowHandler.notifyFromApplicationState(app, state)) {
                 return serviceSuccess();
             }
             return serviceFailure(FUNDING_DECISION_WORKFLOW_FAILURE).andOnSuccessReturnVoid();
