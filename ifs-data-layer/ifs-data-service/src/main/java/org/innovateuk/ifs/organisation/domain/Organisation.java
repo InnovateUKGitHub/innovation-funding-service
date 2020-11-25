@@ -53,12 +53,12 @@ public class Organisation {
     @Column
     private ZonedDateTime dateOfIncorporation;
 
-    @Column
-    private String sicCodes;
+    @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<SicCode> sicCodes = new ArrayList<>();
 
     @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
             orphanRemoval = true)
-
     private List<ExecutiveOfficer> executiveOfficers = new ArrayList<>();
 
     public Organisation() {
@@ -72,11 +72,10 @@ public class Organisation {
         this.name = name;
         this.companiesHouseNumber = companiesHouseNumber;
     }
-    public Organisation(String name, String companiesHouseNumber, ZonedDateTime dateOfIncorporation, String sicCode) {
+    public Organisation(String name, String companiesHouseNumber, ZonedDateTime dateOfIncorporation) {
         this.name = name;
         this.companiesHouseNumber = companiesHouseNumber;
         this.dateOfIncorporation = dateOfIncorporation;
-        this.sicCodes = sicCode;
     }
 
 
@@ -157,11 +156,11 @@ public class Organisation {
         this.dateOfIncorporation = dateOfIncorporation;
     }
 
-    public String getSicCode() {
+    public List<SicCode> getSicCode() {
         return sicCodes;
     }
 
-    public void setSicCode(String sicCode) {
+    public void setSicCode(List<SicCode> sicCode) {
         this.sicCodes = sicCode;
     }
 
@@ -182,4 +181,16 @@ public class Organisation {
         executiveOfficers.remove(officer);
         officer.setOrganisation(null);
     }
+
+    public void addSicCode(SicCode sicCode) {
+        sicCodes.add(sicCode);
+        sicCode.setOrganisation(this);
+    }
+
+    public void removeSicCode(SicCode sicCode) {
+        sicCodes.remove(sicCode);
+        sicCode.setOrganisation(null);
+    }
+
+
 }
