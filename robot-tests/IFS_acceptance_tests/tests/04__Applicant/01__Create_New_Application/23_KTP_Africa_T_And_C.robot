@@ -26,7 +26,7 @@ Creating a new KTP africa comp to confirm T&c's
     [Documentation]  IFS-8164
     Given the user fills in initial details
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  termsAndConditionsId13
+    And the user selects the radio button       termsAndConditionsId  termsAndConditionsId9
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = Knowledge Transfer Partnership (KTP) Africa
 
