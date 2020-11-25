@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,17 @@ public class Organisation {
     @OneToMany(mappedBy = "organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
+    @Column
+    private ZonedDateTime dateOfIncorporation;
+
+    @Column
+    private String sicCodes;
+
+    @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
+            orphanRemoval = true)
+
+    private List<ExecutiveOfficer> executiveOfficers = new ArrayList<>();
+
     public Organisation() {
     }
 
@@ -60,6 +72,13 @@ public class Organisation {
         this.name = name;
         this.companiesHouseNumber = companiesHouseNumber;
     }
+    public Organisation(String name, String companiesHouseNumber, ZonedDateTime dateOfIncorporation, String sicCode) {
+        this.name = name;
+        this.companiesHouseNumber = companiesHouseNumber;
+        this.dateOfIncorporation = dateOfIncorporation;
+        this.sicCodes = sicCode;
+    }
+
 
     public Long getId() {
         return id;
@@ -128,5 +147,39 @@ public class Organisation {
 
     public void setKnowledgeBaseRegistrationNumber(String knowledgeBaseRegistrationNumber) {
         this.knowledgeBaseRegistrationNumber = knowledgeBaseRegistrationNumber;
+    }
+
+    public ZonedDateTime getDateOfIncorporation() {
+        return dateOfIncorporation;
+    }
+
+    public void setDateOfIncorporation(ZonedDateTime dateOfIncorporation) {
+        this.dateOfIncorporation = dateOfIncorporation;
+    }
+
+    public String getSicCode() {
+        return sicCodes;
+    }
+
+    public void setSicCode(String sicCode) {
+        this.sicCodes = sicCode;
+    }
+
+    public List<ExecutiveOfficer> getExecutiveOfficers() {
+        return executiveOfficers;
+    }
+
+    public void setExecutiveOfficers(List<ExecutiveOfficer> executiveOfficers) {
+        this.executiveOfficers = executiveOfficers;
+    }
+
+    public void addExecutiveOfficer(ExecutiveOfficer officer) {
+        executiveOfficers.add(officer);
+        officer.setOrganisation(this);
+    }
+
+    public void removeExecutiveOfficier(ExecutiveOfficer officer) {
+        executiveOfficers.remove(officer);
+        officer.setOrganisation(null);
     }
 }
