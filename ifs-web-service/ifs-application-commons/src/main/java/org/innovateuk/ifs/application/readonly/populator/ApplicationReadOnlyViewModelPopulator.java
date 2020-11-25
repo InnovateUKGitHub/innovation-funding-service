@@ -120,11 +120,12 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
         }
 
+        boolean shouldDisplayKtpApplicationFeedback = competition.isKtp() && user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER);
+
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .filter(section -> settings.isIncludeAllAssessorFeedback()
-                        || (!settings.isIncludeAllAssessorFeedback() && section.getType() != SectionType.KTP_ASSESSMENT))
+                .filter(section -> shouldDisplayKtpApplicationFeedback || section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
@@ -136,7 +137,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                         .map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList(),
                 settings.isIncludeAllSupporterFeedback() ? data.getFeedbackToApplicationSupport().values().stream()
                         .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap(),
-                competition.isKtp() && user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                shouldDisplayKtpApplicationFeedback
         );
     }
 
