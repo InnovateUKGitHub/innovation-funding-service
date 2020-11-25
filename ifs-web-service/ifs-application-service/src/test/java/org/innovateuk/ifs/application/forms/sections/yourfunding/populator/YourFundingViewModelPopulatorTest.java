@@ -95,7 +95,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withChildSections(Collections.emptyList())
                 .withCompetition(competition.getId())
                 .withType(SectionType.FUNDING_FINANCES).build();
-        UserResource user = newUserResource().build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
 
         OrganisationResource organisation = newOrganisationResource()
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
