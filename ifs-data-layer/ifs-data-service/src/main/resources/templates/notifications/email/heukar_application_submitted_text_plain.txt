@@ -1,0 +1,21 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme, administered by Innovate UK, part of UK Research and Innovation.
+
+Once you have heard about your Horizon Europe EU grant application from The European Commission please contact us and tell us their decision.
+
+- you must sign into your Innovation Funding Service account to do this
+- you will need to give us your EU grant application number if you are successful
+- you will then progress to stage 2 of your application for UK government-backed funding
+
+If you have any queries with your application to us, please contact our customer support services at support@innovateuk.ukri.org or 0300 321 4357.
+
+For all other enquiries about your Horizon Europe grant, please contact The European Commission directly.
+
+Please forward this email to any consortia members.
+
+Yours sincerely,
+<@layout.senderHTML />
+</@layout.defaultPlainText>
