@@ -144,7 +144,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategories.isEmpty() ? emptySet() : newHashSet(researchCategories));
-                competition.setStateAid(stateAidAllowed);
+                SubsidyControl subsidyControl = stateAidAllowed ? SubsidyControl.STATE_AID : SubsidyControl.NOT_AID;
+                competition.setSubsidyControl(subsidyControl);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));

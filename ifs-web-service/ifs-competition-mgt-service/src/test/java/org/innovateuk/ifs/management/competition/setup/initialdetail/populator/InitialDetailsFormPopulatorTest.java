@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.SubsidyControl;
 import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -63,7 +64,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withPafCode("paf")
 				.withName("name")
 				.withBudgetCode("budgetcode")
-                .withStateAid(Boolean.TRUE)
+                .withSubsidyControl(SubsidyControl.STATE_AID)
 				.withFundingType(FundingType.GRANT)
 				.withId(8L).build();
 
@@ -101,7 +102,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withPafCode("paf")
 				.withName("name")
 				.withBudgetCode("budgetcode")
-                .withStateAid(Boolean.TRUE)
+                .withSubsidyControl(SubsidyControl.STATE_AID)
 				.withId(8L).build();
 
 		List<InnovationAreaResource> innovationAreaCategories = newInnovationAreaResource().withId(-1L, 6L, 7L).withName("None", "Innovation area 1", "Innovation area 2").build(3);

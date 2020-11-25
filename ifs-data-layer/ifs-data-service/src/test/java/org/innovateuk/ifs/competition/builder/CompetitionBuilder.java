@@ -205,8 +205,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
     }
 
-    public CompetitionBuilder withStateAid(Boolean... stateAid) {
-        return withArraySetFieldByReflection("stateAid", stateAid);
+    public CompetitionBuilder withSubsidyControl(SubsidyControl... subsidyControl) {
+        return withArraySetFieldByReflection("subsidyControl", subsidyControl);
     }
 
     public CompetitionBuilder withCompetitionDocuments(List<CompetitionDocument>... projectDocuments) {

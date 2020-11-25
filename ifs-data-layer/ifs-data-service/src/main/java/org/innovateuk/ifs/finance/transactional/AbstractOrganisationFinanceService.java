@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.SubsidyControl;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -178,7 +179,7 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
     private ServiceResult<Boolean> getStateAidEligibilityForCompetition(long targetId) {
         return getCompetitionFromTargetId(targetId).
-                andOnSuccessReturn(competition -> TRUE.equals(competition.getStateAid()));
+                andOnSuccessReturn(competition -> SubsidyControl.STATE_AID == competition.getSubsidyControl());
     }
 
     private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {

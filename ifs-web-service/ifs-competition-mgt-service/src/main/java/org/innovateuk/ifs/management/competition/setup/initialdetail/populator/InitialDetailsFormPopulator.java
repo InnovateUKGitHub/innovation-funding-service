@@ -4,6 +4,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.SubsidyControl;
 import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
@@ -56,7 +57,8 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		}
 
 		competitionSetupForm.setTitle(competitionResource.getName());
-		competitionSetupForm.setStateAid(competitionResource.getStateAid());
+		boolean stateAid = SubsidyControl.STATE_AID == competitionResource.getSubsidyControl();
+		competitionSetupForm.setStateAid(stateAid);
 		competitionSetupForm.setFundingType(competitionResource.getFundingType());
 
 		return competitionSetupForm;

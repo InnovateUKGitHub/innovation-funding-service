@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.SubsidyControl;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -71,7 +72,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
             .build();
         competition = newCompetitionResource()
             .withId(competitionId)
-            .withStateAid(true)
+            .withSubsidyControl(SubsidyControl.STATE_AID)
             .build();
         organisationFinancesWithoutGrowthTableResource = newOrganisationFinancesWithoutGrowthTableResource()
             .withOrganisationSize(OrganisationSize.SMALL)
@@ -130,7 +131,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
 
     @Test
     public void isShowStateAidAgreement_whenStateAidIsTrue() {
-        competition.setStateAid(true);
+        competition.setSubsidyControl(SubsidyControl.STATE_AID);
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
 
         assertTrue((boolean) service.isShowStateAidAgreement(targetId, organisationId).getSuccess());
@@ -138,7 +139,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
 
     @Test
     public void isShowStateAidAgreement_whenStateAidIsFalse() {
-        competition.setStateAid(false);
+        competition.setSubsidyControl(SubsidyControl.NOT_AID);
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
         assertFalse((boolean) service.isShowStateAidAgreement(targetId, organisationId).getSuccess());
     }
