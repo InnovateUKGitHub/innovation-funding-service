@@ -244,7 +244,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     @AsyncMethod
     public String confirmEligibility(@PathVariable long projectId,
                                      @PathVariable long organisationId,
-                                     @SuppressWarnings("unused") BindingResult bindingResult,
                                      @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                      ValidationHandler validationHandler,
                                      Model model,
