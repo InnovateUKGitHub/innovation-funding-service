@@ -12,8 +12,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -25,12 +27,15 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.ui.Model;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.commons.rest.RestResult.fromException;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -51,6 +56,9 @@ public class ApplicationPrintPopulatorTest {
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Captor
     private ArgumentCaptor<ApplicationReadOnlySettings> settingsArgumentCaptor = ArgumentCaptor.forClass(ApplicationReadOnlySettings.class);
@@ -74,11 +82,17 @@ public class ApplicationPrintPopulatorTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .build();
 
+        ProcessRoleResource assessor = newProcessRoleResource()
+                .withRole(Role.ASSESSOR)
+                .withUser(user)
+                .build();
+
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(applicationReadOnlyViewModelPopulator.populate(eq(applicationId), eq(user), any(ApplicationReadOnlySettings.class)))
                 .thenReturn(viewModel);
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.singletonList(assessor)));
 
         applicationPrintPopulator.print(applicationId, model, user);
 
@@ -110,11 +124,17 @@ public class ApplicationPrintPopulatorTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .build();
 
+        List<ProcessRoleResource> kta = newProcessRoleResource()
+                .withRole(Role.ASSESSOR, Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withUser(user, user)
+                .build(2);
+
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(applicationReadOnlyViewModelPopulator.populate(eq(applicationId), eq(user), any(ApplicationReadOnlySettings.class)))
                 .thenReturn(viewModel);
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(kta));
 
         applicationPrintPopulator.print(applicationId, model, user);
 
