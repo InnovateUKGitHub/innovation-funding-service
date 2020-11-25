@@ -200,10 +200,9 @@ public class GrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping("/signed-additional-contract")
-    public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadSignedAdditionalContractFile(
-            @P("projectId")@PathVariable("projectId") final Long projectId) {
+    public ResponseEntity<ByteArrayResource> downloadSignedAdditionalContractFile(
+            @PathVariable final long projectId) {
 
         final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedAdditionalContractFile(projectId);
         final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedAdditionalContractFileDetails(projectId);
