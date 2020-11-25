@@ -33,7 +33,7 @@ import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
-import static org.innovateuk.ifs.competition.resource.CompetitionResource.HESTA_TYPE_NAME;
+import static org.innovateuk.ifs.competition.resource.CompetitionResource.HEUKAR_TYPE_NAME;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
@@ -764,10 +764,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isHesta() {
+    public boolean isHeukar() {
         return ofNullable(competitionType)
                 .map(CompetitionType::getName)
-                .map(name -> name.equals(HESTA_TYPE_NAME))
+                .map(name -> name.equals(HEUKAR_TYPE_NAME))
                 .orElse(false);
     }
 

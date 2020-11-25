@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
 
 @Component
-public class HestaTemplate implements CompetitionTemplate {
+public class HeukarTemplate implements CompetitionTemplate {
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
@@ -46,7 +46,7 @@ public class HestaTemplate implements CompetitionTemplate {
 
     @Override
     public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.HESTA;
+        return CompetitionTypeEnum.HEUKAR;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class HestaTemplate implements CompetitionTemplate {
         competitionAssessmentConfig.setIncludeAverageAssessorScoreInNotifications(false);
         competitionAssessmentConfig.setAssessorFinanceView(AssessorFinanceView.OVERVIEW);
 
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Hesta"));
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Heukar"));
         competition.setLeadApplicantTypes(organisationTypesList);
         competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setAcademicGrantPercentage(100);

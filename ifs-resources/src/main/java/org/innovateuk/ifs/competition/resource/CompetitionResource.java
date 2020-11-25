@@ -27,7 +27,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
-    public static final String HESTA_TYPE_NAME = "Hesta";
+    public static final String HEUKAR_TYPE_NAME = "Heukar";
     public static final String EXPRESSION_OF_INTEREST_TYPE_NAME = "Expression of interest";
 
     private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
@@ -140,8 +140,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isHesta() {
-        return competitionTypeEnum == CompetitionTypeEnum.HESTA;
+    public boolean isHeukar() {
+        return competitionTypeEnum == CompetitionTypeEnum.HEUKAR;
     }
 
     @JsonIgnore

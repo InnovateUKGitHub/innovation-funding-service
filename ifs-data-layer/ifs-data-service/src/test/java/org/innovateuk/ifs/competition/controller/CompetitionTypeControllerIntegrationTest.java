@@ -52,7 +52,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Aerospace Technology Institute",
                         "The Prince's Trust",
                         "Horizon 2020",
-                        "Hesta"
+                        "Heukar"
                 );
     }
 }
