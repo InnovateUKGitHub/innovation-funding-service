@@ -254,6 +254,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private Notification heukarGrantTransferNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
+        notificationArguments.put("applicationId", application.getId());
         notificationArguments.put("competitionName", competition.getName());
 
         return new Notification(

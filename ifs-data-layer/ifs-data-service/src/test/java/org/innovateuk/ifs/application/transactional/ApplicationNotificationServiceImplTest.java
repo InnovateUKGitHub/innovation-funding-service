@@ -228,6 +228,7 @@ public class ApplicationNotificationServiceImplTest {
 
         verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
+            assertEquals(application.getId(), notification.getGlobalArguments().get("applicationId"));
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
             assertEquals(1, notification.getTo().size());
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());

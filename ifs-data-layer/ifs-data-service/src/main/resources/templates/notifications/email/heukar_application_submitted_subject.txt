@@ -1,1 +1,1 @@
-${applicationId?c}: confirmation of your Horizon Europe UK Application Registration
+${applicationId}: confirmation of your Horizon Europe UK Application Registration
