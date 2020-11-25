@@ -89,7 +89,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    @Value("${ifs.system.external.user.email.domain}")
+    @Value("${ifs.system.kta.user.email.domain}")
     private String externalUserEmailDomain;
 
     @Autowired
