@@ -6,6 +6,9 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...              IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
 ...
 ...              IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
+...
+...              IFS-8463 Implement Azure ChatBot in local environment
+...
 Suite Setup      Custom suite setup
 Suite Teardown   Custom suite teardown
 Force Tags       Applicant
