@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -83,6 +85,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
+    @Autowired
+    private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
 
     @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
     private Long maxFileSize;
@@ -349,6 +353,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     deleteInnovationLead(competition);
                     deleteAllStakeholders(competition);
                     deleteSetupStatus(competition);
+                    deleteCompetitionFinanceRowsTypesForCompetition(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
@@ -413,6 +418,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                         question.getFormInputs().forEach(formInput ->
                                 formInput.getFormValidators().clear())));
         competitionRepository.save(competition);
+    }
+
+    private void deleteCompetitionFinanceRowsTypesForCompetition(Competition competition) {
+        Optional<List<CompetitionFinanceRowTypes>> CompetitionFinanceRowTypes = Optional.ofNullable(competition.getCompetitionFinanceRowTypes());
+        CompetitionFinanceRowTypes.ifPresent((rowTypes) -> {
+            competitionFinanceRowsTypesRepository.deleteAll(rowTypes);
+        });
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -99,6 +100,8 @@ public class CompetitionSetupServiceImplTest {
     private SetupStatusService setupStatusService;
     @Mock
     private SetupStatusRepository setupStatusRepository;
+    @Mock
+    private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
 
     @Before
     public void setup() {
@@ -542,6 +545,7 @@ public class CompetitionSetupServiceImplTest {
                                         .build(1))
                                 .build(1))
                         .build(1))
+                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
                 .build();
 
         PublicContent publicContent = newPublicContent().build();
@@ -553,7 +557,7 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepository, publicContentRepository, innovationLeadRepository, stakeholderRepository,
-                setupStatusRepository, milestoneRepository);
+                setupStatusRepository, milestoneRepository, competitionFinanceRowsTypesRepository );
         inOrder.verify(competitionRepository).findById(competition.getId());
         inOrder.verify(publicContentRepository).findByCompetitionId(competition.getId());
         inOrder.verify(publicContentRepository).delete(publicContent);
@@ -562,12 +566,11 @@ public class CompetitionSetupServiceImplTest {
         inOrder.verify(milestoneRepository).deleteByCompetitionId(competition.getId());
         inOrder.verify(innovationLeadRepository).deleteAllInnovationLeads(competition.getId());
         inOrder.verify(stakeholderRepository).deleteAllStakeholders(competition.getId());
-        inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(),
-                competition.getId());
+        inOrder.verify(setupStatusRepository).deleteByTargetClassNameAndTargetId(Competition.class.getName(), competition.getId());
+        inOrder.verify(competitionFinanceRowsTypesRepository).deleteAll(competition.getCompetitionFinanceRowTypes());
         inOrder.verify(competitionRepository).delete(competition);
         inOrder.verifyNoMoreInteractions();
     }
-
     private Competition createCompetitionExpectationsWithoutFormValidators(Competition competition) {
         return createLambdaMatcher(comp -> {
             assertEquals(competition.getId(), comp.getId());
