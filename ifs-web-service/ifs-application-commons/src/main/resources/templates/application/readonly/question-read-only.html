@@ -285,6 +285,23 @@
     </p>
 </th:block>
 
-<th:block th:fragment="ktp-assessment (model)" />
+<th:block th:fragment="score-assessment (model)" >
+    <div class="govuk-form-group">
+        <th:block th:if="${model.hasFeedback()}">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <th:block th:each="feedback, iteration : ${model.feedback}">
+                        <div class="govuk-!-padding-3 bordered govuk-!-margin-top-2">
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-1" th:text="|Assessor ${iteration.count}|">Assessor</h3>
+                            <p class="govuk-body" th:text="${feedback}">Feedback text</p>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</th:block>
 
 </html>

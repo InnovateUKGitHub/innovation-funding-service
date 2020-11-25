@@ -123,6 +123,8 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
+                .filter(section -> settings.isIncludeAllAssessorFeedback()
+                        || (!settings.isIncludeAllAssessorFeedback() && section.getType() != SectionType.KTP_ASSESSMENT))
                 .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));

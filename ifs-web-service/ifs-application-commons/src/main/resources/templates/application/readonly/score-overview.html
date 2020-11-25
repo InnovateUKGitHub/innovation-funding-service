@@ -24,3 +24,9 @@
         </span>
     </th:block>
 </th:block>
+
+<th:block th:fragment="score-assessment(question)">
+    <th:block th:if="${question.hasScore()}">
+        <span class="section-status govuk-hint float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">Average score</span>
+    </th:block>
+</th:block>

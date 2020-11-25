@@ -60,6 +60,7 @@
                             </span>
                             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
                                 <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId})"/>
+                                <th:block th:if="${question.fragment == 'score-assessment'}" th:insert="application/readonly/score-overview :: score-assessment (${question})"/>
                             </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
@@ -110,6 +111,12 @@
                 <th:block th:if="${feedbackFragment != null && parentModel.interviewFeedbackViewModel != null && parentModel.interviewFeedbackViewModel.hasFeedback()}">
                     <th:block th:include="${feedbackFragment}" />
                 </th:block>
+            </th:block>
+            <!-- TODO: change to score assessment flag -->
+            <th:block th:if="${model.settings.includeAllAssessorFeedback && section.name == 'Score assessment'}">
+                <div class="govuk-!-margin-bottom-3">
+                    <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
+                </div>
             </th:block>
         </section>
     </th:block>
