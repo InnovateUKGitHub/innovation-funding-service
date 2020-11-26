@@ -201,7 +201,7 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
-        // TODO IFS-8779 the toggle ifs.subsidy.control.enabled is removed from the codebase this custom validation
+        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this custom validation
         // TODO IFS-8779 should be removed for property annotations on the DTO.
         if (subsidyControlEnabled && competitionSetupForm.getSubsidyControlType() == null) {
             validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("subsidyControlType", null, "validation.initialdetailsform.subsidyControlType.required")));
