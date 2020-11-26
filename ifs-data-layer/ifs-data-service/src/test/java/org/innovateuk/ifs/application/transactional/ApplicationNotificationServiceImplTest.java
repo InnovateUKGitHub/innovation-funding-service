@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -212,7 +213,7 @@ public class ApplicationNotificationServiceImplTest {
 
         Competition competition = newCompetition()
                 .withCompetitionType(newCompetitionType()
-                        .withName(CompetitionResource.HESTA_TYPE_NAME)
+                        .withName(CompetitionTypeEnum.HEUKAR.getText())
                         .build())
                 .build();
 

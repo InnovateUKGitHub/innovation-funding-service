@@ -164,7 +164,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         notification = horizon2020GrantTransferNotification(from, to, application);
                     } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
-                    } else if (competition.isHesta()) {
+                    } else if (competition.isHeukar()) {
                         notification = heukarGrantTransferNotification(from, to, application, competition);
                     } else {
                         notification = applicationSubmitNotification(from, to, application, competition);
