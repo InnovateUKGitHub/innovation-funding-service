@@ -722,3 +722,14 @@ the user selected organisation if available
     [Arguments]   ${organisationID}   ${pageText}
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain     ${pageText}
     Run Keyword If   '${status}' == 'PASS'     the user selects the radio button     selectedOrganisationId   ${organisationID}
+
+the user selects a knowledge based organisation
+    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+    input text                          id = knowledgeBase        ${knowledgeBase}
+    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
+
+the user apply with knowledge base organisation
+    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
+    the user clicks the button/link                     jQuery = button:contains("Confirm")
+    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta

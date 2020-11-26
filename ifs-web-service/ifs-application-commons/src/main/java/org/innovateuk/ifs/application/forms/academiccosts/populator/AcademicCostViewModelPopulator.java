@@ -9,7 +9,10 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,24 +23,20 @@ import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STA
 @Component
 public class AcademicCostViewModelPopulator {
 
-    private ApplicationRestService applicationRestService;
-    private CompetitionRestService competitionRestService;
-    private SectionService sectionService;
-    private OrganisationRestService organisationRestService;
-    private ApplicationFinanceRestService applicationFinanceRestService;
-
-    AcademicCostViewModelPopulator() {}
-
     @Autowired
-    public AcademicCostViewModelPopulator(ApplicationRestService applicationRestService, CompetitionRestService competitionRestService, SectionService sectionService, OrganisationRestService organisationRestService, ApplicationFinanceRestService applicationFinanceRestService) {
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.sectionService = sectionService;
-        this.organisationRestService = organisationRestService;
-        this.applicationFinanceRestService = applicationFinanceRestService;
-    }
+    private ApplicationRestService applicationRestService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
+    @Autowired
+    private UserRestService userRestService;
 
-    public AcademicCostViewModel populate(long organisationId, long applicationId, long sectionId, boolean applicant) {
+    public AcademicCostViewModel populate(long organisationId, long applicationId, long sectionId, UserResource user) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -53,10 +52,13 @@ public class AcademicCostViewModelPopulator {
 
         boolean complete = completedSectionIds.contains(sectionId);
 
-        boolean open = applicant && competition.isOpen() && application.isOpen();
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+                .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
+                .orElse(false);
+        boolean open = userCanEdit && application.isOpen() && competition.isOpen();
 
         return new AcademicCostViewModel(
-                getYourFinancesUrl(applicationId, organisationId, applicant),
+                getYourFinancesUrl(applicationId, organisationId, userCanEdit),
                 application.getName(),
                 competition.getName(),
                 organisation.getName(),
@@ -64,7 +66,7 @@ public class AcademicCostViewModelPopulator {
                 sectionId,
                 organisationId,
                 finance.getId(),
-                applicant,
+                user.isInternalUser(),
                 includeVat,
                 open,
                 complete);

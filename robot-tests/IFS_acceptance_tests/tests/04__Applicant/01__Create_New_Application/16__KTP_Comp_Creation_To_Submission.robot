@@ -1078,16 +1078,16 @@ the user should see knowledge based organisation fields
     the user should see the element     link = checking your organisation's alternative name (opens in a new window)
     the user should see the element     link = enter its details manually
 
-the user selects a knowledge based organisation
-    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-    input text                          id = knowledgeBase        ${knowledgeBase}
-    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
-
-the user apply with knowledge base organisation
-    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
-    the user clicks the button/link                     jQuery = button:contains("Confirm")
-    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
+#the user selects a knowledge based organisation
+#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+#    input text                          id = knowledgeBase        ${knowledgeBase}
+#    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
+#
+#the user apply with knowledge base organisation
+#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+#    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
+#    the user clicks the button/link                     jQuery = button:contains("Confirm")
+#    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
 
 the user should only see KB partner organisations
     the user should see the element         jQuery = span:contains("${businessOrganisationName}") + span:contains("${bussinessOrgInfoText}")
