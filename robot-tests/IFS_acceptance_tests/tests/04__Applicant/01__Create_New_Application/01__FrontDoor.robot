@@ -7,6 +7,8 @@ Documentation    INFUND-6923 Create new public Competition listings page for App
 ...
 ...              IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
 ...
+...              IFS-8463 Implement Azure ChatBot in local environment
+...
 Suite Setup      Custom suite setup
 Suite Teardown   Custom suite teardown
 Force Tags       Applicant
@@ -29,6 +31,13 @@ Guest user navigates to Front Door
     Then the user should see the element       jQuery = h1:contains("Contact us")
     And the user should not see an error in the page
     And the user should see the element        jQuery = a:contains("feedback")
+
+Guest user can open chatbot on contact us page
+    [Documentation]     IFS-8463
+    When The user clicks the button/link        link = Use our virtual assistant (opens in new window)
+    And Select Window                           NEW  #URL = ${server}/info/contact/virtual-assistant
+    Then The user should see the element        css = [class='wc-message-pane']
+    And the user closes the last opened tab
 
 Guest user can see Competitions and their information
     [Documentation]    INFUND-6923

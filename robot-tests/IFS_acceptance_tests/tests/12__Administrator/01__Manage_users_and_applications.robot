@@ -38,7 +38,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-8095 Content improvement for KTA journey
 ...
 ...               IFS-8547 KTA application and project dashboards
-
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
