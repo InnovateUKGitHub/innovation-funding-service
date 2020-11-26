@@ -22,11 +22,12 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
     private final List<FundingType> fundingTypes;
     private final List<SubsidyControl> subsidyControlTypes;
     private final boolean restricted;
+    private final boolean subsidyControlEnabled;
 
     public InitialDetailsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                    List<UserResource> competitionExecutiveUsers, List<InnovationSectorResource> innovationSectors,
                                    List<InnovationAreaResource> innovationAreas, List<CompetitionTypeResource> competitionTypes,
-                                   List<UserResource> innovationLeadTechUsers, boolean restricted) {
+                                   List<UserResource> innovationLeadTechUsers, boolean restricted, boolean subsidyControlEnabled) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.competitionExecutiveUsers = competitionExecutiveUsers;
         this.innovationSectors = innovationSectors;
@@ -36,6 +37,7 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         this.fundingTypes = asList(FundingType.values());
         this.subsidyControlTypes = asList(SubsidyControl.values());
         this.restricted = restricted;
+        this.subsidyControlEnabled = subsidyControlEnabled;
     }
 
     public List<UserResource> getCompetitionExecutiveUsers() {
@@ -69,4 +71,6 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
     public boolean getRestricted() {
         return restricted || generalSetupViewModel.getCompetition().isSetupAndLive();
     }
+
+    public boolean getSubsidyControlEnabled() {return subsidyControlEnabled; }
 }

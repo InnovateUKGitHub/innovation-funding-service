@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.SubsidyControl;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -61,7 +62,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     private Boolean stateAid;
 
     @NotNull(message = "{validation.initialdetailsform.subsidyControlType.required}", groups = Unrestricted.class)
-    private Boolean subsidyControlType;
+    private SubsidyControl subsidyControlType;
 
     private String innovationAreaNamesFormatted;
 
@@ -152,11 +153,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.innovationLeadUserId = innovationLeadUserId;
     }
 
-    public Boolean getSubsidyControlType() {
+    public SubsidyControl getSubsidyControlType() {
         return subsidyControlType;
     }
 
-    public void setSubsidyControlType(Boolean subsidyControlType) {
+    public void setSubsidyControlType(SubsidyControl subsidyControlType) {
         this.subsidyControlType = subsidyControlType;
     }
 

@@ -107,10 +107,11 @@
                     </select>
                 </div>
 
-                <div th:if="${subsidyControlEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('subsidyControlType')} ? 'govuk-form-group--error'">
+                <div th:if="${model.subsidyControlEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('subsidyControlType')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="subsidyControlType">
-                            <h2 class="govuk-fieldset__heading">Funding type</h2>
+                            <h2 class="govuk-fieldset__heading">Competition funding rules</h2>
+                            <p class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                         </legend>
                         <th:block th:if="${#fields.hasErrors('subsidyControlType')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('subsidyControlType')}" th:text="${err}" />
@@ -121,8 +122,8 @@
                                 <input type="radio"
                                        class="govuk-radios__input"
                                        name="subsidyControlType"
-                                       th:id="${'subsidyControlType-'+subsidyControlType}"
-                                       th:value="${fundingType}"
+                                       th:id="${'subsidyControl-'+subsidyControlType}"
+                                       th:value="${subsidyControlType}"
                                        required="required"
                                        th:checked="${competitionSetupForm.subsidyControlType == subsidyControlType}"
                                        th:attr="data-required-errormessage=#{validation.initialdetailsform.subsidyControlType.required}" />
@@ -134,7 +135,6 @@
 
                     </fieldset>
                 </div>
-
 
             </th:block>
 
