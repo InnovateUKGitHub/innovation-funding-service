@@ -8,7 +8,7 @@ jacocoTestReport{
     additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
     reports {
         html.enabled true
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
         html.destination file("build/reports/jacoco/html")
     }
@@ -60,3 +60,6 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
+
+test.finalizedBy jacocoTestReport
+//tasks['sonarqube'].dependsOn test
