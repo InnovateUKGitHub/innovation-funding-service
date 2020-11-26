@@ -106,6 +106,36 @@
                                 th:selected="${competitionSetupForm.competitionTypeId == competitionType.id}">Competition Type</option>
                     </select>
                 </div>
+
+                <div th:if="${subsidyControlEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('subsidyControlType')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="subsidyControlType">
+                            <h2 class="govuk-fieldset__heading">Funding type</h2>
+                        </legend>
+                        <th:block th:if="${#fields.hasErrors('subsidyControlType')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('subsidyControlType')}" th:text="${err}" />
+                        </th:block>
+                        <div class="govuk-radios">
+                            <div th:each="subsidyControlType : ${model.subsidyControlTypes}"
+                                 class="govuk-radios__item">
+                                <input type="radio"
+                                       class="govuk-radios__input"
+                                       name="subsidyControlType"
+                                       th:id="${'subsidyControlType-'+subsidyControlType}"
+                                       th:value="${fundingType}"
+                                       required="required"
+                                       th:checked="${competitionSetupForm.subsidyControlType == subsidyControlType}"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.subsidyControlType.required}" />
+                                <label th:for="${'subsidyControlType-'+subsidyControlType}"
+                                       th:text="${subsidyControlType.displayName}"
+                                       class="govuk-label govuk-radios__label"></label>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+
+
             </th:block>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">

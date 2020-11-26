@@ -60,6 +60,9 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.stateaid.required}")
     private Boolean stateAid;
 
+    @NotNull(message = "{validation.initialdetailsform.subsidyControlType.required}", groups = Unrestricted.class)
+    private Boolean subsidyControlType;
+
     private String innovationAreaNamesFormatted;
 
     public Long getExecutiveUserId() {
@@ -147,6 +150,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     public void setInnovationLeadUserId(Long innovationLeadUserId) {
         this.innovationLeadUserId = innovationLeadUserId;
+    }
+
+    public Boolean getSubsidyControlType() {
+        return subsidyControlType;
+    }
+
+    public void setSubsidyControlType(Boolean subsidyControlType) {
+        this.subsidyControlType = subsidyControlType;
     }
 
     public Boolean getStateAid() {

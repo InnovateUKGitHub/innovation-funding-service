@@ -184,6 +184,7 @@ public class CompetitionSetupController {
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
+        model.addAttribute("subsidyControlEnabled", subsidyControlEnabled);
 
         return "competition/setup";
     }
