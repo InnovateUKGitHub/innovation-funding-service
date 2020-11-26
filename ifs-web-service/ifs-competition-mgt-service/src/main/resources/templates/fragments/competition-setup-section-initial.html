@@ -67,6 +67,7 @@
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingType">
                             <h2 class="govuk-fieldset__heading">Funding type</h2>
                         </legend>
+                        <p th:if="${model.subsidyControlEnabled}" class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                         <th:block th:if="${#fields.hasErrors('fundingType')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
                         </th:block>
@@ -94,6 +95,7 @@
                     <label class="govuk-label govuk-label--s" for="competitionTypeId">
                         Competition type
                     </label>
+                    <p th:if="${model.subsidyControlEnabled}" class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                     <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}"></span>
                     </th:block>
