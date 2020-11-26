@@ -57,5 +57,3 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
-
-test.finalizedBy jacocoTestReport
