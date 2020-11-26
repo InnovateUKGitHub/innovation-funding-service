@@ -35,6 +35,7 @@ import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.P
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -90,6 +91,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
+
+    @Value("${ifs.subsidy.control.enabled:false}")
+    private boolean subsidyControlEnabled;
 
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
