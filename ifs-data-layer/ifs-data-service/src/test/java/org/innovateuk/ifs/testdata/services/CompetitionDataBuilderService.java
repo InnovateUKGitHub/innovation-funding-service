@@ -164,7 +164,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
-                        line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.innovationSector, line.subsidyControl, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.multiStream, line.collaborationLevel,
                         line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.fundingType, line.competitionCompletionStage,
                         line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
