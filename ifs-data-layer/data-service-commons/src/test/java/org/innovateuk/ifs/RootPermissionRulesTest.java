@@ -92,6 +92,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(SUPPORTER);
     }
 
+    protected UserResource liveProjectsUser() {
+        return getUserWithRole(LIVE_PROJECTS_USER);
+    }
+
     @Before
     public void setupSetsOfData() {
         allRoles = asList(Role.values());

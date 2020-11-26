@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.Sectio
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.setDefaultApplicationConfig;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.setDefaultOrganisationConfig;
 
 public interface CompetitionTemplate {
@@ -16,7 +17,11 @@ public interface CompetitionTemplate {
 
     Competition copyTemplatePropertiesToCompetition(Competition competition);
 
-    default Competition initializeOrganisationConfig(Competition competition) {
+    default Competition initialiseOrganisationConfig(Competition competition) {
         return setDefaultOrganisationConfig(competition);
+    }
+
+    default Competition initialiseApplicationConfig(Competition competition) {
+        return setDefaultApplicationConfig(competition);
     }
 }

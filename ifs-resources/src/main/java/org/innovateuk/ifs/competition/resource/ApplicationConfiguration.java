@@ -23,7 +23,7 @@ public interface ApplicationConfiguration {
 
     boolean isKtp();
 
-    boolean isHesta();
+    boolean isHeukar();
 
     boolean isExpressionOfInterest();
 
