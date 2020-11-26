@@ -21,7 +21,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 ${apcCompetitionTitle}         Advanced Propulsion Centre Competition
 ${apcApplicationTitle}         Advanced Propulsion Centre Application
 ${submittedapplication}        ${server}/management/competition
-${termaandconditionsHeading}   Innovate UK grant terms and conditions for an Advanced Propulsion Centre UK Ltd competition
+${termaandconditionsHeading}    Innovate UK terms and conditions of an Advanced Propulsion Centre competition grant award
 
 *** Test Cases ***
 Comp Admin creates an APC competition
