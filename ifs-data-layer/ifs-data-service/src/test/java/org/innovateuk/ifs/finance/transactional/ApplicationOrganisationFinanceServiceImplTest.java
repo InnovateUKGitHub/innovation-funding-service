@@ -225,7 +225,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void isShowStateAidAgreement() {
+    public void isShowAidAgreement() {
 
         Competition competition = newCompetition().withSubsidyControl(SubsidyControl.STATE_AID).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
@@ -241,7 +241,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
         when(financeService.findApplicationFinanceByApplicationIdAndOrganisation(application.getId(), organisation.getId()))
                 .thenReturn(serviceSuccess(applicationFinanceResource));
 
-        service.isShowStateAidAgreement(application.getId(), organisation.getId()).getSuccess();
+        service.isShowAidAgreement(application.getId(), organisation.getId()).getSuccess();
     }
 
     @Override

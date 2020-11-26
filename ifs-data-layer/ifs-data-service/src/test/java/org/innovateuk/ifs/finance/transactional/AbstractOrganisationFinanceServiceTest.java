@@ -130,18 +130,26 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void isShowStateAidAgreement_whenStateAidIsTrue() {
+    public void isShowAidAgreement_whenSubsidyControlIsStateAid() {
         competition.setSubsidyControl(SubsidyControl.STATE_AID);
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
 
-        assertTrue((boolean) service.isShowStateAidAgreement(targetId, organisationId).getSuccess());
+        assertTrue((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
     }
 
     @Test
-    public void isShowStateAidAgreement_whenStateAidIsFalse() {
+    public void isShowAidAgreement_whenSubsidyControlIsWto() {
+        competition.setSubsidyControl(SubsidyControl.WTO_RULES);
+        when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
+
+        assertTrue((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
+    }
+
+    @Test
+    public void isShowAidAgreement_whenSubsidyControlNotAid() {
         competition.setSubsidyControl(SubsidyControl.NOT_AID);
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
-        assertFalse((boolean) service.isShowStateAidAgreement(targetId, organisationId).getSuccess());
+        assertFalse((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
     }
 
     @Test

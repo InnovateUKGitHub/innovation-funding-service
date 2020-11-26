@@ -167,8 +167,8 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     }
 
     @Override
-    public ServiceResult<Boolean> isShowStateAidAgreement(long targetId, long organisationId) {
-        return getStateAidEligibilityForCompetition(targetId).andOnSuccess(eligibility -> {
+    public ServiceResult<Boolean> isShowAidAgreement(long targetId, long organisationId) {
+        return getAidEligibilityForCompetition(targetId).andOnSuccess(eligibility -> {
             if (!eligibility) {
                 return serviceSuccess(false);
             }
@@ -177,9 +177,9 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     }
 
 
-    private ServiceResult<Boolean> getStateAidEligibilityForCompetition(long targetId) {
+    private ServiceResult<Boolean> getAidEligibilityForCompetition(long targetId) {
         return getCompetitionFromTargetId(targetId).
-                andOnSuccessReturn(competition -> SubsidyControl.STATE_AID == competition.getSubsidyControl());
+                andOnSuccessReturn(competition -> SubsidyControl.NOT_AID != competition.getSubsidyControl());
     }
 
     private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {
