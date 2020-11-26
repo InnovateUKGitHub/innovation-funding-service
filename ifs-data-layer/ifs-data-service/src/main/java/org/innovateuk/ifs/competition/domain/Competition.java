@@ -152,6 +152,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean locationPerPartner = true;
 
+    @ZeroDowntime(reference = "IFS-8787", description = "TODO")
     private Boolean stateAid;
 
     @Enumerated(EnumType.STRING)
@@ -878,21 +879,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.minProjectDuration = minProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
-    }
-
-    public void setStateAid(Boolean stateAid) {
-        this.stateAid = stateAid;
-    }
-
     public SubsidyControl getSubsidyControl() {
         return subsidyControl;
     }
 
     public void setSubsidyControl(SubsidyControl subsidyControl) {
         this.subsidyControl = subsidyControl;
-        this.stateAid = SubsidyControl.STATE_AID == subsidyControl;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
