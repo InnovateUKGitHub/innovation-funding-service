@@ -25,6 +25,11 @@
                 <dt>Competition type</dt>
                 <dd th:each="(competitionType : ${model.competitionTypes})" th:text="${competitionType.name}"  th:if="${competitionType.id == competitionSetupForm.competitionTypeId}">Competition Type</dd>
 
+                <th:block th:if="${model.subsidyControlEnabled}">
+                    <dt>Competition funding rules</dt>
+                    <dd th:text="${competitionSetupForm.subsidyControlType.displayName}"></dd>
+                </th:block>
+
                 <dt>Opening date</dt>
                 <dd>
                     <div th:text="${#temporals.format(competitionSetupForm.openingDate, 'd MMMM yyyy')}"></div>
