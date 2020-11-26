@@ -50,7 +50,7 @@ public class HeukarTemplate implements CompetitionTemplate {
     }
 
     @Override
-    public Competition initializeOrganisationConfig(Competition competition) {
+    public Competition initialiseOrganisationConfig(Competition competition) {
         if (competition.getCompetitionOrganisationConfig() == null) {
             CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
             competitionOrganisationConfig.setCompetition(competition);
