@@ -61,6 +61,14 @@ public class Organisation {
             orphanRemoval = true)
     private List<ExecutiveOfficer> executiveOfficers = new ArrayList<>();
 
+    @Column
+    private String businessType;
+
+    @Column
+    //Could be Tax UTR, Charity number etc
+    private String organisationNumber;
+
+
     public Organisation() {
     }
 
@@ -192,5 +200,27 @@ public class Organisation {
         sicCode.setOrganisation(null);
     }
 
+    public List<SicCode> getSicCodes() {
+        return sicCodes;
+    }
 
+    public void setSicCodes(List<SicCode> sicCodes) {
+        this.sicCodes = sicCodes;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public void setOrganisationNumber(String organisationNumber) {
+        this.organisationNumber = organisationNumber;
+    }
 }
