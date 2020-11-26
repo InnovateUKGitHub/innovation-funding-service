@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -50,6 +51,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -92,8 +95,13 @@ public class CompetitionSetupController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
+    @Value("${ifs.subsidy.control.enabled:true}")
+    private boolean subsidyControlEnabled;
+
+
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
+
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -193,6 +201,14 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
+        // TODO IFS-8779 the toggle ifs.subsidy.control.enabled is removed from the codebase this custom validation
+        // TODO IFS-8779 should be removed for property annotations on the DTO.
+        if (subsidyControlEnabled && competitionSetupForm.getSubsidyControlType() == null) {
+            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("subsidyControlType", null, "validation.initialdetailsform.subsidyControlType.required")));
+        } else if (!subsidyControlEnabled && competitionSetupForm.getStateAid() == null) {
+            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("stateAid", null, "validation.initialdetailsform.stateaid.required")));
+        }
+
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);
     }
 

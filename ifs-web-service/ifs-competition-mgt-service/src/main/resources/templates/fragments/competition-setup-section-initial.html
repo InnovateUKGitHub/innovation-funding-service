@@ -122,7 +122,7 @@
                                 <input type="radio"
                                        class="govuk-radios__input"
                                        name="subsidyControlType"
-                                       th:id="${'subsidyControl-'+subsidyControlType}"
+                                       th:id="${'subsidyControlType-'+subsidyControlType}"
                                        th:value="${subsidyControlType}"
                                        required="required"
                                        th:checked="${competitionSetupForm.subsidyControlType == subsidyControlType}"
@@ -311,7 +311,7 @@
                 </select>
             </div>
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'govuk-form-group--error'">
+            <div th:unless="${model.subsidyControlEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend id="stateAid" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         <h2 class="govuk-fieldset__heading">State aid</h2>

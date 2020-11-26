@@ -58,10 +58,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long innovationLeadUserId;
 
-    @NotNull(message = "{validation.initialdetailsform.stateaid.required}")
+    // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this field and related
+    // TODO IFS-8779 code should be removed
+    //@NotNull(message = "{validation.initialdetailsform.stateaid.required}")
     private Boolean stateAid;
 
-    @NotNull(message = "{validation.initialdetailsform.subsidyControlType.required}", groups = Unrestricted.class)
+    // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this validation should be
+    // TODO IFS-8779 enabled instead of the custom validation in the controller.
+    //@NotNull(message = "{validation.initialdetailsform.subsidyControlType.required}", groups = Unrestricted.class)
     private SubsidyControl subsidyControlType;
 
     private String innovationAreaNamesFormatted;

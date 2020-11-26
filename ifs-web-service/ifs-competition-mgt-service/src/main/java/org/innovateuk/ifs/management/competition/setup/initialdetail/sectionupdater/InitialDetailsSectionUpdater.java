@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtil
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -64,6 +65,10 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     @Autowired
     private UserService userService;
 
+    @Value("${ifs.subsidy.control.enabled:true}")
+    private boolean subsidyControlEnabled;
+
+
     @Override
     public CompetitionSetupSection sectionToSave() {
         return CompetitionSetupSection.INITIAL_DETAILS;
@@ -105,11 +110,8 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setName(initialDetailsForm.getTitle());
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
-        if (Boolean.TRUE.equals(initialDetailsForm.getStateAid())) {
-            competition.setFundingRules(FundingRules.STATE_AID);
-        } else {
-            competition.setFundingRules(FundingRules.NOT_AID);
-        }
+
+        competition.setFundingRules(initialDetailsForm.getFundingRules());
         competition.setFundingType(initialDetailsForm.getFundingType());
 
         errors.addAll(attemptOpeningDateSave(initialDetailsForm, competition));
