@@ -65,7 +65,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     @Autowired
     private UserService userService;
 
-    @Value("${ifs.subsidy.control.enabled:true}")
+    @Value("${ifs.subsidy.control.enabled:false}")
     private boolean subsidyControlEnabled;
 
 

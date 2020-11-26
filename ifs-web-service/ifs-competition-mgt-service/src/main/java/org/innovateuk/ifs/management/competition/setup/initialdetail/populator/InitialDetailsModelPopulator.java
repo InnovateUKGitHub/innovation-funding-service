@@ -38,7 +38,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     @Autowired
     private CategoryRestService categoryRestService;
 
-    @Value("${ifs.subsidy.control.enabled:true}")
+    @Value("${ifs.subsidy.control.enabled:false}")
     private boolean subsidyControlEnabled;
 
 
