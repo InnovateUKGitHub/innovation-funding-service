@@ -179,7 +179,10 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
 
     private ServiceResult<Boolean> getAidEligibilityForCompetition(long targetId) {
         return getCompetitionFromTargetId(targetId).
-                andOnSuccessReturn(competition -> SubsidyControl.NOT_AID != competition.getSubsidyControl());
+                andOnSuccessReturn(competition ->
+                        competition.getSubsidyControl() != null
+                        && SubsidyControl.NOT_AID != competition.getSubsidyControl()
+                );
     }
 
     private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {
