@@ -20,6 +20,7 @@ import java.util.Optional;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.DEFAULT_NOTIFICATION_TEMPLATES_PATH;
@@ -123,6 +124,33 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(renderer.renderTemplate(eq(systemNotificationSource), any(),
                 eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision.html"), eq(arguments)))
+                .thenReturn(serviceSuccess("MessageBody"));
+
+        ServiceResult<ApplicationNotificationTemplateResource> result = service.getUnsuccessfulNotificationTemplate(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals("MessageBody", result.getSuccess().getMessageBody());
+    }
+
+    @Test
+    public void getUnsuccessfulHeukarNotificationTemplate() {
+        ZonedDateTime feedbackDate = ZonedDateTime.now();
+
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .withCompetitionType(newCompetitionType().withName("Heukar").build())
+                .withReleaseFeedbackDate(feedbackDate)
+                .build();
+
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("competitionName", competition.getName());
+        arguments.put("dashboardUrl", webBaseUrl);
+        arguments.put("feedbackDate", toUkTimeZone(competition.getReleaseFeedbackDate()).format(formatter));
+        arguments.put("competitionId", competition.getId());
+
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(renderer.renderTemplate(eq(systemNotificationSource), any(),
+                eq(DEFAULT_NOTIFICATION_TEMPLATES_PATH + "unsuccessful_funding_decision_heukar.html"), eq(arguments)))
                 .thenReturn(serviceSuccess("MessageBody"));
 
         ServiceResult<ApplicationNotificationTemplateResource> result = service.getUnsuccessfulNotificationTemplate(competitionId);
