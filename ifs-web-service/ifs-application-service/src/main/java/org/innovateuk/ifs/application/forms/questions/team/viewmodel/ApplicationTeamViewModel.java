@@ -24,6 +24,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean ktpCompetition;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
+    private final boolean heukar;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -37,7 +38,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean complete,
                                     boolean ktpCompetition,
                                     ApplicationKtaInviteResource ktaInvite,
-                                    ProcessRoleResource ktaProcessRole
+                                    ProcessRoleResource ktaProcessRole,
+                                    boolean heukar
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -52,6 +54,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktpCompetition = ktpCompetition;
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
+        this.heukar = heukar;
     }
 
     @Override
@@ -162,4 +165,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return null;
     }
 
+    public boolean isHeukar() {
+        return heukar;
+    }
 }

@@ -237,7 +237,8 @@
                             </tbody>
                         </table>
                     </form>
-                    <th:block th:if="${organisation.editable and !model.readOnly}">
+                    <th:block th:unless="${model.heukar}"
+                              th:if="${organisation.editable and !model.readOnly}">
                         <p class="govuk-body">
                             <button name="add-team-member"
                                     th:value="${organisation.id}"
@@ -253,9 +254,17 @@
             </th:block>
 
             <th:block th:if="${model.leadApplicant}">
-                <p class="govuk-body govuk-!-margin-top-5">
+                <p th:unless="${model.heukar}"
+                    class="govuk-body govuk-!-margin-top-5">
                     <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
                        th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                       id="add-a-partner-organisation"
+                       class="govuk-link">Add a partner organisation</a>
+                </p>
+                <p th:if="${model.heukar}"
+                    class="govuk-body govuk-!-margin-top-5">
+                    <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation-type(applicationId=${model.applicationId},questionId=${model.questionId})}"
                        id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>
