@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -201,6 +202,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "golTemplateId", referencedColumnName = "id")
+    private GolTemplate golTemplate;
 
     public Competition() {
         setupComplete = false;
@@ -1022,5 +1027,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public boolean isAssessmentClosed() {
         return getCompetitionStatus() != null && getCompetitionStatus().isLaterThan(IN_ASSESSMENT);
+    }
+
+    public GolTemplate getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplate golTemplate) {
+        this.golTemplate = golTemplate;
     }
 }
