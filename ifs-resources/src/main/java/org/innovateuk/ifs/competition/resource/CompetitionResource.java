@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import javax.validation.constraints.Max;
@@ -89,6 +90,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
+    private GolTemplateResource golTemplate;
     private boolean locationPerPartner = true;
     private Boolean stateAid;
     private Boolean includeYourOrganisationSection;
@@ -347,6 +349,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setCompetitionTypeEnum(CompetitionTypeEnum competitionTypeEnum) {
         this.competitionTypeEnum = competitionTypeEnum;
+    }
+
+    public GolTemplateResource getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplateResource golTemplate) {
+        this.golTemplate = golTemplate;
     }
 
     @JsonIgnore
