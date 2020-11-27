@@ -100,7 +100,6 @@ public class HeukarTemplate implements CompetitionTemplate {
                         .withQuestions(newArrayList(
                                 applicationTeam(),
                                 applicationDetails(),
-                                researchCategory(),
                                 equalityDiversityAndInclusion(),
                                 projectSummary(),
                                 publicDescription(),
