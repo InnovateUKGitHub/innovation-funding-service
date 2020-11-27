@@ -3,12 +3,12 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
+import org.innovateuk.ifs.competition.resource.VersionedTemplateResource;
 
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link TermsAndConditionsResource} related data.
+ * Interface for CRUD operations on {@link VersionedTemplateResource} related data.
  */
 public interface TermsAndConditionsRestService {
 
