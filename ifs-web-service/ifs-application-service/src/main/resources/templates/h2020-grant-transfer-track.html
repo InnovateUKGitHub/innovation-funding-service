@@ -18,27 +18,29 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Horizon 2020 grant transfer submission',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
-        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
-            <h2 class="govuk-panel__title">Grant transfer submission complete</h2>
-            <div class="govuk-panel__body govuk-!-font-size-19">
-                Submission number: <span th:text="${model.currentApplication.id}" /><br/>
-                We have received your submission for funding
-                <th:block th:if="${model.currentApplication.submittedDate}">
-                    on
-                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>
-                    at
-                    <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}" />.
-                </th:block><br />
-                <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
-                       class="govuk-link govuk-!-margin-right-6">View submission</a>
-                    <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
-                       class="govuk-link govuk-!-margin-right-6">Reopen application</a>
-                    <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
-                       class="govuk-link">Print submission</a>
-                </div>
-            </div>
-        </div>
+        <th:block><th:block th:insert="fragments/application-submitted"/></th:block>
+
+<!--        <div class="govuk-panel govuk-panel&#45;&#45;confirmation govuk-!-margin-bottom-9">-->
+<!--            <h2 class="govuk-panel__title">Grant transfer submission complete</h2>-->
+<!--            <div class="govuk-panel__body govuk-!-font-size-19">-->
+<!--                Submission number: <span th:text="${model.currentApplication.id}" /><br/>-->
+<!--                We have received your submission for funding-->
+<!--                <th:block th:if="${model.currentApplication.submittedDate}">-->
+<!--                    on-->
+<!--                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>-->
+<!--                    at-->
+<!--                    <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}" />.-->
+<!--                </th:block><br />-->
+<!--                <div class="govuk-!-margin-top-6">-->
+<!--                    <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"-->
+<!--                       class="govuk-link govuk-!-margin-right-6">View submission</a>-->
+<!--                    <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"-->
+<!--                       class="govuk-link govuk-!-margin-right-6">Reopen application</a>-->
+<!--                    <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"-->
+<!--                       class="govuk-link">Print submission</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
