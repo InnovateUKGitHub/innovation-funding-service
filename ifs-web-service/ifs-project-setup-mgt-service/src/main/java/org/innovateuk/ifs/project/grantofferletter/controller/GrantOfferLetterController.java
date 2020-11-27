@@ -290,8 +290,10 @@ public class GrantOfferLetterController {
     @GetMapping("/template")
     public String viewGrantOfferLetterTemplatePage(@PathVariable("projectId") long projectId,
                                                    Model model) {
-        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(projectId));
-        return "project/gol-template";
+        ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
+        return "project/" + competition.getGolTemplate().getTemplate();
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
