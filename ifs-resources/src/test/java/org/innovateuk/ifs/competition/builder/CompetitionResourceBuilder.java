@@ -219,8 +219,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
-    public CompetitionResourceBuilder withSubsidyControl(SubsidyControl... subsidyControl) {
-        return withArraySetFieldByReflection("subsidyControl", subsidyControl);
+    public CompetitionResourceBuilder withFundingRules(FundingRules... fundingRules) {
+        return withArraySetFieldByReflection("fundingRules", fundingRules);
     }
 
     public CompetitionResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {

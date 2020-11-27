@@ -132,7 +132,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getInnovationSector(), innovationSectorId);
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
-        assertEquals(SubsidyControl.STATE_AID, competition.getSubsidyControl());
+        assertEquals(FundingRules.STATE_AID, competition.getFundingRules());
         assertEquals(FundingType.GRANT, competition.getFundingType());
 
         verify(competitionSetupRestService).updateCompetitionInitialDetails(competition);

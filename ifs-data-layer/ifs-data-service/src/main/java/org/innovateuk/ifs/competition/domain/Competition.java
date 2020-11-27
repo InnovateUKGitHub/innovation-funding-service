@@ -157,7 +157,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private Boolean stateAid;
 
     @Enumerated(EnumType.STRING)
-    private SubsidyControl subsidyControl;
+    private FundingRules fundingRules;
 
     private Boolean includeYourOrganisationSection;
 
@@ -884,12 +884,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.minProjectDuration = minProjectDuration;
     }
 
-    public SubsidyControl getSubsidyControl() {
-        return subsidyControl;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setSubsidyControl(SubsidyControl subsidyControl) {
-        this.subsidyControl = subsidyControl;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {

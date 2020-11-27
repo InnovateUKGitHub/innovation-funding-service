@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.SubsidyControl;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -174,7 +174,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void updateOrganisationWithGrowthTable() {
 
-        Competition competition = newCompetition().withSubsidyControl(SubsidyControl.STATE_AID).build();
+        Competition competition = newCompetition().withFundingRules(FundingRules.STATE_AID).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
         Application application = newApplication().withCompetition(competition).build();
         Organisation organisation = newOrganisation().build();
@@ -203,7 +203,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void updateOrganisationWithoutGrowthTable() {
 
-        Competition competition = newCompetition().withSubsidyControl(SubsidyControl.STATE_AID).build();
+        Competition competition = newCompetition().withFundingRules(FundingRules.STATE_AID).build();
         CompetitionResource competitionResource = newCompetitionResource().build();
         Application application = newApplication().withCompetition(competition).build();
         Organisation organisation = newOrganisation().build();
@@ -232,7 +232,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void isShowAidAgreementForStateAid() {
 
-        CompetitionResource competition = newCompetitionResource().withSubsidyControl(SubsidyControl.STATE_AID).build();
+        CompetitionResource competition = newCompetitionResource().withFundingRules(FundingRules.STATE_AID).build();
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();
@@ -249,9 +249,9 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     }
 
     @Test
-    public void isShowAidAgreementForWtoRules() {
+    public void isShowAidAgreementForSubsidyControl() {
 
-        CompetitionResource competition = newCompetitionResource().withSubsidyControl(SubsidyControl.WTO_RULES).build();
+        CompetitionResource competition = newCompetitionResource().withFundingRules(FundingRules.SUBSIDY_CONTROL).build();
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();
@@ -270,7 +270,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void isNotShowAidAgreementForNotAid() {
 
-        CompetitionResource competition = newCompetitionResource().withSubsidyControl(SubsidyControl.NOT_AID).build();
+        CompetitionResource competition = newCompetitionResource().withFundingRules(FundingRules.NOT_AID).build();
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();
@@ -289,7 +289,7 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
     @Test
     public void isNotShowAidAgreementForNull() {
 
-        CompetitionResource competition = newCompetitionResource().withSubsidyControl(null).build();
+        CompetitionResource competition = newCompetitionResource().withFundingRules(null).build();
         Application application = newApplication().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Organisation organisation = newOrganisation().build();

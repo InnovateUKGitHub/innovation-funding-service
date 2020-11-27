@@ -92,7 +92,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private GrantTermsAndConditionsResource termsAndConditions;
     private GolTemplateResource golTemplate;
     private boolean locationPerPartner = true;
-    private SubsidyControl subsidyControl;
+    private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
     private Set<Long> grantClaimMaximums;
     private ApplicationFinanceType applicationFinanceType;
@@ -683,12 +683,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public SubsidyControl getSubsidyControl() {
-        return subsidyControl;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setSubsidyControl(SubsidyControl subsidyControl) {
-        this.subsidyControl = subsidyControl;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -860,7 +860,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(subsidyControl, that.subsidyControl)
+                .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
@@ -924,7 +924,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
                 .append(locationPerPartner)
-                .append(subsidyControl)
+                .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)

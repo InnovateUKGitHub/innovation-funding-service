@@ -94,7 +94,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 String competitionTypeName,
                                                 List<String> innovationAreaNames,
                                                 String innovationSectorName,
-                                                SubsidyControl subsidyControl,
+                                                FundingRules fundingRules,
                                                 List<String> researchCategoryNames,
                                                 String leadTechnologist,
                                                 String compExecutive,
@@ -144,7 +144,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategories.isEmpty() ? emptySet() : newHashSet(researchCategories));
-                competition.setSubsidyControl(subsidyControl);
+                competition.setFundingRules(fundingRules);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));

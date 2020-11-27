@@ -3,7 +3,7 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.resource.SubsidyControl;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -67,7 +67,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("locationPerPartner").description("Indicates if the project location per partner is required during project setup for this competition").optional(),
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last").optional(),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last").optional(),
-            fieldWithPath("subsidyControl").description("Indicates if the competition has state aid eligibility, WTO eligibility, or none").optional(),
+            fieldWithPath("fundingRules").description("Indicates if the competition has state aid eligibility, subsidy control eligibility, or none").optional(),
             fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional(),
             fieldWithPath("competitionDocuments").description("List of documents required during the project setup phase").optional(),
             fieldWithPath("nonFinanceType").description("Does the competition have finance questions").optional(),
@@ -117,7 +117,7 @@ public class CompetitionResourceDocs {
             .withNonIfsUrl("https://google.co.uk")
             .withMilestones(asList(1L, 2L, 3L))
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
-            .withSubsidyControl(SubsidyControl.STATE_AID)
+            .withFundingRules(FundingRules.STATE_AID)
             .withIncludeJesForm(true)
             .withFundingType(FundingType.PROCUREMENT)
             .withCompetitionTerms((FileEntryResource) null);
