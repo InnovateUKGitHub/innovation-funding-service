@@ -368,3 +368,13 @@ hr,
     @extend .govuk-input--error;
   }
 }
+
+/* Only display if javascript is present via css */
+.hide-without-javascript {
+  display:none;
+}
+.js-enabled {
+  .hide-without-javascript {
+    display:block;
+  }
+}
