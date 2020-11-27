@@ -183,7 +183,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                     UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, form, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, null, form, null, true);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(projectAcademicCostsSaver.save(form, projectId, organisationId));
@@ -204,7 +204,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                            UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, type, true);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, type, false);
         yourProjectCostsFormValidator.validateType(form, type, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId));
