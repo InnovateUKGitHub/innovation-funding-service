@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTa
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTableModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -52,12 +50,6 @@ public class GrantOfferLetterTemplatePopulatorTest {
 
     @InjectMocks
     private GrantOfferLetterTemplatePopulator populator;
-
-    @Mock
-    private ProjectRestService projectRestService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
 
     @Mock
     private ProjectService projectService;
@@ -156,8 +148,6 @@ public class GrantOfferLetterTemplatePopulatorTest {
                                                                                     BigDecimal.ONE,
                                                                                     BigDecimal.ZERO);
 
-        when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(organisationRestService.getOrganisationById(leadOrg.getId())).thenReturn(restSuccess(leadOrg));
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(projectManagerProjectUser));
         when(userRestService.retrieveUserById(projectManager.getId())).thenReturn(restSuccess(projectManager));
@@ -168,7 +158,7 @@ public class GrantOfferLetterTemplatePopulatorTest {
         when(academicFinanceTableModelPopulator.createTable(any(), any())).thenReturn(academicFinanceTable);
         when(summaryFinanceTableModelPopulator.createTable(any(), any())).thenReturn(summaryFinanceTable);
 
-        GrantOfferLetterTemplateViewModel model = populator.populate(project.getId());
+        GrantOfferLetterTemplateViewModel model = populator.populate(project, competition);
 
         assertEquals(applicationId, model.getApplicationId());
         assertEquals(projectManager.getFirstName(), model.getProjectManagerFirstName());
