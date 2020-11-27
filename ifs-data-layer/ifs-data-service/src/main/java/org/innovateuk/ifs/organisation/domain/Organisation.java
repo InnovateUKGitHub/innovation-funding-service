@@ -164,14 +164,6 @@ public class Organisation {
         this.dateOfIncorporation = dateOfIncorporation;
     }
 
-    public List<SicCode> getSicCode() {
-        return sicCodes;
-    }
-
-    public void setSicCode(List<SicCode> sicCode) {
-        this.sicCodes = sicCode;
-    }
-
     public List<ExecutiveOfficer> getExecutiveOfficers() {
         return executiveOfficers;
     }

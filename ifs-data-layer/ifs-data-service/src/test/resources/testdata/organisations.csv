@@ -1,4 +1,4 @@
-Organisation name,Organisation type,Organisation address line 1,Line 2,Line3,Town or city,Postcode,County,Address Type,Company registration number,Is international,International registration number
+Organisation name,Organisation type,Organisation address line 1,Line 2,Line3,Town or city,Postcode,County,Address Type,Company registration number,Is international,International registration number,SicCode
 HIVE IT LIMITED,Business,"Electric Works, Sheffield Digital Campus",Concourse Way,,Sheffield,S1 2BJ,South Yorkshire,"OPERATING,REGISTERED",88339838,No,
 HIVE LIMITED,Business,46 Butterton Road,Rhyl,,Prestatyn,LL18 1RF,Denbighshire,"OPERATING,REGISTERED",74454966,No,
 HIVE 1 LTD,Business,Ground Floor,"Elizabeth House, 54/58 High Street",,Edgware,HA8 7EJ,Middlesex,"OPERATING,REGISTERED",98052851,No,
@@ -118,3 +118,4 @@ International Organisation 1,Business,Guapo Centro,,,Barcelona,78201,Barcelona,"
 International Organisation 2,Research,Calle Uno,,,Madrid,67192,Madrid,"OPERATING,REGISTERED",,Yes,123457
 Empire (french),Business,Guapo Centro,,,Barcelona,78201,Barcelona,"OPERATING,REGISTERED",,Yes,123458
 A base of knowledge,Knowledge Base,52 Knowledge Road,,,Swindon,SN1 1GL,Wiltshire,"KNOWLEDGE_BASE",,No,
+A base of no knowledge,no Knowledge Base,51 NoKnowledge Road,,,Swindon,SN3 3GL,Wiltshire,"OPERATING",,No,1234-SIC Code
