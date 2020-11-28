@@ -165,7 +165,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
                     } else if (competition.isHeukar()) {
-                        notification = heukarGrantTransferNotification(from, to, application, competition);
+                        notification = heukarNotification(from, to, application, competition);
                     } else {
                         notification = applicationSubmitNotification(from, to, application, competition);
                     }
@@ -251,7 +251,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
-    private Notification heukarGrantTransferNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
+    private Notification heukarNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
         notificationArguments.put("applicationId", application.getId());
