@@ -81,6 +81,7 @@ public class HeukarTemplate implements CompetitionTemplate {
         competition.setHasAssessmentPanel(false);
         competition.setHasInterviewStage(false);
         competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
+        competition.setStateAid(false);
 
         return competition;
     }
