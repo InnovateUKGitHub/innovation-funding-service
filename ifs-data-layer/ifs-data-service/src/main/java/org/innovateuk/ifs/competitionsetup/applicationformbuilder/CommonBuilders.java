@@ -16,6 +16,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
+import org.innovateuk.ifs.project.grantofferletter.template.repository.GolTemplateRepository;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,9 @@ public class CommonBuilders {
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private GolTemplateRepository golTemplateRepository;
 
     /*
     Tech debt.
@@ -414,5 +419,19 @@ public class CommonBuilders {
         }
 
         return competition;
+    }
+
+    public Competition getGolTemplate(Competition competition) {
+        String templateName;
+        if (competition.isKtp()) {
+            templateName = "KTP GOL Template";
+        } else {
+            templateName = "Default GOL Template";
+        }
+        GolTemplate golTemplate =
+                golTemplateRepository.findFirstByNameOrderByVersionDesc(templateName);
+        competition.setGolTemplate(golTemplate);
+        return competition;
+
     }
 }

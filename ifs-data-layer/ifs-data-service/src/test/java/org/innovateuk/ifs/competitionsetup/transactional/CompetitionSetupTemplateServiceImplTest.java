@@ -149,6 +149,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(grantTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(grantTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(grantTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(grantTemplate.setGolTemplate(any())).thenReturn(competition);
         when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
@@ -181,6 +182,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(loanTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(loanTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(loanTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(loanTemplate.setGolTemplate(any())).thenReturn(competition);
         when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
@@ -215,6 +217,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(ktpTemplate.initialiseFinanceTypes(any())).thenReturn(competition);
         when(ktpTemplate.initialiseProjectSetupColumns(any())).thenReturn(competition);
         when(ktpTemplate.overrideTermsAndConditions(any())).thenReturn(competition);
+        when(ktpTemplate.setGolTemplate(any())).thenReturn(competition);
         when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
         when(assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
