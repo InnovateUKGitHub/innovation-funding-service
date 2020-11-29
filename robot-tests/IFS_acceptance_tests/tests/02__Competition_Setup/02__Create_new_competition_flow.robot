@@ -399,14 +399,14 @@ Application: Application details validations
     Then the user should see a field error       ${field_should_be_1_or_higher}
     And the user should see a field error        The maximum must be larger than the minimum.
 
-    When the user enters text to a text field    id = minProjectDuration  66
-    And the user enters text to a text field     id = maxProjectDuration  65
+    When the user enters text to a text field    id = minProjectDuration  86
+    And the user enters text to a text field     id = maxProjectDuration  85
     Then the user should see a field error       The minimum must be smaller than the maximum.
-    And the user should see a field error        This field should be 60 or lower.
+    And the user should see a field error        This field should be 84 or lower.
 
     When the user enters text to a text field    id = minProjectDuration  59
     And the user clicks the button/link          jQuery = button:contains('Done')
-    Then the user should see a summary error     This field should be 60 or lower
+    Then the user should see a summary error     This field should be 84 or lower
     [Teardown]  the user clicks the button/link  link = Application
 
 
