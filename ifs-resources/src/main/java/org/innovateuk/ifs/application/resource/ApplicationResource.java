@@ -53,6 +53,7 @@ public class ApplicationResource {
     private CompanyPrimaryFocus companyPrimaryFocus;
     private String event;
     private ZonedDateTime lastStateChangeDate;
+    private FundingDecision fundingDecision;
 
     public Long getId() {
         return id;
@@ -137,8 +138,11 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
-    public boolean canBeReopened() {
-        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED || applicationState == ApplicationState.SUBMITTED;
+    public boolean canBeReopened(ApplicationResource application) {
+        return applicationState == ApplicationState.OPENED
+                || applicationState == ApplicationState.CREATED
+                || applicationState == ApplicationState.SUBMITTED
+                && application.getFundingDecision() == null;
     }
 
     @JsonIgnore
@@ -317,6 +321,14 @@ public class ApplicationResource {
 
     public void setLastStateChangeDate(ZonedDateTime lastStateChangeDate) {
         this.lastStateChangeDate = lastStateChangeDate;
+    }
+
+    public FundingDecision getFundingDecision() {
+        return fundingDecision;
+    }
+
+    public void setFundingDecision(FundingDecision fundingDecision) {
+        this.fundingDecision = fundingDecision;
     }
 
     @Override
