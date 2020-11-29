@@ -67,7 +67,7 @@ public class HeukarTemplate implements CompetitionTemplate {
         competitionAssessmentConfig.setIncludeAverageAssessorScoreInNotifications(false);
         competitionAssessmentConfig.setAssessorFinanceView(AssessorFinanceView.OVERVIEW);
 
-        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon Europe UK Application Registration"));
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Heukar"));
         competition.setLeadApplicantTypes(organisationTypesList);
         competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setAcademicGrantPercentage(100);
