@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="application-submitted">
+<th:block th:fragment="application-submitted-panel">
     <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
-<!--        <h2 class="govuk-panel__title">-->
-<!--            <th:block th:if="${model.isH2020}">Grant transfer submission complete</th:block>-->
-<!--            <th:block th:unless="${model.isH2020}">Application submitted</th:block>-->
-<!--        </h2>-->
-        <div class="govuk-panel__body govuk-!-font-size-19">
+                <h2 class="govuk-panel__title">
+                    <th:block th:if="${model.currentCompetition.isH2020()}">Grant transfer submission complete</th:block>
+                    <th:block th:unless="${model.currentCompetition.isH2020()}">Application submitted</th:block>
+                </h2>
+        <div class="govuk-panel__body govuk-!-font-size-24">
             Application number: <span th:text="${model.currentApplication.id}" /><br/>
             Your application for the competition '<span th:text="${model.currentCompetition.name}" />' was submitted
             <th:block th:if="${model.currentApplication.submittedDate}">

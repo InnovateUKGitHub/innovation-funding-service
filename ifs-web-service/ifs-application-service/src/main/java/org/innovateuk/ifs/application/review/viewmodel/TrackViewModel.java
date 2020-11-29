@@ -14,20 +14,17 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private String earlyMetricsUrl;
     private BigDecimal completedQuestionsPercentage;
     private boolean reopenLinkVisible;
-    private boolean isH2020;
 
     public TrackViewModel(CompetitionResource currentCompetition,
                           ApplicationResource currentApplication,
                           String earlyMetricsUrl,
                           BigDecimal completedQuestionsPercentage,
-                          boolean reopenLinkVisible,
-                          boolean isH2020) {
+                          boolean reopenLinkVisible) {
         this.currentCompetition = currentCompetition;
         this.currentApplication = currentApplication;
         this.earlyMetricsUrl = earlyMetricsUrl;
         this.completedQuestionsPercentage = completedQuestionsPercentage;
         this.reopenLinkVisible = reopenLinkVisible;
-        this.isH2020 = isH2020;
     }
 
     @Override
@@ -74,10 +71,6 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
 
     public boolean isReopenLinkVisible() {
         return reopenLinkVisible;
-    }
-
-    public boolean isH2020() {
-        return isH2020;
     }
 
     public boolean isDisplayIfsAssessmentInformation() {

@@ -261,8 +261,8 @@ public class ReviewAndSubmitController {
                 application,
                 earlyMetricsUrl,
                 application.getCompletion(),
-                canReopenApplication(application, user),
-                competition.isH2020()));
+                canReopenApplication(application, user)
+        ));
         return getTrackingPage(competition);
     }
 
