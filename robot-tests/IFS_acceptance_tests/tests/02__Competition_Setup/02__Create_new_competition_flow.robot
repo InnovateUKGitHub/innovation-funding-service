@@ -417,7 +417,7 @@ Application: Application details
     And the user should see the element             jQuery = h1:contains("Details")
     When the user selects the radio button          useResubmissionQuestion  false
     Then the user enters text to a text field       id = minProjectDuration  2
-    And the user enters text to a text field        id = maxProjectDuration  60
+    And the user enters text to a text field        id = maxProjectDuration  84
     And The user clicks the button/link             jQuery = button:contains('Done')
     And the user should see the element             jQuery = li:contains("Application details") .task-status-complete
     When the user clicks the button/link            link = Application details
