@@ -12,12 +12,12 @@ public class AcademicCostViewModel implements BaseAnalyticsViewModel {
     private final long sectionId;
     private final long organisationId;
     private final long applicationFinanceId;
-    private final boolean applicant;
+    private final boolean internal;
     private final boolean includeVat;
     private final boolean open;
     private final boolean complete;
 
-    public AcademicCostViewModel(String financesUrl, String applicationName, String competitionName, String organisationName, long applicationId, long sectionId, long organisationId, long applicationFinanceId, boolean applicant, boolean includeVat, boolean open, boolean complete) {
+    public AcademicCostViewModel(String financesUrl, String applicationName, String competitionName, String organisationName, long applicationId, long sectionId, long organisationId, long applicationFinanceId, boolean internal, boolean includeVat, boolean open, boolean complete) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.organisationName = organisationName;
@@ -26,7 +26,7 @@ public class AcademicCostViewModel implements BaseAnalyticsViewModel {
         this.sectionId = sectionId;
         this.organisationId = organisationId;
         this.applicationFinanceId = applicationFinanceId;
-        this.applicant = applicant;
+        this.internal = internal;
         this.includeVat = includeVat;
         this.open = open;
         this.complete = complete;
@@ -78,8 +78,8 @@ public class AcademicCostViewModel implements BaseAnalyticsViewModel {
         return applicationFinanceId;
     }
 
-    public boolean isApplicant() {
-        return applicant;
+    public boolean isInternal() {
+        return internal;
     }
 
     /* View logic. */
