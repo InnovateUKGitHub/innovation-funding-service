@@ -84,7 +84,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competition.getId(), PROJECT_COST_FINANCES).get(0);
 
         if (academic) {
-            addAcademicFinance(model, applicationId, costSection.getId(), organisationId);
+            addAcademicFinance(model, applicationId, costSection.getId(), organisationId, user);
         } else {
             addIndustrialFinance(model, applicationId, costSection.getId(), organisationId, user);
         }
@@ -96,8 +96,8 @@ public class AssessmentDetailedFinancesModelPopulator {
                 application.getName(), academic);
     }
 
-    private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId) {
-        AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, false);
+    private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {
+        AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
         AcademicCostForm form = new AcademicCostForm();
         applicationAcademicCostFormPopulator.populate(form, applicationId, organisationId);
 
