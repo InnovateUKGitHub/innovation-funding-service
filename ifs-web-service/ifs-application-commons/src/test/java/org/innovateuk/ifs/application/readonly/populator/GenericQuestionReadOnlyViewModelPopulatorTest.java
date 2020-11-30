@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.assessment.builder.ApplicationAssessmentsResourceBuilder;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -25,10 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -36,12 +34,15 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -242,5 +243,40 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
 
         assertEquals("Some text", viewModel.getAnswer());
+    }
+
+    @Test
+    public void populateForKtpAssessment() {
+
+        Long questionId = 1L;
+
+        ApplicationResource application = newApplicationResource()
+                .withResearchCategory(newResearchCategoryResource().withName("Research category").build())
+                .build();
+        CompetitionResource competition = newCompetitionResource()
+                .build();
+        QuestionResource question = newQuestionResource()
+                .withId(questionId)
+                .withShortName("Impact")
+                .build();
+        List<ApplicationAssessmentResource> assessments = ApplicationAssessmentsResourceBuilder.newApplicationAssessmentResource()
+                .withApplicationId(application.getId())
+                .withAssessmentId(2L, 3L)
+                .withScores(asMap(questionId, BigDecimal.ONE), asMap(questionId, BigDecimal.TEN))
+                .withFeedback(asMap(questionId, "Feedback-1"), asMap(questionId, "Feedback-10"))
+                .build(2);
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), assessments, emptyList());
+
+        ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(true);
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data, settings);
+
+        assertNotNull(viewModel);
+        assertEquals(questionId.longValue(), viewModel.getQuestionId());
+        assertEquals(asList("Feedback-1", "Feedback-10"), viewModel.getFeedback());
+        assertEquals(asList(BigDecimal.ONE, BigDecimal.TEN), viewModel.getScores());
+        assertEquals(BigDecimal.valueOf(5.5), viewModel.getAverageScore());
     }
 }

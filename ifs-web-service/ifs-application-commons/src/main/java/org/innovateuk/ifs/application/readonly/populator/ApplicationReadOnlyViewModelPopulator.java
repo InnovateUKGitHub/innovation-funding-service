@@ -123,12 +123,10 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
             settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
         }
 
-        boolean shouldDisplayKtpApplicationFeedback = shouldDisplayKtpApplicationFeedback(competition, user, processRoles);
-
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .filter(section -> shouldDisplayKtpApplicationFeedback || section.getType() != SectionType.KTP_ASSESSMENT)
+                .filter(section -> settings.isIncludeAllAssessorFeedback() || section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
@@ -140,7 +138,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                         .map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList(),
                 settings.isIncludeAllSupporterFeedback() ? data.getFeedbackToApplicationSupport().values().stream()
                         .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap(),
-                shouldDisplayKtpApplicationFeedback
+                shouldDisplayKtpApplicationFeedback(competition, user, processRoles)
         );
     }
 
