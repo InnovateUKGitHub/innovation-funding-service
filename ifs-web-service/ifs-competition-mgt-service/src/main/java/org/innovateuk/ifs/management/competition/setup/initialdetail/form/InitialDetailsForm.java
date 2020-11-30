@@ -61,7 +61,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     // TODO IFS-8779 Once the toggle ifs.funding.rule.enabled is removed from the codebase this validation should be
     // TODO IFS-8779 enabled instead of the custom validation in the controller.
     //@NotNull(message = "{validation.initialdetailsform.funding.rule.required}", groups = Unrestricted.class)
-    private FundingRules fundingRules;
+    private FundingRules fundingRule;
 
     private String innovationAreaNamesFormatted;
 
@@ -88,12 +88,12 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         }
     }
 
-    public FundingRules getFundingRules() {
-        return fundingRules;
+    public FundingRules getFundingRule() {
+        return fundingRule;
     }
 
-    public void setFundingRules(FundingRules fundingRules) {
-        this.fundingRules = fundingRules;
+    public void setFundingRule(FundingRules fundingRules) {
+        this.fundingRule = fundingRules;
     }
 
     public Integer getOpeningDateDay() {

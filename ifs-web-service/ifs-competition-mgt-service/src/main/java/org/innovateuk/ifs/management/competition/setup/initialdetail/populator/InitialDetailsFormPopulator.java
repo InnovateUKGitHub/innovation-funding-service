@@ -57,7 +57,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		}
 
 		competitionSetupForm.setTitle(competitionResource.getName());
-		competitionSetupForm.setFundingRules(competitionResource.getFundingRules());
+		competitionSetupForm.setFundingRule(competitionResource.getFundingRules());
 
 		competitionSetupForm.setFundingType(competitionResource.getFundingType());
 
