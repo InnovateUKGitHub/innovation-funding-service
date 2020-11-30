@@ -156,7 +156,7 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
+    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
     And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
 
 The knowledge transfer partnership t&c's are correct
@@ -1078,16 +1078,16 @@ the user should see knowledge based organisation fields
     the user should see the element     link = checking your organisation's alternative name (opens in a new window)
     the user should see the element     link = enter its details manually
 
-the user selects a knowledge based organisation
-    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-    input text                          id = knowledgeBase        ${knowledgeBase}
-    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
-
-the user apply with knowledge base organisation
-    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
-    the user clicks the button/link                     jQuery = button:contains("Confirm")
-    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
+#the user selects a knowledge based organisation
+#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+#    input text                          id = knowledgeBase        ${knowledgeBase}
+#    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
+#
+#the user apply with knowledge base organisation
+#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+#    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
+#    the user clicks the button/link                     jQuery = button:contains("Confirm")
+#    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
 
 the user should only see KB partner organisations
     the user should see the element         jQuery = span:contains("${businessOrganisationName}") + span:contains("${bussinessOrgInfoText}")

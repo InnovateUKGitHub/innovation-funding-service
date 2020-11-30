@@ -46,7 +46,7 @@ public class CommonYourFinancesViewModelPopulator {
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
-        boolean userCanEdit = !(user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .orElse(false);
         boolean open = userCanEdit && application.isOpen() && competition.isOpen();
