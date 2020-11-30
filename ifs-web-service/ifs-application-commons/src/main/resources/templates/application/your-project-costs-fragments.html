@@ -1191,8 +1191,7 @@
 
 <th:block th:fragment="capital_usage_row (id, row)">
     <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
-         th:id="${path}"
-         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+         th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s"
