@@ -6,5 +6,5 @@ ${message}
 
 Yours sincerely,
 
-<@layout.heukarSenderHTML />
+<@layout.heukarSenderPlainText />
 </@layout.defaultPlainText>
