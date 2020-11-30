@@ -17,5 +17,5 @@ For all other enquiries about your Horizon Europe grant, please contact The Euro
 Please forward this email to any consortia members.
 
 Yours sincerely,
-<@layout.heukarSenderHTML />
+<@layout.heukarSenderPlainText />
 </@layout.defaultPlainText>

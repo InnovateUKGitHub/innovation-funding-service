@@ -25,4 +25,6 @@ public interface FundingTypeTemplate {
     default Competition initialiseProjectSetupColumns(Competition competition) {
         return addDefaultProjectSetupColumns(competition);
     }
+
+    Competition setGolTemplate(Competition competition);
 }
