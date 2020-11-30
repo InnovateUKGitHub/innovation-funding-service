@@ -137,7 +137,7 @@
                                        th:value="${fundingRule}"
                                        required="required"
                                        th:checked="${competitionSetupForm.fundingRule == fundingRule}"
-                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.fundingRule.required}" />
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.funding.rule.required}" />
                                 <label th:for="${'fundingRule-'+fundingRule}"
                                        th:text="${fundingRule.displayName}"
                                        class="govuk-label govuk-radios__label"></label>
@@ -326,7 +326,7 @@
 
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingRule">
-                        <h2 class="govuk-fieldset__heading">Competition funding rules</h2>
+                        <h2 class="govuk-fieldset__heading">State aid</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('fundingRule')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingRule')}" th:text="${err}" />
@@ -341,7 +341,7 @@
                                    th:value="${fundingRule}"
                                    required="required"
                                    th:checked="${competitionSetupForm.fundingRule == fundingRule}"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.funding.rule.required}" />
+                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.stateaid.required}" />
                             <label th:for="${'fundingRule-'+fundingRule}"
                                    th:text="${fundingRule == T(org.innovateuk.ifs.competition.resource.FundingRules).STATE_AID} ? 'Yes' : 'No'"
                                    class="govuk-label govuk-radios__label"></label>
