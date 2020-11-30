@@ -57,11 +57,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 		}
 
 		competitionSetupForm.setTitle(competitionResource.getName());
-		if (competitionResource.getFundingRules() != null) {
-			boolean stateAid = FundingRules.STATE_AID == competitionResource.getFundingRules();
-			competitionSetupForm.setStateAid(stateAid);
-		}
-		competitionSetupForm.setSubsidyControlType(competitionResource.getSubsidyControl());
+		competitionSetupForm.setFundingRules(competitionResource.getFundingRules());
 
 		competitionSetupForm.setFundingType(competitionResource.getFundingType());
 

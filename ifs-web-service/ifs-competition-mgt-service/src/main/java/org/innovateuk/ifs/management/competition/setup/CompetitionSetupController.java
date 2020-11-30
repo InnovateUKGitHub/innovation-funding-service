@@ -52,7 +52,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -95,7 +94,7 @@ public class CompetitionSetupController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
-    @Value("${ifs.subsidy.control.enabled:false}")
+    @Value("${ifs.subsidy.control.enabled:true}")
     private boolean subsidyControlEnabled;
 
 
@@ -203,10 +202,9 @@ public class CompetitionSetupController {
             Model model) {
         // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this custom validation
         // TODO IFS-8779 should be removed for property annotations on the DTO.
-        if (subsidyControlEnabled && competitionSetupForm.getSubsidyControlType() == null) {
-            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("subsidyControlType", null, "validation.initialdetailsform.subsidyControlType.required")));
-        } else if (!subsidyControlEnabled && competitionSetupForm.getStateAid() == null) {
-            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("stateAid", null, "validation.initialdetailsform.stateaid.required")));
+        if (competitionSetupForm.getSubsidyControlType() == null) {
+            String errorKey = subsidyControlEnabled ? "validation.initialdetailsform.subsidyControlType.required" : "validation.initialdetailsform.stateaid.required";
+            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("subsidyControlType", null, errorKey)));
         }
 
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);

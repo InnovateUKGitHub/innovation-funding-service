@@ -36,7 +36,10 @@
                     <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
                 </dd>
 
-                <input type="hidden" th:field="${competitionSetupForm.subsidyControlType}" />
+                <th:block th:if="${model.subsidyControlEnabled}">
+                    <input type="hidden" th:field="${competitionSetupForm.subsidyControlType}" />
+                </th:block>
+
                 <input type="hidden" th:field="${competitionSetupForm.fundingType}" />
                 <input type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
                 <input type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
@@ -319,30 +322,35 @@
                 </select>
             </div>
 
-            <div th:unless="${model.subsidyControlEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset">
-                    <legend id="stateAid" class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                        <h2 class="govuk-fieldset__heading">State aid</h2>
+            <div th:unless="${model.subsidyControlEnabled}" class="govuk-form-group" th:classappend="${#fields.hasErrors('subsidyControlType')} ? 'govuk-form-group--error'">
+
+                <fieldset th:unless="${model.subsidyControlEnabled}" class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="subsidyControlType">
+                        <h2 class="govuk-fieldset__heading">Competition funding rules</h2>
                     </legend>
-                    <th:block th:if="${#fields.hasErrors('stateAid')}">
-                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
+                    <th:block th:if="${#fields.hasErrors('subsidyControlType')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('subsidyControlType')}" th:text="${err}" />
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
-                        <div class="govuk-radios__item" th:each="value : ${ {true, false} }">
-                            <input
-                                type="radio"
-                                class="govuk-radios__input"
-                                th:field="*{stateAid}"
-                                th:value="${value}"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.initialdetailsform.stateaid.required}"/>
-                            <label th:for="${#ids.prev('stateAid')}"
-                                   th:text="${value} ? 'Yes' : 'No'"
+                        <div th:each="subsidyControlType : ${ {T(org.innovateuk.ifs.competition.resource.SubsidyControl).STATE_AID,  T(org.innovateuk.ifs.competition.resource.SubsidyControl).NOT_AID} }"
+                             class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   name="subsidyControlType"
+                                   th:id="${'subsidyControlType-'+subsidyControlType}"
+                                   th:value="${subsidyControlType}"
+                                   required="required"
+                                   th:checked="${competitionSetupForm.subsidyControlType == subsidyControlType}"
+                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.subsidyControlType.required}" />
+                            <label th:for="${'subsidyControlType-'+subsidyControlType}"
+                                   th:text="${subsidyControlType == T(org.innovateuk.ifs.competition.resource.SubsidyControl).STATE_AID} ? 'Yes' : 'No'"
                                    class="govuk-label govuk-radios__label"></label>
                         </div>
                     </div>
 
                 </fieldset>
+
+
             </div>
 
             <input type="hidden" name="unrestricted" value="1" th:if="!${model.restricted}" />
@@ -385,7 +393,7 @@
 
                 <th:block th:unless="${model.subsidyControlEnabled}">
                     <dt>State aid</dt>
-                    <dd th:text="${#bools.isTrue(competitionSetupForm.stateAid) ? 'Yes' : 'No'}"></dd>
+                    <dd th:text="${competitionSetupForm.subsidyControlType == T(org.innovateuk.ifs.competition.resource.SubsidyControl).STATE_AID} ? 'Yes' : 'No'"></dd>
                 </th:block>
             </dl>
 
