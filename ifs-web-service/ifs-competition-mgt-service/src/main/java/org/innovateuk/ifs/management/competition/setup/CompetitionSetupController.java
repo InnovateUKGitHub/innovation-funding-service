@@ -188,7 +188,6 @@ public class CompetitionSetupController {
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
-        model.addAttribute("fundingRuleEnabled", fundingRuleEnabled);
 
         return "competition/setup";
     }
@@ -447,7 +446,6 @@ public class CompetitionSetupController {
                                                   CompetitionSetupSection section,
                                                   UserResource loggedInUser,
                                                   Model model) {
-        model.addAttribute("fundingRuleEnabled", fundingRuleEnabled);
         if (competition.isNonIfs()) {
             return format("redirect:/non-ifs-competition/setup/%d", competition.getId());
         }
