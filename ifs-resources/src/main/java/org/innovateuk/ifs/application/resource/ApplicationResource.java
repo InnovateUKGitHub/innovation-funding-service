@@ -138,11 +138,11 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
-    public boolean canBeReopened(ApplicationResource application) {
+    public boolean canBeReopened() {
         return applicationState == ApplicationState.OPENED
                 || applicationState == ApplicationState.CREATED
                 || applicationState == ApplicationState.SUBMITTED
-                && application.getFundingDecision() == null;
+                && fundingDecision == null;
     }
 
     @JsonIgnore
