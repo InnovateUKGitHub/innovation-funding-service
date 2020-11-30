@@ -138,7 +138,7 @@ public class ApplicationNotificationTemplateServiceImplTest extends BaseServiceU
 
         Competition competition = newCompetition()
                 .withName("Competition")
-                .withCompetitionType(newCompetitionType().withName("Heukar").build())
+                .withCompetitionType(newCompetitionType().withName("HEUKAR").build())
                 .withReleaseFeedbackDate(feedbackDate)
                 .build();
 
