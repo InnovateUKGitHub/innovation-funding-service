@@ -38,11 +38,6 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     @Autowired
     private CategoryRestService categoryRestService;
 
-    @Value("${ifs.subsidy.control.enabled:true}")
-    private boolean subsidyControlEnabled;
-
-
-
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
         return CompetitionSetupSection.INITIAL_DETAILS;
@@ -56,8 +51,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
                 userRestService.findByUserRoleAndUserStatus(INNOVATION_LEAD, ACTIVE).getSuccess(),
-                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()),
-                subsidyControlEnabled);
+                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

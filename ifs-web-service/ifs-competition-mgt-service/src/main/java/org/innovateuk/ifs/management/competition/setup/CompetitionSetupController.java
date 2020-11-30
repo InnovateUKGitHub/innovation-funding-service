@@ -94,7 +94,7 @@ public class CompetitionSetupController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
-    @Value("${ifs.subsidy.control.enabled:true}")
+    @Value("${ifs.subsidy.control.enabled:false}")
     private boolean subsidyControlEnabled;
 
 
@@ -188,6 +188,7 @@ public class CompetitionSetupController {
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
+        model.addAttribute("subsidyControlEnabled", subsidyControlEnabled);
 
         return "competition/setup";
     }
