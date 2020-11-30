@@ -94,7 +94,7 @@ public class CompetitionSetupController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
-    @Value("${ifs.funding.rule.enabled:false}")
+    @Value("${ifs.funding.rule.enabled:true}")
     private boolean fundingRuleEnabled;
 
 
