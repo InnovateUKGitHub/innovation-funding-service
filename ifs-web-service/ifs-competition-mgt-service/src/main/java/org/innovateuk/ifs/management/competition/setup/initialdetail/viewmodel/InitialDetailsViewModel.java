@@ -4,7 +4,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.competition.resource.SubsidyControl;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,7 +20,7 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
     private final List<CompetitionTypeResource> competitionTypes;
     private final List<UserResource> innovationLeadTechUsers;
     private final List<FundingType> fundingTypes;
-    private final List<SubsidyControl> subsidyControlTypes;
+    private final List<FundingRules> fundingRules;
     private final boolean restricted;
 
     public InitialDetailsViewModel(GeneralSetupViewModel generalSetupViewModel,
@@ -34,7 +34,7 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         this.competitionTypes = competitionTypes;
         this.innovationLeadTechUsers = innovationLeadTechUsers;
         this.fundingTypes = asList(FundingType.values());
-        this.subsidyControlTypes = asList(SubsidyControl.values());
+        this.fundingRules = asList(FundingRules.values());
         this.restricted = restricted;
     }
 
@@ -62,8 +62,8 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         return fundingTypes;
     }
 
-    public List<SubsidyControl> getSubsidyControlTypes() {
-        return subsidyControlTypes;
+    public List<FundingRules> getFundingRules() {
+        return fundingRules;
     }
 
     public boolean getRestricted() {

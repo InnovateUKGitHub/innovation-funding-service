@@ -94,8 +94,8 @@ public class CompetitionSetupController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
-    @Value("${ifs.subsidy.control.enabled:false}")
-    private boolean subsidyControlEnabled;
+    @Value("${ifs.funding.rule.enabled:false}")
+    private boolean fundingRulesEnabled;
 
 
     public static final String SETUP_READY_KEY = "setupReady";
@@ -188,7 +188,7 @@ public class CompetitionSetupController {
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
-        model.addAttribute("subsidyControlEnabled", subsidyControlEnabled);
+        model.addAttribute("fundingRulesEnabled", fundingRulesEnabled);
 
         return "competition/setup";
     }
@@ -201,11 +201,11 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
-        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this custom validation
+        // TODO IFS-8779 Once the toggle ifs.funding.rule.enabled is removed from the codebase this custom validation
         // TODO IFS-8779 should be removed for property annotations on the DTO.
-        if (competitionSetupForm.getSubsidyControlType() == null) {
-            String errorKey = subsidyControlEnabled ? "validation.initialdetailsform.subsidyControlType.required" : "validation.initialdetailsform.stateaid.required";
-            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("subsidyControlType", null, errorKey)));
+        if (competitionSetupForm.getFundingRules() == null) {
+            String errorKey = fundingRulesEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
+            validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));
         }
 
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);

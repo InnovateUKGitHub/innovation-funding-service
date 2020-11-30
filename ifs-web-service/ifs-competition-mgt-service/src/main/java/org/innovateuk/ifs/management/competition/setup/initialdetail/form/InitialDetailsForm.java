@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.SubsidyControl;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -58,10 +58,10 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long innovationLeadUserId;
 
-    // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this validation should be
+    // TODO IFS-8779 Once the toggle ifs.funding.rule.enabled is removed from the codebase this validation should be
     // TODO IFS-8779 enabled instead of the custom validation in the controller.
-    //@NotNull(message = "{validation.initialdetailsform.subsidyControlType.required}", groups = Unrestricted.class)
-    private SubsidyControl subsidyControlType;
+    //@NotNull(message = "{validation.initialdetailsform.funding.rule.required}", groups = Unrestricted.class)
+    private FundingRules fundingRules;
 
     private String innovationAreaNamesFormatted;
 
@@ -86,6 +86,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
             LOG.trace("invalid opening date", e);
             return null;
         }
+    }
+
+    public FundingRules getFundingRules() {
+        return fundingRules;
+    }
+
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Integer getOpeningDateDay() {
@@ -150,14 +158,6 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     public void setInnovationLeadUserId(Long innovationLeadUserId) {
         this.innovationLeadUserId = innovationLeadUserId;
-    }
-
-    public SubsidyControl getSubsidyControlType() {
-        return subsidyControlType;
-    }
-
-    public void setSubsidyControlType(SubsidyControl subsidyControlType) {
-        this.subsidyControlType = subsidyControlType;
     }
 
     public String getInnovationAreaNamesFormatted() {
