@@ -95,7 +95,7 @@ public class CompetitionSetupController {
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
     @Value("${ifs.funding.rule.enabled:false}")
-    private boolean fundingRulesEnabled;
+    private boolean fundingRuleEnabled;
 
 
     public static final String SETUP_READY_KEY = "setupReady";
@@ -188,7 +188,7 @@ public class CompetitionSetupController {
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
-        model.addAttribute("fundingRulesEnabled", fundingRulesEnabled);
+        model.addAttribute("fundingRuleEnabled", fundingRuleEnabled);
 
         return "competition/setup";
     }
@@ -204,7 +204,7 @@ public class CompetitionSetupController {
         // TODO IFS-8779 Once the toggle ifs.funding.rule.enabled is removed from the codebase this custom validation
         // TODO IFS-8779 should be removed for property annotations on the DTO.
         if (competitionSetupForm.getFundingRules() == null) {
-            String errorKey = fundingRulesEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
+            String errorKey = fundingRuleEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
             validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));
         }
 
