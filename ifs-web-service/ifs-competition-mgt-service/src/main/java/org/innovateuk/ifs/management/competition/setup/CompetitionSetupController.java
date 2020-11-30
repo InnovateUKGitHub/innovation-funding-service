@@ -94,7 +94,7 @@ public class CompetitionSetupController {
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
-    @Value("${ifs.funding.rule.enabled:false}")
+    @Value("${ifs.funding.rule.enabled:true}")
     private boolean fundingRuleEnabled;
 
 
@@ -447,6 +447,7 @@ public class CompetitionSetupController {
                                                   CompetitionSetupSection section,
                                                   UserResource loggedInUser,
                                                   Model model) {
+        model.addAttribute("fundingRuleEnabled", fundingRuleEnabled);
         if (competition.isNonIfs()) {
             return format("redirect:/non-ifs-competition/setup/%d", competition.getId());
         }
