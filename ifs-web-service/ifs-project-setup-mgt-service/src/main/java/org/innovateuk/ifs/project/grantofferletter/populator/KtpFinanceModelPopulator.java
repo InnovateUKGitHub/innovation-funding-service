@@ -24,13 +24,13 @@ public class KtpFinanceModelPopulator {
         KtpFundingRowsRunningTotal fundingRunningTotal = new KtpFundingRowsRunningTotal();
 
         return aKtpFinanceModel()
-                .withAssociateEmployment(row(leadFinances.getCostCategory(FinanceRowType.ASSOCIATE_SALARY_COSTS), claimPercentage, fundingRunningTotal))
-                .withAssociateDevelopment(row(leadFinances.getCostCategory(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS), claimPercentage, fundingRunningTotal))
-                .withTravelAndSubsistence(row(leadFinances.getCostCategory(FinanceRowType.KTP_TRAVEL), claimPercentage, fundingRunningTotal))
-                .withConsumables(row(leadFinances.getCostCategory(FinanceRowType.CONSUMABLES), claimPercentage, fundingRunningTotal))
-                .withKnowledgeBaseSupervisor(row(leadFinances.getCostCategory(FinanceRowType.KNOWLEDGE_BASE), claimPercentage, fundingRunningTotal))
-                .withAdditionalSupportCosts(row(leadFinances.getCostCategory(FinanceRowType.ASSOCIATE_SUPPORT), claimPercentage, fundingRunningTotal))
-                .withOtherCosts(row(leadFinances.getCostCategory(FinanceRowType.OTHER_COSTS), claimPercentage, fundingRunningTotal))
+                .withAssociateEmployment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SALARY_COSTS), claimPercentage, fundingRunningTotal))
+                .withAssociateDevelopment(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS), claimPercentage, fundingRunningTotal))
+                .withTravelAndSubsistence(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KTP_TRAVEL), claimPercentage, fundingRunningTotal))
+                .withConsumables(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.CONSUMABLES), claimPercentage, fundingRunningTotal))
+                .withKnowledgeBaseSupervisor(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.KNOWLEDGE_BASE), claimPercentage, fundingRunningTotal))
+                .withAdditionalSupportCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.ASSOCIATE_SUPPORT), claimPercentage, fundingRunningTotal))
+                .withOtherCosts(row(leadFinances.getFinanceOrganisationDetails(FinanceRowType.OTHER_COSTS), claimPercentage, fundingRunningTotal))
                 .withAssociateEstateCosts(rowFromRunningTotal(fundingRunningTotal, leadFinances))
                 .withAcademicAndSecretarialSupport(row(calculateAcademicAndSecretarialSupport(project), claimPercentage, fundingRunningTotal)) //todo
                 .build();
