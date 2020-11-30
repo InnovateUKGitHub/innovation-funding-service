@@ -277,8 +277,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "openingDate",
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds",
-                        "competitionTypeId",
-                        "stateAid"))
+                        "competitionTypeId"))
+                        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed and validation is added
+                        // TODO IFS-8779 back to the DTO then "fundingRules" should be added to this test again.
+                        // "stateAid"))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
 
@@ -327,11 +329,15 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Enter a valid funding type.",
                 bindingResult.getFieldError("fundingType").getDefaultMessage()
         );
-        assertTrue(bindingResult.hasFieldErrors("stateAid"));
-        assertEquals(
-                "Please select a state aid option.",
-                bindingResult.getFieldError("stateAid").getDefaultMessage()
-        );
+
+        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed and validation is added back to the DTO
+        // TODO IFS-8779 then "fundingRules" should be added to this test again.
+        //assertTrue(bindingResult.hasFieldErrors("fundingRule"));
+        //assertEquals(
+        //        "Please select a competition funding rule.",
+        //        bindingResult.getFieldError("stateAid").getDefaultMessage()
+        //        bindingResult.getFieldError("stateAid").getDefaultMessage()
+        //);
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -352,8 +358,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "innovationLeadUserId",
                         "openingDate",
                         "innovationSectorCategoryId",
-                        "innovationAreaCategoryIds",
-                        "stateAid"
+                        "innovationAreaCategoryIds"
                 ))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
@@ -365,7 +370,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(7, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals(
                 "Please select a Portfolio Manager.",
@@ -396,11 +401,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Please select an innovation area.",
                 bindingResult.getFieldError("innovationAreaCategoryIds").getDefaultMessage()
         );
-        assertTrue(bindingResult.hasFieldErrors("stateAid"));
-        assertEquals(
-                "Please select a state aid option.",
-                bindingResult.getFieldError("stateAid").getDefaultMessage()
-        );
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -427,7 +427,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
-                .param("stateAid", "true"))
+                .param("fundingRule", FundingRules.STATE_AID.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
@@ -473,7 +473,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
-                .param("stateAid", "true"))
+                .param("fundingRule", FundingRules.STATE_AID.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY, "openingDate"))
