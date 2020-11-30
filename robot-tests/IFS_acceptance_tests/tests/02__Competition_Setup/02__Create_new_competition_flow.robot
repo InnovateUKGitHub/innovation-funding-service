@@ -423,7 +423,7 @@ Application: Application details
     When the user clicks the button/link            link = Application details
     Then the user should see the element            jQuery = dt:contains("resubmission") + dd:contains("No")
     And the user should see the element             jQuery = dt:contains("Minimum") + dd:contains("2")
-    And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("60")
+    And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("84")
     [Teardown]  the user clicks the button/link     link = Application
 
 External user edits the EDI question.
