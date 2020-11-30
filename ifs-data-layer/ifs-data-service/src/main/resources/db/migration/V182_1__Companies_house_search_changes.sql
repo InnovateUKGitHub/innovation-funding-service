@@ -1,4 +1,4 @@
-ALTER TABLE organisation ADD COLUMN date_of_incorporation DATETIME NOT NULL;
+ALTER TABLE organisation ADD COLUMN date_of_incorporation DATETIME DEFAULT NULL;
 ALTER TABLE organisation ADD COLUMN business_type varchar(255) DEFAULT NULL;
 ALTER TABLE organisation ADD COLUMN organisation_number varchar(255) DEFAULT NULL;
 ALTER TABLE organisation ADD COLUMN sic_code_id bigint(20);

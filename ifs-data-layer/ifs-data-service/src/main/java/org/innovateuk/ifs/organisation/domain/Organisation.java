@@ -7,7 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +50,8 @@ public class Organisation {
     @OneToMany(mappedBy = "organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
-    @Column
-    private ZonedDateTime dateOfIncorporation;
+    @Column(name = "date_of_incorporation")
+    private LocalDate dateOfIncorporation;
 
     @OneToMany(mappedBy="organisation",cascade = CascadeType.ALL,
             orphanRemoval = true)
@@ -68,7 +68,6 @@ public class Organisation {
     //Could be Tax UTR, Charity number etc
     private String organisationNumber;
 
-
     public Organisation() {
     }
 
@@ -80,12 +79,6 @@ public class Organisation {
         this.name = name;
         this.companiesHouseNumber = companiesHouseNumber;
     }
-    public Organisation(String name, String companiesHouseNumber, ZonedDateTime dateOfIncorporation) {
-        this.name = name;
-        this.companiesHouseNumber = companiesHouseNumber;
-        this.dateOfIncorporation = dateOfIncorporation;
-    }
-
 
     public Long getId() {
         return id;
@@ -156,11 +149,11 @@ public class Organisation {
         this.knowledgeBaseRegistrationNumber = knowledgeBaseRegistrationNumber;
     }
 
-    public ZonedDateTime getDateOfIncorporation() {
+    public LocalDate getDateOfIncorporation() {
         return dateOfIncorporation;
     }
 
-    public void setDateOfIncorporation(ZonedDateTime dateOfIncorporation) {
+    public void setDateOfIncorporation(LocalDate dateOfIncorporation) {
         this.dateOfIncorporation = dateOfIncorporation;
     }
 

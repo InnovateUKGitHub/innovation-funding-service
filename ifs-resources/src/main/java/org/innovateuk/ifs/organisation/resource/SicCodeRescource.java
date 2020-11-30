@@ -6,7 +6,7 @@ public class SicCodeRescource {
 
     private Long id;
     private Long organisation;
-    private String name;
+    private String sicCode;
 
     public Long getId() {
         return id;
@@ -24,12 +24,16 @@ public class SicCodeRescource {
         this.organisation = organisation;
     }
 
-    public String getName() {
-        return name;
+    public String getSicCode() {
+        return sicCode;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public SicCodeRescource(String sicCode){
+        this.sicCode = sicCode;
+    }
+
+    public void setSicCode(String sicCode) {
+        this.sicCode = sicCode;
     }
 
     @Override
@@ -39,11 +43,11 @@ public class SicCodeRescource {
         SicCodeRescource that = (SicCodeRescource) o;
         return id.equals(that.id) &&
                 organisation.equals(that.organisation) &&
-                name.equals(that.name);
+                sicCode.equals(that.sicCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, organisation, name);
+        return Objects.hash(id, organisation, sicCode);
     }
 }

@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.organisation.resource;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
-
 import java.util.Objects;
 
 public class ExecutiveOfficerResource {
@@ -10,6 +7,10 @@ public class ExecutiveOfficerResource {
     private Long id;
     private Long organisation;
     private String name;
+
+    public ExecutiveOfficerResource (String name){
+        this.name = name;
+    }
 
     public Long getId() {
         return id;

@@ -14,7 +14,11 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.organisation.domain.ExecutiveOfficer;
+import org.innovateuk.ifs.organisation.domain.SicCode;
+import org.innovateuk.ifs.organisation.resource.ExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.resource.SicCodeRescource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Role;
@@ -637,6 +641,10 @@ public class CsvUtils {
         public String companyRegistrationNumber;
         public Boolean isInternational;
         public String internationalRegistrationNumber;
+        public LocalDate dateOfIncorporation;
+        public List<SicCodeRescource> sicCodes;
+        public String organisationNumber;
+        public List<ExecutiveOfficerResource> executiveOfficers;
 
         private OrganisationLine(List<String> line) {
 
@@ -656,6 +664,16 @@ public class CsvUtils {
             companyRegistrationNumber = nullable(line.get(i++));
             isInternational = nullableBoolean(line.get(i++));
             internationalRegistrationNumber = nullable(line.get(i++));
+            dateOfIncorporation = nullableDate(line.get(i++));
+            String sicCodesLine = nullable(line.get(i++));
+            sicCodes = sicCodesLine != null ?
+                    simpleMap(asList(sicCodesLine.split(",")), SicCodeRescource::new) :
+                    emptyList();
+            organisationNumber = nullable(line.get(i++));
+            String executiveOfficersLine = nullable(line.get(i++));
+            executiveOfficers = executiveOfficersLine != null ?
+                    simpleMap(asList(executiveOfficersLine.split(",")), ExecutiveOfficerResource::new) :
+                    emptyList();
         }
     }
 
