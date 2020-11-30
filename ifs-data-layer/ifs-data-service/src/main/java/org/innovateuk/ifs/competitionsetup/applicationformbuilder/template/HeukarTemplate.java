@@ -120,6 +120,13 @@ public class HeukarTemplate implements CompetitionTemplate {
         question.withShortName("A HEUKAR question");
         question.withName("Title");
         question.withDescription("Subtitle");
+        question.getFormInputs().stream()
+                .filter(fi -> fi.getScope().equals(FormInputScope.APPLICATION))
+                .forEach(fi -> fi.withGuidanceTitle("Guidance title"));
+
+        question.getFormInputs().stream()
+                .filter(fi -> fi.getScope().equals(FormInputScope.APPLICATION))
+                .forEach(fi -> fi.withGuidanceAnswer("Guidance answer"));
 
         return question;
     }
