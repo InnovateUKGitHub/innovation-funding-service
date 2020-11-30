@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -421,10 +420,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void deleteCompetitionFinanceRowsTypesForCompetition(Competition competition) {
-        Optional<List<CompetitionFinanceRowTypes>> CompetitionFinanceRowTypes = Optional.ofNullable(competition.getCompetitionFinanceRowTypes());
-        CompetitionFinanceRowTypes.ifPresent((rowTypes) -> {
-            competitionFinanceRowsTypesRepository.deleteAll(rowTypes);
-        });
+        competitionFinanceRowsTypesRepository.deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
