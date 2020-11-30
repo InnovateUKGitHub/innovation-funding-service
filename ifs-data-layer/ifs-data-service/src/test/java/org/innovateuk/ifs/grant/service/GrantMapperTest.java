@@ -108,9 +108,9 @@ public class GrantMapperTest {
 
         Project project = parameter.createProject();
 
-        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Project summary"))
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(project.getApplication().getId(), "Project summary"))
                 .thenReturn(parameter.projectSummaryResponse());
-        when(formInputResponseRepository.findOneByApplicationIdAndFormInputDescription(project.getApplication().getId(), "Public description"))
+        when(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionShortName(project.getApplication().getId(), "Public description"))
                 .thenReturn(parameter.publicDescriptionResponse());
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(any(), any()))
                 .thenAnswer(i -> Optional.of(parameter.createSpendProfile()));
