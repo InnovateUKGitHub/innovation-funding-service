@@ -13,15 +13,17 @@ public class ApplicationTeamAddOrganisationTypeViewModel implements BaseAnalytic
     private final String applicationName;
     private final String competitionName;
     private final List<OrganisationTypeResource> types;
-//    private final List<OrganisationTypeResource> partners;
+    private final List<OrganisationTypeResource> existingPartners;
 
     public ApplicationTeamAddOrganisationTypeViewModel(ApplicationResource application, long questionId,
-                                                       List<OrganisationTypeResource> types) {
+                                                       List<OrganisationTypeResource> types,
+                                                       List<OrganisationTypeResource> existingPartners) {
         this.questionId = questionId;
         this.applicationId = application.getId();
         this.applicationName = application.getName();
         this.competitionName = application.getCompetitionName();
         this.types = types;
+        this.existingPartners = existingPartners;
     }
 
     @Override
@@ -44,5 +46,9 @@ public class ApplicationTeamAddOrganisationTypeViewModel implements BaseAnalytic
 
     public List<OrganisationTypeResource> getTypes() {
         return types;
+    }
+
+    public List<OrganisationTypeResource> getExistingPartners() {
+        return existingPartners;
     }
 }

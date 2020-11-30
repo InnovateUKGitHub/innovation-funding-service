@@ -1,34 +1,28 @@
 package org.innovateuk.ifs.heukar.domain;
 
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
-@Table(name = "heukar_org_type", schema = "ifs", catalog = "")
+@Table(name = "heukar_org_type")
 public class HeukarOrganisationType {
-    private long id;
-    private Long applicationId;
-    private Long organisationTypeId;
-
-    public HeukarOrganisationType(long id, Long applicationId, Long organisationTypeId) {
-        this.id = id;
-        this.applicationId = applicationId;
-        this.organisationTypeId = organisationTypeId;
-    }
 
     @Id
-    @Column(name = "id")
-    public long getId() {
-        return id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private Long applicationId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "organisation_type", referencedColumnName = "id")
+    private OrganisationType organisationType;
+
+    public HeukarOrganisationType() {
+
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "application_id")
-    public Long getApplicationId() {
+    public Long getApplicationID() {
         return applicationId;
     }
 
@@ -36,29 +30,11 @@ public class HeukarOrganisationType {
         this.applicationId = applicationId;
     }
 
-    @Basic
-    @Column(name = "organisation_type_id")
-    public Long getOrganisationTypeId() {
-        return organisationTypeId;
+    public OrganisationType getOrganisationType() {
+        return organisationType;
     }
 
-    public void setOrganisationTypeId(Long organisationTypeId) {
-        this.organisationTypeId = organisationTypeId;
+    public void setOrganisationType(OrganisationType organisationType) {
+        this.organisationType = organisationType;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HeukarOrganisationType that = (HeukarOrganisationType) o;
-        return id == that.id &&
-                Objects.equals(applicationId, that.applicationId) &&
-                Objects.equals(organisationTypeId, that.organisationTypeId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, applicationId, organisationTypeId);
-    }
-
 }

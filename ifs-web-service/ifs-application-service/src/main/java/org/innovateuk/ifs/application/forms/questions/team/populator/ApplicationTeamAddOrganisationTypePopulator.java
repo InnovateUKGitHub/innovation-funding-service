@@ -17,8 +17,10 @@ public class ApplicationTeamAddOrganisationTypePopulator {
 
     public ApplicationTeamAddOrganisationTypeViewModel populate(ApplicationResource applicationResource, long questionId) {
         List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess();
+        List<OrganisationTypeResource> existingTypes =
+                organisationTypeRestService.getHeukarOrganisationTypesForApplicationWithId(applicationResource.getId()).getSuccess();
 
-        return new ApplicationTeamAddOrganisationTypeViewModel(applicationResource, questionId, organisationTypeResourceList);
+        return new ApplicationTeamAddOrganisationTypeViewModel(applicationResource, questionId, organisationTypeResourceList, existingTypes);
     }
 
 }
