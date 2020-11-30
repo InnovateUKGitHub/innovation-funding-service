@@ -13,6 +13,7 @@ public class ApplicationTeamAddOrganisationTypeViewModel implements BaseAnalytic
     private final String applicationName;
     private final String competitionName;
     private final List<OrganisationTypeResource> types;
+//    private final List<OrganisationTypeResource> partners;
 
     public ApplicationTeamAddOrganisationTypeViewModel(ApplicationResource application, long questionId,
                                                        List<OrganisationTypeResource> types) {
