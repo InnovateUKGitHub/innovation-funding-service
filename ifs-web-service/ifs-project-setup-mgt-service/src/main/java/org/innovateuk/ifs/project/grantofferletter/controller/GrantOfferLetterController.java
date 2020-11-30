@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTem
 import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -42,6 +44,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource.DEFAULT_GOL_TEMPLATE;
 
 /**
  * This Controller handles Grant Offer Letter activity for the Internal Competition team members
@@ -279,13 +282,13 @@ public class GrantOfferLetterController {
                                                    Model model) {
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        String template = competition.getGolTemplate().getTemplate();
-        if (template.equals("default-gol-template")) {
+        GolTemplateResource template = competition.getGolTemplate();
+        if (template.getName().equals(DEFAULT_GOL_TEMPLATE)) {
             model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
-        } else if (template.equals("ktp-gol-template")) {
+        } else if (template.getName().equals(FundingType.KTP.getGolType())) {
             model.addAttribute("model", ktpGrantOfferLetterTemplatePopulator.populate(project, competition));
         }
-        return "project/" + template;
+        return "project/" + template.getTemplate();
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

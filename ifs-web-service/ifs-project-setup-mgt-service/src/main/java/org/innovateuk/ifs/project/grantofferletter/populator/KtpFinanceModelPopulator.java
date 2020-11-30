@@ -3,11 +3,9 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.KtpFinanceModel;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.KtpFinanceRowModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,9 +17,6 @@ import static org.innovateuk.ifs.project.grantofferletter.viewmodel.KtpFinanceMo
 public class KtpFinanceModelPopulator {
 
     private static final BigDecimal academicAndSecretarialSupportFixedAnnualRate = new BigDecimal("10500");
-
-    @Autowired
-    private ProjectFinanceRestService projectFinanceRestService;
 
     public KtpFinanceModel populate(ProjectResource project, ProjectFinanceResource leadFinances) {
         BigDecimal claimPercentage = leadFinances.getGrantClaimPercentage();
