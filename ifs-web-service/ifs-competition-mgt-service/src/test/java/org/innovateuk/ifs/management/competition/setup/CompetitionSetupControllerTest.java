@@ -277,10 +277,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "openingDate",
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds",
-                        "competitionTypeId"))
-                        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed and validation is added
-                        // TODO IFS-8779 back to the DTO then "fundingRules" should be added to this test again.
-                        // "stateAid"))
+                        "competitionTypeId",
+                        "fundingRule"))
+
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
 
@@ -330,14 +329,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 bindingResult.getFieldError("fundingType").getDefaultMessage()
         );
 
-        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed and validation is added back to the DTO
-        // TODO IFS-8779 then "fundingRules" should be added to this test again.
-        //assertTrue(bindingResult.hasFieldErrors("fundingRule"));
-        //assertEquals(
-        //        "Please select a competition funding rule.",
-        //        bindingResult.getFieldError("stateAid").getDefaultMessage()
-        //        bindingResult.getFieldError("stateAid").getDefaultMessage()
-        //);
+        assertEquals(
+                "validation.initialdetailsform.stateaid.required",
+                bindingResult.getFieldError("fundingRule").getCode()
+        );
 
         verify(competitionSetupRestService, never()).update(competition);
     }

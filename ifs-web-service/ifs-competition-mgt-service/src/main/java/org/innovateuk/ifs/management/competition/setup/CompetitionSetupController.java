@@ -200,8 +200,6 @@ public class CompetitionSetupController {
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
             UserResource loggedInUser,
             Model model) {
-        // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this custom validation
-        // TODO IFS-8779 should be removed for property annotations on the DTO.
         if (competitionSetupForm.getFundingRule() == null) {
             String errorKey = fundingRuleEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
             validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));

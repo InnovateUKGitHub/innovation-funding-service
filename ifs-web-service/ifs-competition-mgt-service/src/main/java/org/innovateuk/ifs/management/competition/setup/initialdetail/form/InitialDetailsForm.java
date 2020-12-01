@@ -57,10 +57,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long innovationLeadUserId;
-
-    // TODO IFS-8779 Once the toggle ifs.subsidy.control.enabled is removed from the codebase this validation should be
-    // TODO IFS-8779 enabled instead of the custom validation in the controller.
-    //@NotNull(message = "{validation.initialdetailsform.funding.rule.required}", groups = Unrestricted.class)
+    
     private FundingRules fundingRule;
 
     private String innovationAreaNamesFormatted;
