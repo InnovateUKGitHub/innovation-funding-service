@@ -20,9 +20,11 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.collect.Multimaps.index;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -64,6 +67,9 @@ public class ApplicationTeamPopulator {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private OrganisationTypeRestService organisationTypeRestService;
 
     @Autowired
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
@@ -111,6 +117,11 @@ public class ApplicationTeamPopulator {
             ktaInvite = applicationKtaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         }
 
+        List<OrganisationTypeResource> heukaOrgTypes = emptyList();
+        if (competition.isHeukar()) {
+            heukaOrgTypes = organisationTypeRestService.getHeukarOrganisationTypesForApplicationWithId(application.getId()).getSuccess();
+        }
+
         return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),
                 leadApplicant,
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
@@ -118,7 +129,8 @@ public class ApplicationTeamPopulator {
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(),
                 ktaInvite, ktaProcessRole,
-                competition.isHeukar());
+                competition.isHeukar(),
+                heukaOrgTypes);
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {

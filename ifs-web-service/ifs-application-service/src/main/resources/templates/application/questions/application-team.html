@@ -150,13 +150,24 @@
                                                href="/"
                                                th:id="${'remove-organisation-' + organisation.id}"
                                                class="govuk-link">Remove organisation
-                                               <span class="govuk-visually-hidden" th:text="${organisation.name}"></span>
+                                                <span class="govuk-visually-hidden"
+                                                      th:text="${organisation.name}"></span>
                                             </a>
                                         </th:block>
                                     </th:block>
                                     <th:block th:if="${row.lead}">Lead applicant</th:block>
                                 </td>
                             </tr>
+                            <th:block th:if="${model.heukar}">
+                                <tr th:each="orgType: ${model.heukarTeamOrgTypes}"
+                                    class="govuk-table__row">
+                                <td class="govuk-table__cell">
+                                    <h3>Partner # details</h3>
+                                </td>
+                                <td class="govuk-table__cell"
+                                    th:text="${orgType.name}"></td>
+                                </tr>
+                            </th:block>
                             </tbody>
                         </table>
                     </form>

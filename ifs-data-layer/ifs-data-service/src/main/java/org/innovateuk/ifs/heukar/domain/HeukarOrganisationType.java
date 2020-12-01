@@ -12,14 +12,15 @@ public class HeukarOrganisationType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "application_id")
     private Long applicationId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "organisation_type", referencedColumnName = "id")
+    @ManyToOne()
+    @JoinColumn(name="organisation_type_id", referencedColumnName="id")
     private OrganisationType organisationType;
 
     public HeukarOrganisationType() {
-
+        // no arg constructor
     }
 
     public Long getApplicationID() {

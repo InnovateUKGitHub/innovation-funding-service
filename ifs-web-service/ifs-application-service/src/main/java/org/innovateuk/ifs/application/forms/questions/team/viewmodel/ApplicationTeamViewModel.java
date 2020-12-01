@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.Duration;
@@ -25,6 +26,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
     private final boolean heukar;
+    private final List<OrganisationTypeResource> heukarTeamOrgTypes;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -39,7 +41,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean ktpCompetition,
                                     ApplicationKtaInviteResource ktaInvite,
                                     ProcessRoleResource ktaProcessRole,
-                                    boolean heukar
+                                    boolean heukar,
+                                    List<OrganisationTypeResource> heukarTeamOrgTypes
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -55,6 +58,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
         this.heukar = heukar;
+        this.heukarTeamOrgTypes = heukarTeamOrgTypes;
     }
 
     @Override
@@ -167,5 +171,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     public boolean isHeukar() {
         return heukar;
+    }
+
+    public List<OrganisationTypeResource> getHeukarTeamOrgTypes() {
+        return heukarTeamOrgTypes;
     }
 }
