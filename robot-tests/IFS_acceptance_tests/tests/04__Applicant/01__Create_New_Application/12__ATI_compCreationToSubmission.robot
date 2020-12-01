@@ -188,15 +188,15 @@ Comp admin assigns assessors to the competition and assigns the application to a
 #    And the user assigns the application to the assessor
 #    Then the assessor checks the appendices
 #
-#Internal user marks ATI application to successful
-#    [Documentation]  IFS-2332
-#    Given Log in as a different user                     &{internal_finance_credentials}
-#    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
+Internal user marks ATI application to successful
+    [Documentation]  IFS-2332
+    Given Log in as a different user                     &{internal_finance_credentials}
+    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
 
-Comp admin assigns a different assessor to the application in Manage Interview panel
-    [Documentation]  IFS-8729
-    Given log in as a different user       &{Comp_admin1_credentials}
-    And The user navigates to the page     ${server}/management/competition/${competitionId}
+#ATIapplicationTitleComp admin assigns a different assessor to the application in Manage Interview panel
+#    [Documentation]  IFS-8729
+#    Given log in as a different user       &{Comp_admin1_credentials}
+#    And The user navigates to the page     ${server}/management/competition/${competitionId}
 
 MO can see application summary page for the ATI application in project setup before releasing the feedback
     [Documentation]  IFS-7647
