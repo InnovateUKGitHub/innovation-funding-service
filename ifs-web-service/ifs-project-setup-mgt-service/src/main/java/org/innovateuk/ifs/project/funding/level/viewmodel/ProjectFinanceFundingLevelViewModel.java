@@ -20,6 +20,7 @@ public class ProjectFinanceFundingLevelViewModel {
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
     private final boolean loanCompetition;
+    private final boolean ktpCompetition;
     private final BigDecimal fundingAppliedFor;
 
     public ProjectFinanceFundingLevelViewModel(ProjectResource project,
@@ -35,10 +36,11 @@ public class ProjectFinanceFundingLevelViewModel {
         this.partners =  finances.stream()
                 .map(pf -> new ProjectFinancePartnerFundingLevelViewModel(pf.getOrganisation(), pf.getOrganisationName(), pf.getOrganisation().equals(lead.getId()),
                         pf.getMaximumFundingLevel(), pf.getOrganisationSize(), pf.getTotal(), pf.getGrantClaimPercentage(),
-                        pf.getTotalOtherFunding(), totalGrant))
+                        pf.getTotalOtherFunding(), totalGrant, competition.isKtp()))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
         this.loanCompetition = competition.isLoan();
+        this.ktpCompetition = competition.isKtp();
         this.fundingAppliedFor = fundingAppliedFor;
     }
 
@@ -64,6 +66,10 @@ public class ProjectFinanceFundingLevelViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     public BigDecimal getFundingAppliedFor() {

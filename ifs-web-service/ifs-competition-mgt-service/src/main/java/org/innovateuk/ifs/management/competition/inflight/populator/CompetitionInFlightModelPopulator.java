@@ -13,7 +13,6 @@ import org.innovateuk.ifs.management.competition.inflight.viewmodel.CompetitionI
 import org.innovateuk.ifs.management.competition.inflight.viewmodel.MilestonesRowViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -43,9 +42,6 @@ public class CompetitionInFlightModelPopulator {
     @Autowired
     private MilestoneRestService milestoneRestService;
 
-    @Value("${ifs.supporter.enabled}")
-    private boolean supporterEnabled;
-
     public CompetitionInFlightViewModel populateModel(Long competitionId, UserResource user) {
         CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
         return populateModel(competititon, user);
@@ -64,7 +60,6 @@ public class CompetitionInFlightModelPopulator {
                 simpleMap(milestones, MilestonesRowViewModel::new),
                 changesSinceLastNotify,
                 statsViewModel,
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER),
-                supporterEnabled);
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER));
     }
 }

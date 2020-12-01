@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import static java.util.Collections.emptyList;
 /**
  * View model to back the Monitoring Officer page
  */
-public class LegacyMonitoringOfficerViewModel {
+public class MonitoringOfficerViewModel {
 
     private Long projectId;
     private String projectTitle;
@@ -28,14 +29,21 @@ public class LegacyMonitoringOfficerViewModel {
     private boolean editable;
     private List<String> primaryAddressLines;
     private boolean collaborativeProject;
+    private boolean ktpCompetition;
 
-    public LegacyMonitoringOfficerViewModel(ProjectResource project, String area, String projectManagerName,
-                                            List<String> partnerOrganisationNames, String leadOrganisationName,
-                                            CompetitionSummaryResource competitionSummary, boolean editable) {
+    public MonitoringOfficerViewModel(ProjectResource project,
+                                      String area,
+                                      String projectManagerName,
+                                      List<String> partnerOrganisationNames,
+                                      String leadOrganisationName,
+                                      CompetitionSummaryResource competitionSummary,
+                                      boolean editable,
+                                      boolean ktpCompetition) {
         this.projectId = project.getId();
         this.projectTitle = project.getName();
         this.applicationId = project.getApplication();
         this.area = area;
+        this.ktpCompetition = ktpCompetition;
         AddressResource primaryAddress = project.getAddress();
         this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLinesInternational() : emptyList();
         this.targetProjectStartDate = project.getTargetStartDate();
@@ -47,6 +55,7 @@ public class LegacyMonitoringOfficerViewModel {
         this.editMode = false;
         this.editable = editable;
         this.collaborativeProject = project.isCollaborativeProject();
+        this.ktpCompetition = ktpCompetition;
     }
 
     public Long getProjectId() {
@@ -113,6 +122,10 @@ public class LegacyMonitoringOfficerViewModel {
         return isReadOnly() && isEditable();
     }
 
+    public boolean isKtp() {
+        return this.competitionSummary.getFundingType().equals(FundingType.KTP);
+    }
+
     public boolean isDisplayAssignMonitoringOfficerButton() {
         return isEditMode() && isEditable();
     }
@@ -123,5 +136,9 @@ public class LegacyMonitoringOfficerViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }

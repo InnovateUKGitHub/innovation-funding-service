@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleNoneMatch;
 
 /**
@@ -13,17 +14,20 @@ public class ProjectFinanceCheckSummaryViewModel {
     private boolean collaborativeProject;
     private boolean hasOrganisationSizeChanged;
     private boolean userHasExternalFinanceRole;
+    private final boolean hasSpendProfileStage;
 
     public ProjectFinanceCheckSummaryViewModel(FinanceCheckSummaryResource financeCheckSummaryResource,
                                                boolean projectIsActive,
                                                boolean collaborativeProject,
                                                boolean hasOrganisationSizeChanged,
-                                               boolean userHasExternalFinanceRole) {
+                                               boolean userHasExternalFinanceRole,
+                                               boolean hasSpendProfileStage) {
         this.financeCheckSummaryResource = financeCheckSummaryResource;
         this.projectIsActive = projectIsActive;
         this.collaborativeProject = collaborativeProject;
         this.hasOrganisationSizeChanged = hasOrganisationSizeChanged;
         this.userHasExternalFinanceRole = userHasExternalFinanceRole;
+        this.hasSpendProfileStage = hasSpendProfileStage;
     }
 
     private boolean isGenerateSpendProfileReady() {
@@ -77,6 +81,10 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public boolean canEditProjectDuration()  {
         return !userHasExternalFinanceRole && !financeCheckSummaryResource.isSpendProfilesGenerated();
+    }
+
+    public boolean isHasSpendProfileStage() {
+        return hasSpendProfileStage;
     }
 
 }

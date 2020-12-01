@@ -336,7 +336,7 @@ Complete all PS steps before finance
     the user selects the radio button                     projectManager    projectManager1
     the user clicks the button/link                       id = save-project-manager-button
     The user selects their finance contact                financeContact1
-    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Return to set up your project
     the user clicks the button/link                       link = Documents
     the user clicks the button/link                       link = Exploitation plan
     the user uploads the file                             css = .inputfile  ${valid_pdf}

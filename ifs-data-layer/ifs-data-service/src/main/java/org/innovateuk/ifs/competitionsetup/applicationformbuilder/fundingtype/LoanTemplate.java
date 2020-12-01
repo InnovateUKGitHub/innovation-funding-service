@@ -45,6 +45,11 @@ public class LoanTemplate implements FundingTypeTemplate {
     }
 
     @Override
+    public Competition setGolTemplate(Competition competition) {
+        return commonBuilders.getGolTemplate(competition);
+    }
+
+    @Override
     public List<SectionBuilder> sections(List<SectionBuilder> competitionTypeSections) {
         competitionTypeSections.stream().filter(section -> "Project details".equals(section.getName()))
                 .findAny()

@@ -14,13 +14,10 @@ public class InviteUserViewModel {
 
     private Set<Role> roles;
 
-    private boolean supporterEnabled;
-
-    public InviteUserViewModel(InviteUserView type, Set<Role> roles, boolean supporterEnabled)
+    public InviteUserViewModel(InviteUserView type, Set<Role> roles)
     {
         this.type = type;
         this.roles = roles;
-        this.supporterEnabled = supporterEnabled;
     }
 
     public InviteUserView getType() {
@@ -51,14 +48,6 @@ public class InviteUserViewModel {
         this.roles = roles;
     }
 
-    public boolean isSupporterEnabled() {
-        return supporterEnabled;
-    }
-
-    public void setSupporterEnabled(boolean supporterEnabled) {
-        this.supporterEnabled = supporterEnabled;
-    }
-
     public boolean isInternal() {
         return type.equals(InviteUserView.INTERNAL_USER);
     }
@@ -76,20 +65,11 @@ public class InviteUserViewModel {
                 this.roles.stream().findFirst().get() == Role.SUPPORTER;
     }
 
-    public String getLinkTitle() {
-        return supporterEnabled ? "Back to select user role" : "Back to manage users";
-    }
-
-    public String getBackLink() {
-        return supporterEnabled ? "/admin/select-external-role" : "/admin/users/active";
-    }
-
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(type)
                 .append(roles)
-                .append(supporterEnabled)
                 .toHashCode();
     }
 
@@ -104,7 +84,6 @@ public class InviteUserViewModel {
         return new EqualsBuilder()
                 .append(type, this.type)
                 .append(roles, this.roles)
-                .append(supporterEnabled, this.supporterEnabled)
                 .isEquals();
     }
 

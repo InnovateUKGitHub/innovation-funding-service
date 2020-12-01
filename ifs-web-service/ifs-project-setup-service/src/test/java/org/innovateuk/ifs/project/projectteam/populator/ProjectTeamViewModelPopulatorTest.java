@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -71,6 +72,7 @@ public class ProjectTeamViewModelPopulatorTest {
         UserResource loggedInUser = newUserResource().withId(123L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Imaginative competition name")
+                .withFundingType(FundingType.GRANT)
                 .build();
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
@@ -113,6 +115,7 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectInviteRestService.getInvitesByProject(project.getId())).thenReturn(restSuccess(invites));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 

@@ -18,6 +18,10 @@ public interface MonitoringOfficerRestService {
 
     RestResult<List<SimpleUserResource>> findAll();
 
+    RestResult<List<SimpleUserResource>> findAllKtp();
+
+    RestResult<List<SimpleUserResource>> findAllNonKtp();
+
     RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId);
 
     RestResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);

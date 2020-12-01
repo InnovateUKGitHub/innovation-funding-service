@@ -111,5 +111,9 @@ public class FinanceCheckPartnerStatusResourceBuilder extends BaseBuilder<Financ
         public FinanceCheckEligibilityResourceBuilder withContributionToProject(BigDecimal... contributionToProjects) {
             return withArray((contributionToProject, financeCheckEligibilityResource) -> setField("contributionToProject", contributionToProject, financeCheckEligibilityResource), contributionToProjects);
         }
+
+        public FinanceCheckEligibilityResourceBuilder withContributionPercentage(BigDecimal... contributionPercentages) {
+            return withArray((contributionPercentage, financeCheckEligibilityResource) -> setField("contributionPercentage", contributionPercentage, financeCheckEligibilityResource), contributionPercentages);
+        }
     }
 }
