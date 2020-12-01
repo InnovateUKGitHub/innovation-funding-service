@@ -17,7 +17,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,12 +71,8 @@ public class AcademicCostsController {
                                     @PathVariable long sectionId,
                                     @ModelAttribute("form") AcademicCostForm form) {
         formPopulator.populate(form, applicationId, organisationId);
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, isApplicant(user)));
+        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, user));
         return VIEW;
-    }
-
-    private boolean isApplicant(UserResource user) {
-        return !(user.isInternalUser() || user.hasRole(Role.ASSESSOR));
     }
 
     @PostMapping
@@ -158,7 +153,7 @@ public class AcademicCostsController {
             form.setFilename(result.getSuccess().getName());
         }
 
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, true));
+        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, user));
         return VIEW;
     }
 
