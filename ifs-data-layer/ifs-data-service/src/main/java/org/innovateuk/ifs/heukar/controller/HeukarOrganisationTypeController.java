@@ -4,12 +4,9 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.heukar.transactional.HeukarOrganisationTypeService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/heukar-organisation-type")
@@ -19,8 +16,15 @@ public class HeukarOrganisationTypeController {
     private HeukarOrganisationTypeService heukarOrganisationTypeService;
 
     @GetMapping("/find-by-application-id/{applicationId}")
-    public RestResult<Set<OrganisationTypeResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<List<OrganisationTypeResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return heukarOrganisationTypeService.findByApplicationId(applicationId).toGetResponse();
+    }
+
+    @PostMapping("/add-new-org-type/{applicationId}/{organisationTypeId}")
+    public RestResult<Void> addNewHeukarOrganisationType(@PathVariable("applicationId") final Long applicationId,
+                                                         @PathVariable("organisationTypeId") final Long organisationTypeId) {
+        return heukarOrganisationTypeService.addNewOrgTypeToApplication(applicationId, organisationTypeId)
+                .toPostResponse();
     }
 
 }

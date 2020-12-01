@@ -14,4 +14,6 @@ public interface OrganisationTypeRestService {
     RestResult<OrganisationTypeResource> getForOrganisationId(Long organisationId);
 
     RestResult<List<OrganisationTypeResource>> getHeukarOrganisationTypesForApplicationWithId(Long applicationId);
+
+    RestResult<Void> addNewHeukarOrgType(Long applicationId, Long organisationTypeId);
 }

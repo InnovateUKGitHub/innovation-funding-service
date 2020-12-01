@@ -34,4 +34,9 @@ public class OrganisationTypeRestServiceImpl extends BaseRestService implements 
         return getWithRestResult(heukarRestUrl + "/find-by-application-id/" + applicationId, organisationTypeResourceListType());
     }
 
+    @Override
+    public RestResult<Void> addNewHeukarOrgType(Long applicationId, Long organisationTypeId) {
+        return postWithRestResult(heukarRestUrl + "/add-new-org-type/" + applicationId + "/" + organisationTypeId);
+    }
+
 }

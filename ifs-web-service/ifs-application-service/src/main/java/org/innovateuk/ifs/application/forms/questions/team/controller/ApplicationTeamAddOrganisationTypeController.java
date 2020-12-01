@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,9 @@ public class ApplicationTeamAddOrganisationTypeController {
 
     @Autowired
     private ApplicationTeamAddOrganisationTypePopulator applicationTeamAddOrganisationTypePopulator;
+
+    @Autowired
+    private OrganisationTypeRestService organisationTypeRestService;
 
     @GetMapping
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
@@ -56,6 +60,7 @@ public class ApplicationTeamAddOrganisationTypeController {
                                   Model model,
                                   @PathVariable long applicationId,
                                   @PathVariable long questionId) {
+        organisationTypeRestService.addNewHeukarOrgType(applicationId, form.getOrganisationTypeId());
         Supplier<String> failureView = () -> addOrganisationForm(form, bindingResult, model, applicationId, questionId);
         return validationHandler.failNowOrSucceedWith(failureView,
                 () -> redirectToApplicationTeam(applicationId, questionId));

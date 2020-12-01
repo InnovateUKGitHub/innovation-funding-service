@@ -3,16 +3,14 @@ package org.innovateuk.ifs.heukar.transactional;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.heukar.domain.HeukarOrganisationType;
 import org.innovateuk.ifs.heukar.repository.HeukarOrganisationRepository;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Sets.newHashSet;
 
 @Service
 public class HeukarOrganisationTypeServiceImpl implements HeukarOrganisationTypeService {
@@ -24,20 +22,22 @@ public class HeukarOrganisationTypeServiceImpl implements HeukarOrganisationType
     OrganisationTypeMapper mapper;
 
     @Override
-    public ServiceResult<Set<OrganisationTypeResource>> findByApplicationId(long applicationId) {
-        Set<OrganisationType> standardOrgTypes = heukarOrganisationRepository.findAllByApplicationId(applicationId)
+    public ServiceResult<List<OrganisationTypeResource>> findByApplicationId(long applicationId) {
+        List<OrganisationTypeResource> standardOrgTypes = heukarOrganisationRepository.findAllByApplicationId(applicationId)
                 .stream()
                 .map(HeukarOrganisationType::getOrganisationType)
-                .collect(Collectors.toSet());
+                .map(mapper::mapToResource)
+                .collect(Collectors.toList());
 
-        Set<OrganisationTypeResource> organisationTypeResources = newHashSet(mapper.mapToResource(standardOrgTypes));
-        return ServiceResult.serviceSuccess(organisationTypeResources);
+        return ServiceResult.serviceSuccess(standardOrgTypes);
     }
 
-//    @Override
-//    public ServiceResult<HeukarOrganisationType> createHeukarOrgType(long applicationId, long organisationTypeId) {
-//
-//        return ServiceResult.serviceSuccess(heukarOrganisationRepository.save(heukarOrganisationType));
-//    }
+    @Override
+    public ServiceResult<HeukarOrganisationType> addNewOrgTypeToApplication(long applicationId, long organisationTypeId) {
+        HeukarOrganisationType heukarOrganisationType = new HeukarOrganisationType();
+        heukarOrganisationType.setOrganisationType(mapper.mapIdToDomain(organisationTypeId));
+        heukarOrganisationType.setApplicationId(applicationId);
+        return ServiceResult.serviceSuccess(heukarOrganisationRepository.save(heukarOrganisationType));
+    }
 
 }
