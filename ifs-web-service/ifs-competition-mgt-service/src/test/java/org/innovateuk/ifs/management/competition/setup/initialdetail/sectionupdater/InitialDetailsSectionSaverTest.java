@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -42,6 +43,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class InitialDetailsSectionSaverTest {
+
+    private static final int FUTURE_YEAR = Year.now().getValue() + 1;
 
     private static final Long COMPETITION_ID = 24L;
 
@@ -79,7 +82,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -187,7 +190,7 @@ public class InitialDetailsSectionSaverTest {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(10L);
         milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setDate(ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
         milestone.setCompetitionId(1L);
         return asList(milestone);
     }
@@ -206,7 +209,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -248,7 +251,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -292,7 +295,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
+        ZonedDateTime openingDate = ZonedDateTime.of(FUTURE_YEAR, 12, 1, 0, 0, 0, 0, TimeZoneUtil.UK_TIME_ZONE);
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
