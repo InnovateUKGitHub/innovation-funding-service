@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.supporter.resource.AssessorDashboardState;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardCompetitionResource;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
@@ -240,6 +241,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<OrganisationTypeResource>> organisationTypeResourceListType() {
         return new ParameterizedTypeReference<List<OrganisationTypeResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<HeukarPartnerOrganisationResource>> heukarOrganisationTypeResourceListType() {
+        return new ParameterizedTypeReference<List<HeukarPartnerOrganisationResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<AddressResource>> addressResourceListType() {

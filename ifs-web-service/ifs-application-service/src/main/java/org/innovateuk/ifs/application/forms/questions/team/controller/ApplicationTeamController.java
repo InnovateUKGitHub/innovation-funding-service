@@ -11,11 +11,12 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.heukar.service.HeukarPartnerOrganisationRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,9 @@ public class ApplicationTeamController {
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
 
     @GetMapping
     public String viewTeam(@ModelAttribute(value = "form", binding = false) ApplicationTeamForm form,
@@ -102,6 +106,14 @@ public class ApplicationTeamController {
     public String removeKta(@PathVariable long applicationId,
                             @PathVariable long questionId) {
         applicationKtaInviteRestService.removeKtaInviteByApplication(applicationId).getSuccess();
+        return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    @PostMapping(params = "remove-heukar-partner")
+    public String removeHeukarPartner(@PathVariable long applicationId,
+                                      @PathVariable long questionId,
+                                      @RequestParam("remove-heukar-partner") final long heukarPartnerId) {
+        heukarPartnerOrganisationRestService.removeHeukarPartnerOrganisation(heukarPartnerId);
         return redirectToApplicationTeam(applicationId, questionId);
     }
 

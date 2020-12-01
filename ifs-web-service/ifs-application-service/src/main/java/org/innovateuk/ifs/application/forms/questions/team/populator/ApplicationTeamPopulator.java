@@ -13,14 +13,15 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.heukar.service.HeukarPartnerOrganisationRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -74,6 +75,9 @@ public class ApplicationTeamPopulator {
     @Autowired
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
 
+    @Autowired
+    private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
+
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -117,9 +121,9 @@ public class ApplicationTeamPopulator {
             ktaInvite = applicationKtaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         }
 
-        List<OrganisationTypeResource> heukaOrgTypes = emptyList();
+        List<HeukarPartnerOrganisationResource> heukaOrgTypes = emptyList();
         if (competition.isHeukar()) {
-            heukaOrgTypes = organisationTypeRestService.getHeukarOrganisationTypesForApplicationWithId(application.getId()).getSuccess();
+            heukaOrgTypes = heukarPartnerOrganisationRestService.getHeukarOrganisationTypesForApplicationWithId(application.getId()).getSuccess();
         }
 
         return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),

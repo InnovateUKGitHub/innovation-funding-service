@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.Duration;
@@ -26,7 +26,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
     private final boolean heukar;
-    private final List<OrganisationTypeResource> heukarTeamOrgTypes;
+    private final List<HeukarPartnerOrganisationResource> heukarPartnerOrganisationResources;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -42,7 +42,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     ApplicationKtaInviteResource ktaInvite,
                                     ProcessRoleResource ktaProcessRole,
                                     boolean heukar,
-                                    List<OrganisationTypeResource> heukarTeamOrgTypes
+                                    List<HeukarPartnerOrganisationResource> heukarPartnerOrganisationResources
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -58,7 +58,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
         this.heukar = heukar;
-        this.heukarTeamOrgTypes = heukarTeamOrgTypes;
+        this.heukarPartnerOrganisationResources = heukarPartnerOrganisationResources;
     }
 
     @Override
@@ -173,7 +173,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return heukar;
     }
 
-    public List<OrganisationTypeResource> getHeukarTeamOrgTypes() {
-        return heukarTeamOrgTypes;
+    public List<HeukarPartnerOrganisationResource> getHeukarPartnerOrganisationResources() {
+        return heukarPartnerOrganisationResources;
     }
 }

@@ -35,7 +35,7 @@
                   th:with="pageTitle='Partner organisation type',subTitle=${subtitle},size='govuk-heading-xl'"/>
 
         <form th:object="${organisationForm}"
-            th:action="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation-type(
+            th:action="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(
         applicationId=${model.applicationId},
         questionId=${model.questionId})}"
               method="POST"

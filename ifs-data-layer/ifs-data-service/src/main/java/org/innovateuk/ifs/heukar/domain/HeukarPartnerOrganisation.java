@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "heukar_org_type")
-public class HeukarOrganisationType {
+public class HeukarPartnerOrganisation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +19,11 @@ public class HeukarOrganisationType {
     @JoinColumn(name="organisation_type_id", referencedColumnName="id")
     private OrganisationType organisationType;
 
-    public HeukarOrganisationType() {
+    public HeukarPartnerOrganisation() {
         // no arg constructor
     }
 
-    public Long getApplicationID() {
+    public Long getApplicationId() {
         return applicationId;
     }
 
@@ -37,5 +37,9 @@ public class HeukarOrganisationType {
 
     public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
+    }
+
+    public long getId() {
+        return id;
     }
 }

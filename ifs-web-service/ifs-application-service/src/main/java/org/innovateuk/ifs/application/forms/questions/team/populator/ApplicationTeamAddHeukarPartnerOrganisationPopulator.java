@@ -10,17 +10,18 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ApplicationTeamAddOrganisationTypePopulator {
+public class ApplicationTeamAddHeukarPartnerOrganisationPopulator {
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
 
-    public ApplicationTeamAddOrganisationTypeViewModel populate(ApplicationResource applicationResource, long questionId) {
+    public ApplicationTeamAddOrganisationTypeViewModel populate(ApplicationResource applicationResource, long questionId, Long selectedId) {
         List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess();
-        List<OrganisationTypeResource> existingTypes =
-                organisationTypeRestService.getHeukarOrganisationTypesForApplicationWithId(applicationResource.getId()).getSuccess();
 
-        return new ApplicationTeamAddOrganisationTypeViewModel(applicationResource, questionId, organisationTypeResourceList, existingTypes);
+//        List<HeukarOrganisationTypeResource> existingTypes =
+//                organisationTypeRestService.getHeukarOrganisationTypesForApplicationWithId(applicationResource.getId()).getSuccess();
+
+        return new ApplicationTeamAddOrganisationTypeViewModel(applicationResource, questionId, organisationTypeResourceList);
     }
 
 }

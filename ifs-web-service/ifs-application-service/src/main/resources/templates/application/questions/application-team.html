@@ -159,13 +159,23 @@
                                 </td>
                             </tr>
                             <th:block th:if="${model.heukar}">
-                                <tr th:each="orgType: ${model.heukarTeamOrgTypes}"
+                                <tr th:each="partnerOrganisation: ${model.heukarPartnerOrganisationResources}"
                                     class="govuk-table__row">
-                                <td class="govuk-table__cell">
-                                    <h3>Partner # details</h3>
-                                </td>
-                                <td class="govuk-table__cell"
-                                    th:text="${orgType.name}"></td>
+                                    <td class="govuk-table__cell">
+                                        <h3>Partner # details</h3>
+                                    </td>
+                                    <td class="govuk-table__cell"
+                                        th:text="${partnerOrganisation.organisationTypeResource.name}"></td>
+                                    <td>
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(applicationId=${model.applicationId},questionId=${model.questionId},selected=${partnerOrganisation.id})}"
+                                           class="govuk-link"
+                                        >EDIT</a>
+
+                                        <button class="button-clear" type="submit" name="remove-heukar-partner"
+                                                th:value="${partnerOrganisation.id}">Remove
+                                        </button>
+
+                                    </td>
                                 </tr>
                             </th:block>
                             </tbody>
@@ -275,7 +285,7 @@
                 <p th:if="${model.heukar}"
                     class="govuk-body govuk-!-margin-top-5">
                     <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
-                       th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation-type(applicationId=${model.applicationId},questionId=${model.questionId})}"
+                       th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(applicationId=${model.applicationId},questionId=${model.questionId})}"
                        id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>
