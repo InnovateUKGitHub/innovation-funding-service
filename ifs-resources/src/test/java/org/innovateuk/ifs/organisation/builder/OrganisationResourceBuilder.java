@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.SicCodeRescource;
 
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -77,13 +78,13 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
     public OrganisationResourceBuilder withBusinessType(String... businessType) {
         return  withArraySetFieldByReflection("businessType", businessType);
     }
-    public OrganisationResourceBuilder withDateOfIncorporation(ZonedDateTime... dateOfIncorporation) {
+    public OrganisationResourceBuilder withDateOfIncorporation(LocalDate... dateOfIncorporation) {
         return  withArraySetFieldByReflection("dateOfIncorporation", dateOfIncorporation);
     }
-    public OrganisationResourceBuilder withExecutiveOfficer(List<ExecutiveOfficerResource>... executiveOfficers) {
+    public OrganisationResourceBuilder withExecutiveOfficers(List<ExecutiveOfficerResource>... executiveOfficers) {
         return  withArraySetFieldByReflection("executiveOfficers", executiveOfficers);
     }
-    public OrganisationResourceBuilder withSicCode(List<SicCodeRescource>... sicCodes) {
+    public OrganisationResourceBuilder withSicCodes(List<SicCodeRescource>... sicCodes) {
         return  withArraySetFieldByReflection("sicCodes", sicCodes);
     }
 }

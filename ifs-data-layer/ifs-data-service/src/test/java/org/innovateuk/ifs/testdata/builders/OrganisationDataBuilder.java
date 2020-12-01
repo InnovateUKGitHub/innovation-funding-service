@@ -3,13 +3,14 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.domain.ExecutiveOfficer;
+import org.innovateuk.ifs.organisation.domain.SicCode;
+import org.innovateuk.ifs.organisation.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,7 +31,11 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                                                       Boolean isInternational,
                                                       String internationalRegistrationNumber,
                                                       AddressResource address,
-                                                      List<OrganisationAddressType> types) {
+                                                      List<OrganisationAddressType> types,
+                                                      LocalDate dateofIncorporation,
+                                                      List<SicCodeRescource> sicCodes,
+                                                      String organisationNumber,
+                                                      List<ExecutiveOfficerResource> officers) {
 
         return with(data -> {
             doAs(systemRegistrar(), () -> {
@@ -41,6 +46,10 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         withOrganisationType(organisationType.getId()).
                         withIsInternational(isInternational).
                         withInternationalRegistrationNumber(internationalRegistrationNumber).
+                        withDateOfIncorporation(dateofIncorporation).
+                        withSicCodes(sicCodes).
+                        withOrganisationNumber(organisationNumber).
+                        withExecutiveOfficers(officers).
                         build();
                 List<OrganisationAddressResource> addresses = new ArrayList<>();
                 if (address != null) {

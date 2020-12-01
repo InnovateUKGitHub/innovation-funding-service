@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +22,12 @@ public class OrganisationResource {
     private String internationalRegistrationNumber;
     private String registrationNumber;
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
+    private LocalDate dateOfIncorporation;
+    private List<SicCodeRescource> sicCodes;
+    private String organisationNumber;
+    private List<ExecutiveOfficerResource> executiveOfficers;
+
+
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
@@ -102,6 +109,38 @@ public class OrganisationResource {
 
     public void setAddresses(List<OrganisationAddressResource> addresses) {
         this.addresses = addresses;
+    }
+
+    public LocalDate getDateOfIncorporation() {
+        return dateOfIncorporation;
+    }
+
+    public void setDateOfIncorporation(LocalDate dateOfIncorporation) {
+        this.dateOfIncorporation = dateOfIncorporation;
+    }
+
+    public List<SicCodeRescource> getSicCodes() {
+        return sicCodes;
+    }
+
+    public void setSicCodes(List<SicCodeRescource> sicCodes) {
+        this.sicCodes = sicCodes;
+    }
+
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public void setOrganisationNumber(String organistionNumber) {
+        this.organisationNumber = organistionNumber;
+    }
+
+    public List<ExecutiveOfficerResource> getExecutiveOfficers() {
+        return executiveOfficers;
+    }
+
+    public void setExecutiveOfficers(List<ExecutiveOfficerResource> executiveOfficers) {
+        this.executiveOfficers = executiveOfficers;
     }
 
     @JsonIgnore

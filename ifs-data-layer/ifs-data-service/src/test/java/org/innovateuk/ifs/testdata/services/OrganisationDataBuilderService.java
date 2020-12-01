@@ -58,7 +58,12 @@ public class OrganisationDataBuilderService {
                         line.isInternational,
                         line.internationalRegistrationNumber,
                         address,
-                        line.addressType);
+                        line.addressType,
+                        line.dateOfIncorporation,
+                        line.sicCodes,
+                        line.organisationNumber,
+                        line.executiveOfficers
+                );
 
         organisation.build();
     }

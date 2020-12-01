@@ -8,6 +8,10 @@ public class ExecutiveOfficerResource {
     private Long organisation;
     private String name;
 
+    public ExecutiveOfficerResource() {
+
+    }
+
     public ExecutiveOfficerResource (String name){
         this.name = name;
     }

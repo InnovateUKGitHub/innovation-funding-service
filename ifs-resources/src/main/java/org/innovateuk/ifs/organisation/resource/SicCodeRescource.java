@@ -8,6 +8,11 @@ public class SicCodeRescource {
     private Long organisation;
     private String sicCode;
 
+    public SicCodeRescource()
+    {
+
+    }
+
     public Long getId() {
         return id;
     }
