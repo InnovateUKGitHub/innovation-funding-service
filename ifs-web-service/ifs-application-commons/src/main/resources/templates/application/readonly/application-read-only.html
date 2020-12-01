@@ -107,8 +107,7 @@
             </div>
 
             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                <th:block th:if="${(model.shouldDisplayKtpApplicationFeedback && section.name == 'Score assessment')
-                || (!model.shouldDisplayKtpApplicationFeedback && section.name == 'Application questions')}">
+                <th:block th:if="${section.isScored()}">
                     <div class="govuk-!-margin-bottom-3">
                         <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
                     </div>
