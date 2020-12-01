@@ -45,7 +45,7 @@
             <th:block th:insert="application/academic-costs-fragments :: costs (
                 form=${form},
                 readOnly=${model.readOnly},
-                internal=${!model.applicant}
+                internal=${model.internal}
             )" />
 
             <div class="upload-section">

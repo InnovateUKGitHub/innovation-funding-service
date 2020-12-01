@@ -99,6 +99,16 @@ items:
                     configMapKeyRef:
                       name: web-config
                       key: IFS_EARLY_METRICS_URL
+                - name: IFS_WEB_VIRTUALASSISTANT_BOTSECRET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_VIRTUALASSISTANT_BOTSECRET
+                - name: IFS_WEB_VIRTUALASSISTANT_BOTID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_VIRTUALASSISTANT_BOTID
                 - name: NEW_RELIC_LICENSE_KEY
                   valueFrom:
                     configMapKeyRef:

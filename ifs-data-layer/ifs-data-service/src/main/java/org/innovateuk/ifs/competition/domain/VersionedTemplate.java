@@ -14,7 +14,8 @@ import javax.persistence.*;
 @Entity
 @Immutable
 @DiscriminatorColumn(name = "type")
-public abstract class TermsAndConditions extends AuditableEntity {
+@Table(name = "terms_and_conditions")
+public abstract class VersionedTemplate extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,7 +75,7 @@ public abstract class TermsAndConditions extends AuditableEntity {
             return false;
         }
 
-        final TermsAndConditions that = (TermsAndConditions) o;
+        final VersionedTemplate that = (VersionedTemplate) o;
 
         return new EqualsBuilder()
                 .append(version, that.version)
