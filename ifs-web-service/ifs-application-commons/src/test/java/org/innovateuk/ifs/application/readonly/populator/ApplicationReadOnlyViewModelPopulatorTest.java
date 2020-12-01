@@ -128,9 +128,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .setAssessmentId(assessmentId);
 
         QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
-        ScoreAssessmentQuestionReadOnlyPopulator scoreAssessmentQuestionReadOnlyPopulator = mock(ScoreAssessmentQuestionReadOnlyPopulator.class);
-        setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator,
-                QuestionSetupType.KTP_ASSESSMENT, scoreAssessmentQuestionReadOnlyPopulator));
+        setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
         CompetitionResource competition = newCompetitionResource()
@@ -206,7 +204,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
 
         verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
-        verifyZeroInteractions(scoreAssessmentQuestionReadOnlyPopulator);
     }
 
     @Test
@@ -225,9 +222,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .setIncludeAllSupporterFeedback(true);
 
         QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
-        ScoreAssessmentQuestionReadOnlyPopulator scoreAssessmentQuestionReadOnlyPopulator = mock(ScoreAssessmentQuestionReadOnlyPopulator.class);
-        setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator,
-                QuestionSetupType.KTP_ASSESSMENT, scoreAssessmentQuestionReadOnlyPopulator));
+        setField(populator, "populatorMap", asMap(QuestionSetupType.KTP_ASSESSMENT, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
         CompetitionResource competition = newCompetitionResource()
@@ -239,25 +234,21 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withLeadOrganisationId(organisation.getId())
                 .build();
         List<QuestionResource> questions = newQuestionResource()
-                .withQuestionSetupType(QuestionSetupType.APPLICATION_TEAM, QuestionSetupType.KTP_ASSESSMENT)
-                .build(2);
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
         List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
         List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
-                .withQuestion(questions.get(0).getId(), questions.get(1).getId())
-                .build(2);
+                .withQuestion(questions.get(0).getId())
+                .build(1);
         List<SectionResource> sections = newSectionResource()
-                .withName("Section with questions", "Finance section", "Score assessment")
-                .withChildSections(Collections.emptyList(), Collections.singletonList(1L), Collections.emptyList())
+                .withName("Score assessment")
+                .withChildSections(Collections.emptyList())
                 .withQuestions(questions.stream()
-                                .filter(questionResource -> questionResource.getQuestionSetupType() != QuestionSetupType.KTP_ASSESSMENT)
-                                .map(QuestionResource::getId).collect(Collectors.toList()),
-                        emptyList(),
-                        questions.stream()
-                                .filter(questionResource -> questionResource.getQuestionSetupType() == QuestionSetupType.KTP_ASSESSMENT)
-                                .map(QuestionResource::getId).collect(Collectors.toList()))
-                .withType(SectionType.GENERAL, SectionType.FINANCE, SectionType.KTP_ASSESSMENT)
-                .build(3);
+                        .filter(questionResource -> questionResource.getQuestionSetupType() == QuestionSetupType.KTP_ASSESSMENT)
+                        .map(QuestionResource::getId).collect(Collectors.toList()))
+                .withType(SectionType.KTP_ASSESSMENT)
+                .build(1);
 
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR)
@@ -289,7 +280,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture);
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
-        ScoreAssessmentQuestionReadOnlyViewModel expectedScoreAssessmentModel = mock(ScoreAssessmentQuestionReadOnlyViewModel.class);
 
         when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
@@ -305,27 +295,18 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
 
         when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
-        when(scoreAssessmentQuestionReadOnlyPopulator.populate(competition, questions.get(1), expectedData, settings)).thenReturn(expectedScoreAssessmentModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
 
         assertEquals(settings, viewModel.getSettings());
 
-        assertEquals(viewModel.getSections().size(), 3);
+        assertEquals(viewModel.getSections().size(), 1);
 
         Iterator<ApplicationSectionReadOnlyViewModel> iterator = viewModel.getSections().iterator();
 
-        ApplicationSectionReadOnlyViewModel sectionWithQuestion = iterator.next();
-        assertEquals(sectionWithQuestion.getName(), "Section with questions");
-        assertEquals(sectionWithQuestion.getQuestions().iterator().next(), expectedRowModel);
-
-        ApplicationSectionReadOnlyViewModel financeSection = iterator.next();
-        assertEquals(financeSection.getName(), "Finance section");
-        assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
-
         ApplicationSectionReadOnlyViewModel scoreAssessmentSection = iterator.next();
         assertEquals(scoreAssessmentSection.getName(), "Score assessment");
-        assertEquals(scoreAssessmentSection.getQuestions().iterator().next(), expectedScoreAssessmentModel);
+        assertEquals(scoreAssessmentSection.getQuestions().iterator().next(), expectedRowModel);
 
         assertTrue(viewModel.isShouldDisplayKtpApplicationFeedback());
 
@@ -367,7 +348,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(1, viewModel.getPendingCount());
 
         verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
-        verify(scoreAssessmentQuestionReadOnlyPopulator).populate(competition, questions.get(1), expectedData, settings);
     }
 
 }

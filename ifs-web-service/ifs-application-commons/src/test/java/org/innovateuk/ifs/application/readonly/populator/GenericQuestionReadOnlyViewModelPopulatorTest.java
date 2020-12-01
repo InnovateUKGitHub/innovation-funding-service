@@ -258,6 +258,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         QuestionResource question = newQuestionResource()
                 .withId(questionId)
                 .withShortName("Impact")
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
                 .build();
         List<ApplicationAssessmentResource> assessments = ApplicationAssessmentsResourceBuilder.newApplicationAssessmentResource()
                 .withApplicationId(application.getId())
@@ -274,6 +275,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data, settings);
 
         assertNotNull(viewModel);
+        assertTrue(viewModel.isKtpAssessmentQuestion());
         assertEquals(questionId.longValue(), viewModel.getQuestionId());
         assertEquals(asList("Feedback-1", "Feedback-10"), viewModel.getFeedback());
         assertEquals(asList(BigDecimal.ONE, BigDecimal.TEN), viewModel.getScores());
