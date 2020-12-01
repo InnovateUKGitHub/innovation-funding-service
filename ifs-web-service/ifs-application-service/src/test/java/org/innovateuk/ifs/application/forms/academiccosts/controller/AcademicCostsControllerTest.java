@@ -59,7 +59,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
 
     @Test
     public void viewAcademicCosts() throws Exception {
-        AcademicCostViewModel viewModel = mockViewModel(APPLICATION_ID, true);
+        AcademicCostViewModel viewModel = mockViewModel(APPLICATION_ID);
 
         mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID))
@@ -68,21 +68,6 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
                 .andExpect(status().isOk());
 
         verify(formPopulator).populate(any(AcademicCostForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID));
-    }
-
-    @Test
-    public void viewAcademicCostsAsAssessor() throws Exception {
-        setLoggedInUser(assessor);
-
-        AcademicCostViewModel viewModel = mockViewModel(assessor.getId(), false);
-
-        mockMvc.perform(get(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
-                assessor.getId(), ORGANISATION_ID, SECTION_ID))
-                .andExpect(model().attribute("model", viewModel))
-                .andExpect(view().name(VIEW))
-                .andExpect(status().isOk());
-
-        verify(formPopulator).populate(any(AcademicCostForm.class), eq(assessor.getId()), eq(ORGANISATION_ID));
     }
 
     @Test
@@ -134,7 +119,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
 
     @Test
     public void complete_error() throws Exception {
-        AcademicCostViewModel viewModel = mockViewModel(APPLICATION_ID, true);
+        AcademicCostViewModel viewModel = mockViewModel(APPLICATION_ID);
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/academic-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -163,9 +148,9 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
 
     }
 
-    private AcademicCostViewModel mockViewModel(long applicationId, boolean isApplicant) {
+    private AcademicCostViewModel mockViewModel(long applicationId) {
         AcademicCostViewModel viewModel = mock(AcademicCostViewModel.class);
-        when(viewModelPopulator.populate(ORGANISATION_ID, applicationId, SECTION_ID, isApplicant)).thenReturn(viewModel);
+        when(viewModelPopulator.populate(ORGANISATION_ID, applicationId, SECTION_ID, getLoggedInUser())).thenReturn(viewModel);
         return viewModel;
     }
 }
