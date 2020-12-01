@@ -5,7 +5,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "heukar_org_type")
+@Table(name = "heukar_partner_organisation")
 public class HeukarPartnerOrganisation {
 
     @Id

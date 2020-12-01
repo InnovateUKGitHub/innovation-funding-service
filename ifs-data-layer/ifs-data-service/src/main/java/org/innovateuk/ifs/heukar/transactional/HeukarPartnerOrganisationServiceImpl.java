@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+
 
 @Service
 public class HeukarPartnerOrganisationServiceImpl implements HeukarPartnerOrganisationService {
@@ -46,6 +49,12 @@ public class HeukarPartnerOrganisationServiceImpl implements HeukarPartnerOrgani
     public ServiceResult<Void> deletePartnerOrganisation(Long id) {
         heukarPartnerOrganisationRepository.delete(mapper.mapIdToDomain(id));
         return ServiceResult.serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<HeukarPartnerOrganisationResource> findOne(Long id) {
+        return find(heukarPartnerOrganisationRepository.findById(id), notFoundError(HeukarPartnerOrganisation.class))
+                .andOnSuccessReturn(partnerOrganisation -> mapper.mapToResource(partnerOrganisation));
     }
 
 }

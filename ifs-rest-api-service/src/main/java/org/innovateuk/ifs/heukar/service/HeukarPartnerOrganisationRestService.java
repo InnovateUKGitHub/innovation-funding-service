@@ -14,4 +14,6 @@ public interface HeukarPartnerOrganisationRestService {
     RestResult<Void> updateHeukarOrgType(Long id);
 
     RestResult<Void> removeHeukarPartnerOrganisation(Long id);
+
+    RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(long selectedId);
 }

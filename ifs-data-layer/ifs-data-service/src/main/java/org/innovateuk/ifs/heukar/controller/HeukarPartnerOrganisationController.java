@@ -37,4 +37,9 @@ public class HeukarPartnerOrganisationController {
         return heukarPartnerOrganisationService.deletePartnerOrganisation(id).toDeleteResponse();
     }
 
+    @GetMapping("/{id}")
+    public RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(@PathVariable("id") Long id) {
+        return heukarPartnerOrganisationService.findOne(id).toGetResponse();
+    }
+
 }

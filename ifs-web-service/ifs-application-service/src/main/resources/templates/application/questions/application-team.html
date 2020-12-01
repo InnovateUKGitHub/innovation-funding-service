@@ -167,7 +167,7 @@
                                     <td class="govuk-table__cell"
                                         th:text="${partnerOrganisation.organisationTypeResource.name}"></td>
                                     <td>
-                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(applicationId=${model.applicationId},questionId=${model.questionId},selected=${partnerOrganisation.id})}"
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org/{selectedId}(applicationId=${model.applicationId},questionId=${model.questionId},selectedId=${partnerOrganisation.id})}"
                                            class="govuk-link"
                                         >EDIT</a>
 

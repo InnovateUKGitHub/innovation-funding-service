@@ -18,4 +18,6 @@ public interface HeukarPartnerOrganisationService {
 
     ServiceResult<Void> deletePartnerOrganisation(Long id);
 
+    ServiceResult<HeukarPartnerOrganisationResource> findOne(Long id);
+
 }

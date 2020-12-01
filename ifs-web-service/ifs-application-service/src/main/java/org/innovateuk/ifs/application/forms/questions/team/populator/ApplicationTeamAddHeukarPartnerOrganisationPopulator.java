@@ -15,12 +15,8 @@ public class ApplicationTeamAddHeukarPartnerOrganisationPopulator {
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
 
-    public ApplicationTeamAddOrganisationTypeViewModel populate(ApplicationResource applicationResource, long questionId, Long selectedId) {
+    public ApplicationTeamAddOrganisationTypeViewModel populate(ApplicationResource applicationResource, long questionId) {
         List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess();
-
-//        List<HeukarOrganisationTypeResource> existingTypes =
-//                organisationTypeRestService.getHeukarOrganisationTypesForApplicationWithId(applicationResource.getId()).getSuccess();
-
         return new ApplicationTeamAddOrganisationTypeViewModel(applicationResource, questionId, organisationTypeResourceList);
     }
 

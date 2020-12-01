@@ -34,4 +34,9 @@ public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService im
         return deleteWithRestResult(heukarRestUrl + "/" + id);
     }
 
+    @Override
+    public RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(long id) {
+        return getWithRestResult(heukarRestUrl + "/" + id, HeukarPartnerOrganisationResource.class);
+    }
+
 }
