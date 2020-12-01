@@ -80,6 +80,7 @@ Duration field client side
     Then the user should see a field error     ${empty_field_warning_message}
 
     And the user enters text to a text field   id = durationInMonths  25
+    And the user clicks the button/link        jQuery = button:contains("Mark as complete")
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
