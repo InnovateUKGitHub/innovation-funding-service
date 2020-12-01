@@ -36,11 +36,11 @@ public class KtpFinanceModelPopulator {
                 .build();
     }
 
-    private BigDecimal calculateAcademicAndSecretarialSupport(ProjectResource project) {
+    private static BigDecimal calculateAcademicAndSecretarialSupport(ProjectResource project) {
         return BigDecimal.valueOf(project.getDurationInMonths()).multiply(academicAndSecretarialSupportFixedAnnualRate);
     }
 
-    private KtpFinanceRowModel rowFromRunningTotal(KtpFundingRowsRunningTotal fundingRowsRunningTotal, ProjectFinanceResource leadFinances) {
+    private static KtpFinanceRowModel rowFromRunningTotal(KtpFundingRowsRunningTotal fundingRowsRunningTotal, ProjectFinanceResource leadFinances) {
         int cost = leadFinances.getTotal().setScale(0, RoundingMode.HALF_UP).intValue() - fundingRowsRunningTotal.getCostTotal();
         int funding = leadFinances.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP).intValue() - fundingRowsRunningTotal.getFundingTotal();
         return new KtpFinanceRowModel(
@@ -49,11 +49,11 @@ public class KtpFinanceModelPopulator {
         );
     }
 
-    private KtpFinanceRowModel row(FinanceRowCostCategory category, BigDecimal claimPercentage, KtpFundingRowsRunningTotal fundingRunningTotal) {
+    private static KtpFinanceRowModel row(FinanceRowCostCategory category, BigDecimal claimPercentage, KtpFundingRowsRunningTotal fundingRunningTotal) {
         return row(category.getTotal(), claimPercentage, fundingRunningTotal);
     }
 
-    private KtpFinanceRowModel row(BigDecimal total, BigDecimal claimPercentage, KtpFundingRowsRunningTotal fundingRunningTotal) {
+    private static KtpFinanceRowModel row(BigDecimal total, BigDecimal claimPercentage, KtpFundingRowsRunningTotal fundingRunningTotal) {
         BigDecimal funding = total.divide(new BigDecimal("100"), 10, RoundingMode.HALF_UP).multiply(claimPercentage)
                 .setScale(0, RoundingMode.HALF_UP);
         return fundingRunningTotal.addToRunningTotal(new KtpFinanceRowModel(total.setScale(0, RoundingMode.HALF_UP).intValue(),
