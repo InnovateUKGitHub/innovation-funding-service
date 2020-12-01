@@ -179,24 +179,19 @@ Comp admin assigns assessors to the competition and assigns the application to a
     And the assessors accept the invitation to assess the ATI competition
     Then the application is assigned to a assessor
 
-#Comp admin invites an assessor through interview panel and assign the application
-#    [Documentation]  IFS-8729
-#    [Setup]  log in as a different user                          &{Comp_admin1_credentials}
-#    Given The user navigates to the page                         ${server}/management/competition/${competitionId}
-#    And The user clicks the button/link                          jQuery = button:contains("Close assessment")
-#    When The user invites an assessor through interview panel
-#    And the user assigns the application to the assessor
-#    Then the assessor checks the appendices
-#
+Comp admin invites a different assessor through interview panel and assign the application
+    [Documentation]  IFS-8729
+    [Setup]  log in as a different user                          &{Comp_admin1_credentials}
+    Given The user navigates to the page                         ${server}/management/competition/${competitionId}
+    And The user clicks the button/link                          jQuery = button:contains("Close assessment")
+    When The user invites an assessor through interview panel
+    And the user assigns the application to the assessor
+    Then the assessor checks the appendices
+
 Internal user marks ATI application to successful
     [Documentation]  IFS-2332
-    Given Log in as a different user                     &{internal_finance_credentials}
-    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
-
-#ATIapplicationTitleComp admin assigns a different assessor to the application in Manage Interview panel
-#    [Documentation]  IFS-8729
-#    Given log in as a different user       &{Comp_admin1_credentials}
-#    And The user navigates to the page     ${server}/management/competition/${competitionId}
+    Given Log in as a different user                                        &{internal_finance_credentials}
+    Then making the application a successful project from correct state     ${competitionId}  ${ATIapplicationTitle}
 
 MO can see application summary page for the ATI application in project setup before releasing the feedback
     [Documentation]  IFS-7647
@@ -413,4 +408,4 @@ the assessor checks the appendices
     the user navigates to the page      ${server}/assessment/assessor/dashboard/competition/${competitionId}/interview
     the user clicks the button/link     link = ATI application
     the user clicks the button/link     jQuery = button:contains("5. Technical approach")
-#    open pdf link                       jQuery = testing.pdf (opens in a new window)
+    open pdf link                       jQuery = a:contains("testing.pdf (opens in a new window)")
