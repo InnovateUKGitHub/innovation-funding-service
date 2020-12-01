@@ -25,10 +25,11 @@
         </div>
 
         <th:block th:with="orgTitle=${organisationType.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0 ? 'Select your organisation' : 'Enter organisation details'},subTitle=${subtitle},size='govuk-heading-xl'" />
+            <th:block th:unless="${improvedSearchEnabled}" th:insert="fragments/layout :: page-title" th:with="pageTitle=${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0 ? 'Select your organisation' : 'Enter organisation details'},subTitle=${subtitle},size='govuk-heading-xl'" />
+            <th:block th:if="${improvedSearchEnabled}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter your organisation\'s details',subTitle=${subtitle},size='govuk-heading-xl'" />
         </th:block>
 
-        <th:block th:unless="${organisationForm.research}">
+        <th:block th:unless="${organisationForm.research || improvedSearchEnabled}">
             <h2 class="govuk-heading-m">Search on Companies House</h2>
         </th:block>
         <th:block th:if="${organisationForm.research}">
@@ -45,6 +46,22 @@
                    th:text="${searchLabel}">
                 Find your ? organisation
             </label>
+            <th:block th:if="${improvedSearchEnabled}">
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">Where to find your company registration number</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">A company registration number (CRN) is a unique number issued by Companies House when a company is incorporated in the UK.</p>
+                        <p class="govuk-body">It usually consists of either 8 numbers, or 2 letters followed by 6 numbers.</p>
+                        <p class="govuk-body">You can find it on your:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>certificate of incorporation</li>
+                            <li>listing at <a class="govuk-link" target="_blank" th:href="https://www.gov.uk/government/organisations/companies-house">Companies House (opens in a new window)</a>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </th:block>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
                 <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
