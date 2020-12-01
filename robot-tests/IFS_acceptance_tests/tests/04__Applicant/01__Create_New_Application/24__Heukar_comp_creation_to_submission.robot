@@ -10,10 +10,12 @@ Resource          ../../../resources/common/Competition_Commons.robot
 *** Variables ***
 
 *** Test Cases ***
-User can setup Heukar competition
+Comp admin can select the competition type option Heukar in initial details on competition setup
     [Documentation]  IFS-8638
-    Given the user logs-in in new browser                      &{Comp_admin1_credentials}
-    Then the competition admin creates HEUKAR competition      ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  2  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Given the user logs-in in new browser             &{Comp_admin1_credentials}
+    When the user navigates to the page               ${CA_UpcomingComp}
+    And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
+    Then the user fills in the CS Initial details     ${heukarCompetitionName}  ${month}  ${nextyear}  ${compType_HEUKAR}  2  GRANT
 
 *** Keywords ***
 Custom Suite Setup

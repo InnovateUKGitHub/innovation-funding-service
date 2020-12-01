@@ -8,34 +8,6 @@ ${CA_Live}           ${server}/management/dashboard/live
 ${Non_Ifs_Comp}      Webtest Non IFS Comp 20
 
 *** Keywords ***
-The competition admin creates HEUKAR competition
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
-    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
-    ...  ELSE  the user selects the Terms and Conditions
-# REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
-    the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user selects the organisational eligibility         true    true
-    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
-    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
-    ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
-    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
-# REMOVE/ADD NEGATIVE CASE ASSESSORS IN NEXT SPRINT
-#    the user fills in the CS Assessors                      ${fundingType}
-# REMOVE/ADD NEGATIVE CASE DOCUMENTS IN NEXT SPRINT
-#    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
-#    ...  ELSE  the user fills in the CS Documents in other projects
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         jQuery = a:contains("Complete")
-    the user clicks the button/link                         jQuery = button:contains('Done')
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
-
 The competition admin creates competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                          ${CA_UpcomingComp}
@@ -227,8 +199,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
-    Run keyword If  '${comp_type}' == '${compType_HEUKAR}'  the assessed questions are marked complete(HEUKAR type)
-    Run Keyword If  '${comp_type}' == '${compType_EOI}' or '${comp_type}' == '${compType_HEUKAR}'  the user opts no finances for EOI comp
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Back to competition details
@@ -315,10 +286,6 @@ the assessed questions are marked complete except finances(sector type)
 the assessed questions are marked complete(EOI type)
     :FOR   ${ELEMENT}   IN    @{EOI_questions}
      \    the user marks each question as complete    ${ELEMENT}
-    the user should see the element      jQuery = button:contains("Add question")
-
-the assessed questions are marked complete(HEUKAR type)
-    the user marks each question as complete    A HEUKAR question
     the user should see the element      jQuery = button:contains("Add question")
 
 the user marks the Application details section as complete
