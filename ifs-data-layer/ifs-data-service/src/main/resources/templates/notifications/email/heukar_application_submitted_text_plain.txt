@@ -1,5 +1,8 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
+${applicationName}
+Your application number: ${applicationId}
+
 Dear ${notificationTarget.name},
 
 We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme, administered by Innovate UK, part of UK Research and Innovation.
