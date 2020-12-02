@@ -42,15 +42,6 @@ delete from milestone where competition_id in (1,2,3,4,5,6,7,8,9);
 
 delete from project_stages where competition_id in (1,2,3,4,5,6,7,8,9);
 
-update competition_type set template_competition_id = NULL where name = 'Programme';
-update competition_type set template_competition_id = NULL where name = 'Sector';
-update competition_type set template_competition_id = NULL where name = 'Generic';
-update competition_type set template_competition_id = NULL where name = 'Expression of interest';
-update competition_type set template_competition_id = NULL where name = 'Advanced Propulsion Centre';
-update competition_type set template_competition_id = NULL where name = 'Aerospace Technology Institute';
-update competition_type set template_competition_id = NULL where name = "The Prince's Trust";
-update competition_type set template_competition_id = NULL where name = 'Horizon 2020';
-
 delete from competition where id in (1,2,3,4,5,6,7,8,9);
 
 SET foreign_key_checks = 1;
