@@ -57,24 +57,25 @@
                         <p class="govuk-body">You can find it on your:</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>certificate of incorporation</li>
-                            <li>listing at <a class="govuk-link" target="_blank" th:href="https://www.gov.uk/government/organisations/companies-house">Companies House (opens in a new window)</a>.</li>
+                            <li>listing at <a class="govuk-link" target="_blank" href="https://www.gov.uk/government/organisations/companies-house">Companies House (opens in a new window)</a>.</li>
                         </ul>
                     </div>
                 </details>
             </th:block>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
-                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
-                </th:block>
-                <input class="govuk-input govuk-!-width-one-half"
+            <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
+            </th:block>
+            <input class="govuk-input govuk-!-width-one-half"
                        th:field="*{organisationSearchName}"
                        th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
                        type="text"
                        th:attr="data-required-errormessage=#{validation.standard.organisationsearchname.required}"
                        required="required"
                        value="" />
-                <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
-            </div>
+            <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
+        </div>
+        <th:block th:unless="${improvedSearchEnabled}">
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
                     <p class="govuk-body govuk-hint">Choose your organisation:</p>
@@ -121,6 +122,7 @@
                     </details>
                 </th:block>
             </th:block>
+        </th:block>
         </form>
 
 
