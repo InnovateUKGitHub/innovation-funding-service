@@ -164,7 +164,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
-        boolean improvedSearchEnabled = (orgTypeEnum != null && orgTypeEnum != OrganisationTypeEnum.RESEARCH)
+        boolean improvedSearchEnabled = orgTypeEnum != null
+                && orgTypeEnum != OrganisationTypeEnum.RESEARCH
                 && newOrganisationSearchEnabled;
 
         String key = String.format(improvedSearchEnabled ? "improved.registration.%s.%s" : "registration.%s.%s",

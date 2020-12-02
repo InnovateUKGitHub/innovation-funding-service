@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -16,7 +17,8 @@ import java.util.List;
  * Object to store the data that is used for the companies house form, while creating a new application.
  */
 
-@FieldRequiredIf(required = "organisationSearchName", argument = "organisationSearching", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchDisabled", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchEnabled", predicate = true, message = "{validation.improved.organisationsearchname.required}")
 @FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
@@ -29,6 +31,7 @@ public class OrganisationCreationForm implements Serializable {
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     private String organisationName;
+    private Boolean newOrganisationSearchEnabled;
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
@@ -116,6 +119,24 @@ public class OrganisationCreationForm implements Serializable {
     @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
+    }
+
+    public void setNewOrganisationSearchEnabled(boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
+    }
+
+    public boolean isNewOrganisationSearchEnabled() {
+        return newOrganisationSearchEnabled;
+    }
+
+    @JsonIgnore
+    public boolean isImprovedSearchDisabled() {
+        return isOrganisationSearching() && !isNewOrganisationSearchEnabled();
+    }
+
+    @JsonIgnore
+    public boolean isImprovedSearchEnabled() {
+        return isOrganisationSearching() && isNewOrganisationSearchEnabled();
     }
 
     @Override
