@@ -199,7 +199,8 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
-    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
+    Run keyword If  '${comp_type}' == '${compType_HEUKAR}'  the assessed questions are marked complete(HEUKAR type)
+    Run Keyword If  '${comp_type}' == '${compType_EOI}' or '${comp_type}' == '${compType_HEUKAR}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Back to competition details
@@ -288,6 +289,10 @@ the assessed questions are marked complete(EOI type)
      \    the user marks each question as complete    ${ELEMENT}
     the user should see the element      jQuery = button:contains("Add question")
 
+the assessed questions are marked complete(HEUKAR type)
+    the user marks each question as complete    A HEUKAR question
+    the user should see the element      jQuery = button:contains("Add question")
+
 the user marks the Application details section as complete
     [Arguments]  ${compType}
     the user marks each question as complete                Application details
@@ -356,7 +361,8 @@ the user fills in the Finances questions
 the user fills in the Finances questions without growth table
     [Arguments]  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
-    the user selects the radio button     applicationFinanceType  STANDARD
+    run keyword If ${compType_HEUKAR}  the user selects the radio button  applicationFinanceType  NO_FINANCES
+    ... ELSE the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
