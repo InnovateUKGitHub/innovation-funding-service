@@ -2,13 +2,14 @@ package org.innovateuk.ifs.heukar.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
-import org.innovateuk.ifs.heukar.mapper.HeukarPartnerOrganisationTypeMapper;
+import org.innovateuk.ifs.heukar.mapper.HeukarPartnerOrganisationMapper;
 import org.innovateuk.ifs.heukar.repository.HeukarPartnerOrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -22,7 +23,7 @@ public class HeukarPartnerOrganisationServiceImpl implements HeukarPartnerOrgani
     private HeukarPartnerOrganisationRepository heukarPartnerOrganisationRepository;
 
     @Autowired
-    private HeukarPartnerOrganisationTypeMapper mapper;
+    private HeukarPartnerOrganisationMapper mapper;
 
     @Override
     public ServiceResult<List<HeukarPartnerOrganisationResource>> findByApplicationId(long applicationId) {
@@ -36,13 +37,17 @@ public class HeukarPartnerOrganisationServiceImpl implements HeukarPartnerOrgani
     @Override
     public ServiceResult<HeukarPartnerOrganisation> addNewPartnerOrgToApplication(long applicationId, long organisationTypeId) {
         return ServiceResult.serviceSuccess(heukarPartnerOrganisationRepository.save(mapper
-                .mapIdsToDomain(applicationId, organisationTypeId)));
+                .mapWithApplicationIdToDomain(applicationId, organisationTypeId)));
     }
 
     @Override
     public ServiceResult<HeukarPartnerOrganisation> updatePartnerOrganisation(Long id, long organisationTypeId) {
-        HeukarPartnerOrganisation save = heukarPartnerOrganisationRepository.save(mapper.mapIdToDomain(id));
-        return ServiceResult.serviceSuccess(save);
+        Optional<HeukarPartnerOrganisation> existing = heukarPartnerOrganisationRepository.findById(id);
+        if (!existing.isPresent()) {
+            throw new IllegalArgumentException("Partner org with id " + id + " does not exist");
+        }
+        HeukarPartnerOrganisation entity = mapper.mapExistingToDomain(id, existing.get().getApplicationId(), organisationTypeId);
+        return ServiceResult.serviceSuccess(heukarPartnerOrganisationRepository.save(entity));
     }
 
     @Override

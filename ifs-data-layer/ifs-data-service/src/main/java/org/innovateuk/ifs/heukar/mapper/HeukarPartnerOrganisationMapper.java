@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HeukarPartnerOrganisationTypeMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
+public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
@@ -27,12 +27,20 @@ public class HeukarPartnerOrganisationTypeMapper extends BaseMapper<HeukarPartne
         return null;
     }
 
-    @Override
-    public HeukarPartnerOrganisation mapToDomain(HeukarPartnerOrganisationResource resource) {
-        return mapIdsToDomain(resource.getApplicationId(), resource.getOrganisationTypeResource().getId());
+    public HeukarPartnerOrganisation mapExistingToDomain(Long partnerOrgId, Long applicationId, Long orgTypeId) {
+        HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
+        domain.setApplicationId(applicationId);
+        domain.setOrganisationType(organisationTypeMapper.mapIdToDomain(orgTypeId));
+        domain.setId(partnerOrgId);
+        return domain;
     }
 
-    public HeukarPartnerOrganisation mapIdsToDomain(Long applicationId, Long organisationTypeId) {
+    @Override
+    public HeukarPartnerOrganisation mapToDomain(HeukarPartnerOrganisationResource resource) {
+        return mapWithApplicationIdToDomain(resource.getApplicationId(), resource.getOrganisationTypeResource().getId());
+    }
+
+    public HeukarPartnerOrganisation mapWithApplicationIdToDomain(Long applicationId, Long organisationTypeId) {
         HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
         domain.setOrganisationType(organisationTypeMapper.mapIdToDomain(organisationTypeId));
         domain.setApplicationId(applicationId);

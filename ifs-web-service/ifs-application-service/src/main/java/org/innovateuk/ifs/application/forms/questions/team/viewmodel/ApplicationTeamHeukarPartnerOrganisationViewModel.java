@@ -6,7 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;
 
-public class ApplicationTeamAddOrganisationTypeViewModel implements BaseAnalyticsViewModel {
+public class ApplicationTeamHeukarPartnerOrganisationViewModel implements BaseAnalyticsViewModel {
 
     private final long questionId;
     private final long applicationId;
@@ -14,8 +14,8 @@ public class ApplicationTeamAddOrganisationTypeViewModel implements BaseAnalytic
     private final String competitionName;
     private final List<OrganisationTypeResource> types;
 
-    public ApplicationTeamAddOrganisationTypeViewModel(ApplicationResource application, long questionId,
-                                                       List<OrganisationTypeResource> types
+    public ApplicationTeamHeukarPartnerOrganisationViewModel(ApplicationResource application, long questionId,
+                                                             List<OrganisationTypeResource> types
                                                        ) {
         this.questionId = questionId;
         this.applicationId = application.getId();

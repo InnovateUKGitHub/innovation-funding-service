@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 import org.innovateuk.ifs.application.forms.questions.team.form.HeukarPartnerOrganisationForm;
-import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamAddHeukarPartnerOrganisationPopulator;
-import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamAddOrganisationTypeViewModel;
+import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamHeukarPartnerOrganisationPopulator;
+import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamHeukarPartnerOrganisationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team/heukar-partner-org")
-public class ApplicationTeamAddHeukarPartnerOrganisationController {
+public class ApplicationTeamHeukarPartnerOrganisationController {
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
 
@@ -30,7 +30,7 @@ public class ApplicationTeamAddHeukarPartnerOrganisationController {
     private ApplicationRestService applicationRestService;
 
     @Autowired
-    private ApplicationTeamAddHeukarPartnerOrganisationPopulator applicationTeamAddHeukarPartnerOrganisationPopulator;
+    private ApplicationTeamHeukarPartnerOrganisationPopulator applicationTeamHeukarPartnerOrganisationPopulator;
 
     @Autowired
     private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
@@ -43,8 +43,8 @@ public class ApplicationTeamAddHeukarPartnerOrganisationController {
                                                     @PathVariable long applicationId,
                                                     @PathVariable long questionId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        ApplicationTeamAddOrganisationTypeViewModel populate =
-                applicationTeamAddHeukarPartnerOrganisationPopulator.populate(application, questionId);
+        ApplicationTeamHeukarPartnerOrganisationViewModel populate =
+                applicationTeamHeukarPartnerOrganisationPopulator.populate(application, questionId);
 
         model.addAttribute("model", populate);
         model.addAttribute("form", new HeukarPartnerOrganisationForm());
@@ -60,11 +60,13 @@ public class ApplicationTeamAddHeukarPartnerOrganisationController {
                                                   @PathVariable long questionId,
                                                   @PathVariable long existingId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        ApplicationTeamAddOrganisationTypeViewModel populate = applicationTeamAddHeukarPartnerOrganisationPopulator.populate(application, questionId);
+        ApplicationTeamHeukarPartnerOrganisationViewModel populate = applicationTeamHeukarPartnerOrganisationPopulator.populate(application, questionId);
+
         HeukarPartnerOrganisationResource existingPartner = heukarPartnerOrganisationRestService.getExistingPartnerById(existingId).getSuccess();
         HeukarPartnerOrganisationForm heukarPartnerOrganisationForm = new HeukarPartnerOrganisationForm();
         heukarPartnerOrganisationForm.setOrganisationTypeId(existingPartner.getOrganisationTypeResource().getId());
         heukarPartnerOrganisationForm.setId(existingPartner.getId());
+
         model.addAttribute("model", populate);
         model.addAttribute("form", heukarPartnerOrganisationForm);
         return "application/questions/application-team-heukar-partner-organisation";
@@ -81,7 +83,7 @@ public class ApplicationTeamAddHeukarPartnerOrganisationController {
                              @RequestParam Long existingId) {
         boolean isAnEdit = existingId != null;
         if (isAnEdit) {
-            heukarPartnerOrganisationRestService.updateHeukarOrgType(form.getId(), form.getOrganisationTypeId());
+            heukarPartnerOrganisationRestService.updateHeukarOrgType(existingId, form.getOrganisationTypeId());
         } else {
             heukarPartnerOrganisationRestService.addNewHeukarOrgType(applicationId, form.getOrganisationTypeId());
         }

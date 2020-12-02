@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarOrganisationTypeResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarPartnerOrganisationResourceListType;
 
 @Service
 public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService implements HeukarPartnerOrganisationRestService {
@@ -16,7 +16,7 @@ public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService im
 
     @Override
     public RestResult<List<HeukarPartnerOrganisationResource>> getHeukarPartnerOrganisationsForApplicationWithId(Long applicationId) {
-        return getWithRestResult(heukarRestUrl + "/find-by-application-id/" + applicationId, heukarOrganisationTypeResourceListType());
+        return getWithRestResult(heukarRestUrl + "/find-by-application-id/" + applicationId, heukarPartnerOrganisationResourceListType());
     }
 
     @Override

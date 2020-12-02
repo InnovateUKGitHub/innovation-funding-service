@@ -243,7 +243,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<OrganisationTypeResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<HeukarPartnerOrganisationResource>> heukarOrganisationTypeResourceListType() {
+    public static ParameterizedTypeReference<List<HeukarPartnerOrganisationResource>> heukarPartnerOrganisationResourceListType() {
         return new ParameterizedTypeReference<List<HeukarPartnerOrganisationResource>>() {};
     }
 

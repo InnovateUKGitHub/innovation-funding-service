@@ -1,20 +1,25 @@
 package org.innovateuk.ifs.heukar.transactional;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
+import org.innovateuk.ifs.heukar.mapper.HeukarPartnerOrganisationMapper;
 import org.innovateuk.ifs.heukar.repository.HeukarPartnerOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class HeukarPartnerOrganisationServiceImplTest extends BaseServiceUnitTest<HeukarPartnerOrganisationService> {
@@ -23,9 +28,10 @@ public class HeukarPartnerOrganisationServiceImplTest extends BaseServiceUnitTes
     private HeukarPartnerOrganisationRepository heukarPartnerOrganisationRepository;
 
     @Mock
-    private OrganisationTypeMapper mapper;
+    private HeukarPartnerOrganisationMapper mapper;
 
-    private HeukarPartnerOrganisation type;
+    private HeukarPartnerOrganisation partnerOrganisation;
+    private HeukarPartnerOrganisationResource resource;
 
     @Override
     protected HeukarPartnerOrganisationService supplyServiceUnderTest() {
@@ -34,19 +40,43 @@ public class HeukarPartnerOrganisationServiceImplTest extends BaseServiceUnitTes
 
     @Before
     public void setup() {
-        type = new HeukarPartnerOrganisation();
-        type.setApplicationId(1L);
-        type.setOrganisationType(new OrganisationType());
-        when(heukarPartnerOrganisationRepository.findAllByApplicationId(1L)).thenReturn(newHashSet(type));
-
+        partnerOrganisation = new HeukarPartnerOrganisation();
+        partnerOrganisation.setApplicationId(1L);
+        partnerOrganisation.setOrganisationType(new OrganisationType());
+        when(heukarPartnerOrganisationRepository.findAllByApplicationId(1L)).thenReturn(newHashSet(partnerOrganisation));
+        resource = new HeukarPartnerOrganisationResource();
+        when(mapper.mapToResource(partnerOrganisation)).thenReturn(resource);
     }
 
     @Test
     public void findByApplicationId() {
-//        ServiceResult<Set<OrganisationTypeResource>> byApplicationId = service.findByApplicationId(1L);
+        ServiceResult<List<HeukarPartnerOrganisationResource>> byApplicationId = service.findByApplicationId(1L);
+        assertTrue(byApplicationId.isSuccess());
+        MatcherAssert.assertThat(byApplicationId.getSuccess(), Matchers.equalTo(newArrayList(resource)));
+    }
 
-//        assertTrue(byApplicationId.isSuccess());
-//        MatcherAssert.assertThat(byApplicationId.getSuccess(), Matchers.hasSize(type.getOrganisationTypes().size()));
+    @Test
+    public void addNewPartnerOrgToApplication() {
+        when(heukarPartnerOrganisationRepository.save(partnerOrganisation)).thenReturn(partnerOrganisation);
+        when(mapper.mapWithApplicationIdToDomain(anyLong(), anyLong())).thenReturn(partnerOrganisation);
+        ServiceResult<HeukarPartnerOrganisation> serviceResult = service.addNewPartnerOrgToApplication(1L, 1L);
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void updatePartnerOrganisation() {
+        when(mapper.mapIdToDomain(anyLong())).thenReturn(partnerOrganisation);
+        when(heukarPartnerOrganisationRepository.findById(anyLong())).thenReturn(Optional.of(partnerOrganisation));
+        when(heukarPartnerOrganisationRepository.save(partnerOrganisation)).thenReturn(partnerOrganisation);
+        ServiceResult<HeukarPartnerOrganisation> serviceResult = service.updatePartnerOrganisation(1L, 2L);
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void deletePartnerOrganisation(){
+        when(mapper.mapIdToDomain(anyLong())).thenReturn(partnerOrganisation);
+        ServiceResult<Void> serviceResult = service.deletePartnerOrganisation(partnerOrganisation.getId());
+        assertTrue(serviceResult.isSuccess());
     }
 
 }
