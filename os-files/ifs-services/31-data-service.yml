@@ -25,7 +25,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/data-service:${dataServiceVersion}
+            - image: innovateuk/data-service:${nexusVersion}
               name: data-service
               livenessProbe:
                 httpGet:
@@ -182,6 +182,11 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_DATA_POSTCODE_LOOKUP_KEY
+                - name: IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_COMPANIES_HOUSE_LOOKUP_ENABLED
                 - name: IFS_DATA_COMPANIES_HOUSE_KEY
                   valueFrom:
                     configMapKeyRef:
@@ -202,6 +207,16 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
+                - name: IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN
+                - name: IFS_SLACK_AUTH_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SLACK_AUTH_KEY
                 - name: IFS_DOCUSIGN_API_ACCOUNT
                   valueFrom:
                     configMapKeyRef:

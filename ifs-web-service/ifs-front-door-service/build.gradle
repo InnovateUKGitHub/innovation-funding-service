@@ -27,11 +27,11 @@ version project.version
 
 apply plugin: 'idea'
 
-project.version = frontDoorServiceVersion
-tagDocker.tag = frontDoorServiceVersion
-osStageRemote.tag = frontDoorServiceVersion
-tagDockerLocal.tag = frontDoorServiceVersion
-osStageLocal.tag = frontDoorServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.front-door-service.pull.nexus.image') ? project.property('ifs.front-door-service.pull.nexus.image').toBoolean() : false

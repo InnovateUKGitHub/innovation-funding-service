@@ -3,8 +3,10 @@ package org.innovateuk.ifs.application.forms.questions.generic.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.generic.validator.GenericQuestionApplicationFormValidator;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -18,6 +20,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletResponse;
@@ -66,7 +69,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
-    private Validator validator;
+    private GenericQuestionApplicationFormValidator validator;
 
     private long applicationId = 1L;
     private long questionId = 2L;
@@ -99,7 +102,6 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         FormInputResponseResource response = newFormInputResponseResource()
-                .withFileName(null)
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
@@ -156,16 +158,49 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
-        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false)).thenReturn(restSuccess(noErrors()));
+        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", null, false)).thenReturn(restSuccess(noErrors()));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
                 .param("complete", "true")
-                .param("answer", "answer"))
+                .param("answer", "answer")
+                .param("textAreaActive", "true")
+                .param("MultipleChoiceOptionsActive", "false"))
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
 
-        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false);
+        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", null, false);
         verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
+        verify(validator).validate(any(), any());
+        verifyNoMoreInteractions(questionStatusRestService);
+    }
+
+    @Test
+    public void completeMultipleChoiceOptions() throws Exception {
+
+        ProcessRoleResource userProcessRole = newProcessRoleResource()
+                .withRole(COLLABORATOR)
+                .withUser(loggedInUser)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withType(MULTIPLE_CHOICE)
+                .build();
+
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", 1L, false)).thenReturn(restSuccess(noErrors()));
+        when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
+                .param("complete", "true")
+                .param("answer", "Yes")
+                .param("textAreaActive", "false")
+                .param("multipleChoiceOptionId", "1")
+                .param("multipleChoiceOptionsActive", "true"))
+                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
+
+        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", 1L, false);
+        verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
+        verify(validator).validate(any(), any());
         verifyNoMoreInteractions(questionStatusRestService);
     }
 
@@ -230,6 +265,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
     @Test
     public void removeTemplateDocument() throws Exception {
+        long fileEntryId = 10L;
 
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
@@ -250,15 +286,17 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId())).thenReturn(restSuccess());
+                userProcessRole.getId(),
+                fileEntryId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
-                .param("removeTemplateDocument", "true"))
+                .param("removeTemplateDocument", String.valueOf(fileEntryId)))
                 .andExpect(view().name("application/questions/generic"));
 
         verify(formInputResponseRestService).removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId());
+                userProcessRole.getId(),
+                fileEntryId);
         verifyNoMoreInteractions(formInputResponseRestService);
     }
 
@@ -304,6 +342,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
     @Test
     public void removeAppendix() throws Exception {
+        long fileEntryId = 10L;
 
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
@@ -324,15 +363,17 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId())).thenReturn(restSuccess());
+                userProcessRole.getId(),
+                fileEntryId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
-                .param("removeAppendix", "true"))
+                .param("removeAppendix", String.valueOf(fileEntryId)))
                 .andExpect(view().name("application/questions/generic"));
 
         verify(formInputResponseRestService).removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId());
+                userProcessRole.getId(),
+                fileEntryId);
         verifyNoMoreInteractions(formInputResponseRestService);
     }
 }

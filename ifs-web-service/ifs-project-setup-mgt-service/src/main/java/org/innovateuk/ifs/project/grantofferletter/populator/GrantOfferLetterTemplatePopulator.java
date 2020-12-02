@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.grantofferletter.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -14,7 +13,6 @@ import org.innovateuk.ifs.project.grantofferletter.viewmodel.IndustrialFinanceTa
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.SummaryFinanceTableModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -30,87 +28,64 @@ import java.util.Map;
 @Component
 public class GrantOfferLetterTemplatePopulator {
 
-    private final ProjectRestService projectRestService;
-
-    private final CompetitionRestService competitionRestService;
-
-    private final ProjectService projectService;
-
-    private final OrganisationRestService organisationRestService;
-
-    private final UserRestService userRestService;
-
-    private final ProjectFinanceRestService projectFinanceRestService;
-
-    private final ProjectFinanceNotesRestService projectFinanceNotesRestService;
-
-    private final IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator;
-
-    private final AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator;
-
-    private final SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator;
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
-    public GrantOfferLetterTemplatePopulator(
-            ProjectRestService projectRestService,
-            CompetitionRestService competitionRestService,
-            ProjectService projectService,
-            OrganisationRestService organisationRestService,
-            UserRestService userRestService,
-            ProjectFinanceRestService projectFinanceRestService,
-            ProjectFinanceNotesRestService projectFinanceNotesRestService,
-            IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator,
-            AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator,
-            SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator
-    ) {
-        this.projectRestService = projectRestService;
-        this.competitionRestService = competitionRestService;
-        this.projectService = projectService;
-        this.organisationRestService = organisationRestService;
-        this.userRestService = userRestService;
-        this.projectFinanceRestService = projectFinanceRestService;
-        this.projectFinanceNotesRestService = projectFinanceNotesRestService;
-        this.industrialFinanceTableModelPopulator = industrialFinanceTableModelPopulator;
-        this.academicFinanceTableModelPopulator = academicFinanceTableModelPopulator;
-        this.summaryFinanceTableModelPopulator = summaryFinanceTableModelPopulator;
-    }
+    private OrganisationRestService organisationRestService;
 
-    public GrantOfferLetterTemplateViewModel populate(long projectId) {
+    @Autowired
+    private UserRestService userRestService;
 
-        ProjectResource projectResource = projectRestService.getProjectById(projectId).getSuccess();
-        String projectName = projectResource.getName();
-        long applicationId = projectResource.getApplication();
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        ProjectUserResource projectUserResource = projectService.getProjectManager(projectId).get();
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Autowired
+    private ProjectFinanceNotesRestService projectFinanceNotesRestService;
+
+    @Autowired
+    private IndustrialFinanceTableModelPopulator industrialFinanceTableModelPopulator;
+
+    @Autowired
+    private AcademicFinanceTableModelPopulator academicFinanceTableModelPopulator;
+
+    @Autowired
+    private SummaryFinanceTableModelPopulator summaryFinanceTableModelPopulator;
+
+    public GrantOfferLetterTemplateViewModel populate(ProjectResource project, CompetitionResource competition) {
+        String projectName = project.getName();
+        long applicationId = project.getApplication();
+        ProjectUserResource projectUserResource = projectService.getProjectManager(project.getId()).get();
         OrganisationResource leadOrg = organisationRestService.getOrganisationById(projectUserResource.getOrganisation()).getSuccess();
         String leadOrgName = leadOrg.getName();
         UserResource user = userRestService.retrieveUserById(projectUserResource.getUser()).getSuccess();
         String projectManagerFirstName = user.getFirstName();
         String projectManagerLastName = user.getLastName();
-        List<ProjectFinanceResource> allProjectFinances = projectFinanceRestService.getProjectFinances(projectResource.getId()).getSuccess();
+        List<ProjectFinanceResource> allProjectFinances = projectFinanceRestService.getProjectFinances(project.getId()).getSuccess();
         List<NoteResource> allProjectNotes = new ArrayList<>();
         allProjectFinances.forEach(projectFinance ->
                                            projectFinanceNotesRestService.findAll(projectFinance.getId())
                                                    .ifSuccessful(allProjectNotes::addAll)
         );
 
-        Map<OrganisationResource, ProjectFinanceResource> financesForOrgs = getFinancesForOrgs(projectResource, allProjectFinances);
-        IndustrialFinanceTableModel industrialFinanceTableModel = industrialFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
-        AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
-        SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
+        Map<OrganisationResource, ProjectFinanceResource> financesForOrgs = getFinancesForOrgs(project, allProjectFinances);
+        IndustrialFinanceTableModel industrialFinanceTableModel = industrialFinanceTableModelPopulator.createTable(financesForOrgs, competition);
+        AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competition);
+        SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competition);
 
         return new GrantOfferLetterTemplateViewModel(applicationId,
                                                      projectManagerFirstName,
                                                      projectManagerLastName,
-                                                     getAddressLines(projectResource),
-                                                     projectResource.getCompetitionName(),
+                                                     getAddressLines(project),
+                                                     project.getCompetitionName(),
                                                      projectName,
                                                      leadOrgName,
                                                      allProjectNotes,
-                                                     competitionResource.getTermsAndConditions().getTemplate(),
+                                                     competition.getTermsAndConditions().getTemplate(),
                                                      industrialFinanceTableModel,
                                                      academicFinanceTableModel,
-                                                     summaryFinanceTableModel);
+                                                     summaryFinanceTableModel,
+                                                     competition.isProcurement());
     }
 
     private List<String> getAddressLines(ProjectResource project) {
@@ -127,10 +102,10 @@ public class GrantOfferLetterTemplatePopulator {
         return addressLines;
     }
 
-    private Map<OrganisationResource, ProjectFinanceResource> getFinancesForOrgs(ProjectResource projectResource, List<ProjectFinanceResource> projectFinances) {
+    private Map<OrganisationResource, ProjectFinanceResource> getFinancesForOrgs(ProjectResource project, List<ProjectFinanceResource> projectFinances) {
         Map<OrganisationResource, ProjectFinanceResource> orgFinances = new HashMap<>();
 
-        List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectResource.getId());
+        List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(project.getId());
         projectOrganisations.forEach(org -> {
             ProjectFinanceResource financesForOrg =
                     projectFinances

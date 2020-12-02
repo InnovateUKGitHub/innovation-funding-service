@@ -150,19 +150,19 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public boolean isRequestingFunding() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim.isRequestingFunding();
+        return grantClaim == null ? false :grantClaim.isRequestingFunding();
     }
 
     @JsonIgnore
     public BigDecimal getGrantClaimPercentage() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
+        return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
     }
 
     @JsonIgnore
     public BigDecimal getTotalFundingSought() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
+        return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
                 .max(BigDecimal.ZERO);
     }
 
@@ -177,6 +177,12 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public BigDecimal getTotalOtherFunding() {
         FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+        return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
+    }
+
+    @JsonIgnore
+    public BigDecimal getTotalPreviousFunding() {
+        FinanceRowCostCategory otherFundingCategory = getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
         return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
     }
 

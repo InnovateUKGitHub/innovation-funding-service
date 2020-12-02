@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 
 /**
  * A resource object to return finance check status for a project (for all partner organisations).
@@ -272,5 +272,15 @@ public class FinanceCheckSummaryResource {
     @JsonIgnore
     public boolean isLoan() {
         return fundingType == LOAN;
+    }
+
+    @JsonIgnore
+    public boolean isProcurement() {
+        return fundingType == PROCUREMENT;
+    }
+
+    @JsonIgnore
+    public boolean isKtp(){
+        return this.fundingType.equals(KTP);
     }
 }

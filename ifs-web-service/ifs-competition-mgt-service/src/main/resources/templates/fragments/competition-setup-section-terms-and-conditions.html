@@ -1,6 +1,6 @@
 
 <!-- =================Section: Terms and Conditions (3) =========================== -->
-<th:block th:fragment="section-content" xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="section-content" xmlns:th="http://www.thymeleaf.org">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />

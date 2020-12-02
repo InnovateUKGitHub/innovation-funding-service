@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.management.competition.inflight.controller.application.view.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -22,7 +20,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligi
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -60,15 +57,9 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @Mock
     private ProcessRoleService processRoleService;
     @Mock
-    private UserRestService userRestService;
-    @Mock
-    private ApplicationPrintPopulator applicationPrintPopulator;
-    @Mock
     private ApplicationRestService applicationRestService;
     @Mock
     private FormInputResponseRestService formInputResponseRestService;
-    @Mock
-    private ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Mock
@@ -214,26 +205,27 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 long applicationId = 2L;
                 long competitionId = 3L;
                 long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
+                long fileEntryId = 5L;
                 List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
                 when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId)).thenReturn(RestResult.restSuccess(inputResponse));
 
                 ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
                 when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
                 ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
-                when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId)).thenReturn(restSuccess(bar));
+                when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
                 FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-                when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
+                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, fileEntryId);
+                when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
-                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/download"))
+                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/file/" + fileEntryId + "/download"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType(("text/csv")))
                         .andExpect(header().string("Content-Type", "text/csv"))
                         .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
                         .andExpect(content().string("File contents"));
 
-                verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId);
-                verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId);
+                verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId, fileEntryId);
+                verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId, fileEntryId);
 
             } catch (Exception e) {
                 fail();

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -20,10 +21,10 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -56,13 +57,16 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
     @Test
     public void views() throws Exception {
         long projectId = 123L;
         long organisationId = 456L;
         CompetitionResource competition = newCompetitionResource()
                 .withFundingType(FundingType.LOAN)
-                .withFinanceRowTypes(EnumSet.of(FinanceRowType.GRANT_CLAIM_AMOUNT))
+                .withFinanceRowTypes(singletonList(FinanceRowType.GRANT_CLAIM_AMOUNT))
                 .build();
 
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource()

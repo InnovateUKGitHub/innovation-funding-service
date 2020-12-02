@@ -42,6 +42,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
@@ -63,7 +64,6 @@ import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -97,6 +97,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -181,6 +182,19 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         .withPostcode("S1 2BJ")
                         .build())
                 .build();
+        UserCreationResource userCreationResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withPassword("Password123")
+                .withEmail(email)
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
+                .withRole(Role.ASSESSOR)
+                .build();
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
 
@@ -203,7 +217,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         List<AssessmentParticipant> participantsForOtherInvites = Stream.generate(
                 () -> Mockito.spy(new AssessmentParticipant())).limit(2).collect(Collectors.toList());
 
-        when(registrationService.createUser(userRegistrationResource)).thenReturn(serviceSuccess(createdUserResource));
+        when(registrationService.createUser(refEq(userCreationResource))).thenReturn(serviceSuccess(createdUserResource));
 
         when(registrationService.activateAssessorAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(assessmentInviteService.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
@@ -218,7 +232,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                                   userRepository, assessmentParticipantRepository, innovationAreaMapper,
                                   profileRepository, roleProfileStatusRepository);
         inOrder.verify(assessmentInviteService).getInvite(hash);
-        inOrder.verify(registrationService).createUser(userRegistrationResource);
+        inOrder.verify(registrationService).createUser(refEq(userCreationResource));
         inOrder.verify(registrationService).activateAssessorAndSendDiversitySurvey(createdUserResource.getId());
         inOrder.verify(userRepository).findById(createdUserResource.getId());
         inOrder.verify(assessmentParticipantRepository).getByInviteEmail(email);
@@ -276,15 +290,24 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withEmail("email@example.com")
                 .build();
 
+        UserCreationResource userCreationResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withPassword("Password123")
+                .withEmail(competitionInviteResource.getEmail())
+                .withRole(Role.ASSESSOR)
+                .build();
+
         when(assessmentInviteService.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
-        when(registrationService.createUser(userRegistrationResource)).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+        when(registrationService.createUser(refEq(userCreationResource))).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         InOrder inOrder = inOrder(assessmentInviteService, registrationService);
         inOrder.verify(assessmentInviteService).getInvite(hash);
-        inOrder.verify(registrationService).createUser(userRegistrationResource);
+        inOrder.verify(registrationService).createUser(refEq(userCreationResource));
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());
@@ -414,7 +437,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         UserResource userResource = newUserResource().build();
         ProfileResource profileResource = newProfileResource().build();
 
-        when(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR)).thenReturn(user);
+        when(userRepository.findById(assessorId)).thenReturn(user);
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(userMapper.mapToResource(user.get())).thenReturn(userResource);
         when(assessorProfileMapper.mapToResource(profile)).thenReturn(profileResource);
@@ -429,7 +452,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
 
         InOrder inOrder = inOrder(userRepository, profileRepository, userMapper, assessorProfileMapper, affiliationMapper);
-        inOrder.verify(userRepository).findByIdAndRoles(assessorId, Role.ASSESSOR);
+        inOrder.verify(userRepository).findById(assessorId);
         inOrder.verify(profileRepository).findById(profileId);
         inOrder.verify(userMapper).mapToResource(user.get());
         inOrder.verify(assessorProfileMapper).mapToResource(profile);
@@ -477,7 +500,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification1 = new Notification(
                 systemNotificationSource,
-                singletonList(recipients.get(0)),
+                recipients.get(0),
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", users.get(0).getName(),
@@ -489,7 +512,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification2 = new Notification(
                 systemNotificationSource,
-                singletonList(recipients.get(1)),
+                recipients.get(1),
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", users.get(1).getName(),
@@ -554,7 +577,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         Notification expectedNotification = new Notification(
                 systemNotificationSource,
-                singletonList(recipient),
+                recipient,
                 AssessorServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
                 asMap(
                         "name", user.getName(),

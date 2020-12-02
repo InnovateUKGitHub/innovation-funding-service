@@ -18,8 +18,11 @@
     <resource type="download" name="images/" location="/images"/>
     <context>ifs-bitbucket-plugin</context>
   </web-resource>
-  <repository-hook key="flyway-patch-number-hook" name="Flyway Patch Number Hook" i18n-name-key="flyway-patch-number-hook.name" class="org.innovateuk.ifs.bitbucket.plugin.hook.FlywayPatchNumberHook">
-    <description key="flyway-patch-number-hook.description">The Flyway Patch Number Hook Plugin</description>
-    <icon>icon-example.png</icon>
-  </repository-hook>
+  <repository-merge-check key="flyway-patch-number-hook" name="Flyway Patch Number Hook"
+                          class="org.innovateuk.ifs.bitbucket.plugin.hook.FlywayPatchNumberHook">
+    <description>
+      The Flyway Patch Number Hook Plugin
+    </description>
+    <icon>icons/example.png</icon>
+  </repository-merge-check>
 </atlassian-plugin>

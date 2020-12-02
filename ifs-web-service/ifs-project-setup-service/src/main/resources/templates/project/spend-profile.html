@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:if="${form != null}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Spend profile - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
@@ -69,10 +69,12 @@
         </th:block>
         <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
         <dl class="standard-definition-list">
-            <dt>Project start date</dt>
-            <dd>
-                <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
-            </dd>
+            <th:block th:unless="${model.ktpCompetition}">
+                <dt>Project start date</dt>
+                <dd>
+                    <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
+                </dd>
+            </th:block>
             <dt>Duration</dt>
             <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
         </dl>

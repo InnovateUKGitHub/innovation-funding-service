@@ -40,6 +40,16 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<List<SimpleUserResource>> findAllKtp() {
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all-ktp"), simpleUserListType());
+    }
+
+    @Override
+    public RestResult<List<SimpleUserResource>> findAllNonKtp() {
+        return getWithRestResult(format("%s/%s", PROJECT_MONITORING_OFFICER_REST_URL, "find-all-non-ktp"), simpleUserListType());
+    }
+
+    @Override
     public RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId) {
         return getWithRestResult(String.format("%s/%d/projects", PROJECT_MONITORING_OFFICER_REST_URL, userId), projectResourceListType());
     }
@@ -52,5 +62,10 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId) {
         return getWithRestResult(String.format("%s/project/%d/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectId, "is-monitoring-officer", userId), Boolean.class);
+    }
+
+    @Override
+    public RestResult<Boolean> isMonitoringOfficer(long userId) {
+        return getWithRestResult(String.format("%s/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, "is-monitoring-officer", userId), Boolean.class);
     }
 }

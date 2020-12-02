@@ -2,8 +2,8 @@
     <h2 class="govuk-heading-m">Active</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">38</span>
-        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s">active users</span>
-        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">active external users</span>
+        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'active user' : 'active users'">active users</span>
+        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'active external user' : 'active external users'">active external users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=true)" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
@@ -13,8 +13,8 @@
     <h2 class="govuk-heading-m">Inactive</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
-        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s">inactive users</span>
-        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">inactive external users</span>
+        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'inactive user' : 'inactive users'">inactive users</span>
+        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'inactive external user' : 'inactive external users'">inactive external users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=false)" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
@@ -24,7 +24,7 @@
     <h2 class="govuk-heading-m">Pending</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
-        <span class="govuk-heading-s">pending internal users</span>
+        <span class="govuk-heading-s" th:text="${count == 1} ? 'pending user' : 'pending users'">pending users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
@@ -50,8 +50,10 @@
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
                                 class="govuk-button govuk-button--secondary"
-                                data-js-modal="modal-resend-internal-user"
-                                th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},data-modal-input-invite-id=${invite.id}">Resend invite</button>
+                                th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},
+                                data-modal-input-internal-invite-id=${invite.id},
+                                data-modal-input-external-invite-id=${invite.id},
+                                data-js-modal=${invite.externalInvite ? 'modal-resend-external-user' : 'modal-resend-internal-user'}">Resend invitation</button>
                     </form>
                 </td>
             </tr>

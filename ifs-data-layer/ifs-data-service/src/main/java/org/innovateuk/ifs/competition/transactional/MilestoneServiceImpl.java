@@ -18,7 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
@@ -53,23 +57,38 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Override
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccessReturn(competition ->
-            (List<MilestoneResource>)
-                    milestoneMapper.mapToResource(milestoneRepository
-                            .findByCompetitionIdAndTypeIn(id, competition.isH2020() ? HORIZON_PUBLIC_MILESTONES : PUBLIC_MILESTONES))
+                (List<MilestoneResource>)
+                        milestoneMapper.mapToResource(milestoneRepository
+                                .findByCompetitionIdAndTypeIn(id, competition.isH2020() ? HORIZON_PUBLIC_MILESTONES : PUBLIC_MILESTONES))
         );
     }
 
     @Override
     public ServiceResult<Boolean> allPublicDatesComplete(Long competitionId) {
-        boolean isNonIfs = competitionRepository.findById(competitionId).get().isNonIfs();
-        List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
-                .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                .collect(toList());
 
-        List<Milestone> milestones = milestoneRepository
-                .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
 
-        return serviceSuccess(hasRequiredMilestones(milestones, milestonesRequired));
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId)).andOnSuccessReturn(competition -> {
+
+            boolean isNonIfs = competition.isNonIfs();
+
+            List<MilestoneType> milestonesRequired;
+
+            if (isNonIfs) {
+                milestonesRequired= PUBLIC_MILESTONES.stream()
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .collect(toList());
+            } else {
+                milestonesRequired = PUBLIC_MILESTONES.stream()
+                        .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .collect(toList());
+            }
+
+            List<Milestone> milestones = milestoneRepository
+                    .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
+
+            return hasRequiredMilestones(milestones, milestonesRequired);
+        });
     }
 
     private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {
@@ -78,13 +97,13 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 .map(milestone -> milestone.getType()).collect(toList());
 
         return milestoneTypes.containsAll(milestonesRequired)
-            && milestones
+                && milestones
                 .stream()
                 .noneMatch(milestone -> milestone.getDate() == null);
     }
 
     private boolean filterNonIfsOutOnIFSComp(MilestoneType milestoneType, boolean isNonIfs) {
-        if(isNonIfs) {
+        if (isNonIfs) {
             return !milestoneType.equals(MilestoneType.NOTIFICATIONS);
         } else {
             return !milestoneType.isOnlyNonIfs();
@@ -135,8 +154,39 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Transactional
     public ServiceResult<Void> updateCompletionStage(long competitionId, CompetitionCompletionStage completionStage) {
 
-        return getCompetition(competitionId).andOnSuccessReturnVoid(competition ->
-                competition.setCompletionStage(completionStage));
+        return getCompetition(competitionId).andOnSuccessReturnVoid(competition -> {
+            if (competition.getCompletionStage() != completionStage) {
+                competition.setCompletionStage(completionStage);
+
+                List<Milestone> currentMilestones = milestoneRepository.findAllByCompetitionId(competitionId);
+                List<Milestone> newMilestones = new ArrayList<>();
+
+                if (currentMilestones.size() > 1) {
+                    List<Milestone> milestonesToDelete = currentMilestones.stream()
+                            .filter(milestone -> milestone.getType().getPriority() > completionStage.getLastMilestone().getPriority())
+                            .collect(Collectors.toList());
+
+                    milestoneRepository.deleteAll(milestonesToDelete);
+
+                    List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
+                            .map(milestone -> milestone.getType())
+                            .collect(toList());
+
+                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                            .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType)).forEach(type ->
+                            newMilestones.add(new Milestone(type, competition))
+                    );
+                    milestoneRepository.saveAll(newMilestones);
+                } else {
+                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                            .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
+                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
+                            newMilestones.add(new Milestone(type, competition))
+                    );
+                    milestoneRepository.saveAll(newMilestones);
+                }
+            }
+        });
     }
 
     private ValidationMessages validate(List<MilestoneResource> milestones) {

@@ -31,7 +31,7 @@ User can select H2020 Competition Template and complete Initial details
 
 User can populate the Completion Stage, Milestones and Public content
     [Documentation]  IFS-5158
-     Given the user fills in the CS Milestones                                      project-setup-completion-stage  1  ${nextyear}
+     Given the user fills in the CS Milestones                                      PROJECT_SETUP  1  ${nextyear}
      When the user clicks the button/link                                           link = Public content
      Then The user completes Public content for H2020 registration and publishes
      [Teardown]  the user clicks the button/link                                    link = Return to setup overview
@@ -61,7 +61,7 @@ User can complete Organisational eligibility
     Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
     When the user selects the radio button                    internationalOrganisationsApplicable       false
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
-    And the user clicks the button/link                       link = Competition details
+    And the user clicks the button/link                       link = Back to competition details
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 User can finish setting up the grant transfer
@@ -155,7 +155,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-5700
     Given proj finance approves the spend profiles  ${HProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             NO  ${HProjectID}
+    And internal user generates the GOL             ${HProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-5700
@@ -221,6 +221,7 @@ The internal user is able to progress an application to project set up
     the user clicks the button/link       jQuery = button:contains("Write and send email")
     the user clicks the button/link       css = button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       jQuery = .send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the user refreshes until element appears on page         jQuery = td:contains("Project name") ~ td:contains("Sent")
     the user clicks the button/link       link = Competition
     the user clicks the button/link       link = Manage funding notifications
 
@@ -339,18 +340,19 @@ The user fills in public content supporting information section
     the user should see the element         jQuery = div:contains("Supporting information") ~ .task-status-complete
 
 The user completes the application proccess details
-    the user clicks the button/link         link = Application details
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user clicks the button/link         link = Public description
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user clicks the button/link         link = Finances
-    the user selects the radio button       applicationFinanceType  STANDARD
-    the user clicks the button twice        css = label[for = "include-growth-table-no"]
-    the user selects the radio button       includeJesForm  false
-    the user selects the radio button       includeYourOrganisationSection  false
-    the user enters text to a text field    css = .editor  Those are the rules that apply to Finances
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user clicks the button/link         jQuery = button:contains("Done")
+    the user clicks the button/link              link = Application details
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user marks each question as complete     Equality, diversity and inclusion
+    the user clicks the button/link              link = Public description
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link              link = Finances
+    the user selects the radio button            applicationFinanceType  STANDARD
+    the user clicks the button twice             css = label[for = "include-growth-table-no"]
+    the user selects the radio button            includeJesForm  false
+    the user selects the radio button            includeYourOrganisationSection  false
+    the user enters text to a text field         css = .editor  Those are the rules that apply to Finances
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link              jQuery = button:contains("Done")
 
 The user completes grant transfer setup
     the user clicks the button/link         jQuery = a:contains("Complete")
@@ -375,12 +377,13 @@ The user fills in the Competition Setup Project eligibility section
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition details
+    the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
@@ -464,15 +467,14 @@ The user is able to complete your project costs section
 
 The user is able to validate conversion spredsheet links works
     the user clicks the button/link                 link = funding conversion spreadsheet
-    Select Window                                   title = 404 - UK Research and Innovation
-    the user should see the element                 jQuery = p:contains("Go back")
+    Select Window                                   title = Page not found – UKRI
+    the user should see the element                 link = Contact us
     the user closes the last opened tab
 
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user clicks the button/link           id = submit-application-button-modal
-    the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
+    the user clicks the button/link           id = submit-application-button
 
 The user is able to verify validation on each page
     validate errors on Application details page

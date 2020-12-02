@@ -80,6 +80,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withRolesGlobal(singletonList(Role.STAKEHOLDER))
             .withUID("2522-34y34ah-hrt4420").build();
 
+    protected UserResource knowledgeTransferAdvisor = newUserResource().withId(3L)
+            .withFirstName("Itsame")
+            .withLastName("Mario")
+            .withEmail("Itsame@gmail.com")
+            .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER))
+            .withUID("2522-34y34ah-hrt4420").build();
+
     protected UserResource assessorAndApplicant = newUserResource().withId(4L)
             .withFirstName("Fred")
             .withLastName("Smith")
@@ -142,6 +149,27 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withEmail("admin@email.co.uk")
             .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
             .withUID("6573ag-aeg32aeb-23aerr").build();
+
+    protected UserResource kta = newUserResource().withId(2L)
+            .withFirstName("kta")
+            .withLastName("kta")
+            .withEmail("kta@email.co.uk")
+            .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER))
+            .withUID("6573ag-aeg32aeb-23aerr").build();
+
+    protected UserResource supporter = newUserResource().withId(2L)
+            .withFirstName("kta")
+            .withLastName("kta")
+            .withEmail("kta@email.co.uk")
+            .withRolesGlobal(singletonList(Role.SUPPORTER))
+            .withUID("6573ag-aeg32aeb-23aerr").build();
+
+    protected UserResource applicantAndSupporter = newUserResource().withId(4L)
+            .withFirstName("Kit")
+            .withLastName("Fisto")
+            .withEmail("kit.fisto@email.co.uk")
+            .withRolesGlobal(asList(Role.APPLICANT, Role.SUPPORTER))
+            .withUID("1234-abcdefgh-abc1234").build();
 
     protected UserResource loggedInUser = applicant;
 

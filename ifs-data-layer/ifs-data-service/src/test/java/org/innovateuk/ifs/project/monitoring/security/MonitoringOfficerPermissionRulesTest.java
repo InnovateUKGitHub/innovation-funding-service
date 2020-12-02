@@ -36,6 +36,18 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, nonMonitoringOfficer));
     }
 
+    @Test
+    public void ktaCanSeeTheirOwnProjects() {
+        UserResource monitoringOfficer = newUserResource().withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+        UserResource otherMonitoringOfficer = newUserResource().withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+        UserResource nonMonitoringOfficer = newUserResource().withRoleGlobal(APPLICANT).build();
+
+        assertTrue(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, monitoringOfficer));
+
+        assertFalse(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, otherMonitoringOfficer));
+        assertFalse(rules.monitoringOfficerCanSeeTheirOwnProjects(monitoringOfficer, nonMonitoringOfficer));
+    }
+
 
     @Test
     public void internalUsersCanSeeMonitoringOfficerProjects() {
@@ -46,6 +58,21 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.internalUsersCanSeeMonitoringOfficerProjects(monitoringOfficer, internal));
 
         assertFalse(rules.internalUsersCanSeeMonitoringOfficerProjects(monitoringOfficer, nonInternal));
+    }
+
+    @Test
+    public void usersCanSeeIfTheyAreMonitoringOfficerOnProjects() {
+        long id = 1l;
+
+        UserResource monitoringOfficer = newUserResource()
+                .withId(id)
+                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+
+        UserResource userToView = newUserResource()
+                .withId(id)
+                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
+
+        assertTrue(rules.usersCanSeeIfTheyAreMonitoringOfficerOnProjects(monitoringOfficer, userToView));
     }
 
     @Test

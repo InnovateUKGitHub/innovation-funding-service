@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="empty (model)">
     Empty
@@ -12,43 +12,38 @@
         </label>
         <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
 
-        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateDocumentFilename != null}">
-            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateDocumentTitle}|">
+        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
+            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
                 Uploaded project plan and methodology
             </h1>
             <p class="uploaded-file govuk-body">
-               <a class="govuk-link"
-                   th:href="${model.templateDocumentUrl}"
-                   th:text="${model.templateDocumentFilename}"
-                   target="_blank"
-                   aria-describedby="template-document-hint">file</a><span id="template-document-hint"> (opens in a new window)</span>.
-            </p>
-        </div>
-
-        <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
-            <p class="uploaded-file govuk-body">
                 <a class="govuk-link"
-                   th:href="${model.appendixUrl}"
-                   th:text="${model.appendixFilename}"
-                   target="_blank"
-                   aria-describedby="appendix-hint">file</a><span id="appendix-hint">(opens in a new window)</span>.
+                   th:href="${model.templateFile.url}"
+                   th:text="|${model.templateFile.filename} (opens in a new window)|"
+                   target="_blank">file</a>.
             </p>
         </div>
 
-        <th:block th:if="${model.hasAssessorResponse()}">
-            <div class="clear-floats">
-                <div class="govuk-grid-row govuk-!-margin-top-6">
-                    <div class="govuk-grid-column-one-half">
-                        <h3 class="govuk-heading-s">Feedback</h3>
-                    </div>
-                    <div class="govuk-grid-column-one-half alignright govuk-heading-s">
-                        Score <span th:text="${model.score}">Feedback score</span>/10
-                    </div>
-                </div>
-            </div>
+        <div class="govuk-!-margin-top-6" th:unless="${model.appendices.isEmpty()}">
+            <p class="uploaded-file govuk-body" th:each="appendix : ${model.appendices}">
+                <a class="govuk-link"
+                   th:href="${appendix.url}"
+                   th:text="|${appendix.filename} (opens in a new window)|"
+                   target="_blank">file</a>.
+            </p>
+        </div>
+
+        <th:block th:if="${model.hasFeedback()}">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
+
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <p class="govuk-body" th:text="${model.feedback}">Feedback text</p>
+                    <th:block th:each="feedback, iteration : ${model.feedback}">
+                        <div class="govuk-!-padding-3 bordered govuk-!-margin-top-2">
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-1" th:text="|Assessor ${iteration.count}|">Assessor</h3>
+                            <p class="govuk-body" th:text="${feedback}">Feedback text</p>
+                        </div>
+                    </th:block>
                 </div>
             </div>
         </th:block>
@@ -63,9 +58,11 @@
                 <dd th:text="${model.competitionName}"></dd>
                 <dt>Application name</dt>
                 <dd th:text="${model.applicationName}"></dd>
-                <dt>When do you wish to start your project?</dt>
-                <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
-                <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
+                <th:block th:unless="${model.ktpCompetition}">
+                    <dt>When do you wish to start your project?</dt>
+                    <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
+                    <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
+                </th:block>
                 <dt>Duration in months</dt>
                 <dd>
                     <th:block th:text="${model.duration}"/>
@@ -76,7 +73,7 @@
                     <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                 </th:block>
                 <th:block th:unless="${model.resubmission == null}">
-                    <dt>Is this application a resubmission?</dt>
+                    <dt>Has this application been previously submitted to Innovate UK?</dt>
                     <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${model.resubmission == true}">
                         <dt>Previous application number</dt>
@@ -113,26 +110,28 @@
     </div>
 </th:block>
 
-<th:block th:fragment="finance-summary (model)">
-    <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
-        provided by all partners in this project.</p>
+<th:block th:fragment="finance-summary (model)" th:with="print=${print} ?: false">
+    <section class="portrait"
+             th:remove="${print} ? tag : none">
+        <p class="govuk-body" th:unless="${model.fullyFunded}">The finances of all project partners are included in this summary.</p>
 
-    <p class="govuk-body" th:if="${model.open}">
-        To make changes to your organisations' finances, go back to the
-        <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-           class="govuk-link">your project finances</a> section.
-    </p>
+        <p class="govuk-body" th:if="${model.open}">
+            <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
+               class="govuk-link">Return to your project finances</a> to make changes to your organisation's financial information.
+        </p>
 
-    <div>
         <th:block th:unless="${model.fullyFunded}">
             <th:block th:replace="finance/finance-summary :: application-finances-summary (${model.applicationFinanceSummaryViewModel})" />
             <th:block th:replace="finance/finance-summary :: research-participation-alert (${model.applicationResearchParticipationViewModel})"
                       th:if="${model.open}"/>
         </th:block>
+    </section>
 
-        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
+    <section class="portrait"
+        th:remove="${print} ? tag : none">
+        <h2 class="govuk-heading-s print-break-before" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
-    </div>
+    </section>
 </th:block>
 
 <th:block th:fragment="application-team (model)">
@@ -146,8 +145,8 @@
             <table class="govuk-table govuk-!-margin-bottom-2">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
-                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'govuk-!-width-two-thirds' : 'govuk-!-width-one-third'"></th>
+                    <th scope="col" class="govuk-table__header table-header-width-one-third">Organisation details</th>
+                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'table-header-width-two-thirds' : 'table-header-width-one-third'"></th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -166,9 +165,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
-                <th th:if="${model.internal}" scope="col" class="govuk-table__header govuk-!-width-one-third">Phone number</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
+                <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-one-third">Phone number</th>
+                <th scope="col" class="govuk-table__header table-header-width-one-third">Email</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -187,11 +186,32 @@
             </tr>
             </tbody>
         </table>
-    </th:block>
+        </th:block>
+        <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge transfer adviser</h2>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header table-header-width-one-third">Full name</th>
+                    <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-one-third">Phone number</th>
+                    <th scope="col" class="govuk-table__header table-header-width-one-third">Email</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"
+                        th:text="${model.ktaProcessRole.get().userName}"></td>
+                    <td class="govuk-table__cell"
+                        th:if="${model.internal}"
+                        th:text="${model.ktaPhoneNumber}"></td>
+                    <td class="govuk-table__cell ifs-table__email"
+                        th:text="${model.ktaProcessRole.get().userEmail}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
 </th:block>
-
-
-<th:block th:fragment="grant-transfer-details(model)">
+<th:block th:fragment="grant-transfer-details (model)">
     <dl class="govuk-list">
         <dt>Project name</dt>
         <dd th:text="${model.projectName}">My EU project name</dd>
@@ -225,7 +245,7 @@
     </dl>
 </th:block>
 
-<th:block th:fragment="grant-agreement(model)">
+<th:block th:fragment="grant-agreement (model)">
     <th:block th:if="${model.filename != null}">
         <!--/* don't use @{...} so that URL is always pointing to application service */-->
         <a th:href="${'/application/' + model.applicationId +'/grant-agreement'}" th:text="${model.filename}"
@@ -237,7 +257,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions(model)">
+<th:block th:fragment="terms-and-conditions (model)">
     <th:block th:unless="${model.complete}">
         <div class="warning-alert">
             <p class="govuk-body">The following organisations have not yet accepted:</p>

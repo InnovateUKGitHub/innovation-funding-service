@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,116 +15,52 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
  */
 public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewModel {
 
-    private final long applicationId;
-    private final String competitionName;
-    private final List<FinanceSummaryTableRow> rows;
-    private final boolean readOnly;
-    private final boolean collaborativeProject;
+    private final FinanceSummaryTableViewModel financeSummaryTableViewModel;
     private final CollaborationLevel collaborationLevel;
-    private final boolean fundingLevelFirst;
-
     private final Long currentUsersOrganisationId;
 
-    public ApplicationFinanceSummaryViewModel(long applicationId,
-                                              String competitionName,
-                                              List<FinanceSummaryTableRow> rows,
-                                              boolean readOnly,
-                                              boolean collaborativeProject,
-                                              CollaborationLevel collaborationLevel,
-                                              boolean fundingLevelFirst,
+    public ApplicationFinanceSummaryViewModel(CompetitionResource competition,
+                                              FinanceSummaryTableViewModel financeSummaryTableViewModel,
                                               Long currentUsersOrganisationId) {
-        this.applicationId = applicationId;
-        this.competitionName = competitionName;
-        this.rows = rows;
-        this.readOnly = readOnly;
-        this.collaborativeProject = collaborativeProject;
-        this.collaborationLevel = collaborationLevel;
-        this.fundingLevelFirst = fundingLevelFirst;
+        this.financeSummaryTableViewModel = financeSummaryTableViewModel;
+        this.collaborationLevel = competition.getCollaborationLevel();
         this.currentUsersOrganisationId = currentUsersOrganisationId;
     }
 
 
     @Override
     public Long getApplicationId() {
-        return applicationId;
+        return financeSummaryTableViewModel.getApplicationId();
     }
 
     @Override
     public String getCompetitionName() {
-        return competitionName;
+        return financeSummaryTableViewModel.getCompetitionName();
     }
 
-    public List<FinanceSummaryTableRow> getRows() {
-        return rows;
-    }
 
     public boolean isReadOnly() {
-        return readOnly;
+        return financeSummaryTableViewModel.isReadOnly();
     }
 
     public boolean isCollaborativeProject() {
-        return collaborativeProject;
-    }
-
-    public boolean isFundingLevelFirst() {
-        return fundingLevelFirst;
+        return financeSummaryTableViewModel.isCollaborativeProject();
     }
 
     public Long getCurrentUsersOrganisationId() {
         return currentUsersOrganisationId;
     }
 
-    public boolean isFundingSoughtFirst() {
-        return !isFundingLevelFirst();
+    public BigDecimal getCompetitionMaximumFundingSought() {
+        return financeSummaryTableViewModel.getCompetitionMaximumFundingSought();
     }
 
-    public boolean isAllFinancesComplete() {
-        return rows.stream()
-                .filter(negate(FinanceSummaryTableRow::isPendingOrganisation))
-                .allMatch(FinanceSummaryTableRow::isComplete);
+    public FinanceSummaryTableViewModel getFinanceSummaryTableViewModel() {
+        return financeSummaryTableViewModel;
     }
 
-    public List<FinanceSummaryTableRow> getIncompleteOrganisations() {
-        return rows.stream()
-                .filter(negate(FinanceSummaryTableRow::isComplete))
-                .filter(negate(FinanceSummaryTableRow::isPendingOrganisation))
-                .collect(toList());
-    }
-
-    public boolean isUsersFinancesIncomplete() {
-        return rows.stream()
-                .filter(row -> row.getOrganisationId() != null)
-                .anyMatch(row -> row.getOrganisationId().equals(currentUsersOrganisationId) && !row.isComplete());
-    }
-
-    public BigDecimal getCosts() {
-        return rows.stream()
-                .map(FinanceSummaryTableRow::getCosts)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getClaimPercentage() {
-        return rows.stream()
-                .map(FinanceSummaryTableRow::getClaimPercentage)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getFundingSought() {
-        return rows.stream()
-                .map(FinanceSummaryTableRow::getFundingSought)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getOtherFunding() {
-        return rows.stream()
-                .map(FinanceSummaryTableRow::getOtherFunding)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public BigDecimal getContribution() {
-        return rows.stream()
-                .map(FinanceSummaryTableRow::getContribution)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public boolean isKtp() {
+        return financeSummaryTableViewModel.isKtp();
     }
 
     public boolean showCollaborationWarning() {
@@ -131,8 +68,38 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
                 && !atLeastTwoCompleteOrganisationFinances();
     }
 
+    public boolean showFundingSoughtWarning() {
+        return !isFundingSoughtValid();
+    }
+
+    private boolean isFundingSoughtValid() {
+        if (financeSummaryTableViewModel.getCompetitionMaximumFundingSought() == null) {
+            return true;
+        }
+        return financeSummaryTableViewModel.getRows().stream()
+                .map(row -> row.getFundingSought())
+                .reduce(BigDecimal::add).get().compareTo(financeSummaryTableViewModel.getCompetitionMaximumFundingSought()) <= 0;
+    }
+
+    public List<FinanceSummaryTableRow> getIncompleteOrganisations() {
+        return financeSummaryTableViewModel.getRows().stream()
+                .filter(negate(FinanceSummaryTableRow::isComplete))
+                .filter(negate(FinanceSummaryTableRow::isPendingOrganisation))
+                .collect(toList());
+    }
+    
+    public boolean isUsersFinancesIncomplete() {
+        return financeSummaryTableViewModel.getRows().stream()
+                .filter(row -> row.getOrganisationId() != null)
+                .anyMatch(row -> row.getOrganisationId().equals(currentUsersOrganisationId) && !row.isComplete());
+    }
+    public boolean showFinancesIncompleteWarning() {
+        return !financeSummaryTableViewModel.isAllFinancesComplete() && !showFundingSoughtWarning();
+    }
+
     private boolean atLeastTwoCompleteOrganisationFinances() {
-        return rows.stream().filter(FinanceSummaryTableRow::isComplete)
+        return financeSummaryTableViewModel.getRows().stream().filter(FinanceSummaryTableRow::isComplete)
                 .count() > 1;
     }
+
 }

@@ -15,4 +15,9 @@ public interface ApplicationProgressService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     boolean applicationReadyForSubmit(@P("applicationId") final long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<BigDecimal> getApplicationProgress(final long applicationId);
+
+
 }

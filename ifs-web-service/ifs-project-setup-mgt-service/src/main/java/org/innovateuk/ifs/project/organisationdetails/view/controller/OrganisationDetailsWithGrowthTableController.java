@@ -26,8 +26,8 @@ public class OrganisationDetailsWithGrowthTableController extends AbstractOrgani
     private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
 
     @Override
-    protected String getView() {
-        return "project/organisationdetails/organisation-details-with-growth-table";
+    protected String formFragment() {
+        return "with-growth-table";
     }
 
     @Override

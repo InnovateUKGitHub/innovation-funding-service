@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourP
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -118,7 +120,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         spy(threadViewModelPopulator);
         controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
-        this.setupCompetition();
+        this.setupCompetition(FundingType.GRANT, AssessorFinanceView.OVERVIEW);
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.setupFinances();

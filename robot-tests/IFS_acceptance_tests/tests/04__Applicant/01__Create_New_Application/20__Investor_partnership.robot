@@ -17,7 +17,7 @@ ${tandcLink}                Investor Partnerships terms and conditions
 ${investorPSApplication}    Investor ps application
 ${investorPSApplicationId}  ${application_ids["${investorPSApplication}"]}
 ${investorApplicationLink}  ${server}/management/competition/${investorCompId}/application/${investorApplicationId}
-${investorFeedbackLink}     ${server}/application/${investorPSApplicationId}/feedback
+${investorFeedbackLink}     ${server}/application/${investorPSApplicationId}/summary
 
 
 *** Test Cases ***
@@ -37,7 +37,7 @@ Creating a new investor comp points to the correct T&C
     [Documentation]  IFS-7213
     Given the user fills in initial details
     When the user clicks the button/link                     link = Terms and conditions
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId11
+    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
 
 The Investor partnership t&c's are correct
     [Documentation]  IFS-7213
@@ -48,7 +48,7 @@ The Investor partnership t&c's are correct
 T&c's can be confirmed
     [Documentation]  IFS-7213
     Given the user clicks the button/link    jQuery = button:contains("Done")
-    When the user clicks the button/link     link = Competition details
+    When the user clicks the button/link     link = Back to competition details
     Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Applicant is able to see correct T&C's
@@ -72,9 +72,10 @@ Internal user sees correct label for T&C's
     Then the user should see the element     jQuery = button:contains("${tandcLink}")
 
 Application feedback page shows the correct link for t&c's
-    [Documentation]  IFS-7235
+    [Documentation]  IFS-7235  IFS-8066
     Given Log in as a different user         &{troy_ward_crendentials}
     When The user navigates to the page      ${investorFeedbackLink}
+    And the user clicks the button/link      jQuery = button:contains("Investor Partnerships terms and conditions")
     Then the user should see the element     link = View ${tandcLink}
 
 *** Keywords ***
@@ -92,4 +93,4 @@ the user fills in initial details
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")
-    the user clicks the button/link             link = Competition details
+    the user clicks the button/link             link = Back to competition details

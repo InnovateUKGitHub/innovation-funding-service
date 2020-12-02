@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
@@ -85,7 +85,7 @@
                             <legend class="govuk-visually-hidden">Select applications</legend>
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input th:disabled="${model.selectAllDisabled || model.selectionLimitWarning}"
+                                    <input th:disabled="${model.selectAllDisabled || model.selectionLimitWarning || !model.anythingChangeable}"
                                            th:checked="${model.selectionForm.isAllSelected()}"
                                            class="govuk-checkboxes__input select-all"
                                            id="select-all-1"

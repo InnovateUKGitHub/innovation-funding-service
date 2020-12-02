@@ -39,6 +39,46 @@ table {
     width: 50%;
   }
 
+  .table-header-width-70-percent {
+    width: 70%;
+  }
+
+  .table-header-width-60-percent {
+    width: 60%;
+  }
+
+  .table-header-width-55-percent {
+    width: 55%;
+  }
+
+  .table-header-width-40-percent {
+    width: 40%;
+  }
+
+  .table-header-width-35-percent {
+    width: 35%;
+  }
+
+  .table-header-width-15-percent {
+    width: 15%;
+  }
+
+  .table-header-width-10-percent {
+    width: 10%;
+  }
+
+  .table-header-width-20-percent {
+    width: 20%;
+  }
+
+  .table-header-width-one-third {
+    width: 33.3%;
+  }
+
+  .table-header-width-two-thirds {
+    width: 66.6%;
+  }
+
   .width-65 {
     width: 65px;
   }
@@ -58,6 +98,11 @@ table {
   .width-200 {
     width: 200px;
   }
+
+  .width-250 {
+    width: 250px;
+  }
+
 
   .selection-button-checkbox {
     margin-left: 5px;
@@ -305,6 +350,14 @@ hr,
   }
 }
 
+.vertical-line {
+  display: inline-block;
+  border-left: 2px solid govuk-colour("mid-grey");
+  height: 1em;
+  padding: 2px;
+  vertical-align: bottom;
+}
+
 .govuk-input--width-25 {
   max-width:50ex
 }
@@ -319,5 +372,15 @@ hr,
 .autocomplete__input {
   &.govuk-input--error {
     @extend .govuk-input--error;
+  }
+}
+
+/* Only display if javascript is present via css */
+.hide-without-javascript {
+  display:none;
+}
+.js-enabled {
+  .hide-without-javascript {
+    display:block;
   }
 }

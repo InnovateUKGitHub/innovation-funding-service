@@ -4,6 +4,7 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -26,6 +27,9 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
     private boolean open;
     private boolean complete;
 
+    private boolean ktpCompetition;
+    private boolean canResubmit;
+
     public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete) {
         this.application = application;
         this.competitionIsClosingSoon = competition.isClosingSoon();
@@ -36,6 +40,8 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
         this.procurementCompetition = competition.isProcurement();
         this.open = open;
         this.complete = complete;
+        this.ktpCompetition = competition.isKtp();
+        this.canResubmit = competition.getResubmission();
     }
 
     @Override
@@ -105,4 +111,11 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
         return application.getNoInnovationAreaApplicable();
     }
 
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public boolean isCanResubmit() {
+        return canResubmit;
+    }
 }

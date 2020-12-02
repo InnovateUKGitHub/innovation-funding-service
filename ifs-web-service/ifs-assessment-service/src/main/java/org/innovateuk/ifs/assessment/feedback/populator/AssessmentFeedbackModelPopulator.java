@@ -19,6 +19,7 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,9 +29,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Build the model for Assessment Feedback view.
@@ -71,7 +70,7 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                         orElse(null);
 
         String applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
-        FileDetailsViewModel appendixDetails = getAppendixDetails(applicationFormInputs, applicantResponses);
+        List<FileDetailsViewModel> appendixDetails = getAppendixDetails(applicationFormInputs, applicantResponses);
         FileDetailsViewModel templateDocumentDetails = getTemplateDocumentDetails(applicationFormInputs, applicantResponses);
         String templateDocumentTitle = findFormInputWithType(applicationFormInputs, TEMPLATE_DOCUMENT)
                 .map(FormInputResource::getDescription)
@@ -99,16 +98,22 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
         return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
-    private FileDetailsViewModel getAppendixDetails(List<FormInputResource> applicationFormInputs,
+    private List<FileDetailsViewModel> getAppendixDetails(List<FormInputResource> applicationFormInputs,
                                                     Map<Long, FormInputResponseResource> applicantResponses) {
 
         return findFormInputWithType(applicationFormInputs, FILEUPLOAD).map(appendixFormInput -> {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
-            boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
-            return applicantAppendixResponseExists ? new FileDetailsViewModel(appendixFormInput.getId(),
-                        applicantAppendixResponse.getFilename(),
-                        applicantAppendixResponse.getFilesizeBytes()) : null;
-        }).orElse(null);
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null && !applicantAppendixResponse.getFileEntries().isEmpty();
+            if (!applicantAppendixResponseExists) {
+                return new ArrayList<FileDetailsViewModel>();
+            }
+            return applicantAppendixResponse.getFileEntries().stream()
+                    .map(file -> new FileDetailsViewModel(appendixFormInput.getId(),
+                            file.getId(),
+                            file.getName(),
+                            file.getFilesizeBytes()))
+                    .collect(toList());
+        }).orElse(new ArrayList<>());
     }
 
     private FileDetailsViewModel getTemplateDocumentDetails(List<FormInputResource> applicationFormInputs,
@@ -116,16 +121,27 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
         return findFormInputWithType(applicationFormInputs, TEMPLATE_DOCUMENT).map(appendixFormInput -> {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
-            boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null && !applicantAppendixResponse.getFileEntries().isEmpty();
             return applicantAppendixResponseExists ? new FileDetailsViewModel(appendixFormInput.getId(),
-                    applicantAppendixResponse.getFilename(),
-                    applicantAppendixResponse.getFilesizeBytes()) : null;
+                    applicantAppendixResponse.getFileEntries().get(0).getId(),
+                    applicantAppendixResponse.getFileEntries().get(0).getName(),
+                    applicantAppendixResponse.getFileEntries().get(0).getFilesizeBytes()) : null;
         }).orElse(null);
     }
 
     private String getApplicantResponseValue(List<FormInputResource> applicationFormInputs, Map<Long, FormInputResponseResource> applicantResponses) {
-        FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInputs.get(0).getId());
-        return applicantResponse != null ? applicantResponse.getValue() : null;
+        String applicantResponseValue = applicationFormInputs.stream()
+                .filter(formInput -> formInput.getType().equals(TEXTAREA) || formInput.getType().equals(MULTIPLE_CHOICE))
+                .map(input -> applicantResponses.entrySet().stream()
+                        .filter(applicantResponse -> applicantResponse.getKey().equals(input.getId()))
+                        .map(Map.Entry::getValue)
+                        .map(formInputResponse -> input.getType().equals(MULTIPLE_CHOICE)
+                                ? formInputResponse.getMultipleChoiceOptionText()
+                                : formInputResponse.getValue()).findFirst().orElse(null))
+                .findFirst()
+                .orElse(null);
+
+        return applicantResponseValue;
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {

@@ -3,10 +3,15 @@ package org.innovateuk.ifs.application.validation;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.validator.ApplicationDetailsMarkAsCompleteValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
@@ -23,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +38,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
 /**
  * Class to validate several objects
@@ -62,6 +69,15 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private ApplicationFinanceService applicationFinanceService;
+
+    @Autowired
+    private ApplicationProgressService applicationProgressService;
+
+    @Autowired
+    private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
@@ -97,9 +113,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     public List<ValidationMessages> validateCostItem(Long applicationId, FinanceRowType type, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
                 financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccessReturn(financeDetails ->
-                    financeValidationUtil.validateCostItem(type,
-                        financeDetails.getFinanceOrganisationDetails().get(type)
-                    )
+                        financeValidationUtil.validateCostItem(type,
+                                financeDetails.getFinanceOrganisationDetails().get(type)
+                        )
                 )
         ).getSuccess();
     }
@@ -125,6 +141,50 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
             }
             return noErrors();
         }).getSuccess();
+    }
+
+    @Override
+    public Boolean isApplicationComplete(Application application) {
+        BigDecimal progressPercentage = applicationProgressService.getApplicationProgress(application.getId()).getSuccess();
+        return isFinanceOverviewComplete(application) && isApplicationProgressComplete(progressPercentage);
+    }
+
+    @Override
+    public Boolean isFinanceOverviewComplete(Application application) {
+        List<ApplicationFinanceResource> applicationFinanceResources = applicationFinanceHandler.getApplicationTotals(application.getId());
+
+        BigDecimal totalFundingSought = applicationFinanceResources.stream()
+                .map(ApplicationFinanceResource::getTotalFundingSought)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(application.getId());
+
+        return isCollaborativeFundingCriteriaMet(application)
+                && isFundingSoughtValid(application.getCompetition(), totalFundingSought)
+                && isResearchParticipationValid(researchParticipation, application.getCompetition());
+    }
+
+    private boolean isCollaborativeFundingCriteriaMet(Application application) {
+        if (application.isCollaborativeProject()) {
+            return applicationFinanceService.collaborativeFundingCriteriaMet(application.getId()).getSuccess();
+        }
+        return true;
+    }
+
+    private boolean isResearchParticipationValid(BigDecimal researchParticipation, Competition competition) {
+        return researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
+    }
+
+    private boolean isApplicationProgressComplete(BigDecimal progressPercentage) {
+        return progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0;
+    }
+
+    private boolean isFundingSoughtValid(Competition competition, BigDecimal totalFundingSought) {
+        if (competition.getCompetitionApplicationConfig().getMaximumFundingSought() != null) {
+            return totalFundingSought.compareTo(competition.getCompetitionApplicationConfig().getMaximumFundingSought()) <= 0;
+        }
+        return true;
     }
 
     private boolean financeFileIsNotPresent(Application application, OrganisationResource organisation) {

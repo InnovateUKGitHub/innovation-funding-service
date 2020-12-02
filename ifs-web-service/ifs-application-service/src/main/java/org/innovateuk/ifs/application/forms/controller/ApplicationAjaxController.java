@@ -14,6 +14,7 @@ import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.navigation.ExcludeFromPageHistory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,7 @@ public class ApplicationAjaxController {
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                                     @RequestParam("value") String value,
+                                    @RequestParam("multipleChoiceOptionId") Long multipleChoiceOptionId,
                                     @PathVariable(APPLICATION_ID) Long applicationId,
                                     @PathVariable("competitionId") Long competitionId,
                                     UserResource user,
@@ -81,7 +83,7 @@ public class ApplicationAjaxController {
             String fieldName = request.getParameter("fieldName");
             LOG.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
-            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value);
+            StoreFieldResult storeFieldResult = storeField(applicationId, user.getId(), competitionId, fieldName, inputIdentifier, value, multipleChoiceOptionId);
 
             fieldId = storeFieldResult.getFieldId();
 
@@ -105,10 +107,10 @@ public class ApplicationAjaxController {
         }
     }
 
-    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) throws NumberFormatException {
+    private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value, Long multipleChoiceOptionId) throws NumberFormatException {
         Long formInputId = Long.valueOf(inputIdentifier);
         ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
-                formInputId, value, false).getSuccess();
+                formInputId, value, multipleChoiceOptionId, false).getSuccess();
         List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
         return new StoreFieldResult(lookedUpErrorMessages);
     }
@@ -154,6 +156,7 @@ public class ApplicationAjaxController {
     }
 
     @GetMapping(value = "/update_time_details")
+    @ExcludeFromPageHistory
     public String updateTimeDetails(Model model, @PathVariable Long applicationId) {
         model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
         model.addAttribute("lastUpdatedText", "by you");

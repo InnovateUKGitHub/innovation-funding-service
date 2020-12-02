@@ -132,6 +132,13 @@ public class GrantOfferLetterController {
 
         return redirectToGrantOfferLetterPage(projectId);
     }
+    
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PostMapping(value = "/upload-annex", params = "removeAdditionalContractFileClicked")
+    public String removeAdditionalContractFile(@P("projectId") @PathVariable("projectId") final Long projectId) {
+        grantOfferLetterService.removeAdditionalContractFile(projectId);
+        return redirectToGrantOfferLetterPage(projectId);
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping("/signed")
@@ -243,7 +250,10 @@ public class GrantOfferLetterController {
 
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        return new GrantOfferLetterModel(competition.getId(),
+        return new GrantOfferLetterModel(
+                competition.isProcurement() ? "Contract" : "Grant offer letter",
+                competition.isProcurement() ? "Contract" : "Letter",
+                competition.getId(),
                 competition.isH2020(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
@@ -263,8 +273,10 @@ public class GrantOfferLetterController {
     @GetMapping("/template")
     public String viewGrantOfferLetterTemplatePage(@PathVariable("projectId") long projectId,
                                                    Model model) {
-        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(projectId));
-        return "project/gol-template";
+        ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(project, competition));
+        return "project/" + competition.getGolTemplate().getTemplate();
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {

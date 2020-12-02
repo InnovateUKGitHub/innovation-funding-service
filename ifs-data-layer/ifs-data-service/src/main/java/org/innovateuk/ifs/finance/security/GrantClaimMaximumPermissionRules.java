@@ -23,10 +23,10 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
     private UsersRolesService usersRolesService;
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",
-            description = "A user can see the grant claim maximums if they are an internal admin user")
-    public boolean internalAdminCanCheckMaxFundingLevelOverridden
+            description = "A user can see the grant claim maximums if they are an internal user")
+    public boolean internalUserCanCheckMaxFundingLevelOverridden
             (CompetitionResource competition, UserResource user) {
-        return isInternalAdmin(user);
+        return isInternal(user);
     }
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",
@@ -34,6 +34,13 @@ public class GrantClaimMaximumPermissionRules extends BasePermissionRules {
     public boolean usersWithApplicationForCompetitionCanCheckMaxFundingLevelOverridden
         (CompetitionResource competition, UserResource user) {
         return usersRolesService.userHasApplicationForCompetition(user.getId(), competition.getId()).getSuccess();
+    }
+
+    @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",
+            description = "A supporter can see the grant claim maximums if they attached to an application for the competition")
+    public boolean supporterAttachedToApplicationForCompetitionCanCheckMaxFundingLevelOverridden
+            (CompetitionResource competition, UserResource user) {
+        return isSupporterForCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "MAX_FUNDING_LEVEL_OVERRIDDEN",

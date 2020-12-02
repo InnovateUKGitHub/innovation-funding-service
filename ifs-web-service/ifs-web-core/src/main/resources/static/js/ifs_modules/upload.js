@@ -217,8 +217,8 @@ IFS.core.upload = (function () {
       IFS.core.upload.toggleUploadView(wrapper)
     },
     resetFileInput: function (wrapper) {
-      // wrapper.wrap('<form>').closest('form').get(0).reset()
-      // wrapper.unwrap()
+      wrapper.wrap('<form>').closest('form').get(0).reset()
+      wrapper.unwrap()
     },
     replaceMessageListWithResponse: function (wrapper, data, filename) {
       var index = jQuery(s.wrapper).index(wrapper)

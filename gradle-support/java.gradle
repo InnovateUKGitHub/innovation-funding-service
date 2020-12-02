@@ -4,12 +4,15 @@ apply plugin: 'jacoco'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-jacocoTestReport {
-    afterEvaluate {
-        getClassDirectories().setFrom(
-                fileTree(dir: it,
-                        exclude: ['**/*Mapper**']))
+jacocoTestReport{
+    additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+        html.destination file("build/reports/jacoco/html")
     }
+    executionData.from = files('build/jacoco/test.exec')
 }
 
 test {
@@ -57,3 +60,5 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
+
+test.finalizedBy jacocoTestReport

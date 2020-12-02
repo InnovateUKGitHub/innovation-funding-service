@@ -6,17 +6,24 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -55,19 +62,25 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
     private QuestionRestService questionRestService;
 
     @Mock
-    private SectionRestService sectionRestService;
-
-    @Mock
     private SectionService sectionService;
 
     @Mock
     private ApplicantRestService applicantRestService;
 
     @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
     private QuestionService questionService;
 
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Override
     protected YourFundingViewModelPopulator supplyServiceUnderTest() {
@@ -82,16 +95,18 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withChildSections(Collections.emptyList())
                 .withCompetition(competition.getId())
                 .withType(SectionType.FUNDING_FINANCES).build();
-        UserResource user = newUserResource().build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
 
         ApplicantResource applicant = newApplicantResource()
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
                         .withRoleName("leadapplicant")
                         .build())
-                .withOrganisation(newOrganisationResource()
-                        .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
-                        .build())
+                .withOrganisation(organisation)
                 .build();
 
         ApplicationResource application = newApplicationResource()
@@ -127,17 +142,17 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
         when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId())).thenReturn(restSuccess(true));
-
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(organisation.getId()).build()));
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
 
-        assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
-        assertEquals(viewModel.getApplicationName(), "Name");
-        assertEquals(viewModel.getCompetitionId(), competition.getId().longValue());
-        assertEquals(viewModel.getMaximumFundingLevel().intValue(), 60);
-        assertEquals(viewModel.getYourOrganisationSectionId(), yourOrgSection.getId().longValue());
-        assertEquals(viewModel.getResearchCategoryQuestionId(), researchCategoryQuestion.getId());
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals("Name", viewModel.getApplicationName());
+        assertEquals(competition.getId().longValue(), viewModel.getCompetitionId());
+        assertEquals(60, viewModel.getMaximumFundingLevel().intValue());
+        assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
+        assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(viewModel.getFinancesUrl(), format("/application/%d/form/FINANCE", APPLICATION_ID));
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisation.getId()), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
     }
 
@@ -145,21 +160,26 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
     public void populateManagement() {
         long organisationId = 3L;
         long competitionId = 4L;
+        CompetitionResource competition = newCompetitionResource().build();
+        OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withName("name")
                 .withCompetition(competitionId)
                 .build()));
 
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
-
-        assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
-        assertEquals(viewModel.getCompetitionId(), competitionId);
-        assertEquals(viewModel.getApplicationName(),"name");
-
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals("name", viewModel.getApplicationName());
+        assertEquals(OrganisationTypeEnum.BUSINESS, viewModel.getOrganisationType());
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(viewModel.getFinancesUrl(), format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId));
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
     }
 }

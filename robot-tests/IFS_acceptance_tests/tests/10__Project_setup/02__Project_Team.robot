@@ -392,26 +392,27 @@ Non lead partners complete the Project team section
     log in as a different user                &{collaborator2_alternative_user_credentials}
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
-    the user clicks the button/link           link = Set up your project
+    the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
     log in as a different user                &{collaborator1_credentials}
     the user navigates to the Project team page from the dashboard
     the user selects their finance contact    financeContact2
-    the user clicks the button/link           link = Set up your project
+    the user clicks the button/link           link = Back to project setup
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 Lead partner completes the Project team section
-    log in as a different user               &{lead_applicant_credentials}
-    the user clicks the button/link          link = ${PS_PD_Application_Title}
-    the user should see the element          jQuery = ul li:contains("Project team") span:contains("To be completed")
-    the user clicks the button/link          link = Project team
-    the user selects their finance contact   financeContact2
-    the user clicks the button/link          link = Project manager
-    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
-    the user selects the radio button        projectManager   projectManager2
-    the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Set up your project
-    the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+    log in as a different user                                         &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                                    link = ${PS_PD_Application_Title}
+    the user should see the element                                    jQuery = ul li:contains("Project team") span:contains("To be completed")
+    the user clicks the button/link                                    link = Project team
+    the user selects their finance contact                             financeContact2
+    the user clicks the button/link                                    link = Project manager
+    the user should see project manager/finance contact validations    Save and continue   You need to select a Project Manager before you can continue.
+    the user selects the radio button                                  projectManager   projectManager2
+    the user clicks the button/link                                    jQuery = button:contains("Save and continue")
+    the user clicks the button/link                                    link = Back to project setup
+    the user should see the element                                    jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user
     log in as a different user        &{internal_finance_credentials}
@@ -541,7 +542,7 @@ the internal partner does not see link for added partner
     the user should not see the element   link = Review all changes to project finances
 
 the internal patner does see link for existing partner
-    the user clicks the button/link       link = Finance checks
+    the user clicks the button/link       link = Back to finance checks
     the user clicks the button/link       jQuery = tr:contains("Ward Ltd") td:nth-child(4)
     the user should see the element       link = Review all changes to project finances
 
@@ -553,7 +554,7 @@ the user can join the project
     the user should see the element   jQuery = li:contains("${applicationName}") .msg-progress
 
 the applicant fills in bank details
-    the user clicks the button/link                      link = Return to setup your project
+    the user clicks the button/link                      link = Return to set up your project
     the user clicks the button/link                      link = Bank details
     the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
     the user clicks the button/link                      id = postcode-lookup

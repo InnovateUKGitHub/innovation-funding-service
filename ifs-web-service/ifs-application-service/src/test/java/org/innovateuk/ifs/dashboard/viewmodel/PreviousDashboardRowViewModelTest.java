@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -23,7 +24,8 @@ public class PreviousDashboardRowViewModelTest {
                                                                                     null,
                                                                                     YESTERDAY,
                                                                         false,
-                                                                false);
+                                                                false,
+                CompetitionCompletionStage.PROJECT_SETUP);
         assertEquals("/application/1/summary", viewModel.getLinkUrl());
         assertEquals("Untitled application", viewModel.getTitle());
         assertTrue(viewModel.isApproved());

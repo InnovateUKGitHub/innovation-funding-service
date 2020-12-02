@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -79,9 +80,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
-
-    @OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
-    private CompetitionType templateForType;
 
     private String pafCode;
     private String budgetCode;
@@ -151,7 +149,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinTable(name = "grant_claim_maximum_competition",
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
-    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
+        private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;
 
@@ -173,11 +171,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Column(name = "funding_type")
     private FundingType fundingType;
 
-    @ElementCollection(targetClass = FinanceRowType.class)
-    @JoinTable(name = "competition_finance_row_types", joinColumns = @JoinColumn(name = "competition_id"))
-    @Column(name = "finance_row_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Set<FinanceRowType> financeRowTypes = new HashSet<>();
+    @OneToMany(mappedBy = "competitionFinanceRowTypesId.competition")
+    @OrderBy("priority")
+    private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectStages> projectStages = new ArrayList<>();
@@ -192,12 +188,20 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionApplicationConfigId", referencedColumnName = "id")
+    private CompetitionApplicationConfig competitionApplicationConfig;
+
     private boolean useDocusignForGrantOfferLetter;
 
     private boolean hasAssessmentStage = true;
 
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "golTemplateId", referencedColumnName = "id")
+    private GolTemplate golTemplate;
 
     public Competition() {
         setupComplete = false;
@@ -233,6 +237,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
+            } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
+                return PREVIOUS;
             } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
             } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {
@@ -260,12 +266,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.covidType = covidType;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
-        return financeRowTypes;
-    }
-
-    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
-        this.financeRowTypes = financeRowTypes;
+    public List<FinanceRowType> getFinanceRowTypes() {
+        return competitionFinanceRowTypes.stream().map(CompetitionFinanceRowTypes::getFinanceRowType).collect(toList());
     }
 
     public List<ProjectStages> getProjectStages() {
@@ -772,15 +774,19 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isLoan() {
-        return FundingType.LOAN.equals(fundingType);
+        return FundingType.LOAN == fundingType;
     }
 
     public boolean isGrant() {
-        return FundingType.GRANT.equals(fundingType);
+        return FundingType.GRANT == fundingType;
     }
 
     public boolean isProcurement() {
-        return FundingType.PROCUREMENT.equals(fundingType);
+        return FundingType.PROCUREMENT == fundingType;
+    }
+
+    public boolean isKtp() {
+        return FundingType.KTP == fundingType;
     }
 
     public void releaseFeedback(ZonedDateTime date) {
@@ -958,6 +964,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionOrganisationConfig = competitionOrganisationConfig;
     }
 
+    public CompetitionApplicationConfig getCompetitionApplicationConfig() {
+        return competitionApplicationConfig;
+    }
+
+    public void setCompetitionApplicationConfig(CompetitionApplicationConfig competitionApplicationConfig) {
+        this.competitionApplicationConfig = competitionApplicationConfig;
+    }
+
     public boolean isUseDocusignForGrantOfferLetter() {
         return useDocusignForGrantOfferLetter;
     }
@@ -967,7 +981,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isHasAssessmentStage() {
-        return hasAssessmentStage && !isH2020();
+        return hasAssessmentStage && !isH2020() && (ofNullable(completionStage)
+                .map(stage -> !stage.equals(CompetitionCompletionStage.COMPETITION_CLOSE))
+                .orElse(true)) ;
+    }
+
+    public List<CompetitionFinanceRowTypes> getCompetitionFinanceRowTypes() {
+        return competitionFinanceRowTypes;
     }
 
     public void setHasAssessmentStage(boolean hasAssessmentStage) {
@@ -982,8 +1002,34 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionAssessmentConfig = competitionAssessmentConfig;
     }
 
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return ofNullable(getCompetitionType()).map(CompetitionType::getCompetitionTypeEnum).orElse(null);
+    }
+
+    @Override
+    public boolean isExpressionOfInterest() {
+        return getCompetitionTypeEnum() == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
+    }
+
+    @Override
+    public boolean isSbriPilot() {
+        return SBRI_PILOT.equals(name);
+    }
+
     @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
+    }
+
+    public boolean isAssessmentClosed() {
+        return getCompetitionStatus() != null && getCompetitionStatus().isLaterThan(IN_ASSESSMENT);
+    }
+
+    public GolTemplate getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplate golTemplate) {
+        this.golTemplate = golTemplate;
     }
 }

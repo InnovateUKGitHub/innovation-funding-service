@@ -119,7 +119,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "leadOrganisation", "Lead Organisation 123",
                 "inviteOrganisationName", "Invite Organisation Name",
                 "competitionName", "Competition 1",
-                "inviteUrl", "https://ifs-local-dev/invite"
+                "inviteUrl", "https://ifs-local-dev/invite",
+                "procurement", false
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("invite_finance_contact_subject.txt", templateArguments);
@@ -133,7 +134,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev",
                 "applicationId", 1234L,
-                "competitionName", "Competition 1"
+                "title", "grant offer letter",
+                "shortTitle", "letter"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("grant_offer_letter_project_manager_subject.txt", templateArguments);
@@ -218,7 +220,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "applicationId", "1234",
                 "projectName", "Project 1",
                 "projectStartDate", "12 June 2020",
-                "projectSetupUrl", "https://ifs.local-dev/project-setup/project/1234"
+                "projectSetupUrl", "https://ifs.local-dev/project-setup/project/1234",
+                "titleUpper", "Grant offer letter",
+                "title", "grant offer letter"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", templateArguments);
@@ -236,6 +240,26 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_subject.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_text_html.html", templateArguments);
+    }
+
+    @Test
+    public void testReopenApplicationEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "name", "User 2",
+                "leadApplicant", "User 1",
+                "date", "12 June 2020",
+                "applicationNumber", "1234",
+                "applicationName", "Application 1",
+                "link", "https://ifs.local-dev/application/1234"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_lead_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_lead_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_lead_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_partner_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_partner_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_partner_text_plain.txt", templateArguments);
     }
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {

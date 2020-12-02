@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -33,9 +35,7 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -106,7 +106,9 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .withAllowedFileTypes(singleton(FileTypeCategory.PDF)).build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileName("appendix.pdf")
+                                                .withFileEntries(newFileEntryResource()
+                                                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                                                        .build(2))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
                                         .build(1))
@@ -118,7 +120,10 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileName("templateresponse.pdf")
+                                                .withFileEntries(newFileEntryResource()
+                                                        .withId(999L)
+                                                        .withName("templateresponse.pdf")
+                                                        .build(1))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
                                         .build(1))
@@ -152,12 +157,14 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals(applicantQuestion.getApplicantFormInputs().get(1).getFormInput().getId(), viewModel.getAppendixFormInputId());
         assertEquals("Appendix guidance", viewModel.getAppendixGuidance());
         assertEquals(singleton(FileTypeCategory.PDF), viewModel.getAppendixAllowedFileTypes());
-        assertEquals("appendix.pdf", viewModel.getAppendixFilename());
+        assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());
+        assertEquals("Appendix2.pdf", viewModel.getAppendices().get(1).getFilename());
 
         assertEquals(applicantQuestion.getApplicantFormInputs().get(2).getFormInput().getId(), viewModel.getTemplateDocumentFormInputId());
         assertEquals("Template", viewModel.getTemplateDocumentTitle());
         assertEquals("template.odt", viewModel.getTemplateDocumentFilename());
         assertEquals("templateresponse.pdf", viewModel.getTemplateDocumentResponseFilename());
+        assertEquals((Long) 999L, viewModel.getTemplateDocumentResponseFileEntryId());
 
         assertEquals(toUkTimeZone(now), viewModel.getLastUpdated());
         assertEquals("Bob", viewModel.getLastUpdatedByName());
@@ -179,5 +186,100 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertTrue(viewModel.isTextAreaActive());
         assertTrue(viewModel.isAppendixActive());
         assertTrue(viewModel.isTemplateDocumentActive());
+    }
+
+    @Test
+    public void populateForMultipleChoiceOptions() {
+        ZonedDateTime now = ZonedDateTime.now();
+        Long multipleChoiceOptionId = 1L;
+        String multipleChoiceOptionText = "Yes";
+        MultipleChoiceOptionResource multipleChoiceOption = new MultipleChoiceOptionResource(multipleChoiceOptionId, multipleChoiceOptionText);
+
+        ApplicantQuestionResource applicantQuestion = newApplicantQuestionResource()
+                .withQuestion(
+                        newQuestionResource()
+                                .withQuestionNumber("1")
+                                .withDescription("desc")
+                                .withShortName("short")
+                                .withName("name")
+                                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                                .build()
+                )
+                .withApplication(
+                        newApplicationResource()
+                                .withName("Application")
+                                .build()
+                )
+                .withCompetition(
+                        newCompetitionResource().build()
+                )
+                .withCurrentApplicant(
+                        newApplicantResource()
+                                .withProcessRole(newProcessRoleResource().withRole(Role.LEADAPPLICANT).build())
+                                .build()
+                )
+                .withCurrentUser(
+                        newUserResource().build()
+                )
+                .withApplicantQuestionStatuses(
+                        newApplicantQuestionStatusResource()
+                                .withStatus(newQuestionStatusResource().build())
+                                .build(1)
+                )
+                .withApplicantFormInputs(asList(
+                        newApplicantFormInputResource()
+                                .withFormInput(newFormInputResource()
+                                        .withType(FormInputType.MULTIPLE_CHOICE)
+                                        .withMultipleChoiceOptions(Collections.singletonList(multipleChoiceOption))
+                                        .withGuidanceAnswer("Guidance")
+                                        .withGuidanceTitle("Title")
+                                        .withWordCount(500)
+                                        .build())
+                                .withApplicantResponses(newApplicantFormInputResponseResource()
+                                        .withResponse(newFormInputResponseResource().withValue(multipleChoiceOptionText)
+                                                .withMultipleChoiceOptionId(multipleChoiceOptionId)
+                                                .withMultipleChoiceOptionText(multipleChoiceOptionText)
+                                                .withUpdateDate(now)
+                                                .withUpdatedByUser(2L)
+                                                .withUpdatedByUserName("Bob")
+                                                .build())
+                                        .build(1))
+                                .build()
+                ))
+                .build();
+
+        AssignButtonsViewModel assignButtonsViewModel = mock(AssignButtonsViewModel.class);
+        when(assignButtonsPopulator.populate(applicantQuestion, applicantQuestion, false)).thenReturn(assignButtonsViewModel);
+        when(assignButtonsViewModel.getAssignableApplicants()).thenReturn(newProcessRoleResource().build(1));
+
+        GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion);
+
+        assertEquals((Long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
+        assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());
+        assertEquals((long) applicantQuestion.getCurrentUser().getId(), viewModel.getCurrentUser());
+
+        assertEquals(applicantQuestion.getApplicantFormInputs().get(0).getFormInput().getId(), viewModel.getMultipleChoiceFormInputId());
+        assertEquals(multipleChoiceOptionId, viewModel.getSelectedMultipleChoiceOption().getId());
+        assertEquals(multipleChoiceOptionText, viewModel.getSelectedMultipleChoiceOption().getText());
+
+        assertEquals(toUkTimeZone(now), viewModel.getLastUpdated());
+        assertEquals("Bob", viewModel.getLastUpdatedByName());
+        assertEquals((Long) 2L, viewModel.getLastUpdatedBy());
+
+        assertEquals(false, viewModel.isOpen());
+        assertEquals(false, viewModel.isComplete());
+        assertEquals(true, viewModel.isLeadApplicant());
+
+        assertEquals(assignButtonsViewModel, viewModel.getAssignButtonsViewModel());
+
+        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.shouldDisplayQuestionNumber());
+        assertTrue(viewModel.hasResponse());
+        assertFalse(viewModel.isRespondedByCurrentUser());
+        assertEquals(" by Bob", viewModel.getLastUpdatedText());
+        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.isSingleApplicant());
+        assertFalse(viewModel.isTextAreaActive());
+        assertTrue(viewModel.isMultipleChoiceOptionsActive());
     }
 }

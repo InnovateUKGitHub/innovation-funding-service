@@ -36,18 +36,25 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...               IFS-5686 MO - external user view
 ...
 ...               IFS-5859 MO View: Show Spend Profile navigation of all partners
+...
+...               IFS-8753 515 - 73652 - Monitoring Officer unable to view application feedback
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
-${Assign_Project}      Climate control solution
-${Assign_Project_ID}   ${application_ids["${Assign_Project}"]}
-${Assign_Project2}     High Performance Gasoline Stratified
-${Assign_Project2_ID}  ${application_ids["${Assign_Project2}"]}
-${New_Mo}          tom@poly.io
+${Successful_Monitoring_Officer_Page}     ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
+${Assign_Project}                         Climate control solution
+${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
+${Assign_Project2}                        High Performance Gasoline Stratified
+${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
+${New_Mo}                                 tom@poly.io
+${PSCapplicationID}                       212
+${PSCapplicationTitle}                    PSC application 15
+${PSC_Competition_Name}                   Project Setup Comp 15
+${PSC_Competition_Id}                     ${competition_ids["${PSC_Competition_Name}"]}
 
 *** Test Cases ***
 Before Monitoring Officer is assigned
@@ -59,8 +66,8 @@ Before Monitoring Officer is assigned
     And the user should not see the element             css = ul li.complete:nth-child(4)
     And the user should see the element                 css = ul li.waiting:nth-child(4)
     When the user clicks the button/link                link = Monitoring Officer
-    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a Monitoring Officer.")
-    And the user should not see the element             jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    Then the user should see the element                jQuery = p:contains("Your project has not yet been assigned a monitoring officer.")
+    And the user should not see the element             jQuery = .success-alert:contains("We have assigned a monitoring officer to your project.")
     When the user navigates to the page                 ${server}/project-setup/project/${Grade_Crossing_Project_Id}/team-status
     And the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(4)
 
@@ -102,7 +109,7 @@ MO details can be edited and viewed in the Set up your project page
     [Setup]    Log in as a different user              &{Comp_admin1_credentials}
     Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     And the user clicks the button/link                css = #table-project-status tr:nth-child(4) > td:nth-child(5) a
-    When the user clicks the button/link               link = Change Monitoring Officer
+    When the user clicks the button/link               link = Change monitoring officer
     And the user edits the MO details
     When Log in as a different user                    &{lead_applicant_credentials_bd}
     Then the user should see assigned MO details
@@ -126,8 +133,9 @@ Links to other sections in Project setup dependent on project details (applicabl
 Existing Monitoring Officer can sign in and see projects that they are assigned to
     [Documentation]    IFS-3977  IFS-3978
     [Tags]  HappyPath
-    Given log in as a different user          &{monitoring_officer_one_credentials}
-    Then the user should see the element      jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
+    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    Then the user should see the element                        jQuery = .projects-in-setup h2:contains("Projects in setup") ~ ul li a:contains("${PS_LP_Application_Title}")
 
 Monitoring officer see the project setup veiw for assigned project
     [Documentation]  IFS-4209  IFS-5859
@@ -136,9 +144,9 @@ Monitoring officer see the project setup veiw for assigned project
     Then the MO user is able to access all of the links
 
 MO sees the application feedback
-    [Documentation]  IFS-5298
+    [Documentation]  IFS-5298  IFS-8066
     Given the user clicks the button/link  link = view application feedback
-    Then the user should see the element   jQuery = h1:contains("Feedback overview")
+    Then the user should see the element   jQuery = h1:contains("Application overview")
 
 Monitoring Officer cannot see projects if they are not assigned to them
     [Documentation]    IFS-3978
@@ -214,10 +222,20 @@ New MO see the project setup view for assigned project
     Then the user should see the project set view
 
 Mo is able to view application feedback on a competition which as been through assessment and interview panels
-    [Documentation]  IFS-7230
+    [Documentation]  IFS-7230  IFS-8066
     [Setup]  release feedback on inform comp
     Given the user clicks the button/link   link = view application feedback
-    Then the user should see the element    jQuery = h1:contains("Feedback overview")
+    Then the user should see the element    jQuery = h1:contains("Application overview")
+
+MO is able to download the appendix file
+    [Documentation]  IFS-7230
+    Given log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user clicks the project setup tile if displayed
+    And the user clicks the button/link                         link = ${PS_LP_Application_Title}
+    When the user clicks the button/link                        link = view application feedback
+    And the user clicks the button/link                         jQuery = button:contains("Technical approach")
+    Then the user downloads the file                            ${monitoring_officer_one_credentials["email"]}    ${server}/application/${PS_LP_Application_No}/form/question/442/forminput/1266/file/298/download   ${DOWNLOAD_FOLDER}/super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
+    [Teardown]    remove the file from the operating system     super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
 
 Assign MO role to existing IFS user
     [Documentation]  IFS-5104
@@ -233,6 +251,20 @@ Comp admin assign project existing IFS user MO
     Given the internal user assign project to MO   ${Elbow_Grease_Application_No}  ${Elbow_Grease_Title}
     And logout as user
     Then the user logs in and checks for assigned projects
+
+Internal user assigns a MO to a new project and removes a partner organisation
+    [Documentation]    IFS-8753
+    When Log in as a different user                      &{internal_finance_credentials}
+    Then Internal user assigns MO to application         ${PSCapplicationID}  ${PSCapplicationTitle}  Orvill  Orville Gibbs
+    And Internal user removes a partner organisation
+
+MO can now check the application feedback
+    [Documentation]    IFS-8753
+    Given Log in as a different user                           Orville.Gibbs@gmail.com    Passw0rd1357
+    And the user clicks the project setup tile if displayed
+    When The user clicks the button/link                       link = ${PSCapplicationTitle}
+    and the user clicks the button/link                        link = view application feedback
+    Then The user should see the element                       jQuery = h1:contains("Application overview")
 
 *** Keywords ***
 The MO user is able to access all of the links
@@ -283,7 +315,7 @@ The user should not see the validation error
 The user edits the MO details
     search for MO   Orvill  Orville Gibbs
     the user clicks the button/link    jQuery = td:contains("${Grade_Crossing_Applicaiton_No}") ~ td a:contains("Remove")
-    the user clicks the button/link    link = Back
+    the user clicks the button/link    link = Back to assign monitoring officers
     search for MO  Nilesh  Nilesh Patti
     the internal user assign project to MO   ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
 
@@ -348,7 +380,7 @@ The user should see server side validations
 
 The user should see server side validations triggered correctly
     the user should see server side validations      Create account
-    the user should see a field and summary error    Password must be at least 8 characters.
+    the user should see a field and summary error    Password must be at least 12 characters.
     the user should see a field and summary error    Please enter your password.
 
 Comp admin remove project assigned to MO
@@ -396,7 +428,7 @@ The user should see assigned MO details
     the user should see the element                css = ul li.complete:nth-child(4)
     the user should see the text in the element    css = ul li.complete:nth-child(4) p    Your Monitoring Officer for this project is Nilesh Patti.
     the user clicks the button/link                link = Monitoring Officer
-    the user should see the element                jQuery = .success-alert:contains("We have assigned a Monitoring Officer to your project.")
+    the user should see the element                jQuery = .success-alert:contains("We have assigned a monitoring officer to your project.")
     the user should see the element                jQuery = .govuk-body:contains("Nilesh Patti")
     the user should see the element                jQuery = .govuk-body:contains("nilesh.patti@gmail.com")
     the user should see the element                jQuery = .govuk-body:contains("449890325459")
@@ -414,3 +446,10 @@ release feedback on inform comp
     ...                              AND    the user clicks the button/link  jQuery = button:contains("Release feedback")
     log in as a different user     tom@poly.io   ${short_password}
     the user clicks the button/link  link = ${Assign_Project2}
+
+Internal user removes a partner organisation
+    the user navigates to the page          ${server}/project-setup-management/competition/${PSC_Competition_Id}/status/all
+    the user clicks the button/link         jQuery = tbody tr:nth-of-type(1) td:nth-of-type(2)
+    the user clicks the button/link         jQuery = h2:contains("SmithZone")~ button:contains("Remove organisation"):first
+    the user clicks the button/link         jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
+    the user should not see the element     jQuery = h2:contains("SmithZone")

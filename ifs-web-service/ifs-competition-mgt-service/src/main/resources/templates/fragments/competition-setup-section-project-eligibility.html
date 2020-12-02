@@ -11,9 +11,9 @@
           th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id}"
           data-section="project-eligibility">
-
         <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />
+            <input type="hidden" th:field="*{ktpCompetition}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="singleOrCollaborative">
@@ -201,34 +201,41 @@
                 </fieldset>
             </div>
 
-
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="leadApplicantTypes">
-                       <h2 class="govuk-fieldset__heading">Lead applicant</h2>
-                    </legend>
-                    <span class="govuk-hint">Select the lead applicant type required.</span>
-                    <span th:if="${#fields.hasErrors('leadApplicantTypes')}" class="govuk-error-message"
-                          th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}"/>
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item"
-                             th:each="leadApplicantType : ${model.leadApplicantTypes}">
-                            <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
-                                   class="govuk-checkboxes__input"
-                                   name="leadApplicantTypes"
-                                   th:value="${leadApplicantType.id}"
-                                   type="checkbox"
-                                   required="required"
-                                   th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"
-                                   th:attr="data-required-errormessage=#{validation.eligibilityform.leadApplicantTypes.required}"/>
-                            <label th:for="${'lead-applicant-type-' + leadApplicantType.id}"
-                                   th:text="${leadApplicantType.name}"
-                                   class="govuk-label govuk-checkboxes__label"></label>
+            <th:block th:unless="${model.general.competition.isKtp()}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="leadApplicantTypes">
+                           <h2 class="govuk-fieldset__heading">Lead applicant</h2>
+                        </legend>
+                        <span class="govuk-hint">Select the lead applicant type required.</span>
+                        <span th:if="${#fields.hasErrors('leadApplicantTypes')}" class="govuk-error-message"
+                              th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}"/>
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item"
+                                 th:each="leadApplicantType : ${model.leadApplicantTypes}">
+                                <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
+                                       class="govuk-checkboxes__input"
+                                       name="leadApplicantTypes"
+                                       th:value="${leadApplicantType.id}"
+                                       type="checkbox"
+                                       required="required"
+                                       th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"
+                                       th:attr="data-required-errormessage=#{validation.eligibilityform.leadApplicantTypes.required}"/>
+                                <label th:for="${'lead-applicant-type-' + leadApplicantType.id}"
+                                       th:text="${leadApplicantType.name}"
+                                       class="govuk-label govuk-checkboxes__label"></label>
+                            </div>
                         </div>
-                    </div>
 
-                </fieldset>
-            </div>
+                    </fieldset>
+                </div>
+            </th:block>
+
+            <th:block th:if="${model.general.competition.isKtp()}">
+                <div th:each="leadApplicantType : ${model.leadApplicantTypes}">
+                    <input type="hidden" th:id="${'lead-applicant-type-' + leadApplicantType.id}" name="leadApplicantTypes" th:value="${leadApplicantType.id}" />
+                </div>
+            </th:block>
 
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'govuk-form-group--error'"
@@ -305,8 +312,10 @@
                 <dt>Research categories</dt>
                 <dd th:text="${competitionSetupForm.researchCategoriesApplicable ? model.researchCategoriesFormatted : 'Not applicable'}"></dd>
 
-                <dt>Lead applicant</dt>
-                <dd th:text="${model.leadApplicantTypesText}"></dd>
+                <th:block th:unless="${model.general.competition.isKtp()}">
+                    <dt>Lead applicant</dt>
+                    <dd th:text="${model.leadApplicantTypesText}"></dd>
+                </th:block>
 
                 <th:block th:if="${competitionSetupForm.overrideFundingRules != null}">
                     <dt>Override funding rules</dt>

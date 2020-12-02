@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public class ProjectFinancePartnerFundingLevelForm {
 
     @NotNull(message = "{validation.finance.funding.level.required}")
-    @DecimalMin(value = "1", message = "{validation.finance.funding.level.min}")
+    @DecimalMin(value = "0", message = "{validation.finance.funding.level.min}")
     private BigDecimal fundingLevel;
 
     public ProjectFinancePartnerFundingLevelForm() {

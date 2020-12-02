@@ -16,7 +16,7 @@ public class ProjectOrganisationSizeViewModel {
     private final String organisationName;
     private final long organisationId;
     private boolean showStateAidAgreement;
-    private boolean fundingSectionComplete;
+    private boolean showOrganisationSizeAlert;
     private boolean h2020;
     private boolean readOnly;
     private boolean procurementCompetition;
@@ -24,7 +24,7 @@ public class ProjectOrganisationSizeViewModel {
     public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName,
                                             long organisationId,
                                             boolean showStateAidAgreement,
-                                            boolean fundingSectionComplete,
+                                            boolean showOrganisationSizeAlert,
                                             boolean h2020,
                                             boolean readOnly,
                                             boolean procurementCompetition) {
@@ -32,7 +32,7 @@ public class ProjectOrganisationSizeViewModel {
         this.organisationName = organisationName;
         this.organisationId = organisationId;
         this.showStateAidAgreement = showStateAidAgreement;
-        this.fundingSectionComplete = fundingSectionComplete;
+        this.showOrganisationSizeAlert = showOrganisationSizeAlert;
         this.h2020 = h2020;
         this.readOnly = readOnly;
         this.procurementCompetition = procurementCompetition;
@@ -59,7 +59,7 @@ public class ProjectOrganisationSizeViewModel {
     }
 
     public boolean isShowOrganisationSizeAlert() {
-        return fundingSectionComplete;
+        return showOrganisationSizeAlert;
     }
 
     public boolean isH2020() {
@@ -87,7 +87,7 @@ public class ProjectOrganisationSizeViewModel {
                 .append(organisationName, that.organisationName)
                 .append(organisationId, that.organisationId)
                 .append(showStateAidAgreement, that.showStateAidAgreement)
-                .append(fundingSectionComplete, that.fundingSectionComplete)
+                .append(showOrganisationSizeAlert, that.showOrganisationSizeAlert)
                 .append(h2020, that.h2020)
                 .append(procurementCompetition, that.procurementCompetition)
                 .isEquals();
@@ -100,7 +100,7 @@ public class ProjectOrganisationSizeViewModel {
                 .append(organisationName)
                 .append(organisationId)
                 .append(showStateAidAgreement)
-                .append(fundingSectionComplete)
+                .append(showOrganisationSizeAlert)
                 .append(h2020)
                 .append(procurementCompetition)
                 .toHashCode();

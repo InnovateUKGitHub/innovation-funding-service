@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assessor overview - ${model.applicationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -27,12 +27,17 @@
                             <dd th:text="${model.competitionName}"/>
                         </dl>
                     </div>
+                    <div class="govuk-grid-column-one-half alignright">
+                        <span class="icon icon-print"></span>
+                        <a th:href="${'/application/' + model.applicationId + '/print'}"
+                           class="govuk-link">Print or download the application</a>
+                    </div>
                 </div>
 
                 <section th:each="section,iterStat : ${model.sections}">
                     <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <p class="govuk-hint" th:text="${section.guidance}" />
-                    <ul class="task-list">
+                    <ul class="task-list" th:classappend="${section.hasAnyScoredQuestions()} ? 'govuk-!-margin-bottom-6': ''">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'"
                             th:unless="${section.finance || section.termsAndConditions}">
                             <div class="task">
@@ -66,8 +71,19 @@
                             </div>
                             <div class="task-status"><span>No score required</span></div>
                         </li>
-
                     </ul>
+
+                    <th:block th:if="${section.hasAnyScoredQuestions()}">
+                    <p class="govuk-body govuk-!-font-weight-bold alignright govuk-!-margin-bottom-0">
+                        Total score:
+                        <th:block th:text="${section.score}"></th:block>
+                        /
+                        <th:block th:text="${section.maximumScore}"></th:block>
+                    </p>
+                    <p class="govuk-body govuk-!-font-weight-bold alignright">
+                        <th:block th:text="|${section.scorePercentage}%|"></th:block>
+                    </p>
+                    </th:block>
                 </section>
 
                 <th:block th:unless="${#lists.isEmpty(model.appendices)}">
@@ -76,10 +92,8 @@
                         <li class="govuk-form-group download">
                             <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
                             <a target="_blank"
-                               th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}"
-                               th:text="|${appendix.name}, ${appendix.size}|"
-                               th:attr="aria-describedby=|appendix-hint-${iter.count}|">Project-plan.pdf, 161.96 KB</a>
-                            <span th:id="|appendix-hint-${iter.count}|">(opens in a new window)</span>
+                               th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})}"
+                               th:text="|${appendix.name}, ${appendix.size} (opens in a new window)|">Project-plan.pdf, 161.96 KB</a>
                         </li>
                     </ul>
                 </th:block>

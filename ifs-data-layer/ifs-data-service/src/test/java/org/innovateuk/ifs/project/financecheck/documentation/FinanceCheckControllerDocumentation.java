@@ -47,7 +47,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
     public void getByProjectAndOrganisation() throws Exception {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(123L, 456L);
 
-        CostCategoryResource costCategoryResource = newCostCategoryResource().withName(LABOUR.getName()).build();
+        CostCategoryResource costCategoryResource = newCostCategoryResource().withName(LABOUR.getDisplayName()).build();
 
         List<CostResource> costs = newCostResource().withCostCategory(costCategoryResource).withValue(new BigDecimal(500.00)).build(7);
 
@@ -168,6 +168,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withFundingSought(new BigDecimal(5000.00)).
                 withOtherPublicSectorFunding(new BigDecimal(0.00)).
                 withContributionToProject(new BigDecimal(50.00)).
+                withContributionPercentage(new BigDecimal(50.00)).
                 build();
 
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(123L, 456L)).thenReturn(serviceSuccess(expected));

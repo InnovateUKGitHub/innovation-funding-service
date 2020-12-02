@@ -21,6 +21,12 @@ public interface CompetitionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final long id);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<CompetitionResource> getCompetitionByProjectId(long projectId);
+
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
 
@@ -67,4 +73,6 @@ public interface CompetitionService {
 
     @NotSecured(value = "Anyone can download competition terms", mustBeSecuredByOtherServices = false)
     ServiceResult<FileAndContents> downloadTerms(long competitionId);
+
+
 }

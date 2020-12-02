@@ -29,7 +29,9 @@ public class NavigationUtils {
                     SUPPORT, "management/dashboard",
                     MONITORING_OFFICER, "project-setup/monitoring-officer/dashboard",
                     STAKEHOLDER, "management/dashboard",
-                    EXTERNAL_FINANCE, "management/dashboard"
+                    EXTERNAL_FINANCE, "management/dashboard",
+                    KNOWLEDGE_TRANSFER_ADVISER, "assessment/assessor/dashboard",
+                    SUPPORTER, "assessment/supporter/dashboard"
             );
 
     @Value("${ifs.live.projects.landing.page.url}")

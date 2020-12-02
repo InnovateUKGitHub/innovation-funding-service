@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Notes - ${model.projectName}|,hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
     </head>
@@ -52,15 +52,13 @@
                                 </p>
                                 <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${post.body}">Content of the note.</p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documents</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
-                                               th:text="${attachment.name}"
+                                               th:text="|${attachment.name} (opens in a new window)|"
                                                class="govuk-link"
-                                               target="_blank"
-                                               aria-describedby="supporting-documentation-hint">file</a>
-                                            <span id="supporting-documentation-hint" class="govuk-body"> (opens in a new window)</span>
+                                               target="_blank">file</a>
                                         </li>
                                     </ul>
                                 </th:block>
@@ -106,10 +104,8 @@
                                              data-js-upload-file-input="attachment"
                                              data-js-number-of-files="10"
                                              data-js-upload-one-at-a-time="">
-                                            <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
-                                            <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No
-                                                file currently
-                                                uploaded.</p>
+                                            <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
+                                            <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
                                             <ul class="govuk-list file-list">
                                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
                                                     class="success">

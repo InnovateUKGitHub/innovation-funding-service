@@ -91,6 +91,10 @@ public class ProcessRole {
         return isLeadApplicant() || isCollaborator();
     }
 
+    public boolean isKta() {
+        return role.isKta();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,9 +114,15 @@ public class ProcessRole {
 
     @Override
     public int hashCode() {
+        Long userId;
+        if (user == null) {
+            userId = null;
+        } else {
+            userId = user.getId();
+        }
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(user.getId())
+                .append(userId)
                 .append(applicationId)
                 .append(role)
                 .append(organisationId)

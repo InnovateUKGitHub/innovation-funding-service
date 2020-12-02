@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Correspondence address - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -20,7 +20,10 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Correspondence address',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-                <p class="govuk-body" th:if="${model.isCollaborativeProject()}">This is the correspondence address for the lead organisation.</p>
+                <p class="govuk-body" th:if="${model.isCollaborativeProject()}">This is the correspondence address for the
+                    <th:block th:if="${model.ktpCompetition}">knowledge base partner.</th:block>
+                    <th:block th:unless="${model.ktpCompetition}">lead organisation.</th:block></p>
+
                 <p class="govuk-body" th:unless="${model.isCollaborativeProject()}">This is the correspondence address for your organisation.</p>
 
                 <form id="address-details-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">

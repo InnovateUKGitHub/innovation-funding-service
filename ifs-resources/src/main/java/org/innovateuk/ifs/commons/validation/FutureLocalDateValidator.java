@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons.validation;
 
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
+import org.innovateuk.ifs.util.DateUtil;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -18,12 +19,6 @@ public class FutureLocalDateValidator implements ConstraintValidator<FutureLocal
 
     @Override
     public boolean isValid(LocalDate value, ConstraintValidatorContext context) {
-        if(value == null) {
-            return false;
-        }
-
-        LocalDate today = LocalDate.now();
-
-        return value.isAfter(today);
+        return DateUtil.isFutureDate(value);
     }
 }

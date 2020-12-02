@@ -7,16 +7,25 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -32,6 +41,9 @@ import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySetting
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+
 
 @Component
 public class ManagementApplicationPopulator {
@@ -58,18 +70,53 @@ public class ManagementApplicationPopulator {
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Autowired
+    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+
+    @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
 
     public ManagementApplicationViewModel populate(long applicationId,
                                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        ApplicationReadOnlySettings settings = defaultSettings();
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, applicationId));
+
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {
             settings.setIncludeStatuses(true);
         }
 
+        final InterviewFeedbackViewModel interviewFeedbackViewModel;
+        if (settings.isIncludeAllAssessorFeedback() && interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+        } else {
+            interviewFeedbackViewModel = null;
+        }
+        
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 
@@ -85,24 +132,39 @@ public class ManagementApplicationPopulator {
                 applicationReadOnlyViewModel,
                 getAppendices(applicationId),
                 canMarkAsIneligible(application, user),
-                user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
+                user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN),
                 support,
                 projectId,
-                user.hasRole(Role.EXTERNAL_FINANCE)
+                user.hasRole(Role.EXTERNAL_FINANCE),
+                isProjectWithdrawn(applicationId),
+                interviewFeedbackViewModel
         );
+    }
 
+    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, Long applicationId) {
+        return (user.hasRole(PROJECT_FINANCE) && competition.isProcurement())
+                || interviewAssigned(applicationId, user);
+    }
+
+    private boolean interviewAssigned(Long applicationId, UserResource loggedInUser) {
+        return loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE) && interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+    }
+
+    private boolean isProjectWithdrawn(Long applicationId) {
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        return project != null && project.isWithdrawn();
     }
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
-        return responses.stream().filter(fir -> fir.getFileEntry() != null).
-                map(fir -> {
-                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
-                    FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
-                    String title = fileTitle(formInputResource, fileEntryResource);
-                    return new AppendixViewModel(applicationId, formInputResource.getId(), title, fileEntryResource);
-                }).
-                collect(Collectors.toList());
+        return responses.stream().filter(fir -> fir.getFileEntries() != null && !fir.getFileEntries().isEmpty())
+                .flatMap(fir -> fir.getFileEntries().stream()
+                    .map(file -> {
+                        FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
+                        String title = fileTitle(formInputResource, file);
+                        return new AppendixViewModel(applicationId, formInputResource.getId(), title, file);
+                    }))
+                .collect(Collectors.toList());
     }
 
     private static String fileTitle(FormInputResource formInputResource, FileEntryResource fileEntryResource) {
@@ -116,6 +178,6 @@ public class ManagementApplicationPopulator {
 
     private boolean canMarkAsIneligible(ApplicationResource application, UserResource user) {
         return application.getApplicationState() == SUBMITTED
-                && user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN, Role.INNOVATION_LEAD);
+                && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, Role.INNOVATION_LEAD);
     }
 }

@@ -33,11 +33,13 @@ public class FinanceChecksEligibilityViewModel {
     private boolean externalView;
     private boolean isUsingJesFinances;
     private final boolean h2020;
+    private final boolean procurement;
     private final boolean projectIsActive;
     private final boolean loanCompetition;
     private final boolean collaborativeProject;
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
+    private final boolean ktp;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -60,6 +62,7 @@ public class FinanceChecksEligibilityViewModel {
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
         this.h2020 = competition.isH2020();
+        this.procurement = competition.isProcurement();
         this.loanCompetition = competition.isLoan();
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
@@ -74,6 +77,7 @@ public class FinanceChecksEligibilityViewModel {
         this.isUsingJesFinances = isUsingJesFinances;
         this.canEditAcademicFinances = canEditAcademicFinances;
         this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
+        this.ktp = competition.isKtp();
     }
 
     public boolean isApproved() {
@@ -209,6 +213,10 @@ public class FinanceChecksEligibilityViewModel {
         return h2020;
     }
 
+    public boolean isProcurement() {
+        return procurement;
+    }
+
     public boolean isProjectIsActive() {
         return projectIsActive;
     }
@@ -222,11 +230,15 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowChangesLink() {
-        return eligibilityOverview.isHasApplicationFinances();
+        return isProcurement() || isKtp() ? false: eligibilityOverview.isHasApplicationFinances();
     }
 
     public boolean isEligibilityReadyToConfirm() {
         return eligibilityReadyToConfirm;
+    }
+
+    public boolean isKtp(){
+        return ktp;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

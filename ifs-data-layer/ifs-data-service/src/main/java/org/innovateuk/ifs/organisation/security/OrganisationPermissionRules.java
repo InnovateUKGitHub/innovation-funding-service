@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.security;
 
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
@@ -10,6 +11,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -42,6 +42,9 @@ public class OrganisationPermissionRules {
     @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
+    @Autowired
+    private SupporterAssignmentRepository supporterAssignmentRepository;
+
     @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
     public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return isInternal(user);
@@ -57,10 +60,21 @@ public class OrganisationPermissionRules {
         return isExternalFinanceUser(user);
     }
 
+    @PermissionRule(value = "READ", description = "Co funder can see can see all Organisations")
+    public boolean supporterCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isSupporter(user) && organisationLinkedToAnApplication(organisation);
+    }
+
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
         return getMonitoringOfficersOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations attached to the application on their projects")
+    public boolean monitoringOfficersCanSeeApplicationOrganisations(OrganisationResource organisation, UserResource user) {
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
+        return getMonitoringOfficersApplicationOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
@@ -82,6 +96,14 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Users linked to Applications can view the basic details of the other Organisations on their own Applications")
     public boolean usersCanViewOrganisationsOnTheirOwnApplications(OrganisationResource organisation, UserResource user) {
         return processRoleRepository.findOrganisationIdsSharingApplicationsWithUser(user.getId()).contains(organisation.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Supporters linked to Applications can view the basic details of the other Organisations on their own Applications")
+    public boolean supportersCanViewOrganisationsOnTheirOwnApplications(OrganisationResource organisation, UserResource user) {
+        return supporterAssignmentRepository.findByParticipantId(user.getId()).stream().anyMatch(supporterAssignment ->
+            supporterAssignment.getTarget().getProcessRoles().stream()
+                    .anyMatch(pr -> organisation.getId().equals(pr.getOrganisationId()))
+        );
     }
 
     @PermissionRule(value = "READ", description = "User is invited to join the organisation")
@@ -142,6 +164,18 @@ public class OrganisationPermissionRules {
             pmo.getProject()
                     .getPartnerOrganisations()
                     .forEach(partnerOrganisation -> monitoringOfficersOrganisationIds.add(partnerOrganisation.getOrganisation().getId()));
+        });
+
+        return monitoringOfficersOrganisationIds;
+    }
+
+    private List<Long> getMonitoringOfficersApplicationOrganisationIds(List<MonitoringOfficer> projectMonitoringOfficers) {
+        List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
+        projectMonitoringOfficers.forEach(pmo -> {
+            pmo.getProject().getApplication().getApplicantProcessRoles().stream()
+                    .map(ProcessRole::getOrganisationId)
+                    .distinct()
+                    .collect(Collectors.toCollection(() -> monitoringOfficersOrganisationIds));
         });
 
         return monitoringOfficersOrganisationIds;

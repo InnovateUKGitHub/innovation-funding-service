@@ -31,6 +31,11 @@ public class GrantsInviteController {
         return grantsInviteService.resendInvite(inviteId).toPostResponse();
     }
 
+    @DeleteMapping("/{inviteId}")
+    public RestResult<Void> deleteInvite(@PathVariable long inviteId) {
+        return grantsInviteService.deleteInvite(inviteId).toPostResponse();
+    }
+
     @GetMapping("/{hash}")
     public RestResult<SentGrantsInviteResource> getInviteByHash(@PathVariable String hash) {
         return grantsInviteService.getInviteByHash(hash).toGetResponse();

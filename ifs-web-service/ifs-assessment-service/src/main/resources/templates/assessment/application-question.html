@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -27,7 +27,7 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <form th:if="${responseRequired}"
+                <form th:remove="${!responseRequired} ? tag : none"
                       th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
                       method="post"
                       enctype="multipart/form-data"
@@ -36,52 +36,49 @@
                       data-autosave="assessorFeedback">
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                    <p class="govuk-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
-                    <p class="govuk-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
+                    <th:block th:if="${model.applicantResponse != null}">
+                        <p class="govuk-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
+                        <p class="govuk-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
 
-                    <div class="govuk-form-group">
-                        <h2 class="govuk-heading-m">
-                            <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
-                            <th:block th:text="${model.questionName}" />
-                        </h2>
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-heading-m">
+                                <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
+                                <th:block th:text="${model.questionName}" />
+                            </h2>
 
-                        <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response.</p>
-                    </div>
+                            <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response.</p>
+                        </div>
+                    </th:block>
 
                     <div th:if="${model.appendixExists}">
-                        <div th:replace="question-type/form-elements :: readonly-file-download
-                        (filename=${model.appendixDetails.filename},
-                        filesizeKbytes=${model.appendixDetails.filesizeKbytes},
-                        fileDescription=${model.appendixFileDescription}+':',
-                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
+                        <th:block th:each="appendix : ${model.appendixDetails}">
+                            <th:block th:insert="question-type/form-elements :: readonly-file-download
+                            (filename=${appendix.filename},
+                            filesizeKbytes=${appendix.filesizeKbytes},
+                            fileDescription=${model.appendixFileDescription}+':',
+                            downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})})" />
+                        </th:block>
                     </div>
 
                     <div th:if="${model.templateDocumentExists}">
-                        <div th:replace="question-type/form-elements :: readonly-file-download
+                        <th:block th:insert="question-type/form-elements :: readonly-file-download
                         (filename=${model.templateDocumentDetails.filename},
                         filesizeKbytes=${model.templateDocumentDetails.filesizeKbytes},
                         fileDescription=${model.templateDocumentFileDescription}+':',
-                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.templateDocumentDetails.formInputId})})" />
+                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.templateDocumentDetails.formInputId},fileEntryId=${model.templateDocumentDetails.fileEntryId})})" />
                     </div>
 
                     <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
-                        <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
+                        <th:block th:insert="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" th:with="feedbackWillBeReleasedToApplicant=${!model.ktp}" />
                     </div>
 
-                    <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                    <th:block th:if="${responseRequired}">
+                        <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                        <button  type="submit" class="govuk-button govuk-button--secondary" name="submit-section">Save and return to assessment overview</button>
+                    </th:block>
 
-                    <button type="submit" class="govuk-button govuk-button--secondary" name="submit-section">Save and return to assessment overview</button>
-                </form>
+                    </form>
 
-                <th:block th:unless="${responseRequired}">
-                    <div class="govuk-form-group">
-                        <h2 class="govuk-heading-m">
-                            <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
-                            <th:block th:text="${model.questionName}"  />
-                        </h2>
-                        <p th:text="${model.applicantResponse}" data-md-to-html="" class="govuk-body wysiwyg-styles" />
-                    </div>
-                </th:block>
                 <input type="hidden" id="cacheTest" value="" />
 
                 <th:block th:insert="fragments/assessment :: assessment-pagination" />

@@ -1,0 +1,6 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: feature-toggle-config
+data:
+  IFS_SUPPORTER_ENABLED: "${IFS_SUPPORTER_ENABLED}"

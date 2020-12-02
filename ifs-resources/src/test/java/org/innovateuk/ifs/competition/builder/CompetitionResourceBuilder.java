@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import java.time.ZonedDateTime;
@@ -267,7 +268,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     @SafeVarargs
-    public final CompetitionResourceBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
+    public final CompetitionResourceBuilder withFinanceRowTypes(List<FinanceRowType>... financeRowTypes) {
         return withArray((financeRowType, competitionResource) -> competitionResource.setFinanceRowTypes(financeRowType), financeRowTypes);
     }
 
@@ -284,6 +285,18 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((projectSetupStage, competitionResource) -> competitionResource.setProjectSetupStages(projectSetupStage), projectSetupStages);
     }
 
+    public CompetitionResourceBuilder withCompetitionTypeEnum(CompetitionTypeEnum... types) {
+        return withArray((type, competitionResource) -> competitionResource.setCompetitionTypeEnum(type), types);
+    }
+
+    public CompetitionResourceBuilder withGolTemplate(String... golTemplates) {
+        return withArray((golTemplate, competitionResource) -> {
+            GolTemplateResource resource = new GolTemplateResource();
+            resource.setTemplate(golTemplate);
+            competitionResource.setGolTemplate(resource);
+        }, golTemplates);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);
@@ -293,4 +306,5 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     protected CompetitionResource createInitial() {
         return new CompetitionResource();
     }
+
 }

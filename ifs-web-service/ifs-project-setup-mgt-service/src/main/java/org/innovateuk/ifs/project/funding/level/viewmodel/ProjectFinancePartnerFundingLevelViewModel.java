@@ -15,6 +15,7 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     private final BigDecimal fundingLevel;
     private final BigDecimal otherFunding;
     private final BigDecimal totalGrant;
+    private final boolean ktpCompetition;
 
     public ProjectFinancePartnerFundingLevelViewModel(long id,
                                                       String name,
@@ -24,7 +25,8 @@ public class ProjectFinancePartnerFundingLevelViewModel {
                                                       BigDecimal costs,
                                                       BigDecimal fundingLevel,
                                                       BigDecimal otherFunding,
-                                                      BigDecimal totalGrant) {
+                                                      BigDecimal totalGrant,
+                                                      boolean ktpCompetition) {
         this.id = id;
         this.name = name;
         this.lead = lead;
@@ -34,6 +36,7 @@ public class ProjectFinancePartnerFundingLevelViewModel {
         this.fundingLevel = fundingLevel;
         this.otherFunding = otherFunding;
         this.totalGrant = totalGrant;
+        this.ktpCompetition = ktpCompetition;
     }
 
     public long getId() {
@@ -91,11 +94,25 @@ public class ProjectFinancePartnerFundingLevelViewModel {
     }
 
     public String getSubtitle() {
+        if (ktpCompetition && lead) {
+            return "Lead organisation";
+        }
+        if (ktpCompetition && !lead) {
+            return "Partner";
+        }
         String part = organisationSize != null ? organisationSize.getDescription() : "Academic";
         String text = String.format("%s, %d%%", part, maximumFundingLevel);
         if (lead) {
             text = "Lead, " + text.toLowerCase();
         }
         return text;
+    }
+
+    public boolean isTotalGrantZero() {
+        return (totalGrant.compareTo(BigDecimal.ZERO) == 0);
+    }
+
+    public boolean isLead() {
+        return lead;
     }
 }

@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.form.resource;
 
-public class MultipleChoiceOptionResource {
+import java.io.Serializable;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.MultipleChoiceValidationGroup;
+import javax.validation.constraints.NotBlank;
+
+public class MultipleChoiceOptionResource implements Serializable {
 
     private Long id;
+    @NotBlank(groups = MultipleChoiceValidationGroup.class)
     private String text;
 
     public MultipleChoiceOptionResource() {
@@ -11,6 +16,9 @@ public class MultipleChoiceOptionResource {
     public MultipleChoiceOptionResource(Long id, String text) {
         this.id = id;
         this.text = text;
+    }
+    public MultipleChoiceOptionResource(String text) {
+        this(null, text);
     }
 
     public Long getId() {

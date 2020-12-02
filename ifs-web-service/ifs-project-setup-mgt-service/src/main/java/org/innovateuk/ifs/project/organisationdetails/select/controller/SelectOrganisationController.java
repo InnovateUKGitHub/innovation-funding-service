@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.organisationdetails.select.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.organisationdetails.select.form.SelectOrganisationForm;
@@ -45,10 +47,10 @@ public class SelectOrganisationController {
     private ProjectService projectService;
 
     @Autowired
-    private YourOrganisationRestService yourOrganisationRestService;
+    private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
     @Autowired
-    private PendingPartnerProgressRestService pendingPartnerProgressRestService;
+    private CompetitionRestService competitionRestService;
 
     @GetMapping("/select")
     public String selectOrganisation(@ModelAttribute(name = "form", binding = false) SelectOrganisationForm form,
@@ -81,13 +83,22 @@ public class SelectOrganisationController {
     }
 
     private String redirectToSelectedOrganisationPage(long competitionId, long projectId, long organisationId) {
-        boolean includeGrowthTable = yourOrganisationRestService.isIncludingGrowthTable(competitionId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        String urlPart;
+        if (competition.getFundingType() == FundingType.KTP) {
+            urlPart = "ktp-financial-years";
+        } else if (competition.getIncludeProjectGrowthTable()) {
+            urlPart = "with-growth-table";
+        } else {
+            urlPart = "without-growth-table";
+        }
+
         return "redirect:" +
             String.format("/competition/%d/project/%d/organisation/%d/details/%s",
                 competitionId,
                 projectId,
                 organisationId,
-                includeGrowthTable ? "with-growth-table" : "without-growth-table");
+                urlPart);
     }
 
     private List<PartnerOrganisationResource> getSortedCompletedSetupOrganisations(long projectId, List<PartnerOrganisationResource> partners) {

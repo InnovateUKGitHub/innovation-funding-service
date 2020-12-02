@@ -10,6 +10,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
@@ -259,7 +260,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application expectedApplicationComp2WithMaxDate = saved.get(5);
 
         assertEquals(expectedApplicationComp2WithMaxDate, repository
-                .findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition2.getId()));
+                .findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition2.getId()).get());
     }
 
     private Application createApplicationByState(ApplicationState applicationState) {
@@ -501,6 +502,94 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(userOnAppButNotProject.getId())));
         assertFalse(applications.stream().anyMatch(app -> app.getId().equals(assessorApp.getId())));
+    }
+
+    @Test
+    public void findApplicationsForKtaDashboard() {
+        loginCompAdmin();
+
+        Competition competition = newCompetition().with(id(null)).build();
+        User user = new User("Kta", "Kta", "kta@gmail.com", "", "456abc");
+
+        Application ktaApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("ktaApp")
+                .build();
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.save(ktaApp);
+
+        ProcessRole ktaRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(ktaApp)
+                .withUser(user)
+                .build();
+
+        processRoleRepository.save(ktaRole);
+
+        List<Application> applications = repository.findApplicationsForDashboard(user.getId());
+
+        assertEquals(1, applications.size());
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(ktaApp.getId())));
+    }
+
+    @Test
+    public void findOnlyUncompleteKTPApplicationsForKtaDashboard() {
+        loginCompAdmin();
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .with(id(null))
+                .build();
+        User user = new User("Kta", "Kta", "kta@gmail.com", "", "456abc");
+
+        Application ktaApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("ktaApp")
+                .build();
+
+        Application ktaClosedApp = newApplication()
+                .with(id(1L))
+                .withCompetition(competition)
+                .withName("KtaClosedApp")
+                .build();
+
+        Project project = projectRepository.save(newProject()
+                .withApplication(ktaClosedApp)
+                .withId(17L)
+                .withName("Project Name")
+                .build()
+        );
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.save(ktaApp);
+        applicationRepository.save(ktaClosedApp);
+
+        ProcessRole ktaRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(ktaApp)
+                .withUser(user)
+                .build();
+        ProcessRole ktaClosedRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(ktaClosedApp)
+                .withUser(user)
+                .build();
+
+        processRoleRepository.save(ktaRole);
+        processRoleRepository.save(ktaClosedRole);
+
+        List<Application> applications = repository.findApplicationsForDashboard(user.getId());
+
+        assertEquals(1, applications.size());
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(ktaApp.getId())));
     }
 
     @Test

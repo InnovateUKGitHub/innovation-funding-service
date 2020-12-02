@@ -37,6 +37,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                                                                long applicationId,
                                                                long formInputId,
                                                                String value,
+                                                               Long multipleChoiceOptionId,
                                                                boolean ignoreEmpty) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
@@ -44,6 +45,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
+        node.put("multipleChoiceOptionId", multipleChoiceOptionId);
         node.put("ignoreEmpty", ignoreEmpty);
         return postWithRestResult(formInputResponseRestURL + "/save-question-response/", node, ValidationMessages.class);
     }
@@ -63,32 +65,35 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId) {
+    public RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId, long fileEntryId) {
 
         String url = formInputResponseRestURL + "/file" +
                 "?formInputId=" + formInputId +
                 "&applicationId=" + applicationId +
-                "&processRoleId=" + processRoleId;
+                "&processRoleId=" + processRoleId +
+                "&fileEntryId=" + fileEntryId;
 
         return deleteWithRestResult(url);
     }
 
     @Override
-    public RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId) {
+    public RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId, long fileEntryId) {
         String url = formInputResponseRestURL + "/file" +
                 "?formInputId=" + formInputId +
                 "&applicationId=" + applicationId +
-                "&processRoleId=" + processRoleId;
+                "&processRoleId=" + processRoleId +
+                "&fileEntryId=" + fileEntryId;
 
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
     @Override
-    public RestResult<FormInputResponseFileEntryResource> getFileDetails(long formInputId, long applicationId, long processRoleId) {
+    public RestResult<FormInputResponseFileEntryResource> getFileDetails(long formInputId, long applicationId, long processRoleId, long fileEntryId) {
         String url = formInputResponseRestURL + "/fileentry" +
                 "?formInputId=" + formInputId +
                 "&applicationId=" + applicationId +
-                "&processRoleId=" + processRoleId;
+                "&processRoleId=" + processRoleId +
+                "&fileEntryId=" + fileEntryId;
 
         return getWithRestResult(url, FormInputResponseFileEntryResource.class);
     }

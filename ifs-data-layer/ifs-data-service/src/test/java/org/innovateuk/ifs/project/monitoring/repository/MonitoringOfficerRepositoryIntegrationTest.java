@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -78,7 +79,35 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void findUnassignedProject() {
+    public void findAllUnassignedProjects() {
+        setLoggedInUser(getSteveSmith());
+
+        Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP);
+        Project unassignedProject = aProjectIn(SETUP);
+        Project unassignedKTPProject = aProjectIn(SETUP, true);
+        Project withdrawnProject = aProjectIn(WITHDRAWN, true);
+        Project offlineProject = aProjectIn(HANDLED_OFFLINE);
+        Project completeOfflineProject = aProjectIn(COMPLETED_OFFLINE, true);
+        flushAndClearSession();
+
+        List<MonitoringOfficerUnassignedProjectResource> unassignedProjectResources = repository.findAllUnassignedProjects();
+
+        List<Long> unassignedProjectIds = unassignedProjectResources
+                .stream()
+                .map(MonitoringOfficerUnassignedProjectResource::getProjectId)
+                .collect(toList());
+
+        assertTrue(unassignedProjectIds.contains(unassignedProject.getId()));
+        assertTrue(unassignedProjectIds.contains(unassignedKTPProject.getId()));
+
+        assertFalse(unassignedProjectIds.contains(assignedProject.getId()));
+        assertFalse(unassignedProjectIds.contains(withdrawnProject.getId()));
+        assertFalse(unassignedProjectIds.contains(offlineProject.getId()));
+        assertFalse(unassignedProjectIds.contains(completeOfflineProject.getId()));
+    }
+
+    @Test
+    public void findUnassignedNonKTPProject() {
         setLoggedInUser(getSteveSmith());
 
         Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP);
@@ -88,7 +117,7 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
         Project completeOfflineProject = aProjectIn(COMPLETED_OFFLINE);
         flushAndClearSession();
 
-        List<MonitoringOfficerUnassignedProjectResource> unassignedProjectResources = repository.findUnassignedProject();
+        List<MonitoringOfficerUnassignedProjectResource> unassignedProjectResources = repository.findUnassignedNonKTPProjects();
 
         List<Long> unassignedProjectIds = unassignedProjectResources
                 .stream()
@@ -104,7 +133,69 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void findAssignedProject() {
+    public void findUnassignedKTPProject() {
+        setLoggedInUser(getSteveSmith());
+
+        Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP, true);
+        Project unassignedProject = aProjectIn(SETUP, true);
+        Project withdrawnProject = aProjectIn(WITHDRAWN, true);
+        Project offlineProject = aProjectIn(HANDLED_OFFLINE, true);
+        Project completeOfflineProject = aProjectIn(COMPLETED_OFFLINE, true);
+        flushAndClearSession();
+
+        List<MonitoringOfficerUnassignedProjectResource> unassignedProjectResources = repository.findUnassignedKTPProjects();
+
+        List<Long> unassignedProjectIds = unassignedProjectResources
+                .stream()
+                .map(MonitoringOfficerUnassignedProjectResource::getProjectId)
+                .collect(toList());
+
+        assertTrue(unassignedProjectIds.contains(unassignedProject.getId()));
+
+        assertFalse(unassignedProjectIds.contains(assignedProject.getId()));
+        assertFalse(unassignedProjectIds.contains(withdrawnProject.getId()));
+        assertFalse(unassignedProjectIds.contains(offlineProject.getId()));
+        assertFalse(unassignedProjectIds.contains(completeOfflineProject.getId()));
+    }
+
+    @Test
+    public void findAllAssignedProjects() {
+        setLoggedInUser(getSteveSmith());
+
+        Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP);
+        Project assignedKTPProject = aProjectWithMonitoringOfficerIn(SETUP, true);
+        Project unassignedProject = aProjectIn(SETUP);
+        Project withdrawnProject = aProjectWithMonitoringOfficerIn(WITHDRAWN, true);
+        Project offlineProject = aProjectWithMonitoringOfficerIn(HANDLED_OFFLINE);
+        Project completeOfflineProject = aProjectWithMonitoringOfficerIn(COMPLETED_OFFLINE, true);
+        flushAndClearSession();
+
+        List<MonitoringOfficerAssignedProjectResource> assignedProjectResources = repository.findAllAssignedProjects((getFelixWilson().getId()));
+
+        List<Long> assignedProjectIds = assignedProjectResources
+                .stream()
+                .map(MonitoringOfficerAssignedProjectResource::getProjectId)
+                .collect(toList());
+
+        assertTrue(assignedProjectIds.contains(assignedProject.getId()));
+        assertTrue(assignedProjectIds.contains(assignedKTPProject.getId()));
+
+        assertFalse(assignedProjectIds.contains(unassignedProject.getId()));
+        assertFalse(assignedProjectIds.contains(withdrawnProject.getId()));
+        assertFalse(assignedProjectIds.contains(offlineProject.getId()));
+        assertFalse(assignedProjectIds.contains(completeOfflineProject.getId()));
+
+        MonitoringOfficerAssignedProjectResource assignedProjectResource = assignedProjectResources
+                .stream()
+                .filter(a -> a.getProjectId() == assignedProject.getId())
+                .findAny()
+                .get();
+
+        assertEquals("Lead organisation", assignedProjectResource.getLeadOrganisationName());
+    }
+
+    @Test
+    public void findAssignedNonKTPProject() {
         setLoggedInUser(getSteveSmith());
 
         Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP);
@@ -114,7 +205,41 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
         Project completeOfflineProject = aProjectWithMonitoringOfficerIn(COMPLETED_OFFLINE);
         flushAndClearSession();
 
-        List<MonitoringOfficerAssignedProjectResource> assignedProjectResources = repository.findAssignedProjects((getFelixWilson().getId()));
+        List<MonitoringOfficerAssignedProjectResource> assignedProjectResources = repository.findAssignedNonKTPProjects((getFelixWilson().getId()));
+
+        List<Long> assignedProjectIds = assignedProjectResources
+                .stream()
+                .map(MonitoringOfficerAssignedProjectResource::getProjectId)
+                .collect(toList());
+
+        assertTrue(assignedProjectIds.contains(assignedProject.getId()));
+
+        assertFalse(assignedProjectIds.contains(unassignedProject.getId()));
+        assertFalse(assignedProjectIds.contains(withdrawnProject.getId()));
+        assertFalse(assignedProjectIds.contains(offlineProject.getId()));
+        assertFalse(assignedProjectIds.contains(completeOfflineProject.getId()));
+
+        MonitoringOfficerAssignedProjectResource assignedProjectResource = assignedProjectResources
+                .stream()
+                .filter(a -> a.getProjectId() == assignedProject.getId())
+                .findAny()
+                .get();
+
+        assertEquals("Lead organisation", assignedProjectResource.getLeadOrganisationName());
+    }
+
+    @Test
+    public void findAssignedKTPProject() {
+        setLoggedInUser(getSteveSmith());
+
+        Project assignedProject = aProjectWithMonitoringOfficerIn(SETUP, true);
+        Project unassignedProject = aProjectIn(SETUP, true);
+        Project withdrawnProject = aProjectWithMonitoringOfficerIn(WITHDRAWN, true);
+        Project offlineProject = aProjectWithMonitoringOfficerIn(HANDLED_OFFLINE, true);
+        Project completeOfflineProject = aProjectWithMonitoringOfficerIn(COMPLETED_OFFLINE, true);
+        flushAndClearSession();
+
+        List<MonitoringOfficerAssignedProjectResource> assignedProjectResources = repository.findAssignedKTPProjects((getFelixWilson().getId()));
 
         List<Long> assignedProjectIds = assignedProjectResources
                 .stream()
@@ -138,7 +263,11 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     private Project aProjectWithMonitoringOfficerIn(ProjectState state) {
-        Project project = aProjectIn(state);
+        return aProjectWithMonitoringOfficerIn(state, false);
+    }
+
+    private Project aProjectWithMonitoringOfficerIn(ProjectState state, boolean isKtp) {
+        Project project = aProjectIn(state, isKtp);
         MonitoringOfficer monitoringOfficer = new MonitoringOfficer(getUserByEmail(getFelixWilson().getEmail()), project);
         repository.save(monitoringOfficer);
         project.setProjectMonitoringOfficer(monitoringOfficer);
@@ -146,7 +275,14 @@ public class MonitoringOfficerRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     private Project aProjectIn(ProjectState state) {
+        return aProjectIn(state, false);
+    }
+
+    private Project aProjectIn(ProjectState state, boolean isKtp) {
         Competition competition = newCompetition().withId((Long) null).build();
+        if (isKtp) {
+            competition.setFundingType(FundingType.KTP);
+        }
         competition = competitionRepository.save(competition);
         Application application = new Application("application name");
         application.setCompetition(competition);

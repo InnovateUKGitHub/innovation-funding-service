@@ -20,12 +20,16 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-6054 Display completed projects in the previous tab
 ...
 ...             IFS-6187 Remove competitions from Project Setup once all projects are completed
+...
+...             IFS-7772 Allow applications from all submitted states to be pushed through to project setup from the previous page.
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/PS_Common.robot
 Resource        ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
+${compLinkInPreviousTab}              ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous
+${compLinkInProjectSetup}             ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
 ${unsuccessfulState}                  Unsuccessful
 ${withdrawnState}                     Withdrawn
@@ -67,12 +71,22 @@ The IFS admin checks for compeleted projects on previous tab
 #withdrawn projects count as competed projects
     [Documentation]  IFS-6053
     [Tags]
-    [Setup]  the user navigates to the page    ${server}/management/dashboard/previous
-    Given the user clicks the button/link   jQuery = button:contains("Next")
+    Given the user navigates the the previous page
     Then the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
     And the user should see applications and withdrawn projects
 
+IFS Admin should be able to mark the ineligible application in previous tab as successful and move it to project set up
+    [Documentation]  IFS-7772
+    Given the user navigates to the page                         ${compLinkInPreviousTab}
+    When the user clicks the button/link                         jQuery = td:contains("Ineligible") ~ td a:contains("Mark as successful")
+    Then the user clicks the button/link                         name = mark-as-successful
+    And the user should see the application in project setup
+
 *** Keywords ***
+the user should see the application in project setup
+    the user navigates to the page      ${compLinkInProjectSetup}
+    the user should see the element     link = ${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}
+
 All project sections should be read only
     the user clicks the button/link      css = #table-project-status td:nth-child(3).status.ok a
     the user should not see the element  link = Add team member
@@ -88,11 +102,11 @@ finance checks are RO
     the user clicks the button/link      jQuery = tr:contains(Tanzone) a.govuk-link.viability-0
     the user should not see the element  jQuery = input[id="costs-reviewed"]
     the user should not see the element  jQuery = input[id="project-viable"]
-    the user clicks the button/link      link = Finance checks
+    the user clicks the button/link      link = Back to finance checks
     #Eligibility page is RO
     the user clicks the button/link      jQuery = tr:contains(Tanzone) a.govuk-link.eligibility-0
     the user should not see the element  jQuery = input[id="project-eligible"]
-    the user clicks the button/link      link = Finance checks
+    the user clicks the button/link      link = Back to finance checks
     #Queries page is RO
     the user clicks the button/link      jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
     the user should not see the element  jQuery = button:contains("Post a new query")
@@ -179,3 +193,10 @@ the user should see the all projects and navigate back to completed projects
     the user navigates to the page      ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     the user clicks the button/link     link = View only completed projects for this competition
     the user navigates to the page      ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous
+
+the user navigates the the previous page
+    the user navigates to the page    ${server}/management/dashboard/previous
+    the user clicks the button/link   jQuery = button:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link     jQuery = button:contains("Next")
+

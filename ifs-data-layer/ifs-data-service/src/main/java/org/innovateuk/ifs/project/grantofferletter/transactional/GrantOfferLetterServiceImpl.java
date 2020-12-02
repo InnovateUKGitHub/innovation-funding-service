@@ -16,10 +16,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -42,8 +39,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -209,6 +206,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                         andOnSuccessReturnVoid());
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeAdditionalContractFileEntry(Long projectId) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectIsActive(project).
+                        andOnSuccess(() -> removeAdditionalContractFileFromProject(project)).
+                        andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId())).
+                        andOnSuccessReturnVoid());
+    }
+
     private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
         return getCurrentlyLoggedInUser().andOnSuccess(user ->
                 golWorkflowHandler.removeGrantOfferLetter(project, user) ?
@@ -220,6 +227,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return validateProjectIsActive(project).andOnSuccessReturn(() -> {
             FileEntry fileEntry = project.getGrantOfferLetter();
             project.setGrantOfferLetter(null);
+            return fileEntry;
+        });
+
+    }
+
+    private ServiceResult<FileEntry> removeAdditionalContractFileFromProject(Project project) {
+
+        return validateProjectIsActive(project).andOnSuccessReturn(() -> {
+            FileEntry fileEntry = project.getAdditionalContractFile();
+            project.setAdditionalContractFile(null);
             return fileEntry;
         });
 
@@ -251,6 +268,23 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             project.setSignedGrantOfferLetter(null);
             return fileEntry;
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resetGrantOfferLetter(Long projectId) {
+        Project project = getProject(projectId).getSuccess();
+
+        if (project.getGrantOfferLetter() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getGrantOfferLetter().getId());
+            project.setGrantOfferLetter(null);
+        }
+        if (project.getAdditionalContractFile() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getAdditionalContractFile().getId());
+            project.setAdditionalContractFile(null);
+        }
+        golWorkflowHandler.grantOfferLetterReset(project, getCurrentlyLoggedInUser().getSuccess());
+        return serviceSuccess();
     }
 
     @Override
@@ -326,11 +360,14 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 Map<String, Object> notificationArguments = new HashMap<>();
                 notificationArguments.put("dashboardUrl", webBaseUrl);
                 notificationArguments.put("applicationId", project.getApplication().getId());
-                notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
+                String title = project.getApplication().getCompetition().isProcurement() ? "contract" : "grant offer letter";
+                String shortTitle = project.getApplication().getCompetition().isProcurement() ? "contract" : "letter";
+                notificationArguments.put("title", title);
+                notificationArguments.put("shortTitle", shortTitle);
 
                 return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
                     Notification notification = new Notification(systemNotificationSource,
-                            singletonList(pmTarget),
+                            pmTarget,
                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
                             notificationArguments);
 
@@ -459,7 +496,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private List<NotificationTarget> getLiveProjectNotificationTargets(Project project) {
+    private List<NotificationMessage> getLiveProjectNotificationTargets(Project project) {
         List<NotificationTarget> notificationTargets = new ArrayList<>();
 
         User projectManager = getExistingProjectManager(project).get().getUser();
@@ -474,7 +511,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationTargets.add(projectManagerTarget);
         notificationTargets.addAll(uniqueFinanceContactTargets);
 
-        return notificationTargets;
+        return notificationTargets.stream().map(NotificationMessage::new).collect(Collectors.toList());
     }
 
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
@@ -491,13 +528,17 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
 
         Project project = projectRepository.findById(projectId).get();
-        List<NotificationTarget> notificationTargets = getLiveProjectNotificationTargets(project);
+        List<NotificationMessage> notificationTargets = getLiveProjectNotificationTargets(project);
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("projectName", project.getName());
         notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
         notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
+        String title = project.getApplication().getCompetition().isProcurement() ? "contract" : "grant offer letter";
+        String titleUpper = project.getApplication().getCompetition().isProcurement() ? "Contract" : "Grant offer letter";
+        notificationArguments.put("title", title);
+        notificationArguments.put("titleUpper", titleUpper);
 
         Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 

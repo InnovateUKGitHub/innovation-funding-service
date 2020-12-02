@@ -193,6 +193,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName(competitionName)
                 .withCompetitionStatus(competitionStatus)
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));

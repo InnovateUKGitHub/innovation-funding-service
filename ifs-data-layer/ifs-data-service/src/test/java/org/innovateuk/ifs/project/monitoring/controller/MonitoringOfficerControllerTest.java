@@ -37,6 +37,33 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         verify(projectMonitoringOfficerServiceMock).findAll();
     }
 
+    @Test
+    public void findAllKtp() throws Exception {
+        List<SimpleUserResource> expected = newSimpleUserResource().build(1);
+
+        when(projectMonitoringOfficerServiceMock.findAllKtp()).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/monitoring-officer/find-all-ktp"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(projectMonitoringOfficerServiceMock).findAllKtp();
+    }
+
+
+    @Test
+    public void findAllNonKtp() throws Exception {
+        List<SimpleUserResource> expected = newSimpleUserResource().build(1);
+
+        when(projectMonitoringOfficerServiceMock.findAllNonKtp()).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/monitoring-officer/find-all-non-ktp"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(projectMonitoringOfficerServiceMock).findAllNonKtp();
+    }
+
 
     @Test
     public void getProjectMonitoringOfficer() throws Exception {
@@ -84,11 +111,24 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         when(projectMonitoringOfficerServiceMock.getMonitoringOfficerProjects(userId)).thenReturn(serviceSuccess(emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/monitoring-officer/{userId}/projects", userId))
+        mockMvc.perform(get("/monitoring-officer/{userId}/projects", userId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).getMonitoringOfficerProjects(userId);
     }
+
+
+    @Test
+    public void isMonitoringOfficer() throws Exception {
+        long userId = 11;
+        when(projectMonitoringOfficerServiceMock.isMonitoringOfficer(userId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/monitoring-officer/is-monitoring-officer/{userId}", userId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(projectMonitoringOfficerServiceMock, only()).isMonitoringOfficer(userId);
+    }
+
 
     @Override
     protected MonitoringOfficerController supplyControllerUnderTest() {

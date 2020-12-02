@@ -78,6 +78,8 @@ public class ProjectEligibilityFormPopulator implements CompetitionSetupFormPopu
             competitionSetupForm.setFundingLevelPercentage(getFundingLevelPercentage(competitionResource));
         }
 
+        competitionSetupForm.setKtpCompetition(competitionResource.isKtp());
+
         return competitionSetupForm;
     }
 

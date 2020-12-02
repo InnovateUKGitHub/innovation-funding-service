@@ -27,7 +27,7 @@ the user tries the footer links
     And the user should see the element     link = Events
     And the user should see the element     link = Connect to innovation experts
     And the user should see the element     link = Innovate UK blog
-    And the user should see the element     link = GOV.UK accessibility
+    And the user should see the element     link = Accessibility
     And the user tries the link             ${page}    Terms and conditions    Terms and conditions
     And the user tries the link             ${page}    Contact us    Contact us
     And the user tries the link             ${page}    Latest funding opportunities    Innovation competitions

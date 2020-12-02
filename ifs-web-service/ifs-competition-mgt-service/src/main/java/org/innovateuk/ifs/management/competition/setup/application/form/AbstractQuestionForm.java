@@ -11,9 +11,16 @@ import javax.validation.constraints.NotNull;
  */
 public abstract class AbstractQuestionForm extends CompetitionSetupForm {
 
+    public enum TypeOfQuestion {
+        FREE_TEXT,
+        MULTIPLE_CHOICE;
+    }
+
     @Valid
     @NotNull
     private CompetitionSetupQuestionResource question;
+
+    private TypeOfQuestion typeOfQuestion;
 
     public CompetitionSetupQuestionResource getQuestion() {
         return question;
@@ -21,6 +28,14 @@ public abstract class AbstractQuestionForm extends CompetitionSetupForm {
 
     public void setQuestion(CompetitionSetupQuestionResource question) {
         this.question = question;
+    }
+
+    public TypeOfQuestion getTypeOfQuestion() {
+        return typeOfQuestion;
+    }
+
+    public void setTypeOfQuestion(TypeOfQuestion typeOfQuestion) {
+        this.typeOfQuestion = typeOfQuestion;
     }
 
     public boolean isRemovable() { return false; }

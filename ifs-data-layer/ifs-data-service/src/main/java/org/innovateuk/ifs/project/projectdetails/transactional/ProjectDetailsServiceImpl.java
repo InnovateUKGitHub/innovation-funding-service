@@ -317,6 +317,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
 
         List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        if (existingFinanceContactForOrganisation.stream().anyMatch(pu -> pu.getUser().getId().equals(newFinanceContact.getUser().getId()))) {
+            return serviceSuccess();
+        }
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
@@ -466,6 +469,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("competitionName", inviteResource.getCompetitionName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
+        globalArguments.put("procurement", project.getApplication().getCompetition().isProcurement());
         return globalArguments;
     }
 

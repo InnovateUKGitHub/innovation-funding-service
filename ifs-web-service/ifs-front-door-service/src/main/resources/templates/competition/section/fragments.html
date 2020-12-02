@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <!-- ===========================Front door - repeating content group  =========================== -->
 <th:block th:fragment="content-group(section, competitionId)">
@@ -12,10 +12,9 @@
             <th:block th:if="${section.hasAttachment(contentGroup.id)}">
                 <div>
                     <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
-                       th:text="${section.fileName(contentGroup.id)}"
+                       th:text="|${section.fileName(contentGroup.id)} (opens in a new window)|"
                        class="govuk-link"
-                       target="_blank"
-                       aria-describedby="attachment-hint"></a> <span id="attachment-hint">(opens in a new window)</span>
+                       target="_blank"></a>
                 </div>
             </th:block>
         </div>

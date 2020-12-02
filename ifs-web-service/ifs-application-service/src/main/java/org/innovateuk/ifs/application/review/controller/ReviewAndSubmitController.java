@@ -82,7 +82,17 @@ public class ReviewAndSubmitController {
     public String submitApplication(@PathVariable long applicationId,
                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                     BindingResult bindingResult,
-                                    RedirectAttributes redirectAttributes) {
+                                    RedirectAttributes redirectAttributes,
+                                    UserResource user,
+                                    HttpServletResponse response) {
+
+            ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+            if (!ableToSubmitApplication(user, application)) {
+                cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
+                return  format("redirect:/application/%d", applicationId);
+            }
+
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return format("redirect:/application/%d/confirm-submit", applicationId);
     }
@@ -176,7 +186,7 @@ public class ReviewAndSubmitController {
 
         if (!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-            return "redirect:/application/" + applicationId + "/confirm-submit";
+            return  format("redirect:/application/%d", applicationId);
         }
 
         RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
@@ -209,14 +219,9 @@ public class ReviewAndSubmitController {
     }
 
     private boolean canReopenApplication(ApplicationResource application, UserResource user) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.getCovidType() != null) {
-            return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
-                    && application.canBeReopened()
-                    && userService.isLeadApplicant(user.getId(), application);
-        }
-
-        return false;
+        return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
+                && application.canBeReopened()
+                && userService.isLeadApplicant(user.getId(), application);
     }
 
     @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can reopen their applications")
@@ -231,14 +236,14 @@ public class ReviewAndSubmitController {
         RestResult<Void> updateResult = applicationRestService.reopenApplication(applicationId);
 
         Supplier<String> failureView = () -> applicationReopen(model, form, bindingResult, validationHandler, applicationId);
-        Supplier<String> successView = () -> format("redirect:/application/%d/", applicationId);
+        Supplier<String> successView = () -> format("redirect:/application/%d", applicationId);
 
         return validationHandler.addAnyErrors(updateResult)
                 .failNowOrSucceedWith(failureView, successView);
     }
 
-    @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")
-    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants and kta can track their application after submitting.")
+    @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
                                    @PathVariable long applicationId,

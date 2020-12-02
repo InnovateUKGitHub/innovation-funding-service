@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="address-details">
     <div id="manual-company-input">
@@ -17,7 +17,7 @@
                           th:text="${err}"/>
                 </th:block>
                 <input id="addressForm.postcodeInput"
-                       class="govuk-input govuk-input--width-10"
+                       class="govuk-input govuk-input--width-10 govuk-!-margin-right-1"
                        th:field="*{addressForm.postcodeInput}"
                        th:errorclass="govuk-input--error"
                        type="text"/>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org"
       th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application overview - ${applicationName}|" />
@@ -11,7 +11,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block>
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${model.application.name},size='govuk-heading-xl'" />
@@ -25,29 +25,41 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
                         <dl class="govuk-list govuk-!-font-size-16">
-                            <dt>Competition name</dt>
+                            <dt>Competition name:</dt>
                             <dd th:text="${model.competitionName}"></dd>
-                            <dt>Application name</dt>
+                            <dt>Application name:</dt>
                             <dd th:text="${model.applicationName}"></dd>
-                            <dt>When do you wish to start your project?</dt>
-                            <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
-                            <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
-                            <dt>Duration in months</dt>
+                            <th:block th:unless="${model.ktpCompetition}">
+                                <dt>When do you wish to start your project?</dt>
+                                <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
+                                <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
+                            </th:block>
+                            <th:block th:if="${model.ktpCompetition}">
+                                <dt>Application number:</dt>
+                                <dd th:text="${model.applicationNumber}"></dd>
+                                <dt>Lead organisation:</dt>
+                                <dd th:text="${model.leadOrganisationName}"></dd>
+                                <th:block th:unless="${model.collaboratorOrganisationNames.isEmpty()}">
+                                    <dt>Partners:</dt>
+                                    <dd th:each="collaboratorName : ${model.collaboratorOrganisationNames}" th:text="${collaboratorName}"></dd>
+                                </th:block>
+                            </th:block>
+                            <dt>Duration in months:</dt>
                             <dd>
                                 <th:block th:text="${model.duration}"/>
                                 months
                             </dd>
                             <th:block th:if="${model.canSelectInnovationArea}">
-                                <dt>Innovation area</dt>
+                                <dt>Innovation area:</dt>
                                 <dd th:text="${model.innovationAreaName} ?: 'Not listed'"></dd>
                             </th:block>
                             <th:block th:unless="${model.resubmission == null}">
                                 <dt>Is this application a resubmission?</dt>
                                 <dd th:text="${model.resubmission ? 'Yes' : 'No'}"></dd>
                                 <th:block th:if="${model.resubmission == true}">
-                                    <dt>Previous application number</dt>
+                                    <dt>Previous application number:</dt>
                                     <dd th:text="${model.previousApplicationNumber}"></dd>
-                                    <dt>Previous application title</dt>
+                                    <dt>Previous application title:</dt>
                                     <dd th:text="${model.previousApplicationTitle}"></dd>
                                 </th:block>
                             </th:block>
@@ -63,11 +75,96 @@
                                 <dt>What is your organisation's primary area of focus?</dt>
                                 <dd th:text="${model.application.companyPrimaryFocus.name} ?: 'None Selected'"></dd>
                             </th:block>
+                            <th:block th:if="${model.ktpCompetition}">
+                                <dt>Total project costs:</dt>
+                                <dd th:text="'£' + ${#numbers.formatInteger(model.totalProjectCosts, 0, 'DEFAULT')}"></dd>
+                            </th:block>
                         </dl>
                     </div>
                 </div>
 
-                <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+                <th:block th:unless="${model.interviewFeedbackViewModel == null || model.interviewFeedbackViewModel.feedbackReleased}">
+                    <div class="message-alert"
+                         th:attr="aria-hidden=${!model.interviewFeedbackViewModel.hasResponse()}"
+                         data-js-toggle-on-file-upload="">
+                        <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.responseBannerText}">Some info</p>
+                    </div>
+                    <div class="message-alert"
+                         th:attr="aria-hidden=${model.interviewFeedbackViewModel.hasResponse()}"
+                         data-js-toggle-on-file-upload="">
+                        <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.noResponseBannerText}">Some info</p>
+                    </div>
+                </th:block>
+
+                <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.responseSectionEnabled}">
+                    <th:block th:if="${model.interviewFeedbackViewModel.leadApplicant}">
+                        <form th:action="@{/application/{applicationId}/summary(applicationId=${model.application.id})}"
+                              method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
+                            <h2 class="govuk-heading-m">Your response</h2>
+                            <div class="upload-section">
+                                <details th:unless="${model.interviewFeedbackViewModel.feedbackReleased}"
+                                         class="govuk-details"
+                                         role="group">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">What should I include in the response?</span>
+                                    </summary>
+                                    <div class="govuk-details__text">
+                                        <p class="govuk-body">You may submit a written response to this feedback. You can upload a single PDF
+                                            document, including charts and diagrams. The maximum file upload is 10MB.</p>
+                                    </div>
+                                </details>
+                                <th:block th:insert="question-type/types :: fileupload-fragment(${model.interviewFeedbackViewModel.feedbackReleased ? 'readonly' : 'edit'},
+                                            @{/application/{applicationId}/summary/download-response(applicationId=${model.application.id})},
+                                            ${model.interviewFeedbackViewModel.responseFilename},
+                                            response,
+                                            response,
+                                            true,
+                                            removeResponse,
+                                            uploadResponse)"/>
+                            </div>
+                        </form>
+                    </th:block>
+                    <th:block th:unless="${model.interviewFeedbackViewModel.leadApplicant}">
+                        <h2 class="govuk-heading-m">Response from lead applicant</h2>
+                        <th:block th:unless="${model.interviewFeedbackViewModel.hasResponse()}">
+                            <p class="govuk-body">The lead applicant has not yet uploaded a response.</p>
+                        </th:block>
+                        <th:block th:if="${model.interviewFeedbackViewModel.hasResponse()}">
+                            <div class="govuk-form-group download">
+                                <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
+                                <p class="govuk-body uploaded-file">
+                                    <a th:href="@{/application/{applicationId}/summary/download-response(applicationId=${model.application.id})}"
+                                       th:text="|${model.interviewFeedbackViewModel.responseFilename} (opens in a new window)|"
+                                       target="_blank"
+                                       class="govuk-link">File</a>.
+                                </p>
+                            </div>
+                        </th:block>
+                    </th:block>
+                </th:block>
+
+                <th:block th:insert="application/readonly/application-read-only :: accordion (model=${model.applicationReadOnlyViewModel}, feedbackFragment=~{ :: .feedbackFragment}, parentModel=${model})">
+                    <div class="feedbackFragment">
+                        <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
+                        <div class="govuk-form-group download">
+                            <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
+                            <a target="_blank"
+                               th:href="@{/application/{applicationId}/summary/download-feedback(applicationId=${parentModel.application.id})}"
+                               th:text="|${parentModel.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
+                               class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
+                        </div>
+                    </div>
+                </th:block>
+
+                <div class="govuk-body govuk-!-margin-top-6">
+                    <a th:href="@{/application/{id}/print(id=${model.application.id})}"
+                       class="govuk-link"
+                       rel="nofollow"
+                       target="_blank">
+                        <span class="icon icon-print"></span>
+                        Print application
+                    </a>
+                </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

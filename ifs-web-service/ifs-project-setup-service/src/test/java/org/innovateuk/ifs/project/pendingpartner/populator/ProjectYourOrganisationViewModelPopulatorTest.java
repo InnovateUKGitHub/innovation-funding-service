@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -30,8 +31,7 @@ import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceB
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -60,7 +60,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
         CompetitionResource competition = newCompetitionResource()
             .withFundingType(FundingType.GRANT)
             .withIncludeJesForm(true)
-            .withCompetitionTypeName("Horizon 2020")
+            .withCompetitionTypeEnum(CompetitionTypeEnum.HORIZON_2020)
             .build();
         ProjectResource project = newProjectResource()
             .withId(projectId)
@@ -86,7 +86,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
 
         assertEquals(expectedOrgSizeOptions, actual.getOrganisationSizeOptions());
         assertTrue(actual.isH2020());
-        assertTrue(actual.isShowOrganisationSizeAlert());
+        assertFalse(actual.isShowOrganisationSizeAlert());
         assertTrue(actual.isShowStateAidAgreement());
         assertTrue(actual.isShowHints());
         assertEquals(organisationId, actual.getOrganisationId());

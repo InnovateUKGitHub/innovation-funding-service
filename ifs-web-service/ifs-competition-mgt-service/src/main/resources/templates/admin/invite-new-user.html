@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite a new internal user',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite a new ' + ${model.getTypeName()},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
@@ -10,26 +10,27 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage Users',linkUrl=@{/admin/users/active}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to select user role',linkUrl=@{/admin/select-external-role}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to invite this user.</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new internal user',size='govuk-heading-l'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new ' + ${model.getTypeName()},size='govuk-heading-l'" />
 
+        <p class="govuk-body" th:if="${model.external}" th:text="|Enter the new ${model.onlyRole.displayName.toLowerCase()}'s details:|"></p>
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="firstName">
+                <label class="govuk-label govuk-label--s" for="firstName">
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
                 <input id="firstName"
-                       class="govuk-input"
+                       class="govuk-input govuk-!-width-one-third"
                        type="text"
                        th:errorclass="govuk-input--error"
                        th:field="*{firstName}"
@@ -37,20 +38,20 @@
                        minlength="2"
                        maxlength="70"
                        pattern="\D{2,}"
-                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                       th:attr="data-minlength-errormessage=#{validation.invite.firstname.length.min(null,null,2)},
                                 data-pattern-errormessage=#{validation.standard.firstname.invalid},
-                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-maxlength-errormessage=#{validation.invite.firstname.length.max},
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="lastName">
+                <label class="govuk-label govuk-label--s" for="lastName">
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
                 <input id="lastName"
-                       class="govuk-input"
+                       class="govuk-input govuk-!-width-one-third"
                        type="text"
                        th:errorclass="govuk-input--error"
                        th:field="*{lastName}"
@@ -58,46 +59,64 @@
                        minlength="2"
                        maxlength="70"
                        pattern="\D{2,}"
-                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                       th:attr="data-minlength-errormessage=#{validation.invite.lastname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.invite.lastname.length.max},
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
+            <div th:if="${model.addingSupporterRole}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisation}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="organisation">
+                    Organisation
+                </label>
+                <th:block th:if="${#fields.hasErrors('organisation')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('organisation')}" th:text="${err}"></span>
+                </th:block>
+                <input id="organisation"
+                       class="govuk-input govuk-!-width-one-third"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{organisation}"
+                       maxlength="256"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.invite.organisation.required}" />
+            </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="emailAddress">
+                <label class="govuk-label govuk-label--s" for="emailAddress">
                     Email address
                 </label>
                 <th:block th:if="${#fields.hasErrors('emailAddress')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
                 </th:block>
                 <input id="emailAddress"
-                       class="govuk-input"
+                       class="govuk-input govuk-!-width-one-third"
                        type="email"
                        th:errorclass="govuk-input--error"
                        th:field="*{emailAddress}"
                        maxlength="256"
                        required="required"
-                       th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
-                                        data-required-errormessage=#{validation.invite.email.required}" />
+                       th:attr="kta-user=${model.isAddingKtaRole()},
+                                data-maxlength-errormessage=#{validation.invite.email.length.max(null, 254)},
+                                data-required-errormessage=${model.addingKtaRole} ? #{validation.kta.invite.email.required} : #{validation.invite.email.required}" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="role">
+            <div th:if="${#lists.size(model.roles) > 1}" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s" for="role">
                     Role
                 </label>
                 <th:block th:if="${#fields.hasErrors('role')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                 </th:block>
                 <select name="role"
-                        class="govuk-select"
+                        class="govuk-select govuk-!-width-one-third"
                         id="role"
                         th:field="*{role}"
                         required="required"
                         data-required-errormessage="Please select a role">
-                    <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+                    <option th:each="adminRole : ${model.roles}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                 </select>
             </div>
+            <input th:if="${#lists.size(model.roles) == 1}" type="hidden" name="role" th:value="${model.roles[0]}" />
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-button">Send invite</button>
+                <button class="govuk-button">Send invitation</button>
                 <a th:href="@{/admin/users/active}" class="button-clear">Cancel</a>
             </div>
         </form>

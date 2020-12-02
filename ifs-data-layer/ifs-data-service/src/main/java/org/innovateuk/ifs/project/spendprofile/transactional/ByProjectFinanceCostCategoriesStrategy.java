@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.CostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -53,7 +54,6 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     private ProjectFinanceService projectFinanceService;
 
     public final static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
-
     @Override
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {
         return find(project(projectId), organisation(organisationId)).
@@ -62,7 +62,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                                 andOnSuccess((finances) -> {
                                     CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
+                                    if (competition.isSbriPilot()) {
+                                        costCategoryGenerators = sort(allOf(SbriPilotCostCategoryGenerator.class));
+                                    } else if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());
                                     } else {
@@ -90,17 +92,17 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
             // We need CostCategories
             List<CostCategory> costCategories = simpleMap(costCategoryGenerators, this::newCostCategory);
             // We need a CostCategoryGroup - a logical grouping of the CostCategories with a description
-            String costCategoryGroupDescription = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
+            String costCategoryGroupDescription = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getDisplayName, ", ");
             CostCategoryGroup costCategoryGroup = new CostCategoryGroup(costCategoryGroupDescription, costCategories);
             // We need a CostCategoryType - a description of the CostCategoryGroup. E.g. currently we would expect one for Industrial and one for Academic
-            String costCategoryTypeName = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
+            String costCategoryTypeName = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getDisplayName, ", ");
             CostCategoryType costCategoryTypeToCreate = new CostCategoryType(costCategoryTypeName, costCategoryGroup);
             return costCategoryTypeRepository.save(costCategoryTypeToCreate);
         });
     }
 
     private CostCategory newCostCategory(CostCategoryGenerator costCategoryGenerator) {
-        CostCategory newCostCategory = new CostCategory(costCategoryGenerator.getName());
+        CostCategory newCostCategory = new CostCategory(costCategoryGenerator.getDisplayName());
         newCostCategory.setLabel(costCategoryGenerator.getLabel());
         return newCostCategory;
     }
@@ -127,14 +129,14 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     private boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
         if(ccg == null
                 || ccg.getLabel() == null
-                || ccg.getName() == null
+                || ccg.getDisplayName() == null
                 || cc == null
                 || cc.getName() == null
                 || ccg.getLabel() == null) {
             return false;
         }
 
-        return ccg.getLabel().equals(cc.getLabel()) && ccg.getName().equals(cc.getName());
+        return ccg.getLabel().equals(cc.getLabel()) && ccg.getDisplayName().equals(cc.getName());
     }
 
 }

@@ -86,7 +86,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
     private CompetitionResource competitionResource = newCompetitionResource()
             .withName("Competition")
-            .withFinanceRowTypes(Collections.singleton(FinanceRowType.FINANCE))
+            .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
             .build();
 
     private ApplicationResource app = newApplicationResource()
@@ -202,7 +202,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         assertEquals(Integer.valueOf(6678), viewModel.getTotalCosts());
         assertEquals(BigDecimal.valueOf(30), viewModel.getPercentageGrant());
-        assertEquals(Integer.valueOf(1004), viewModel.getFundingSought());
+        assertEquals(Integer.valueOf(1003), viewModel.getFundingSought());
         assertEquals(Integer.valueOf(1000), viewModel.getOtherPublicSectorFunding());
         assertEquals(Integer.valueOf(4675), viewModel.getContributionToProject());
         assertTrue(viewModel.isReadOnly());

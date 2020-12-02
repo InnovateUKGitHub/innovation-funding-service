@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Finance checks edit duration - ${model.project.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.project.id})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.project.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -31,8 +31,10 @@
       <dl class="govuk-list">
         <dt>Project title</dt>
         <dd th:text="${model.project.name}"></dd>
-        <dt>Start date</dt>
-        <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+        <th:block th:unless="${model.ktpCompetition}">
+            <dt>Start date</dt>
+            <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+        </th:block>
       </dl>
       <form th:action="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.competitionId},projectId=${model.project.id})}"
             th:object="${form}"

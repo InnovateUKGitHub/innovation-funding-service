@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.application.list.populator;
 
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.application.list.viewmodel.ApplicationsMenuViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,11 @@ public class ApplicationsMenuModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public ApplicationsMenuViewModel populateModel(Long competitionId, UserResource user) {
-        CompetitionSummaryResource summary = applicationSummaryRestService.getCompetitionSummary(competitionId).getSuccess();
+    public ApplicationsMenuViewModel populateModel(CompetitionResource competition, UserResource user) {
+        CompetitionSummaryResource summary = applicationSummaryRestService.getCompetitionSummary(competition.getId()).getSuccess();
 
         return new ApplicationsMenuViewModel(
-                summary.getCompetitionId(),
-                summary.getCompetitionName(),
+                competition,
                 summary.getAssessorsInvited(),
                 summary.getApplicationsInProgress(),
                 summary.getApplicationsSubmitted(),

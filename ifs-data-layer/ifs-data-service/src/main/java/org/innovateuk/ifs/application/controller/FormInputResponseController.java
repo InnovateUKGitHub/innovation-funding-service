@@ -64,8 +64,9 @@ public class FormInputResponseController {
         JsonNode ignoreEmptyNode = jsonObj.get("ignoreEmpty");
         boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
+        Long multipleChoiceOptionId = jsonObj.get("multipleChoiceOptionId").asLong();
 
-        ServiceResult<ValidationMessages> result = formInputResponseService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value))
+        ServiceResult<ValidationMessages> result = formInputResponseService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value, multipleChoiceOptionId))
                 .andOnSuccessReturn(response -> buildBindingResultWithCheckErrors(response, ignoreEmpty));
 
         return result.toPostWithBodyResponse();

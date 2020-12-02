@@ -67,6 +67,11 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
     }
 
     @Test
+    public void testRemoveAdditionalContractFile() {
+        assertSecured(() -> classUnderTest.removeAdditionalContractFile(projectCompositeId.id()));
+    }
+
+    @Test
     public void testUploadAnnexPage() {
         assertSecured(() -> classUnderTest.uploadAnnexFile(projectCompositeId.id(), null, null, null, null, null));
     }

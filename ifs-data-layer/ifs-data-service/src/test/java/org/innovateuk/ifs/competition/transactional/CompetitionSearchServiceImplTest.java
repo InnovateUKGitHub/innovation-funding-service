@@ -131,8 +131,22 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
         when(competitionRepositoryMock.findProjectSetup(any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(Optional.of(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build()));
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(Optional.of(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build()));
+
+        CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
+
+        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response.getContent());
+    }
+
+    @Test
+    public void findProjectSetupCompetitions_NoApplications() {
+        int page = 0;
+        int size = 20;
+        List<Competition> expectedCompetitions = newCompetition().build(1);
+
+        when(competitionRepositoryMock.findProjectSetup(any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(Optional.empty());
 
         CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 
@@ -151,8 +165,8 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
         when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(eq(stakeholderUser.getId()), any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(Optional.of(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build()));
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(Optional.of(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build()));
 
         CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 
@@ -173,8 +187,8 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
         when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(eq(competitionFinanceUser.getId()), any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(Optional.of(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build()));
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(Optional.of(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build()));
 
         CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 

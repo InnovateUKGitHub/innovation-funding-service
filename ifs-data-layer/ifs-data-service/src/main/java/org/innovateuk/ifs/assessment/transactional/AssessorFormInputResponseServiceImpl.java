@@ -13,6 +13,7 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -27,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
@@ -38,7 +37,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -85,7 +84,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     @Transactional
-   public ServiceResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource responses) {
+    public ServiceResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource responses) {
         return processAnyFailuresOrSucceed(simpleMap(responses.getResponses(), this::saveAssessorFormInputResponse));
     }
 
@@ -125,14 +124,14 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {
         return responses.stream()
-                    .filter(response -> response.getFormInput().getType() == ASSESSOR_SCORE)
-                    .filter(response -> response.getValue() != null)
-                    .collect(
-                            Collectors.groupingBy(
-                                    x -> x.getFormInput().getQuestion().getId(),
-                                    Collectors.mapping(
-                                            AssessorFormInputResponse::getValue,
-                                            new AssessorScoreAverageCollector())));
+                .filter(response -> response.getFormInput().getType() == ASSESSOR_SCORE)
+                .filter(response -> response.getValue() != null)
+                .collect(
+                        Collectors.groupingBy(
+                                x -> x.getFormInput().getQuestion().getId(),
+                                Collectors.mapping(
+                                        AssessorFormInputResponse::getValue,
+                                        new AssessorScoreAverageCollector())));
     }
 
     @Override
@@ -171,6 +170,55 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 question -> assessmentFormInputs.containsKey(question.getId())
         );
         return serviceSuccess(new AssessmentDetailsResource(questions, assessmentFormInputs, assessorFormInputResponses));
+    }
+
+    @Override
+    public ServiceResult<ApplicationAssessmentsResource> getApplicationAssessments(long applicationId) {
+        List<ServiceResult<ApplicationAssessmentResource>> results = assessmentRepository.findByTargetIdAndActivityStateIn(applicationId, Collections.singleton(AssessmentState.SUBMITTED)).stream()
+                .map(assessment -> getApplicationAssessment(applicationId, assessment.getId()))
+                .collect(toList());
+        return aggregate(results)
+                .andOnSuccessReturn(assessments -> new ApplicationAssessmentsResource(applicationId, assessments));
+    }
+
+    @Override
+    public ServiceResult<ApplicationAssessmentResource> getApplicationAssessment(long applicationId, long assessmentId) {
+        return find(assessmentRepository.findById(assessmentId), notFoundError(Assessment.class, assessmentId)).andOnSuccessReturn(assessment -> {
+
+            List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentId(assessmentId);
+
+            boolean inScope = false;
+            Map<Long, BigDecimal> scores = new HashMap<>();
+            Map<Long, String> feedback = new HashMap<>();
+
+            for (AssessorFormInputResponse resp : responses.stream()
+                    .filter(resp -> resp.getValue() != null)
+                    .collect(toList())) {
+                FormInput formInput = resp.getFormInput();
+
+                if (formInput.getType() == TEXTAREA) {
+                    feedback.put(formInput.getQuestion().getId(), resp.getValue());
+                }
+
+                if (formInput.getType() == ASSESSOR_SCORE) {
+                    scores.put(formInput.getQuestion().getId(), new BigDecimal(resp.getValue()));
+                }
+
+                if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE) {
+                    inScope = "true".equals(resp.getValue());
+                }
+            }
+            return new ApplicationAssessmentResource(
+                    assessmentId,
+                    applicationId,
+                    inScope,
+                    scores,
+                    feedback,
+                    getAveragePercentage(responses),
+                    assessment.getFundingDecision().getFeedback()
+            );
+
+        });
     }
 
     private Map<Long, List<FormInputResource>> getAssessmentFormInputs(long competitionId) {

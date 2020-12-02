@@ -13,7 +13,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -37,18 +37,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
-import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -128,7 +128,6 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
-
         CompetitionResource competition = newCompetitionResource().build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
@@ -148,10 +147,23 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withChildSections(Collections.emptyList(), Collections.singletonList(1L))
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
-        List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().withQuestion(1L).build(1);
-        ProcessRoleResource processRole = newProcessRoleResource().build();
 
-        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, Optional.of(processRole), questions, formInputs, responses, questionStatuses, assessorFormInputResponseResources);
+        ProcessRoleResource processRole = newProcessRoleResource().withRole(Role.LEADAPPLICANT).withUser(user).build();
+
+        Map<Long, BigDecimal> scores = new HashMap<>();
+        scores.put(1L, new BigDecimal("9"));
+        Map<Long, String> feedback = new HashMap<>();
+        feedback.put(1L, "Hello world");
+
+        ApplicationAssessmentResource assessorResponseFuture = newApplicationAssessmentResource()
+                .withApplicationId(applicationId)
+                .withTestId(3L)
+                .withAveragePercentage(new BigDecimal("50.0"))
+                .withScores(scores)
+                .withFeedback(feedback)
+                .build();
+
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole), questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture));
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -164,8 +176,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
-        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessmentId)).thenReturn(restSuccess(assessorFormInputResponseResources));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
+        when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
+
         when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);

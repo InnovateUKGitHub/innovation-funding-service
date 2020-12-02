@@ -71,6 +71,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
@@ -197,6 +198,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
+                withCompetition(newCompetition().build()).
                 build();
 
         project = newProject().
@@ -893,6 +895,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        globalArguments.put("procurement", false);
 
         Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER, globalArguments);
         when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(
@@ -941,6 +944,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        globalArguments.put("procurement", false);
 
         Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_PROJECT_MANAGER, globalArguments);
         when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -1018,6 +1022,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        globalArguments.put("procurement", false);
 
         Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT, globalArguments);
         when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -1102,6 +1107,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Application a = newApplication()
                 .withProcessRoles(roles)
+                .withCompetition(newCompetition().build())
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
@@ -1121,6 +1127,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         globalArguments.put("applicationId", application.getId());
         globalArguments.put("inviteOrganisationName", "Invite Organisation 1");
         globalArguments.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        globalArguments.put("procurement", false);
 
         Notification notification = new Notification(systemNotificationSource, to, ProjectDetailsServiceImpl.Notifications.INVITE_FINANCE_CONTACT, globalArguments);
         when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());

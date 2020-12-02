@@ -8,10 +8,12 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -28,11 +30,13 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 import static java.lang.Boolean.TRUE;
@@ -123,12 +127,28 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
                 QuestionResponseDataBuilder responseBuilder = baseBuilder.
                         forQuestion(question.getName()).
-                        withAssignee(leadApplicantEmail).
-                        withAnswer(answerValue, leadApplicantEmail);
+                        withAssignee(leadApplicantEmail);
 
                 List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
 
-                if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
+                if (formInputs.stream().anyMatch(fi -> fi.getScope().equals(FormInputScope.APPLICATION) && fi.getType().equals(FormInputType.TEXTAREA))) {
+                    responseBuilder = responseBuilder.withAnswer(answerValue, leadApplicantEmail);
+                }
+
+                if (formInputs.stream().anyMatch(fi -> fi.getScope().equals(FormInputScope.APPLICATION) && fi.getType().equals(FormInputType.MULTIPLE_CHOICE))) {
+                    FormInputResource multipleChoice = formInputs.stream().filter(fi -> fi.getType().equals(FormInputType.MULTIPLE_CHOICE)).findFirst().get();
+                    List<MultipleChoiceOptionResource> choices = multipleChoice.getMultipleChoiceOptions();
+
+                    String applicationName = applicationData.getApplication().getName();
+                    String questionName = question.getName();
+
+                    //Pick a choice based on the application name and question name. Ensures we have a random choice, but is the same choice each time generator is ran.
+                    int choice = (applicationName + questionName).length() % choices.size();
+
+                    responseBuilder = responseBuilder.withChoice(choices.get(choice), leadApplicantEmail);
+                }
+
+                if (formInputs.stream().anyMatch(fi -> fi.getScope().equals(FormInputScope.APPLICATION) && fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
                     String applicationName = applicationData.getApplication().getName();
                     String questionName = question.getShortName().toLowerCase();
@@ -215,7 +235,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                                 applicationData.getApplication(),
                                 applicationData.getCompetition(),
                                 user,
-                                organisationName)
+                                organisationName,
+                                organisationType)
                 );
             }
 
@@ -257,6 +278,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
                 markApplicationDetailsComplete(applicationLine.markQuestionsComplete).
+                markEdiComplete(applicationLine.markQuestionsComplete).
                 markApplicationTeamComplete(applicationLine.markQuestionsComplete).
                 markResearchCategoryComplete(applicationLine.markQuestionsComplete);
         if (applicationLine.submittedDate != null) {
@@ -360,6 +382,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator), organisationRepository.findOneByName(usersOrganisations.get(collaborator)));
         }
 
+        if (competition.getCompetition().isKtp() && line.submittedDate != null) {
+            baseBuilder = baseBuilder.inviteKta();
+        }
+
         List<CsvUtils.InviteLine> pendingInvites = simpleFilter(inviteLines,
                 invite -> "APPLICATION".equals(invite.type) && line.title.equals(invite.targetName));
 
@@ -371,7 +397,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         if (line.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
-
         return baseBuilder.build();
     }
 
@@ -488,11 +513,13 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationResource application,
             CompetitionResource competition,
             String user,
-            String organisationName) {
+            String organisationName,
+            OrganisationTypeEnum organisationType) {
 
         UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
             final IndustrialCostDataBuilder[] builder = {costs};
-            competition.getFinanceRowTypes().forEach(type -> {
+
+            Consumer<? super FinanceRowType> costPopulator = type -> {
                 switch(type) {
                     case LABOUR:
                         builder[0] = builder[0].withWorkingDaysPerYear(123).
@@ -536,23 +563,59 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                     case YOUR_FINANCE:
                         //none for industrial costs.
                         break;
+                    case ASSOCIATE_SALARY_COSTS:
+                        builder[0] = builder[0].withAssociateSalaryCosts("role", 4, new BigInteger("6"));
+                        break;
+                    case ASSOCIATE_DEVELOPMENT_COSTS:
+                        builder[0] = builder[0].withAssociateDevelopmentCosts("role", 4, new BigInteger("7"));
+                        break;
+                    case CONSUMABLES:
+                        builder[0] = builder[0].withConsumables("item", new BigInteger("8"), 3);
+                        break;
+                    case ASSOCIATE_SUPPORT:
+                        builder[0] = builder[0].withAssociateSupport("supp", new BigInteger("13"));
+                        break;
+                    case KNOWLEDGE_BASE:
+                        builder[0] = builder[0].withKnowledgeBase("desc", new BigInteger("15"));
+                        break;
+                    case ESTATE_COSTS:
+                        builder[0] = builder[0].withEstateCosts("desc", new BigInteger("16"));
+                        break;
+                    case KTP_TRAVEL:
+                        builder[0] = builder[0].withKtpTravel(KtpTravelCost.KtpTravelCostType.ASSOCIATE, "desc", new BigDecimal("17.00"), 1);
+                        break;
+                    case ADDITIONAL_COMPANY_COSTS:
+                        builder[0] = builder[0].withAdditionalCompanyCosts(AdditionalCompanyCost.AdditionalCompanyCostType.ASSOCIATE_SALARY, "desc", new BigInteger("18"));
+                        break;
+                    case PREVIOUS_FUNDING:
+                        builder[0] = builder[0].withPreviousFunding("a", "b", "c", new BigDecimal("23"));
+                        break;
                 }
-            });
+            };
 
-            if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
-                builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
-                        60L,
-                        new BigDecimal("100000"),
-                        new BigDecimal("200000"),
-                        new BigDecimal("300000"),
-                        new BigDecimal("400000"));
+
+            if (competition.isKtp()) {
+                if (OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType) {
+                    competition.getFinanceRowTypes().forEach(costPopulator);
+                }
             } else {
-                builder[0] = builder[0].withEmployeesAndTurnover(50L,
-                        new BigDecimal("700000"));
+                competition.getFinanceRowTypes().forEach(costPopulator);
+
+                if (TRUE.equals(competition.getIncludeProjectGrowthTable())) {
+                    builder[0] = builder[0].withProjectGrowthTable(YearMonth.of(2020, 1),
+                            60L,
+                            new BigDecimal("100000"),
+                            new BigDecimal("200000"),
+                            new BigDecimal("300000"),
+                            new BigDecimal("400000"));
+                } else {
+                    builder[0] = builder[0].withEmployeesAndTurnover(50L,
+                            new BigDecimal("700000"));
+                }
             }
 
             return builder[0].withOrganisationSize(SMALL).
-                    withWorkPostcode("AB12 3CD");
+                    withLocation();
         };
         return applicationFinanceDataBuilder.
                 withApplication(application).
@@ -587,7 +650,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withExceptionsStaff(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
                         withUploadedJesForm().
-                        withWorkPostcode("AB12 3CD"));
+                        withLocation());
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(

@@ -119,9 +119,9 @@ the user should see that the element is disabled
 
 The user fills the empty question fields
     The user enters text to a text field    id=question.title    Test title
-    The user enters text to a text field    id=question.subTitle    Subtitle test
+    The user enters text to a text field    jQuery = label:contains("Question subtitle") + div .editor    Subtitle test
     The user enters text to a text field    id=question.guidanceTitle    Test guidance title
-    The user enters text to a text field    css=.editor    Guidance text test
+    The user enters text to a text field    jQuery = label:contains("Question guidance") + div .editor    Guidance text test
     The user enters text to a text field    id=question.maxWords    150
 
 The user fills the empty assessment fields
@@ -175,6 +175,11 @@ the internal user navigates to the project setup competition
     \  ${i} =  Set Variable  ${i + 1}
     the user clicks the button/link       link=${comp_name}
 
+the user refreshes until element appears on page
+    [Arguments]  ${selector}
+    Wait Until Keyword Succeeds Without Screenshots     35s   2s   reload and check if element appears    ${selector}
 
-
-
+reload and check if element appears
+    [Arguments]  ${selector}
+    the user reloads the page
+    Wait Until Page Contains Element Without Screenshots    ${selector}     1s

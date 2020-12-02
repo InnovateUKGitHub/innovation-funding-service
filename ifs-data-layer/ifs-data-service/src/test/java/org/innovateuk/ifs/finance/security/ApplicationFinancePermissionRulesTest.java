@@ -44,9 +44,12 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private UserResource collaborator;
     private UserResource compAdmin;
     private UserResource stakeholderResource;
+    private UserResource kta;
 
     private ApplicationFinanceResource otherApplicationFinance;
     private UserResource otherLeadApplicant;
+    private UserResource otherKta;
+    private UserResource supporter;
 
     @Override
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
@@ -86,6 +89,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             assessor = newUserResource().build();
             collaborator = newUserResource().build();
             stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
+            kta = ktaUser();
+            supporter = supporterUser();
 
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
@@ -98,9 +103,12 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationId, Role.COLLABORATOR)).thenReturn(true);
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), applicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
             when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
             when(competitionRepository.findById(application.getCompetition().getId())).thenReturn(Optional.of(competition));
+
+            setupSupporterAssignmentExpectations(application.getId(), supporter.getId(), true);
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
@@ -116,8 +124,14 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             Application otherApplication = newApplication().with(id(otherApplicationId)).withCompetition(otherCompetition).build();
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();
+            otherKta = ktaUser();
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherKta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
+
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(false);
+
+            setupSupporterAssignmentExpectations(otherApplication.getId(), supporter.getId(), false);
         }
     }
 
@@ -134,6 +148,18 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
         assertTrue(rules.assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, assessor));
         assertFalse(rules.assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, assessor));
+    }
+
+    @Test
+    public void ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
+        assertTrue(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, kta));
+        assertFalse(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, kta));
+    }
+
+    @Test
+    public void supporterCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
+        assertTrue(rules.supporterCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAreAssignedTo(applicationFinance, supporter));
+        assertFalse(rules.supporterCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAreAssignedTo(otherApplicationFinance, supporter));
     }
 
     @Test

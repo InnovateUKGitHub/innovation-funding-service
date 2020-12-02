@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -23,6 +26,7 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -113,6 +117,58 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertTrue(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().withId(organisationId).build(), monitoringOfficerUser()));
             } else {
                 assertFalse(rules.monitoringOfficersCanSeeAllOrganisations(newOrganisationResource().withId(organisationId).build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void monitoringOfficersCanSeeApplicationOrganisations() {
+
+        long organisationId = 2L;
+
+        Organisation organisation = newOrganisation()
+                .withId(organisationId)
+                .build();
+
+        ProcessRole processRole = newProcessRole()
+                .withOrganisation(organisation)
+                .withRole(COLLABORATOR)
+                .build();
+
+        Application application = newApplication()
+                .withProcessRole(processRole)
+                .build();
+
+        Project project = newProject()
+                .withApplication(application)
+                .build();
+
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
+                .withProject(project)
+                .build(1);
+
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(MONITORING_OFFICER)) {
+                assertTrue(rules.monitoringOfficersCanSeeApplicationOrganisations(newOrganisationResource().withId(organisationId).build(), monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanSeeApplicationOrganisations(newOrganisationResource().withId(organisationId).build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void supporterCanSeeAllOrganisations() {
+
+        OrganisationResource organisation = newOrganisationResource().build();
+        when(processRoleRepository.existsByOrganisationId(organisation.getId())).thenReturn(true);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(SUPPORTER)) {
+                assertTrue(rules.supporterCanSeeAllOrganisations(organisation, supporterUser()));
+            } else {
+                assertFalse(rules.supporterCanSeeAllOrganisations(organisation, user));
             }
         });
     }

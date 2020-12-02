@@ -23,12 +23,12 @@ public class RequiredMultipleChoiceValidator extends BaseValidator {
     public void validate(Object target, Errors errors) {
         FormInputResponse response = (FormInputResponse) target;
 
-        if (response.getValue() == null) {
+        if (response.getMultipleChoiceOption() == null) {
             rejectValue(errors, "value", "validation.multiple.choice.required");
             return;
         }
 
-        Optional<MultipleChoiceOption> option = multipleChoiceOptionRepository.findById(Long.valueOf(response.getValue()));
+        Optional<MultipleChoiceOption> option = multipleChoiceOptionRepository.findById(Long.valueOf(response.getMultipleChoiceOption().getId()));
 
         if (!(option.isPresent() && option.get().getFormInput().getId().equals(response.getFormInput().getId()))) {
             rejectValue(errors, "value", "validation.multiple.choice.invalid");

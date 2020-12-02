@@ -111,7 +111,7 @@ public class ProjectManagerController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName(), competition.isLoan());
+        ProjectManagerViewModel viewModel = new ProjectManagerViewModel(leadOrgPartners, projectResource.getId(), projectResource.getName(), competition.isLoan(), competition.isKtp());
         model.addAttribute("model", viewModel);
     }
 

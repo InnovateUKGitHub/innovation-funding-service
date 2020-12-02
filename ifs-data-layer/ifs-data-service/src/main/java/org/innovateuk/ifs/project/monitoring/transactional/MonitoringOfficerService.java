@@ -20,6 +20,16 @@ public interface MonitoringOfficerService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
     ServiceResult<List<SimpleUserResource>> findAll();
 
+    @SecuredBySpring(value = "GET_MONITORING_OFFICERS",
+            description = "Only comp admin, project finance and ifs administrators can get a project list of monitoring officers")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    ServiceResult<List<SimpleUserResource>> findAllKtp();
+
+    @SecuredBySpring(value = "GET_MONITORING_OFFICERS",
+            description = "Only comp admin, project finance and ifs administrators can get a project list of monitoring officers")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
+    ServiceResult<List<SimpleUserResource>> findAllNonKtp();
+
     @SecuredBySpring(value = "GET_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can get a project monitoring officer")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
@@ -28,7 +38,7 @@ public interface MonitoringOfficerService {
     @SecuredBySpring(value = "ASSIGN_MONITORING_OFFICER",
             description = "Only comp admin, project finance and ifs administrators can assign projects to a monitoring officer")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'ifs_administrator')")
-    @Activity(type = MONITORING_OFFICER_ASSIGNED, projectId ="projectId")
+    @Activity(type = MONITORING_OFFICER_ASSIGNED, projectId = "projectId")
     ServiceResult<Void> assignProjectToMonitoringOfficer(long userId, long projectId);
 
     @SecuredBySpring(value = "UNASSIGN_MONITORING_OFFICER",
@@ -44,4 +54,7 @@ public interface MonitoringOfficerService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId);
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'IS_MONITORING_OFFICER')")
+    ServiceResult<Boolean> isMonitoringOfficer(long userId);
 }

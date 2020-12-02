@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <!-- ===========================Element: Skip-content=========================== -->
 
@@ -135,6 +135,9 @@
     <div th:if="${emailSent}" class="event-alert">
         <p class="govuk-body"><span>The email has been sent successfully</span></p>
     </div>
+    <div th:if="${deleteInvite}" class="event-alert">
+        <p class="govuk-body"><span>The invite has been cancelled successfully</span></p>
+    </div>
 </th:block>
 
 <!-- =========================== Element: Formatted Date =========================== -->
@@ -162,7 +165,7 @@
         <h2 class="govuk-heading-s govuk-!-margin-0">This project has been withdrawn.</h2>
         <p class="govuk-body">The application was successful but withdrawn at project setup stage. The scores and written feedback from each assessor can be found below.</p>
     </div>
-    <th:block th:unless="${projectWithdrawn}">
+    <th:block th:unless="${projectWithdrawn || competition.isKtp()}">
         <div class="success-alert"
              th:if="${applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
             <th:block th:unless="${competition.isLoan()}">

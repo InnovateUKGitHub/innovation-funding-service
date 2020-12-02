@@ -22,8 +22,10 @@ items:
         labels:
           deploymentconfig: sil-stub
       spec:
+        imagePullSecrets:
+          - name: imagePullSecretsName
         containers:
-        - image: innovateuk/sil-stub:${silStubVersion}
+        - image: innovateuk/sil-stub:${nexusVersion}
           name: sil-stub
           livenessProbe:
             httpGet:

@@ -36,7 +36,7 @@ Non-registered assessor: Accept invitation
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     Given the user clicks the button/link    jQuery = .govuk-button:contains("Create account")
-    And the user should see the element      jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
+    And the user should see the element      jQuery = .govuk-label:contains("Email") ~ span:contains("worth.email.test+thomas.fister@gmail.com")
     When the user clicks the button/link     jQuery = .govuk-back-link:contains("Back")
     Then the user should see the element     jQuery = h1:contains("Become an assessor for Innovate UK")
 
@@ -90,19 +90,19 @@ Non-registered assessor: Reject invitation
 
 The internal user invites an applicant as an assessor
     Given the comp admin logs in and navigate to invite tab   ${openCompetitionRTO_name}
-    When The internal user invites a user as an assessor      Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    When The internal user invites a user as an assessor      Abby Gallagher   ${abby_gallagher_credentials["email"]}
     Then the internal user send invite
     [Teardown]    Logout as user
 
 The invited applicant accepts the invitation
-    Given the user reads his email and clicks the link    ${RTO_lead_applicant_credentials["email"]}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
+    Given the user reads his email and clicks the link    ${abby_gallagher_credentials["email"]}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
     When the user selects the radio button                acceptInvitation  true
     And the user clicks the button/link                   css = button[type = "Submit"]
     Then the user should see the element                  jQuery = p:contains("Your email address is linked to an existing account.")
 
 The internal user invites the applicant to assess another competition
     Given the comp admin logs in and navigate to invite tab  ${openCompetitionAPC}
-    When The internal user invites a user as an assessor     Dave Adams  ${RTO_lead_applicant_credentials["email"]}
+    When The internal user invites a user as an assessor     Abby Gallagher  ${abby_gallagher_credentials["email"]}
     Then the user should see a field and summary error       ${email_already_in_use}
     [Teardown]    Logout as user
 
@@ -140,7 +140,7 @@ the user should see the validation error in the create assessor form
     the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
     the user should see a field and summary error      Your last name should have at least 2 characters.
     the user should see a field and summary error      Your first name should have at least 2 characters.
-    the user should see a field and summary error      Password must be at least 8 characters.
+    the user should see a field and summary error      Password must be at least 12 characters.
 
 the user enters the postcode and password to create account
     The user enters text to a text field                  id = addressForm.postcodeInput    BS14NT
@@ -158,11 +158,11 @@ the user should not see the error messages after entering valid values
     the user should not see the validation error in the create assessor form   ${enter_a_phone_number_between_8_and_20_digits}
     the user enters text to a text field                                       id = password    ${correct_password}
     the user should not see the validation error in the create assessor form   Please enter your password.
-    the user should not see the validation error in the create assessor form   Password must be at least 8 characters.
+    the user should not see the validation error in the create assessor form   Password must be at least 12 characters.
 
 the user checks for validations on reject invitation page
     the user navigates to the page                    ${Invitation_nonregistered_assessor2}
-    the user should see the element                   jQuery = h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    the user should see the element                   jQuery = h1:contains("You are invited to assess the competition: ${IN_ASSESSMENT_COMPETITION_NAME}")
     the user selects the radio button                 acceptInvitation  false
     the user clicks the button/link                   jQuery = button:contains("Confirm")
     the user should see a field and summary error     The reason cannot be blank.

@@ -90,13 +90,13 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
-                spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
+                spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false, competitionResource));
 
         return "project/details";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/readonly")
+    @GetMapping("/{projectId}/details/readonly")
     public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
                                                UserResource loggedInUser) {
 
@@ -120,7 +120,7 @@ public class ProjectDetailsController {
                         : Collections.emptyList(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
-                spendProfileGenerated, true, true));
+                spendProfileGenerated, true, true, competitionResource));
 
         return "project/details";
     }
@@ -130,8 +130,9 @@ public class ProjectDetailsController {
     public String viewStartDate(@PathVariable("projectId") final long projectId, Model model,
                                 UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource, competitionResource));
         return "project/details-start-date";
     }
 

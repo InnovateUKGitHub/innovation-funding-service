@@ -5,16 +5,23 @@ set -e
 PROJECT=$1
 TARGET=$2
 VERSION=$3
+IMAGE_REGISTRY=$4
+NEXUS_USER=$5
+NEXUS_PASS=$6
+NEXUS_EMAIL=$7
+NEXUS_VERSION=$8
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
+
+REGISTRY=$(getRegistry)
+INTERNAL_REGISTRY=$(getInternalRegistry)
+NEXUS_REGISTRY=$(getNexusRegistryUrl)
 
 PROJECT=$(getProjectName $PROJECT $TARGET)
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 HOST=$(getHost $TARGET)
 ROUTE_DOMAIN=$(getRouteDomain $TARGET $HOST)
-REGISTRY=$(getRegistry)
-INTERNAL_REGISTRY=$(getInternalRegistry)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
@@ -51,7 +58,16 @@ then
     replacePersistentFileClaim
 fi
 
-useContainerRegistry
+
+if [[ ${IMAGE_REGISTRY} == "nexus" ]]
+then
+    addAbilityToPullFromNexus
+    # use hardcoded version as our version is one above the release so does not exist
+    useNexusRegistry ${NEXUS_VERSION}
+else
+    useContainerRegistry
+fi
+
 deploy
 blockUntilServiceIsUp
 

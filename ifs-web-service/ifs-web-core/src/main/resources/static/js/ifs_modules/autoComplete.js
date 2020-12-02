@@ -56,6 +56,7 @@ IFS.core.autoComplete = (function () {
               element.val('')
               autoCompleteSubmitElement.prop('disabled', true)
             }
+            element.trigger('ifsAutosave')
             if (required) {
               setInterval(function () { IFS.core.formValidation.checkRequired(element.parent().find('.autocomplete__input')) }, 1)
             }

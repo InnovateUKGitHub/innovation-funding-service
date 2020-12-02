@@ -142,7 +142,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
     private void sharedAssertions (MvcResult result, AddressResource expectedAddress){
         OrganisationDetailsViewModel organisationDetails = (OrganisationDetailsViewModel) result.getModelAndView().getModel().get("organisationDetails");
-        assertEquals("project/organisationdetails/organisation-details-with-growth-table", result.getModelAndView().getViewName());
+        assertEquals("project/organisationdetails/organisation-details", result.getModelAndView().getViewName());
         assertEquals(expectedAddress.getAddressLine1(), organisationDetails.getAddressLine1());
         assertEquals(expectedAddress.getAddressLine2(), organisationDetails.getAddressLine2());
         assertEquals(expectedAddress.getAddressLine3(), organisationDetails.getAddressLine3());

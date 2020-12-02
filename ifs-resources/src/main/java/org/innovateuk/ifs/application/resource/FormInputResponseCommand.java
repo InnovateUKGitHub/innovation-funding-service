@@ -13,12 +13,14 @@ public class FormInputResponseCommand implements Serializable {
     private long applicationId;
     private long userId;
     private String value;
+    private Long multipleChoiceOptionId;
 
-    public FormInputResponseCommand(long formInputId, long applicationId, long userId, String value) {
+    public FormInputResponseCommand(long formInputId, long applicationId, long userId, String value, Long multipleChoiceOptionId) {
         this.formInputId = formInputId;
         this.applicationId = applicationId;
         this.userId = userId;
         this.value = value;
+        this.multipleChoiceOptionId = multipleChoiceOptionId;
     }
 
     public long getFormInputId() {
@@ -51,5 +53,13 @@ public class FormInputResponseCommand implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Long getMultipleChoiceOptionId() {
+        return multipleChoiceOptionId;
+    }
+
+    public void setMultipleChoiceOptionId(Long multipleChoiceOptionId) {
+        this.multipleChoiceOptionId = multipleChoiceOptionId;
     }
 }

@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.saver.AcademicCostSaver;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -60,13 +59,10 @@ public class AcademicCostsController {
     private UserRestService userRestService;
 
     @Autowired
-    private YourProjectCostsCompleter completeSectionAction;
-
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'assessor')")
     @SecuredBySpring(value = "VIEW_ACADEMIC_COSTS", description = "Applicants and internal users can view the academic project costs page")
     public String viewAcademicCosts(Model model,
                                     UserResource user,
@@ -75,7 +71,7 @@ public class AcademicCostsController {
                                     @PathVariable long sectionId,
                                     @ModelAttribute("form") AcademicCostForm form) {
         formPopulator.populate(form, applicationId, organisationId);
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, !user.isInternalUser()));
+        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, user));
         return VIEW;
     }
 
@@ -107,7 +103,7 @@ public class AcademicCostsController {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())),
+                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()).getSuccess(),
                         mappingErrorKeyToField("validation.application.jes.upload.required", "jesFile"), defaultConverters());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
@@ -157,7 +153,7 @@ public class AcademicCostsController {
             form.setFilename(result.getSuccess().getName());
         }
 
-        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, true));
+        model.addAttribute("model", viewModelPopulator.populate(organisationId, applicationId, sectionId, user));
         return VIEW;
     }
 

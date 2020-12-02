@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project details - ${model.project.name}|"/>
 </head>
@@ -19,8 +19,19 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
         <p class="govuk-body">We need this information to set up your project.</p>
         <h2 class="govuk-heading-m">Project information</h2>
-        <p class="govuk-body" th:if="${model.userLeadPartner}">As the lead you must complete these details on behalf of the overall project.</p>
-        <p class="govuk-body" th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
+
+        <th:block th:if="${model.userLeadPartner}">
+            <th:block th:if="${model.ktpCompetition}">
+                <p class="govuk-body">You provided these details for the overall project.</p>
+            </th:block>
+
+            <p class="govuk-body" th:unless="${model.ktpCompetition}"
+               th:text="${model.procurementCompetition ? 'You must complete these details.' : 'As the lead you must complete these details on behalf of the overall project.'}">..you</p>
+        </th:block>
+
+        <p class="govuk-body" th:unless="${model.userLeadPartner}"
+           th:text="${model.ktpCompetition ? 'The knowledge base partner provided these details for the overall project.' : 'The lead has provided these details on behalf of the overall project.'}">..you</p>
+
         <p class="govuk-body"></p>
         <table class="govuk-table">
             <thead class="govuk-table__head">
@@ -31,17 +42,21 @@
             </tr>
             </thead>
             <tbody class="govuk-table__body">
+            <th:block th:unless="${model.ktpCompetition}">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
                     <a th:if="${model.userLeadPartner and !model.isProjectLive()}" th:href="@{/project/{id}/details/start-date(id=${model.project.id})}" class="govuk-link">Target start date</a>
                     <th:block th:unless="${model.userLeadPartner and !model.isProjectLive()}">Target start date</th:block>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
-                    <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
-                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                    <th:block th:unless="${model.ktpCompetition}">
+                        <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
+                        <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                    </th:block>
                 </td>
                 <td class="govuk-table__cell alignright"></td>
             </tr>
+            </th:block>
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
                     <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}" class="govuk-link">Correspondence address</a>
@@ -62,7 +77,9 @@
             </tbody>
         </table>
         <h2 class="govuk-heading-m">Project location</h2>
-        <p class="govuk-body" th:if="${model.isCollaborativeProject()}">Each partner must provide a project location. We assign the monitoring officer based on location.</p>
+        <p class="govuk-body" th:if="${model.isCollaborativeProject()}"
+           th:text="${model.ktpCompetition ? 'Each partner provided their own project location.' : 'Each partner must provide a project location. We assign the monitoring officer based on location.'}"></p>
+
         <p class="govuk-body" th:unless="${model.isCollaborativeProject()}">Your organisation must provide a project location. We assign the monitoring officer based on location.</p>
         <table class="govuk-table">
             <thead class="govuk-table__head">

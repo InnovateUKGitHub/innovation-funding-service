@@ -3,9 +3,10 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,12 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
+    @Autowired
+    private ApplicationFinanceService applicationFinanceService;
+
+    @Autowired
+    private ApplicationValidatorService applicationValidatorService;
+
     @Override
     @Transactional
     public ServiceResult<BigDecimal> updateApplicationProgress(final long applicationId) {
@@ -53,28 +60,16 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     }
 
     @Override
+    public ServiceResult<BigDecimal> getApplicationProgress(long applicationId) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturn(application -> calculateApplicationProgress(application));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean applicationReadyForSubmit(final long id) {
-        return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
-            BigDecimal progressPercentage = calculateApplicationProgress(application);
-
-            return sectionStatusService.sectionsCompleteForAllOrganisations(id)
-                    .andOnSuccessReturn(allSectionsComplete -> {
-                        Competition competition = application.getCompetition();
-                        BigDecimal researchParticipation =
-                                applicationFinanceHandler.getResearchParticipationPercentage(id);
-
-                        boolean readyForSubmit = false;
-
-                        if (allSectionsComplete
-                                && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
-                                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
-                            readyForSubmit = true;
-                        }
-
-                        return readyForSubmit;
-                    });
-        }).getSuccess();
+        return find(applicationRepository.findById(id), notFoundError(Application.class, id))
+                .andOnSuccessReturn(application -> applicationValidatorService.isApplicationComplete(application)).getSuccess();
     }
 
     private BigDecimal calculateApplicationProgress(Application application) {

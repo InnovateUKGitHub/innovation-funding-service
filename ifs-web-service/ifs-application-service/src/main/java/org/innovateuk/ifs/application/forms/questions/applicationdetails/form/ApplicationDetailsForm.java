@@ -5,29 +5,38 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
-import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
+import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
+import org.innovateuk.ifs.util.DateUtil;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.function.BiPredicate;
 
 /**
  * Form for application details.
  */
+@FieldRequiredIf(required = "startDate", argument = "ktpCompetition", predicate = false, message = "{validation.project.start.date.is.valid.date}")
+@FieldRequiredIf(required = "resubmission", argument = "canResubmit", predicate = true, message = "{validation.application.must.indicate.resubmission.or.not}")
+@FieldComparison(
+        firstField = "startDate",
+        secondField = "ktpCompetition",
+        message = "{validation.project.start.date.not.in.future}",
+        predicate = ApplicationDetailsForm.FutureLocalDatePredicateProvider.class
+)
 public class ApplicationDetailsForm {
 
     @NotBlank(message = "{validation.project.name.must.not.be.empty}")
     private String name;
 
-    @NotNull(message = "{validation.project.start.date.is.valid.date}")
-    @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
 
     @NotNull
     @Range(min = 1, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
-    @NotNull(message = "{validation.application.must.indicate.resubmission.or.not}")
     private Boolean resubmission;
 
     private String previousApplicationNumber;
@@ -41,6 +50,10 @@ public class ApplicationDetailsForm {
     private CompanyPrimaryFocus companyPrimaryFocus;
 
     private Object innovationAreaErrorHolder;
+
+    private Boolean ktpCompetition;
+
+    private Boolean canResubmit;
 
     public void populateForm(ApplicationResource application) {
         this.name = application.getName();
@@ -132,5 +145,36 @@ public class ApplicationDetailsForm {
 
     public void setInnovationAreaErrorHolder(Object innovationAreaErrorHolder) {
         this.innovationAreaErrorHolder = innovationAreaErrorHolder;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public void setKtpCompetition(boolean ktpCompetition) {
+        this.ktpCompetition = ktpCompetition;
+    }
+
+    public Boolean getCanResubmit() {
+        return canResubmit;
+    }
+
+    public void setCanResubmit(Boolean canResubmit) {
+        this.canResubmit = canResubmit;
+    }
+
+    public static class FutureLocalDatePredicateProvider implements BiPredicateProvider<LocalDate, Boolean> {
+
+        public BiPredicate<LocalDate, Boolean> predicate() {
+            return (startDate, ktpCompetition) -> isDateInFuture(startDate, ktpCompetition);
+        }
+
+        private boolean isDateInFuture(LocalDate startDate, Boolean ktpCompetition) {
+            if(!ktpCompetition) {
+                return DateUtil.isFutureDate(startDate);
+            }
+
+            return true;
+        }
     }
 }

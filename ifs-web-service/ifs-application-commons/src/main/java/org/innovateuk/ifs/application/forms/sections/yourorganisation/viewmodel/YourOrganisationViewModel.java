@@ -16,15 +16,15 @@ public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
     private long applicationId;
     private String competitionName;
     private boolean showStateAidAgreement;
-    private boolean fundingSectionComplete;
+    private boolean showOrganisationSizeAlert;
     private boolean h2020;
     private boolean procurementCompetition;
 
-    public YourOrganisationViewModel(long applicationId, String competitionName, boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, boolean procurementCompetition) {
+    public YourOrganisationViewModel(long applicationId, String competitionName, boolean showStateAidAgreement, boolean showOrganisationSizeAlert, boolean h2020, boolean procurementCompetition) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.showStateAidAgreement = showStateAidAgreement;
-        this.fundingSectionComplete = fundingSectionComplete;
+        this.showOrganisationSizeAlert = showOrganisationSizeAlert;
         this.h2020 = h2020;
         this.procurementCompetition = procurementCompetition;
     }
@@ -48,7 +48,7 @@ public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
     }
 
     public boolean isShowOrganisationSizeAlert() {
-        return fundingSectionComplete;
+        return showOrganisationSizeAlert;
     }
 
     public boolean isH2020() {

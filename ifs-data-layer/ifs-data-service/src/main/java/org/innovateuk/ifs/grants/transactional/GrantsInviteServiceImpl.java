@@ -189,7 +189,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-        return new Notification(from, singletonList(to), Notifications.INVITE_GRANTS_USER, notificationArguments);
+        return new Notification(from, to, Notifications.INVITE_GRANTS_USER, notificationArguments);
     }
 
 
@@ -202,6 +202,13 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                     return sendInviteNotification(invite);
                 })
                 .andOnSuccessReturnVoid((sentInvite) -> sentInvite.resend(loggedInUserSupplier.get(), ZonedDateTime.now()));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteInvite(long inviteId) {
+        return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
+                .andOnSuccessReturnVoid(invite -> grantsInviteRepository.deleteById(inviteId));
     }
 
     @Override
@@ -250,8 +257,6 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         } else {
             projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), invite.getOrganisation()));
         }
-
-
     }
 
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {

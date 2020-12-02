@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -27,7 +28,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -117,7 +120,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             doCompetitionDetailsUpdate(data, competition -> {
 
                 if (competitionTypeName != null) {
-                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName);
                     competition.setCompetitionType(competitionType.getId());
                 }
 
@@ -211,7 +214,47 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 question.setDescription("Generic question description");
                 questionRepository.save(question);
             }
+
+            if (data.getCompetition().getName().contains("Multiple choice")) {
+                CompetitionSetupQuestionResource yesNoQuestion = addMultipleChoiceQuestion(data.getCompetition().getId());
+                yesNoQuestion.setShortTitle("Can you answer this question?");
+                yesNoQuestion.setTitle("Answer this.");
+                yesNoQuestion.setSubTitle("<strong>Try picking an answer</strong>");
+                yesNoQuestion.setChoices(newArrayList(new MultipleChoiceOptionResource("Yes"), new MultipleChoiceOptionResource("No")));
+                questionSetupCompetitionService.update(yesNoQuestion);
+                CompetitionSetupQuestionResource surveyQuestion = addMultipleChoiceQuestion(data.getCompetition().getId());
+                surveyQuestion.setShortTitle("IFS is the best govuk sevice.");
+                surveyQuestion.setTitle("Do you agree?");
+                surveyQuestion.setSubTitle("<strong>You do...</strong>");
+                surveyQuestion.setChoices(newArrayList(new MultipleChoiceOptionResource("Strongly agree"), new MultipleChoiceOptionResource("Agree"),
+                        new MultipleChoiceOptionResource("Don't care"), new MultipleChoiceOptionResource("Disagree"), new MultipleChoiceOptionResource("Strongly disagree")));
+                questionSetupCompetitionService.update(surveyQuestion);
+                CompetitionSetupQuestionResource manyAnswers = addMultipleChoiceQuestion(data.getCompetition().getId());
+                manyAnswers.setShortTitle("This question has loads of answers");
+                manyAnswers.setTitle("so many answers.");
+                manyAnswers.setSubTitle("<strong>Best letter?</strong>");
+                manyAnswers.setChoices(newArrayList(new MultipleChoiceOptionResource("A"), new MultipleChoiceOptionResource("B"),
+                        new MultipleChoiceOptionResource("C"), new MultipleChoiceOptionResource("D"), new MultipleChoiceOptionResource("E"),
+                        new MultipleChoiceOptionResource("F"), new MultipleChoiceOptionResource("G"), new MultipleChoiceOptionResource("H"),
+                        new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
+                questionSetupCompetitionService.update(manyAnswers);
+            }
         });
+    }
+
+    private CompetitionSetupQuestionResource addMultipleChoiceQuestion(long competitionId) {
+        CompetitionSetupQuestionResource question = questionSetupCompetitionService.createByCompetitionId(competitionId).getSuccess();
+        question.setTextArea(false);
+        question.setMultipleChoice(true);
+        question.setTemplateDocument(false);
+        question.setScored(true);
+        question.setWrittenFeedback(true);
+        question.setScope(false);
+        question.setResearchCategoryQuestion(false);
+        question.setAssessmentGuidance("Assess this");
+        question.setScoreTotal(10);
+        question.setAssessmentMaxWords(500);
+        return question;
     }
 
     public CompetitionDataBuilder withSetupComplete() {
@@ -241,6 +284,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
         competitionSections.stream().filter(section -> section.getName().equals("Project details"))
+                .findFirst()
+                .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
+        // only for ktp competitions
+        competitionSections.stream().filter(section -> section.getName().equals("Score Guidance"))
                 .findFirst()
                 .ifPresent(sectionResource -> markSectionQuestionsSetupComplete(questionResources, sectionResource, data));
     }
@@ -323,10 +370,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones() {
+    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage) {
         return asCompAdmin(data ->
             Stream.of(MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
+                    .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                     .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
@@ -374,7 +422,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
-        return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+        if (date.isBefore(now())) {
+            return asCompAdmin(data ->  competitionService.closeAssessment(data.getCompetition().getId()).getSuccess());
+        } else {
+            return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
+        }
     }
 
     public CompetitionDataBuilder withLineDrawDate(ZonedDateTime date) {

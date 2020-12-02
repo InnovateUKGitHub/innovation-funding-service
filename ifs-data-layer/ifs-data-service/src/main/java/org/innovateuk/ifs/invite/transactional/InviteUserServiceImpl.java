@@ -23,6 +23,8 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.SimpleOrganisation;
+import org.innovateuk.ifs.organisation.repository.SimpleOrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -49,6 +51,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -80,13 +84,18 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private SimpleOrganisationRepository simpleOrganisationRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    public static final String WEB_CONTEXT = "/management/registration";
+    public static final String INTERNAL_USER_WEB_CONTEXT = "/management/registration";
+    public static final String EXTERNAL_USER_WEB_CONTEXT = "/registration";
 
     enum Notifications {
-        INVITE_INTERNAL_USER
+        INVITE_INTERNAL_USER,
+        INVITE_EXTERNAL_USER,
     }
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
@@ -94,35 +103,38 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Value("${ifs.system.internal.user.email.domain}")
     private String internalUserEmailDomain;
 
+    @Value("${ifs.system.kta.user.email.domain}")
+    private String ktaUserEmailDomain;
+
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
-
-        return validateInvite(invitedUser, role)
-                .andOnSuccess(() -> validateInternalUserRole(role))
-                .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> saveInvite(invitedUser, role))
-                .andOnSuccess(this::inviteInternalUser);
-    }
-
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
-
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role, String organisation) {
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
-        return serviceSuccess();
+
+        if (externalRolesToInvite().contains(role)) {
+            return validateExternalUserEmailDomain(invitedUser.getEmail(), role)
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
+                    .andOnSuccess(this::inviteExternalUser);
+        } else if (internalRoles().contains(role)) {
+            return validateInternalUserEmailDomain(invitedUser.getEmail())
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role, organisation))
+                    .andOnSuccess(this::inviteInternalUser);
+        } else {
+            return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+        }
     }
 
-    private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
+    private ServiceResult<RoleInvite> validateAndSaveInvite(UserResource invitedUser, Role role, String organisation) {
+                return validateUserEmailAvailable(invitedUser)
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> saveInvite(invitedUser, role, organisation));
 
-        return Role.internalRoles().stream().anyMatch(internalRole -> internalRole == userRoleType)
-                ? serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 
-    private ServiceResult<Void> validateEmail(String email) {
+    private ServiceResult<Void> validateInternalUserEmailDomain(String email) {
 
         internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
 
@@ -130,6 +142,21 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         if (!internalUserEmailDomain.equalsIgnoreCase(domain)) {
             return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateExternalUserEmailDomain(String email, Role role) {
+
+        if (role == Role.KNOWLEDGE_TRANSFER_ADVISER) {
+            ktaUserEmailDomain = StringUtils.defaultString(ktaUserEmailDomain);
+
+            String domain = StringUtils.substringAfter(email, "@");
+
+            if (!ktaUserEmailDomain.equalsIgnoreCase(domain)) {
+                return serviceFailure(KTA_USER_ROLE_INVITE_INVALID_EMAIL);
+            }
         }
 
         return serviceSuccess();
@@ -145,25 +172,29 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
-    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<RoleInvite> saveInvite(UserResource invitedUser, Role role, String organisation) {
+        SimpleOrganisation simpleOrganisation = null;
+        if (organisation != null) {
+            simpleOrganisation = simpleOrganisationRepository.save(new SimpleOrganisation(organisation));
+        }
         RoleInvite roleInvite = new RoleInvite(invitedUser.getFirstName() + " " + invitedUser.getLastName(),
                 invitedUser.getEmail(),
                 generateInviteHash(),
                 role,
-                CREATED);
+                CREATED,
+                simpleOrganisation);
 
         RoleInvite invite = roleInviteRepository.save(roleInvite);
 
         return serviceSuccess(invite);
     }
-
     private ServiceResult<Void> inviteInternalUser(RoleInvite roleInvite) {
 
         try {
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
 
             Notification notification = new Notification(systemNotificationSource,
-                    singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
+                    createUserNotificationTarget(roleInvite),
                     Notifications.INVITE_INTERNAL_USER, globalArgs);
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -178,8 +209,29 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }
+    private ServiceResult<Void> inviteExternalUser(RoleInvite roleInvite) {
 
-    private NotificationTarget createInviteInternalUserNotificationTarget(RoleInvite roleInvite) {
+        try {
+            Map<String, Object> globalArgs = createGlobalArgsForExternalUserInvite(roleInvite);
+
+            Notification notification = new Notification(systemNotificationSource,
+                    createUserNotificationTarget(roleInvite),
+                    Notifications.INVITE_EXTERNAL_USER, globalArgs);
+
+            ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
+
+            inviteContactEmailSendResult.handleSuccessOrFailure(
+                    failure -> handleInviteError(roleInvite, failure),
+                    success -> handleInviteSuccess(roleInvite)
+            );
+            return inviteContactEmailSendResult;
+        } catch (IllegalArgumentException e) {
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()), e);
+            return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
+        }
+    }
+
+    private NotificationTarget createUserNotificationTarget(RoleInvite roleInvite) {
         return new UserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
     }
 
@@ -187,7 +239,15 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         Map<String, Object> globalArguments = new HashMap<>();
         Role roleResource = roleInvite.getTarget();
         globalArguments.put("role", roleResource.getDisplayName());
-        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, roleInvite));
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + INTERNAL_USER_WEB_CONTEXT, roleInvite));
+        return globalArguments;
+    }
+
+    private Map<String, Object> createGlobalArgsForExternalUserInvite(RoleInvite roleInvite) {
+        Map<String, Object> globalArguments = new HashMap<>();
+        Role roleResource = roleInvite.getTarget();
+        globalArguments.put("role", roleResource.getDisplayName().toLowerCase());
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + EXTERNAL_USER_WEB_CONTEXT, roleInvite));
         return globalArguments;
     }
 
@@ -248,8 +308,17 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     @Override
-    public ServiceResult<Void> resendInternalUserInvite(long inviteId) {
-        return findRoleInvite(inviteId).andOnSuccess(this::inviteInternalUser);
+    public ServiceResult<Void> resendInvite(long inviteId) {
+        return findRoleInvite(inviteId)
+                .andOnSuccess(invite -> {
+                    if (externalRolesToInvite().contains(invite.getTarget())) {
+                        return inviteExternalUser(invite);
+                    } else if (internalRoles().contains(invite.getTarget())) {
+                        return inviteInternalUser(invite);
+                    } else {
+                        return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+                    }
+                });
     }
 
     private ServiceResult<RoleInvite> findRoleInvite(long inviteId) {

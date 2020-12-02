@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -35,4 +36,7 @@ public interface ApplicationFinanceService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource','CHECK_COLLABORATIVE_FUNDING_CRITERIA_MET')")
     ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource','CHECK_FUNDING_SOUGHT_VALID')")
+    ServiceResult<Boolean> fundingSoughtValid(long applicationId);
 }

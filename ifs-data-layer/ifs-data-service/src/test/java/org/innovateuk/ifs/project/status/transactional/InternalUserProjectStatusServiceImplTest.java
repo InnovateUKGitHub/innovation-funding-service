@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
@@ -160,6 +161,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         long applicationId = 456L;
         application = newApplication().
                 withId(applicationId).
+                withApplicationState(ApplicationState.APPROVED).
                 withProcessRoles(leadApplicantProcessRole).
                 withName("My Application").
                 withCompetition(competition).
@@ -274,6 +276,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2))
+                .withActivityState(ApplicationState.APPROVED)
                 .build(3);
 
         List<ProjectUser> projectUsers = newProjectUser()
@@ -539,7 +542,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -666,6 +669,30 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
+    }
+    @Test
+    public void getProjectStatusResourceByProjectGolApplicationNoFundingDecision() {
+        long projectId = 2345L;
+
+        Project project = createProjectStatusResource(projectId,
+                ApprovalType.APPROVED,
+                false,
+                false,
+                false,
+                true,
+                false
+        );
+        project.getApplication().getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
+
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
+        when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
     }
 
     @Test
@@ -1172,6 +1199,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Application application = newApplication()
                 .withCompetition(competition)
+                .withApplicationState(ApplicationState.APPROVED)
                 .build();
         Organisation organisation = newOrganisation().build();
         Role role = Role.LEADAPPLICANT;

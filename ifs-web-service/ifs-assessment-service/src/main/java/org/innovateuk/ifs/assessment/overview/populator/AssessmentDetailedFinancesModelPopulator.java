@@ -84,9 +84,9 @@ public class AssessmentDetailedFinancesModelPopulator {
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competition.getId(), PROJECT_COST_FINANCES).get(0);
 
         if (academic) {
-            addAcademicFinance(model, applicationId, costSection.getId(), organisationId);
+            addAcademicFinance(model, applicationId, costSection.getId(), organisationId, user);
         } else {
-            addIndustrialFinance(model, applicationId, costSection.getId(), organisationId);
+            addIndustrialFinance(model, applicationId, costSection.getId(), organisationId, user);
         }
 
         addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competitionAssessmentConfigResource.getAssessorFinanceView());
@@ -96,8 +96,8 @@ public class AssessmentDetailedFinancesModelPopulator {
                 application.getName(), academic);
     }
 
-    private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId) {
-        AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, false);
+    private void addAcademicFinance(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {
+        AcademicCostViewModel viewModel = academicCostViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
         AcademicCostForm form = new AcademicCostForm();
         applicationAcademicCostFormPopulator.populate(form, applicationId, organisationId);
 
@@ -105,8 +105,8 @@ public class AssessmentDetailedFinancesModelPopulator {
         model.addAttribute("form", form);
     }
 
-    private void addIndustrialFinance(Model model, long applicationId, long sectionId, long organisationId) {
-        YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, sectionId, organisationId, true);
+    private void addIndustrialFinance(Model model, long applicationId, long sectionId, long organisationId, UserResource user) {
+        YourProjectCostsViewModel viewModel = yourProjectCostsViewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         YourProjectCostsForm form = yourProjectCostsFormPopulator.populateForm(applicationId, organisationId);
         model.addAttribute("costsViewModel", viewModel);
         model.addAttribute("form", form);

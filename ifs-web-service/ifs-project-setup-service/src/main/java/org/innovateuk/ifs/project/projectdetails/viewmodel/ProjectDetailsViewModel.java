@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -23,6 +24,8 @@ public class ProjectDetailsViewModel {
 
     private boolean userLeadPartner;
     private boolean collaborativeProject;
+    private boolean ktpCompetition;
+    private boolean procurementCompetition;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                          List<Long> usersPartnerOrganisations,
@@ -32,7 +35,8 @@ public class ProjectDetailsViewModel {
                                          boolean userIsLeadPartner,
                                          boolean spendProfileGenerated,
                                          boolean grantOfferLetterGenerated,
-                                         boolean readOnlyView) {
+                                         boolean readOnlyView,
+                                         CompetitionResource competitionResource) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -44,6 +48,8 @@ public class ProjectDetailsViewModel {
         this.readOnlyView = readOnlyView;
         this.userLeadPartner = userIsLeadPartner;
         this.collaborativeProject = project.isCollaborativeProject();
+        this.ktpCompetition = competitionResource.isKtp();
+        this.procurementCompetition = competitionResource.isProcurement();
     }
 
     public ProjectResource getProject() {
@@ -109,5 +115,13 @@ public class ProjectDetailsViewModel {
 
     public boolean isProjectLive() {
         return project.getProjectState().isLive();
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 }

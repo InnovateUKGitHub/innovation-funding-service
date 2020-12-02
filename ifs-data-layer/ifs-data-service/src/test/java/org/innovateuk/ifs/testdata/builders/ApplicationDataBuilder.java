@@ -9,6 +9,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -30,13 +31,13 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
-import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Generates an Application for a Competition.  Additionally generates finances for each Organisation on the Application
  */
 public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, ApplicationDataBuilder> {
+    private static final String KTA_EMAIL = "hermen.mermen@ktn-uk.test";
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationDataBuilder.class);
 
@@ -80,6 +81,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return markQuestionComplete(markAsComplete, APPLICATION_DETAILS);
     }
 
+    public ApplicationDataBuilder markEdiComplete(boolean markAsComplete) {
+        return markQuestionComplete(markAsComplete, EQUALITY_DIVERSITY_INCLUSION);
+    }
+
     public ApplicationDataBuilder markApplicationTeamComplete(boolean markAsComplete) {
         return markQuestionComplete(markAsComplete, APPLICATION_TEAM);
     }
@@ -106,10 +111,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    public ApplicationDataBuilder withQuestionResponse(String questionName, String value, String answeredBy) {
-        return withQuestionResponses(builder -> builder.forQuestion(questionName).withAnswer(value, answeredBy));
-    }
-
     public ApplicationDataBuilder withStartDate(LocalDate startDate) {
         return asLeadApplicant(data -> doApplicationDetailsUpdate(data, application -> application.setStartDate(startDate)));
     }
@@ -127,6 +128,13 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
             doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId(), Optional.of(organisation.getId())));
+        });
+    }
+    public ApplicationDataBuilder inviteKta() {
+        return asLeadApplicant(data -> {
+            ktaInviteService.saveKtaInvite(new ApplicationKtaInviteResource(KTA_EMAIL, data.getApplication().getId())).getSuccess();
+            ApplicationKtaInviteResource invite = ktaInviteService.getKtaInviteByApplication(data.getApplication().getId()).getSuccess();
+            doAs(retrieveUserByEmail(KTA_EMAIL), () -> ktaInviteService.acceptInvite(invite.getHash()));
         });
     }
 
@@ -258,23 +266,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     @Override
     protected ApplicationData createInitial() {
         return new ApplicationData();
-    }
-
-    public ApplicationDataBuilder withQuestionResponses(
-            UnaryOperator<QuestionResponseDataBuilder>... responseBuilders) {
-
-        return withQuestionResponses(asList(responseBuilders));
-    }
-
-    public ApplicationDataBuilder withQuestionResponses(
-            List<UnaryOperator<QuestionResponseDataBuilder>> responseBuilders) {
-
-        return with(data -> {
-            QuestionResponseDataBuilder baseBuilder =
-                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
-
-            responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
-        });
     }
 
     public ApplicationDataBuilder withExistingApplication(ApplicationData applicationData) {

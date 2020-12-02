@@ -173,7 +173,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
     }
 
-    public void setupCompetition() {
+    public void setupCompetition(FundingType fundingType, AssessorFinanceView assessorFinanceView) {
         competitionResource = newCompetitionResource()
                 .with(id(competitionId))
                 .with(name("Competition x"))
@@ -183,7 +183,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMinProjectDuration(1)
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
-                .withFundingType(FundingType.GRANT)
+                .withFundingType(fundingType)
                 .build();
 
         competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
@@ -192,10 +192,10 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withAssessorPay(BigDecimal.valueOf(100))
                 .withHasAssessmentPanel(false)
                 .withHasInterviewStage(false)
-                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                .withAssessorFinanceView(assessorFinanceView)
                 .build();
 
-        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+        competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource();
 
@@ -565,7 +565,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
-                .getId(), SMALL, "ABC 123", null);
+                .getId(), SMALL, "ABC 123", null, "");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new ExcludedCostCategory();
         costCategory.addCost(new GrantClaimPercentage(1L, BigDecimal.valueOf(50), applicationFinanceResource.getId()));

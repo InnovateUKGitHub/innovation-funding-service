@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -17,10 +18,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -164,6 +166,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("competitionOrganisationConfig", competitionOrganisationConfig);
     }
 
+    public CompetitionBuilder withCompetitionApplicationConfig(CompetitionApplicationConfig... competitionApplicationConfig) {
+        return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfig);
+    }
+
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
         return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }
@@ -188,9 +194,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((grantClaimMaximums, c) -> c.setGrantClaimMaximums(grantClaimMaximums), grantClaimMaximumses);
     }
 
-    @SafeVarargs
-    public final CompetitionBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
-        return withArraySetFieldByReflection("financeRowTypes", financeRowTypes);
+    public final CompetitionBuilder withFinanceRowTypes(List<FinanceRowType> financeRowTypes) {
+        List<CompetitionFinanceRowTypes> types = IntStream.range(0, financeRowTypes.size()).mapToObj(
+                i -> new CompetitionFinanceRowTypes(null, financeRowTypes.get(i), i)
+        ).collect(toList());
+        return with(comp -> comp.getCompetitionFinanceRowTypes().addAll(types));
     }
 
     public CompetitionBuilder withTermsAndConditions(GrantTermsAndConditions... termsAndConditions) {
@@ -343,4 +351,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withFundingType(FundingType... fundingTypes) {
         return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
     }
+
+    @SafeVarargs
+    public final CompetitionBuilder withProjectStages(List<ProjectStages>... projectStages) {
+        return withArray((projectStage, competition) -> competition.setProjectStages(projectStage), projectStages);
+    }
+
+
 }

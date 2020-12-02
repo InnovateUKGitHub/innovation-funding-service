@@ -13,7 +13,7 @@ public class FlywayVersionComparatorTest
     @Test
     public void testCompareTo(){
         final FlywayVersionComparator comparator = new FlywayVersionComparator();
-        assertEquals(0, comparator.compare(new ArrayList<Integer>(), new ArrayList<Integer>()));
+        assertEquals(0, comparator.compare(new ArrayList<>(), new ArrayList<>()));
         assertEquals(1, comparator.compare(asList(10), asList(1)));
         assertEquals(-1, comparator.compare(asList(1), asList(10)));
         assertEquals(1, comparator.compare(asList(1, 1), asList(1)));

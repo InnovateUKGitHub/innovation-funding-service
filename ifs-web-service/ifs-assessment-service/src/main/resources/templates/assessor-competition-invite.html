@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -22,37 +22,48 @@
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='govuk-heading-xl'" />
-                <p class="govuk-body">You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|You are invited to assess the competition: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <section class="boxed govuk-!-margin-bottom-6">
-                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.acceptsDate, 'd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'd MMMM yyyy')}: Assessment period|">
-                        21 March 2017 to 28 March 2017: Assessment period
+                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.acceptsDate.year!=model.deadlineDate.year} ? 'd MMM yyyy' : 'd MMM'">
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Assessment period: ${#temporals.format(model.acceptsDate,dateFormat)} to ${#temporals.format(model.deadlineDate, 'd MMM yyyy')}|">
+                        Assessment period: 21 Mar to 28 Mar 2017
                     </h2>
-                    <p class="govuk-body">This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
 
-                    <p class="govuk-body" th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
-                        taking place on ${#temporals.format(model.briefingDate, 'd MMMM')}.|"></p>
+                    <p class="govuk-body" th:classappend="${model.ktpCompetition} ? 'govuk-!-margin-top-2' : ''">
+                        <th:block th:unless="${model.assessorPay == null}">
+                            This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.
+                        </th:block>
+                        <th:block th:if="${model.assessorPay == null}">
+                            The assessment period is for reading, scoring, writing comments and submitting your assessment.
+                        </th:block>
+                    </p>
+
+                    <p class="govuk-body" th:if="${model.assessorPay != null && model.briefingDate != null}" th:text="|The assessor webinar briefing will last one hour,
+                    taking place on ${#temporals.format(model.briefingDate, 'd MMMM')}.|"></p>
+
+                    <p class="govuk-body" th:if="${model.assessorPay == null}">You may receive up to 10 applications to assess, depending on the number of applications we receive for this competition.</p>
                 </section>
 
                 <section>
-                    <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+                    <h2 class="govuk-heading-m">
+                        <th:block th:text="|Competition details|"/>
+                        <br/>
+                        <th:block th:text="|${model.competitionId}: ${model.competitionName}|"/>
+                    </h2>
 
                     <p class="govuk-body">
                         <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
                            class="govuk-link"
                            target="_blank"
-                           rel="external noopener noreferrer"
-                           aria-describedby="competition-brief-hint">See competition brief</a>
-                        <span id="competition-brief-hint">(opens in a new window)</span>.
+                           rel="external noopener noreferrer">See the competition brief (opens in a new window)</a>
                     </p>
 
                     <h3 class="govuk-heading-s">You should reject this invitation if:</h3>
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>you are unavailable for the assessment period dates</li>
-                        <li>you are unable to meet the assessment deadlines</li>
+                        <li>you are unavailable during the assessment period</li>
+                        <li>you cannot meet the assessment deadlines</li>
                         <li>this competition is not in your area of expertise</li>
-                        <li>you have a direct conflict of interest, for example intending to apply to this competition yourself</li>
+                        <li>you have a direct conflict of interest, for example, you intend to apply for this competition yourself</li>
                     </ul>
                 </section>
 
@@ -60,7 +71,7 @@
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="acceptInvitation">
-                                <h2 class="govuk-fieldset__heading">Select your ability to assess the competition</h2>
+                                <h2 class="govuk-fieldset__heading">Are you able to assess applications for this competition?</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
@@ -72,7 +83,7 @@
                                            th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
                                     <label for="acceptCompetition"
                                            class="govuk-label govuk-radios__label">
-                                        Yes, I am able to assess applications to this competition<th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                                        Yes
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item" data-target="reject-competition">
@@ -81,7 +92,7 @@
                                            th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}"/>
                                     <label for="rejectCompetition"
                                            class="govuk-label govuk-radios__label">
-                                        No, I am not able to assess applications to this competition
+                                        No
                                     </label>
                                 </div>
                             </div>

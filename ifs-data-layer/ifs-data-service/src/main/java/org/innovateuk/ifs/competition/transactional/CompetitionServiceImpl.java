@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -20,10 +20,11 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
+import org.innovateuk.ifs.project.core.transactional.ProjectToBeCreatedService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +34,12 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -50,16 +51,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 
     @Autowired
-    private InnovationLeadRepository innovationLeadRepository;
-
-    @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
@@ -73,6 +68,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private ProjectToBeCreatedService projectToBeCreatedService;
+
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
         return findCompetitionById(id).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
@@ -80,6 +78,26 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<Competition> findCompetitionById(long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id));
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
+        return findCompetitionByApplicationId(applicationId).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    private ServiceResult<Competition> findCompetitionByApplicationId(long applicationId) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturn(app -> app.getCompetition());
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> getCompetitionByProjectId(long projectId) {
+        return findCompetitionByProjectId(projectId).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    private ServiceResult<Competition> findCompetitionByProjectId(long projectId) {
+        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId))
+                .andOnSuccessReturn(proj -> proj.getApplication().getCompetition());
     }
 
     @Override
@@ -98,8 +116,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> closeAssessment(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId).get();
+        ServiceResult<?> result = serviceSuccess();
+        if (competition.isKtp()) {
+            result = aggregate(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, newArrayList(ApplicationState.SUBMITTED))
+                    .stream()
+                    .map(Application::getId)
+                    .map(id -> projectToBeCreatedService.markApplicationReadyToBeCreated(id, null))
+                    .collect(toList()));
+        }
         competition.closeAssessment(ZonedDateTime.now());
-        return serviceSuccess();
+        return result.andOnSuccessReturnVoid();
     }
 
     @Override

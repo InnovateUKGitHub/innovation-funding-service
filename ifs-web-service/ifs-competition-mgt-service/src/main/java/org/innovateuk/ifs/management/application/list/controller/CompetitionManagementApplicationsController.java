@@ -57,8 +57,9 @@ public class CompetitionManagementApplicationsController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
-        checkCompetitionIsOpen(competitionId);
-        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId, user));
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        checkCompetitionIsOpen(competition);
+        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competition, user));
         return "competition/applications-menu";
     }
 
@@ -71,7 +72,8 @@ public class CompetitionManagementApplicationsController {
                                   @RequestParam(value = "sort", defaultValue = "") String sort,
                                   @RequestParam(value = "filterSearch") Optional<String> filter,
                                   UserResource user) {
-        checkCompetitionIsOpen(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        checkCompetitionIsOpen(competition);
         model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, page, sort, filter, user));
 
         return "competition/all-applications";
@@ -85,7 +87,8 @@ public class CompetitionManagementApplicationsController {
                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                         @RequestParam(value = "sort", defaultValue = "") String sort,
                                         @RequestParam(value = "filterSearch") Optional<String> filter) {
-        checkCompetitionIsOpen(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        checkCompetitionIsOpen(competition);
         model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, page, sort, filter));
 
         return "competition/submitted-applications";
@@ -100,14 +103,14 @@ public class CompetitionManagementApplicationsController {
                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "sort", defaultValue = "") String sort,
                                          UserResource user) {
-        checkCompetitionIsOpen(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        checkCompetitionIsOpen(competition);
         model.addAttribute("model", ineligibleApplicationsModelPopulator.populateModel(competitionId, page, sort, filterForm, user));
 
         return "competition/ineligible-applications";
     }
 
-    private void checkCompetitionIsOpen(long competitionId) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+    private void checkCompetitionIsOpen(CompetitionResource competition) {
         if (!competition.getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
             throw new IncorrectStateForPageException("Competition is not yet open.");
         }

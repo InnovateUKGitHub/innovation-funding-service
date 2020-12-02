@@ -80,7 +80,7 @@ public class RemovePartnerNotificationServiceImpl implements RemovePartnerNotifi
         notificationArguments.put("organisationName", organisation.getName());
         notificationArguments.put("projectTeamLink", getProjectTeamLink(project.getId()));
 
-        Notification notification = new Notification(from, singletonList(to), REMOVE_PROJECT_ORGANISATION, notificationArguments);
+        Notification notification = new Notification(from, to, REMOVE_PROJECT_ORGANISATION, notificationArguments);
         notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 

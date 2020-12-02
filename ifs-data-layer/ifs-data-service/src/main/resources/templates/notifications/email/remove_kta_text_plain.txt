@@ -1,0 +1,12 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+You have been removed as the knowledge transfer adviser for the Innovation Funding Service application:
+
+${applicationId} : ${applicationId}
+
+Yours sincerely
+
+<@layout.innovateSenderPlainText />
+</@layout.defaultPlainText>

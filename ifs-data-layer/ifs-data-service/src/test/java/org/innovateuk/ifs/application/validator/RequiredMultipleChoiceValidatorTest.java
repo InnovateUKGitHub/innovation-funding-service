@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.domain.MultipleChoiceOption;
 import org.innovateuk.ifs.form.repository.MultipleChoiceOptionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,20 +40,30 @@ public class RequiredMultipleChoiceValidatorTest {
 
     @Test
     public void valid() {
-        formInputResponse.setValue("1");
-        when(multipleChoiceOptionRepository.findById(1L)).thenReturn(Optional.of(newMultipleChoiceOption().withFormInput(formInputResponse.getFormInput()).build()));
+        MultipleChoiceOption multipleChoiceOption =newMultipleChoiceOption()
+                .withId(1L)
+                .withText("Yes")
+                .withFormInput(formInputResponse.getFormInput()).build();
+        formInputResponse.setMultipleChoiceOption(multipleChoiceOption);
+        when(multipleChoiceOptionRepository.findById(1L)).thenReturn(Optional.of(multipleChoiceOption));
         validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
     }
+
     @Test
     public void missingValue() {
-        formInputResponse.setValue(null);
+        formInputResponse.setMultipleChoiceOption(null);
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
     }
+
     @Test
     public void missingOption() {
-        formInputResponse.setValue("5");
+        MultipleChoiceOption multipleChoiceOption =newMultipleChoiceOption()
+                .withId(5L)
+                .withText("No")
+                .withFormInput(formInputResponse.getFormInput()).build();
+        formInputResponse.setMultipleChoiceOption(multipleChoiceOption);
         when(multipleChoiceOptionRepository.findById(5L)).thenReturn(Optional.empty());
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());

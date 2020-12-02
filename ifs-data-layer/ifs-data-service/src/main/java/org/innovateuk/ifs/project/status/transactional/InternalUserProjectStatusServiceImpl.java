@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -84,6 +86,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
 
     @Override
     @Transactional //Write transaction for first time creation of project finances.
+    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-8610")
     public ServiceResult<ProjectStatusPageResource> getCompetitionStatus(long competitionId,
                                                                          String applicationSearchString,
                                                                          int page,
@@ -150,6 +153,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
                 golWorkflowHandler.isSent(project),
                 project.getProjectState(),
+                project.getApplication().getApplicationProcess().getProcessState(),
                 sentToIfsPa);
     }
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectActivityStates partnerProjectLocationStatus) {
@@ -195,24 +199,32 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project) {
+        if (!projectContainsStage(project, ProjectSetupStage.BANK_DETAILS)) {
+            return COMPLETE;
+        }
+        List<Organisation> organisationsRequiringBankDetails = project.getOrganisations()
+                .stream()
+                .filter(org -> areBankDetailsRequired(project, org))
+                .collect(toList());
+        if (organisationsRequiringBankDetails.isEmpty()) {
+            return COMPLETE;
+        }
 
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
         boolean started = false;
-        for (Organisation organisation : project.getOrganisations()) {
-            if (areBankDetailsRequired(project, organisation)) {
-                Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-                ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-                ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
-                if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
-                    incomplete = true;
-                }
-                if (bankDetails.isPresent()) {
-                    started = true;
-                    if (organisationBankDetailsStatus.equals(PENDING)) {
-                        return project.getProjectState().isActive() ?
-                                ACTION_REQUIRED : PENDING;
-                    }
+        for (Organisation organisation : organisationsRequiringBankDetails) {
+            Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
+            if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
+                incomplete = true;
+            }
+            if (bankDetails.isPresent()) {
+                started = true;
+                if (organisationBankDetailsStatus.equals(PENDING)) {
+                    return project.getProjectState().isActive() ?
+                            ACTION_REQUIRED : PENDING;
                 }
             }
         }
@@ -355,7 +367,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         }
         if (COMPLETE.equals(documentsStatus)
                 && COMPLETE.equals(spendProfileStatus)
-                && COMPLETE.equals(bankDetailsStatus)) {
+                && COMPLETE.equals(bankDetailsStatus)
+                && project.getApplication().getApplicationProcess().getProcessState() == ApplicationState.APPROVED) {
             if (golWorkflowHandler.isApproved(project)) {
                 return COMPLETE;
             } else if (golWorkflowHandler.isRejected(project)) {

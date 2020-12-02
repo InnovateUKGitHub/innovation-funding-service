@@ -52,7 +52,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         final long userId = 3L;
 
         final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId,
-                applicationId, userId, "test text");
+                applicationId, userId, "test text", null);
 
         assertAccessDenied(
                 () -> classUnderTest.saveQuestionResponse(formInputResponseCommand),

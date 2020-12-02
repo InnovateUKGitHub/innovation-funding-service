@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -34,10 +35,11 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final List<FormInputResource> assessmentFormInputs;
     private final boolean scoreFormInputExists;
     private final boolean scopeFormInputExists;
-    private final FileDetailsViewModel appendixDetails;
+    private final List<FileDetailsViewModel> appendixDetails;
     private final FileDetailsViewModel templateDocumentDetails;
     private final String templateDocumentTitle;
     private final List<ResearchCategoryResource> researchCategories;
+    private final FundingType fundingType;
 
     private AssessmentFeedbackViewModel(long assessmentId,
                                         long daysLeft,
@@ -53,10 +55,11 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         List<FormInputResource> assessmentFormInputs,
                                         boolean scoreFormInputExists,
                                         boolean scopeFormInputExists,
-                                        FileDetailsViewModel appendixDetails,
+                                        List<FileDetailsViewModel> appendixDetails,
                                         FileDetailsViewModel templateDocumentDetails,
                                         String templateDocumentTitle,
-                                        List<ResearchCategoryResource> researchCategories) {
+                                        List<ResearchCategoryResource> researchCategories,
+                                        FundingType fundingType) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
@@ -75,13 +78,14 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         this.templateDocumentDetails = templateDocumentDetails;
         this.templateDocumentTitle = templateDocumentTitle;
         this.researchCategories = researchCategories;
+        this.fundingType = fundingType;
     }
 
     public AssessmentFeedbackViewModel(AssessmentResource assessment, CompetitionResource competition, QuestionResource question, String applicantResponse,
                                        List<FormInputResource> assessmentFormInputs,
                                        boolean scoreFormInputExists,
                                        boolean scopeFormInputExists,
-                                       FileDetailsViewModel appendixDetails,
+                                       List<FileDetailsViewModel> appendixDetails,
                                        FileDetailsViewModel templateDocumentDetails,
                                        String templateDocumentTitle,
                                        List<ResearchCategoryResource> researchCategories) {
@@ -102,7 +106,8 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 appendixDetails,
                 templateDocumentDetails,
                 templateDocumentTitle,
-                researchCategories);
+                researchCategories,
+                competition.getFundingType());
     }
 
     public long getAssessmentId() {
@@ -161,7 +166,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return scopeFormInputExists;
     }
 
-    public FileDetailsViewModel getAppendixDetails() {
+    public List<FileDetailsViewModel> getAppendixDetails() {
         return appendixDetails;
     }
 
@@ -188,6 +193,10 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
 
     public boolean isTemplateDocumentExists() {
         return templateDocumentDetails != null;
+    }
+
+    public boolean isKtp() {
+        return fundingType == FundingType.KTP;
     }
 
     @Override
@@ -217,6 +226,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(templateDocumentDetails, that.templateDocumentDetails)
                 .append(templateDocumentTitle, that.templateDocumentTitle)
                 .append(researchCategories, that.researchCategories)
+                .append(fundingType, that.fundingType)
                 .isEquals();
     }
 
@@ -241,6 +251,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append(templateDocumentDetails)
                 .append(templateDocumentTitle)
                 .append(researchCategories)
+                .append(fundingType)
                 .toHashCode();
     }
 
@@ -265,6 +276,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                 .append("templateDocumentDetails", templateDocumentDetails)
                 .append("templateDocumentTitle", templateDocumentTitle)
                 .append("researchCategories", researchCategories)
+                .append("fundingType", fundingType)
                 .toString();
     }
 }

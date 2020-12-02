@@ -55,6 +55,10 @@ public class AssessmentFinancesSummaryViewModel {
         return fundingType;
     }
 
+    public boolean isKtpCompetition() {
+        return FundingType.KTP.equals(fundingType);
+    }
+
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
         return applicationFinanceSummaryViewModel;
     }

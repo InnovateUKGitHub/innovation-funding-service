@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -93,10 +94,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .stream()
                 .sorted(comparing(SectionResource::getPriority))
                 .filter(section -> section.getParentSection() == null)
+                .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels);
+        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels, application.hasBeenReopened(), application.getLastStateChangeDate());
     }
 
     private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {
@@ -122,9 +124,44 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
-        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(),
-                section.getName().equals("Finances") ? getFinanceSectionSubTitle(data.getCompetition()) : section.getDescription(),
-                rows);
+
+        String subtitle = subtitle(data.getCompetition(), section);
+
+        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows);
+    }
+
+    private String subtitle(CompetitionResource competition, SectionResource section) {
+
+        String messageCode;
+
+        switch (section.getName()) {
+            case "Finances":
+                messageCode = getFinanceSectionSubTitle(competition);
+                break;
+            case "Project details":
+                if (competition.isKtp()) {
+                    messageCode = "ifs.section.projectDetails.ktp.description";
+                } else {
+                    messageCode = "ifs.section.projectDetails.description";
+                }
+                break;
+            case "Terms and conditions":
+                if (competition.isExpressionOfInterest()) {
+                    messageCode = "ifs.section.termsAndConditionsEoi.description";
+                } else {
+                    messageCode = "ifs.section.termsAndConditions.description";
+                }
+                break;
+            case "Application questions":
+                if (!competition.isKtp()) {
+                    messageCode = "ifs.section.applicationQuestions.description";
+                    break;
+                }
+            default:
+                return null;
+        }
+
+        return messageSource.getMessage(messageCode, null, Locale.getDefault());
     }
 
     private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
@@ -202,11 +239,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
     private String getFinanceSectionSubTitle(CompetitionResource competition) {
         if (competition.isFullyFunded()) {
-            return "Submit your organisation's project finances.";
+            return "ifs.section.finances.fullyFunded.description";
         } else if (competition.getCollaborationLevel() == SINGLE) {
-            return messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault());
+            return "ifs.section.finances.description";
         } else {
-            return messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault());
+            return "ifs.section.finances.collaborative.description";
         }
     }
 

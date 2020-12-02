@@ -1,8 +1,19 @@
 *** Settings ***
 Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
+...
+...               IFS-8707 - Allow Users with LIVE PROJECTS USER role to Create Application
+...
+
 Resource          ../../resources/common/PS_Common.robot
 Suite Setup       Project fiance approves the grant offer letter
 Suite Teardown    Close browser and delete emails
+
+*** Variables ***
+${secondKTPOrgName}                      The University of Reading
+${applicantKTACredentials}               john.fenton@ktn-uk.test
+${email}                                 steve.smith@empire.com
+${liveProjectName}                       Live project application
+
 
 *** Test Cases ***
 Project dashboard shows message that the project is live
@@ -10,9 +21,6 @@ Project dashboard shows message that the project is live
     [Tags]  HappyPath
     Given the lead partner logs in and navigate to applications dashboard
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
-    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
 
 Status indicators should not show
@@ -31,6 +39,14 @@ Project details section is read-only
     And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
     And the user should not see the element     link = ${Crystalrover_Name}
+    [Teardown]    the user goes back to the previous page
+
+Project Team section is read-only
+    [Documentation]    IFS-7735
+    When the user clicks the button/link        link = Project team
+    Then the user should not see the element    link = Your finance contact
+    And the user should not see the element     name = add-team-member
+    And the user should not see the element     jQuery = button:contains("Remove")
     [Teardown]    the user goes back to the previous page
 
 Bank details section is read-only
@@ -200,7 +216,7 @@ Spend profile section is read-only for academic partner
 Documents section is read-only for academic partner
     [Documentation]    INFUND-6376
     [Tags]
-    When the user clicks the button/link       link = Documents
+    When the user clicks the button/link           link = Documents
     Then the use can see the mandatory documents
     [Teardown]  the user clicks the button/link    link = Set up your project
 
@@ -214,20 +230,82 @@ Grant offer letter section is read-only for academic partner
 
 PM should see project tab on dashboard once GOL is approved
     [Documentation]  IFS-4959
-    Given the user clicks the button/link    link = Dashboard
-    And the user should not see the element  id = dashboard-link-LIVE_PROJECTS_USER
+    Given the user clicks the button/link                    link = Dashboard
+    And the user clicks the application tile if displayed
     When the project is sent to acc
-    And log in as a different user           ${PS_LP_Application_Academic_Email}  ${short_password}
-    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
-    And the user should see the element      jQuery = h2:contains("Projects")
+    And log in as a different user                           ${PS_LP_Application_Academic_Email}  ${short_password}
+    Then the user should see the element                     id = dashboard-link-LIVE_PROJECTS_USER
+    And the user should see the element                      jQuery = h2:contains("Projects")
 
 MO sould see project tab on dashboard once GOL is approved
     [Documentation]
-    Given Log in as a different user  &{monitoring_officer_one_credentials}
+    Given Log in as a different user         &{monitoring_officer_one_credentials}
     Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
     And the user should see the element      jQuery = h2:contains("Projects")
 
+Live Project User is able to create a new application
+    [Documentation]  IFS-8707
+    Given the internal user approve the GOL                        ${project_ids["${liveProjectName}"]}
+    When Log in as a different user                                &{leadApplicantCredentials}
+    And the user select the competition and starts application     KTP new competition
+    And the user selects a knowledge based organisation            Reading   The University of Reading
+    Then the user should see the element                           jQuery = h1:contains("Application overview")
+
+Live Project User is able to join an application within the same organisation
+    [Documentation]  IFS-8707
+    Given the user clicks the button/link                                           link = Application team
+    When the user clicks the button/link                                            jQuery = button:contains("Add person to ${secondKTPOrgName}")
+    And the user invites a person to the same organisation                          Troy Ward  troy.ward@gmail.com
+    And the user accepts invitation to join application under same organisation
+    Then The user should see the element                                            jQuery = td:contains("Troy Ward")
+
+Live project user is able to join an application as a different organisation
+    [Documentation]  IFS-8707
+    Given Log in as a different user                                ${applicantKTACredentials}  ${short_password}
+    When the user select the competition and starts application     KTP new competition
+    And the user selects a knowledge based organisation             Reading     The University of Reading
+    And the user fills in the inviting steps                        edward.morris@gmail.com
+    And the user accepts invitation to collaborate
+    Then The user should see the element                            jQuery = td:contains("Edward Morris")
+
+
 *** Keywords ***
+the user accepts invitation to collaborate
+     Logout as user
+     the user reads his email and clicks the link   edward.morris@gmail.com  Invitation to collaborate in KTP new competition  You are invited by John Fenton to participate in an application for funding through the Innovation Funding Service.  2
+     the user clicks the button/link                jQuery = a:contains("Continue")
+     the user logs in                               edward.morris@gmail.com  ${short_password}
+     the user clicks the button/link                jQuery = button:contains("Save and continue")
+     the user clicks the button/link                link = Application team
+
+
+the user accepts invitation to join application under same organisation
+     Logout as user
+     the user reads his email and clicks the link     troy.ward@gmail.com  Invitation to contribute in KTP new competition  You are invited by Steve Smith to participate in an application for funding through the Innovation Funding Service.  2
+     the user clicks the button/link                  jQuery = a:contains("Continue")
+     the user logs in                                 troy.ward@gmail.com  ${short_password}
+     the user clicks the button/link                  jQuery = a:contains("Confirm and accept invitation")
+     the user clicks the button/link                  jQuery = a:contains("Application team")
+
+the user logs in
+    [Arguments]   ${email}   ${short_password}
+     the guest user inserts user email and password    ${email}  ${short_password}
+     the guest user clicks the log-in button
+
+the user selects a knowledge based organisation
+    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+     input text                           id = knowledgeBase        ${knowledgeBase}
+     the user clicks the button/link      jQuery = ul li:contains("${completeKBOrganisartionName}")
+     the user clicks the button/link      JQuery = button:contains("Confirm")
+     the user clicks the button/link      JQuery = button:contains("Save and continue")
+
+
+project setup is completed and project is now live
+    log in as a different user         &{leadApplicantCredentials}
+    the user navigates to the page     ${server}/project-setup-management/competition/44/compeition/85/status/all
+    the user clicks the button/link    xPath = /html/body/div[4]/main/div/section/div/table/tbody/tr[2]/td[6]/a
+    the user selects the radio button
+
 grant offer letter is sent to users
     the user logs-in in new browser    &{internal_finance_credentials}
     the user navigates to the page     ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send

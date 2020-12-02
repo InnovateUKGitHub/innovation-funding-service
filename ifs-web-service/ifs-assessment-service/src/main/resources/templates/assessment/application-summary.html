@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessment summary',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -30,7 +30,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Review assessment</h2>
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-questions">
                     <th:block th:each="question, iteration : ${model.questionsForReview}">
-                        <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question}, count=${iteration.count})" />
+                        <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question}, count=${iteration.count}, ktpCompetition=${model.ktpCompetition})" />
                     </th:block>
                 </div>
 
@@ -45,6 +45,38 @@
                                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingConfirmation">
                                     <h2 class="govuk-fieldset__heading">Do you believe that this application is suitable for funding?</h2>
                                 </legend>
+                                <th:block th:if="${model.ktpCompetition}">
+                                    <details class="govuk-details" role="group">
+                                        <summary class="govuk-details__summary">
+                                            <span class="govuk-details__summary-text">Guidance for funding suitability</span>
+                                        </summary>
+                                        <div class="govuk-details__text">
+                                            <p class="govuk-body">You must explain your decision with a clear, concise statement in the feedback area.</p>
+                                            <p class="govuk-body">Only select ‘Yes’ for one of these reasons:</p>
+                                            <ul class="govuk-list govuk-list--bullet">
+                                                <li>the project meets the KTP project criteria</li>
+                                                <li>the project requires further development, but look out for lack of evidence, a poor business case and other shortcomings shown in the assessment scores and comments.</li>
+                                            </ul>
+                                            <p class="govuk-body">Select ‘No’ for any one of these reasons:</p>
+                                            <p class="govuk-body govuk-!-margin-0">1. The application does not meet one of the basic criteria for KTP, such as:</p>
+                                            <ul class="govuk-list govuk-list--bullet">
+                                                <li>it is outside competition scope</li>
+                                                <li>it does not meet funding criteria</li>
+                                                <li>the project could be delivered by other interventions (for example, recruitment or contract research and development)</li>
+                                            </ul>
+                                            <p class="govuk-body govuk-!-margin-0">2. The application does not comply with a KTP scheme rule, such as:</p>
+                                            <ul class="govuk-list govuk-list--bullet">
+                                                <li>does not demonstrate progression from previous KTP projects</li>
+                                                <li>partners have not made appropriate commitments, for example, time spent with associate or face-to-face meetings</li>
+                                                <li>no knowledge transfer is demonstrated or required</li>
+                                                <li>no need for knowledge transfer is demonstrated</li>
+                                                <li>contains incorrect or incomplete information</li>
+                                                <li>does not demonstrate affordability to the assessor's satisfaction</li>
+                                                <li>shows the potential to damage the reputation of the Government, UKRI, Innovate UK or other project funders</li>
+                                            </ul>
+                                        </div>
+                                    </details>
+                                </th:block>
                                 <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
                                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
                                 </th:block>
@@ -88,7 +120,7 @@
                                 <label class="govuk-label" th:for="feedback">
                                     Your feedback
                                 </label>
-                                <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                <span class="govuk-hint">Please explain your decision with a few sentences.<th:block th:unless="${model.ktpCompetition}"> This feedback will be sent to the applicant.</th:block></span>
                                 <th:block th:if="${#fields.hasErrors('feedback')}">
                                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
                                 </th:block>

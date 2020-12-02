@@ -140,7 +140,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition competition = competitionMapper.mapToDomain(competitionResource);
         competition = setCompetitionAuditableFields(competition, existingCompetition);
         saveFunders(competitionResource);
-        competition = saveAssessmentAndOrganisationConfigs(existingCompetition, competition);
+        competition = saveConfigs(existingCompetition, competition);
         competition = competitionRepository.save(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
     }
@@ -149,9 +149,10 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         competitionFunderService.reinsertFunders(competitionResource);
     }
 
-    private Competition saveAssessmentAndOrganisationConfigs(Competition existingCompetition, Competition newCompetition) {
+    private Competition saveConfigs(Competition existingCompetition, Competition newCompetition) {
         newCompetition.setCompetitionAssessmentConfig(existingCompetition.getCompetitionAssessmentConfig());
         newCompetition.setCompetitionOrganisationConfig(existingCompetition.getCompetitionOrganisationConfig());
+        newCompetition.setCompetitionApplicationConfig(existingCompetition.getCompetitionApplicationConfig());
         return newCompetition;
     }
 

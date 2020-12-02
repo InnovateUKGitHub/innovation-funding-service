@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.status.viewmodel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.status.viewmodel.BaseCompetitionStatusTableViewModel;
 
 import java.util.List;
@@ -37,11 +38,17 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         return "There are currently no projects in this competition.";
     }
 
-    public long getOpenQueryCount() { return openQueryCount; }
+    public long getOpenQueryCount() {
+        return openQueryCount;
+    }
 
-    public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
+    public long getPendingSpendProfilesCount() {
+        return pendingSpendProfilesCount;
+    }
 
-    public boolean isShowTabs() { return showTabs; }
+    public boolean isShowTabs() {
+        return showTabs;
+    }
 
     public String getApplicationSearchString() {
         return applicationSearchString;
@@ -50,5 +57,4 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
     public PaginationViewModel getPaginationViewModel() {
         return paginationViewModel;
     }
-
 }

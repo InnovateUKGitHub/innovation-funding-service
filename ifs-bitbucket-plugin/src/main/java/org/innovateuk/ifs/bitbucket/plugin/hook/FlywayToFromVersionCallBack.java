@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.bitbucket.plugin.hook;
 
-import com.atlassian.bitbucket.scm.pull.MergeRequest;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -12,22 +11,19 @@ import java.util.List;
  */
 public class FlywayToFromVersionCallBack {
 
-    private static FlywayVersionComparator FLYWAY_VERSION_COMPARATOR = new FlywayVersionComparator();
-    private final MergeRequest request;
+    private static final FlywayVersionComparator FLYWAY_VERSION_COMPARATOR = new FlywayVersionComparator();
 
     /**
      * List of Flyway patch numbers and file names on the branch being pulled to.
      */
-    private List<Pair<String, List<Integer>>> toVersions = new ArrayList<Pair<String, List<Integer>>>();
+    private List<Pair<String, List<Integer>>> toVersions = new ArrayList<>();
 
     /**
      * List of Flyway patch numbers and file names on the branch which the pull request came from.
      */
-    private List<Pair<String, List<Integer>>> fromVersions = new ArrayList<Pair<String, List<Integer>>>();
+    private List<Pair<String, List<Integer>>> fromVersions = new ArrayList<>();
 
-    public FlywayToFromVersionCallBack(final MergeRequest request) {
-        this.request = request;
-    }
+    private final List<String> errors = new ArrayList<>();
 
     public void onTo(final List<Pair<String, List<Integer>>> sortedVersions) {
         toVersions = sortedVersions;
@@ -41,13 +37,13 @@ public class FlywayToFromVersionCallBack {
 
     void compareVersions() {
         if (!toVersions.isEmpty() && !fromVersions.isEmpty()) {
-            final List<Pair<String, List<Integer>>> newFromVersions = new ArrayList<Pair<String, List<Integer>>>(fromVersions);
+            final List<Pair<String, List<Integer>>> newFromVersions = new ArrayList<>(fromVersions);
             newFromVersions.removeAll(toVersions);
             final Pair<String, List<Integer>> toMaxVersion = toVersions.get(toVersions.size() -1);
             if(!newFromVersions.isEmpty()) {
                 final Pair<String, List<Integer>> newFromMin = newFromVersions.get(0);
                 if (FLYWAY_VERSION_COMPARATOR.compare(toMaxVersion.getValue(), newFromMin.getValue()) >= 0) {
-                    setErrors("Flyway patch level error, please increase the level of the flyway patches " +
+                    errors.add("Flyway patch level error, please increase the level of the flyway patches " +
                             "in the incoming branch to be greater than the patch " + toMaxVersion.getKey() + ". Currently the " +
                             "lowest incoming patch is " + newFromMin.getKey());
                 }
@@ -55,7 +51,7 @@ public class FlywayToFromVersionCallBack {
         }
     }
 
-    void setErrors(final String error) {
-        request.veto(error, error);
+    public List<String> getErrors() {
+        return errors;
     }
 }

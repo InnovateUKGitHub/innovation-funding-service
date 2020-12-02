@@ -4,6 +4,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +39,9 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
 
     private void setTotalCost(Overhead overhead) {
         if (overhead.getRateType().getRate() != null) {
-            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
+            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100))).setScale(0, RoundingMode.HALF_UP);
         } else {
-            total = new BigDecimal(overhead.getRate());
+            total = new BigDecimal(overhead.getRate()).setScale(0, RoundingMode.HALF_UP);
         }
     }
 
@@ -56,7 +57,6 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
         return false;
     }
 
-    @Override
     public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }

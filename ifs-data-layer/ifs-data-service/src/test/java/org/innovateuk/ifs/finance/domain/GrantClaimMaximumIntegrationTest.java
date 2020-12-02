@@ -137,9 +137,9 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         application.setResearchCategory(researchCategory);
 
         organisationSize.ifPresent(size -> {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, leadOrganisationId);
-            applicationFinance.setOrganisationSize(size);
-            applicationFinanceRepository.save(applicationFinance);
+            Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, leadOrganisationId);
+            applicationFinance.get().setOrganisationSize(size);
+            applicationFinanceRepository.save(applicationFinance.get());
         });
 
         ApplicationFinanceResource financeDetails = getFinanceDetails(leadApplicant, applicationId, leadOrganisationId);
@@ -217,7 +217,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
                         true, STANDARD, true, true).
                 withApplicationFormFromTemplate().
-                withNewMilestones().
+                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
                 withBriefingDate(addDays(1)).
                 withSubmissionDate(addDays(2)).

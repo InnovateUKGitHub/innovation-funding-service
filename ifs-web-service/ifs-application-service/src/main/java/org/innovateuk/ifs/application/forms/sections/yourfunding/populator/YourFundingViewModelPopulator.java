@@ -10,15 +10,20 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
@@ -48,21 +54,36 @@ public class YourFundingViewModelPopulator {
     private ApplicantRestService applicantRestService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
     private QuestionService questionService;
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private UserRestService userRestService;
+
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
-            return populateManagement(applicationId, sectionId, organisationId);
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+                .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
+                .orElse(false);
+        if (userCanEdit) {
+            return populateApplicant(applicationId, sectionId, organisationId, user);
         }
-        return populate(applicationId, sectionId, user);
+        return populateManagement(applicationId, sectionId, organisationId, user);
     }
 
-    private YourFundingViewModel populate(long applicationId, long sectionId, UserResource user) {
+    private YourFundingViewModel populateApplicant(long applicationId, long sectionId, long organisationId, UserResource user) {
 
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+        if (!section.getCurrentApplicant().getOrganisation().getId().equals(organisationId)) {
+            return populateManagement(applicationId, sectionId, organisationId, user);
+        }
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section
                 .getCurrentApplicant().getOrganisation().getId());
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, section.getCurrentApplicant().getOrganisation().getId()).getSuccess();
@@ -95,14 +116,19 @@ public class YourFundingViewModelPopulator {
                 researchCategoryQuestionId,
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
-                format("/application/%d/form/FINANCE", applicationId),
-                overridingFundingRules);
+                format("/application/%d/form/FINANCE/%d", applicationId, section.getCurrentApplicant().getOrganisation().getId()),
+                overridingFundingRules,
+                section.getCompetition().getFundingType(),
+                section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum());
     }
 
-    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
+    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum());
 
     }
 
@@ -139,8 +165,13 @@ public class YourFundingViewModelPopulator {
                                            boolean researchCategoryRequired,
                                            boolean yourOrganisationRequired) {
         boolean fieldsRequired = researchCategoryRequired || yourOrganisationRequired;
-        return fieldsRequired && isCompetitionOpen(section) && isOrganisationTypeBusiness(section) &&
-                !isMaximumFundingLevelOverridden(section) && !competitionIsLoanType(section);
+        return fieldsRequired && !competitionIsKtp(section) && !competitionIsLoanType(section)
+                && isCompetitionOpen(section) && isOrganisationTypeBusiness(section) &&
+                !isMaximumFundingLevelOverridden(section);
+    }
+
+    private boolean competitionIsKtp(ApplicantSectionResource section) {
+        return KTP.equals(section.getCompetition().getFundingType());
     }
 
     private boolean competitionIsLoanType(ApplicantSectionResource section) {

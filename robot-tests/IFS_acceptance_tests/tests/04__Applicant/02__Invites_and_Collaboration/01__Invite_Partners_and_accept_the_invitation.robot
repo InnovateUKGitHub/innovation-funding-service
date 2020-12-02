@@ -28,6 +28,9 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               IFS-951  Display 'Organisation type' against user
 ...
 ...               IFS-1841 Basic view of all 'external' IFS users
+...
+...               IFS-8095 Content improvement for KTA journey
+
 #create new competition to test the new application team view.
 Suite Setup       Custom Suite Setup
 Suite Teardown
@@ -85,12 +88,12 @@ Lead organisation already used email
     Then The user should see a field and summary error        This email is already in use.
 
 Lead Adds/Removes partner organisation
-    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590
+    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590 IFS-8095
     [Tags]  HappyPath
     Given the user clicks the button/link              link = Add a partner organisation
     And the user adds a partner organisation           Fannie May  Collaborator 2  ewan+10@hiveit.co.uk
     And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
-    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove organisation")
+    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove")
     Then the user clicks the button/link               jQuery = tr:contains("ewan") .warning-modal button:contains("Remove organisation")
     And the user should not see the element            jQuery = td:contains("Fannie May")
     And the user should see the element                jQuery = h1:contains("Application team")
@@ -122,7 +125,7 @@ Cannot mark as complete with pending invites
     [Documentation]  IFS-3088
     [Tags]  HappyPath
     Given the user clicks the button/link                 id = application-question-complete
-    Then The user should see a field and summary error    You cannot mark as complete until Adrian Booth has either accepted the invitation or is removed
+    Then The user should see a field and summary error    You cannot mark this page as complete until this invitation has either been accepted or removed.
 
 Partner is still marked as pending after accepting invitation but not completing
     [Documentation]  IFS-6589
@@ -132,7 +135,7 @@ Partner is still marked as pending after accepting invitation but not completing
     And the user clicks the button/link     link = Sign in
     And Logging in and Error Checking       &{lead_applicant_credentials}
     Then the user still sees pending user
-    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invite")
+    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invitation")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -221,7 +224,7 @@ Lead applicant invites a non registered user in the same organisation
 Lead is able to resend invitation
     [Documentation]  IFS-5960
     [Tags]
-    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invitation")
     Then the user should see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
@@ -233,19 +236,20 @@ Registered partner should not create new org but should follow the create accoun
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
     [Tags]
-    Given the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
-    And Logging in and Error Checking           &{lead_applicant_credentials}
-    When the user clicks the button/link        link = Invite robot test application
-    And the user clicks the button/link         link = Application team
-    Then the user should see the element        jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
-    And The user should not see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link                     jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    And Logging in and Error Checking                         &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = Invite robot test application
+    And the user clicks the button/link                       link = Application team
+    Then the user should see the element                      jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And The user should not see the element                   jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
     Then the user creates an account and signs in
 
 New Lead Applicant invites new user as collaborator on his application
@@ -291,13 +295,13 @@ the user creates an account and signs in
 
 the lead applicant invites the collaborator
     Logging in and error checking    ${newLeadApplicant}  ${correct_password}
-    The user clicks the button/link  link = Untitled application (start here)
+    The user clicks the button/link  link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user fills in the inviting steps no Edit  ${newCollaborator}
     The user logs out if they are logged in
 
 the lead applicant is no longer directed to the team page
     Log in as a different user       ${newLeadApplicant}  ${correct_password}
-    The user clicks the button/link  jQuery = .progress-list a:contains("Untitled application (start here)")
+    The user clicks the button/link  jQuery = .progress-list a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     The user should see the element  jQuery = h1:contains("Application overview")
     # Added the above check, to see that the user doesn't get directed to the team page (since he has not clicked on the Begin application button)
 
@@ -316,6 +320,7 @@ the user accepts invitation
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 
 the user still sees pending user
-    the user clicks the button/link    link = Invite robot test application
-    the user clicks the button/link    link = Application team
-    the user should see the element    jQuery = td:contains("Adrian Booth (pending for")
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = Invite robot test application
+    the user clicks the button/link                       link = Application team
+    the user should see the element                       jQuery = td:contains("Adrian Booth (pending for")

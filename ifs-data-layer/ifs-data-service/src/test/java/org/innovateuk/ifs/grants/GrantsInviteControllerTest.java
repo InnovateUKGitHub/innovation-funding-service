@@ -15,6 +15,7 @@ import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.Gran
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -57,6 +58,19 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
                 .andExpect(status().isOk());
 
         verify(grantsInviteService, only()).resendInvite(inviteId);
+    }
+
+    @Test
+    public void deleteInvite() throws Exception {
+        long projectId = 1L;
+        long inviteId = 2L;
+
+        when(grantsInviteService.deleteInvite(inviteId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/grant-invite/{inviteId}", projectId, inviteId))
+                .andExpect(status().isOk());
+
+        verify(grantsInviteService, only()).deleteInvite(inviteId);
     }
 
     @Test

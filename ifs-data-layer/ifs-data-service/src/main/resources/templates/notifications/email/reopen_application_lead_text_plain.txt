@@ -2,11 +2,14 @@
 <@layout.defaultPlainText>
 Dear ${name}
 
-The application was reopened by ${leadApplicant}, the lead applicant on ${date}:
-
+You reopened this application on ${date}:
 ${applicationNumber} : ${applicationName}
 
-You can now make changes to the application until you resubmit it.
+You can now make changes to the application.
+
+You must resubmit this application for it to be assessed, even if you haven't made any changes.
+
+No previously submitted versions of this application will be assessed.
 
 ${link}
 

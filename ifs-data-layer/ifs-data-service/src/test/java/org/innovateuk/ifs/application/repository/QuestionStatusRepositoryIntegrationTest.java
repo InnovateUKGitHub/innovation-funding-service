@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<QuestionStatusRepository> {
+    public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<QuestionStatusRepository> {
 
     private long questionId;
     private long applicationId;
@@ -53,11 +53,11 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
     @Test
     public void findByApplicationIdAndAssigneeOrganisationId() {
         List<QuestionStatus> questionStatuses = repository.findByApplicationId(applicationId);
-        assertEquals(21, questionStatuses.size());
+        assertEquals(22, questionStatuses.size());
     }
 
     @Test
-    public void findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById() throws Exception {
+    public void findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById() {
         List<Question> questions = newQuestion()
                 .withId(98L, 108L)
                 .build(2);

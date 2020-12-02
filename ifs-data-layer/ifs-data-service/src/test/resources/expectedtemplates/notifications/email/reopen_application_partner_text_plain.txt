@@ -1,0 +1,14 @@
+Dear User 2
+
+The application was reopened by User 1, the lead applicant on 12 June 2020:
+1234 : Application 1
+
+You can now make any changes assigned to you, before the lead applicant resubmits this application for assessment.
+
+https://ifs.local-dev/application/1234
+
+Yours sincerely
+
+Innovate UK, part of UK Research and Innovation
+Tel: 0300 321 4357
+Email: competitions@innovateuk.ukri.org

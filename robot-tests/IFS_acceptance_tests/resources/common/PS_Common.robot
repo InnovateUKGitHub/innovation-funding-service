@@ -184,7 +184,7 @@ The user adds a new team member
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
-    [Arguments]  ${setDocusign}  ${projectID}
+    [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
@@ -202,21 +202,37 @@ Applicant uploads the GOL
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
 
+Applicant uploads the contract
+    the user clicks the button/link       link = Contract
+    the user uploads the file             signedGrantOfferLetter    ${contract_pdf}
+    the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    the user clicks the button/link       id = submit-gol-for-review
+
 Applicant uploads the GOL using Docusign
     [Arguments]  ${projectID}  ${date}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           jquery = a:contains("Grant offer letter")
     the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           css=.page.page-loaded
     the user should see the element           jQuery = span:contains("Please review the documents below.")
     the user selects the checkbox             disclosureAccepted
     the user clicks the button/link           jQuery = button:contains("Continue")
     the user clicks the button/link           jQuery = span:contains("Start")
     the user clicks the button/link           css = div.initials-tab-content
+    the user should see the element           css=.page.page-loaded
     The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    the user should see the element           css=.page.page-loaded
+    the user clicks the button/link           jQuery = span:contains("Fill In")
     The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
     the user should see the element           jQuery = h1:contains("Grant offer letter")
+
+the GOL has already been approved
+    [Arguments]  ${projectID}
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
 
 the internal user approve the GOL
     [Arguments]  ${projectID}
@@ -241,17 +257,7 @@ the applicant is able to see the rejected GOL
     [Arguments]  ${projectID}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           link = Grant offer letter
-    the user should see the element           jQuery = .fail-alert h2:contains("Your grant offer letter has been rejected by Innovate UK")
-
-the user enters bank details
-    the user clicks the button/link                      link = Bank details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details-model-button
+    the user should see the element           jQuery = .fail-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
@@ -262,10 +268,10 @@ The user is able to complete project details section
 The user completes the project team section
     the user selects their finance contact   financeContact1
     the user clicks the button/link          link = Project manager
-    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
+#    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button        projectManager   projectManager1
-    the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Set up your project
+    the user clicks the button/link          jQuery = button:contains("Save and continue")
+    the user clicks the button/link          link = Return to set up your project
 
 The user uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
@@ -281,6 +287,23 @@ The user uploads the Test document type
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
 
+the user enters bank details
+    the user clicks the button/link                      link = Bank details
+    the user enters text to a text field                 name = accountNumber  ${Account_Two}
+    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
+    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link                      id = postcode-lookup
+    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
+    the user clicks the button/link                      id = submit-bank-details-button
+    the user clicks the button/link                      id = submit-bank-details-model-button
+
+the user uploads the Collaboration agreement
+    the user clicks the button/link     link = Collaboration agreement
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submit-document-button
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
 The user is able to complete the Documents section
     [Documentation]  IFS-5700
     Given the user clicks the button/link     link = Documents
@@ -291,9 +314,9 @@ The user is able to complete the Documents section
 The user selects their finance contact
     [Arguments]  ${financeContactName}
     the user clicks the button/link     link = Your finance contact
-    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
+#    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
     the user selects the radio button   financeContact   ${financeContactName}
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 the user should see project manager/finance contact validations
     [Arguments]   ${save_CTA}  ${errormessage}
@@ -363,7 +386,8 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    The user logs-in in new browser  &{lead_applicant_credentials}
+    The user logs-in in new browser                       &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
     ${update_comp}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
@@ -500,6 +524,12 @@ The user submits the spend profile
     the user clicks the button/link    link = Submit project spend profile
     the user clicks the button/link    id = submit-send-all-spend-profiles
 
+The partner submits the spend profile
+    [Arguments]  ${ProjectID}  ${organistaionID}
+    the user navigates to the page      ${server}/project-setup/project/${ProjectID}/partner-organisation/${organistaionID}/spend-profile
+    the user clicks the button/link     link = Submit to lead partner
+    the user clicks the button/link     jQuery = button.govuk-button:contains("Submit")
+
 project finance approves Viability for
     [Arguments]  ${partner}  ${project}
     the user navigates to the page       ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/viability
@@ -581,10 +611,13 @@ internal user approve uploaded documents
     the user should see the element        jQuery = p:contains("You have approved this document.")
 
 the user enter the Correspondence address
-    the user enters text to a text field                id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link                     id = postcode-lookup
-    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+    the user looks for address using postcode
+    the user clicks the button/link               jQuery = .govuk-button:contains("Save address")
+
+the user looks for address using postcode
+    the user enters text to a text field                   id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link                        id = postcode-lookup
+    the user selects the index from the drop-down menu     1  id=addressForm.selectedPostcodeIndex
 
 the user uploads to the collaboration agreement/exploitation plan
     [Arguments]   ${file_name}
@@ -613,11 +646,11 @@ the user completes the project team details
     the user clicks the button/link     link = Project team
     the user clicks the button/link     link = Your finance contact
     the user selects the radio button   financeContact   financeContact1
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Project manager
     the user selects the radio button   projectManager   projectManager1
-    the user clicks the button/link     jQuery = button:contains("Save project manager")
-    the user clicks the button/link     link = Set up your project
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     link = Back to project setup
     #the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 PM uploads the project documents
@@ -754,3 +787,41 @@ enter the country in the autocomplete field
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
     the user should see the element     link = ${reviewProgressLink}
+
+Internal user assigns MO to application
+    [Arguments]  ${applicationID}  ${applicationTitle}  ${MO_name}  ${MO_fullname}
+    the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all
+    Search for MO                                     ${MO_name}  ${MO_fullname}
+    The internal user assign project to MO            ${applicationID}  ${applicationTitle}
+
+confirm viability
+    [Arguments]  ${viability}
+    the user clicks the button/link                         css = .viability-${viability}
+    the user selects the checkbox                           project-viable
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         id = confirm-button      #Page confirmation button
+    the user clicks the button/link                         name = confirm-viability   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks
+
+confirm eligibility
+    [Arguments]  ${eligibility}
+    the user clicks the button/link                         css = .eligibility-${eligibility}
+    the user selects the checkbox                           project-eligible
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         css = #confirm-button        #Page confirmation button
+    the user clicks the button/link                         name = confirm-eligibility   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks
+
+the internal user approve the contract
+    [Arguments]  ${projectID}
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button   APPROVED  acceptGOL
+    the user clicks the button/link     id = submit-button
+    the user clicks the button/link     id = accept-signed-gol
+    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+
+organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
+    logout as user
+    the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}

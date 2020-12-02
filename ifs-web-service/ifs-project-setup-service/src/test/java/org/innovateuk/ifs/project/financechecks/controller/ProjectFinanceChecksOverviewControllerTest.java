@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,7 +18,6 @@ import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -52,9 +52,12 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
     @Test
     public void viewOverview() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withFundingType(GRANT).withFinanceRowTypes(singleton(FinanceRowType.FINANCE)).build();
+        CompetitionResource competition = newCompetitionResource().withFundingType(GRANT).withFinanceRowTypes(singletonList(FinanceRowType.FINANCE)).build();
         ApplicationResource application = newApplicationResource().withId(123L).withCompetition(competition.getId()).build();
         ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).withCompetition(competition.getId()).build();
         OrganisationResource industrialOrganisation = newOrganisationResource()

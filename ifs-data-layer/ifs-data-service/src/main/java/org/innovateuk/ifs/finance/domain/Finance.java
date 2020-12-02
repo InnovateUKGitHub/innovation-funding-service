@@ -8,10 +8,8 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
-import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
 import static javax.persistence.CascadeType.REMOVE;
 
 /**
@@ -39,11 +37,16 @@ public abstract class Finance {
     @JoinColumn(name = "growthTableId")
     private GrowthTable growthTable;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover) {
+    @OneToOne(fetch = FetchType.LAZY, cascade = REMOVE)
+    @JoinColumn(name = "ktpFinancialYearsId")
+    private KtpFinancialYears ktpFinancialYears;
+
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
         this.employeesAndTurnover = employeesAndTurnover;
+        this.ktpFinancialYears = ktpFinancialYears;
     }
 
     public Finance(Organisation organisation) {
@@ -89,6 +92,8 @@ public abstract class Finance {
     public FinancialYearAccounts getFinancialYearAccounts() {
         if (getGrowthTable() != null) {
             return getGrowthTable();
+        } else if (getKtpFinancialYears() != null) {
+            return getKtpFinancialYears();
         }
         return getEmployeesAndTurnover();
     }
@@ -109,6 +114,14 @@ public abstract class Finance {
         this.growthTable = growthTable;
     }
 
+    public KtpFinancialYears getKtpFinancialYears() {
+        return ktpFinancialYears;
+    }
+
+    public void setKtpFinancialYears(KtpFinancialYears ktpFinancialYears) {
+        this.ktpFinancialYears = ktpFinancialYears;
+    }
+
     public Competition getCompetition() {
         return getApplication().getCompetition();
     }
@@ -124,9 +137,13 @@ public abstract class Finance {
             return FundingLevel.HUNDRED.getPercentage();
         }
 
-        if (isMaximumFundingLevelOverridden()) {
-            // The same maximum funding level is set for all GrantClaimMaximums when overriding
-            return getCompetition().getGrantClaimMaximums().stream().findAny().map(GrantClaimMaximum::getMaximum).get();
+        boolean allMaximumsTheSame =
+                getCompetition().getGrantClaimMaximums().stream()
+                .map(max -> max.getMaximum())
+                .distinct()
+                .count() == 1;
+        if (allMaximumsTheSame) {
+            return getCompetition().getGrantClaimMaximums().get(0).getMaximum();
         }
 
         return getCompetition().getGrantClaimMaximums()
@@ -136,6 +153,11 @@ public abstract class Finance {
                 .map(GrantClaimMaximum::getMaximum)
                 .orElse(0);
     }
+
+    public BigDecimal getMaximumFundingAmount() {
+        return getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+    }
+
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
         return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum);
     }
@@ -156,14 +178,4 @@ public abstract class Finance {
     private boolean isBusinessOrganisationType() {
         return getOrganisation().getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId());
     }
-
-    private boolean isMaximumFundingLevelOverridden() {
-        Set<Long> competitionGrantClaimMaximumIds = getCompetition().getGrantClaimMaximums().stream()
-                .map(GrantClaimMaximum::getId)
-                .collect(toSet());
-        Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
-                .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
-        return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
-    }
-
 }

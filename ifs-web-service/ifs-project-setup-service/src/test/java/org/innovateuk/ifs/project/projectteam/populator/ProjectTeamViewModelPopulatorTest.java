@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -37,6 +38,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -70,11 +72,13 @@ public class ProjectTeamViewModelPopulatorTest {
         UserResource loggedInUser = newUserResource().withId(123L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Imaginative competition name")
+                .withFundingType(FundingType.GRANT)
                 .build();
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
                 .withName("Imaginative project name")
                 .withMonitoringOfficerUser(789L)
+                .withProjectState(SETUP)
                 .build();
         OrganisationResource leadOrg = newOrganisationResource()
                 .withName("Imaginative organisation name")
@@ -111,6 +115,7 @@ public class ProjectTeamViewModelPopulatorTest {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectInviteRestService.getInvitesByProject(project.getId())).thenReturn(restSuccess(invites));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
@@ -121,6 +126,7 @@ public class ProjectTeamViewModelPopulatorTest {
         assertFalse(model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
         assertFalse(model.isInternalUserView());
+        assertFalse(model.isReadOnly());
         assertEquals(2, model.getPartners().size());
 
         ProjectTeamOrganisationViewModel partnerOneViewModel = model.getPartners().stream().filter(view -> view.getId() == partnerOne.getId()).findAny().get();

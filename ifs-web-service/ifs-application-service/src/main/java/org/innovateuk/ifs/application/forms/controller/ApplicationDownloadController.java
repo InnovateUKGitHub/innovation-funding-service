@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
@@ -29,7 +33,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
-@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer')")
+@PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance', 'assessor', 'monitoring_officer', 'supporter')")
 public class ApplicationDownloadController {
 
     @Autowired
@@ -46,19 +50,35 @@ public class ApplicationDownloadController {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
-    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download")
+    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoles.stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()
-                .orElseThrow(ObjectNotFoundException::new);
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
+                .orElseGet(() -> impersonateLeadRole(processRoles, user));
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
+    }
+
+    private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
+        if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER)) {
+                return processRoles.stream()
+                        .filter(pr -> pr.getRole().equals(Role.LEADAPPLICANT))
+                        .findFirst()
+                        .orElseThrow(this::roleNotFound);
+        } else {
+            throw roleNotFound();
+        }
+    }
+    private ObjectNotFoundException roleNotFound() {
+        return new ObjectNotFoundException("No process role found for user", Collections.emptyList());
     }
 
     @GetMapping("/{applicationFinanceId}/finance-download")

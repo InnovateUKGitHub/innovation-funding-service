@@ -33,7 +33,7 @@ public class InviteUserController {
 
     @PostMapping("/save-invite")
     public RestResult<Void> saveUserInvite(@RequestBody InviteUserResource inviteUserResource) {
-        return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole()).toPostResponse();
+        return inviteUserService.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getRole(), inviteUserResource.getOrganisation()).toPostResponse();
     }
 
     @GetMapping("/get-invite/{inviteHash}")
@@ -55,7 +55,7 @@ public class InviteUserController {
 
     @PutMapping("/internal/pending/{inviteId}/resend")
     public RestResult<Void> resendPendingInternalUserInvite(@PathVariable("inviteId") long inviteId) {
-        return inviteUserService.resendInternalUserInvite(inviteId).toPutResponse();
+        return inviteUserService.resendInvite(inviteId).toPutResponse();
     }
 
     @GetMapping("/find-external-invites")

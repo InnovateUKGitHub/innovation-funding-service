@@ -224,7 +224,7 @@ the user add assessor to invite list
     the user clicks the button/link    jQuery = a:contains("41 to")
     the user clicks the button/link    jQuery = a:contains("61 to")
     the user clicks the button/link    jQuery = input[value = "${getUserId("${invitedAssessor}")}"] ~ label
-    the user should see the element    jQuery = .govuk-hint:contains("1 assessors selected")
+    the user should see the element    jQuery = .govuk-hint:contains("1 selected")
     the user clicks the button/link    jQuery = button:contains("Add selected to invite list")
 
 the user should see assessor details

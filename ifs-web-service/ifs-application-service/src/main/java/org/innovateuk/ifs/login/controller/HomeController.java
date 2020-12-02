@@ -4,9 +4,13 @@ import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,11 +20,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingInt;
-import static org.innovateuk.ifs.user.resource.Role.multiDashboardRoles;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 
 /**
  * This Controller redirects the request from http://<domain>/ to the relevant user dashboard based on the user's
@@ -32,6 +38,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 public class HomeController {
 
     private NavigationUtils navigationUtils;
+
+    @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
+    private MonitoringOfficerRestService monitoringOfficerRestService;
 
     HomeController(NavigationUtils navigationUtils) {
         this.navigationUtils = navigationUtils;
@@ -46,8 +58,9 @@ public class HomeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserResource user = (UserResource) authentication.getDetails();
+        Set<Role> roles = getMultiDashboardRoles(user);
 
-        if (user.hasMoreThanOneRoleOf(multiDashboardRoles())) {
+        if (roles.size() > 1) {
             return "redirect:/dashboard-selection";
         }
 
@@ -63,19 +76,49 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (!user.hasMoreThanOneRoleOf(multiDashboardRoles())) {
+        Set<Role> roles = getMultiDashboardRoles(user);
+
+        if (roles.size() < 1) {
             return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
-        return doViewDashboardSelection(request, model, user);
+        return viewDashboardSelection(request, model, roles);
     }
 
-    private String doViewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
+    private Set<Role> getMultiDashboardRoles(UserResource user) {
+        Set<Role> dashboardRoles = user.getRoles().stream().filter(multiDashboardRoles()::contains).collect(Collectors.toSet());
 
-        List<Role> dashboardRoles = simpleFilter(user.getRoles(), multiDashboardRoles()::contains);
-        List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
+        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
+            addKtaRoles(user, dashboardRoles);
+        }
+        return dashboardRoles;
+    }
+
+    private void addKtaRoles(UserResource user, Set<Role> dashboardRoles) {
+        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRoleByUserId(user.getId()).getSuccess();
+        boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
+        boolean shouldShowApplicantPanel = processRoleResources.stream()
+                .map(ProcessRoleResource::getRole)
+                .anyMatch(Role::isKta);
+
+        if (isMonitoringOfficer) {
+            dashboardRoles.add(MONITORING_OFFICER);
+        }
+        if (shouldShowApplicantPanel) {
+            dashboardRoles.add(APPLICANT);
+        }
+
+        dashboardRoles.add(ASSESSOR);
+    }
+
+    private String viewDashboardSelection(HttpServletRequest request, Model model, Set<Role> roles) {
+        if (roles.size() == 1) {
+            return navigationUtils.getRedirectToDashboardUrlForRole(roles.stream().findAny().get());
+        }
+
+        List<DashboardPanel> dashboardPanels = simpleMap(roles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
-                comparingInt(panel -> asList(multiDashboardRoles()).indexOf(panel.getRole())));
+                comparingInt(panel -> multiDashboardRoles().indexOf(panel.getRole())));
 
         model.addAttribute("model", new DashboardSelectionViewModel(orderedPanels));
         return "login/multiple-dashboard-choice";

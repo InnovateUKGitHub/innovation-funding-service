@@ -64,10 +64,8 @@ Applicant can add funding sought
 
 Submit application
     [Documentation]  IFS-7440
-    Given the user clicks the button/link      id = application-overview-submit-cta
-    And the user should not see the element    jQuery = .message-alert:contains("You will not be able to make changes")
-    When the user clicks the button/link       id = submit-application-button
-    Then the user should see the element       link = Reopen application
+    When the user can submit the application
+    Then the user should see the element         link = Reopen application
 
 Non lead cannot reopen competition
     [Documentation]  IFS-7440
@@ -83,19 +81,15 @@ Non lead does not see reopen on submitted page
 
 Lead can reopen application
     [Documentation]  IFS-7440
-    [Setup]  log in as a different user   &{lead_applicant_credentials}
-    Given the user clicks the button/link  link = Dashboard
-    When the user clicks the button/link   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
-    And the user clicks the button/link    css = input[type="submit"]
-    Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
-    And the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
-    And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+    [Setup]  log in as a different user                       &{lead_applicant_credentials}
+    Given the user clicks the application tile if displayed
+    When the user can reopen application                      ${COVIDdeminimusapplicationTitle1}
+    Then the user reads his email                             collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email                              steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
-Lead can make changes and resubmit
+Lead can resubmit the application
     [Documentation]  IFS-7440
-    Given the user clicks the button/link     id = application-overview-submit-cta
-    When the user should not see the element  jQuery = .message-alert:contains("You will not be able to make changes")
-    Then the user clicks the button/link      id = submit-application-button
+    Given the user can submit the application
 
 Internal user can invite to assesment
     [Documentation]  IFS-7441
@@ -117,7 +111,7 @@ External project finance can edit funding sought
 External project finance can generate spend profile and complete PS
     [Documentation]  IFS-7357
     Given the user clicks the button/link    css = .generate-spend-profile-main-button
-    When the user clicks the button/link    css = #generate-spend-profile-modal-button
+    When the user clicks the button/link     css = #generate-spend-profile-modal-button
     Then the internal user can complete PS
 
 Internal user is able to approve Spend profile and generates the GOL
@@ -125,7 +119,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Setup]  Requesting Project ID of this Project
     Given proj finance approves the spend profiles  ${ProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             YES  ${ProjectID}
+    And internal user generates the GOL             ${ProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7365
@@ -166,17 +160,18 @@ Custom Suite teardown
 
 the applicant adds contributor to Application Team
     the user clicks the button/link                        link = Application team
-    then the user clicks the button/link                   jQuery = button:contains("Add person to Empire Ltd")
+    the user clicks the button/link                        jQuery = button:contains("Add person to Empire Ltd")
     the user invites a person to the same organisation     Collaborator  collaborator1@example.com
     logout as user
-    When the user reads his email and clicks the link      collaborator1@example.com    Invitation to contribute in ${COVIDdeminimuscompetitionTitle}     You will be joining as part of the organisation    2
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
-    And the invited user fills the create account form     Collaborator  Axe
-    And the user reads his email and clicks the link       collaborator1@example.com    Please verify your email address    Once verified you can sign into your account
+    the user reads his email and clicks the link           collaborator1@example.com    Invitation to contribute in ${COVIDdeminimuscompetitionTitle}     You will be joining as part of the organisation    2
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Confirm and continue")
+    the invited user fills the create account form         Collaborator  Axe
+    the user reads his email and clicks the link           collaborator1@example.com    Please verify your email address    Once verified you can sign into your account
     the user clicks the button/link                        jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
     Logging in and Error Checking                          &{lead_applicant_credentials}
-    then the user clicks the button/link                   link = ${COVIDdeminimusapplicationTitle1}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                        link = ${COVIDdeminimusapplicationTitle1}
     the applicant completes Application Team
 
 the user fills in bank details
@@ -188,47 +183,40 @@ the user fills in bank details
     applicant user enters bank details
 
 the project finance approves all steps before finance
-    Log in as a different user               &{lead_applicant_credentials}
-    the user clicks the button/link          link = ${COVIDdeminimusapplicationTitle1}
-    the user clicks the button/link          link = Project details
-    the user clicks the button/link          link = Correspondence address
+    Log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDdeminimusapplicationTitle1}
+    the user clicks the button/link                       link = Project details
+    the user clicks the button/link                       link = Correspondence address
     the user enter the Correspondence address
-    the user clicks the button/link          id = return-to-set-up-your-project-button
-    the user clicks the button/link          link = Project team
-    the user clicks the button/link          link = Project manager
-    the user selects the radio button        projectManager    projectManager1
-    the user clicks the button/link          id = save-project-manager-button
-    The user selects their finance contact   financeContact1
-    the user clicks the button/link          link = Set up your project
-    the user clicks the button/link          link = Documents
-    the user clicks the button/link          link = Exploitation plan
-    the user uploads the file                css = .inputfile  ${valid_pdf}
-    the user should see the element          jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
-    the user clicks the button/link          id = submit-document-button
-    the user clicks the button/link          id = submitDocumentButtonConfirm
-    the user clicks the button/link          link = Back to document overview
+    the user clicks the button/link                       id = return-to-set-up-your-project-button
+    the user clicks the button/link                       link = Project team
+    the user clicks the button/link                       link = Project manager
+    the user selects the radio button                     projectManager    projectManager1
+    the user clicks the button/link                       id = save-project-manager-button
+    The user selects their finance contact                financeContact1
+    the user clicks the button/link                       link = Back to project setup
+    the user clicks the button/link                       link = Documents
+    the user clicks the button/link                       link = Exploitation plan
+    the user uploads the file                             css = .inputfile  ${valid_pdf}
+    the user should see the element                       jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
+    the user clicks the button/link                       id = submit-document-button
+    the user clicks the button/link                       id = submitDocumentButtonConfirm
+    the user clicks the button/link                       link = Back to document overview
     the user fills in bank details
-    log in as a different user               &{ifs_admin_user_credentials}
-    the user navigates to the page           ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
-    the user clicks the button/link          jQuery = td.action:nth-of-type(3) a
-    the user clicks the button/link          link = Exploitation plan
+    log in as a different user                            &{ifs_admin_user_credentials}
+    the user navigates to the page                        ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
+    the user clicks the button/link                       jQuery = td.action:nth-of-type(3) a
+    the user clicks the button/link                       link = Exploitation plan
     internal user approve uploaded documents
-    the user navigates to the page           ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
-    the user clicks the button/link          jQuery = td.action:nth-of-type(4)
-    search for MO                            Orvill  Orville Gibbs
-    the internal user assign project to MO   ${application_id}  ${COVIDdeminimusapplicationTitle1}
-    the user navigates to the page           ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
-    the user clicks the button/link          jQuery = td.action:nth-of-type(5)
+    the user navigates to the page                        ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
+    the user clicks the button/link                       jQuery = td.action:nth-of-type(4)
+    search for MO                                         Orvill  Orville Gibbs
+    the internal user assign project to MO                ${application_id}  ${COVIDdeminimusapplicationTitle1}
+    the user navigates to the page                        ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
+    the user clicks the button/link                       jQuery = td.action:nth-of-type(5)
     approve bank account details
 
-confirm viability
-    [Arguments]  ${viability}
-    the user clicks the button/link                      css = .viability-${viability}
-    the user selects the checkbox                        project-viable
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link                      id = confirm-button      #Page confirmation button
-    the user clicks the button/link                      name = confirm-viability   #Pop-up confirmation button
-    the user clicks the button/link                      link = Return to finance checks
 
 confirm eligibility
     [Arguments]  ${eligibility}
@@ -281,6 +269,7 @@ the user completes the covid deminimus application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDdeminimusapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant adds contributor to Application Team
+    the applicant marks EDI question as complete
     the user selects research category                       Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user accept the competition terms and conditions     Return to application overview
@@ -338,13 +327,13 @@ the assessor submits
 
 the assessor adds score for every question
     [Arguments]   ${no_of_questions}
-    The user clicks the button/link                       link = Scope
-    The user selects the index from the drop-down menu    1    css = .research-category
-    The user clicks the button/link                       jQuery = label:contains("Yes")
+    The user clicks the button/link                               link = Scope
+    The user selects the index from the drop-down menu            1    css = .research-category
+    The user clicks the button/link                               jQuery = label:contains("Yes")
     :FOR  ${INDEX}  IN RANGE  1  ${no_of_questions}
-      \    the user clicks the button/link    css = .next
+      \    the user clicks the button/link                        jQuery = li:contains("Next")
       \    The user selects the option from the drop-down menu    23    css = .assessor-question-score
-    The user clicks the button with resubmission              jquery = button:contains("Save and return to assessment overview")
+    The user clicks the button with resubmission                  jquery = button:contains("Save and return to assessment overview")
 
 the user completes assessment and moves to PS
     the user set assessor score notification to yes
@@ -355,14 +344,15 @@ the user completes assessment and moves to PS
     moving competition to Project Setup            ${COVIDdeminimuscompetitionId}
 
 the internal user can complete PS
-    log in as a different user         &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDdeminimusapplicationTitle1}
-    the user clicks the button/link    link = Spend profile
-    the user clicks the button/link    link = Empire Ltd
-    the user clicks the button/link    id = spend-profile-mark-as-complete-button
-    the user clicks the button/link    jQuery = a:contains("Review and submit project spend profile")
-    the user clicks the button/link    jQuery = a:contains("Submit project spend profile")
-    the user clicks the button/link    id = submit-send-all-spend-profiles
+    log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDdeminimusapplicationTitle1}
+    the user clicks the button/link                       link = Spend profile
+    the user clicks the button/link                       link = Empire Ltd
+    the user clicks the button/link                       id = spend-profile-mark-as-complete-button
+    the user clicks the button/link                       jQuery = a:contains("Review and submit project spend profile")
+    the user clicks the button/link                       jQuery = a:contains("Submit project spend profile")
+    the user clicks the button/link                       id = submit-send-all-spend-profiles
     the external finance cannot access spend profile
 
 the user can change funding sought
@@ -370,8 +360,8 @@ the user can change funding sought
     the user clicks the button/link        link = Change funding sought
     the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  2100
     the user clicks the button/link        jQuery = button:contains("Save and return to project finances")
-    the user should see the element        jQuery = h3:contains("Finances summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
-    the user clicks the button/link        link = Finance checks
+    the user should see the element        jQuery = h3:contains("Finance summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
+    the user clicks the button/link        link = Back to finance checks
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDdeminimusapplicationTitle1}

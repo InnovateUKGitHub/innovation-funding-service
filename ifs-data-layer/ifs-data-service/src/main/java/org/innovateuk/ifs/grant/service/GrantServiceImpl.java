@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.grant.service;
 
+import com.newrelic.api.agent.Trace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -9,9 +10,9 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
-import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.resource.Role.LIVE_PROJECTS_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -53,13 +55,14 @@ public class GrantServiceImpl implements GrantService {
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendReadyProjects() {
+    @Trace(dispatcher = true)
+    public ServiceResult<ScheduleResponse> sendReadyProjects() {
         return grantProcessService.findOneReadyToSend()
                 .map(this::sendProject)
-                .orElse(serviceSuccess());
+                .orElse(serviceSuccess(ScheduleResponse.noWorkNeeded()));
     }
 
-    private ServiceResult<Void> sendProject(GrantProcess grantProcess) {
+    private ServiceResult<ScheduleResponse> sendProject(GrantProcess grantProcess) {
         long applicationId = grantProcess.getApplicationId();
         LOG.info("Sending project : " + applicationId);
 
@@ -73,7 +76,7 @@ public class GrantServiceImpl implements GrantService {
                 .andOnFailure((ServiceFailure serviceFailure) ->
                         grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
 
-        return serviceSuccess();
+        return serviceSuccess(new ScheduleResponse("Project sent: " + applicationId));
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {

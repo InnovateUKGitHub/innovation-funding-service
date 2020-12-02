@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage funding applications',hasFormErrors=${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" />
 </head>
@@ -166,7 +166,7 @@
                                 <td class="govuk-table__cell" th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
                                 <td class="govuk-table__cell" th:case="*">-</td>
                             </th:block>
-                            <td class="govuk-table__cell" th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
+                            <td class="govuk-table__cell" th:text="${applicationSummary.emailStatus()}">-</td>
                             <td class="govuk-table__cell alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
                         </tr>
                         <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.content)}">

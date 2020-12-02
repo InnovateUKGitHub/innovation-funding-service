@@ -725,10 +725,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void ifsAdminCanViewAnyUsersProfile() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(ifsAdminUser())) {
-                assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+            if (user.isInternalUser()) {
+                assertTrue(rules.internalUserCanViewAnyUsersProfile(newUserProfileResource().build(), user));
             } else {
-                assertFalse(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
+                assertFalse(rules.internalUserCanViewAnyUsersProfile(newUserProfileResource().build(), user));
             }
         });
     }
@@ -895,37 +895,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void assessorCanRequestApplicantRole() {
-        UserResource otherAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
-
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(otherAssessor.getId(), APPLICANT), assessorUser()));
-        assertFalse(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.assessorCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
-
-    }
-
-    @Test
-    public void stakeholderCanRequestApplicantRole() {
-        UserResource otherStakeholder = newUserResource().withRolesGlobal(singletonList(STAKEHOLDER)).build();
-
-        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(otherStakeholder.getId(), APPLICANT), stakeholderUser()));
-        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
-    }
-
-    @Test
-    public void monitoringOfficerCanRequestApplicantRole() {
-        UserResource otherMonitoringOfficer = newUserResource().withRolesGlobal(singletonList(MONITORING_OFFICER)).build();
-
-        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), compAdminUser()));
-        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(otherMonitoringOfficer.getId(), APPLICANT), monitoringOfficerUser()));
-        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
-
-        assertTrue(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
+    public void isMultipleRoleDashboardUsersCanRequestApplicantRole() {
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(assessorUser().getId(), APPLICANT), assessorUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
+        assertTrue(rules.isMultipleRoleDashboardUsersCanRequestApplicantRole(new GrantRoleCommand(liveProjectsUser().getId(), APPLICANT), liveProjectsUser()));
     }
 
     @Test
@@ -959,15 +933,14 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         userPageResourceWithNonAssessors.setContent(newUserResource().withRolesGlobal(singletonList(ASSESSOR), singletonList(APPLICANT)).build(2));
 
         allGlobalRoleUsers.forEach(u -> {
-                if (u.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE)) {
-                    assertTrue(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
-                    assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
+                    if (u.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE)) {
+                        assertTrue(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
+                        assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
+                    } else {
+                        assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
+                        assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
+                    }
                 }
-                else {
-                    assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithOnlyAssessors, u));
-                    assertFalse(rules.compAdminAndProjectFinanceCanViewAssessors(userPageResourceWithNonAssessors, u));
-                }
-            }
         );
     }
 

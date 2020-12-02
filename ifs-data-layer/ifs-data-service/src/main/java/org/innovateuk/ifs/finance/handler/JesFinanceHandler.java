@@ -3,10 +3,7 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
-import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
-import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
+import org.innovateuk.ifs.finance.handler.item.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +15,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 
 @Component
 public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implements OrganisationTypeFinanceHandler {
@@ -32,11 +28,14 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
     private OtherFundingHandler otherFundingHandler;
 
     @Autowired
+    private GrantClaimAmountHandler grantClaimAmountHandler;
+
+    @Autowired
     private JESCostHandler jesCostHandler;
 
     @Override
     protected boolean initialiseCostTypeSupported(FinanceRowType costType) {
-        return asList(FINANCE, OTHER_FUNDING).contains(costType);
+        return asList(FINANCE, GRANT_CLAIM_AMOUNT, OTHER_FUNDING).contains(costType);
     }
 
     @Override
@@ -47,6 +46,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
             FinanceRowCostCategory financeRowCostCategory;
             switch (costType) {
                 case FINANCE:
+                case GRANT_CLAIM_AMOUNT:
                     financeRowCostCategory = new ExcludedCostCategory();
                     break;
                 case OTHER_FUNDING:
@@ -85,6 +85,9 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                 break;
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
+                break;
+            case GRANT_CLAIM_AMOUNT:
+                handler = grantClaimAmountHandler;
                 break;
         }
         if (handler != null) {

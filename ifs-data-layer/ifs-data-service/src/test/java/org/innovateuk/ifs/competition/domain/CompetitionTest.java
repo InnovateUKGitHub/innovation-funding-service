@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.domain;
 
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.Funder;
 import org.innovateuk.ifs.form.domain.Question;
@@ -162,6 +163,13 @@ public class CompetitionTest {
         competition.notifyAssessors(ZonedDateTime.now().minusDays(1));
         competition.setFundersPanelDate(ZonedDateTime.now().plusDays(1));
         assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void competitionStatusInPrevious() {
+        competition.setCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE);
+        competition.setEndDate(ZonedDateTime.now().minusDays(1));
+        assertEquals(PREVIOUS, competition.getCompetitionStatus());
     }
 
     @Test

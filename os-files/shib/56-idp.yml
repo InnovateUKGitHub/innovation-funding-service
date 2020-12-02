@@ -30,7 +30,7 @@ items:
           imagePullSecrets:
             - name: imagePullSecretsName
           containers:
-            - image: innovateuk/idp-service:${idpVersion}
+            - image: innovateuk/idp-service:${nexusVersion}
               name: idp
               volumeMounts:
                 - name: idp-keys-volume

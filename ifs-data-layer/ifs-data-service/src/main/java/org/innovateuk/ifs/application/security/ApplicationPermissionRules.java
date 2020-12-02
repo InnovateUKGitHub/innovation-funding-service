@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -34,6 +35,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
+    @Autowired
+    private SupporterAssignmentRepository supporterAssignmentRepository;
+
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
@@ -44,8 +48,22 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isAssessorForApplication(applicationResource, user);
     }
 
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The kta can see the participation percentage for applications they assess")
+    public boolean ktaCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+        return isKtaForApplication(applicationResource, user);
+    }
+
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The co funder can see the participation percentage for applications they assess")
+    public boolean supporterCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+        return isSupporterForApplication(applicationResource.getId(), user.getId());
+    }
+
     private boolean isAssessorForApplication(ApplicationResource applicationResource, UserResource user) {
         return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
+    }
+
+    private boolean isKtaForApplication(ApplicationResource applicationResource, UserResource user) {
+        return isKta(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")
@@ -73,6 +91,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean leadApplicantCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "READ_FINANCE_DETAILS",
+            description = "The kta can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean ktaCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
+        return isKta(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -116,6 +141,20 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(applicationResource.getCompetition(), user.getId());
     }
 
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "The kta can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean ktaCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isKta(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "The co funder can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean supporterCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isSupporterForApplication(applicationResource.getId(), user.getId());
+    }
+
     @PermissionRule(value = "APPLICATION_SUBMITTED_NOTIFICATION", description = "A lead applicant can send the notification of a submitted application")
     public boolean aLeadApplicantCanSendApplicationSubmittedNotification(final ApplicationResource applicationResource, final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
@@ -133,7 +172,8 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "A user can see an application resource which they are connected to")
     public boolean usersConnectedToTheApplicationCanView(ApplicationResource application, UserResource user) {
-        return userIsConnectedToApplicationResource(application, user);
+        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), application.getId())
+                || supporterAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
@@ -156,6 +196,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return application != null && application.getCompetition() != null && projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application.getId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "Supporter can see applications assigned to them")
+    public boolean supportersCanSeeApplicationsAssigned(final ApplicationResource application, final UserResource user) {
+        return application != null && supporterAssignmentRepository.existsByParticipantIdAndTargetId(user.getId(), application.getId());
+    }
+
     @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
     public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user) {
         Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
@@ -163,6 +208,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             return false;
         }
         return isPartner(linkedProject.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Supporters can can see application resources for applications assigned to them.")
+    public boolean supportersCanViewApplicationsAssigned(final ApplicationResource application, final UserResource user) {
+        return application != null && isSupporterForApplication(application.getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
@@ -249,10 +299,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return application.isInPublishedAssessorFeedbackCompetitionState() && isMemberOfProjectTeam(application.getId(), user);
     }
 
-    boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
-        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), application.getId());
-    }
-
     @PermissionRule(value = "CREATE",
             description = "Any logged in user with global roles or user with system registrar role can create an application but only for open competitions",
             particularBusinessState = "Competition is in Open state")
@@ -272,8 +318,15 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "CHECK_FUNDING_SOUGHT_VALID", description = "The consortium can check funding sought is valid")
+    public boolean consortiumCanCheckFundingSoughtIsValid(final ApplicationResource applicationResource,
+                                                                       final UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
+
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
+
 }
 

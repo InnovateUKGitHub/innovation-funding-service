@@ -352,9 +352,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(organisationRepository.findById(organisations.get(2).getId())).thenReturn(Optional.of(organisations.get(2)));
 
         List<ApplicationFinance> applicationFinances = newApplicationFinance().build(3);
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(applicationFinances.get(0));
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(applicationFinances.get(1));
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(applicationFinances.get(2));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(Optional.of(applicationFinances.get(0)));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(Optional.of(applicationFinances.get(1)));
+        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(Optional.of(applicationFinances.get(2)));
 
         ApplicationFinanceResource applicationFinanceResource0 = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).withOrganisation(organisations.get(0).getId()).build();
         when(applicationFinanceMapper.mapToResource(applicationFinances.get(0))).thenReturn(applicationFinanceResource0);

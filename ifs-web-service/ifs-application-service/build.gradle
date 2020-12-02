@@ -22,16 +22,19 @@ afterEvaluate {
     }
 }
 
+ext.IFS_WEB_VIRTUALASSISTANT_BOTSECRET = ext.has('ifs.web.virtualAssistant.botSecret') ? ext.get('ifs.web.virtualAssistant.botSecret') : 'authSecretNotConfigured'
+ext.IFS_WEB_VIRTUALASSISTANT_BOTID = ext.has('ifs.web.virtualAssistant.botId') ? ext.get('ifs.web.virtualAssistant.botId') : 'ukridev-qnamaker-bot'
+
 group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
 
-project.version = applicationServiceVersion
-tagDocker.tag = applicationServiceVersion
-osStageRemote.tag = applicationServiceVersion
-tagDockerLocal.tag = applicationServiceVersion
-osStageLocal.tag = applicationServiceVersion
+project.version = nexusVersion
+tagDocker.tag = nexusVersion
+osStageRemote.tag = nexusVersion
+tagDockerLocal.tag = nexusVersion
+osStageLocal.tag = nexusVersion
 
 createContainer.hostName = "application-svc"
 createContainer.containerName = "application-svc"

@@ -19,7 +19,7 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
             description = "Monitoring officers can get their own projects."
     )
     public boolean monitoringOfficerCanSeeTheirOwnProjects(UserResource monitoringOfficerUser, UserResource user) {
-        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasRole(MONITORING_OFFICER);
+        return user.getId().equals(monitoringOfficerUser.getId()) && user.hasAuthority(MONITORING_OFFICER.getName());
     }
 
     @PermissionRule(
@@ -28,6 +28,14 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
     )
     public boolean internalUsersCanSeeMonitoringOfficerProjects(UserResource monitoringOfficerUser, UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(
+            value = "IS_MONITORING_OFFICER",
+            description = "Users can see if they are moitoring offices on any projects"
+    )
+    public boolean usersCanSeeIfTheyAreMonitoringOfficerOnProjects(UserResource monitoringOfficerUser, UserResource user) {
+        return monitoringOfficerUser.getId().equals(user.getId());
     }
 
     @PermissionRule(

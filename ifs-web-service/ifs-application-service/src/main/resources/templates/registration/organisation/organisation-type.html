@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application - Choose your organisation type ',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
@@ -33,8 +33,9 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle=${subtitle},size='govuk-heading-xl'" />
 
         <p th:if="${model.leadJourney}" class="govuk-body govuk-!-margin-top-6">This is the organisation that will lead the application.</p>
+        <p th:if="${!model.leadJourney}" class="govuk-body govuk-!-margin-top-6">This is the organisation that will join the application.</p>
 
-         <form th:object="${organisationForm}"
+        <form th:object="${organisationForm}"
                th:action="@{/organisation/create/organisation-type}" method="POST" novalidate="novalidate">
              <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'govuk-form-group--error'">
                  <fieldset class="govuk-fieldset">
@@ -45,7 +46,8 @@
                          <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                      </th:block>
                      <div class="govuk-radios">
-                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}" th:each="type : ${model.types}">
+                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}"
+                              th:each="type : ${model.types}">
                             <input th:id="'radio-'+ ${type.id}" type="radio"
                                    class="govuk-radios__input"
                                    th:field="*{organisationTypeId}"

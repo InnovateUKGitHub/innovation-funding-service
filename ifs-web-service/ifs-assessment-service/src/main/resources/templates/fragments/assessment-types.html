@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 
 <!-- ======== Assessment - research category ======= -->
@@ -12,9 +12,7 @@
         <span class="govuk-hint">More
             <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                class="govuk-link"
-               target="_blank"
-               aria-describedby="research-categories-hint">guidance on research categories</a>
-            <span id="research-categories-hint">(opens in a new window)</span>.
+               target="_blank">guidance on research categories (opens in a new window)</a>.
         </span>
         <select class="govuk-select research-category"
                 th:id="formInput[__${field.id}__]"
@@ -32,11 +30,11 @@
 
 
 <!-- ======== Assessment - assessor feedback textarea and word count ======= -->
-<th:block th:fragment="textarea (field)">
+<th:block th:fragment="textarea (field)" th:with="feedbackWillBeReleasedToApplicant=${feedbackWillBeReleasedToApplicant != null} ? ${feedbackWillBeReleasedToApplicant} : true">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label govuk-label--s" th:for="formInput[__${field.id}__]" th:id="'form-label-'+${field.id}">Feedback</label>
-        <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
-        <span th:unless="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+        <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences<th:block th:if="${feedbackWillBeReleasedToApplicant}"> which will be returned to the applicant as feedback</th:block>.</span>
+        <span th:unless="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your score by writing 2 or 3 sentences<th:block th:if="${feedbackWillBeReleasedToApplicant}"> which will be returned to the applicant as feedback</th:block>.</span>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         <details th:unless="${#strings.isEmpty(field.guidanceTitle)}"
                  class="govuk-details">

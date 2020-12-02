@@ -7,8 +7,11 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,8 +19,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
@@ -27,7 +33,7 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
  */
 @Controller
 @RequestMapping("/application")
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser', 'supporter')")
 @SecuredBySpring(value="Controller",
         description = "Only applicants on an application are allowed to view the corresponding application overview",
         securedType = ApplicationOverviewController.class)
@@ -38,6 +44,11 @@ public class ApplicationOverviewController {
     private UserRestService userRestService;
     private ApplicationRestService applicationRestService;
 
+    public ApplicationOverviewController() {
+
+    }
+
+    @Autowired
     public ApplicationOverviewController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
                                  UserRestService userRestService,
                                  ApplicationRestService applicationRestService) {
@@ -54,7 +65,8 @@ public class ApplicationOverviewController {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
 
-        if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
+        if (application.getCompetitionStatus() != CompetitionStatus.OPEN
+                || userIsKta(user.getId(), application.getId())) {
             return format("redirect:/application/%s/summary", application.getId());
         }
 
@@ -66,6 +78,13 @@ public class ApplicationOverviewController {
 
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, user));
         return "application-overview";
+    }
+
+    private boolean userIsKta(long userId, long applicationId) {
+        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRole(applicationId).getSuccess();
+        return processRoleResources.stream()
+                .anyMatch(processRole -> processRole.getUser().equals(userId)
+                        && processRole.getRole().equals(KNOWLEDGE_TRANSFER_ADVISER));
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {

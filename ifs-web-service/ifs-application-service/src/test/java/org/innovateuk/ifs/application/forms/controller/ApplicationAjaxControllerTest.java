@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +39,7 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
     @Before
     public void setUpData() {
 
-        this.setupCompetition();
+        this.setupCompetition(FundingType.GRANT, AssessorFinanceView.OVERVIEW);
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.setupFinances();
@@ -48,8 +50,8 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
         costId = 1L;
 
         // save actions should always succeed.
-        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
-        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), eq(""), anyLong(), anyBoolean())).thenReturn(restSuccess(new ValidationMessages(fieldError("value", "", "Please enter some text 123"))));
+        when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(noErrors()));
     }
 
     @Test
@@ -61,8 +63,24 @@ public class ApplicationAjaxControllerTest extends AbstractApplicationMockMVCTes
                         .param("formInputId", formInputId.toString())
                         .param("fieldName", "formInput[" + formInputId + "]")
                         .param("value", value)
+                        .param("multipleChoiceOptionId", "")
         ).andExpect(status().isOk());
 
-        Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, false);
+        Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, value, null, false);
+    }
+
+    @Test
+    public void testSaveFormElementMultipleChoiceOption() throws Exception {
+        String value = "Form Input " + formInputId + " Response";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", formInputId.toString())
+                        .param("fieldName", "formInput[" + formInputId + "]")
+                        .param("value", "")
+                        .param("multipleChoiceOptionId", "1")
+        ).andExpect(status().isOk());
+
+        Mockito.inOrder(formInputResponseRestService).verify(formInputResponseRestService, calls(1)).saveQuestionResponse(loggedInUser.getId(), application.getId(), formInputId, "", 1L, false);
     }
 }
