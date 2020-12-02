@@ -117,6 +117,11 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                 }
             }
 
+            // TODO: check manual entry here
+            if (form.getSelectedOrganisationId() != null) {
+                return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
+            }
+
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());
         };
     }
