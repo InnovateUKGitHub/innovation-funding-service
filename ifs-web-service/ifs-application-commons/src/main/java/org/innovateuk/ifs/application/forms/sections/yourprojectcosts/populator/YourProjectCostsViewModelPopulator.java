@@ -43,7 +43,7 @@ public class YourProjectCostsViewModelPopulator {
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
-        boolean userCanEdit = !(user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .orElse(false);
         boolean open = userCanEdit && application.isOpen() && competition.isOpen();
