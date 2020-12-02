@@ -7,7 +7,7 @@ ALTER TABLE organisation ADD COLUMN executive_officer_id bigint(20);
 CREATE TABLE sic_code (
                      	id bigint(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
                      	organisation_id bigint(20) NOT NULL,
-                     	name VARCHAR(255)
+                     	sic_code VARCHAR(255)
 );
 
 CREATE TABLE executive_officer (
