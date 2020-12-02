@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,9 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
 
     @Mock
     private UserRestService userRestService;
+
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private OrganisationRestService organisationRestService;
@@ -122,7 +126,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
 
         AddressResource address = newAddressResource().build();
 
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
         when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").build()));

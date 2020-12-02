@@ -29,7 +29,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,7 +74,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -149,7 +149,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     }
 
     private List<ProcessRoleResource> getProcessRoles(ApplicationResource application) {
-        return userRestService.findProcessRole(application.getId()).getSuccess();
+        return processRoleRestService.findProcessRole(application.getId()).getSuccess();
     }
 
     private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
