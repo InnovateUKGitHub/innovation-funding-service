@@ -14,7 +14,7 @@ public interface HeukarPartnerOrganisationService {
 
     ServiceResult<HeukarPartnerOrganisation> addNewPartnerOrgToApplication(long applicationId, long organisationTypeId);
 
-    ServiceResult<HeukarPartnerOrganisation> updatePartnerOrganisation(Long id);
+    ServiceResult<HeukarPartnerOrganisation> updatePartnerOrganisation(Long id, long organisationTypeId);
 
     ServiceResult<Void> deletePartnerOrganisation(Long id);
 

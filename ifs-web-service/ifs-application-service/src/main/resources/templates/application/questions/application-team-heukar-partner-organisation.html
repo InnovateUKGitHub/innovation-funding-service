@@ -34,10 +34,11 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Partner organisation type',subTitle=${subtitle},size='govuk-heading-xl'"/>
 
-        <form th:object="${organisationForm}"
+        <form th:object="${form}"
             th:action="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(
         applicationId=${model.applicationId},
-        questionId=${model.questionId})}"
+        questionId=${model.questionId},
+        existingId=${form.id})}"
               method="POST"
               novalidate="novalidate"
         >

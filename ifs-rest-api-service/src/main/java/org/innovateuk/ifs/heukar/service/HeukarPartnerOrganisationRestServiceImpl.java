@@ -15,7 +15,7 @@ public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService im
     private String heukarRestUrl = "heukar-partner-organisation";
 
     @Override
-    public RestResult<List<HeukarPartnerOrganisationResource>> getHeukarOrganisationTypesForApplicationWithId(Long applicationId) {
+    public RestResult<List<HeukarPartnerOrganisationResource>> getHeukarPartnerOrganisationsForApplicationWithId(Long applicationId) {
         return getWithRestResult(heukarRestUrl + "/find-by-application-id/" + applicationId, heukarOrganisationTypeResourceListType());
     }
 
@@ -25,8 +25,8 @@ public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService im
     }
 
     @Override
-    public RestResult<Void> updateHeukarOrgType(Long id) {
-        return putWithRestResult(heukarRestUrl + "/" + id);
+    public RestResult<Void> updateHeukarOrgType(Long id, long organisationTypeId) {
+        return putWithRestResult(heukarRestUrl + "/" + id + "/" + organisationTypeId);
     }
 
     @Override

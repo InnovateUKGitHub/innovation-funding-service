@@ -40,7 +40,7 @@ public class HeukarPartnerOrganisationServiceImpl implements HeukarPartnerOrgani
     }
 
     @Override
-    public ServiceResult<HeukarPartnerOrganisation> updatePartnerOrganisation(Long id) {
+    public ServiceResult<HeukarPartnerOrganisation> updatePartnerOrganisation(Long id, long organisationTypeId) {
         HeukarPartnerOrganisation save = heukarPartnerOrganisationRepository.save(mapper.mapIdToDomain(id));
         return ServiceResult.serviceSuccess(save);
     }

@@ -123,7 +123,7 @@ public class ApplicationTeamPopulator {
 
         List<HeukarPartnerOrganisationResource> heukaOrgTypes = emptyList();
         if (competition.isHeukar()) {
-            heukaOrgTypes = heukarPartnerOrganisationRestService.getHeukarOrganisationTypesForApplicationWithId(application.getId()).getSuccess();
+            heukaOrgTypes = heukarPartnerOrganisationRestService.getHeukarPartnerOrganisationsForApplicationWithId(application.getId()).getSuccess();
         }
 
         return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),

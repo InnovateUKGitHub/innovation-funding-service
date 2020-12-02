@@ -6,7 +6,11 @@ import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 
 import javax.validation.constraints.NotNull;
 
-public class ApplicationTeamOrganisationTypeForm {
+public class HeukarPartnerOrganisationForm {
+
+
+    private Long id;
+
     @NotNull(message="{validation.standard.organisationtype.required}")
     private Long organisationTypeId;
 
@@ -44,5 +48,13 @@ public class ApplicationTeamOrganisationTypeForm {
                 .append(organisationTypeId)
                 .append(isLeadApplicant)
                 .toHashCode();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

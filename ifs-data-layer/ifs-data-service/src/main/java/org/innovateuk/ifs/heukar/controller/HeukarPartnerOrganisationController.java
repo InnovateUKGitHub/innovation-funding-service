@@ -27,9 +27,10 @@ public class HeukarPartnerOrganisationController {
                 .toPostResponse();
     }
 
-    @PutMapping("/{id}")
-    public RestResult<Void> updateHeukarPartnerOrganisation(@PathVariable("id") Long id) {
-        return heukarPartnerOrganisationService.updatePartnerOrganisation(id).toPutResponse();
+    @PutMapping("/{id}/{organisationTypeId}")
+    public RestResult<Void> updateHeukarPartnerOrganisation(@PathVariable("id") Long id,
+                                                            @PathVariable("organisationTypeId") long organisationTypeId) {
+        return heukarPartnerOrganisationService.updatePartnerOrganisation(id, organisationTypeId).toPutResponse();
     }
 
     @DeleteMapping("/{id}")
