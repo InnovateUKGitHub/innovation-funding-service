@@ -74,7 +74,7 @@
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__durationInMonths__}')} ? 'govuk-form-group--error'">
                     <label for="durationInMonths" class="govuk-label">
-                        Duration in months
+                        Project duration in months
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='durationInMonths')" />
                     <input class="govuk-input govuk-input--width-2"
