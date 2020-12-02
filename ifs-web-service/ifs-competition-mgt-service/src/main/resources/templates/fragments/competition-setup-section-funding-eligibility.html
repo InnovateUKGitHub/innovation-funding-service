@@ -1,0 +1,114 @@
+<!-- =================== Comp setup section - Project Eligibility (3) ============================== -->
+<th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding eligibility',size='govuk-heading-xl'" />
+
+    <form th:action="@{(${model.general.editable} ? '' : 'funding-eligibility/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${model.general.competition.id}"
+          data-section="funding-eligibility">
+        <th:block th:if="${model.general.editable}">
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('researchCategoriesApplicable')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoriesApplicable">
+                        <h2 class="govuk-fieldset__heading">Are research categories applicable?</h2>
+                    </legend>
+                    <span th:if="${#fields.hasErrors('researchCategoriesApplicable')}" class="govuk-error-message"
+                          th:each="err : ${#fields.errors('researchCategoriesApplicable')}" th:text="${err}"/>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" data-target="research-categories"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-researchCategoriesApplicable-yes"
+                                   name="researchCategoriesApplicable"
+                                   th:checked="${!model.general.firstTimeInForm && competitionSetupForm.researchCategoriesApplicable}"
+                                   value="true"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchCategoriesApplicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-researchCategoriesApplicable-yes">
+                                Yes
+                            </label>
+                        </div>
+
+                        <div id="research-categories" class="panel">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'govuk-form-group--error'">
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchCategoryId">
+                                        <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
+                                    </legend>
+                                    <span th:if="${#fields.hasErrors('researchCategoryId')}" class="govuk-error-message"
+                                          th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"/>
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >
+                                            <input th:value="${researchCategory.id}"
+                                                   type="checkbox"
+                                                   class="govuk-checkboxes__input"
+                                                   name="researchCategoryId"
+                                                   th:id="${'research-categories-' + researchCategory.id}"
+                                                   th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
+                                                   required="required"
+                                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
+                                            <label th:for="${'research-categories-' + researchCategory.id}"
+                                                   th:text="${researchCategory.name}"
+                                                   class="govuk-label govuk-checkboxes__label"></label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item" data-target="funding-level"
+                             data-target-clear-validation="true" data-target-clear-form="true">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="comp-researchCategoriesApplicable-no"
+                                   name="researchCategoriesApplicable"
+                                   th:checked="${!model.general.firstTimeInForm && !competitionSetupForm.researchCategoriesApplicable}"
+                                   value="false"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchCategoriesApplicable.required}"/>
+                            <label class="govuk-radios__label"
+                                   for="comp-researchCategoriesApplicable-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button class="govuk-button">Done</button>
+        </th:block>
+
+        <th:block th:if="${!model.general.editable}">
+
+            <dl class="standard-definition-list">
+                <dt>Research categories</dt>
+                <dd th:text="${competitionSetupForm.researchCategoriesApplicable ? model.researchCategoriesFormatted : 'Not applicable'}"></dd>
+            </dl>
+
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
+        </th:block>
+
+    </form>
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-eligibility')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Project eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='funding-level-percentage')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Funding level percentage</span>
+            </a>
+        </li>
+    </ul>
+</th:block>
