@@ -7,7 +7,7 @@ import java.util.Objects;
  * Stores the SIC code from the companies house API which returns a list of strings for SIC codes.
  */
 @Entity
-@Table(name ="sic_code")
+@Table
 public class SicCode {
 
     @Id

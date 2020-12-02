@@ -2,15 +2,23 @@ package org.innovateuk.ifs.organisation.resource;
 
 import java.util.Objects;
 
-public class SicCodeRescource {
+public class OrganisationExecutiveOfficerResource {
 
     private Long id;
     private Long organisation;
-    private String sicCode;
+    private String name;
 
-    public SicCodeRescource()
-    {
+    public OrganisationExecutiveOfficerResource() {
 
+    }
+
+    public OrganisationExecutiveOfficerResource(Long organisation, String name) {
+        this.organisation = organisation;
+        this.name = name;
+    }
+
+    public OrganisationExecutiveOfficerResource(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -29,30 +37,26 @@ public class SicCodeRescource {
         this.organisation = organisation;
     }
 
-    public String getSicCode() {
-        return sicCode;
+    public String getName() {
+        return name;
     }
 
-    public SicCodeRescource(String sicCode){
-        this.sicCode = sicCode;
-    }
-
-    public void setSicCode(String sicCode) {
-        this.sicCode = sicCode;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SicCodeRescource that = (SicCodeRescource) o;
+        OrganisationExecutiveOfficerResource that = (OrganisationExecutiveOfficerResource) o;
         return id.equals(that.id) &&
                 organisation.equals(that.organisation) &&
-                sicCode.equals(that.sicCode);
+                name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, organisation, sicCode);
+        return Objects.hash(id, organisation, name);
     }
 }

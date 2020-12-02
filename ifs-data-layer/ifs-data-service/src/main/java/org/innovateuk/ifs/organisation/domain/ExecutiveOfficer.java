@@ -7,7 +7,7 @@ import java.util.Objects;
  * Stores the Executive officer name string from the companies house list officers api call.
  */
 @Entity
-@Table(name ="executive_officer")
+@Table
 public class ExecutiveOfficer {
 
     @Id

@@ -23,9 +23,9 @@ public class OrganisationResource {
     private String registrationNumber;
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
     private LocalDate dateOfIncorporation;
-    private List<SicCodeRescource> sicCodes;
+    private List<OrganisationSicCodeResource> sicCodes = new ArrayList<>();
     private String organisationNumber;
-    private List<ExecutiveOfficerResource> executiveOfficers;
+    private List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
 
 
 
@@ -119,11 +119,11 @@ public class OrganisationResource {
         this.dateOfIncorporation = dateOfIncorporation;
     }
 
-    public List<SicCodeRescource> getSicCodes() {
+    public List<OrganisationSicCodeResource> getSicCodes() {
         return sicCodes;
     }
 
-    public void setSicCodes(List<SicCodeRescource> sicCodes) {
+    public void setSicCodes(List<OrganisationSicCodeResource> sicCodes) {
         this.sicCodes = sicCodes;
     }
 
@@ -135,11 +135,11 @@ public class OrganisationResource {
         this.organisationNumber = organistionNumber;
     }
 
-    public List<ExecutiveOfficerResource> getExecutiveOfficers() {
+    public List<OrganisationExecutiveOfficerResource> getExecutiveOfficers() {
         return executiveOfficers;
     }
 
-    public void setExecutiveOfficers(List<ExecutiveOfficerResource> executiveOfficers) {
+    public void setExecutiveOfficers(List<OrganisationExecutiveOfficerResource> executiveOfficers) {
         this.executiveOfficers = executiveOfficers;
     }
 
