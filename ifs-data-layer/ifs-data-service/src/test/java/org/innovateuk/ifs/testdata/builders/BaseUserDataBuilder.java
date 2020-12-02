@@ -53,6 +53,15 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         });
     }
 
+    public S activateUser() {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                UserResource user = data.getUser();
+                registrationService.activateUser(user.getId());
+            });
+        });
+    }
+
     private void updateUserInUserData(T data, Long userId) {
         UserResource user = baseUserService.getUserById(userId).getSuccess();
         data.setUser(user);

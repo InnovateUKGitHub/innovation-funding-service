@@ -17,8 +17,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORTER;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate User data.  While
@@ -78,13 +77,18 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber, role, organisation);
 
         UnaryOperator<S> verifyEmail = UnaryOperator.identity();
-        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER).contains(role)) {
+        if (!newArrayList(KNOWLEDGE_TRANSFER_ADVISER, SUPPORTER, MONITORING_OFFICER, STAKEHOLDER).contains(role)) {
             verifyEmail = BaseUserDataBuilder::verifyEmail;
+        }
+
+        UnaryOperator<S> activateUser = UnaryOperator.identity();
+        if (newArrayList(MONITORING_OFFICER, STAKEHOLDER).contains(role)){
+            activateUser = BaseUserDataBuilder::activateUser;
         }
 
         UnaryOperator<S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 
-        registerUserIfNecessary.andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
+        registerUserIfNecessary.andThen(verifyEmail).andThen(activateUser).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private void setDefaultSystemRegistrar() {
