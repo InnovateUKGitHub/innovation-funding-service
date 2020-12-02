@@ -136,8 +136,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private Boolean useResubmissionQuestion = true;
 
-    private boolean template = false;
-
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
@@ -724,14 +722,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
-    }
-
-    public boolean isTemplate() {
-        return template;
-    }
-
-    public void setTemplate(boolean template) {
-        this.template = template;
     }
 
     public Boolean getUseResubmissionQuestion() {
