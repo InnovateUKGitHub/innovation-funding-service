@@ -34,7 +34,7 @@
             </div>
 
             <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
-                <div class="fail-alert govuk-!-margin-bottom-6">
+                <div class="warning-alert govuk-!-margin-bottom-6">
                     <h2 class="govuk-heading-s" th:unless="${model.ktp}" th:text="|Your signed ${model.title.toLowerCase()} has been rejected by Innovate UK|"></h2>
                     <p class="govuk-body" th:unless="${model.ktp}">Someone will be in touch with you soon.</p>
                     <h2 class="govuk-heading-s" th:if="${model.ktp}" th:text="|Your signed ${model.title.toLowerCase()} and annex have been reviewed and rejected|"></h2>
@@ -53,6 +53,7 @@
                             <li>The Project Manager must review and sign the GOL.</li>
                             <li>The finance contact must review and sign the annex when required.</li>
                             <li>Signed documents are sent to Innovate UK.</li>
+                            <li th:if="${model.ktp}">Project setup will be complete after we have received and approved the signed documents.</li>
                         </th:block>
                         <th:block th:if="${model.procurement}">
                             <li>The Project Manager must review and sign the contract.</li>
@@ -60,7 +61,6 @@
                         </th:block>
                     </ul>
                     <p class="govuk-body" th:unless="${model.ktp}" th:text="|Project setup will be complete after the signed ${model.title.toLowerCase()} has been received and approved by us.|"></p>
-                    <p class="govuk-body" th:if="${model.ktp}" th:text="|Project setup will be complete after we have received and approved the signed documents.|"></p>
                 </th:block>
 
 
