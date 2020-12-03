@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
@@ -39,7 +40,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                                                       List<OrganisationExecutiveOfficerResource> officers) {
 
         return with(data -> {
-            doAs(systemRegistrar(), () -> {
+            doAs(ifsAdmin(), () -> {
 
                 OrganisationResource organisation = newOrganisationResource().
                         withId().
@@ -58,7 +59,9 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         addresses.add(new OrganisationAddressResource(organisation, address, new AddressTypeResource(type.getId(), type.name())));
                     });
                 }
+                organisation.setAddresses(addresses);
                 OrganisationResource created = organisationInitialCreationService.createOrMatch(organisation).getSuccess();
+
 
                 List<OrganisationSicCodeResource> organisationSicCodeResources = new ArrayList<>();
                 if (sicCodes != null) {
@@ -74,11 +77,17 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                     });
                 }
 
-                organisation.setAddresses(addresses);
+
                 organisation.setSicCodes(organisationSicCodeResources);
                 organisation.setExecutiveOfficers(organisationExecutiveOfficerResources);
-                OrganisationResource createdOrMatched = organisationInitialCreationService.createOrMatch(organisation).getSuccess();
-                data.setOrganisation(createdOrMatched);
+                if(sicCodes != null || officers != null) {
+                   OrganisationResource updated = organisationService.update(organisation).getSuccess();
+                    data.setOrganisation(updated);
+                }else {
+                    data.setOrganisation(created);
+                }
+
+
              });
         });
     }
