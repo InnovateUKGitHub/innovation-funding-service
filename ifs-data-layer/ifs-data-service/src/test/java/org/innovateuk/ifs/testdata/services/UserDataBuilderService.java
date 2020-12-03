@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.assertj.core.util.Lists;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.resource.Role;
@@ -10,6 +11,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -54,7 +56,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
         testService.doWithinTransaction(() -> {
 
             externalUserBuilder.withRole(line.role);
-            createUser(externalUserBuilder, line, line.role, line.organisationName);
+            createUser(externalUserBuilder, line, line.role, line.organisationName, line.additionalRoles);
         });
     }
 
@@ -68,11 +70,11 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.withRole(role);
 
-            createUser(baseBuilder, line, role, null);
+            createUser(baseBuilder, line, role, null, Lists.emptyList());
         });
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, Role role, String organisation) {
+    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, Role role, String organisation, List<Role> additionalRoles) {
 
         UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber, role, organisation);
 
@@ -86,9 +88,11 @@ public class UserDataBuilderService extends BaseDataBuilderService {
             activateUser = BaseUserDataBuilder::activateUser;
         }
 
+        UnaryOperator<S> addRoles = builder -> builder.addAdditionalRoles(additionalRoles);
+
         UnaryOperator<S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 
-        registerUserIfNecessary.andThen(verifyEmail).andThen(activateUser).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
+        registerUserIfNecessary.andThen(verifyEmail).andThen(activateUser).andThen(addRoles).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private void setDefaultSystemRegistrar() {

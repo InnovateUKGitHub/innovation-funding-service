@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -61,6 +62,23 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
             });
         });
     }
+
+    public S addAdditionalRoles(List<Role> roles) {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                roles.forEach(role -> {
+                    long id = data.getUser().getId();
+                    userRepository.findById(id).ifPresent(
+                            user -> {
+                                user.addRole(role);
+                                userRepository.save(user);
+                            }
+                    );
+                });
+            });
+        });
+    }
+
 
     private void updateUserInUserData(T data, Long userId) {
         UserResource user = baseUserService.getUserById(userId).getSuccess();
