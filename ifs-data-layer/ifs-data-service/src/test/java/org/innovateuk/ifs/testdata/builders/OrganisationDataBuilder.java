@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.OrganisationData;
+
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                                                       List<OrganisationExecutiveOfficerResource> officers) {
 
         return with(data -> {
-            doAs(ifsAdmin(), () -> {
+            doAs(systemRegistrar(), () -> {
 
                 OrganisationResource organisation = newOrganisationResource().
                         withId().
@@ -64,31 +65,28 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
 
 
                 List<OrganisationSicCodeResource> organisationSicCodeResources = new ArrayList<>();
-                if (sicCodes != null) {
-                    sicCodes.forEach(sicCode -> {
-                        organisationSicCodeResources.add(new OrganisationSicCodeResource(created.getId(), sicCode.getSicCode()));
-                    });
-                }
+
+                sicCodes.forEach(sicCode -> {
+                    organisationSicCodeResources.add(new OrganisationSicCodeResource(created.getId(), sicCode.getSicCode()));
+                });
+
 
                 List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficerResources = new ArrayList<>();
-                if (officers != null) {
-                    officers.forEach(officer -> {
-                        organisationExecutiveOfficerResources.add(new OrganisationExecutiveOfficerResource(created.getId(), officer.getName()));
-                    });
-                }
+
+                officers.forEach(officer -> {
+                    organisationExecutiveOfficerResources.add(new OrganisationExecutiveOfficerResource(created.getId(), officer.getName()));
+                });
 
 
-                organisation.setSicCodes(organisationSicCodeResources);
-                organisation.setExecutiveOfficers(organisationExecutiveOfficerResources);
-                if(sicCodes != null || officers != null) {
-                   OrganisationResource updated = organisationService.update(organisation).getSuccess();
+                created.setSicCodes(organisationSicCodeResources);
+                created.setExecutiveOfficers(organisationExecutiveOfficerResources);
+                if (!sicCodes.isEmpty() || !officers.isEmpty()) {
+                     OrganisationResource updated = organisationService.update(created).getSuccess();
                     data.setOrganisation(updated);
-                }else {
+                } else {
                     data.setOrganisation(created);
                 }
-
-
-             });
+            });
         });
     }
 
@@ -116,7 +114,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
     @Override
     protected void postProcess(int index, OrganisationData instance) {
         super.postProcess(index, instance);
-        if (instance.getOrganisation()!= null) {
+        if (instance.getOrganisation() != null) {
             LOG.info("Created Organisation '{}'", instance.getOrganisation().getName());
         }
         LOG.info("Created Organisation");
