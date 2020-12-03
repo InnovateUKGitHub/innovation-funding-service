@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
@@ -39,16 +40,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private RegistrationCookieService registrationCookieService;
-
-    @Autowired
     private OrganisationSelectionViewModelPopulator organisationSelectionViewModelPopulator;
-
-    @Autowired
-    private OrganisationJourneyEnd organisationJourneyEnd;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -117,13 +109,21 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
                 }
             }
 
-            // TODO: check manual entry here
-            if (form.getSelectedOrganisationId() != null) {
-                return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
+            if (verifyOrganisationDetailsEnteredManually(form)) {
+                return "redirect:" + BASE_URL + "/" + EXISTING_ORGANISATION + "/" + form.getSelectedOrganisationId();
             }
 
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());
         };
+    }
+
+    private boolean verifyOrganisationDetailsEnteredManually(OrganisationSelectionForm form) {
+        OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+
+        return selectedOrganisation.getCompaniesHouseNumber() == null
+                && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.RESEARCH
+                && selectedOrganisation.getOrganisationTypeEnum() != OrganisationTypeEnum.KNOWLEDGE_BASE
+                && !selectedOrganisation.isInternational();
     }
 
     private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
@@ -135,7 +135,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         } else {
             return isValidCollaborator(organisation.getOrganisationType());
         }
-
     }
 
     private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {

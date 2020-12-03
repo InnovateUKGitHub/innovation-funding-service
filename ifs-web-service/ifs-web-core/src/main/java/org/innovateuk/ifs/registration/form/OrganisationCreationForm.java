@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -32,6 +31,8 @@ public class OrganisationCreationForm implements Serializable {
     private transient List<OrganisationSearchResult> organisationSearchResults;
     private String organisationName;
     private Boolean newOrganisationSearchEnabled;
+    private Long selectedExistingOrganisationId;
+    private String selectedExistingOrganisationName;
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
@@ -127,6 +128,30 @@ public class OrganisationCreationForm implements Serializable {
 
     public boolean isNewOrganisationSearchEnabled() {
         return newOrganisationSearchEnabled;
+    }
+
+    public Boolean getNewOrganisationSearchEnabled() {
+        return newOrganisationSearchEnabled;
+    }
+
+    public void setNewOrganisationSearchEnabled(Boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
+    }
+
+    public Long getSelectedExistingOrganisationId() {
+        return selectedExistingOrganisationId;
+    }
+
+    public void setSelectedExistingOrganisationId(Long selectedExistingOrganisationId) {
+        this.selectedExistingOrganisationId = selectedExistingOrganisationId;
+    }
+
+    public String getSelectedExistingOrganisationName() {
+        return selectedExistingOrganisationName;
+    }
+
+    public void setSelectedExistingOrganisationName(String selectedExistingOrganisationName) {
+        this.selectedExistingOrganisationName = selectedExistingOrganisationName;
     }
 
     @JsonIgnore

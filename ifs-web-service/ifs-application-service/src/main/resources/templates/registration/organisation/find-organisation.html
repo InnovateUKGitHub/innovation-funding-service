@@ -42,6 +42,10 @@
         <input type="hidden" name="newOrganisationSearchEnabled" th:value="${improvedSearchEnabled}" />
 
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
+            <th:block th:if="${improvedSearchEnabled && selectedOrganisationDetailsEnteredManually}">
+                <p class="govuk-body govuk-!-margin-bottom-0">You applied for a different competition with this organisation: <b><th:block th:text="${organisationForm.selectedExistingOrganisationName}" /></b>.</p>
+                <p class="govuk-body govuk-!-margin-bottom-6">You need to complete all your organisation details for this application.</p>
+            </th:block>
             <label class="govuk-label"
                    th:for="organisationSearchName"
                    th:text="${searchLabel}">

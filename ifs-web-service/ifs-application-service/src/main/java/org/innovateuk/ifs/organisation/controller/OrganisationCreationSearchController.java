@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
@@ -78,7 +79,21 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
-
+    @GetMapping("/" + EXISTING_ORGANISATION + "/{selectedExistingOrganisationId}")
+    public String searchExistingOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                             Model model,
+                                             @PathVariable("selectedExistingOrganisationId") final Long selectedOrganisationId,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response,
+                                             UserResource user) {
+        OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(selectedOrganisationId).getSuccess();
+        organisationForm.setSelectedExistingOrganisationId(selectedOrganisation.getId());
+        organisationForm.setOrganisationTypeId(selectedOrganisation.getOrganisationType());
+        organisationForm.setSelectedExistingOrganisationName(selectedOrganisation.getName());
+        organisationForm.setManualEntry(false);
+        model.addAttribute("selectedOrganisationDetailsEnteredManually", true);
+        return createOrganisation(organisationForm, model, user, request, response);
+    }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION)
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
@@ -88,7 +103,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
-
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")

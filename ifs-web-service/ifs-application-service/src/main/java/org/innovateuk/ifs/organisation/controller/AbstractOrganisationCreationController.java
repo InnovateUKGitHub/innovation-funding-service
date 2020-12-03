@@ -44,6 +44,7 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String KNOWLEDGE_BASE_CONFIRM_ORGANISATION = "knowledge-base-confirm-organisation";
     protected static final String INTERNATIONAL_ORGANISATION = "international-organisation";
     protected static final String INTERNATIONAL_ORGANISATION_DETAILS = "international-organisation-details";
+    protected static final String EXISTING_ORGANISATION = "existing-organisation";
 
     protected static final String ORGANISATION_FORM = "organisationForm";
 
@@ -165,6 +166,8 @@ public abstract class AbstractOrganisationCreationController {
                 model.addAttribute("subtitle", "Join project");
             } else if (registrationCookieService.isCollaboratorJourney(request)) {
                 model.addAttribute("subtitle", "Join application");
+            } else if (model.containsAttribute("selectedOrganisationDetailsEnteredManually")) {
+                model.addAttribute("subtitle", "Your organisation");
             } else {
                 model.addAttribute("subtitle", "Create new application");
             }
