@@ -118,7 +118,7 @@ public class ApplicationTeamHeukarPartnerOrganisationControllerTest extends Base
                 .andReturn();
 
         verify(heukarPartnerOrganisationRestService, times(1)).addNewHeukarOrgType(any(), any());
-        verify(heukarPartnerOrganisationRestService, never()).updateHeukarOrgType(any(), any());
+        verify(heukarPartnerOrganisationRestService, never()).updateHeukarOrgType(anyLong(), anyLong());
     }
 
 }
