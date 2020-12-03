@@ -27,7 +27,7 @@
                   th:with="pageTitle='Bank details',subTitle=${project.name},size='govuk-heading-xl'"/>
 
         <form th:object="${form}" id="bank-details-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
-              novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
+              novalidate="novalidate" th:with="readonly=${bankDetails != null || readOnlyView ? true : false}">
 
             <th:block th:unless="${bankDetails == null}">
                 <p class="govuk-body" th:unless="${bankDetails.approved}">The bank account details below are being
@@ -131,11 +131,11 @@
                     <dt>Account number</dt>
 
                     <dd>
-                        <th:block th:text="*{'*****'+#strings.substring(accountNumber,5,8)}"/>
+                        <th:block th:if="${accountNumber != null}" th:text="*{'*****'+#strings.substring(accountNumber,5,8)}"/>
                     </dd>
                     <dt>Sort code</dt>
                     <dd>
-                        <th:block th:text="*{'****'+#strings.substring(sortCode,4,6)}"/>
+                        <th:block th:if="${sortCode != null}" th:text="*{'****'+#strings.substring(sortCode,4,6)}"/>
                     </dd>
                 </dl>
 
