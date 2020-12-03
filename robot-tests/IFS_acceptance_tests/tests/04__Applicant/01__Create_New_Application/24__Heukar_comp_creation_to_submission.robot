@@ -1,11 +1,10 @@
 *** Settings ***
 Documentation     IFS-8638: Create new competition type
 ...
-...               IFS-8769: Email notification for application submission
-
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
@@ -27,7 +26,7 @@ Comp admin can view Heukar competition type in Initial details read only view
     Then the user can view Heukar competition type in Initial details read only view
 
 Comp admin creates Heukar competition
-    [Documentation]  IFS-8769
+    [Documentation]  IFS-8638
     Given the user clicks the button/link                             link = Back to competition details
     Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  2  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
