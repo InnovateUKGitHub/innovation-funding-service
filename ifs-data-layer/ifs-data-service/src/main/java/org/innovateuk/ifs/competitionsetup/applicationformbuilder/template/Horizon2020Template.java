@@ -32,7 +32,7 @@ public class Horizon2020Template implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
+        competition.setGrantClaimMaximums(commonBuilders.getStateAidGrantClaimMaxmimums());
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon 2020"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);

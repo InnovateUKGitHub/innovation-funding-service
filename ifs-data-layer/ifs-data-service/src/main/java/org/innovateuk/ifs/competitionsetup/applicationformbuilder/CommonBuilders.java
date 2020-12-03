@@ -354,7 +354,7 @@ public class CommonBuilders {
                 Function.identity());
     }
 
-    public List<GrantClaimMaximum> getDefaultGrantClaimMaximums() {
+    public List<GrantClaimMaximum> getStateAidGrantClaimMaxmimums() {
         ResearchCategory feasibilityStudies = categoryRepository.findById(33L).get();
         ResearchCategory industrialResearch = categoryRepository.findById(34L).get();
         ResearchCategory experimentalDevelopment = categoryRepository.findById(35L).get();
@@ -368,6 +368,23 @@ public class CommonBuilders {
                 new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, 45),
                 new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, 35),
                 new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, 25)
+        );
+    }
+
+    public List<GrantClaimMaximum> getBlankGrantClaimMaxmimums() {
+        ResearchCategory feasibilityStudies = categoryRepository.findById(33L).get();
+        ResearchCategory industrialResearch = categoryRepository.findById(34L).get();
+        ResearchCategory experimentalDevelopment = categoryRepository.findById(35L).get();
+        return newArrayList(
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, null),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, null),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.LARGE, null),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.SMALL, null),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.MEDIUM, null),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.LARGE, null),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, null),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, null),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, null)
         );
     }
 

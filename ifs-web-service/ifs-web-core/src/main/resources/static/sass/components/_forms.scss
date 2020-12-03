@@ -96,6 +96,13 @@ td {
       vertical-align: top;
     }
 
+    .input-suffix {
+      @include media-down(mobile) {
+        vertical-align: -50%;
+      }
+      vertical-align: -35%;
+    }
+
     &.govuk-table__cell--numeric {
 
       &.top {

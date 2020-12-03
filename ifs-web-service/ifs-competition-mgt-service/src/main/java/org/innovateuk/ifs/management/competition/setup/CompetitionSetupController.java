@@ -29,6 +29,7 @@ import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionS
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.fundingeligibility.form.FundingEligibilityResearchCategoryForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
+import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelPercentageForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
@@ -266,7 +267,7 @@ public class CompetitionSetupController {
     }
 
     @PostMapping("/{competitionId}/section/funding-eligibility")
-    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingEligibilityResearchCategoryForm competitionSetupForm,
+    public String submitFundingEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingEligibilityResearchCategoryForm competitionSetupForm,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -274,6 +275,17 @@ public class CompetitionSetupController {
                                                   Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_ELIGIBILITY, loggedInUser, model);
+    }
+
+    @PostMapping("/{competitionId}/section/funding-level-percentage")
+    public String submitFundingLevelPercentageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                  UserResource loggedInUser,
+                                                  Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")

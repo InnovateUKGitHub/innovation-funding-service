@@ -2,7 +2,10 @@ package org.innovateuk.ifs.finance.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
+import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
@@ -14,8 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -29,6 +35,8 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     @Autowired
     private CommonBuilders commonBuilders;
+    @Autowired
+    private CompetitionSetupService competitionSetupService;
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
@@ -37,10 +45,20 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    public ServiceResult<List<GrantClaimMaximumResource>> getGrantClaimMaximumByCompetitionId(long competitionId) {
+        return find(grantClaimMaximumRepository.findByCompetitionsId(competitionId), notFoundError(GrantClaimMaximum.class, competitionId))
+                .andOnSuccessReturn(maximums ->
+                        maximums.stream().map(grantClaimMaximumMapper::mapToResource)
+                        .collect(Collectors.toList()));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
-        GrantClaimMaximum gcm = grantClaimMaximumRepository.save(grantClaimMaximumMapper.mapToDomain(grantClaimMaximumResource));
-        return serviceSuccess(grantClaimMaximumMapper.mapToResource(gcm));
+        return find(grantClaimMaximumRepository.findById(grantClaimMaximumResource.getId()), notFoundError(GrantClaimMaximum.class, grantClaimMaximumResource.getId())).andOnSuccessReturn((maximum) -> {
+            maximum.setMaximum(grantClaimMaximumResource.getMaximum());
+            return grantClaimMaximumMapper.mapToResource(grantClaimMaximumRepository.save(maximum));
+        });
     }
 
     @Override
@@ -49,21 +67,12 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             if (competition.isNonFinanceType()) {
                 return false;
             }
-            List<GrantClaimMaximum> competitionGrantClaimMaximums = competition.getGrantClaimMaximums();
-            List<GrantClaimMaximum> defaultGrantClaimMaximums = commonBuilders.getDefaultGrantClaimMaximums();
-            if (competitionGrantClaimMaximums.size() == defaultGrantClaimMaximums.size()) {
-                boolean mismatchFound = false;
-                for (GrantClaimMaximum competitionMaximum : competitionGrantClaimMaximums) {
-                    mismatchFound = defaultGrantClaimMaximums.stream().noneMatch(
-                            defaultMaximum ->
-                                    defaultMaximum.getMaximum().equals(competitionMaximum.getMaximum())
-                                    && defaultMaximum.getResearchCategory().getId().equals(competitionMaximum.getResearchCategory().getId())
-                                    && defaultMaximum.getOrganisationSize() == competitionMaximum.getOrganisationSize()
-                    );
-                }
-                return mismatchFound;
-            }
-            return true;
+            long count = competition.getGrantClaimMaximums().stream()
+                    .map(GrantClaimMaximum::getMaximum)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .count();
+            return count == 1;
         });
     }
 
@@ -71,12 +80,25 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     @Transactional
     public ServiceResult<Set<Long>> revertToDefault(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            List<GrantClaimMaximum> maximums;
+            if (TRUE.equals(competition.getStateAid()) && !competition.getResearchCategories().isEmpty()) {
+                maximums = commonBuilders.getStateAidGrantClaimMaxmimums();
+                setCompetitionSetupSectionComplete(competition);
+            } else {
+                maximums = commonBuilders.getBlankGrantClaimMaxmimums();
+            }
+            competition.getGrantClaimMaximums().clear();
             Set<Long> ids = new HashSet<>();
-            commonBuilders.getDefaultGrantClaimMaximums().forEach(maximum -> {
+                maximums.forEach(maximum -> {
                 maximum.setCompetitions(Lists.newArrayList(competition));
                 ids.add(grantClaimMaximumRepository.save(maximum).getId());
+                competition.getGrantClaimMaximums().add(maximum);
             });
             return ids;
         });
+    }
+
+    private void setCompetitionSetupSectionComplete(Competition competition) {
+        competitionSetupService.markSectionComplete(competition.getId(), CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE).getSuccess();
     }
 }

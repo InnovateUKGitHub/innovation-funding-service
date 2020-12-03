@@ -31,12 +31,11 @@ public class CompetitionSetupPopulator {
 
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
                 .getSuccess();
+        boolean firstTimeInForm = !statuses.get(section).isPresent();
 
         Map<CompetitionSetupSection, Boolean> statusesAndValues = simpleMapKeyAndValue(statuses, key -> key, value -> value.orElse(false));
 
         boolean editable = isSectionEditable(statusesAndValues, section, competitionResource);
-        boolean firstTimeInForm = !statusesAndValues.containsKey(section);
-
         boolean isInitialComplete = competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId());
 
         boolean isIfsAdmin = SecurityRuleUtil.isIFSAdmin(userResource);

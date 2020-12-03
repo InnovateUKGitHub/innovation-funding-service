@@ -1,0 +1,118 @@
+<!-- =================== Comp setup section - Project Eligibility (3) ============================== -->
+<th:block th:fragment="section-content" xmlns:th="http://www.w3.org/1999/html">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding level percentage',size='govuk-heading-xl'" />
+
+    <form th:action="@{(${model.general.editable} ? '' : 'funding-level-percentage/edit')}" method="post"
+          th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${model.general.competition.id}"
+          data-section="funding-level-percentage">
+        <th:block th:if="${model.categories.isEmpty()}">
+                <div th:class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('maximums[0].maximum')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-visually-hidden" for="maximum">
+                        Funding level percentage
+                    </label>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('maximums[0].maximum')}"
+                          th:text="${err}"/>
+                    <input id="maximum"
+                           type="number"
+                           class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
+                           min="0"
+                           max="100"
+                           required="required"
+                           th:errorclass="govuk-input--error"
+                           th:field="*{maximums[0].maximum}"
+                           step="1"
+                           data-prevent-input-non-number />
+                    <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
+                </div>
+        </th:block>
+
+        <th:block th:unless="${model.categories.isEmpty()}">
+            <div class="table-overflow">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Business sizes</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric"
+                            th:each="category : ${model.categories}"
+                            th:text="${category.name}"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row form-group-row-validated" th:each="size,iter : ${model.sizes}">
+                            <!--/*th:classappend="${#fields.hasErrors('{__${path}__.maximum}')} ? 'govuk-form-group--error'">*/-->
+                            <td class="govuk-table__cell" th:text="${model.descriptionForSize(size)}"></td>
+                            <th:block
+                                th:each="category : ${model.categories}"
+                                th:with="index=${competitionSetupForm.indexFor(size, category)},
+                                         path=|maximums[${index}]|">
+                                <td th:if="${model.general.editable}"
+                                    class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
+                                    <input type="hidden"
+                                           th:field="*{__${path}__.grantClaimMaximumId}"/>
+                                    <input type="hidden"
+                                           th:field="*{__${path}__.categoryId}"/>
+                                    <input type="hidden"
+                                           th:field="*{__${path}__.organisationSize}"/>
+                                    <label th:for="__${path}__.maximum">
+                                        <span class="govuk-visually-hidden">Maximum</span>
+                                    </label>
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${path}__.maximum}')}" th:text="${err}">Error</span>
+                                    <input type="number"
+                                           class="govuk-input govuk-input--width-3"
+                                           th:id="__${path}__.maximum"
+                                           th:field="*{__${path}__.maximum}"
+                                           th:errorclass="govuk-input--error"
+                                           required="required"
+                                           min="0"
+                                           max="100"
+                                           step="1"
+                                           data-prevent-input-non-number />
+                                    <span class="input-suffix govuk-!-padding-left-1">%</span>
+                                           <!--/*th:attr="data-required-errormessage=#{validation.finance.funding.level.required},
+                                                    data-min-errormessage=#{validation.finance.funding.level.min},
+                                                    data-max-errormessage=#{validation.finance.grant.claim.percentage.max(${partner.maximumFundingLevel})},
+                                                    max=${partner.maximumFundingLevel}">*/-->
+
+                                </td>
+                                <td th:unless="${model.general.editable}"
+                                    class="govuk-table__cell govuk-table__cell--numeric">
+                                    <th:block th:text="*{__${path}__.maximum}"></th:block>%
+                                </td>
+                            </th:block>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.general.editable}">
+            <button class="govuk-button">Done</button>
+        </th:block>
+        <th:block th:unless="${model.general.editable}">
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
+        </th:block>
+
+    </form>
+    <ul class="govuk-list pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='funding-eligibility')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Funding eligibility</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='organisational-eligibility')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Organisational eligibility</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

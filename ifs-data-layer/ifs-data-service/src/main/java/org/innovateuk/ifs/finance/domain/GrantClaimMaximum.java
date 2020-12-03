@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.domain;
 
-import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -12,7 +11,6 @@ import java.util.List;
  * Reference data that describes the maximum funding levels that can be applied for.
  */
 @Entity
-@Immutable
 public class GrantClaimMaximum {
 
     @Id
