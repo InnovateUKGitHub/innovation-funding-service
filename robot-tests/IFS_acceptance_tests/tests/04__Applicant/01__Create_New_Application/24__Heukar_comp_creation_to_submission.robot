@@ -9,9 +9,14 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
+Resource          ../../../resources/keywords/05__Email_Keywords.robot
 
 *** Variables ***
-${heukarCompTypeSelector}             dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
+${heukarCompTypeSelector}                     dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
+${HeukarApplicationSubmissionEmailSubject}    ${ApplicationID}: confirmation of your Horizon Europe UK Application Registration
+${HuekarApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${HeukarEmail}                                steve.smith@empire.com
+${HeukarApplicationTitle}                     Heukar new application
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
@@ -31,6 +36,13 @@ Comp admin creates Heukar competition
     Given the user clicks the button/link                             link = Back to competition details
     Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  2  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
+
+
+The applicant should get a confirmation email after application submission
+    [Documentation]    IFS-8769
+    [Setup]  Requesting IDs of this application
+    Then the user reads his email     ${HeukarEmail}  ${HeukarApplicationSubmissionEmailSubject}  ${HuekarApplicationSubmissionEmail}
+
 
 
 *** Keywords ***
@@ -60,6 +72,10 @@ the competition admin creates HEUKAR competition
     the user clicks the button/link                         jQuery = button:contains('Done')
     the user navigates to the page                          ${CA_UpcomingComp}
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+
+Requesting IDs of this application
+    ${ApplicationID} =  get application id by name    ${HeukarApplicationTitle}
+    Set suite variable    ${ApplicationID}
 
 Custom Suite Setup
     Set predefined date variables
