@@ -164,6 +164,7 @@ h2020.perf.applicant1@example.com,H2020,Applicant,ACTIVE,Empire Ltd,1234567890,A
 egon.spengler@gmail.com,Egon,Spengler,ACTIVE,International Organisation 1,1269127482,APPLICANT
 stephan.marriek@empire.fr,Stephan,Marriek,ACTIVE,Empire (french),46439359578,APPLICANT
 bob@knowledge.base,Bob,Knowledge,ACTIVE,A base of knowledge,46439359578,APPLICANT
+bobs.mate@knowledge.base,Bobs,Mate,ACTIVE,A base of knowledge,46439359578,APPLICANT
 john.fenton@ktn-uk.test,John,Fenton,ACTIVE,Empire (KTN),9464537384,APPLICANT
 hermen.mermen@ktn-uk.test,Hermen,Mermen,ACTIVE,\N,\N,KNOWLEDGE_TRANSFER_ADVISER
 hubert.cumberdale@salad-fingers.com,Hubert,Cumberdale,ACTIVE,Salad fingers inc.,\N,SUPPORTER
