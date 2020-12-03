@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.FUNDING_ELIGIBILITY;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
@@ -60,12 +62,21 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
                     if (researchCategoriesYesNoChanged || researchCategoriesChanged) {
                         competition.setResearchCategories(projectEligibilityForm.getResearchCategoryId());
                         return competitionSetupRestService.update(competition).toServiceResult().andOnSuccess(() ->
-                                grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()));
+                                revertFundingLevels(competition));
                     } else {
                         //No form changes. So no need to reset funding levels or update competition.
                         return serviceSuccess();
                     }
                 });
+    }
+
+    private ServiceResult<Void> revertFundingLevels(CompetitionResource competition) {
+        return grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()).toServiceResult().andOnSuccess(() -> {
+            if (TRUE.equals(competition.getStateAid()) && !competition.getResearchCategories().isEmpty()) {
+                return competitionSetupRestService.markSectionComplete(competition.getId(), FUNDING_LEVEL_PERCENTAGE).toServiceResult();
+            }
+            return serviceSuccess();
+        });
     }
 
     private ServiceResult<Boolean> handleResearchCategoryApplicableChanges(CompetitionResource competitionResource,

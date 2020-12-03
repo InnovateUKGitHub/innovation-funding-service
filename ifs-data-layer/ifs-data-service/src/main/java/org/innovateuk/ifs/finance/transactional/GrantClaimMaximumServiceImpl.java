@@ -2,10 +2,7 @@ package org.innovateuk.ifs.finance.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
@@ -35,8 +32,6 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     @Autowired
     private CommonBuilders commonBuilders;
-    @Autowired
-    private CompetitionSetupService competitionSetupService;
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
@@ -83,7 +78,6 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             List<GrantClaimMaximum> maximums;
             if (TRUE.equals(competition.getStateAid()) && !competition.getResearchCategories().isEmpty()) {
                 maximums = commonBuilders.getStateAidGrantClaimMaxmimums();
-                setCompetitionSetupSectionComplete(competition);
             } else {
                 maximums = commonBuilders.getBlankGrantClaimMaxmimums();
             }
@@ -96,9 +90,5 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             });
             return ids;
         });
-    }
-
-    private void setCompetitionSetupSectionComplete(Competition competition) {
-        competitionSetupService.markSectionComplete(competition.getId(), CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE).getSuccess();
     }
 }

@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
@@ -30,6 +31,7 @@ import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionS
 import org.innovateuk.ifs.management.competition.setup.fundingeligibility.form.FundingEligibilityResearchCategoryForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelPercentageForm;
+import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.validator.FundingLevelPercentageValidator;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
@@ -56,6 +58,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
@@ -92,6 +95,12 @@ public class CompetitionSetupController {
 
     @Autowired
     private TermsAndConditionsRestService termsAndConditionsRestService;
+
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
+    @Autowired
+    private FundingLevelPercentageValidator fundingLevelPercentageValidator;
 
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
@@ -285,7 +294,15 @@ public class CompetitionSetupController {
                                                   UserResource loggedInUser,
                                                   Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        fundingLevelPercentageValidator.validate(competitionSetupForm, validationHandler);
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.FUNDING_LEVEL_PERCENTAGE, loggedInUser, model);
+    }
+
+    @PostMapping(value = "/{competitionId}/section/funding-level-percentage", params = "reset-maximum-funding-levels")
+    public String resetMaximumFundingLevels(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
+                                                             @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        grantClaimMaximumRestService.revertToDefaultForCompetitionType(competitionId).getSuccess();
+        return format("redirect:/competition/setup/%d/section/%s", competitionId, FUNDING_LEVEL_PERCENTAGE.getPath());
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")

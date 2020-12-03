@@ -41,4 +41,8 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
                 throw new ObjectNotFoundException("Unknown size " + size);
         }
     }
+
+    public boolean isShowResetButton() {
+        return !generalSetupViewModel.getState().isPreventEdit() && Boolean.TRUE.equals(generalSetupViewModel.getCompetition().getStateAid()) && !categories.isEmpty();
+    }
 }

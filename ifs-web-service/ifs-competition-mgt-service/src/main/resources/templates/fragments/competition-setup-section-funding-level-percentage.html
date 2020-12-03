@@ -11,7 +11,14 @@
           th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id}"
           data-section="funding-level-percentage">
+        <th:block th:if="${model.general.editable}">
+            <p class="govuk-body">Set the maximum funding level percentage for the business sizes for each research category</p>
+            <p class="govuk-body govuk-!-font-weight-bold">You can only use whole numbers from 0 to 100.</p>
+        </th:block>
+
         <th:block th:if="${model.categories.isEmpty()}">
+
+            <th:block th:if="${model.general.editable}">
                 <div th:class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('maximums[0].maximum')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-visually-hidden" for="maximum">
@@ -31,6 +38,10 @@
                            data-prevent-input-non-number />
                     <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
                 </div>
+            </th:block>
+            <th:block th:unless="${model.general.editable}">
+                <p class="govuk-body">Maximum funding level percentage is set to <th:block th:text="*{maximums[0].maximum}"/>%</p>
+            </th:block>
         </th:block>
 
         <th:block th:unless="${model.categories.isEmpty()}">
@@ -89,6 +100,8 @@
                         </tr>
                     </tbody>
                 </table>
+                <button class="govuk-button button-clear" name="reset-maximum-funding-levels"  th:if="${model.showResetButton}">reset funding levels to State aid default</button>
+
             </div>
         </th:block>
 
@@ -96,6 +109,7 @@
             <button class="govuk-button">Done</button>
         </th:block>
         <th:block th:unless="${model.general.editable}">
+            <p class="govuk-body govuk-!-font-weight-bold">Click edit to change the maximum funding level percentage.</p>
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
 
