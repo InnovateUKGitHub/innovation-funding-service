@@ -136,7 +136,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowGrantOfferLetterRejectedMessage() {
 
-        if (!isProjectManager() || !isFinanceContact()) {
+        if (!isProjectManager() && !isFinanceContact()) {
             return false;
         }
 
