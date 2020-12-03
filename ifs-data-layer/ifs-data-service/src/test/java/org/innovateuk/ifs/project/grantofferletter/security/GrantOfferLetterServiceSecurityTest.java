@@ -162,8 +162,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.createSignedAdditionalContractFileEntry(projectId, null, null), () -> {
-            verify(projectGrantOfferPermissionRules).leadPartnerCanUploadGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).projectManagerCanUploadGrantOfferLetter(project, getLoggedInUser
+            verify(projectGrantOfferPermissionRules).leadPartnerCanUploadSignedAdditionalContract(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).financeContactCanUploadSignedAdditionalContract(project, getLoggedInUser
                     ());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
