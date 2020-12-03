@@ -8,7 +8,7 @@
             <span th:if="${assessmentId}" class="section-status govuk-hint float-right" th:text="|Score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
         </th:block>
 
-        <th:block th:if="${!question.hasScore()}">
+        <th:block th:if="${!question.hasScore() && !question.isKtpCompetition()}">
             <span class="section-status govuk-hint float-right">No feedback provided</span>
         </th:block>
     </th:block>
@@ -23,10 +23,4 @@
                 In scope <span th:text="${question.inScope}">4</span>/<span th:text="${question.totalScope}">5</span>
         </span>
     </th:block>
-</th:block>
-
-<th:block th:fragment="score-assessment(question)">
-    <!--th:block th:if="${question.hasScore()}">
-        <span class="section-status govuk-hint float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">Average score</span>
-    </th:block-->
 </th:block>

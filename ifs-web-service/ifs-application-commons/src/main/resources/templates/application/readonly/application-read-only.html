@@ -47,7 +47,7 @@
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
 
-            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+            <th:block th:if="${model.settings.includeAllAssessorFeedback && !parentModel.ktpCompetition}">
                 <p th:if="${section.name.equals('Project details')}" class="govuk-body govuk-hint">This section is not scored but will provide background to the project.</p>
                 <p th:if="${section.name.equals('Application questions')}" class="govuk-body govuk-hint">Each question has been assessed by several independent assessors.<br>They have given a score and feedback for each.</p>
 
@@ -62,7 +62,7 @@
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
                             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                                <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId})"/>
+                                <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId}, )"/>
                             </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
