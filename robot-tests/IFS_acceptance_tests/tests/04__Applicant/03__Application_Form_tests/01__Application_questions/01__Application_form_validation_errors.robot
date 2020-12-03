@@ -70,11 +70,11 @@ Duration field client side
     [Tags]
     When the user enters text to a text field  id = durationInMonths  0
     And the user clicks the button/link        id = application-question-complete
-    Then the user should see a field and summary error  Your project should last between 1 and 84 months.
+    Then the user should see a field and summary error  Enter the total number of months between 1 and 84.
 
     When the user enters text to a text field  id = durationInMonths  -1
     And the user clicks the button/link        id = application-question-complete
-    Then the user should see a field and summary error  Your project should last between 1 and 84 months.
+    Then the user should see a field and summary error  Enter the total number of months between 1 and 84.
 
     When the user enters text to a text field  id = durationInMonths  ${EMPTY}
     Then the user should see a field error     ${empty_field_warning_message}
@@ -149,4 +149,4 @@ the applicant should not see the validation error of the duration any more
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
     Set Focus To Element      jQuery = button:contains("Save and return to application overview")
     wait for autosave
-    The user should not see the element   jQuery = .govuk-error-message:contains("Your project should last between 1 and 84 months")
+    The user should not see the element   jQuery = .govuk-error-message:contains("Enter the total number of months between 1 and 84")
