@@ -159,28 +159,57 @@
                                 </td>
                             </tr>
                             <th:block th:if="${model.heukar}">
-                                <th:block th:each="partnerOrganisation: ${model.heukarPartnerOrganisationResources}">
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">
-                                            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Partner # details</h3>
-                                        </td>
-                                    </tr>
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell">
-                                            <h3 class="govuk-table__header">Type</h3>
-                                        </td>
-                                        <td class="govuk-table__cell alignright buttoncolumn"
-                                            th:text="${partnerOrganisation.organisationTypeResource.name}"></td>
-                                        <td class="govuk-table__cell alignright buttoncolumn">
-                                            <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org/{existingId}(applicationId=${model.applicationId},questionId=${model.questionId},existingId=${partnerOrganisation.id})}"
-                                               class="govuk-link"
-                                            >Edit</a>
-                                            <span>|</span>
-                                            <button class="button-clear" type="submit" name="remove-heukar-partner"
-                                                    th:value="${partnerOrganisation.id}">Remove Organisation
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <th:block
+                                    th:each="partnerOrganisation,partnerOrganisationStat: ${model.heukarPartnerOrganisationResources}">
+                                    <table class="govuk-table govuk-!-margin-bottom-2">
+                                        <thead class="govuk-table__head">
+                                        <tr class="govuk-table__row">
+                                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                                                <h3 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-!-margin-top-4">
+                                                    Partner
+                                                    <span th:text="${partnerOrganisationStat.index + 1}"></span>
+                                                    details
+                                                </h3>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                                                <span class="govuk-visually-hidden"></span>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                                                <span class="govuk-visually-hidden"></span>
+                                            </th>
+                                        </tr>
+
+                                        </thead>
+                                        <tbody class="govuk-table__body">
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell">
+                                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Type</h3>
+                                            </td>
+                                            <td class="govuk-table__cell"
+                                                th:text="${partnerOrganisation.organisationTypeResource.name}">
+                                            </td>
+
+                                            <td th:unless="${model.readOnly or model.collaborationLevelSingle}"
+                                                class="govuk-table__cell alignright buttoncolumn">
+                                                <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org/{existingId}(applicationId=${model.applicationId},questionId=${model.questionId},existingId=${partnerOrganisation.id})}"
+                                                   class="govuk-link govuk-!-margin-right-1">
+                                                    Edit
+                                                </a>
+                                                <span>|</span>
+                                                <button class="button-clear govuk-!-margin-left-1"
+                                                        type="submit"
+                                                        name="remove-heukar-partner"
+                                                        th:value="${partnerOrganisation.id}">
+                                                    Remove organisation
+                                                </button>
+                                            </td>
+                                            <td class="govuk-table__cell alignright buttoncolumn"
+                                                th:if="${model.readOnly or model.collaborationLevelSingle}">
+                                                <span class="govuk-visually-hidden"></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </th:block>
                             </th:block>
                             </tbody>

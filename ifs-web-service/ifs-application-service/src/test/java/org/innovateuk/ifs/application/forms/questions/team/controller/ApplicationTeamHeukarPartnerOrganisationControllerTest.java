@@ -15,9 +15,9 @@ import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -97,8 +97,28 @@ public class ApplicationTeamHeukarPartnerOrganisationControllerTest extends Base
     }
 
     @Test
-    public void submitForm() {
-    }
+    public void submitFormForAddition() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+        Long existingId = 1L;
 
+        ApplicationTeamHeukarPartnerOrganisationViewModel expected = mock(ApplicationTeamHeukarPartnerOrganisationViewModel.class);
+        ApplicationResource application = mock(ApplicationResource.class);
+        when(application.getId()).thenReturn(applicationId);
+
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(RestResult.restSuccess(application));
+        when(populator.populate(application, questionId)).thenReturn(expected);
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org?existingId=",
+                        applicationId, questionId))
+                .andExpect(status().isOk())
+                .andExpect(view()
+                        .name("application/questions/application-team-heukar-partner-organisation"))
+                .andReturn();
+
+        verify(heukarPartnerOrganisationRestService, times(1)).addNewHeukarOrgType(any(), any());
+        verify(heukarPartnerOrganisationRestService, never()).updateHeukarOrgType(any(), any());
+    }
 
 }

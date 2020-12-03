@@ -29,13 +29,18 @@
         </div>
         <!-- ************** -->
 
-        <!--        TODO: insert application name here -->
+        <th:block
+            th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Partner organisation type',subTitle=${subtitle},size='govuk-heading-xl'"/>
+        </th:block>
 
-        <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Partner organisation type',subTitle=${subtitle},size='govuk-heading-xl'"/>
+        <p class="govuk-body">
+            Select the type which accurately describes your partner organisation.
+        </p>
 
         <form th:object="${form}"
-            th:action="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(
+              th:action="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(
         applicationId=${model.applicationId},
         questionId=${model.questionId},
         existingId=${form.id})}"
@@ -43,14 +48,10 @@
               novalidate="novalidate"
         >
             <div class="govuk-form-group">
-                <!--                 th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'govuk-form-group&#45;&#45;error'">-->
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-visually-hidden" id="organisationTypeId">
                         <span class="govuk-fieldset__heading">Please select your organisation type</span>
                     </legend>
-                    <!--                    <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">-->
-                    <!--                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>-->
-                    <!--                    </th:block>-->
                     <div class="govuk-radios">
                         <div class="govuk-radios__item"
                              th:each="type : ${model.types}">
@@ -65,13 +66,6 @@
                                 <span th:text="${type.name}"></span>
                                 <span class="govuk-hint" th:text="${type.description}"></span>
                             </label>
-                            <!--                            <div th:if="T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">-->
-                            <!--                                <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>-->
-                            <!--                                <ul class="govuk-list govuk-list&#45;&#45;bullet">-->
-                            <!--                                    <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>-->
-                            <!--                                    <li>your project is essential to lay the foundations for the growth of an early stage industry</li>-->
-                            <!--                                </ul>-->
-                            <!--                            </div>-->
                         </div>
                     </div>
                 </fieldset>
@@ -82,9 +76,23 @@
                 If your organisation type is not listed contact the <a th:href="@{/info/contact}" class="govuk-link">customer
                 support service</a>.
             </p>
-            <button id="lead-organisation-type-cta" class="govuk-button govuk-!-margin-top-6" name="select-company-type"
-                    type="submit">Save and continue
-            </button>
+            <p class="govuk-body">
+                For more information about Je-S visit
+                <a th:href="@{www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system}">
+                    Guidance for academics applying via the Je-S system (opens in a new tab)
+                </a>
+            </p>
+
+            <div class="govuk-!-margin-top-6">
+                <button id="heukar-partner-org-type-cta" class="govuk-button" name="select-company-type"
+                        type="submit">Save and continue
+                </button>
+                <a class="button-clear"
+                   th:href="@{/application/{applicationId}/form/question/{questionId}/team(applicationId=${model.applicationId},questionId=${model.questionId})}">
+                    Cancel
+                </a>
+            </div>
+
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
