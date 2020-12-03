@@ -22,6 +22,7 @@ public class ProjectFinanceFundingLevelViewModel {
     private final boolean loanCompetition;
     private final boolean ktpCompetition;
     private final BigDecimal fundingAppliedFor;
+    private final boolean complete;
 
     public ProjectFinanceFundingLevelViewModel(ProjectResource project,
                                                List<ProjectFinanceResource> finances,
@@ -31,6 +32,7 @@ public class ProjectFinanceFundingLevelViewModel {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
+        this.complete = project.getProjectState().isComplete();
         BigDecimal totalGrant = finances.stream().map(BaseFinanceResource::getTotalFundingSought)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         this.partners =  finances.stream()
@@ -74,6 +76,10 @@ public class ProjectFinanceFundingLevelViewModel {
 
     public BigDecimal getFundingAppliedFor() {
         return fundingAppliedFor;
+    }
+
+    public boolean isComplete() {
+        return complete;
     }
 
     /* View logic. */
