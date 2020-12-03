@@ -96,7 +96,7 @@
                     </details>
                 </th:block>
 
-                <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null && !model.grantOfferLetterRejected}">
+                <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null && !model.grantOfferLetterRejected && model.projectManager}">
                     <h2 class="govuk-heading-m" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/signed-download(id=${model.projectId})}"

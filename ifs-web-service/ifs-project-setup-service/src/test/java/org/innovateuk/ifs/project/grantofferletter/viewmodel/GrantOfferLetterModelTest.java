@@ -27,9 +27,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
         
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isShowSubmitButton(), is(true));
@@ -40,9 +41,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isShowSubmitButton(), is(false));
@@ -53,9 +55,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isShowSubmitButton(), is(false));
@@ -66,9 +69,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferSubmittedToInternalTeam);
 
         assertThat(model.isShowSubmitButton(), is(false));
@@ -79,9 +83,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferRejected);
 
         assertThat(model.isShowGrantOfferLetterRejectedMessage(), is(true));
@@ -92,9 +97,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferRejected);
 
         assertThat(model.isShowGrantOfferLetterRejectedMessage(), is(false));
@@ -105,9 +111,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferSubmittedToInternalTeam);
 
         assertThat(model.isShowGrantOfferLetterRejectedMessage(), is(false));
@@ -118,9 +125,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(true));
@@ -131,9 +139,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = false;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(false));
@@ -144,9 +153,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(false));
@@ -157,9 +167,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferSubmittedToInternalTeam);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(false));
@@ -170,9 +181,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferRejected);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(true));
@@ -183,9 +195,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferRejected);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(false));
@@ -196,9 +209,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferApproved);
 
         assertThat(model.isAbleToRemoveSignedGrantOffer(), is(false));
@@ -209,9 +223,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = false;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferSubmittedToInternalTeam);
 
         assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(true));
@@ -222,9 +237,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = false;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferRejected);
 
         assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(true));
@@ -235,9 +251,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferRejected);
 
         assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(true));
@@ -248,9 +265,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferRejected);
 
         assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(false));
@@ -261,9 +279,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferApproved);
 
         assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(false));
@@ -274,9 +293,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = false;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isShowAwaitingSignatureFromLeadPartnerMessage(), is(true));
@@ -287,9 +307,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
@@ -300,9 +321,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmGeneratedOfferSentToProjectTeam);
 
         assertThat(model.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
@@ -313,9 +335,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmGeneratedGrantOfferNotYetSentToProjectTeam);
 
         assertThat(model.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
@@ -326,9 +349,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferSubmittedToInternalTeam);
 
         assertThat(model.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
@@ -339,9 +363,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = false;
         boolean projectManager = false;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = false;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferRejected);
 
         assertThat(model.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
@@ -352,9 +377,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferApproved);
 
         assertThat(model.isShowGrantOfferLetterApprovedByInnovateMessage(), is(true));
@@ -365,9 +391,10 @@ public class GrantOfferLetterModelTest {
 
         boolean leadPartner = true;
         boolean projectManager = true;
+        boolean financeContact = false;
         boolean signedGrantOfferUploaded = true;
 
-        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, signedGrantOfferUploaded,
+        GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPmSignedGrantOfferSubmittedToInternalTeam);
 
         assertThat(model.isShowGrantOfferLetterApprovedByInnovateMessage(), is(false));
@@ -376,6 +403,7 @@ public class GrantOfferLetterModelTest {
     private GrantOfferLetterModel createGrantOfferLetterModel(
             boolean leadPartner,
             boolean projectManager,
+            boolean financeContact,
             boolean signedGrantOfferUploaded,
             GrantOfferLetterStateResource state) {
 
@@ -395,6 +423,6 @@ public class GrantOfferLetterModelTest {
                 null;
         
         return new GrantOfferLetterModel("Grant offer letter", 123L, "Project name", leadPartner,
-                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, signedAdditionalContractFile, projectManager, state, false, false, false);
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, signedAdditionalContractFile, projectManager, financeContact, state, false, false, false);
     }
 }

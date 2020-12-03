@@ -14,6 +14,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private final String projectName;
     private final boolean leadPartner;
     private final boolean projectManager;
+    private final boolean financeContact;
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
@@ -25,7 +26,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public GrantOfferLetterModel(String title, Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 FileDetailsViewModel signedAdditionalContractFile, boolean projectManager,
+                                 FileDetailsViewModel signedAdditionalContractFile, boolean projectManager, boolean financeContact,
                                  GrantOfferLetterStateResource golState, boolean useDocusign, boolean procurement, boolean ktp) {
         this.title = title;
         this.projectId = projectId;
@@ -36,6 +37,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.additionalContractFile = additionalContractFile;
         this.signedAdditionalContractFile = signedAdditionalContractFile;
         this.projectManager = projectManager;
+        this.financeContact = financeContact;
         this.golState = golState;
         this.useDocusign = useDocusign;
         this.procurement = procurement;
@@ -120,6 +122,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return projectManager;
     }
 
+    public boolean isFinanceContact() {
+        return financeContact;
+    }
+
     public boolean isGrantOfferLetterSent() {
         return golState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
@@ -130,7 +136,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowGrantOfferLetterRejectedMessage() {
 
-        if (!isProjectManager()) {
+        if (!isProjectManager() || !isFinanceContact()) {
             return false;
         }
 
