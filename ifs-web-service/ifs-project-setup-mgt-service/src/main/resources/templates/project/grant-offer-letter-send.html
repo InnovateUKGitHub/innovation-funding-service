@@ -207,7 +207,6 @@
             </th:block>
         </th:block>
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
-            <h2 class="govuk-heading-m" th:text="|Confirm signed ${model.title.toLowerCase()}|"></h2>
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
