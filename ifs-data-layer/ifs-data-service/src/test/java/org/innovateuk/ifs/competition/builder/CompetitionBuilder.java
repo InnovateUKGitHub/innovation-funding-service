@@ -170,9 +170,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfig);
     }
 
-    public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
-        return withArraySetFieldByReflection("assessorCount", assessorCounts);
-    }
     public CompetitionBuilder withInnovationSector(InnovationSector... innovationSectors) {
         return withArray((innovationSector, competition) -> competition.setInnovationSector(innovationSector), innovationSectors);
     }
@@ -183,10 +180,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
-    }
-
-    public CompetitionBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
-        return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
     @SafeVarargs
