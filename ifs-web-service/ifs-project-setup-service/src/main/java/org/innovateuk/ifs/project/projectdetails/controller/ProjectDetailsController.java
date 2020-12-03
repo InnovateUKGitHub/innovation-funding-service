@@ -72,7 +72,6 @@ public class ProjectDetailsController {
                                      UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
         List<ProjectUserResource> projectUsers = projectRestService.getProjectUsersForProject(projectResource.getId()).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
