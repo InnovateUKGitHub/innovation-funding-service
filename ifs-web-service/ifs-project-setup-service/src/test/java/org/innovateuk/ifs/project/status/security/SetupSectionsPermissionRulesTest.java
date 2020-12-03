@@ -124,7 +124,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         setUpPartnerProjectLocationRequiredMocking();
 
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, true),
+                setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation),
                 () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(activeProject.getId()), user));
         verify(projectService, times(2)).getById(activeProject.getId());
     }
@@ -134,7 +134,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         setUpPartnerProjectLocationRequiredMocking();
 
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
-                setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, true),
+                setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation),
                 () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(activeProject.getId()), user));
         verify(projectService, times(2)).getById(activeProject.getId());
     }

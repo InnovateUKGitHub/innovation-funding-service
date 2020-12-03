@@ -142,16 +142,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(resolve(teamStatusRequest));
         boolean projectComplete = project.getProjectState().isLive();
         boolean isLeadPartner = isLeadPartner(resolve(teamStatusRequest), resolve(organisationRequest));
-        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
         ProjectPartnerStatusResource ownOrganisation = resolve(teamStatusRequest).getPartnerStatusForOrganisation(resolve(organisationRequest).getId()).get();
         switch (stage) {
             case PROJECT_DETAILS:
                 boolean isProjectDetailsProcessCompleted =
                         isLeadPartner ?
                                 checkLeadPartnerProjectDetailsProcessCompleted(resolve(teamStatusRequest))
-                                : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest), partnerProjectLocationRequired);
-                boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest),
-                        partnerProjectLocationRequired);
+                                : partnerProjectDetailsComplete(statusAccessor, resolve(organisationRequest));
+                boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(resolve(teamStatusRequest));
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
                                 : competition.isProcurement() ? "The start date and location of this project." : "The proposed start date and location of the project.",
@@ -189,9 +187,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 Optional<MonitoringOfficerResource> maybeMonitoringOfficer = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
                 boolean isProjectDetailsSubmitted = COMPLETE.equals(resolve(teamStatusRequest).getLeadPartnerStatus().getProjectDetailsStatus());
                 boolean requiredProjectDetailsForMonitoringOfficerComplete =
-                        requiredProjectDetailsForMonitoringOfficerComplete(partnerProjectLocationRequired,
-                                isProjectDetailsSubmitted,
-                                resolve(teamStatusRequest));
+                        requiredProjectDetailsForMonitoringOfficerComplete(isProjectDetailsSubmitted, resolve(teamStatusRequest));
                 return new SetupStatusStageViewModel(stage, "Monitoring Officer",
                         maybeMonitoringOfficer.isPresent() ? format(getMonitoringOfficerText(competition.isKtp()) + " %s.", maybeMonitoringOfficer.get().getFullName())
                                 : "We will assign the project a Monitoring Officer.",
@@ -199,7 +195,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 : format("/project/%d/monitoring-officer", project.getId()),
                         sectionStatus.monitoringOfficerSectionStatus(maybeMonitoringOfficer.isPresent(),
                                 requiredProjectDetailsForMonitoringOfficerComplete),
-                        statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest), partnerProjectLocationRequired),
+                        statusAccessor.canAccessMonitoringOfficerSection(resolve(organisationRequest)),
                         maybeMonitoringOfficer.isPresent() ? null : "awaiting-assignment"
                 );
             case BANK_DETAILS:
@@ -270,18 +266,12 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
     }
 
-    private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
-
-        if (partnerProjectLocationRequired) {
-            return isProjectDetailsSubmitted && allPartnersProjectLocationStatusComplete(teamStatus);
-        } else {
-            return isProjectDetailsSubmitted;
-        }
+    private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
+        return isProjectDetailsSubmitted && allPartnersProjectLocationStatusComplete(teamStatus);
     }
 
-    private boolean partnerProjectDetailsComplete(SetupSectionAccessibilityHelper statusAccessor, OrganisationResource organisation, boolean partnerProjectLocationRequired) {
-
-        return !partnerProjectLocationRequired || statusAccessor.isPartnerProjectLocationSubmitted(organisation);
+    private boolean partnerProjectDetailsComplete(SetupSectionAccessibilityHelper statusAccessor, OrganisationResource organisation) {
+        return statusAccessor.isPartnerProjectLocationSubmitted(organisation);
     }
 
     public boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
@@ -289,11 +279,11 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         return leadPartnerStatus.getProjectDetailsStatus().equals(COMPLETE);
     }
 
-    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
+    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus) {
 
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
 
-        return partnerProjectLocationRequired && isAwaitingWhenProjectLocationRequired(teamStatus, leadPartnerStatus);
+        return isAwaitingWhenProjectLocationRequired(teamStatus, leadPartnerStatus);
     }
 
     private boolean isAwaitingWhenProjectLocationRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {

@@ -90,9 +90,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectDetails() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)

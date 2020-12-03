@@ -80,17 +80,8 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_PARTNER_PROJECT_LOCATION_PAGE", description = "A partner can access the partner project location " +
             "page when their Companies House data is complete or not required, and the Monitoring Officer has not yet been assigned")
     public boolean partnerCanAccessProjectLocationPage(ProjectCompositeId projectCompositeId, UserResource user) {
-        boolean partnerProjectLocationRequired = isPartnerProjectLocationRequired(projectCompositeId);
         return doSectionCheck(projectCompositeId.id(), user,
-                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, partnerProjectLocationRequired));
-    }
-
-    private boolean isPartnerProjectLocationRequired(ProjectCompositeId projectCompositeId) {
-        ProjectResource project = projectService.getById(projectCompositeId.id());
-        ApplicationResource applicationResource = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-
-        return competition.isLocationPerPartner();
+                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation));
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
@@ -115,9 +106,8 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        boolean partnerProjectLocationRequired = isPartnerProjectLocationRequired(projectCompositeId);
         return doSectionCheck(projectCompositeId.id(), user,
-                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, partnerProjectLocationRequired));
+                (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation));
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A partner can access the Bank Details " +
