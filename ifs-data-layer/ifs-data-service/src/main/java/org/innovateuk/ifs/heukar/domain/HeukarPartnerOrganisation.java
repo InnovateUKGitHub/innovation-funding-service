@@ -15,8 +15,8 @@ public class HeukarPartnerOrganisation {
     @Column(name = "application_id")
     private Long applicationId;
 
-    @ManyToOne()
-    @JoinColumn(name="organisation_type_id", referencedColumnName="id")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "organisation_type_id", referencedColumnName = "id")
     private OrganisationType organisationType;
 
     public HeukarPartnerOrganisation() {

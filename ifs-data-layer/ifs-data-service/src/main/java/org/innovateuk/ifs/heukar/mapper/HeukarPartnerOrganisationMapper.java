@@ -7,6 +7,8 @@ import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResourc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Stream;
+
 @Component
 public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
 
@@ -24,7 +26,7 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
 
     @Override
     public Iterable<HeukarPartnerOrganisationResource> mapToResource(Iterable<HeukarPartnerOrganisation> domain) {
-        return null;
+        return (Iterable<HeukarPartnerOrganisationResource>) Stream.of(domain).map(this::mapToResource);
     }
 
     public HeukarPartnerOrganisation mapExistingToDomain(Long partnerOrgId, Long applicationId, Long orgTypeId) {
@@ -49,6 +51,6 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
 
     @Override
     public Iterable<HeukarPartnerOrganisation> mapToDomain(Iterable<HeukarPartnerOrganisationResource> resource) {
-        return null;
+        return (Iterable<HeukarPartnerOrganisation>) Stream.of(resource).map(this::mapToDomain);
     }
 }
