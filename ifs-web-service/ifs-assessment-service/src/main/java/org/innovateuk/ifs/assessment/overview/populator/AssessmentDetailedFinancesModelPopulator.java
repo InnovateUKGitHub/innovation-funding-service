@@ -29,7 +29,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -51,7 +51,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     @Autowired
     private AssessmentRestService assessmentRestService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     @Autowired
     private OrganisationRestService organisationRestService;
     @Autowired
@@ -78,7 +78,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        List<ProcessRoleResource> applicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> applicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
 
         boolean academic = isAcademicFinance(organisation.getOrganisationType(), competition);
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competition.getId(), PROJECT_COST_FINANCES).get(0);

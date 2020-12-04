@@ -20,6 +20,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,9 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     private UserRestService userRestService;
 
     @Autowired
+    private ProcessRoleRestService processRoleRestService;
+
+    @Autowired
     private InviteRestService inviteRestService;
 
     @Autowired
@@ -53,7 +57,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public ApplicationTeamReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
-        List<ProcessRoleResource> applicationProcessRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess();
+        List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(data.getApplication().getId()).getSuccess();
         List<ProcessRoleResource> processRoles = applicationProcessRoles.stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
                 .collect(toList());
