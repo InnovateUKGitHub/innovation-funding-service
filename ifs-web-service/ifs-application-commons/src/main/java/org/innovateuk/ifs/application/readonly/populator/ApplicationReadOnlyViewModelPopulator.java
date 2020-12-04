@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.SupporterAssignmentReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -137,7 +138,11 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream()
                         .map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList(),
                 settings.isIncludeAllSupporterFeedback() ? data.getFeedbackToApplicationSupport().values().stream()
-                        .collect(Collectors.groupingBy(SupporterAssignmentResource::getState)) : emptyMap(),
+                        .map(assignment -> new SupporterAssignmentReadOnlyViewModel(
+                                assignment.getState().getStateName().toLowerCase(),
+                                assignment.getComments(),
+                                assignment.getUserSimpleOrganisation()))
+                        .collect(Collectors.groupingBy(SupporterAssignmentReadOnlyViewModel::getState)) : emptyMap(),
                 shouldDisplayKtpApplicationFeedback(competition, user, processRoles)
         );
     }

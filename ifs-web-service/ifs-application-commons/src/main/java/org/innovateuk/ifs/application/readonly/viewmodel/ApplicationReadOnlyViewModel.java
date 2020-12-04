@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
-import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
-import org.innovateuk.ifs.supporter.resource.SupporterState;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,14 +13,14 @@ public class ApplicationReadOnlyViewModel {
     private final Set<ApplicationSectionReadOnlyViewModel> sections;
     private final BigDecimal applicationScore;
     private List<String> overallFeedbacks;
-    private Map<SupporterState, List<SupporterAssignmentResource>> assignments;
+    private Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments;
     private boolean shouldDisplayKtpApplicationFeedback;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
                                         BigDecimal applicationScore,
                                         List<String> overallFeedbacks,
-                                        Map<SupporterState, List<SupporterAssignmentResource>> assignments,
+                                        Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments,
                                         boolean shouldDisplayKtpApplicationFeedback) {
         this.settings = settings;
         this.sections = sections;
@@ -46,7 +44,7 @@ public class ApplicationReadOnlyViewModel {
 
     public BigDecimal getApplicationScore() { return applicationScore; }
 
-    public Map<SupporterState, List<SupporterAssignmentResource>> getAssignments() {
+    public Map<String, List<SupporterAssignmentReadOnlyViewModel>> getAssignments() {
         return assignments;
     }
 
@@ -55,26 +53,26 @@ public class ApplicationReadOnlyViewModel {
     }
 
     public boolean isAccepted() {
-        return this.assignments.containsKey(SupporterState.ACCEPTED);
+        return this.assignments.containsKey("accepted");
     }
 
     public boolean isPending() {
-        return this.assignments.containsKey(SupporterState.CREATED);
+        return this.assignments.containsKey("created");
     }
 
     public boolean isDeclined() {
-        return this.assignments.containsKey(SupporterState.REJECTED);
+        return this.assignments.containsKey("rejected");
     }
 
     public int getAcceptedCount() {
-        return isAccepted() ? this.assignments.get(SupporterState.ACCEPTED).size() : 0;
+        return isAccepted() ? this.assignments.get("accepted").size() : 0;
     }
 
     public int getPendingCount() {
-        return isPending() ? this.assignments.get(SupporterState.CREATED).size() : 0;
+        return isPending() ? this.assignments.get("created").size() : 0;
     }
 
     public int getDeclinedCount() {
-        return isDeclined() ? this.assignments.get(SupporterState.REJECTED).size() : 0;
+        return isDeclined() ? this.assignments.get("rejected").size() : 0;
     }
 }
