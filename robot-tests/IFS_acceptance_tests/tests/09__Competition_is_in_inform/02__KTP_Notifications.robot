@@ -60,9 +60,11 @@ The KTA checks the status of the application
     And the user is able to view the application overview page
 
 Project users checks their email
-    The user reads his email     hermen.mermen@ktn-uk.test     KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
-    The user reads his email     jessica.doe@ludlow.co.uk      KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
-    The user reads his email     bob@knowledge.base            KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
+    The user reads his email     hermen.mermen@ktn-uk.test      KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
+    The user reads his email     jessica.doe@ludlow.co.uk       KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
+    The user reads his email     bob@knowledge.base             KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
+    The user reads his email     bobs.mate@knowledge.base       KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
+    The user reads his email     kevin.summers@ludlow.co.uk     KTP notifications: Notification regarding your application 301: KTP notifications application     Thank you for submitting your application for this funding competition
 
 *** Keywords ***
 Custom suite setup
@@ -125,14 +127,14 @@ the user cannot make any changes in Finance checks section
      the user should not see the element     jQuery = td:contains("${ktp_LeadOrgName}") ~ td:nth-child(6):contains("30.00%") input[type='hidden']
      the user navigates to the page          ${server}/project-setup-management/project/${ktp_ProjectID}/finance-check
      the user clicks the button/link         jQuery = th:contains("${ktp_LeadOrgName}") ~ td a:contains("Review")
-#     the user should not see the element     css = a[href="?financeType=ASSOCIATE_SALARY_COSTS"]
-#     the user should not see the element     css = a[href="?financeType=ASSOCIATE_DEVELOPMENT_COSTS"]
-#     the user should not see the element     css = a[href="?financeType=KTP_TRAVEL"]
-#     the user should not see the element     css = a[href="?financeType=CONSUMABLES"]
-#     the user should not see the element     css = a[href="?financeType=KNOWLEDGE_BASE"]
-#     the user should not see the element     css = a[href="?financeType=ESTATE_COSTS"]
-#     the user should not see the element     css = a[href="?financeType=ASSOCIATE_SUPPORT"]
-#     the user should not see the element     css = a[href="?financeType=OTHER_COSTS"]
+     the user should not see the element     css = a[href="?financeType=ASSOCIATE_SALARY_COSTS"]
+     the user should not see the element     css = a[href="?financeType=ASSOCIATE_DEVELOPMENT_COSTS"]
+     the user should not see the element     css = a[href="?financeType=KTP_TRAVEL"]
+     the user should not see the element     css = a[href="?financeType=CONSUMABLES"]
+     the user should not see the element     css = a[href="?financeType=KNOWLEDGE_BASE"]
+     the user should not see the element     css = a[href="?financeType=ESTATE_COSTS"]
+     the user should not see the element     css = a[href="?financeType=ASSOCIATE_SUPPORT"]
+     the user should not see the element     css = a[href="?financeType=OTHER_COSTS"]
 
 the user cannot make any changes in Bank Details
      the user clicks the button/link         link = Bank details
