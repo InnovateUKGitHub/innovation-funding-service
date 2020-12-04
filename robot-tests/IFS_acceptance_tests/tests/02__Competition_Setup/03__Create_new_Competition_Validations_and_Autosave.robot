@@ -28,6 +28,9 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               IFS-4982 Move Funding type selection from front door to Initial detail
 ...
 ...               IFS-7148 Replace maximum funding level drop down menu with free type field in comp setup
+...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -36,7 +39,7 @@ Resource          ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
-    [Documentation]  INFUND-2982 IFUND-3888  IFS-4982
+    [Documentation]  INFUND-2982 IFUND-3888  IFS-4982  IFS-8779
     [Tags]
     Given the user navigates to the page                  ${CA_UpcomingComp}
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Create competition")
@@ -45,15 +48,16 @@ Initial details: server-side validations
     Then the user should see a field and summary error    Please enter a title.
     And the user should see a field and summary error     Enter a valid funding type.
     And the user should see a field and summary error     Please select a competition type.
+    And the user should see a field and summary error     Please select a competition funding rule.
     And the user should see a field and summary error     Please select an innovation sector.
     And the user should see a field and summary error     Please select an innovation area.
     And the user should see a field and summary error     ${enter_a_valid_date}
     And the user should see a field and summary error     Please select an Innovation Lead.
     And the user should see a field and summary error     Please select a Portfolio Manager.
-    And the user should see a field and summary error     Please select a state aid option.
+#    And the user should see a field and summary error     Please select a state aid option.
 
 Initial details: client-side validations
-    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982
+    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982  IFS-8779
     [Tags]
     When the user enters text to a text field                   id = title    Validations Test
     Then the user should not see the error any more             Please enter a title.
@@ -61,6 +65,8 @@ Initial details: client-side validations
     Then the user should not see the error any more             Enter a valid funding type.
     When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
     Then the user should not see the error any more             Please select a competition type.
+    When the user selects the radio button                      fundingRule  SUBSIDY_CONTROL
+    Then the user should not see the error any more             Please select a competition funding rule.
     When the user selects the option from the drop-down menu    Health and life sciences    id = innovationSectorCategoryId
     Then the user should not see the error any more             Please select an innovation sector.
     When the user selects the option from the drop-down menu    Advanced therapies    name = innovationAreaCategoryIds[0]
@@ -69,8 +75,8 @@ Initial details: client-side validations
     And the user enters text to a text field                    id = openingDateMonth    12
     And the user enters text to a text field                    id = openingDateYear  ${nextYear}
     Then the user should not see the error any more             ${enter_a_valid_date}
-    When the user clicks the button twice                       css = label[for="stateAid2"]
-    Then the user should not see the error any more             Please select a state aid option.
+#    When the user clicks the button twice                       css = label[for="stateAid2"]
+#    Then the user should not see the error any more             Please select a state aid option.
     When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
     Then the user should not see the error any more             Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id = executiveUserId
