@@ -15,6 +15,7 @@ import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.fo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -46,7 +47,7 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
         FundingLevelPercentageForm form = (FundingLevelPercentageForm) competitionSetupForm;
 
         if (form.getMaximums().size() == 1) {
-            return saveSingleValue(form.getMaximums().get(0), competition);
+            return saveSingleValue(form.getMaximums().get(0).get(0), competition);
         } else {
             return saveTableOfMaximums(form, competition);
         }
@@ -55,7 +56,7 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
     private ServiceResult<Void> saveTableOfMaximums(FundingLevelPercentageForm form, CompetitionResource competition) {
         Map<Long, ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess().stream()
                 .collect(toMap(ResearchCategoryResource::getId, Function.identity()));
-        return aggregate(form.getMaximums().stream()
+        return aggregate(form.getMaximums().stream().flatMap(Collection::stream)
                 .map(maximumForm -> saveTableFormCell(maximumForm, researchCategories))
                 .collect(toList()))
                 .andOnSuccess(() -> {

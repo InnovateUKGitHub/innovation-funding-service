@@ -34,19 +34,21 @@ public class FundingLevelPercentageValidator {
         Map<Long, ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess()
                 .stream()
                 .collect(toMap(ResearchCategoryResource::getId, Function.identity()));
-        IntStream.range(0, form.getMaximums().size()).forEach(index -> {
-            FundingLevelMaximumForm maximumForm = form.getMaximums().get(index);
-            Integer maximum = maximumForm.getMaximum();
-            if (maximum == null || maximum > 100 || maximum < 0) {
-                validationHandler.addError(Error.fieldError("maximums[" + index + "].maximum",
-                        "maximum","validation.competitionsetup.fundinglevelpercentage.table.numberbetween",
-                        newArrayList(maximumForm.getOrganisationSize().getDescription(), researchCategories.get(maximumForm.getCategoryId()).getName(), 0, 100)));
-            }
+        IntStream.range(0, form.getMaximums().size()).forEach(index1 -> {
+            IntStream.range(0, form.getMaximums().get(index1).size()).forEach(index2 -> {
+                FundingLevelMaximumForm maximumForm = form.getMaximums().get(index1).get(index2);
+                Integer maximum = maximumForm.getMaximum();
+                if (maximum == null || maximum > 100 || maximum < 0) {
+                    validationHandler.addError(Error.fieldError("maximums[" + index1 + "][" + index2 + "].maximum",
+                            "maximum", "validation.competitionsetup.fundinglevelpercentage.table.numberbetween",
+                            newArrayList(maximumForm.getOrganisationSize().getDescription(), researchCategories.get(maximumForm.getCategoryId()).getName(), 0, 100)));
+                }
+            });
         });
     }
 
     private void validateSingleForm(FundingLevelPercentageForm form, ValidationHandler validationHandler) {
-        Integer maximum = form.getMaximums().get(0).getMaximum();
+        Integer maximum = form.getMaximums().get(0).get(0).getMaximum();
         if (maximum == null || maximum > 100 || maximum < 0) {
             validationHandler.addError(Error.fieldError("maximums[0].maximum", "maximum",
                     "validation.competitionsetup.fundinglevelpercentage.single.numberbetween", newArrayList(0, 100)));

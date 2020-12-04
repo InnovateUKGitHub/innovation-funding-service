@@ -11,19 +11,26 @@ import java.util.stream.IntStream;
 
 public class FundingLevelPercentageForm extends CompetitionSetupForm {
 
-    private List<FundingLevelMaximumForm> maximums = new ArrayList<>();
+    private List<List<FundingLevelMaximumForm>> maximums = new ArrayList<>();
 
-    public List<FundingLevelMaximumForm> getMaximums() {
+    public List<List<FundingLevelMaximumForm>> getMaximums() {
         return maximums;
     }
 
-    public void setMaximums(List<FundingLevelMaximumForm> maximums) {
+    public void setMaximums(List<List<FundingLevelMaximumForm>> maximums) {
         this.maximums = maximums;
     }
 
-    public int indexFor(OrganisationSize size, ResearchCategoryResource cat) {
+    public int indexForSize(OrganisationSize size) {
         return IntStream.range(0, maximums.size())
-                .filter(index -> maximums.get(index).getCategoryId().equals(cat.getId()) && maximums.get(index).getOrganisationSize() == size)
+                .filter(index -> maximums.get(index).get(0).getOrganisationSize() == size)
+                .findAny()
+                .orElseThrow(() -> new ObjectNotFoundException("No matching maximum on form"));
+    }
+
+    public int indexForCategory(ResearchCategoryResource category) {
+        return IntStream.range(0, maximums.get(0).size())
+                .filter(index -> maximums.get(0).get(index).getCategoryId().equals(category.getId()))
                 .findAny()
                 .orElseThrow(() -> new ObjectNotFoundException("No matching maximum on form"));
     }

@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.populator;
 
+import com.google.common.collect.Multimap;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
@@ -11,9 +13,13 @@ import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.fo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Multimaps.index;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelMaximumForm.singleValueForm;
 
 /**
@@ -36,9 +42,12 @@ public class FundingLevelPercentageFormPopulator implements CompetitionSetupForm
 
         List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competitionResource.getId()).getSuccess();
         if (competitionResource.getResearchCategories().isEmpty()) {
-            competitionSetupForm.getMaximums().add(singleValueForm(maximums.stream().findAny().map(GrantClaimMaximumResource::getMaximum).orElse(null)));
+            competitionSetupForm.getMaximums().add(newArrayList(singleValueForm(maximums.stream().findAny().map(GrantClaimMaximumResource::getMaximum).orElse(null))));
         } else {
-            competitionSetupForm.setMaximums(maximums.stream().map(FundingLevelMaximumForm::fromGrantClaimMaximumResource).collect(Collectors.toList()));
+            List<FundingLevelMaximumForm> forms = maximums.stream().map(FundingLevelMaximumForm::fromGrantClaimMaximumResource).collect(Collectors.toList());
+            Multimap<OrganisationSize, FundingLevelMaximumForm> map = index(forms, FundingLevelMaximumForm::getOrganisationSize);
+            List<List<FundingLevelMaximumForm>> listOfLists = map.asMap().values().stream().map(ArrayList::new).collect(toList());
+            competitionSetupForm.setMaximums(listOfLists);
         }
         return competitionSetupForm;
     }
