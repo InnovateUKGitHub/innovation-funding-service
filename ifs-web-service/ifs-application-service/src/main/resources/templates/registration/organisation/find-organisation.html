@@ -38,7 +38,7 @@
             </div>
         </th:block>
 
-        <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
+        <form th:action="@{${improvedSearchEnabled ? '#' : '/organisation/create/find-organisation'}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
         <input type="hidden" name="newOrganisationSearchEnabled" th:value="${improvedSearchEnabled}" />
 
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">

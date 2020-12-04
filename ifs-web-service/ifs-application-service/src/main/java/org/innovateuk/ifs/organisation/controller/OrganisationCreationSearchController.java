@@ -184,14 +184,14 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                 && orgTypeEnum != OrganisationTypeEnum.RESEARCH
                 && newOrganisationSearchEnabled;
 
-        String key = String.format(improvedSearchEnabled ? "improved.registration.%s.%s" : "registration.%s.%s",
-                orgTypeEnum.toString(), textKey);
+        String key = improvedSearchEnabled ? String.format("improved.registration.%s", textKey)
+                : String.format("registration.%s.%s", orgTypeEnum.toString(), textKey);
         try {
             return messageSource.getMessage(key, null, locale);
         } catch (NoSuchMessageException e) {
             LOG.error("unable to get message for key: " + key + " and local: " + locale);
-            return messageSource.getMessage(
-                    String.format(improvedSearchEnabled ? "improved.registration.DEFAULT.%s" : "registration.DEFAULT.%s", textKey),
+            return messageSource.getMessage(improvedSearchEnabled ? String.format("improved.registration.DEFAULT.%s", textKey)
+                            : String.format("registration.DEFAULT.%s", orgTypeEnum.toString(), textKey),
                     null, locale);
         }
     }
