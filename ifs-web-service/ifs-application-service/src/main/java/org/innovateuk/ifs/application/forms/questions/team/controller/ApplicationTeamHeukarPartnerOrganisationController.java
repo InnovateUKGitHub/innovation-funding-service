@@ -36,7 +36,7 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
     private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
 
     @GetMapping
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'HEUKAR_PARTNER_ORGANISATION')")
     public String showAddNewPartnerOrganisationForm(@ModelAttribute(value = "form", binding = false) HeukarPartnerOrganisationForm form,
                                                     BindingResult bindingResult,
                                                     Model model,
@@ -52,7 +52,7 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
     }
 
     @GetMapping("/{existingId}")
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'HEUKAR_PARTNER_ORGANISATION')")
     public String showEditPartnerOrganisationForm(@ModelAttribute(value = "form", binding = false) HeukarPartnerOrganisationForm form,
                                                   BindingResult bindingResult,
                                                   Model model,
@@ -73,7 +73,7 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
     }
 
     @PostMapping
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'HEUKAR_PARTNER_ORGANISATION')")
     public String submitForm(@Valid @ModelAttribute(value = "form") HeukarPartnerOrganisationForm form,
                              BindingResult bindingResult,
                              ValidationHandler validationHandler,
