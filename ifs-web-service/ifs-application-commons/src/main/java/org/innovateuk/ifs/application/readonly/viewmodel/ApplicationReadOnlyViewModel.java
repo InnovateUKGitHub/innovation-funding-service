@@ -15,19 +15,22 @@ public class ApplicationReadOnlyViewModel {
     private List<String> overallFeedbacks;
     private Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments;
     private boolean shouldDisplayKtpApplicationFeedback;
+    private final boolean ktpCompetition;
 
     public ApplicationReadOnlyViewModel(ApplicationReadOnlySettings settings,
                                         Set<ApplicationSectionReadOnlyViewModel> sections,
                                         BigDecimal applicationScore,
                                         List<String> overallFeedbacks,
                                         Map<String, List<SupporterAssignmentReadOnlyViewModel>> assignments,
-                                        boolean shouldDisplayKtpApplicationFeedback) {
+                                        boolean shouldDisplayKtpApplicationFeedback,
+                                        boolean ktpCompetition) {
         this.settings = settings;
         this.sections = sections;
         this.applicationScore = applicationScore;
         this.overallFeedbacks = overallFeedbacks;
         this.assignments = assignments;
         this.shouldDisplayKtpApplicationFeedback = shouldDisplayKtpApplicationFeedback;
+        this.ktpCompetition = ktpCompetition;
     }
 
     public List<String> getOverallFeedbacks() {
@@ -74,5 +77,9 @@ public class ApplicationReadOnlyViewModel {
 
     public int getDeclinedCount() {
         return isDeclined() ? this.assignments.get("rejected").size() : 0;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }

@@ -203,6 +203,8 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(financeSection.getName(), "Finance section");
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
 
+        assertFalse(viewModel.isKtpCompetition());
+
         verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
     }
 
@@ -317,35 +319,37 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertNotNull(viewModel.getAssignments());
         assertEquals(3, viewModel.getAssignments().size());
 
-        assertNotNull(viewModel.getAssignments().get(SupporterState.ACCEPTED));
-        assertEquals(2, viewModel.getAssignments().get(SupporterState.ACCEPTED).size());
-        assertNotNull(viewModel.getAssignments().get(SupporterState.ACCEPTED).get(0));
-        assertEquals("accepted one", viewModel.getAssignments().get(SupporterState.ACCEPTED).get(0).getComments());
-        assertEquals("Org A", viewModel.getAssignments().get(SupporterState.ACCEPTED).get(0).getUserSimpleOrganisation());
-        assertNotNull(viewModel.getAssignments().get(SupporterState.ACCEPTED).get(1));
-        assertEquals("accepted two", viewModel.getAssignments().get(SupporterState.ACCEPTED).get(1).getComments());
-        assertEquals("Org B", viewModel.getAssignments().get(SupporterState.ACCEPTED).get(1).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("accepted"));
+        assertEquals(2, viewModel.getAssignments().get("accepted").size());
+        assertNotNull(viewModel.getAssignments().get("accepted").get(0));
+        assertEquals("accepted one", viewModel.getAssignments().get("accepted").get(0).getComments());
+        assertEquals("Org A", viewModel.getAssignments().get("accepted").get(0).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("accepted").get(1));
+        assertEquals("accepted two", viewModel.getAssignments().get("accepted").get(1).getComments());
+        assertEquals("Org B", viewModel.getAssignments().get("accepted").get(1).getUserSimpleOrganisation());
         assertTrue(viewModel.isAccepted());
         assertEquals(2, viewModel.getAcceptedCount());
 
-        assertNotNull(viewModel.getAssignments().get(SupporterState.REJECTED));
-        assertEquals(2, viewModel.getAssignments().get(SupporterState.REJECTED).size());
-        assertNotNull(viewModel.getAssignments().get(SupporterState.REJECTED).get(0));
-        assertEquals("rejected one", viewModel.getAssignments().get(SupporterState.REJECTED).get(0).getComments());
-        assertEquals("Org C", viewModel.getAssignments().get(SupporterState.REJECTED).get(0).getUserSimpleOrganisation());
-        assertNotNull(viewModel.getAssignments().get(SupporterState.REJECTED).get(1));
-        assertEquals("rejected two", viewModel.getAssignments().get(SupporterState.REJECTED).get(1).getComments());
-        assertEquals("Org D", viewModel.getAssignments().get(SupporterState.REJECTED).get(1).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("rejected"));
+        assertEquals(2, viewModel.getAssignments().get("rejected").size());
+        assertNotNull(viewModel.getAssignments().get("rejected").get(0));
+        assertEquals("rejected one", viewModel.getAssignments().get("rejected").get(0).getComments());
+        assertEquals("Org C", viewModel.getAssignments().get("rejected").get(0).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("rejected").get(1));
+        assertEquals("rejected two", viewModel.getAssignments().get("rejected").get(1).getComments());
+        assertEquals("Org D", viewModel.getAssignments().get("rejected").get(1).getUserSimpleOrganisation());
         assertTrue(viewModel.isDeclined());
         assertEquals(2, viewModel.getDeclinedCount());
 
-        assertNotNull(viewModel.getAssignments().get(SupporterState.CREATED));
-        assertEquals(1, viewModel.getAssignments().get(SupporterState.CREATED).size());
-        assertNotNull(viewModel.getAssignments().get(SupporterState.CREATED).get(0));
-        assertEquals("created", viewModel.getAssignments().get(SupporterState.CREATED).get(0).getComments());
-        assertEquals("Org E", viewModel.getAssignments().get(SupporterState.CREATED).get(0).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("created"));
+        assertEquals(1, viewModel.getAssignments().get("created").size());
+        assertNotNull(viewModel.getAssignments().get("created").get(0));
+        assertEquals("created", viewModel.getAssignments().get("created").get(0).getComments());
+        assertEquals("Org E", viewModel.getAssignments().get("created").get(0).getUserSimpleOrganisation());
         assertTrue(viewModel.isPending());
         assertEquals(1, viewModel.getPendingCount());
+
+        assertTrue(viewModel.isKtpCompetition());
 
         verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
     }
