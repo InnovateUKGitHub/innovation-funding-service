@@ -78,8 +78,6 @@ public class HeukarTemplate implements CompetitionTemplate {
         competition.setApplicationFinanceType(NO_FINANCES);
         competition.setResubmission(false);
         competition.setHasAssessmentStage(false);
-        competition.setHasAssessmentPanel(false);
-        competition.setHasInterviewStage(false);
         competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         competition.setStateAid(false);
 
