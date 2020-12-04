@@ -95,7 +95,7 @@
             margin: 0;
             padding: 0;
         }
-        ol.ifs-list--number > li {
+        ol.ifs-list--number > li:not(.regular) {
             display: table;
             counter-increment: item;
             margin-bottom: 0.6em;
@@ -138,6 +138,9 @@
             Dear <th:block th:text="${model.projectManagerFirstName}" />,
         </p>
         <p>
+            <strong>Knowledge transfer partnership (KTP) grant offer letter</strong>
+        </p>
+        <p>
             <strong>KTP between <th:block th:text="${model.leadOrgName}" /> and <th:block th:text="${model.partnerOrgName}" /></strong>
         </p>
         <p>
@@ -155,8 +158,7 @@
         <p>Barry Shaw<br>
             Head of Operational Delivery<br>
             <strong>
-                Innovate UK<br>
-                part of UK Research and Innovation
+                Innovate UK, part of UK Research and Innovation
             </strong>
         </p>
         <div class="letter-page-break"></div>
@@ -168,10 +170,10 @@
         <div class="terms-and-conditions letter-size letter-size--terms">
 
             <ol class="govuk-list ifs-list--number">
-                <li>
+                <li class="regular">
                     I am pleased to inform you that Innovate UK, part of UK Research and Innovation (“Innovate UK”) acting on behalf of government funding organisations, is prepared to offer <th:block th:text="${model.leadOrgName}" />  ("the Knowledge Base Partner") a grant not exceeding [£<th:block th:text="${model.ktpFinanceModel.getTable1TotalFunding()}">table1</th:block> (fEC) or £<th:block th:text="${model.ktpFinanceModel.getTable2TotalFunding()}">table1</th:block> (non-fEC)] under Section 96 of the Higher Education and Research Act 2017. This is towards the Knowledge Base Partner’s costs of undertaking with <th:block th:text="${model.partnerOrgName}" /> (“the Business”) a Knowledge Transfer Partnership (“the Partnership”) in accordance with the application submitted to Innovate UK. This award is subject to the terms and conditions of this grant offer letter (GOL) and its Schedules.
                 </li>
-                <li>
+                <li class="regular">
                     <p>The funding organisation(s) that have agreed to fund the grant to the Partnership at the time of issuing this GOL are identified above.  During the Partnership, some or all of the funding may be reallocated to other funding organisations.</p>
                     <p>At the time of preparing any publicity material, you should always check which funding organisations are currently funding the Partnership; this can be confirmed by using the online search facility provided on the KTP website http://ktp.innovateuk.org/.  Any reallocation of funding must not be interpreted as changing the terms of this offer of grant.</p>
                 </li>
@@ -211,7 +213,7 @@
                                 <li>Take out and maintain insurance covering your risks and liabilities for appropriate amounts and in keeping with good commercial practice;</li>
                                 <li>Comply with all the laws and regulations of England and Wales in carrying out your activities under this GOL;</li>
                                 <li>As a minimum, advertise the Associate post in accordance with your institutional guidelines and on the KTP recruitment site https://www.ktp-uk.org/academics/ (scroll down to Post a Vacancy);</li>
-                                <li>Provide the project secretariat and take all reasonable steps to ensure that the academic Knowledge Base Partner, Associate, Business Partner and KTA are not required to fulfil this role at Local Management Committee (LMC) meetings;</li>
+                                <li>Provide the project secretariat and take all reasonable steps to ensure that the Knowledge Base Partner, Associate, Business Partner and KTA are not required to fulfil this role at Local Management Committee (LMC) meetings;</li>
                                 <li>Submit within 1 calendar month of the end of the Partnership, the Partnership Final Report together with any supporting documentation;</li>
                                 <li>Submit within 3 calendar months of the end of the Partnership the final claim and Schedule 3.</li>
                             </ul>
@@ -428,15 +430,14 @@
         <p>Barry Shaw<br>
             Head of Operational Delivery<br>
             <strong>
-                Innovate UK<br>
-                part of UK Research and Innovation
+                Innovate UK, part of UK Research and Innovation
             </strong>
         </p>
         <div class="letter-page-break"></div>
 
         <h2 class="heading-medium">Annex 1</h2>
         <p><strong>Statement of acceptance in respect of an offer of grant</strong></p>
-        <p>For a knowledge transfer partnership between <th:block th:text="${model.leadOrgName}" /> and <th:block th:text="${model.partnerOrgName}" /></p>
+        <p><strong>For a knowledge transfer partnership between <th:block th:text="${model.leadOrgName}" /> and <th:block th:text="${model.partnerOrgName}" /></strong></p>
 
         <p>Knowledge transfer partnership project no. <th:block th:text="${model.applicationId}" /></p>
 
@@ -558,7 +559,7 @@
             </tr>
             <tr>
                 <th>Government Contribution(%)</th>
-                <th colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
+                <th style="text-align:right;" colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
             </tr>
             </tbody>
         </table>
@@ -625,7 +626,7 @@
             </tr>
             <tr>
                 <th>Government Contribution(%)</th>
-                <th colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
+                <th style="text-align:right;" colspan="3" th:text="${model.ktpFinanceModel.claimPercentage}"></th>
             </tr>
             </tbody>
         </table>
@@ -675,19 +676,19 @@
             </thead>
             <tbody>
             <tr>
-                <td>i. Associate employment</td>
+                <td>i Associate(s) employment costs</td>
                 <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
             </tr>
             <tr>
-                <td>ii. Associate development</td>
+                <td>ii Associate development</td>
                 <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
             </tr>
             <tr>
-                <td>iii. Travel and subsistence</td>
+                <td>iii Travel and subsistence</td>
                 <td th:text="${model.ktpFinanceModel.travelAndSubsistence.cost}"></td>
             </tr>
             <tr>
-                <td>iv. Consumables</td>
+                <td>iv Consumables</td>
                 <td th:text="${model.ktpFinanceModel.consumables.cost}"></td>
             </tr>
             <tr>
@@ -695,15 +696,15 @@
                 <th></th>
             </tr>
             <tr>
-                <td>v. Knowledge base supervisor</td>
+                <td>v Knowledge base supervisor</td>
                 <td th:text="${model.ktpFinanceModel.knowledgeBaseSupervisor.cost}"></td>
             </tr>
             <tr>
-                <td>vi.  Associate estates costs</td>
+                <td>vi Associate Estates provision</td>
                 <td th:text="${model.ktpFinanceModel.associateEstateCosts.cost}"></td>
             </tr>
             <tr>
-                <td>vii. Other costs</td>
+                <td>vii Mentoring Support</td>
                 <td th:text="${model.ktpFinanceModel.otherCosts.cost}"></td>
             </tr>
             <tr>
@@ -711,7 +712,7 @@
                 <th></th>
             </tr>
             <tr>
-                <td>viii. Additional associate support</td>
+                <td>viii Additional Associate Support</td>
                 <td th:text="${model.ktpFinanceModel.additionalSupportCosts.cost}"></td>
             </tr>
             </tbody>
@@ -728,28 +729,24 @@
             </thead>
             <tbody>
             <tr>
-                <td>a. Associate employment</td>
+                <td>a. Associate(s) Employment Costs</td>
                 <td th:text="${model.ktpFinanceModel.associateEmployment.cost}"></td>
             </tr>
             <tr>
-                <td>b. Academic and secretarial support</td>
+                <td>b. Academic and Secretarial Support</td>
                 <td th:text="${model.ktpFinanceModel.academicAndSecretarialSupport.cost}"></td>
             </tr>
             <tr>
-                <td>c. Associate development</td>
+                <td>c. Associate(s) development</td>
                 <td th:text="${model.ktpFinanceModel.associateDevelopment.cost}"></td>
             </tr>
             <tr>
-                <td>d. Travel and subsistence</td>
+                <td>d. Travel and Subsistence</td>
                 <td th:text="${model.ktpFinanceModel.travelAndSubsistence.cost}"></td>
             </tr>
             <tr>
-                <td>e. Consumables</td>
-                <td th:text="${model.ktpFinanceModel.consumables.cost}"></td>
-            </tr>
-            <tr>
-                <td>f. Other costs</td>
-                <td th:text="${model.ktpFinanceModel.otherCosts.cost}"></td>
+                <td>e. Equipment, consumables and other costs</td>
+                <td th:text="${model.ktpFinanceModel.consumables.cost + model.ktpFinanceModel.otherCosts.cost}"></td>
             </tr>
             <tr>
                 <th>TOTAL of expenditure defrayed on the Partnership</th>

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -19,9 +20,9 @@ public class KtpFinanceModel {
     private final KtpFinanceRowModel additionalSupportCosts;
     private final KtpFinanceRowModel academicAndSecretarialSupport;
 
-    private final Integer claimPercentage;
+    private final BigDecimal claimPercentage;
 
-    public KtpFinanceModel(KtpFinanceRowModel associateEmployment, KtpFinanceRowModel associateDevelopment, KtpFinanceRowModel travelAndSubsistence, KtpFinanceRowModel consumables, KtpFinanceRowModel knowledgeBaseSupervisor, KtpFinanceRowModel associateEstateCosts, KtpFinanceRowModel otherCosts, KtpFinanceRowModel additionalSupportCosts, KtpFinanceRowModel academicAndSecretarialSupport, Integer claimPercentage) {
+    public KtpFinanceModel(KtpFinanceRowModel associateEmployment, KtpFinanceRowModel associateDevelopment, KtpFinanceRowModel travelAndSubsistence, KtpFinanceRowModel consumables, KtpFinanceRowModel knowledgeBaseSupervisor, KtpFinanceRowModel associateEstateCosts, KtpFinanceRowModel otherCosts, KtpFinanceRowModel additionalSupportCosts, KtpFinanceRowModel academicAndSecretarialSupport, BigDecimal claimPercentage) {
         this.associateEmployment = associateEmployment;
         this.associateDevelopment = associateDevelopment;
         this.travelAndSubsistence = travelAndSubsistence;
@@ -70,7 +71,7 @@ public class KtpFinanceModel {
         return academicAndSecretarialSupport;
     }
 
-    public Integer getClaimPercentage() {
+    public BigDecimal getClaimPercentage() {
         return claimPercentage;
     }
 
@@ -126,7 +127,7 @@ public class KtpFinanceModel {
         private KtpFinanceRowModel otherCosts;
         private KtpFinanceRowModel additionalSupportCosts;
         private KtpFinanceRowModel academicAndSecretarialSupport;
-        private Integer claimPercentage;
+        private BigDecimal claimPercentage;
 
         private KtpFinanceModelBuilder() {
         }
@@ -180,7 +181,7 @@ public class KtpFinanceModel {
             return this;
         }
 
-        public KtpFinanceModelBuilder withClaimPercentage(Integer claimPercentage) {
+        public KtpFinanceModelBuilder withClaimPercentage(BigDecimal claimPercentage) {
             this.claimPercentage = claimPercentage;
             return this;
         }
