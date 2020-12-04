@@ -522,12 +522,12 @@ the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user accept the competition terms and conditions
-    [Arguments]  ${retrunLink}
+    [Arguments]  ${returnLink}
     the user clicks the button/link    link = Award terms and conditions
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
-    the user clicks the button/link    link = ${retrunLink}
+    the user clicks the button/link    link = ${returnLink}
 
 the user accept the procurement terms and conditions
     the user clicks the button/link    link = Award terms and conditions
@@ -733,3 +733,11 @@ the user apply with knowledge base organisation
     the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
     the user clicks the button/link                     jQuery = button:contains("Confirm")
     the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
+
+the user is able to complete Public description section
+    the user clicks the button/link           jQuery = a:contains("Public description")
+    the user should see the element           jQuery = h1:contains("Public description")
+    the user enters text to a text field      css=.textarea-wrapped .editor    This is some random text
+    the user clicks the button/link           id = application-question-complete
+    the user clicks the button/link           jQuery = a:contains("Return to application overview")
+    the user should see the element           jQuery = li:contains("Public description") > .task-status-complete

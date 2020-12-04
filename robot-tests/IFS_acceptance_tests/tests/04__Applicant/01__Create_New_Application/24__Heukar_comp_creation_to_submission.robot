@@ -37,7 +37,7 @@ Comp admin creates Heukar competition
 Lead applicant sees validation error messages in Application details when they enter numerical values > 84 in the Project duration in months field
     [Documentation]  IFS-8751
     Given log in as a different user                                 &{lead_applicant_credentials}
-    And the user select the competition and starts application      ${heukarCompetitionName}
+    And the user select the competition and starts application       ${heukarCompetitionName}
     And user selects where is organisation based                     isNotInternational
     And the user clicks the button/link                              link = Application details
     When the user fills in the Heukar Application details            ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  85
@@ -47,6 +47,14 @@ Lead applicant can enter numerical values in Application details from 1 to 84 in
     [Documentation]  IFS-8751
     Given the user re-enters project duration in months without errors
     Then the user successfully marks Application details as complete
+
+Lead applicant can submit application
+    [Documentation]  IFS-8751
+    Given the applicant completes Application Team
+    When the applicant marks EDI question as complete
+    And the lead applicant fills all the questions and marks as complete(heukar)
+    And the user accept the competition terms and conditions        Back to application overview
+    Then the user can submit the application
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
