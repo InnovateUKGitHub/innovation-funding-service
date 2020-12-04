@@ -290,7 +290,8 @@ the assessed questions are marked complete(EOI type)
     the user should see the element      jQuery = button:contains("Add question")
 
 the assessed questions are marked complete(HEUKAR type)
-    the user marks each question as complete    A HEUKAR question
+    :FOR   ${ELEMENT}   IN    @{HEUKAR_questions}
+     \    the user marks each question as complete    ${ELEMENT}
     the user should see the element      jQuery = button:contains("Add question")
 
 the user marks the Application details section as complete
