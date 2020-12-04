@@ -348,8 +348,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      true
+                                                      false
         );
 
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -383,7 +382,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.EMPTY,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,
@@ -430,8 +428,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      true
+                                                      false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
@@ -472,8 +469,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      true
+                                                      false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
@@ -518,8 +514,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                false,
-                true
+                false
         );
         Organisation o = newOrganisation().withId(organisationId).withInternational(true).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
@@ -561,7 +556,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.EMPTY,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,
@@ -608,7 +602,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
 
@@ -643,8 +636,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      true,
-                                                      false
+                                                      true
         );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
@@ -679,8 +671,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                true,
-                false
+                true
         );
         project.getApplication().getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
@@ -704,7 +695,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       true,
-                                                      false,
                                                       false
         );
 
@@ -741,7 +731,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
 
@@ -777,7 +766,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
                                                       false
         );
 
@@ -811,7 +799,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,
@@ -855,7 +842,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -882,7 +868,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       ApprovalType.APPROVED,
                                                       false,
                                                       true,
-                                                      false,
                                                       false,
                                                       false
         );
@@ -911,7 +896,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -939,7 +923,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -964,7 +947,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       ApprovalType.APPROVED,
                                                       false,
                                                       true,
-                                                      false,
                                                       false,
                                                       false
         );
@@ -995,7 +977,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
                                                       false
         );
         project.setProjectDocuments(docs);
@@ -1017,7 +998,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.EMPTY,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,
@@ -1058,7 +1038,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.EMPTY,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,
@@ -1103,7 +1082,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                false,
                 false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
@@ -1144,7 +1122,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false,
                 false,
                 false,
-                false,
                 false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
@@ -1182,8 +1159,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                 Boolean golReadyToApprove,
                                                 Boolean golIsSent,
                                                 Boolean golIsApproved,
-                                                Boolean golRejected,
-                                                boolean locationPerPartnerRequired) {
+                                                Boolean golRejected) {
 
         long competitionId = 112L;
 
@@ -1193,7 +1169,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         Competition competition = CompetitionBuilder.newCompetition()
                 .withId(competitionId)
                 .withCompetitionDocuments(competitionDocuments)
-                .withLocationPerPartner(locationPerPartnerRequired)
                 .build();
         competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
 
@@ -1253,7 +1228,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.EMPTY,
-                                                      false,
                                                       false,
                                                       false,
                                                       false,

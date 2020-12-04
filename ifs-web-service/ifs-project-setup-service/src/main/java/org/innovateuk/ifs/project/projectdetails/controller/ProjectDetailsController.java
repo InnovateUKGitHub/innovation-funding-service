@@ -85,8 +85,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations,
-                partnerProjectLocationRequired ? partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
+                partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
                 spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false, competitionResource));
@@ -101,7 +100,6 @@ public class ProjectDetailsController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
         List<ProjectUserResource> projectUsers = projectRestService.getProjectUsersForProject(projectResource.getId()).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -115,8 +113,7 @@ public class ProjectDetailsController {
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations,
-                partnerProjectLocationRequired ? partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
+                partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess(),
                 leadOrganisation,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()),
                 spendProfileGenerated, true, true, competitionResource));

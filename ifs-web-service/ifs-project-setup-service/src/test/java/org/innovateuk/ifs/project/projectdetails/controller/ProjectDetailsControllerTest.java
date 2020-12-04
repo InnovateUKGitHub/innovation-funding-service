@@ -150,7 +150,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
                 .withFundingType(FundingType.KTP)
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -207,9 +206,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectDetailsReadOnlyView() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -264,10 +261,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectDetailsKtpCompetitionReadOnlyView() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
                 .withFundingType(FundingType.KTP)
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -387,9 +382,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void projectManagerAndAddressCannotBeChangedWhenGOLAlreadyGenerated() throws Exception {
         Long projectId = 20L;
 
-        boolean partnerProjectLocationRequired = true;
         CompetitionResource competitionResource = newCompetitionResource()
-                .withLocationPerPartner(partnerProjectLocationRequired)
                 .build();
         ProjectResource project = newProjectResource()
                 .withId(projectId)

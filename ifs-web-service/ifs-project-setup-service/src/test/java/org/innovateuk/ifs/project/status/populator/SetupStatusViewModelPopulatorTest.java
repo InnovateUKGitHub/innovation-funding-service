@@ -120,7 +120,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                     .build(2);
 
     private CompetitionResource competition = newCompetitionResource()
-            .withLocationPerPartner(false)
             .withProjectDocument(projectDocumentConfig)
             .withProjectSetupStages(new ArrayList<>(EnumSet.allOf(ProjectSetupStage.class)))
             .build();
@@ -373,9 +372,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -404,9 +400,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -438,9 +431,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -472,9 +462,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(organisationResource.getId())
@@ -506,9 +493,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -539,9 +523,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -574,9 +555,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -611,9 +589,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -647,9 +622,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, FC = Finance Contact, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsNonLeadWhenPDSubmittedAndOnlyNonLeadFCSubmittedAndPLRequiredAndSubmitted() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
                 .withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withOrganisationId(999L)
@@ -713,9 +685,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     // PD = Project Details, PL = Project Location
     @Test
     public void viewProjectSetupStatusAsLeadWhenPLRequiredAndAwaitingPDActionFromOtherPartners() {
-
-        competition.setLocationPerPartner(true);
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
