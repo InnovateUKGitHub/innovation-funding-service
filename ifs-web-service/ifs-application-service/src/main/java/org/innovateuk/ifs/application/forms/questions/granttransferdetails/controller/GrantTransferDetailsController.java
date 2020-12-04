@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,15 +35,15 @@ public class GrantTransferDetailsController {
 
     private GrantTransferDetailsSaver grantTransferDetailsSaver;
 
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     private QuestionStatusRestService questionStatusRestService;
 
-    public GrantTransferDetailsController(GrantTransferDetailsFormPopulator grantTransferDetailsFormPopulator, GrantTransferDetailsViewModelPopulator grantTransferDetailsViewModelPopulator, GrantTransferDetailsSaver grantTransferDetailsSaver, UserRestService userRestService, QuestionStatusRestService questionStatusRestService) {
+    public GrantTransferDetailsController(GrantTransferDetailsFormPopulator grantTransferDetailsFormPopulator, GrantTransferDetailsViewModelPopulator grantTransferDetailsViewModelPopulator, GrantTransferDetailsSaver grantTransferDetailsSaver, ProcessRoleRestService processRoleRestService, QuestionStatusRestService questionStatusRestService) {
         this.grantTransferDetailsFormPopulator = grantTransferDetailsFormPopulator;
         this.grantTransferDetailsViewModelPopulator = grantTransferDetailsViewModelPopulator;
         this.grantTransferDetailsSaver = grantTransferDetailsSaver;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.questionStatusRestService = questionStatusRestService;
     }
 
@@ -81,7 +81,7 @@ public class GrantTransferDetailsController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(grantTransferDetailsSaver.save(form, applicationId).getErrors());
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+                ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
                 questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess();
                 return String.format("redirect:/application/%d/form/question/%d/grant-transfer-details", applicationId, questionId);
             });
@@ -95,7 +95,7 @@ public class GrantTransferDetailsController {
                        @PathVariable long applicationId,
                        @PathVariable long questionId,
                        UserResource user) {
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId()).getSuccess();
         return viewGrantTransferDetails(form, bindingResult, model, applicationId, questionId, user);
     }

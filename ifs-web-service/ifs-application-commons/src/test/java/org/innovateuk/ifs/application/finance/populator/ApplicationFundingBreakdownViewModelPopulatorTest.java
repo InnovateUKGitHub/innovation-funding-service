@@ -19,7 +19,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,7 +63,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -115,7 +115,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
         when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(Collections.singletonList(applicationFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(organisations));
         when(financeLinksUtil.financesLink(leadOrganisation, Collections.singletonList(processRole), user, application, competition)).thenReturn(Optional.of(financeLinkUrl));
@@ -171,7 +171,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
         when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(Collections.singletonList(applicationFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(organisations));
         when(financeLinksUtil.financesLink(leadOrganisation, Collections.singletonList(processRole), user, application, competition)).thenReturn(Optional.of(financeLinkUrl));
@@ -233,7 +233,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(Collections.singletonList(projectFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(organisations));
 
