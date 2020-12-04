@@ -594,7 +594,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         AcademicCostViewModel viewModel = mock(AcademicCostViewModel.class);
-        when(academicCostViewModelPopulator.populate(organisations.get(0).getId(), applicationResource.getId(), sectionResources.get(7).getId(), false)).thenReturn(viewModel);
+        when(academicCostViewModelPopulator.populate(organisations.get(0).getId(), applicationResource.getId(), sectionResources.get(7).getId(), getLoggedInUser())).thenReturn(viewModel);
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisations.get(1)));
 
