@@ -229,6 +229,7 @@
                 <th:block th:if="${model.additionalContractFile}">
                     <h2 class="govuk-heading-m">Annex</h2>
                     <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.title.toLowerCase()} you also agree to any conditions set out in the annex.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The annex contains any additional contracts agreed upon during the application process.|"></p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
