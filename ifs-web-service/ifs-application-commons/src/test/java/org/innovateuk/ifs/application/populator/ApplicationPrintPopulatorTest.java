@@ -15,7 +15,7 @@ import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -23,7 +23,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.ui.Model;
 
 import java.util.Arrays;
@@ -31,8 +30,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
-import static org.innovateuk.ifs.commons.rest.RestResult.fromException;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -58,7 +55,7 @@ public class ApplicationPrintPopulatorTest {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Captor
     private ArgumentCaptor<ApplicationReadOnlySettings> settingsArgumentCaptor = ArgumentCaptor.forClass(ApplicationReadOnlySettings.class);
@@ -92,7 +89,7 @@ public class ApplicationPrintPopulatorTest {
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(applicationReadOnlyViewModelPopulator.populate(eq(applicationId), eq(user), any(ApplicationReadOnlySettings.class)))
                 .thenReturn(viewModel);
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.singletonList(assessor)));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(Collections.singletonList(assessor)));
 
         applicationPrintPopulator.print(applicationId, model, user);
 
@@ -134,7 +131,7 @@ public class ApplicationPrintPopulatorTest {
         when(interviewAssignmentRestService.isAssignedToInterview(applicationId)).thenReturn(restSuccess(false));
         when(applicationReadOnlyViewModelPopulator.populate(eq(applicationId), eq(user), any(ApplicationReadOnlySettings.class)))
                 .thenReturn(viewModel);
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(kta));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(kta));
 
         applicationPrintPopulator.print(applicationId, model, user);
 
