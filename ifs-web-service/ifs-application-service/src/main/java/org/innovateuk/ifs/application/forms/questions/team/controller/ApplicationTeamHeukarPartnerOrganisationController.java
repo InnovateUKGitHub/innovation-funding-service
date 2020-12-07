@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.forms.questions.team.populator.Application
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamHeukarPartnerOrganisationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.heukar.service.HeukarPartnerOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
@@ -22,6 +23,8 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team/heukar-partner-org")
+@SecuredBySpring(value = "Controller", description = "Only applicants can edit their application team", securedType = ApplicationTeamController.class)
+@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamHeukarPartnerOrganisationController {
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
@@ -36,7 +39,6 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
     private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
 
     @GetMapping
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'HEUKAR_PARTNER_ORGANISATION')")
     public String showAddNewPartnerOrganisationForm(@ModelAttribute(value = "form", binding = false) HeukarPartnerOrganisationForm form,
                                                     BindingResult bindingResult,
                                                     Model model,
@@ -52,7 +54,6 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
     }
 
     @GetMapping("/{existingId}")
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'HEUKAR_PARTNER_ORGANISATION')")
     public String showEditPartnerOrganisationForm(@ModelAttribute(value = "form", binding = false) HeukarPartnerOrganisationForm form,
                                                   BindingResult bindingResult,
                                                   Model model,
@@ -73,7 +74,6 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
     }
 
     @PostMapping
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'HEUKAR_PARTNER_ORGANISATION')")
     public String submitForm(@Valid @ModelAttribute(value = "form") HeukarPartnerOrganisationForm form,
                              BindingResult bindingResult,
                              ValidationHandler validationHandler,

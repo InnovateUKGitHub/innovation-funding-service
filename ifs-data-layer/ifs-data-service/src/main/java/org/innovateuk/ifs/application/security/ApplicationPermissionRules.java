@@ -324,11 +324,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
-    @PermissionRule(value = "HEUKAR_PARTNER_ORGANISATION", description = "The lead applicant on a heukar competition can make changes to the partner organisations")
-    public boolean canAddHeukarPartnerOrganisation(final ApplicationResource application, UserResource user) {
-        return isLeadApplicant(application.getId(), user);
-    }
-
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
