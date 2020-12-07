@@ -5,10 +5,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -138,7 +135,7 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getInnovationSector(), innovationSectorId);
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
-        assertEquals(Boolean.TRUE, competition.getStateAid());
+        assertEquals(FundingRules.STATE_AID, competition.getFundingRules());
         assertEquals(FundingType.GRANT, competition.getFundingType());
 
         verify(competitionSetupRestService).updateCompetitionInitialDetails(competition);
