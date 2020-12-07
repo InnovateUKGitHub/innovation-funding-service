@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Companies House search results '"/>
+</head>
+<body class="govuk-template__body create-application-search-organisations">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to enter your organisation\'s details',linkUrl='/organisation/create/find-organisation'"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle='Companies House search results',subTitle=${subtitle},size='govuk-heading-xl'"/>
+            <p class="govuk-body">If your organisation is not displayed in the search results, please check your
+                organisation name or company registration number and search again.</p>
+           <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
+               <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <div style="margin-top: 0">&nbsp;</div>
+                </div>
+                <div class="govuk-grid-column-one-half alignright">
+                    <div class="form-search" style="margin-top: 0">
+
+                         <input class="govuk-input search-query"
+                                       th:field="*{organisationSearchName}"
+                                       th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
+                                       type="text"
+                                       th:attr="data-required-errormessage=#{validation.standard.organisationsearchname.required}"
+                                       required="required"
+                                       value="${organisationForm.organisationSearchName}" />
+                        <input type="submit" class="btn" id="org-search" name="search-organisation">
+
+                     </div>
+                </div>
+            </div>
+
+
+
+            <ul id="org-results" class="govuk-list results-list panel"
+                th:if="${organisationForm.organisationSearching}">
+                <th:block>
+                    <!--   <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
+                           <span th:text="${organisationForm.organisationSearchResults.size()} + ' ' + 'Companies matching the search' + ${organisationForm.organisationSearchName}"></span>
+                       </h2> -->
+
+                    <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
+                        <span th:text="${organisationForm.organisationSearchResults.size()}"></span>
+                    </h2>
+                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-bold">
+                        <span th:text=" ' ' + 'Companies'"></span>
+                    </h3>
+                    <h4 class="govuk-!-font-size-16 govuk-!-margin-0 govuk-!-font-weight-normal">
+                        <span th:text=" ' ' + 'matching the search'"></span>
+                    </h4>
+                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-bold">
+                        <span th:text=" ' ' + ${organisationForm.organisationSearchName}"></span>
+                    </h3>
+
+                </th:block>
+                <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
+                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
+                        <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
+                           title="View organisation"
+                           th:text="${organisation.name}"
+                           class="govuk-link">
+                        </a>
+                    </h3>
+                    <th:block th:unless="${organisationForm.research}">
+                        <p class="govuk-body meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
+                        <p class="govuk-body" th:text="${organisation.location}"></p>
+                    </th:block>
+                </li>
+
+            </ul>
+        </form>
+     <th:block th:insert="fragments/layout :: main-content-end"/>
+    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})"/>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>
