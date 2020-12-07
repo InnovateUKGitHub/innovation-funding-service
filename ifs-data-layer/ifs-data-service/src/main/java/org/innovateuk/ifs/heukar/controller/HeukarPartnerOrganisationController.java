@@ -1,14 +1,19 @@
 package org.innovateuk.ifs.heukar.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.heukar.transactional.HeukarPartnerOrganisationService;
 import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@SecuredBySpring(value = "Controller", description = "Only applicants can add/remove/update Heukar partner organisation",
+        securedType = HeukarPartnerOrganisationController.class)
+@PreAuthorize("hasAuthority('applicant')")
 @RequestMapping("/heukar-partner-organisation")
 public class HeukarPartnerOrganisationController {
 
