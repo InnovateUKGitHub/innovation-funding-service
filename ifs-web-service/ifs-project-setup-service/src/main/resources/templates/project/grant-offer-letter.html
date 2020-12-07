@@ -133,7 +133,8 @@
                                        validationField=${inputField},
                                        mayRemove=${model.ableToRemoveSignedGrantOffer},
                                        removeName='removeSignedGrantOfferLetterClicked',
-                                       saveName='uploadSignedGrantOfferLetterClicked'">
+                                       saveName='uploadSignedGrantOfferLetterClicked',
+                                       wrapperId='grant-letter-upload'">
                             <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                         </th:block>
                     </div>
@@ -188,17 +189,11 @@
                         </th:block>
                     </div>
 
-                    <th:block th:if="${model.projectManager and model.grantOfferLetterSent}">
-                        <a th:if="${model.signedGrantOfferLetterFile != null}" th:attr="aria-hidden=${!model.showSubmitButton}"
-                           data-js-toggle-on-file-upload=""
-                           th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
-                           data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
-                    </th:block>
                 </th:block>
 
                 <th:block th:if="${model.projectManager and !model.useDocusign and model.grantOfferLetterSent}">
                     <a th:attr="aria-hidden=${!model.showSubmitButton}"
-                       data-js-toggle-on-file-upload=""
+                       data-js-toggle-on-file-upload="grant-letter-upload"
                        th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
                        data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
                 </th:block>
