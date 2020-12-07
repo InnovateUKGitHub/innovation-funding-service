@@ -17,6 +17,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-7647 MO visibility of submitted applications
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -34,9 +36,9 @@ ${partnerEmail}                       test1@test.com
 ${fundingSoughtValidationMessage}     Your total funding sought exceed
 *** Test Cases ***
 Comp Admin creates an ATI competition
-    [Documentation]  IFS-2396
+    [Documentation]  IFS-2396  IFS-8779
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
     And user fills in funding overide
 
 Applicant applies to newly created ATI competition

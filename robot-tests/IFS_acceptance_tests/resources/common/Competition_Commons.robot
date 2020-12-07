@@ -9,10 +9,10 @@ ${Non_Ifs_Comp}      Webtest Non IFS Comp 20
 
 *** Keywords ***
 The competition admin creates competition
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
@@ -66,11 +66,12 @@ the user sees the correct read only view of the question
     the user should not see the element      jQuery = dt:contains("5-6") ~ dd:contains("The business opportunity is plausible")
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
     the user clicks the button/link                      link = Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
     the user selects the radio button                    fundingType  ${fundingType}
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
+    And the user selects the radio button                fundingRule  ${fundingRule}
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
     the user enters text to a text field                 css = #openingDateDay  1
@@ -78,7 +79,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
     the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
     the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
-    the user clicks the button twice                     css = label[for="stateAid${stateAid}"]
+#    the user clicks the button twice                     css = label[for="stateAid${stateAid}"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
