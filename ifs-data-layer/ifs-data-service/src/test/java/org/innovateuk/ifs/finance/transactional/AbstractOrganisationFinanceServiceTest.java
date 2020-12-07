@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -71,7 +72,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
             .build();
         competition = newCompetitionResource()
             .withId(competitionId)
-            .withStateAid(true)
+            .withFundingRules(FundingRules.STATE_AID)
             .build();
         organisationFinancesWithoutGrowthTableResource = newOrganisationFinancesWithoutGrowthTableResource()
             .withOrganisationSize(OrganisationSize.SMALL)
@@ -129,18 +130,26 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void isShowStateAidAgreement_whenStateAidIsTrue() {
-        competition.setStateAid(true);
+    public void isShowAidAgreement_whenFundingRulesIsStateAid() {
+        competition.setFundingRules(FundingRules.STATE_AID);
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
 
-        assertTrue((boolean) service.isShowStateAidAgreement(targetId, organisationId).getSuccess());
+        assertTrue((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
     }
 
     @Test
-    public void isShowStateAidAgreement_whenStateAidIsFalse() {
-        competition.setStateAid(false);
+    public void isShowAidAgreement_whenFundingRulesIsSubsidyControl() {
+        competition.setFundingRules(FundingRules.SUBSIDY_CONTROL);
         when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
-        assertFalse((boolean) service.isShowStateAidAgreement(targetId, organisationId).getSuccess());
+
+        assertTrue((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
+    }
+
+    @Test
+    public void isShowAidAgreement_whenFundingRulesNotAid() {
+        competition.setFundingRules(FundingRules.NOT_AID);
+        when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
+        assertFalse((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
     }
 
     @Test
