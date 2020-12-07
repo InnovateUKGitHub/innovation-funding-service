@@ -217,6 +217,8 @@
                 </th:block>
 
                 <h2 class="govuk-heading-m" th:text="|${model.title}|"></h2>
+                <p class="govuk-body" th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">This document is awaiting signature by the project manager.</p>
+
                 <p class="govuk-body">
                     <a th:href="@{/project/{id}/offer/download(id=${model.projectId})}"
                        th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
