@@ -48,7 +48,7 @@ public class KtpFinanceModelPopulatorTest {
         assertRow(ktpFinanceModel.getKnowledgeBaseSupervisor(), 131, 58, 73);
         assertRow(ktpFinanceModel.getOtherCosts(), 400, 178, 222);
         assertRow(ktpFinanceModel.getAdditionalSupportCosts(), 131, 58, 73);
-        assertRow(ktpFinanceModel.getAcademicAndSecretarialSupport(), 105000, 46662, 58338);
+        assertRow(ktpFinanceModel.getAcademicAndSecretarialSupport(), 8750, 3888, 4862);
 
         //Estate costs contains the correction based on the rounding errors. 44.44% of 17957 is 7980.0908.
         assertRow(ktpFinanceModel.getAssociateEstateCosts(), 17957, 7981, 9976);
@@ -57,12 +57,12 @@ public class KtpFinanceModelPopulatorTest {
         assertEquals((int)ktpFinanceModel.getTable1TotalFunding(), leadFinances.getTotalFundingSought().setScale(0, RoundingMode.HALF_UP).intValue());
         assertEquals((int)ktpFinanceModel.getTable1TotalContribution(), leadFinances.getTotalContribution().setScale(0, RoundingMode.HALF_UP).intValue());
 
-        assertEquals((int)ktpFinanceModel.getTable2TotalCost(), 108329);
-        assertEquals((int)ktpFinanceModel.getTable2TotalFunding(), 48141);
-        assertEquals((int)ktpFinanceModel.getTable2TotalContribution(), 60188);
+        assertEquals((int)ktpFinanceModel.getTable2TotalCost(), 12079);
+        assertEquals((int)ktpFinanceModel.getTable2TotalFunding(), 5367);
+        assertEquals((int)ktpFinanceModel.getTable2TotalContribution(), 6712);
 
-        assertEquals(ktpFinanceModel.getContributionToKbPartnerOverheads(), 21525);
-        assertEquals(ktpFinanceModel.getMaximumAmountOfGovtGrant(), 69666);
+        assertEquals(ktpFinanceModel.getContributionToKbPartnerOverheads(), 1849);
+        assertEquals(ktpFinanceModel.getMaximumAmountOfGovtGrant(), 7216);
     }
 
     private void assertRow(KtpFinanceRowModel row, int cost, int funding, int contribution) {
