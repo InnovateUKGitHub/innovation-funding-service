@@ -169,6 +169,31 @@ public class CompaniesHouseApiServiceImplTest {
 		assertNull(result.getSuccess().getOrganisationAddress().getPostcode());
 	}
 
+	@Test
+	public void getCompanyWithSicCodes() {
+
+		Map<String, Object> companyMapWithSicCodes = companyMapWithSicCodes();
+		JsonNode resultNode = new ObjectMapper().valueToTree(companyMapWithSicCodes);
+		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
+		when(adapter.restGetEntity("baseurl/company/123", JsonNode.class)).thenReturn(response);
+
+		ServiceResult<OrganisationSearchResult> result = service.getOrganisationById("123");
+
+		verify(adapter).restGetEntity("baseurl/company/123", JsonNode.class);
+		assertTrue(result.isSuccess());
+		assertEquals("company name", result.getSuccess().getName());
+		assertEquals("1234", result.getSuccess().getOrganisationSearchId());
+		assertEquals("line1", result.getSuccess().getOrganisationAddress().getAddressLine1());
+		assertEquals("line2", result.getSuccess().getOrganisationAddress().getAddressLine2());
+		assertEquals("line3", result.getSuccess().getOrganisationAddress().getAddressLine3());
+		assertEquals("loc", result.getSuccess().getOrganisationAddress().getTown());
+		assertEquals("reg", result.getSuccess().getOrganisationAddress().getCounty());
+		assertEquals("ba1", result.getSuccess().getOrganisationAddress().getPostcode());
+		assertEquals(sicCodesList().size(), result.getSuccess().getOrganisationSicCodes().size());
+		assertEquals("62012", result.getSuccess().getOrganisationSicCodes().get(0).getSicCode());
+		assertEquals("62090", result.getSuccess().getOrganisationSicCodes().get(sicCodesList().size() -1).getSicCode());
+	}
+
 	private Map<String, Object> companyResultMap() {
 		return asMap("company_number", "1234",
 				"title", "company name",
@@ -192,6 +217,16 @@ public class CompaniesHouseApiServiceImplTest {
 				"postal_code","ba1"
 					);
 	}
-	
-	
+
+	private Map<String, Object> companyMapWithSicCodes() {
+		return asMap("company_number", "1234",
+				"company_name", "company name",
+				"company_number", "1234",
+				"registered_office_address", addressMap(),
+				"sic_codes", sicCodesList());
+	}
+
+	private List<String> sicCodesList() {
+		return asList("62012","62020","62090");
+	}
 }

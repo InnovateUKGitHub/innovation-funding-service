@@ -3,11 +3,16 @@ package org.innovateuk.ifs.organisation.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResultPageResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -40,11 +46,14 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final Log LOG = LogFactory.getLog(OrganisationCreationSearchController.class);
 
     private static final String SELECTED_ORGANISATION = "selected-organisation";
-
+    private static final String SEARCH_RESULT_ORGANISATION = "search-organisation-results";
     private static final String SAVE_ORGANISATION_DETAILS = "save-organisation-details";
     private static final String REFERER = "referer";
     private static final String ORGANISATION_NAME = "organisationName";
     private static final String MODEL = "model";
+
+    @Value("${ifs.new.organisation.search.enabled}")
+    private boolean isImprovedSearchEnabled = false;
 
     @Autowired
     private MessageSource messageSource;
@@ -69,8 +78,41 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+
         addPageSubtitleToModel(request, user, model);
+
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
+    }
+
+    @GetMapping(value = {"/" + SEARCH_ORGANISATION + "/**"})
+    public String searchOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+                                     Model model,
+                                     UserResource user,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) {
+        registrationCookieService.deleteOrganisationIdCookie(response);
+
+        organisationForm.setOrganisationSearching(false);
+        organisationForm = getFormDataFromCookie(organisationForm, model, request);
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+
+        addPageSubtitleToModel(request, user, model);
+
+
+        long totalElements = organisationForm.getOrganisationSearchResults().size();
+        int totalPages = (int) (totalElements / 10.0);
+        List<OrganisationSearchResult> content = organisationForm.getOrganisationSearchResults();
+        int number = 0;
+        int size = 10;
+        model.addAttribute("pagination", new PaginationViewModel(new OrganisationSearchResultPageResource(totalElements, totalPages, content, number,size)));
+        return TEMPLATE_PATH + "/" + SEARCH_RESULT_ORGANISATION;
     }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION)
@@ -80,8 +122,10 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+        if (isImprovedSearchEnabled) {
+            return "redirect:/organisation/create/" + SEARCH_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
-
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
