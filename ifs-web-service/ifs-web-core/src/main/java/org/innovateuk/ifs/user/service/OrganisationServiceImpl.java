@@ -19,19 +19,23 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
     private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private UserService userService;
 
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
-                                   UserRestService userRestService, UserService userService) {
+                                   UserRestService userRestService,
+                                   ProcessRoleRestService processRoleRestService,
+                                   UserService userService) {
         this.organisationRestService = organisationRestService;
         this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.userService = userService;
     }
 
     @Override
     public Long getOrganisationType(long userId, long applicationId) {
-        final ProcessRoleResource processRoleResource = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        final ProcessRoleResource processRoleResource = processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
             final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccess();
             return organisationResource.getOrganisationType();

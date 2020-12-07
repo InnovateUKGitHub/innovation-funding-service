@@ -12,7 +12,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -50,7 +50,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
     private ApplicationService applicationService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private QuestionService questionService;
@@ -216,7 +216,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         ProcessRoleResource processRole = newProcessRoleResource().build();
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
         when(applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationResource.getId(),
                 researchCategoryId, processRole.getId())).thenReturn(restSuccess(newApplicationResource().build()));
 
@@ -227,11 +227,11 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 .andExpect(redirectedUrl(format("/application/%d/form/question/%d/research-category", applicationResource.getId(), questionId)))
                 .andExpect(status().is3xxRedirection());
 
-        InOrder inOrder = inOrder(userRestService, applicationService,
+        InOrder inOrder = inOrder(processRoleRestService, applicationService,
                 researchCategoryModelPopulator, researchCategoryFormPopulator, cookieFlashMessageFilter,
                 applicationResearchCategoryRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(userRestService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
+        inOrder.verify(processRoleRestService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
         inOrder.verify(applicationResearchCategoryRestService).setResearchCategoryAndMarkAsComplete(applicationResource.getId(),
                 researchCategoryId, processRole.getId());
         inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
@@ -274,7 +274,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "researchCategory"));
 
-        InOrder inOrder = inOrder(userRestService, applicationService,
+        InOrder inOrder = inOrder(processRoleRestService, applicationService,
                 researchCategoryModelPopulator, researchCategoryFormPopulator, cookieFlashMessageFilter,
                 applicationResearchCategoryRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
@@ -306,7 +306,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 "Steve Smith");
 
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId()))
                 .thenReturn(researchCategoryViewModel);
@@ -318,9 +318,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 .andExpect(view().name("application/questions/research-categories"))
                 .andExpect(status().isOk());
 
-        InOrder inOrder = inOrder(userRestService, questionService, applicationService,
+        InOrder inOrder = inOrder(processRoleRestService, questionService, applicationService,
                 researchCategoryModelPopulator, researchCategoryFormPopulator, applicationResearchCategoryRestService);
-        inOrder.verify(userRestService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
+        inOrder.verify(processRoleRestService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
         inOrder.verify(questionService).markAsIncomplete(questionId, applicationResource.getId(), processRole.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
