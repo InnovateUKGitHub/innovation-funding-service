@@ -57,4 +57,8 @@ public class ApplicationAssessmentResourceBuilder extends BaseBuilder<Applicatio
     public ApplicationAssessmentResourceBuilder withAveragePercentage(BigDecimal averagePercentage) {
         return with(applicationAssessmentResource -> setField("averagePercentage", averagePercentage, applicationAssessmentResource));
     }
+
+    public ApplicationAssessmentResourceBuilder withOverallFeedback(String overallFeedback) {
+        return with(applicationAssessmentResource -> setField("overallFeedback", overallFeedback, applicationAssessmentResource));
+    }
 }

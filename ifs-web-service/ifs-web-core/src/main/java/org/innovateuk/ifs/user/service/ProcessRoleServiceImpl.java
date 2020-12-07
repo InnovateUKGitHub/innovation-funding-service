@@ -19,15 +19,15 @@ import static org.innovateuk.ifs.application.service.Futures.adapt;
 public class ProcessRoleServiceImpl implements ProcessRoleService {
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     public List<ProcessRoleResource> findAssignableProcessRoles(Long applicationId) {
-        return userRestService.findAssignableProcessRoles(applicationId).getSuccess();
+        return processRoleRestService.findAssignableProcessRoles(applicationId).getSuccess();
     }
 
     @Override
     public Future<ProcessRoleResource> getById(Long id) {
-        return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccess);
+        return adapt(processRoleRestService.findProcessRoleById(id), RestResult::getSuccess);
     }
 }

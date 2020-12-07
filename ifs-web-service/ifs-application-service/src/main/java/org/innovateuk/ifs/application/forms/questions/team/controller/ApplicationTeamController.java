@@ -18,7 +18,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -56,7 +56,7 @@ public class ApplicationTeamController {
     private QuestionStatusRestService questionStatusRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
@@ -312,7 +312,7 @@ public class ApplicationTeamController {
     }
 
     private long processRoleId(long userId, long applicationId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess().getId();
     }
 
 }
