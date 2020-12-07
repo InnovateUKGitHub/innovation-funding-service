@@ -865,7 +865,7 @@ Internal user can see KTP GOL template
     And the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link                jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("Review")
     And the user clicks the button/link                 link = View the grant offer letter page (opens in a new window)
-    And Select Window                                   title = Print version with CSS             #${ProjectID}: ${ktpApplicationTitle} - Grant offer letter - Innovation Funding Service
+    And Select Window                                   title = Print version with CSS
     Then element should contain                         xpath = //p[4]     Knowledge transfer partnership (KTP) grant offer letter
     [Teardown]  the user closes the last opened tab
 
