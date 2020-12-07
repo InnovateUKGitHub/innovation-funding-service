@@ -95,10 +95,12 @@
             margin: 0;
             padding: 0;
         }
-        ol.ifs-list--number > li:not(.regular) {
+        ol.ifs-list--number > li {
             display: table;
             counter-increment: item;
             margin-bottom: 0.6em;
+        }
+        ol.ifs-list--number > li:not(.regular) {
             font-weight: bold;
         }
         ol.ifs-list--number > li:before {
