@@ -292,7 +292,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
         when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
 
