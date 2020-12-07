@@ -10,7 +10,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ public class ApplicationDownloadController {
     private FinanceService financeService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -57,7 +57,7 @@ public class ApplicationDownloadController {
             @PathVariable("formInputId") final Long formInputId,
             @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) {
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
         ProcessRoleResource processRole = processRoles.stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()

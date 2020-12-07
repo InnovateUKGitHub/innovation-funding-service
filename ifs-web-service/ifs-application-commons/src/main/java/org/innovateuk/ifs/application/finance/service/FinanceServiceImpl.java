@@ -9,7 +9,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import static java.util.Collections.emptyList;
 public class FinanceServiceImpl implements FinanceService {
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
@@ -44,7 +44,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        ProcessRoleResource userApplicationRole = processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisationId()).getSuccess();
     }
 
@@ -55,7 +55,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        ProcessRoleResource userApplicationRole = processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
         return getApplicationFinanceDetails(userId, applicationId, userApplicationRole.getOrganisationId());
     }
 

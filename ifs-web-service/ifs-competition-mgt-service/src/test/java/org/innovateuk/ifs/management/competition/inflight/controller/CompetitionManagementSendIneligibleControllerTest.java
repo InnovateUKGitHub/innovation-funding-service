@@ -13,7 +13,7 @@ import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.populator.InformIneligibleModelPopulator;
 import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -52,7 +52,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -96,7 +96,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         expectedForm.setSubject(String.format("Notification regarding your application %s: %s", applicationResource.getId(), applicationResource.getName()));
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(processRoles));
         when(applicationNotificationTemplateRestService.getIneligibleNotificationTemplate(competitionId))
                 .thenReturn(restSuccess(new ApplicationNotificationTemplateResource("MessageBody")));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
@@ -106,7 +106,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm));
         verify(applicationRestService, only()).getApplicationById(applicationId);
-        verify(userRestService, only()).findProcessRole(applicationId);
+        verify(processRoleRestService, only()).findProcessRole(applicationId);
     }
 
     @Test

@@ -23,6 +23,8 @@ public interface ApplicationConfiguration {
 
     boolean isKtp();
 
+    boolean isHeukar();
+
     boolean isExpressionOfInterest();
 
     Boolean getIncludeJesForm();

@@ -2,10 +2,7 @@ package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
-import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
-import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -16,20 +13,22 @@ import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.resource.SupporterState;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +47,7 @@ import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectatio
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.supporter.builder.SupporterAssignmentResourceBuilder.newSupporterAssignmentResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -58,7 +58,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
@@ -99,13 +99,16 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
     private List<QuestionReadOnlyViewModelPopulator<?>> mocklist;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
+
+    @Mock
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     @Before
     public void setupExpectations() {
@@ -128,7 +131,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         setField(populator, "populatorMap", asMap(QuestionSetupType.APPLICATION_TEAM, mockPopulator));
         setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .build();
         ApplicationResource application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competition.getId())
@@ -143,10 +148,11 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build(1);
         OrganisationResource organisation = newOrganisationResource().build();
         List<SectionResource> sections = newSectionResource()
-                .withName("Section with questions", "Finance section")
-                .withChildSections(Collections.emptyList(), Collections.singletonList(1L))
-                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
-                .build(2);
+                .withName("Section with questions", "Finance section", "Score assessment")
+                .withChildSections(Collections.emptyList(), Collections.singletonList(1L), Collections.emptyList())
+                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList())
+                .withType(SectionType.GENERAL, SectionType.FINANCE, SectionType.KTP_ASSESSMENT)
+                .build(3);
 
         ProcessRoleResource processRole = newProcessRoleResource().withRole(Role.LEADAPPLICANT).withUser(user).build();
 
@@ -163,7 +169,8 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withFeedback(feedback)
                 .build();
 
-        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole), questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture));
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), emptyList());
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -176,7 +183,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
 
         when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
@@ -196,6 +203,155 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         assertEquals(financeSection.getName(), "Finance section");
         assertEquals(financeSection.getQuestions().iterator().next(), expectedFinanceSummary);
 
+        assertFalse(viewModel.isKtpCompetition());
+
         verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
     }
+
+    @Test
+    public void populateKtp() {
+        long applicationId = 1L;
+        long assessmentId = 2L;
+        OrganisationResource organisation = newOrganisationResource().build();
+        UserResource user = newUserResource()
+                .withRolesGlobal(Arrays.asList(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR))
+                .build();
+        ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings()
+                .setIncludeQuestionLinks(true)
+                .setIncludeStatuses(true)
+                .setAssessmentId(assessmentId)
+                .setIncludeAllAssessorFeedback(true)
+                .setIncludeAllSupporterFeedback(true);
+
+        QuestionReadOnlyViewModelPopulator mockPopulator = mock(QuestionReadOnlyViewModelPopulator.class);
+        setField(populator, "populatorMap", asMap(QuestionSetupType.KTP_ASSESSMENT, mockPopulator));
+        setField(populator, "asyncFuturesGenerator", futuresGeneratorMock);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .build();
+        ApplicationResource application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId())
+                .withLeadOrganisationId(organisation.getId())
+                .build();
+        List<QuestionResource> questions = newQuestionResource()
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .build(1);
+        List<FormInputResource> formInputs = newFormInputResource().withQuestion(2L).build(1);
+        List<FormInputResponseResource> responses = newFormInputResponseResource().build(1);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource()
+                .withQuestion(questions.get(0).getId())
+                .build(1);
+        List<SectionResource> sections = newSectionResource()
+                .withName("Score assessment")
+                .withChildSections(Collections.emptyList())
+                .withQuestions(questions.stream()
+                        .filter(questionResource -> questionResource.getQuestionSetupType() == QuestionSetupType.KTP_ASSESSMENT)
+                        .map(QuestionResource::getId).collect(Collectors.toList()))
+                .withType(SectionType.KTP_ASSESSMENT)
+                .build(1);
+
+        ProcessRoleResource processRole = newProcessRoleResource()
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR)
+                .withUser(user)
+                .build();
+
+        Map<Long, BigDecimal> scores = new HashMap<>();
+        scores.put(1L, new BigDecimal("9"));
+        Map<Long, String> feedback = new HashMap<>();
+        feedback.put(1L, "Hello world");
+
+        ApplicationAssessmentResource assessorResponseFuture = newApplicationAssessmentResource()
+                .withApplicationId(applicationId)
+                .withTestId(3L)
+                .withAveragePercentage(new BigDecimal("50.0"))
+                .withScores(scores)
+                .withFeedback(feedback)
+                .withOverallFeedback("Overall Feedback")
+                .build();
+
+        List<SupporterAssignmentResource> supporterResponseFuture = newSupporterAssignmentResource()
+                .withAssignmentId(1, 2, 3, 4, 5)
+                .withState(SupporterState.ACCEPTED, SupporterState.ACCEPTED, SupporterState.REJECTED, SupporterState.REJECTED, SupporterState.CREATED)
+                .withComments("accepted one", "accepted two", "rejected one", "rejected two", "created")
+                .withUserSimpleOrganisation("Org A", "Org B", "Org C", "Org D", "Org E")
+                .build(5);
+
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole),
+                questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture), supporterResponseFuture);
+        ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
+        FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
+
+        when(financeSummaryViewModelPopulator.populate(expectedData)).thenReturn(expectedFinanceSummary);
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(questionRestService.findByCompetition(competition.getId())).thenReturn(restSuccess(questions));
+        when(formInputRestService.getByCompetitionId(competition.getId())).thenReturn(restSuccess(formInputs));
+        when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(responses));
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
+        when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
+        when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
+        when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
+        when(supporterAssignmentRestService.getAssignmentsByApplicationId(applicationId)).thenReturn(restSuccess(supporterResponseFuture));
+
+        when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
+
+        ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
+
+        assertEquals(settings, viewModel.getSettings());
+
+        assertEquals(viewModel.getSections().size(), 1);
+
+        Iterator<ApplicationSectionReadOnlyViewModel> iterator = viewModel.getSections().iterator();
+
+        ApplicationSectionReadOnlyViewModel scoreAssessmentSection = iterator.next();
+        assertEquals(scoreAssessmentSection.getName(), "Score assessment");
+        assertEquals(scoreAssessmentSection.getQuestions().iterator().next(), expectedRowModel);
+
+        assertTrue(viewModel.isShouldDisplayKtpApplicationFeedback());
+
+        assertNotNull(viewModel.getOverallFeedbacks());
+        assertEquals(1, viewModel.getOverallFeedbacks().size());
+        assertEquals("Overall Feedback", viewModel.getOverallFeedbacks().get(0));
+
+        assertNotNull(viewModel.getAssignments());
+        assertEquals(3, viewModel.getAssignments().size());
+
+        assertNotNull(viewModel.getAssignments().get("accepted"));
+        assertEquals(2, viewModel.getAssignments().get("accepted").size());
+        assertNotNull(viewModel.getAssignments().get("accepted").get(0));
+        assertEquals("accepted one", viewModel.getAssignments().get("accepted").get(0).getComments());
+        assertEquals("Org A", viewModel.getAssignments().get("accepted").get(0).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("accepted").get(1));
+        assertEquals("accepted two", viewModel.getAssignments().get("accepted").get(1).getComments());
+        assertEquals("Org B", viewModel.getAssignments().get("accepted").get(1).getUserSimpleOrganisation());
+        assertTrue(viewModel.isAccepted());
+        assertEquals(2, viewModel.getAcceptedCount());
+
+        assertNotNull(viewModel.getAssignments().get("rejected"));
+        assertEquals(2, viewModel.getAssignments().get("rejected").size());
+        assertNotNull(viewModel.getAssignments().get("rejected").get(0));
+        assertEquals("rejected one", viewModel.getAssignments().get("rejected").get(0).getComments());
+        assertEquals("Org C", viewModel.getAssignments().get("rejected").get(0).getUserSimpleOrganisation());
+        assertNotNull(viewModel.getAssignments().get("rejected").get(1));
+        assertEquals("rejected two", viewModel.getAssignments().get("rejected").get(1).getComments());
+        assertEquals("Org D", viewModel.getAssignments().get("rejected").get(1).getUserSimpleOrganisation());
+        assertTrue(viewModel.isDeclined());
+        assertEquals(2, viewModel.getDeclinedCount());
+
+        assertNotNull(viewModel.getAssignments().get("created"));
+        assertEquals(1, viewModel.getAssignments().get("created").size());
+        assertNotNull(viewModel.getAssignments().get("created").get(0));
+        assertEquals("created", viewModel.getAssignments().get("created").get(0).getComments());
+        assertEquals("Org E", viewModel.getAssignments().get("created").get(0).getUserSimpleOrganisation());
+        assertTrue(viewModel.isPending());
+        assertEquals(1, viewModel.getPendingCount());
+
+        assertTrue(viewModel.isKtpCompetition());
+
+        verify(mockPopulator).populate(competition, questions.get(0), expectedData, settings);
+    }
+
 }

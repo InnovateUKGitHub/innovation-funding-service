@@ -24,7 +24,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +76,7 @@ public class GenericQuestionApplicationController {
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
@@ -308,11 +308,11 @@ public class GenericQuestionApplicationController {
     }
 
     private ProcessRoleResource getUsersProcessRole(long applicationId, UserResource user) {
-        return userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        return processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
     }
 
     private ProcessRoleResource getLeadProcessRole(long applicationId) {
-        return userRestService.findProcessRole(applicationId)
+        return processRoleRestService.findProcessRole(applicationId)
                 .getSuccess()
                 .stream()
                 .filter(pr -> pr.getRole().equals(LEADAPPLICANT))

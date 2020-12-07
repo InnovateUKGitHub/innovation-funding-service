@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,8 @@ public class YourProjectCostsViewModelPopulator {
     private SectionService sectionService;
     @Autowired
     private UserRestService userRestService;
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
 
 
     public YourProjectCostsViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
@@ -43,7 +46,7 @@ public class YourProjectCostsViewModelPopulator {
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
-        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && processRoleRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .orElse(false);
         boolean open = userCanEdit && application.isOpen() && competition.isOpen();
