@@ -8,7 +8,7 @@
             <span th:if="${assessmentId}" class="section-status govuk-hint float-right" th:text="|Score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
         </th:block>
 
-        <th:block th:if="${!question.hasScore()}">
+        <th:block th:if="${!question.hasScore() && !question.isKtpCompetition()}">
             <span class="section-status govuk-hint float-right">No feedback provided</span>
         </th:block>
     </th:block>

@@ -26,10 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -247,6 +244,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -349,6 +347,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -456,6 +455,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -545,6 +545,87 @@ public class ApplicationNotificationServiceImplTest {
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
+    }
+
+    @Test
+    public void notifyKtpApplicantsByCompetition() {
+        Long competitionId = 1L;
+        Long applicationOneId = 2L;
+        Long applicationTwoId = 3L;
+        Long applicationThreeId = 4L;
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .withName("Competition")
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("John", "Jane", "Bob", "innactive")
+                .withLastName("Smith", "Jones", "Davies", "gone")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com", "nolongeron@ifs.com")
+                .withStatus(UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.INACTIVE)
+                .build(4);
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(applicationOneId, applicationTwoId, applicationThreeId)
+                .withName("App1", "App2", "App3")
+                .build(3);
+
+        ProcessRole ktaRole = newProcessRole()
+                .withUser(users.get(0))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        ProcessRole applicantRole = newProcessRole()
+                .withUser(users.get(1))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        ProcessRole collaboratorRole = newProcessRole()
+                .withUser(users.get(2))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        applications.get(0).setProcessRoles(asList(ktaRole, applicantRole));
+        applications.get(1).setProcessRoles(singletonList(applicantRole));
+        applications.get(2).setProcessRoles(Arrays.asList(applicantRole, collaboratorRole));
+
+        NotificationTarget notificationTarget = new UserNotificationTarget(
+                users.get(0).getName(), users.get(0).getEmail()
+        );
+
+        Notification notification = new Notification(
+                systemNotificationSourceMock,
+                notificationTarget,
+                KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
+                asMap("name", users.get(0).getName(),
+                        "applicationName", applications.get(0).getName(),
+                        "applicationId", applications.get(0).getId(),
+                        "competitionName", competition.getName(),
+                        "dashboardUrl", WEB_BASE_URL)
+        );
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+
+        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+
+        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isSuccess());
     }
 
     @Test
