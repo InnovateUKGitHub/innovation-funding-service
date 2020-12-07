@@ -30,6 +30,11 @@ public class ProcurementTemplate implements FundingTypeTemplate {
     }
 
     @Override
+    public Competition setGolTemplate(Competition competition) {
+        return commonBuilders.getGolTemplate(competition);
+    }
+
+    @Override
     public Competition overrideTermsAndConditions(Competition competition) {
         return commonBuilders.overrideTermsAndConditions(competition);
     }

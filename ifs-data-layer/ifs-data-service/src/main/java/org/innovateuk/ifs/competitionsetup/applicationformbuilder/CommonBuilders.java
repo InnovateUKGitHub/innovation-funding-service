@@ -2,9 +2,7 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
@@ -18,6 +16,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
+import org.innovateuk.ifs.project.grantofferletter.template.repository.GolTemplateRepository;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,9 @@ public class CommonBuilders {
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private GolTemplateRepository golTemplateRepository;
 
     /*
     Tech debt.
@@ -396,5 +399,39 @@ public class CommonBuilders {
                 grantTermsAndConditionsRepository.getLatestForFundingType(competition.getFundingType());
         competition.setTermsAndConditions(grantTermsAndConditions);
         return competition;
+    }
+
+    public static Competition setDefaultOrganisationConfig(Competition competition) {
+        if (competition.getCompetitionOrganisationConfig() == null) {
+            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
+            competitionOrganisationConfig.setCompetition(competition);
+            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
+        }
+
+        return competition;
+    }
+
+    public static Competition setDefaultApplicationConfig(Competition competition) {
+        if (competition.getCompetitionApplicationConfig() == null) {
+            CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
+            competitionApplicationConfig.setCompetition(competition);
+            competition.setCompetitionApplicationConfig(competitionApplicationConfig);
+        }
+
+        return competition;
+    }
+
+    public Competition getGolTemplate(Competition competition) {
+        String templateName;
+        if (competition.isKtp()) {
+            templateName = "KTP GOL Template";
+        } else {
+            templateName = "Default GOL Template";
+        }
+        GolTemplate golTemplate =
+                golTemplateRepository.findFirstByNameOrderByVersionDesc(templateName);
+        competition.setGolTemplate(golTemplate);
+        return competition;
+
     }
 }
