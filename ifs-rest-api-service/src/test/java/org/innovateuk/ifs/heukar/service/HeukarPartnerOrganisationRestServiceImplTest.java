@@ -4,15 +4,15 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarPartnerOrganisationResourceListType;
+import static org.innovateuk.ifs.organisation.builder.HeukarPartnerOrganisationResourceBuilder.newHeukarPartnerOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertTrue;
 
 public class HeukarPartnerOrganisationRestServiceImplTest extends BaseRestServiceUnitTest<HeukarPartnerOrganisationRestServiceImpl> {
@@ -22,14 +22,12 @@ public class HeukarPartnerOrganisationRestServiceImplTest extends BaseRestServic
     @Test
     public void getHeukarPartnerOrganisationsForApplicationWithId() {
         long applicationId = 1;
-        List<HeukarPartnerOrganisationResource> resourceList = new ArrayList<>();
-        HeukarPartnerOrganisationResource resource = new HeukarPartnerOrganisationResource();
-        resource.setId(1L);
-        resource.setApplicationId(1L);
-        OrganisationTypeResource organisationTypeResource = new OrganisationTypeResource();
-        organisationTypeResource.setId(1L);
-        resource.setOrganisationTypeResource(organisationTypeResource);
-        resourceList.add(resource);
+
+        List<HeukarPartnerOrganisationResource> resourceList = newHeukarPartnerOrganisationResource()
+                .withId(1L)
+                .withApplicationId(1L)
+                .withOrganisationTypeResource(newOrganisationTypeResource().withName("test").withId(1L).build())
+                .build(2);
 
         setupGetWithRestResultExpectations(heukarUrl + "/find-by-application-id/" + applicationId, heukarPartnerOrganisationResourceListType(), resourceList);
         RestResult<List<HeukarPartnerOrganisationResource>> result = service.getHeukarPartnerOrganisationsForApplicationWithId(applicationId);
@@ -56,12 +54,12 @@ public class HeukarPartnerOrganisationRestServiceImplTest extends BaseRestServic
 
     @Test
     public void getExistingPartnerById() {
-        HeukarPartnerOrganisationResource resource = new HeukarPartnerOrganisationResource();
-        resource.setId(1L);
-        resource.setApplicationId(1L);
-        OrganisationTypeResource organisationTypeResource = new OrganisationTypeResource();
-        organisationTypeResource.setId(1L);
-        resource.setOrganisationTypeResource(organisationTypeResource);
+        HeukarPartnerOrganisationResource resource = newHeukarPartnerOrganisationResource()
+                .withId(1L)
+                .withApplicationId(1L)
+                .withOrganisationTypeResource(newOrganisationTypeResource().withName("test").withId(1L).build())
+                .build();
+
         setupGetWithRestResultExpectations(heukarUrl + "/" + resource.getId(), HeukarPartnerOrganisationResource.class, resource);
         RestResult<HeukarPartnerOrganisationResource> restResult = service.getExistingPartnerById(resource.getId());
         assertTrue(restResult.isSuccess());
