@@ -6,6 +6,9 @@ Documentation     INFUND-43 As an applicant and I am on the application form on 
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 ...
 ...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
+...
+...               IFS-8751: Increase project duration in months
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -66,7 +69,7 @@ Year field client side
     Then the applicant should not see the validation error any more
 
 Duration field client side
-    [Documentation]  INFUND-43 INFUND-2843 IFS-2776
+    [Documentation]  INFUND-43 INFUND-2843 IFS-2776 IFS-8751
     [Tags]
     When the user enters text to a text field  id = durationInMonths  0
     And the user clicks the button/link        id = application-question-complete
