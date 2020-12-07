@@ -200,7 +200,7 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
 
         if (!competition.isMaximumFundingLevelConstant(() -> organisationService.findById(finance.getOrganisation()).getSuccess().getOrganisationTypeEnum(),
-                () -> grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).getSuccess())) {
+                () -> grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId).getSuccess())) {
             resetYourFundingSection(finance, competitionId, userId);
             resetFundingLevel(finance);
         }

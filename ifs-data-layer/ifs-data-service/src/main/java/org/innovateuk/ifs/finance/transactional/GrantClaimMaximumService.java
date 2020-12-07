@@ -31,7 +31,7 @@ public interface GrantClaimMaximumService {
             "if they have an application for the competition")
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', " +
             "'MAX_FUNDING_LEVEL_OVERRIDDEN')")
-    ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId);
+    ServiceResult<Boolean> isMaximumFundingLevelConstant(long competitionId);
 
     @SecuredBySpring(value = "UPDATE", securedType = GrantClaimMaximumResource.class,
             description = "Only those with either comp admin or project finance roles can update a GrantClaimMaximum")

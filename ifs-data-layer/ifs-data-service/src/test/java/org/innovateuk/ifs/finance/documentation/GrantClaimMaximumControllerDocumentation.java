@@ -91,7 +91,7 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
     public void isMaximumFundingLevelOverridden() throws Exception {
         long competitionId = 1L;
 
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess
                 (true));
 
         mockMvc.perform(get("/grant-claim-maximum/maximum-funding-level-overridden/{competitionId}", competitionId)
@@ -107,6 +107,6 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
                         ))
                 );
 
-        verify(grantClaimMaximumService).isMaximumFundingLevelOverridden(competitionId);
+        verify(grantClaimMaximumService).isMaximumFundingLevelConstant(competitionId);
     }
 }

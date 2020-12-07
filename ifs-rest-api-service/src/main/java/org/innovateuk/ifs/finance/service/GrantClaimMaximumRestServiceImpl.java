@@ -37,7 +37,7 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
+    public RestResult<Boolean> isMaximumFundingLevelConstant(long competitionId) {
         return getWithRestResult(grantClaimMaximumRestURL + "/maximum-funding-level-overridden/" + competitionId, Boolean.class);
     }
 }

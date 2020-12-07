@@ -60,7 +60,7 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
+    public ServiceResult<Boolean> isMaximumFundingLevelConstant(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
             if (competition.isNonFinanceType()) {
                 return false;

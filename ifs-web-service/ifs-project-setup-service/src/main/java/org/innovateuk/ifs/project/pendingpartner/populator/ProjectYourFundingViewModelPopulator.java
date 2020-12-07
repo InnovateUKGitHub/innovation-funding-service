@@ -49,7 +49,7 @@ public class ProjectYourFundingViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         boolean locked = organisationSectionRequired && !progress.isYourOrganisationComplete();
-        boolean fundingOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
+        boolean fundingOverridden = grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess();
         PartnerOrganisationResource partnerOrganisationResource = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
 
         return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),

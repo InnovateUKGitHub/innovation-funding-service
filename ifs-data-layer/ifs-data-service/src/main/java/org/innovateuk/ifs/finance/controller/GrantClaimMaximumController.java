@@ -44,7 +44,7 @@ public class GrantClaimMaximumController {
     }
 
     @GetMapping("/maximum-funding-level-overridden/{competitionId}")
-    public RestResult<Boolean> isMaximumFundingLevelOverridden(@PathVariable("competitionId") final long competitionId) {
-        return grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).toGetResponse();
+    public RestResult<Boolean> isMaximumFundingLevelConstant(@PathVariable("competitionId") final long competitionId) {
+        return grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId).toGetResponse();
     }
 }

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.finance.service.YourOrganisationRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -47,7 +46,7 @@ public class ApplicationYourOrganisationViewModelPopulator {
 
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 () -> organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationTypeEnum(),
-                () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
+                () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
 
         boolean showOrganisationSizeAlert = false;
         if (!isMaximumFundingLevelConstant) {

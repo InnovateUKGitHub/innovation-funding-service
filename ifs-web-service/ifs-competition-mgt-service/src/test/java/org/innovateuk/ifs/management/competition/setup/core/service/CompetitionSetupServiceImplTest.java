@@ -432,7 +432,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
-        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, false, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
         generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
         generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, CompetitionStatus.COMPETITION_SETUP));
 

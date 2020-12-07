@@ -64,6 +64,20 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     }
 
     @Test
+    public void getGrantClaimMaximumByCompetitionId() {
+        long competitionId = 1L;
+        List<GrantClaimMaximum> gcm = newGrantClaimMaximum().build(1);
+        List<GrantClaimMaximumResource> gcmResource = newGrantClaimMaximumResource().build(1);
+
+        when(grantClaimMaximumRepository.findByCompetitionsId(competitionId)).thenReturn(gcm);
+        when(grantClaimMaximumMapper.mapToResource(gcm)).thenReturn(gcmResource);
+
+        ServiceResult<List<GrantClaimMaximumResource>> result = service.getGrantClaimMaximumByCompetitionId(competitionId);
+        assertTrue(result.isSuccess());
+        assertEquals(gcmResource, result.getSuccess());
+    }
+
+    @Test
     public void getNotFoundGrantClaimMaximum() {
         GrantClaimMaximum gcm = newGrantClaimMaximum().build();
         ServiceResult<GrantClaimMaximumResource> result = service.getGrantClaimMaximumById(gcm.getId());
@@ -80,7 +94,6 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
                 .build();
 
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(commonBuilders.getStateAidGrantClaimMaxmimums()).thenReturn(defaultGrantClaimMaximums);
         when(grantClaimMaximumRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         ServiceResult<Set<Long>> result = service.revertToDefault(competition.getId());
@@ -116,7 +129,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         when(commonBuilders.getStateAidGrantClaimMaxmimums()).thenReturn(grantClaimMaximums);
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
-        ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelOverridden(competition
+        ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelConstant(competition
                 .getId());
 
         assertTrue(isMaximumFundingLevelOverridden.isSuccess());
@@ -136,7 +149,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         when(commonBuilders.getStateAidGrantClaimMaxmimums()).thenReturn(defaultGrantClaimMaximums);
         when(competitionRepository.findById(competition.getId())).thenReturn(Optional.of(competition));
 
-        ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelOverridden(competition
+        ServiceResult<Boolean> isMaximumFundingLevelOverridden = service.isMaximumFundingLevelConstant(competition
                 .getId());
 
         assertTrue(isMaximumFundingLevelOverridden.isSuccess());
