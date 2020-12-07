@@ -349,6 +349,12 @@ public class Project implements ProcessActivity {
                 projectUser.isProjectManager()).isEmpty();
     }
 
+    public boolean isFinanceContact(User user) {
+        return !getProjectUsers(projectUser ->
+                projectUserForUser(user, projectUser) &&
+                        projectUser.isFinanceContact()).isEmpty();
+    }
+
     private boolean projectUserForUser(User user, ProjectUser projectUser) {
         return projectUser.getUser().getId().equals(user.getId());
     }

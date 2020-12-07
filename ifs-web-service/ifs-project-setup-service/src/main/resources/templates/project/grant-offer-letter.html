@@ -188,7 +188,7 @@
                         </th:block>
                     </div>
 
-                    <th:block th:if="${model.grantOfferLetterSent}">
+                    <th:block th:if="${model.projectManager and model.grantOfferLetterSent}">
                         <a th:if="${model.signedGrantOfferLetterFile != null}" th:attr="aria-hidden=${!model.showSubmitButton}"
                            data-js-toggle-on-file-upload=""
                            th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"

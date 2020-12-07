@@ -131,7 +131,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
             GrantOfferLetterState state = getState(project);
             GrantOfferLetterEvent lastProcessEvent = getLastProcessEvent(project);
 
-            if (project.isPartner(user) && !project.isProjectManager(user)) {
+            if (project.isPartner(user) && !(project.isProjectManager(user) || project.isFinanceContact(user))) {
                 return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
             } else {
                 return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);
