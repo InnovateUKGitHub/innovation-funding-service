@@ -11,6 +11,8 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8617  Assessment overview - missing print link and spacing of score assessment
 ...
+...              IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
@@ -233,11 +235,11 @@ Assessor can submit the KTP application assessment
     Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
 
 Deafult value of assessor view finance config set to all for ktp competitions
-    [Documentation]   IFS-8594
+    [Documentation]   IFS-8594  IFS-8779
     Given Log in as a different user                 &{Comp_admin1_credentials}
     When the user navigates to the page              ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  1  KTP
+    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
     And the user clicks the button/link              link = Assessors
     Then radio button should be set to               assessorFinanceView   ALL
 
