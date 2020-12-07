@@ -11,6 +11,7 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class ApplicationPrintPopulator {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     public String print(final Long applicationId,
                         Model model, UserResource user) {
@@ -66,7 +67,7 @@ public class ApplicationPrintPopulator {
     }
 
     private boolean ktpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         boolean isKta = processRoles.stream()
                 .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
 
