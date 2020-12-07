@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -55,7 +55,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
     private SectionStatusRestService sectionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Test
     public void viewAcademicCosts() throws Exception {
@@ -83,7 +83,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
 
     @Test
     public void edit() throws Exception {
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess());
 
@@ -102,7 +102,7 @@ public class AcademicCostsControllerTest extends BaseControllerMockMVCTest<Acade
     public void complete() throws Exception {
         ProcessRoleResource processRole = newProcessRoleResource().withId(PROCESS_ROLE_ID).build();
         when(saver.save(any(AcademicCostForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 

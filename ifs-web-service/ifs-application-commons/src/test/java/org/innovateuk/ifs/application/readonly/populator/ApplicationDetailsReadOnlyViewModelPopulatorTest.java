@@ -51,7 +51,8 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
                 .withShortName("Application details")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList(), emptyList());
 
         ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
@@ -94,7 +95,8 @@ public class ApplicationDetailsReadOnlyViewModelPopulatorTest {
                 .withShortName("Application details")
                 .build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(),  emptyList(), emptyList());
 
         ApplicationDetailsReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
