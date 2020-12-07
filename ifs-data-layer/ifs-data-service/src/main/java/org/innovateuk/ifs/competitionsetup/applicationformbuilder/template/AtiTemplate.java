@@ -30,7 +30,6 @@ public class AtiTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setGrantClaimMaximums(commonBuilders.getStateAidGrantClaimMaxmimums());
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI)"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
