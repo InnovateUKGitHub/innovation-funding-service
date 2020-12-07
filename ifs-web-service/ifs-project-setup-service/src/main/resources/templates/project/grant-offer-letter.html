@@ -188,6 +188,27 @@
                             <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                         </th:block>
                     </div>
+                </th:block>
+
+                <th:block th:if="${model.additionalContractFile != null and model.projectManager and !model.financeContact and !model.useDocusign}">
+                    <h2 class="govuk-heading-m">Annex</h2>
+                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
+                    <p class="govuk-body">
+                        <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
+                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
+                           class="govuk-link"
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
+                    </p>
+
+                    <th:block th:if="${model.signedAdditionalContractFile != null && model.signedAdditionalContractFile.filename != null && !model.grantOfferLetterRejected}">
+                        <h2 class="govuk-heading-m">Signed annex</h2>
+                        <p class="govuk-body">
+                            <a th:href="@{/project/{id}/offer/signed-additional-contract(id=${model.projectId})}"
+                               th:text="|${model.signedAdditionalContractFile.filename} (opens in a new window)|"
+                               class="govuk-link"
+                               target="_blank">Signed annex.PDF</a>
+                        </p>
+                    </th:block>
 
                 </th:block>
 
