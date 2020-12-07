@@ -362,8 +362,7 @@ the user fills in the Finances questions
 the user fills in the Finances questions without growth table
     [Arguments]  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
-    run keyword If ${compType_HEUKAR}  the user selects the radio button  applicationFinanceType  NO_FINANCES
-    ... ELSE the user selects the radio button     applicationFinanceType  STANDARD
+    the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances

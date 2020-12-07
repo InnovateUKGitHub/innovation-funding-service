@@ -34,26 +34,10 @@ Comp admin creates Heukar competition
     Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  2  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
 
-Lead applicant sees validation error messages in Application details when they enter numerical values > 84 in the Project duration in months field
-    [Documentation]  IFS-8751
-    Given log in as a different user                                 &{lead_applicant_credentials}
-    And the user select the competition and starts application       ${heukarCompetitionName}
-    And user selects where is organisation based                     isNotInternational
-    And the user clicks the button/link                              link = Application details
-    When the user fills in the Heukar Application details            ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  85
-    Then the user should see project duration validation errors
-
-Lead applicant can enter numerical values in Application details from 1 to 84 in the Project duration in months field
-    [Documentation]  IFS-8751
-    Given the user re-enters project duration in months without errors
-    Then the user successfully marks Application details as complete
-
 Lead applicant can submit application
     [Documentation]  IFS-8751
-    Given the applicant completes Application Team
-    When the applicant marks EDI question as complete
-    And the lead applicant fills all the questions and marks as complete(heukar)
-    And the user accept the competition terms and conditions        Back to application overview
+    Given log in as a different user     &{lead_applicant_credentials}
+    When the user successfully completes application
     Then the user can submit the application
 
 *** Keywords ***
@@ -90,7 +74,7 @@ user selects where is organisation based
     the user clicks the button/link       id = international-organisation-cta
     the user clicks the button/link       id = save-organisation-button
 
-the user fills in the Heukar Application details
+the user completes Heukar Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
     the user should see the element             jQuery = h1:contains("Application details")
     the user enters text to a text field        id = name  ${appTitle}
@@ -100,21 +84,22 @@ the user fills in the Heukar Application details
     the user should see the element             jQuery = label:contains("Project duration in months")
     the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
     the user clicks the button twice            css = label[for="resubmission-no"]
-    the user clicks the button/link             id = application-question-complete
-
-the user should see project duration validation errors
-    And the user should see a summary error     Enter the total number of months between 1 and 84.
-    And the user should see a field error       Enter the total number of months between 1 and 84.
-
-the user re-enters project duration in months without errors
-    the user enters text to a text field        css = [id="durationInMonths"]  84
-    the user should not see a summary error     Enter the total number of months between 1 and 84.
-    the user should not see a field error       Enter the total number of months between 1 and 84.
+    the user successfully marks Application details as complete
 
 the user successfully marks Application details as complete
     the user clicks the button/link             id = application-question-complete
     the user clicks the button/link             link = Back to application overview
     the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
+
+the user successfully completes application
+    the user select the competition and starts application      ${heukarCompetitionName}
+    user selects where is organisation based                    isNotInternational
+    the user clicks the button/link                             link = Application details
+    the user completes Heukar Application details               ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the applicant completes Application Team
+    the applicant marks EDI question as complete
+    the lead applicant fills all the questions and marks as complete(heukar)
+    the user accept the competition terms and conditions        Back to application overview
 
 Custom Suite Setup
     Set predefined date variables
