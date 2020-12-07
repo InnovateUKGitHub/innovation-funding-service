@@ -79,6 +79,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8770 Bring back bank details for KTP
 ...
+...            IFS-8614 KTP Project setup: GOL template
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -856,6 +858,16 @@ Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
     When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+
+Internal user can see KTP GOL template
+    [Documentation]  IFS-8614
+    Given log in as a different user                    &{ifs_admin_user_credentials}
+    And the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link                jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("Review")
+    And the user clicks the button/link                 link = View the grant offer letter page (opens in a new window)
+    And Select Window                                   title = Print version with CSS             #${ProjectID}: ${ktpApplicationTitle} - Grant offer letter - Innovation Funding Service
+    Then element should contain                         xpath = //p[4]     Knowledge transfer partnership (KTP) grant offer letter
+    [Teardown]  the user closes the last opened tab
 
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
