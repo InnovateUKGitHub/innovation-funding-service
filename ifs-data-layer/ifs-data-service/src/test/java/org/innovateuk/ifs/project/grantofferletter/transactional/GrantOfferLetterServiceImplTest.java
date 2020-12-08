@@ -509,7 +509,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(userRepository.findById(externalUser.getId())).thenReturn(Optional.of(user));
         when(projectWorkflowHandler.getState(project)).thenReturn(SETUP);
         when(fileServiceMock.deleteFileIgnoreNotFound(existingAdditionalContractFile.getId())).thenReturn(serviceSuccess(existingAdditionalContractFile));
-        when(golWorkflowHandler.removeSignedGrantOfferLetter(project, user)).thenReturn(true);
+        when(golWorkflowHandler.removeSignedAdditionalContract(project, user)).thenReturn(true);
 
         ServiceResult<Void> result = service.removeSignedAdditionalContractFileEntry(123L);
         assertTrue(result.isSuccess());

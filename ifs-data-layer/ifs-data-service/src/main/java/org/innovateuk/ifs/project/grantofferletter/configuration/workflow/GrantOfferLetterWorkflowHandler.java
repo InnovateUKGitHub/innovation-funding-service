@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 
@@ -91,6 +92,19 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
                 PROJECT_MANAGER, user.getId());
 
         if (projectManager == null) {
+            return false;
+        }
+
+        return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
+    }
+
+    public boolean removeSignedAdditionalContract(Project project, User user) {
+        ProjectUser projectManager = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
+                PROJECT_MANAGER, user.getId());
+        ProjectUser financeContact = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
+                PROJECT_FINANCE_CONTACT, user.getId());
+
+        if ((projectManager == null) && (financeContact == null)) {
             return false;
         }
 

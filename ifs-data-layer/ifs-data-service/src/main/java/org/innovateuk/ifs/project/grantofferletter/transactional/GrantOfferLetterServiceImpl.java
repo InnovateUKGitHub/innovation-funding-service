@@ -296,7 +296,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<FileEntry> removeSignedAdditionalContractIfAllowed(Project project, User user) {
-        if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
+        if (!golWorkflowHandler.removeSignedAdditionalContract(project, user)) {
             return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
         }
 
