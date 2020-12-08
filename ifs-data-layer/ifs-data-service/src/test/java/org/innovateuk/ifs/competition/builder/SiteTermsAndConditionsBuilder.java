@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class SiteTermsAndConditionsBuilder extends AbstractTermsAndConditionsBuilder<SiteTermsAndConditions,
+public class SiteTermsAndConditionsBuilder extends AbstractVersionedTemplateBuilder<SiteTermsAndConditions,
         SiteTermsAndConditionsBuilder> {
 
     private SiteTermsAndConditionsBuilder(List<BiConsumer<Integer, SiteTermsAndConditions>> multiActions) {

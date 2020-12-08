@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+    <link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
+</head>
+
+<body>
+<div id="bot"></div>
+
+<script th:inline="javascript">
+    (function() {
+        /*<![CDATA[*/
+            var virtualAssistantModel = /*[[${model}]]*/ 'unset';
+        /*]]>*/
+
+        var user = {
+            id: 'user-id',
+            name: 'User'
+        };
+        var botConnection = new BotChat.DirectLine({
+            token: virtualAssistantModel.clientToken,
+        });
+        BotChat.App({
+            user: user,
+            botConnection: botConnection,
+            bot: { id: virtualAssistantModel.botId, name: 'InnovateChatbot' },
+            resize: 'detect'
+        }, document.getElementById("bot"));
+        botConnection
+            .postActivity({
+                from: user,
+                type : 'message',
+                name: 'requestWelcomeDialog',
+                text: 'Hello!',
+                value: 'WelcomeEvent'
+            }).subscribe(function (id) {console.log('"trigger requestWelcomeDialog" sent');
+        });
+    })()
+</script>
+
+</body>
+</html>
+

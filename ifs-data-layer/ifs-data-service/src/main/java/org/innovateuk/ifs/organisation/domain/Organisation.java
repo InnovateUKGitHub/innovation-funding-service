@@ -44,7 +44,7 @@ public class Organisation {
     private List<OrganisationAddress> addresses = new ArrayList<>();
 
     //Only used by queries.
-    @OneToMany(mappedBy="organisationId")
+    @OneToMany(mappedBy = "organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation")
@@ -82,6 +82,10 @@ public class Organisation {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
