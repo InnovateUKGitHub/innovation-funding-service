@@ -535,7 +535,7 @@ the user is able to see the Grant Offer letter page
 
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css = button[name = "removeSignedGrantOfferLetterClicked"]
-    the user should see the element  jQuery = label:contains("Upload")
+    Wait Until Page Contains Without Screenshots    No file currently uploaded.
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css = .govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id = submit-gol-for-review

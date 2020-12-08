@@ -935,8 +935,7 @@ Project manager uploads new GOL for review
     [Documentation]   IFS-8737
     Given log in as a different user         &{ktpLeadApplicantCredentials}
     When the user navigates to the page      ${server}/project-setup/project/${ProjectID}/offer
-    And the user clicks the button/link      name = removeSignedGrantOfferLetterClicked
-    And the user should see the element      jQuery = label:contains("Upload")
+    And the user removes uploaded file       removeSignedGrantOfferLetterClicked   No file currently uploaded.
     And the user uploads the file            signedGrantOfferLetter    ${gol_pdf}
     Then the user should see the element     link = GOL_template.pdf (opens in a new window)
 
@@ -944,8 +943,7 @@ Finance contact uploads new Annex for review
     [Documentation]   IFS-8737
     Given log in as a different user         ${leadTeamMember}   ${correct_password}
     When the user navigates to the page      ${server}/project-setup/project/${ProjectID}/offer
-    And the user clicks the button/link      name = removeSignedAdditionalContractFileClicked
-    And the user should see the element      jQuery = label:contains("Upload")
+    And the user removes uploaded file       removeSignedAdditionalContractFileClicked   No file currently uploaded.
     And the user uploads the file            signedAdditionalContract    ${valid_pdf}
     Then the user should see the element     link = testing.pdf (opens in a new window)
 
@@ -962,8 +960,8 @@ Internal user approves GOL and Annex documents
     [Documentation]   IFS-8737
     When the internal user approve the GOL     ${ProjectID}
     Then the user should see the element       jQuery = h2:contains("These documents have been approved.")
-    And the user should see the element        jQuery = h2:contains("Signed grant offer letter") ~ p:contains("GOL_template.pdf (opens in a new window)")
-    And the user should see the element        jQuery = h2:contains("Signed annex") ~ p:contains("testing.pdf (opens in a new window)")
+    And the user should see the element        jQuery = h2:contains("Signed grant offer letter") ~ div p:contains("GOL_template.pdf (opens in a new window)")
+    And the user should see the element        jQuery = h2:contains("Signed annex") ~ div p:contains("testing.pdf (opens in a new window)")
 
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
@@ -1400,3 +1398,8 @@ adds a new team member and accept invitation
     the user reads his email and clicks the link       ${leadTeamMember}    Please verify your email address    Once verified you can sign into your account
     the user clicks the button/link                    link = Sign in
     Logging in and Error Checking                      ${leadTeamMember}   ${correct_password}
+
+the user removes uploaded file
+    [Arguments]   ${selector}  ${message}
+    the user clicks the button/link                 name = ${selector}
+    Wait Until Page Contains Without Screenshots    ${message}
