@@ -3,7 +3,7 @@
 
 Dear ${notificationTarget.name},
 
-${applicationName}
+${competitionName}
 Your application number: ${applicationId}
 
 We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme, administered by Innovate UK, part of UK Research and Innovation.
