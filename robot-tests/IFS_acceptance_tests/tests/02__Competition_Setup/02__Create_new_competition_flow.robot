@@ -166,11 +166,12 @@ Initial Details - drop down menu is populated with comp admin users
     When the user should see the option in the drop-down menu    John Doe    name = executiveUserId
     And the user should see the option in the drop-down menu     Robert Johnson    name = executiveUserId
 
-Initial details - Comp Type and Date should not be editable
-    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
+Initial details - Comp Type, funding rule and Date should not be editable
+    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892,  IFS-8779
     [Tags]
     And the user should not see the element   id = competitionTypeId
     And the user should not see the element   id = openingDateDay
+    And the user should not see the element   id = fundingRule
     And the user clicks the button/link       jQuery = button:contains("Done")
 
 Initial details - should have a green check
