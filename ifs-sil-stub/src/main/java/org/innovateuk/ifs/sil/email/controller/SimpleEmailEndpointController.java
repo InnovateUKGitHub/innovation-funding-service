@@ -84,6 +84,7 @@ public class SimpleEmailEndpointController {
                 props.put("mail.smtp.auth", auth);
                 props.put("mail.smtp.starttls.enable", true);
                 props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                props.put("mail.smtp.ssl.checkserveridentity", true);
             }
 
             try {
