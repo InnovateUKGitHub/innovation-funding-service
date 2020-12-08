@@ -22,7 +22,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -64,7 +64,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -127,7 +127,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(Collections.singletonList(processRole)));
         when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(Collections.singletonList(applicationFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(Collections.singletonList(organisation)));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(new HashMap<>()));
@@ -193,7 +193,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBaseProcessRole, partnerProcessRole)));
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBaseProcessRole, partnerProcessRole)));
         when(applicationFinanceRestService.getFinanceTotals(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBaseFinance, partnerFinance)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(newArrayList(knowledgeBase, partner)));
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(new HashMap<>()));
