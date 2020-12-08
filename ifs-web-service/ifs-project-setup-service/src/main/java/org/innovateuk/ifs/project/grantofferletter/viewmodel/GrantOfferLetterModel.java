@@ -136,7 +136,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowGrantOfferLetterRejectedMessage() {
 
-        if (!isProjectManager() && !isFinanceContact()) {
+        if (!isProjectManager() && !(isLeadPartner() && isFinanceContact())) {
             return false;
         }
 
@@ -174,7 +174,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         }
 
         if (isGrantOfferLetterRejected()) {
-            return isProjectManager();
+            return isProjectManager() || isFinanceContact();
         }
 
         if (!isSubmitted()) {

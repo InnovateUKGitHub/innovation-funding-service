@@ -140,7 +140,7 @@
                     </div>
                 </th:block>
 
-                <th:block th:if="${model.additionalContractFile != null and model.financeContact and !model.useDocusign}">
+                <th:block th:if="${model.additionalContractFile != null and (model.financeContact or model.projectManager) and !model.useDocusign}">
                     <h2 class="govuk-heading-m">Annex</h2>
                     <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
                     <p class="govuk-body">
@@ -190,28 +190,6 @@
                     </div>
                 </th:block>
 
-                <th:block th:if="${model.additionalContractFile != null and model.projectManager and !model.financeContact and !model.useDocusign}">
-                    <h2 class="govuk-heading-m">Annex</h2>
-                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
-                    <p class="govuk-body">
-                        <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
-                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
-                           class="govuk-link"
-                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
-                    </p>
-
-                    <th:block th:if="${model.signedAdditionalContractFile != null && model.signedAdditionalContractFile.filename != null && !model.grantOfferLetterRejected}">
-                        <h2 class="govuk-heading-m">Signed annex</h2>
-                        <p class="govuk-body">
-                            <a th:href="@{/project/{id}/offer/signed-additional-contract(id=${model.projectId})}"
-                               th:text="|${model.signedAdditionalContractFile.filename} (opens in a new window)|"
-                               class="govuk-link"
-                               target="_blank">Signed annex.PDF</a>
-                        </p>
-                    </th:block>
-
-                </th:block>
-
                 <th:block th:if="${model.projectManager and !model.useDocusign and model.grantOfferLetterSent}">
                     <a th:attr="aria-hidden=${!model.showSubmitButton}"
                        data-js-toggle-on-file-upload="grant-letter-upload"
@@ -225,12 +203,6 @@
             </th:block>
 
             <th:block th:if="${!model.leadPartner}">
-                <th:block th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">
-                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|The ${model.title.toLowerCase()} has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.|"></p>
-                    <p class="govuk-body" th:unless="${model.ktp}" th:text="|A copy of the unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
-                    <p class="govuk-body" th:if="${model.ktp}" th:text="|The ${model.title.toLowerCase()} has been created using the information provided during project setup.|"></p>
-                    <p class="govuk-body" th:if="${model.ktp}">You may download the unsigned documents below for your records.</p>
-                </th:block>
 
                 <h2 class="govuk-heading-m" th:text="|${model.title}|"></h2>
                 <p class="govuk-body" th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">This document is awaiting signature by the project manager.</p>
