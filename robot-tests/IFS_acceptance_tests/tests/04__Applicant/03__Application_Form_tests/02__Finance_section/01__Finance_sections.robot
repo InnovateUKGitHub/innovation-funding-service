@@ -108,7 +108,7 @@ Compadmin can open the jes-file in applications
     And the user should not see an error in the page
     And the user navigates to the page     ${openCompetitionManagementRTO}
 
-File upload mandatory for Academic partner to mark section as comple
+File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469  IFS-2879
     [Tags]  HappyPath
     [Setup]  Log in as a different user               &{collaborator2_credentials}
