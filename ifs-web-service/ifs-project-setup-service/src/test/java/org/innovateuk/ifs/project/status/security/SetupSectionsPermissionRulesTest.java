@@ -126,7 +126,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                 setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation),
                 () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(activeProject.getId()), user));
-        verify(projectService, times(2)).getById(activeProject.getId());
+        verify(projectService).getById(activeProject.getId());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) ->
                 setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation),
                 () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(activeProject.getId()), user));
-        verify(projectService, times(2)).getById(activeProject.getId());
+        verify(projectService).getById(activeProject.getId());
     }
 
     private void setUpPartnerProjectLocationRequiredMocking() {
@@ -256,14 +256,14 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void monitoringOfficerSectionAccessUnavailableForWithdrawnProject() {
         setUpPartnerProjectLocationRequiredMocking();
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectService, times(2)).getById(withdrawnProject.getId());
+        verify(projectService).getById(withdrawnProject.getId());
     }
 
     @Test
     public void projectLocationSectionAccessUnavailableForWithdrawnProject() {
         setUpPartnerProjectLocationRequiredMocking();
         assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
-        verify(projectService, times(2)).getById(withdrawnProject.getId());
+        verify(projectService).getById(withdrawnProject.getId());
     }
 
     @Test
