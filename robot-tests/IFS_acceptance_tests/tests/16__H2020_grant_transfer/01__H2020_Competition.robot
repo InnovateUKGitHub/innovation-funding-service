@@ -247,7 +247,6 @@ The user is able to complete Initial details section
     the user enters text to a text field                            id = openingDateYear     ${nextyear}
     the user selects the option from the drop-down menu             Ian Cooper    id = innovationLeadUserId
     the user selects the option from the drop-down menu             John Doe   id = executiveUserId
-#    the user clicks the button twice                                css = label[for = "stateAid2"]
     the user clicks the button/link                                 jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
@@ -260,7 +259,6 @@ The user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
-#    the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 The user completes funding information
     the user clicks the button/link         id = generate-code

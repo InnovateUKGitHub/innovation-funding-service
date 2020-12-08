@@ -54,7 +54,6 @@ Initial details: server-side validations
     And the user should see a field and summary error     ${enter_a_valid_date}
     And the user should see a field and summary error     Please select an Innovation Lead.
     And the user should see a field and summary error     Please select a Portfolio Manager.
-#    And the user should see a field and summary error     Please select a state aid option.
 
 Initial details: client-side validations
     [Documentation]  INFUND-2982  INFUND-3888  IFS-4982  IFS-8779
@@ -75,8 +74,6 @@ Initial details: client-side validations
     And the user enters text to a text field                    id = openingDateMonth    12
     And the user enters text to a text field                    id = openingDateYear  ${nextYear}
     Then the user should not see the error any more             ${enter_a_valid_date}
-#    When the user clicks the button twice                       css = label[for="stateAid2"]
-#    Then the user should not see the error any more             Please select a state aid option.
     When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
     Then the user should not see the error any more             Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id = executiveUserId

@@ -140,7 +140,6 @@ Initial details - User enters valid values and marks as done
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
-#    And the user clicks the button twice                        css = label[for = "stateAid2"]
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
 
@@ -942,7 +941,6 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
-#    the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 the comp admin creates competition
     the user navigates to the page        ${CA_UpcomingComp}
