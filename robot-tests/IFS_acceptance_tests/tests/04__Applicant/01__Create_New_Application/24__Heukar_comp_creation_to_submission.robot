@@ -94,7 +94,9 @@ the user successfully marks Application details as complete
 the user successfully completes application
     the user select the competition and starts application      ${heukarCompetitionName}
     user selects where is organisation based                    isNotInternational
-    the user clicks the button/link                             link = Application details
+    ${status}    ${value} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = input ~ label:contains("Organisation2")
+    Run Keyword If  '${status}' == 'PASS'  the user selects the radio button     selectedOrganisationId  selectedOrganisationId1
+    ...                             ELSE   the user clicks the button/link       link = Application details
     the user completes Heukar Application details               ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the applicant marks EDI question as complete
