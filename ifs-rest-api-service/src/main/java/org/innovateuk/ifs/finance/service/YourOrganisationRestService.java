@@ -37,5 +37,5 @@ public interface YourOrganisationRestService {
             long organisationId,
             OrganisationFinancesKtpYearsResource finances);
 
-    ServiceResult<Boolean> isShowStateAidAgreement(long targetId, long organisationId);
+    ServiceResult<Boolean> isShowAidAgreement(long targetId, long organisationId);
 }
