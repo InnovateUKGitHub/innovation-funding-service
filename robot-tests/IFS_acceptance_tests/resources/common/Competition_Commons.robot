@@ -290,7 +290,8 @@ the assessed questions are marked complete(EOI type)
     the user should see the element      jQuery = button:contains("Add question")
 
 the assessed questions are marked complete(HEUKAR type)
-    the user marks each question as complete    A HEUKAR question
+    :FOR   ${ELEMENT}   IN    @{HEUKAR_questions}
+     \    the user marks each question as complete    ${ELEMENT}
     the user should see the element      jQuery = button:contains("Add question")
 
 the user marks the Application details section as complete
@@ -361,8 +362,7 @@ the user fills in the Finances questions
 the user fills in the Finances questions without growth table
     [Arguments]  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
-    run keyword If ${compType_HEUKAR}  the user selects the radio button  applicationFinanceType  NO_FINANCES
-    ... ELSE the user selects the radio button     applicationFinanceType  STANDARD
+    the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}
     the user enters text to a text field  css = .editor  Those are the rules that apply to Finances

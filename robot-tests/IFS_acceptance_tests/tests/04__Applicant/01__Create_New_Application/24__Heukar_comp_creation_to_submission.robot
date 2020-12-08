@@ -1,11 +1,12 @@
 *** Settings ***
 Documentation     IFS-8638: Create new competition type
 ...
-...               IFS-8769: Email notification for application submission
-
+...               IFS-8751: Increase project duration in months
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
@@ -32,11 +33,16 @@ Comp admin can view Heukar competition type in Initial details read only view
     Then the user can view Heukar competition type in Initial details read only view
 
 Comp admin creates Heukar competition
-    [Documentation]  IFS-8769
+    [Documentation]  IFS-8751
     Given the user clicks the button/link                             link = Back to competition details
     Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  2  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
 
+Lead applicant can submit application
+    [Documentation]  IFS-8751
+    Given log in as a different user     &{lead_applicant_credentials}
+    When the user successfully completes application
+    Then the user can submit the application
 
 The applicant should get a confirmation email after application submission
     [Documentation]    IFS-8769
@@ -76,6 +82,41 @@ the competition admin creates HEUKAR competition
 Requesting IDs of this application
     ${ApplicationID} =  get application id by name    ${HeukarApplicationTitle}
     Set suite variable    ${ApplicationID}
+
+user selects where is organisation based
+    [Arguments]  ${org_type}
+    the user selects the radio button     international  ${org_type}
+    the user clicks the button/link       id = international-organisation-cta
+    the user clicks the button/link       id = save-organisation-button
+
+the user completes Heukar Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
+    the user should see the element             jQuery = h1:contains("Application details")
+    the user enters text to a text field        id = name  ${appTitle}
+    the user enters text to a text field        id = startDate  ${tomorrowday}
+    the user enters text to a text field        css = #application_details-startdate_month  ${month}
+    the user enters text to a text field        css = #application_details-startdate_year  ${nextyear}
+    the user should see the element             jQuery = label:contains("Project duration in months")
+    the user enters text to a text field        css = [id="durationInMonths"]  ${projectDuration}
+    the user clicks the button twice            css = label[for="resubmission-no"]
+    the user successfully marks Application details as complete
+
+the user successfully marks Application details as complete
+    the user clicks the button/link             id = application-question-complete
+    the user clicks the button/link             link = Back to application overview
+    the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
+
+the user successfully completes application
+    the user select the competition and starts application      ${heukarCompetitionName}
+    user selects where is organisation based                    isNotInternational
+    ${status}    ${value} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = input ~ label:contains("Organisation2")
+    Run Keyword If  '${status}' == 'PASS'  the user selects the radio button     selectedOrganisationId  selectedOrganisationId1
+    ...                             ELSE   the user clicks the button/link       link = Application details
+    the user completes Heukar Application details               ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the applicant completes Application Team
+    the applicant marks EDI question as complete
+    the lead applicant fills all the questions and marks as complete(heukar)
+    the user accept the competition terms and conditions        Back to application overview
 
 Custom Suite Setup
     Set predefined date variables

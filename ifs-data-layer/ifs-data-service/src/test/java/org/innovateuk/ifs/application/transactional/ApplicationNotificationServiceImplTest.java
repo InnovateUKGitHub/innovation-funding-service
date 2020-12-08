@@ -18,6 +18,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -599,7 +600,7 @@ public class ApplicationNotificationServiceImplTest {
         );
 
         Notification notification = new Notification(
-                systemNotificationSourceMock,
+                systemNotificationSource,
                 notificationTarget,
                 KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
                 asMap("name", users.get(0).getName(),
@@ -609,19 +610,19 @@ public class ApplicationNotificationServiceImplTest {
                         "dashboardUrl", WEB_BASE_URL)
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepository.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
 
-        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationOneId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
 
         inOrder.verifyNoMoreInteractions();
 
