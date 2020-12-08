@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private ApplicationRestService applicationRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -34,7 +34,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
         Optional<ProcessRoleResource> currentApplicantRole = getCurrentUsersRole(processRoles, user);
 
         return new ApplicationFinanceSummaryViewModel(competition, financeSummaryTableViewModelPopulator.populateAllOrganisations(application, competition, processRoles, user),

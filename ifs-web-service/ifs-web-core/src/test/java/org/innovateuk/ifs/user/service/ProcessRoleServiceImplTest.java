@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleService> {
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     protected ProcessRoleService supplyServiceUnderTest() { return new ProcessRoleServiceImpl(); }
 
@@ -28,12 +28,12 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
         long applicationId = 1;
         List<ProcessRoleResource> resources = newArrayList(new ProcessRoleResource());
         RestResult<List<ProcessRoleResource>> restResult = restSuccess(resources);
-        when(userRestService.findAssignableProcessRoles(applicationId)).thenReturn(restResult);
+        when(processRoleRestService.findAssignableProcessRoles(applicationId)).thenReturn(restResult);
 
         List<ProcessRoleResource> actualResources = service.findAssignableProcessRoles(applicationId);
 
-        verify(userRestService, times(1)).findAssignableProcessRoles(applicationId);
-        verifyNoMoreInteractions(userRestService);
+        verify(processRoleRestService, times(1)).findAssignableProcessRoles(applicationId);
+        verifyNoMoreInteractions(processRoleRestService);
         assertEquals(resources, actualResources);
     }
 
@@ -44,13 +44,13 @@ public class ProcessRoleServiceImplTest extends BaseServiceUnitTest<ProcessRoleS
         RestResult<ProcessRoleResource> restResult = restSuccess(resource);
         Future future = mock(Future.class);
         when(future.get()).thenReturn(restResult);
-        when(userRestService.findProcessRoleById(id)).thenReturn(future);
+        when(processRoleRestService.findProcessRoleById(id)).thenReturn(future);
 
         Future<ProcessRoleResource> returnedResponse = service.getById(id);
         ProcessRoleResource actualResources = returnedResponse.get();
 
-        verify(userRestService, times(1)).findProcessRoleById(id);
-        verifyNoMoreInteractions(userRestService);
+        verify(processRoleRestService, times(1)).findProcessRoleById(id);
+        verifyNoMoreInteractions(processRoleRestService);
         assertEquals(resource, actualResources);
     }
 }

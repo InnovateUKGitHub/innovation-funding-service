@@ -14,14 +14,13 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -58,7 +57,7 @@ public class YourFundingController {
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private YourFundingFormValidator yourFundingFormValidator;
@@ -397,6 +396,6 @@ public class YourFundingController {
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess().getId();
     }
 }

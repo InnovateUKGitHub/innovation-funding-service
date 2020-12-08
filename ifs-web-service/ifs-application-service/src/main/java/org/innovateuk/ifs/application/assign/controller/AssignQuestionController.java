@@ -12,7 +12,7 @@ import org.innovateuk.ifs.navigation.PageHistory;
 import org.innovateuk.ifs.navigation.PageHistoryService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
@@ -39,7 +38,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 public class AssignQuestionController {
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -73,7 +72,7 @@ public class AssignQuestionController {
                          Model model,
                          UserResource loggedInUser) {
         Supplier<String> failureView = () -> doViewAssignPage(model, questionId, applicationId);
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+        ProcessRoleResource assignedBy = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> assignResult = questionService.assign(questionId, applicationId, form.getAssignee(), assignedBy.getId());
 
