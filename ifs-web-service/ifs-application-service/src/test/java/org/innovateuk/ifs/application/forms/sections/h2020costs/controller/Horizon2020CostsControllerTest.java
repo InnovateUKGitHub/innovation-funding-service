@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -52,7 +52,7 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
     private SectionStatusRestService sectionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Test
     public void viewYourProjectCosts() throws Exception {
@@ -80,7 +80,7 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
     @Test
     public void edit() throws Exception {
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsInComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess());
 
@@ -99,7 +99,7 @@ public class Horizon2020CostsControllerTest extends AbstractAsyncWaitMockMVCTest
     public void complete() throws Exception {
         ProcessRoleResource processRole = newProcessRoleResource().withId(PROCESS_ROLE_ID).build();
         when(saver.save(any(Horizon2020CostsForm.class), eq(APPLICATION_ID), eq(ORGANISATION_ID))).thenReturn(serviceSuccess());
-        when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
+        when(processRoleRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(processRole));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, processRole.getId())).thenReturn(restSuccess(new ValidationMessages()));
 

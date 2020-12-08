@@ -40,8 +40,8 @@ public class ApplicationYourOrganisationViewModelPopulator {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        boolean showStateAidAgreement =
-                yourOrganisationRestService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
+        boolean showAidAgreement =
+                yourOrganisationRestService.isShowAidAgreement(applicationId, organisationId).getSuccess();
 
         List<SectionResource> fundingSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES);
 
@@ -58,6 +58,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
             showOrganisationSizeAlert = fundingSectionComplete;
         }
 
-        return new YourOrganisationViewModel(applicationId, competition.getName(), showStateAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
+        return new YourOrganisationViewModel(applicationId, competition.getName(), showAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
     }
 }

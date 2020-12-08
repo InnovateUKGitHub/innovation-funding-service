@@ -91,7 +91,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
     private GolTemplateResource golTemplate;
-    private Boolean stateAid;
+    private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
     private Set<Long> grantClaimMaximums;
     private ApplicationFinanceType applicationFinanceType;
@@ -137,6 +137,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isH2020() {
         return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
+    }
+
+    @JsonIgnore
+    public boolean isHeukar() {
+        return competitionTypeEnum == CompetitionTypeEnum.HEUKAR;
     }
 
     @JsonIgnore
@@ -674,12 +679,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(final Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -850,7 +855,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(stateAid, that.stateAid)
+                .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
@@ -913,7 +918,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
-                .append(stateAid)
+                .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)

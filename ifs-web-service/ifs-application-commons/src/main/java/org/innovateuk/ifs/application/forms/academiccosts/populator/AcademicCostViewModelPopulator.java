@@ -12,7 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class AcademicCostViewModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     public AcademicCostViewModel populate(long organisationId, long applicationId, long sectionId, UserResource user) {
 
@@ -52,7 +52,7 @@ public class AcademicCostViewModelPopulator {
 
         boolean complete = completedSectionIds.contains(sectionId);
 
-        boolean userCanEdit = user.hasRole(Role.APPLICANT) && userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+        boolean userCanEdit = user.hasRole(Role.APPLICANT) && processRoleRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
                 .map(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .orElse(false);
         boolean open = userCanEdit && application.isOpen() && competition.isOpen();

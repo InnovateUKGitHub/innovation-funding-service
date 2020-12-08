@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,20 +22,20 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 public class ApplicationTermsPartnerModelPopulator {
 
     private final SectionService sectionService;
-    private final UserRestService userRestService;
+    private final ProcessRoleRestService processRoleRestService;
     private final OrganisationService organisationService;
 
     public ApplicationTermsPartnerModelPopulator(SectionService sectionService,
-                                                 UserRestService userRestService,
+                                                 ProcessRoleRestService processRoleRestService,
                                                  OrganisationService organisationService) {
         this.sectionService = sectionService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.organisationService = organisationService;
     }
 
     public ApplicationTermsPartnerViewModel populate(ApplicationResource application, long questionId) {
         long termsAndConditionsSectionId = sectionService.getTermsAndConditionsSection(application.getCompetition()).getId();
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         SortedSet<OrganisationResource> organisations = organisationService.getApplicationOrganisations(userApplicationRoles);
 
         long leadOrganisationId = userApplicationRoles
