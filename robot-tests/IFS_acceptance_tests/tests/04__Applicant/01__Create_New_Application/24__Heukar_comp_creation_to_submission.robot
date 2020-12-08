@@ -3,6 +3,8 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8751: Increase project duration in months
 ...
+...               IFS-8769: Email notification for application submission
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -14,10 +16,10 @@ Resource          ../../../resources/keywords/05__Email_Keywords.robot
 
 *** Variables ***
 ${heukarCompTypeSelector}                     dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
-${HeukarApplicationSubmissionEmailSubject}    ${ApplicationID}: confirmation of your Horizon Europe UK Application Registration
-${HuekarApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${HeukarEmail}                                steve.smith@empire.com
-${HeukarApplicationTitle}                     Heukar new application
+${heukarApplicationTitle}                     Heukar new application
+${heukarApplicationSubmissionEmailSubject}    ${ApplicationID}: confirmation of your Horizon Europe UK Application Registration
+${huekarApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${heukarEmail}                                steve.smith@empire.com
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
@@ -44,12 +46,10 @@ Lead applicant can submit application
     When the user successfully completes application
     Then the user can submit the application
 
-The applicant should get a confirmation email after application submission
+Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-8769
-    [Setup]  Requesting IDs of this application
-    Then the user reads his email     ${HeukarEmail}  ${HeukarApplicationSubmissionEmailSubject}  ${HuekarApplicationSubmissionEmail}
-
-
+    Given Requesting IDs of this application
+    Then the user reads his email     ${heukarEmail}  ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
@@ -80,7 +80,7 @@ the competition admin creates HEUKAR competition
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 Requesting IDs of this application
-    ${ApplicationID} =  get application id by name    ${HeukarApplicationTitle}
+    ${ApplicationID} =  get application id by name    ${heukarApplicationName}
     Set suite variable    ${ApplicationID}
 
 user selects where is organisation based
