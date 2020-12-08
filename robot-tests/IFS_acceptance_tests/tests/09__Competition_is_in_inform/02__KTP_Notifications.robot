@@ -19,8 +19,6 @@ ${ktp_PartnerOrgName}               Ludlow
 ${ktp_PartnerOrgId}                 ${organisation_ids["${ktp_PartnerOrgName}"]}
 ${ktp_KTA_email}                    hermen.mermen@ktn-uk.test
 &{ktp_KTA_Credentials}              email=${ktp_KTA_email}    password=${short_password}
-${ifs_Admin_email}                  arden.pimenta@innovateuk.test
-&{ifs_Admin_Credentials}            email=${ifs_Admin_email}     password=${short_password}
 ${ktp_Lead_email}                   bob@knowledge.base
 &{ktp_Lead_Credentials}             email=${ktp_Lead_email}    password=${short_password}
 ${ktp_Partner_email}                jessica.doe@ludlow.co.uk
@@ -29,8 +27,9 @@ ${ktp_Partner_email}                jessica.doe@ludlow.co.uk
 *** Test Cases ***
 Internal user marks the KTP application as unsuccessful
     [Documentation]  IFS-8549
-    When the user navigates to the page                                        ${server}/management/competition/${KTP_competitonId}
-    Then the user makes the application unsuccessful and sends notification
+    Given the user navigates to the page                                        ${server}/management/competition/${KTP_competitonId}
+    When the user makes the application unsuccessful and sends notification
+    Then Project users checks their email
 
 Internal user checks the status of the application
     [Documentation]  IFS-8549
@@ -63,23 +62,9 @@ The KTA checks the status of the application
     And the project user is unable to make any changes
     And the user is able to view the application overview page
 
-Project users checks their email
-    [Documentation]  IFS-8549
-    The user reads his email     &{ktp_KTA_email}               KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     &{ktp_Partner_email}           KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     &{ktp_Lead_email}              KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     bobs.mate@knowledge.base       KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-    The user reads his email     kevin.summers@ludlow.co.uk     KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
-
 *** Keywords ***
 Custom suite setup
     the user logs-in in new browser   &{ifs_admin_user_credentials}
-
-Requesting KTP Organisation IDs
-    ${ktpLeadOrgID} =  get organisation id by name     ${ktpLeadOrgName}
-    Set suite variable      ${ktpLeadOrgID}
-    ${ktpPartnerOrgId} =  get organisation id by name    ${ktpPartnerOrgName}
-    Set suite variable      ${ktpPartnerOrgId}
 
 the user makes the application unsuccessful and sends notification
      the user clicks the button/link    link = Input and review funding decision
@@ -152,3 +137,10 @@ the user is able to view the application overview page
     the user clicks the button/link         link = view application overview
     the user should see the element         jQuery = h1:contains("Application overview")
     the user should see the element         jQuery = dt:contains("Application name:") ~ dd:contains("${KTP_application}")
+
+Project users checks their email
+    The user reads his email     ${ktp_KTA_email}               KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_Partner_email}           KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+    The user reads his email     ${ktp_Lead_email}              KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+    The user reads his email     bobs.mate@knowledge.base       KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+    The user reads his email     kevin.summers@ludlow.co.uk     KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
