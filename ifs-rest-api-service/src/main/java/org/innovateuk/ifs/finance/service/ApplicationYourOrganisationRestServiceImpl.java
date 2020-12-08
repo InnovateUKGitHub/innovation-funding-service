@@ -80,7 +80,7 @@ public class ApplicationYourOrganisationRestServiceImpl extends BaseRestService 
     }
 
     @Override
-    public ServiceResult<Boolean> isShowStateAidAgreement(long applicationId, long organisationId) {
+    public ServiceResult<Boolean> isShowAidAgreement(long applicationId, long organisationId) {
         String url = format(baseUrl + "/show-state-aid", applicationId, organisationId);
         return getWithRestResult(url, Boolean.class).toServiceResult();
     }
