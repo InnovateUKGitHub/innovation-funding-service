@@ -102,6 +102,17 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return title;
     }
 
+    public String getDocumentName() {
+        return title.toLowerCase();
+    }
+
+    public String getFullDocumentName() {
+        if ("Grant offer letter".equals(title)) {
+            return "grant offer letter (GOL)";
+        }
+        return getDocumentName();
+    }
+
     public boolean isProcurement() {
         return procurement;
     }
