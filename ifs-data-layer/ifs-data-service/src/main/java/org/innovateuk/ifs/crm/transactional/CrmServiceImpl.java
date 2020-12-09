@@ -14,8 +14,12 @@ import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -34,6 +38,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private SilCrmEndpoint silCrmEndpoint;
+
+    @Value("${ifs.new.organisation.search.enabled:false}")
+    private Boolean newOrganisationSearchEnabled;
 
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
@@ -84,6 +91,12 @@ public class CrmServiceImpl implements CrmService {
         silOrganisation.setName(organisation.getName());
         silOrganisation.setRegistrationNumber(organisation.getCompaniesHouseNumber());
         silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
+
+        if (newOrganisationSearchEnabled) {
+            silOrganisation.setDateOfIncorporation(LocalDate.now());
+            silOrganisation.setSicCodes(Collections.emptyList());
+            silOrganisation.setExecutiveOfficers(Collections.emptyList());
+        }
 
         silContact.setOrganisation(silOrganisation);
 
