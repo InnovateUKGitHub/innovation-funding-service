@@ -41,7 +41,9 @@ public class OrganisationDataBuilderService {
 
     public void createOrganisation(CsvUtils.OrganisationLine line) {
         AddressResource address = null;
-        if (line.addressType.contains(OrganisationAddressType.INTERNATIONAL) || line.addressType.contains(OrganisationAddressType.KNOWLEDGE_BASE)) {
+        if (line.addressType.contains(OrganisationAddressType.INTERNATIONAL) ||
+                line.addressType.contains(OrganisationAddressType.KNOWLEDGE_BASE) ||
+                line.addressType.contains(OrganisationAddressType.REGISTERED)) {
             address = newAddressResource().
                     withAddressLine1(line.addressLine1).
                     withAddressLine2(line.addressLine2).
@@ -58,7 +60,12 @@ public class OrganisationDataBuilderService {
                         line.isInternational,
                         line.internationalRegistrationNumber,
                         address,
-                        line.addressType);
+                        line.addressType,
+                        line.dateOfIncorporation,
+                        line.sicCodes,
+                        line.organisationNumber,
+                        line.executiveOfficers
+                );
 
         organisation.build();
     }
@@ -66,6 +73,4 @@ public class OrganisationDataBuilderService {
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
     }
-
-
 }
