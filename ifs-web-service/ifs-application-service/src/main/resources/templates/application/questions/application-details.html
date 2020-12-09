@@ -74,7 +74,7 @@
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__durationInMonths__}')} ? 'govuk-form-group--error'">
                     <label for="durationInMonths" class="govuk-label">
-                        Duration in months
+                        Project duration in months
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='durationInMonths')" />
                     <input class="govuk-input govuk-input--width-2"
@@ -323,7 +323,7 @@
                                 <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
                                 <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
                             </th:block>
-                            <dt>Duration in months</dt>
+                            <dt>Project duration in months</dt>
                             <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
                             <th:block th:if="${model.canSelectInnovationArea}">
                                 <dt>Innovation area</dt>

@@ -608,7 +608,7 @@ the project finance user cannot see the project start date
     When the user navigates to the page                ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user clicks the button/link               link = ${ApplicationID}
     And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
-    And the user should see the element                jQuery = dt:contains("Duration in months")
+    And the user should see the element                jQuery = dt:contains("Project duration in months")
 
 The lead cannot view the project start date and duration and can see the correspondance address
     [Documentation]  IFS-7805 IFS-8070 IFS-8116
