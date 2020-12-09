@@ -108,7 +108,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
             return false;
         }
 
-        return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
+        return true;
     }
 
     public boolean isApproved(Project project) {
