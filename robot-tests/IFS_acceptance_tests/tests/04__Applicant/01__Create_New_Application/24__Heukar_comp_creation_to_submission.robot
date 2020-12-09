@@ -20,7 +20,6 @@ ${heukarApplicationName}                      Heukar application
 ${newLeadApplicantEmail}                      tim.timmy@heukar.com
 ${heukarApplicationSubmissionEmailSubject}    ${ApplicationID}: confirmation of your Horizon Europe UK Application Registration
 ${huekarApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${heukarEmail}                                steve.smith@empire.com
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
@@ -50,7 +49,7 @@ Lead applicant can submit application
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-8769
     Given Requesting IDs of this application
-    Then the user reads his email     ${heukarEmail}  ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
+    Then the user reads his email     ${newLeadApplicantEmail}  ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
