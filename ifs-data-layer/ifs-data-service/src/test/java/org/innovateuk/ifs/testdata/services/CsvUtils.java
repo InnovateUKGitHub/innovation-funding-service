@@ -109,12 +109,6 @@ public class CsvUtils {
     public static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
         return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
     }
-    public static List<SicCodesLine> readSicCodes() {
-        return simpleMap(readCsvLines("sic-codes.csv"), SicCodesLine::new);
-    }
-    public static List<ExecutiveOfficersLine> readExecutiveOfficers() {
-        return simpleMap(readCsvLines("executive-officers.csv"), ExecutiveOfficersLine::new);
-    }
 
 
     public static List<ProjectLine> readProjects() {
