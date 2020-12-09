@@ -18,10 +18,13 @@
                 <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
             </div>
 
-            <th:block th:if="${model.settings.includeAllAssessorFeedback && section.name == 'Application questions'}">
-                <div class="govuk-!-margin-bottom-3">
-                    <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
-                </div>
+            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                <th:block th:if="${(model.shouldDisplayKtpApplicationFeedback && section.name == 'Score assessment')
+                || (!model.shouldDisplayKtpApplicationFeedback && section.name == 'Application questions')}">
+                    <div class="govuk-!-margin-bottom-3">
+                        <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
+                    </div>
+                </th:block>
             </th:block>
         </section>
 
@@ -32,7 +35,8 @@
     </th:block>
 
     <section class="portrait">
-        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
+        <th:block th:if="${model.settings.includeAllAssessorFeedback}" th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" />
+        <th:block th:if="${model.settings.includeAllSupporterFeedback}" th:insert="application/readonly/application-read-only :: supporter_feedback (${model})" />
     </section>
 </th:block>
 
@@ -43,7 +47,7 @@
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
 
-            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+            <th:block th:if="${model.settings.includeAllAssessorFeedback && !model.ktpCompetition}">
                 <p th:if="${section.name.equals('Project details')}" class="govuk-body govuk-hint">This section is not scored but will provide background to the project.</p>
                 <p th:if="${section.name.equals('Application questions')}" class="govuk-body govuk-hint">Each question has been assessed by several independent assessors.<br>They have given a score and feedback for each.</p>
 
@@ -58,7 +62,7 @@
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
                             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                                <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId})"/>
+                                <th:block th:if="${question.fragment == 'generic'}" th:insert="application/readonly/score-overview :: generic (${question}, ${model.settings.assessmentId}, )"/>
                             </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
@@ -102,10 +106,12 @@
                 </div>
             </div>
 
-            <th:block th:if="${model.settings.includeAllAssessorFeedback && section.name == 'Application questions'}">
-                <div class="govuk-!-margin-bottom-3">
-                    <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
-                </div>
+            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                <th:block th:if="${section.isScored()}">
+                    <div class="govuk-!-margin-bottom-3">
+                        <h3 class="govuk-heading-s alignright" th:text="|Application score: ${model.applicationScore}%|"></h3>
+                    </div>
+                </th:block>
                 <th:block th:if="${feedbackFragment != null && parentModel.interviewFeedbackViewModel != null && parentModel.interviewFeedbackViewModel.hasFeedback()}">
                     <th:block th:include="${feedbackFragment}" />
                 </th:block>
@@ -113,19 +119,113 @@
         </section>
     </th:block>
 
-    <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
+    <th:block th:unless="${model.shouldDisplayKtpApplicationFeedback}">
+        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
+    </th:block>
+
+    <th:block th:if="${model.shouldDisplayKtpApplicationFeedback}">
+        <th:block th:insert="application/readonly/application-read-only :: ktp_application_feedback (${model})" ></th:block>
+    </th:block>
 </th:block>
 
 <th:block th:fragment="assessor_feedback(model)">
     <div th:if="!${#lists.isEmpty(model.overallFeedbacks)}">
         <h2 class="govuk-heading-m govuk-!-margin-top-9">Assessor feedback</h2>
+        <th:block th:insert="application/readonly/application-read-only :: assessor_feedback_list (${model})" ></th:block>
+    </div>
+</th:block>
+
+<th:block th:fragment="assessor_feedback_list(model)">
+    <ul class="govuk-list boxed-list">
+        <li th:each="item, iterStat : ${model.overallFeedbacks}">
+            <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+            <div th:text="${item}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+        </li>
+    </ul>
+</th:block>
+
+<th:block th:fragment="supporter_feedback(model)">
+    <div th:if="!${#lists.isEmpty(model.assignments)}">
+        <h2 class="govuk-heading-m govuk-!-margin-top-9">Supporter feedback</h2>
+        <th:block th:insert="application/readonly/application-read-only :: supporter_feedback_list (${model})" ></th:block>
+    </div>
+</th:block>
+
+<th:block th:fragment="supporter_feedback_list(model)">
+    <th:block th:if="${model.accepted}">
         <ul class="govuk-list boxed-list">
-            <li th:each="item, iterStat : ${model.overallFeedbacks}">
-                <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
-                <div th:text="${item}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+            <h3 class="govuk-heading-s" th:text="|Interested (${model.AcceptedCount})|">Interested</h3>
+            <li>
+                <span th:each="assignment : ${model.assignments.get('accepted')}">
+                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
+                    <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+                </span>
             </li>
         </ul>
-    </div>
+    </th:block>
+    <th:block th:if="${model.declined}">
+        <h3 class="govuk-heading-s" th:text="|Declined (${model.DeclinedCount})|">Declined</h3>
+        <ul class="govuk-list boxed-list">
+            <li>
+                <span th:each="assignment : ${model.assignments.get('rejected')}">
+                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
+                    <div th:text="${assignment.comments}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+                </span>
+            </li>
+        </ul>
+    </th:block>
+    <th:block th:if="${model.pending}">
+        <h3 class="govuk-heading-s" th:text="|Didn&rsquo;t review (${model.PendingCount})|">Didn't review</h3>
+        <ul class="govuk-list boxed-list">
+            <li>
+                <span th:each="assignment : ${model.assignments.get('created')}">
+                    <h3 class="govuk-heading-s" th:text="${assignment.userSimpleOrganisation}">Organisation name</h3>
+                </span>
+            </li>
+        </ul>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="ktp_application_feedback(model)">
+    <section th:if="${model.settings.includeAllAssessorFeedback || model.settings.includeAllSupporterFeedback}">
+        <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">
+            <span>
+                Application feedback
+            </span>
+        </h2>
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-with-summary-sections">
+            <div class="govuk-accordion__section " th:if="!${#lists.isEmpty(model.overallFeedbacks)}">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-1">
+                            Assessor feedback
+                        </span>
+                    </h2>
+                </div>
+                <div id="accordion-with-summary-sections-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-with-summary-sections-heading-1">
+                    <label class="govuk-label">
+                        <span class="govuk-heading-s">Assessor feedback</span>
+                    </label>
+                    <th:block th:insert="application/readonly/application-read-only :: assessor_feedback_list (${model})" ></th:block>
+                </div>
+            </div>
+            <div class="govuk-accordion__section " th:if="!${#lists.isEmpty(model.assignments)}">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-2">
+                            Supporter feedback
+                        </span>
+                    </h2>
+                </div>
+                <div id="accordion-with-summary-sections-content-2" class="govuk-accordion__section-content" aria-labelledby="accordion-with-summary-sections-heading-2">
+                    <label class="govuk-label">
+                        <span class="govuk-heading-s">Supporter feedback</span>
+                    </label>
+                    <th:block th:insert="application/readonly/application-read-only :: supporter_feedback_list (${model})" ></th:block>
+                </div>
+            </div>
+        </div>
+    </section>
 </th:block>
 
 </html>

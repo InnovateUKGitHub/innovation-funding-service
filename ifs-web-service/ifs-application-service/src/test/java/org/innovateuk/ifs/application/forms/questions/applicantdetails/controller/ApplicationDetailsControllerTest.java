@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private QuestionStatusRestService questionStatusRestService;
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private ApplicationRestService applicationRestService;
     @Mock
@@ -207,7 +208,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(
@@ -257,7 +258,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
         when(applicationRestService.saveApplication(any(ApplicationResource.class))).thenReturn(restSuccess(ValidationMessages.noErrors()));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
-        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(
@@ -319,7 +320,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         long applicationId = 2L;
 
         ProcessRoleResource processRoleResource = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
+        when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess());
         ApplicationResource application = newApplicationResource().build();
         ApplicationDetailsViewModel viewModel = mock(ApplicationDetailsViewModel.class);
