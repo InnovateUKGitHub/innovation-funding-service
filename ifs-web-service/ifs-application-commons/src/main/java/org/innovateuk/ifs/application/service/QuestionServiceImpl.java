@@ -10,7 +10,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,14 +31,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     private QuestionRestService questionRestService;
     private QuestionStatusRestService questionStatusRestService;
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     public QuestionServiceImpl(QuestionRestService questionRestService,
                                QuestionStatusRestService questionStatusRestService,
-                               UserRestService userRestService) {
+                               ProcessRoleRestService processRoleRestService) {
         this.questionRestService = questionRestService;
         this.questionStatusRestService = questionStatusRestService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void assignQuestion(Long applicationId, UserResource user, HttpServletRequest request) {
-        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource assignedBy = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         assignQuestion(applicationId, request, assignedBy);
     }
 

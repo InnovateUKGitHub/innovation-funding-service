@@ -649,6 +649,17 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void viewGrantOfferLetterTemplate() throws Exception {
         long projectId = 123L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withGolTemplate("gol-template")
+                .build();
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        ProjectResource projectResource = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         AcademicFinanceTableModel academicTable = new AcademicFinanceTableModel(false,
                                                                                 asMap("orgName", projectFinance),
@@ -665,7 +676,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                              BigDecimal.ONE,
                                                                              BigDecimal.ZERO);
 
-        when(populator.populate(projectId))
+        when(populator.populate(projectResource, competition))
                 .thenReturn(new GrantOfferLetterTemplateViewModel(123L,
                                                                   "firstName",
                                                                   "lastName",
@@ -683,7 +694,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));
 
-        verify(populator).populate(projectId);
+        verify(populator).populate(projectResource, competition);
     }
 
     private ServiceResult<GrantOfferLetterStateResource> golState(GrantOfferLetterState state) {

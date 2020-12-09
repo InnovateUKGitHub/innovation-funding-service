@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
- * Resource representation of TermsAndConditions
+ * Resource representation of VersionedTemplate
  */
-public abstract class TermsAndConditionsResource implements Serializable {
+public abstract class VersionedTemplateResource implements Serializable {
 
     private Long id;
     protected String name;
@@ -17,10 +17,10 @@ public abstract class TermsAndConditionsResource implements Serializable {
     private String modifiedBy;
     private ZonedDateTime modifiedOn;
 
-    public TermsAndConditionsResource() {
+    public VersionedTemplateResource() {
     }
 
-    public TermsAndConditionsResource(String name, String template, int version) {
+    public VersionedTemplateResource(String name, String template, int version) {
         this.name = name;
         this.template = template;
         this.version = version;

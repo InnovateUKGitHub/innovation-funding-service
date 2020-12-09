@@ -13,6 +13,8 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...
 ...               IFS-8646 Comp 730 - App 97191 - Unable to access application
 ...
+...               IFS-8826 Applicants with assessor roles cannot add a funding level in an application
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -71,6 +73,16 @@ Marketing emails information should have updated on the profile
     When the user navigates to the page    ${edit_profile_url}
     Then Checkbox Should Be Selected       allowMarketingEmails
 
+The user with assessor and applicant roles can add a funding level in the application
+    [Documentation]   IFS-8826
+    Given log in as a different user                               jo.peters@ntag.example.com   ${short_password}
+    And the user select the competition and starts application     KTP new competition
+    And the user apply with knowledge base organisation            Reading    The University of Reading
+    When the user completes funding level in application
+    Then the user should see the element                           jQuery = dt:contains("Funding level")+dd:contains("100.00%")
+    And the user should see the element                            jQuery = p:contains("No other funding")
+
+
 *** Keywords ***
 the new application should be visible in the dashboard page
     the user clicks the button/link      link = Dashboard
@@ -115,3 +127,12 @@ the user is redirected to overview page if he has been there already
     the user should see the element      jQuery = h1:contains("Application overview")
     the user clicks the button/link      link = Application team
     logout as user
+
+the user completes funding level in application
+    the user clicks the button/link          link = Your project finances
+    the user clicks the button/link          link = Your funding
+    the user selects the radio button        requestingFunding   true
+    the user enters text to a text field     css = [name^="grantClaimPercentage"]  100
+    the user selects the radio button        otherFunding   false
+    the user clicks the button/link          jQuery = button:contains("Mark as complete")
+    the user clicks the button/link          link = Your funding

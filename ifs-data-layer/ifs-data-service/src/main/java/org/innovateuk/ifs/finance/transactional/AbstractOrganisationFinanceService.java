@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -18,7 +19,6 @@ import java.time.YearMonth;
 import java.util.Collections;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -166,8 +166,8 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     }
 
     @Override
-    public ServiceResult<Boolean> isShowStateAidAgreement(long targetId, long organisationId) {
-        return getStateAidEligibilityForCompetition(targetId).andOnSuccess(eligibility -> {
+    public ServiceResult<Boolean> isShowAidAgreement(long targetId, long organisationId) {
+        return getAidEligibilityForCompetition(targetId).andOnSuccess(eligibility -> {
             if (!eligibility) {
                 return serviceSuccess(false);
             }
@@ -176,9 +176,12 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     }
 
 
-    private ServiceResult<Boolean> getStateAidEligibilityForCompetition(long targetId) {
+    private ServiceResult<Boolean> getAidEligibilityForCompetition(long targetId) {
         return getCompetitionFromTargetId(targetId).
-                andOnSuccessReturn(competition -> TRUE.equals(competition.getStateAid()));
+                andOnSuccessReturn(competition ->
+                        competition.getFundingRules() != null
+                        && FundingRules.NOT_AID != competition.getFundingRules()
+                );
     }
 
     private ServiceResult<Boolean> isBusinessOrganisation(Long organisationId) {

@@ -421,7 +421,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
+        when(processRoleRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
         when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
 
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
@@ -478,7 +478,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
-        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(processRoleRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
@@ -529,7 +529,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
-        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(processRoleRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
@@ -590,11 +590,11 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentRestService.getByUserAndApplication(getLoggedInUser().getId(), applicationResource.getId())).thenReturn(restSuccess(singletonList(assessmentResource)));
-        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
+        when(processRoleRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         AcademicCostViewModel viewModel = mock(AcademicCostViewModel.class);
-        when(academicCostViewModelPopulator.populate(organisations.get(0).getId(), applicationResource.getId(), sectionResources.get(7).getId(), false)).thenReturn(viewModel);
+        when(academicCostViewModelPopulator.populate(organisations.get(0).getId(), applicationResource.getId(), sectionResources.get(7).getId(), getLoggedInUser())).thenReturn(viewModel);
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisations.get(1)));
 
@@ -820,7 +820,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId(), fileEntryId);
 
 
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId(),
@@ -840,7 +840,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
-        verify(userRestService).findProcessRole(applicationId);
+        verify(processRoleRestService).findProcessRole(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId(), fileEntryId);
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId(), fileEntryId);
     }

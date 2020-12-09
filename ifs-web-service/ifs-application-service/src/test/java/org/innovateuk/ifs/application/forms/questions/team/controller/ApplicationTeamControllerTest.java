@@ -9,7 +9,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
@@ -46,7 +46,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     private QuestionStatusRestService questionStatusRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Test
     public void viewTeam() throws Exception {
@@ -71,7 +71,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         long questionId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
@@ -89,7 +89,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         long questionId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(singletonList(new ValidationMessages(globalError("please.enter.some.text")))));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
@@ -109,7 +109,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         long questionId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(singletonList(new ValidationMessages(globalError("validation.kta.pending.invite")))));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
@@ -130,7 +130,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         long questionId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(singletonList(new ValidationMessages(globalError("validation.kta.missing.invite")))));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
@@ -151,7 +151,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         long questionId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/team?show-errors=true", applicationId, questionId))
@@ -168,7 +168,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         long questionId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
 
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
