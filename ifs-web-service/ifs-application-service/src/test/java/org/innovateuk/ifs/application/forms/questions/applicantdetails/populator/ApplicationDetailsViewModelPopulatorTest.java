@@ -12,7 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -52,7 +52,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
 
     @Test
@@ -84,7 +84,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
         when(questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId())).thenReturn(completedFuture(singleton(questionId)));
 
         ApplicationDetailsViewModel viewModel = populator.populate(application, questionId, user);

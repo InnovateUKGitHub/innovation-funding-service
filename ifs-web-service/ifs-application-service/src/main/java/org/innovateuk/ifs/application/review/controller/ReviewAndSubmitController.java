@@ -19,7 +19,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +56,7 @@ public class ReviewAndSubmitController {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
@@ -113,7 +113,7 @@ public class ReviewAndSubmitController {
     public String completeQuestion(@PathVariable long applicationId,
                                    @RequestParam("complete") long questionId,
                                    UserResource user) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         List<ValidationMessages> messages = questionStatusRestService.markAsComplete(questionId, applicationId, processRole.getId()).getSuccess();
         if (messages.isEmpty()) {
             return redirectToReview(applicationId);
@@ -131,7 +131,7 @@ public class ReviewAndSubmitController {
                                        UserResource user) {
 
         ProcessRoleResource assignTo = userService.getLeadApplicantProcessRole(applicationId);
-        ProcessRoleResource assignFrom = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource assignFrom = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.assign(questionId, applicationId, assignTo.getId(), assignFrom.getId()).getSuccess();
         return redirectToReview(applicationId);
     }
@@ -143,7 +143,7 @@ public class ReviewAndSubmitController {
     public String incompleteQuestion(@PathVariable long applicationId,
                                      @RequestParam("incomplete") long questionId,
                                      UserResource user) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsInComplete(questionId, applicationId, processRole.getId());
         return redirectToQuestion(applicationId, questionId);
     }
