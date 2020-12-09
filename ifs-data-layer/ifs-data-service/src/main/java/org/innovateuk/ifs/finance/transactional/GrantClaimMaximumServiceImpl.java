@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
@@ -21,7 +22,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -80,7 +80,7 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     public ServiceResult<Set<Long>> revertToDefault(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
             List<GrantClaimMaximum> maximums;
-            if (TRUE.equals(competition.getStateAid()) && !competition.getResearchCategories().isEmpty()) {
+            if (competition.getFundingRules() == FundingRules.STATE_AID && !competition.getResearchCategories().isEmpty()) {
                 maximums = getStateAidGrantClaimMaxmimums();
             } else {
                 maximums = getBlankGrantClaimMaxmimums();
