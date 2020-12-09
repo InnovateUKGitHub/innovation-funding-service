@@ -27,13 +27,13 @@ public class DetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @DecimalMin(value = "1", message = "{competition.setup.applicationdetails.projectduration.min}")
-    @DecimalMax(value = "60", message = "{competition.setup.applicationdetails.projectduration.max}")
+    @DecimalMax(value = "84", message = "{competition.setup.applicationdetails.projectduration.max}")
     @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
     private BigDecimal minProjectDuration;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @DecimalMin(value = "1", message = "{competition.setup.applicationdetails.projectduration.min}")
-    @DecimalMax(value = "60", message = "{competition.setup.applicationdetails.projectduration.max}")
+    @DecimalMax(value = "84", message = "{competition.setup.applicationdetails.projectduration.max}")
     @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
     private BigDecimal maxProjectDuration;
 
