@@ -5,7 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
@@ -20,7 +22,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -93,14 +97,26 @@ public class CrmServiceImpl implements CrmService {
         silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
 
         if (newOrganisationSearchEnabled) {
-            silOrganisation.setDateOfIncorporation(LocalDate.now());
-            silOrganisation.setSicCodes(Collections.emptyList());
-            silOrganisation.setExecutiveOfficers(Collections.emptyList());
+            silOrganisation.setDateOfIncorporation(organisation.getDateOfIncorporation());
+            silOrganisation.setSicCodes(getSicCodes(organisation));
+            silOrganisation.setExecutiveOfficers(getExecutiveOfficers(organisation));
         }
 
         silContact.setOrganisation(silOrganisation);
 
         return silContact;
+    }
+
+    private List<String> getExecutiveOfficers(OrganisationResource organisation) {
+        return organisation.getExecutiveOfficers().stream()
+                .map(OrganisationExecutiveOfficerResource::getName)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getSicCodes(OrganisationResource organisation) {
+        return organisation.getSicCodes().stream()
+                .map(OrganisationSicCodeResource::getSicCode)
+                .collect(Collectors.toList());
     }
 
     private SilContact setSilContactDetails(UserResource user) {
