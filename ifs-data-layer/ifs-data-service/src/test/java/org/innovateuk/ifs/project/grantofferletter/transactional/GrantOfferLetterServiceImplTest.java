@@ -515,7 +515,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertTrue(result.isSuccess());
         assertNull(project.getSignedAdditionalContractFile());
 
-        verify(golWorkflowHandler).removeSignedGrantOfferLetter(project, user);
+        verify(golWorkflowHandler).removeSignedAdditionalContract(project, user);
         verify(fileServiceMock).deleteFileIgnoreNotFound(existingAdditionalContractFile.getId());
     }
 
