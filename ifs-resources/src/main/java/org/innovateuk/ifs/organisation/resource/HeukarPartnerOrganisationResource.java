@@ -3,7 +3,11 @@ package org.innovateuk.ifs.organisation.resource;
 public class HeukarPartnerOrganisationResource {
     private Long id;
     private Long applicationId;
-    private OrganisationTypeResource organisationTypeResource;
+
+    private Long organisationTypeId;
+    private String name;
+    private String description;
+//    private OrganisationTypeResource organisationTypeResource;
 
     public Long getId() {
         return id;
@@ -21,11 +25,36 @@ public class HeukarPartnerOrganisationResource {
         this.applicationId = applicationId;
     }
 
-    public OrganisationTypeResource getOrganisationTypeResource() {
-        return organisationTypeResource;
+//    public OrganisationTypeResource getOrganisationTypeResource() {
+//        return organisationTypeResource;
+//    }
+//
+//    public void setOrganisationTypeResource(OrganisationTypeResource organisationTypeResource) {
+//        this.organisationTypeResource = organisationTypeResource;
+//    }
+
+
+    public Long getOrganisationTypeId() {
+        return organisationTypeId;
     }
 
-    public void setOrganisationTypeResource(OrganisationTypeResource organisationTypeResource) {
-        this.organisationTypeResource = organisationTypeResource;
+    public void setOrganisationTypeId(Long organisationTypeId) {
+        this.organisationTypeId = organisationTypeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

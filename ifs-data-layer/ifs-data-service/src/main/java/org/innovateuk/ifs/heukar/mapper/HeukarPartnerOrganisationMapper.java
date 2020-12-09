@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisationTypeEnum.fromId;
+
 @Component
 public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
 
@@ -20,7 +22,10 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
         HeukarPartnerOrganisationResource resource = new HeukarPartnerOrganisationResource();
         resource.setApplicationId(domain.getApplicationId());
         resource.setId(domain.getId());
-        resource.setOrganisationTypeResource(organisationTypeMapper.mapToResource(domain.getOrganisationType()));
+//        resource.setOrganisationTypeResource(organisationTypeMapper.mapToResource(domain.getOrganisationType()));
+        resource.setOrganisationTypeId(domain.getOrganisationType().getId());
+        resource.setName(domain.getOrganisationType().getName());
+        resource.setDescription(domain.getOrganisationType().getDescription());
         return resource;
     }
 
@@ -32,19 +37,19 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
     public HeukarPartnerOrganisation mapExistingToDomain(Long partnerOrgId, Long applicationId, Long orgTypeId) {
         HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
         domain.setApplicationId(applicationId);
-        domain.setOrganisationType(organisationTypeMapper.mapIdToDomain(orgTypeId));
+//        domain.setOrganisationType(organisationTypeMapper.mapIdToDomain(orgTypeId));
         domain.setId(partnerOrgId);
         return domain;
     }
 
     @Override
     public HeukarPartnerOrganisation mapToDomain(HeukarPartnerOrganisationResource resource) {
-        return mapWithApplicationIdToDomain(resource.getApplicationId(), resource.getOrganisationTypeResource().getId());
+        return mapWithApplicationIdToDomain(resource.getApplicationId(), resource.getOrganisationTypeId());
     }
 
     public HeukarPartnerOrganisation mapWithApplicationIdToDomain(Long applicationId, Long organisationTypeId) {
         HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
-        domain.setOrganisationType(organisationTypeMapper.mapIdToDomain(organisationTypeId));
+        domain.setOrganisationType(fromId(organisationTypeId));
         domain.setApplicationId(applicationId);
         return domain;
     }

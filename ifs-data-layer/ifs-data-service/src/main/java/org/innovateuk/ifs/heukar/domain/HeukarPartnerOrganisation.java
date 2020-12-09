@@ -15,9 +15,12 @@ public class HeukarPartnerOrganisation {
     @Column(name = "application_id")
     private Long applicationId;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "organisation_type_id", referencedColumnName = "id")
-    private OrganisationType organisationType;
+    @Enumerated(EnumType.STRING)
+    private HeukarPartnerOrganisationTypeEnum organisationType;
+
+//    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+//    @JoinColumn(name = "organisation_type_id", referencedColumnName = "id")
+//    private OrganisationType organisationType;
 
     public HeukarPartnerOrganisation() {
         // no arg constructor
@@ -31,13 +34,21 @@ public class HeukarPartnerOrganisation {
         this.applicationId = applicationId;
     }
 
-    public OrganisationType getOrganisationType() {
+    public HeukarPartnerOrganisationTypeEnum getOrganisationType() {
         return organisationType;
     }
 
-    public void setOrganisationType(OrganisationType organisationType) {
+    public void setOrganisationType(HeukarPartnerOrganisationTypeEnum organisationType) {
         this.organisationType = organisationType;
     }
+
+    //    public OrganisationType getOrganisationType() {
+//        return organisationType;
+//    }
+//
+//    public void setOrganisationType(OrganisationType organisationType) {
+//        this.organisationType = organisationType;
+//    }
 
     public long getId() {
         return id;
