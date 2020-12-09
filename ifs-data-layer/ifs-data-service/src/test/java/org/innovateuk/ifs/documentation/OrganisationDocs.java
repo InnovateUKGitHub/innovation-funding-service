@@ -18,7 +18,11 @@ public class OrganisationDocs {
             fieldWithPath("international").description("The organisation is located outside UK.").optional(),
             fieldWithPath("internationalRegistrationNumber").description("The international organisation registration number.").optional(),
             fieldWithPath("registrationNumber").description("The organisation registration number, used by knowledge bases.").optional(),
-            fieldWithPath("addresses").description("The addresses of the organisation").optional()
+            fieldWithPath("addresses").description("The addresses of the organisation").optional(),
+            fieldWithPath("dateOfIncorporation").description("The date the company was incorporation").optional(),
+            fieldWithPath("sicCodes").description("The sic codes of the organisation").optional(),
+            fieldWithPath("executiveOfficers").description("The executive offciers of the organisation.").optional(),
+            fieldWithPath("organisationNumber").description("The number of the organisation, a unique identity number could be a charity number or UTC.").optional()
     };
 
     public static final OrganisationResourceBuilder organisationResourceBuilder = newOrganisationResource()
