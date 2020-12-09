@@ -109,8 +109,8 @@ public class AbstractOrganisationFinanceControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void isShowStateAidAgreement() throws Exception {
-        when(organisationFinanceService.isShowStateAidAgreement(targetId, organisationId)).thenReturn(serviceSuccess(true));
+    public void isShowAidAgreement() throws Exception {
+        when(organisationFinanceService.isShowAidAgreement(targetId, organisationId)).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/root/{targetId}/organisation/{organisationId}/finance/show-state-aid", targetId,
             organisationId)).andExpect(status().isOk())
