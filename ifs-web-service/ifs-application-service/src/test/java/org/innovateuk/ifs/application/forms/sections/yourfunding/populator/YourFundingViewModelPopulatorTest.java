@@ -23,7 +23,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -80,7 +80,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     protected YourFundingViewModelPopulator supplyServiceUnderTest() {
@@ -142,7 +142,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
         when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId())).thenReturn(restSuccess(true));
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(organisation.getId()).build()));
+        when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(organisation.getId()).build()));
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
 
         assertEquals(APPLICATION_ID, viewModel.getApplicationId());

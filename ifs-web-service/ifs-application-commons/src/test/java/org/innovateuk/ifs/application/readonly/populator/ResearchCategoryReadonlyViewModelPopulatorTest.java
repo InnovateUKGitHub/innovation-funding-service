@@ -41,7 +41,8 @@ public class ResearchCategoryReadonlyViewModelPopulatorTest {
         QuestionResource question = newQuestionResource()
                 .withShortName("Research category")
                 .build();
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(),
+                emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
         ResearchCategoryReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestServic
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     protected HomeController supplyControllerUnderTest() {
@@ -157,7 +157,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
                 .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
 
-        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
+        when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(true));
 
 
@@ -170,7 +170,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     public void assessorDashboardDefaultForKnowledgeTransferAdvisor() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
 
-        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(emptyList()));
+        when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(emptyList()));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get("/dashboard-selection"))
@@ -188,7 +188,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
                 .build(1);
 
-        when(userRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
+        when(processRoleRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(this.knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(true));
@@ -215,7 +215,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .withRole(Role.APPLICANT)
                 .build(1);
 
-        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId()))
+        when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(true));
@@ -239,7 +239,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
                 .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
                 .build(1);
 
-        when(userRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
+        when(processRoleRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(this.knowledgeTransferAdvisor.getId()))
                 .thenReturn(restSuccess(false));
