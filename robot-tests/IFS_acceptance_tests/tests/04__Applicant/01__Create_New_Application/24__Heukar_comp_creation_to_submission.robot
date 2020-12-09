@@ -14,6 +14,7 @@ Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 *** Variables ***
 ${heukarCompTypeSelector}             dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
 ${heukarApplicationName}              Heukar application
+${newLeadApplicantEmail}              tim.timmy@heukar.com
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
@@ -36,7 +37,7 @@ Comp admin creates Heukar competition
 
 Lead applicant can submit application
     [Documentation]  IFS-8751
-    Given log in as a different user     &{lead_applicant_credentials}
+    Given the user logs out if they are logged in
     When the user successfully completes application
     Then the user can submit the application
 
@@ -72,7 +73,6 @@ user selects where is organisation based
     [Arguments]  ${org_type}
     the user selects the radio button     international  ${org_type}
     the user clicks the button/link       id = international-organisation-cta
-    the user clicks the button/link       id = save-organisation-button
 
 the user completes Heukar Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}  ${projectDuration}
@@ -92,16 +92,25 @@ the user successfully marks Application details as complete
     the user should see the element             jQuery = li:contains("Application details") > .task-status-complete
 
 the user successfully completes application
-    the user select the competition and starts application      ${heukarCompetitionName}
-    user selects where is organisation based                    isNotInternational
-    ${status}    ${value} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = input ~ label:contains("Organisation2")
-    Run Keyword If  '${status}' == 'PASS'  the user selects the radio button     selectedOrganisationId  selectedOrganisationId1
-    ...                             ELSE   the user clicks the button/link       link = Application details
-    the user completes Heukar Application details               ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the user select the competition and starts application          ${heukarCompetitionName}
+    the user clicks the button/link                                 link = Continue and create an account
+    user selects where is organisation based                        isNotInternational
+    the user selects the radio button                               organisationTypeId    radio-1
+    the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
+    the user selects his organisation in Companies House            innovate  INNOVATE LTD
+    the user should be redirected to the correct page               ${SERVER}/registration/register
+    the user enters the details and clicks the create account       tim  timmy  ${newLeadApplicantEmail}  ${short_password}
+    the user reads his email and clicks the link                    ${newLeadApplicantEmail}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page               ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                 link = Sign in
+    Logging in and Error Checking                                   ${newLeadApplicantEmail}  ${short_password}
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                                 link = Application details
+    the user completes Heukar Application details                   ${heukarApplicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(heukar)
-    the user accept the competition terms and conditions        Back to application overview
+    the user accept the competition terms and conditions            Back to application overview
 
 Custom Suite Setup
     Set predefined date variables
