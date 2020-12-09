@@ -131,11 +131,11 @@
                     <dt>Account number</dt>
 
                     <dd>
-                        <th:block th:if="${accountNumber != null}" th:text="*{'*****'+#strings.substring(accountNumber,5,8)}"/>
+                        <th:block th:if="${form.accountNumber != null}" th:text="*{'*****'+#strings.substring(accountNumber,5,8)}"/>
                     </dd>
                     <dt>Sort code</dt>
                     <dd>
-                        <th:block th:if="${sortCode != null}" th:text="*{'****'+#strings.substring(sortCode,4,6)}"/>
+                        <th:block th:if="${form.sortCode != null}" th:text="*{'****'+#strings.substring(sortCode,4,6)}"/>
                     </dd>
                 </dl>
 
