@@ -75,10 +75,6 @@ The partner answers the question and assigns the question back to lead for revie
      When the user clicks the button/link           link = ${project_team_question}
      Then the partner selects new answer choice
 
-#Lead uploads appendix to application question
-#    [Documentation]  IFS-8729
-
-
 The lead should see the answer selected by partner and mark it as complete
      [Documentation]  IFS-7703
      [Setup]  log in as a different user                 &{lead_applicant_credentials}
