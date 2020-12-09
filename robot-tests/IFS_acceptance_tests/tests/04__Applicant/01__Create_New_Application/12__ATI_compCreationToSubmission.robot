@@ -113,11 +113,11 @@ Comp admin can see the ATI application submitted
 
 Comp admin amends the assessment panel and interview stage options
     [Documentation]  IFS-8729
-    Given The user navigates to the page       ${server}/management/competition/setup/${competitionId}/section/assessors
-    When The user clicks the button/link       jQuery = button:contains("Edit")
+    Given the user navigates to the page       ${server}/management/competition/setup/${competitionId}/section/assessors
+    When the user clicks the button/link       jQuery = button:contains("Edit")
     Then the user selects the radio button     hasAssessmentPanel  1
     And the user selects the radio button      hasInterviewStage  1
-    And The user clicks the button/link        jQuery = button:contains("Done")
+    And the user clicks the button/link        jQuery = button:contains("Done")
 
 Collaborator cannot reopen the application
     [Documentation]  IFS-7547
@@ -167,10 +167,10 @@ Lead does not see reopen when the comp is closed
     And log in as a different user               &{lead_applicant_credentials}
     Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
 
-Comp admin assigns assessors to the competition and assigns the application to a assessor
+Comp admin assigns assessors to the competition and assigns the application to an assessor
     [Documentation]  IFS-8729
     [Setup]  log in as a different user                                      &{Comp_admin1_credentials}
-    Given The user navigates to the page                                     ${server}/management/competition/${competitionId}/assessors/find
+    Given the user navigates to the page                                     ${server}/management/competition/${competitionId}/assessors/find
     When the user invites assessors to assess the ATI competition
     And the assessors accept the invitation to assess the ATI competition
     Then the application is assigned to a assessor
@@ -178,9 +178,9 @@ Comp admin assigns assessors to the competition and assigns the application to a
 Comp admin invites a different assessor through interview panel and assign the application
     [Documentation]  IFS-8729
     [Setup]  log in as a different user                          &{Comp_admin1_credentials}
-    Given The user navigates to the page                         ${server}/management/competition/${competitionId}
-    And The user clicks the button/link                          jQuery = button:contains("Close assessment")
-    When The user invites an assessor through interview panel
+    Given the user navigates to the page                         ${server}/management/competition/${competitionId}
+    And the user clicks the button/link                          jQuery = button:contains("Close assessment")
+    When the user invites an assessor through interview panel
     And the user assigns the application to the assessor
     Then the assessor checks the appendices
 
