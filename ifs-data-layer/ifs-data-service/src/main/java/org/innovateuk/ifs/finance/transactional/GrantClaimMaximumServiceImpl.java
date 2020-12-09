@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -96,9 +97,9 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     }
 
     private List<GrantClaimMaximum> getStateAidGrantClaimMaxmimums() {
-        ResearchCategory feasibilityStudies = researchCategoryRepository.findById(33L).get();
-        ResearchCategory industrialResearch = researchCategoryRepository.findById(34L).get();
-        ResearchCategory experimentalDevelopment = researchCategoryRepository.findById(35L).get();
+        ResearchCategory feasibilityStudies = researchCategoryRepository.findById(FEASIBILITY_STUDIES_ID).get();
+        ResearchCategory industrialResearch = researchCategoryRepository.findById(INDUSTRIAL_RESEARCH_ID).get();
+        ResearchCategory experimentalDevelopment = researchCategoryRepository.findById(EXPERIMENTAL_DEVELOPMENT_ID).get();
         return newArrayList(
                 new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, 70),
                 new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, 60),
@@ -113,9 +114,9 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     }
 
     private List<GrantClaimMaximum> getBlankGrantClaimMaxmimums() {
-        ResearchCategory feasibilityStudies = researchCategoryRepository.findById(33L).get();
-        ResearchCategory industrialResearch = researchCategoryRepository.findById(34L).get();
-        ResearchCategory experimentalDevelopment = researchCategoryRepository.findById(35L).get();
+        ResearchCategory feasibilityStudies = researchCategoryRepository.findById(FEASIBILITY_STUDIES_ID).get();
+        ResearchCategory industrialResearch = researchCategoryRepository.findById(INDUSTRIAL_RESEARCH_ID).get();
+        ResearchCategory experimentalDevelopment = researchCategoryRepository.findById(EXPERIMENTAL_DEVELOPMENT_ID).get();
         return newArrayList(
                 new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, null),
                 new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, null),
