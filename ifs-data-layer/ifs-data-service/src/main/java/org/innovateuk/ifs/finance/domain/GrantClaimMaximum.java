@@ -78,4 +78,5 @@ public class GrantClaimMaximum {
     public void setMaximum(Integer maximum) {
         this.maximum = maximum;
     }
+
 }
