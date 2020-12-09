@@ -105,7 +105,7 @@
             </form>
         </div>
 
-        <h2 class="govuk-heading-m">Annex</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Annex</h2>
         <p class="govuk-body">The annex contains any additional contracts
             that were agreed upon during the application. Any supporting documents should be uploaded with the annex.</p>
 
@@ -174,7 +174,7 @@
         </th:block>
 
         <th:block th:if="${model.isSentToProjectTeam()}">
-            <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
             <div class="upload-section">
                 <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
                     <p class="uploaded-file govuk-body">
@@ -190,7 +190,7 @@
             </div>
 
             <th:block th:if="${model.ktp}">
-                <h2 class="govuk-heading-m govuk-!-margin-0" >Signed annex</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-6" >Signed annex</h2>
                 <div class="upload-section">
                     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
                         <p class="uploaded-file govuk-body">
@@ -227,7 +227,7 @@
                                 />
                                 <label for="acceptGOL"
                                        class="govuk-label govuk-radios__label">
-                                    Accept documents
+                                    Accept
                                 </label>
                             </div>
                             <div class="govuk-radios__item" data-target="reject-gol">
@@ -242,7 +242,7 @@
                                 />
                                 <label for="rejectGOL"
                                        class="govuk-label govuk-radios__label">
-                                    Reject documents
+                                    Reject
                                 </label>
                             </div>
                         </div>
