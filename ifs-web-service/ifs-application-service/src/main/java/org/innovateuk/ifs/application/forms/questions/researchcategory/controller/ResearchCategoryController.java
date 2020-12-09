@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -56,7 +56,7 @@ public class ResearchCategoryController {
     private ApplicationService applicationService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -159,7 +159,7 @@ public class ResearchCategoryController {
     }
 
     private long getProcessRoleId(long userId, long applicationId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess().getId();
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess().getId();
     }
 
     private String redirectToResearchCategory(ApplicationResource applicationResource, long questionId) {

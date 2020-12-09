@@ -79,6 +79,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8770 Bring back bank details for KTP
 ...
+...            IFS-8619 Application status page for KTP comp - content incorrect
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -526,11 +528,14 @@ KTA can download the appendix file uploaded by lead
     [Teardown]  remove the file from the operating system     ${valid_pdf}
 
 New lead applicant submits the application
-    [Documentation]  IFS-7812  IFS-7814
-    Given Log in as a different user                  &{ktpLeadApplicantCredentials}
-    When the user clicks the button/link              link = ${ktpApplicationTitle}
+    [Documentation]  IFS-7812  IFS-7814  IFS-8619
+    Given Log in as a different user                      &{ktpLeadApplicantCredentials}
+    When the user clicks the button/link                  link = ${ktpApplicationTitle}
     And the applicant completes Application Team
     Then the applicant submits the application
+    And the user should not see the element               jQuery = li:contains("your KT adviser will be in touch to provide feedback and to answer any queries.")
+    And the user should see the element                   jQuery = li:contains("your knowledge transfer adviser (KTA) will be in touch to provide feedback and to answer any queries")
+    And the user should not see the element               jQuery = li:contains("You will receive feedback from your knowledge transfer adviser (KTA).")
 
 Internal user moves competition to project setup
     [Documentation]  IFS-8119
@@ -602,7 +607,7 @@ the project finance user cannot see the project start date
     When the user navigates to the page                ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user clicks the button/link               link = ${ApplicationID}
     And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
-    And the user should see the element                jQuery = dt:contains("Duration in months")
+    And the user should see the element                jQuery = dt:contains("Project duration in months")
 
 The lead cannot view the project start date and duration and can see the correspondance address
     [Documentation]  IFS-7805 IFS-8070 IFS-8116
