@@ -42,7 +42,7 @@ public class YourOrganisationViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         boolean showStateAidAgreement =
-                yourOrganisationRestService.isShowStateAidAgreement(projectId, organisationId).getSuccess();
+                yourOrganisationRestService.isShowAidAgreement(projectId, organisationId).getSuccess();
 
         PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
