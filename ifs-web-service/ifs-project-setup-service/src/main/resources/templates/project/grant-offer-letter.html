@@ -103,16 +103,6 @@
                     </details>
                 </th:block>
 
-                <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null && !model.grantOfferLetterRejected && model.projectManager}">
-                    <h2 class="govuk-heading-m" th:text="|Signed ${model.documentName}|"></h2>
-                    <p class="govuk-body">
-                        <a th:href="@{/project/{id}/offer/signed-download(id=${model.projectId})}"
-                           th:text="|${model.signedGrantOfferLetterFile.filename} (opens in a new window)|"
-                           class="govuk-link"
-                           target="_blank">Signed grant offer letter 2016-07-28a.PDF</a>
-                    </p>
-                </th:block>
-
                 <th:block th:if="${model.projectManager and !model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section govuk-!-margin-top-6">
                         <h2 class="govuk-heading-m" th:text="|Sending your signed ${model.documentName} to Innovate UK|"></h2>
@@ -193,7 +183,7 @@
                     <a th:attr="aria-hidden=${!model.showSubmitButton}"
                        data-js-toggle-on-file-upload="grant-letter-upload"
                        th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
-                       data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
+                       data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button govuk-!-margin-top-4">Send to Innovate UK</a>
                 </th:block>
 
                 <th:block th:insert="fragments/modals :: modal-overlay" />
