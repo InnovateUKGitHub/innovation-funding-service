@@ -18,7 +18,7 @@ Resource          ../../../resources/keywords/05__Email_Keywords.robot
 ${heukarCompTypeSelector}                     dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
 ${heukarApplicationName}                      Heukar application
 ${newLeadApplicantEmail}                      tim.timmy@heukar.com
-${heukarApplicationSubmissionEmailSubject}    ${ApplicationID}: confirmation of your Horizon Europe UK Application Registration
+${heukarApplicationSubmissionEmailSubject}    confirmation of your Horizon Europe UK Application Registration
 ${huekarApplicationSubmissionEmail}           We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
 
 *** Test Cases ***
@@ -49,7 +49,7 @@ Lead applicant can submit application
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-8769
     Given Requesting IDs of this application
-    Then the user reads his email     ${newLeadApplicantEmail}  ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
+    Then the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
