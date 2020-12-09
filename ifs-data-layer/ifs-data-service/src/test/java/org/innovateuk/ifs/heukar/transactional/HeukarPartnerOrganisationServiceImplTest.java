@@ -43,7 +43,7 @@ public class HeukarPartnerOrganisationServiceImplTest extends BaseServiceUnitTes
         partnerOrganisation = new HeukarPartnerOrganisation();
         partnerOrganisation.setApplicationId(1L);
         partnerOrganisation.setOrganisationType(new OrganisationType());
-        when(heukarPartnerOrganisationRepository.findAllByApplicationId(1L)).thenReturn(newHashSet(partnerOrganisation));
+        when(heukarPartnerOrganisationRepository.findAllByApplicationId(1L)).thenReturn(newArrayList(partnerOrganisation));
         resource = new HeukarPartnerOrganisationResource();
         when(mapper.mapToResource(partnerOrganisation)).thenReturn(resource);
     }

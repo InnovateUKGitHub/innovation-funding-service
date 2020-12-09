@@ -49,7 +49,6 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
                 applicationTeamHeukarPartnerOrganisationPopulator.populate(application, questionId);
 
         model.addAttribute("model", populate);
-        model.addAttribute("form", new HeukarPartnerOrganisationForm());
         return "application/questions/application-team-heukar-partner-organisation";
     }
 
@@ -81,15 +80,17 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
                              @PathVariable long applicationId,
                              @PathVariable long questionId,
                              @RequestParam Long existingId) {
-        boolean isAnEdit = existingId != null;
-        if (isAnEdit) {
-            heukarPartnerOrganisationRestService.updateHeukarOrgType(existingId, form.getOrganisationTypeId());
-        } else {
-            heukarPartnerOrganisationRestService.addNewHeukarOrgType(applicationId, form.getOrganisationTypeId());
-        }
         Supplier<String> failureView = () -> showAddNewPartnerOrganisationForm(form, bindingResult, model, applicationId, questionId);
         return validationHandler.failNowOrSucceedWith(failureView,
-                () -> redirectToApplicationTeam(applicationId, questionId));
+                () -> {
+                    boolean isAnEdit = existingId != null;
+                    if (isAnEdit) {
+                        heukarPartnerOrganisationRestService.updateHeukarOrgType(existingId, form.getOrganisationTypeId());
+                    } else {
+                        heukarPartnerOrganisationRestService.addNewHeukarOrgType(applicationId, form.getOrganisationTypeId());
+                    }
+                    return redirectToApplicationTeam(applicationId, questionId);
+                });
     }
 
     private String redirectToApplicationTeam(long applicationId, long questionId) {

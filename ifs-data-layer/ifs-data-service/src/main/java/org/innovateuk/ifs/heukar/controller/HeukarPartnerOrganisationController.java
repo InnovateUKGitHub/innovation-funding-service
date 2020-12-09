@@ -21,30 +21,30 @@ public class HeukarPartnerOrganisationController {
     private HeukarPartnerOrganisationService heukarPartnerOrganisationService;
 
     @GetMapping("/find-by-application-id/{applicationId}")
-    public RestResult<List<HeukarPartnerOrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<List<HeukarPartnerOrganisationResource>> findByApplicationId(@PathVariable final long applicationId) {
         return heukarPartnerOrganisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
     @PostMapping("/add-new-org-type/{applicationId}/{organisationTypeId}")
-    public RestResult<Void> addNewHeukarPartnerOrganisation(@PathVariable("applicationId") final Long applicationId,
-                                                            @PathVariable("organisationTypeId") final Long organisationTypeId) {
+    public RestResult<Void> addNewHeukarPartnerOrganisation(@PathVariable final long applicationId,
+                                                            @PathVariable final long organisationTypeId) {
         return heukarPartnerOrganisationService.addNewPartnerOrgToApplication(applicationId, organisationTypeId)
                 .toPostResponse();
     }
 
     @PutMapping("/{id}/{organisationTypeId}")
-    public RestResult<Void> updateHeukarPartnerOrganisation(@PathVariable("id") Long id,
-                                                            @PathVariable("organisationTypeId") long organisationTypeId) {
+    public RestResult<Void> updateHeukarPartnerOrganisation(@PathVariable long id,
+                                                            @PathVariable long organisationTypeId) {
         return heukarPartnerOrganisationService.updatePartnerOrganisation(id, organisationTypeId).toPutResponse();
     }
 
     @DeleteMapping("/{id}")
-    public RestResult<Void> deleteHeukarOrganisationType(@PathVariable("id") Long id) {
+    public RestResult<Void> deleteHeukarOrganisationType(@PathVariable long id) {
         return heukarPartnerOrganisationService.deletePartnerOrganisation(id).toDeleteResponse();
     }
 
     @GetMapping("/{id}")
-    public RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(@PathVariable("id") Long id) {
+    public RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(@PathVariable long id) {
         return heukarPartnerOrganisationService.findOne(id).toGetResponse();
     }
 
