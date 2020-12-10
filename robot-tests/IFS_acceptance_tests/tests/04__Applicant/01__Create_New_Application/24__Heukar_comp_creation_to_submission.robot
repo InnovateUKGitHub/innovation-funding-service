@@ -5,6 +5,8 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8769: Email notification for application submission
 ...
+...               IFS-8752: Email notification for application submission
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -46,10 +48,15 @@ Lead applicant can submit application
     When the user successfully completes application
     Then the user can submit the application
 
+Lead applicant is presented with the Application Summary page when an application is submitted
+
+
+
 Lead applicant should get a confirmation email after application submission
     [Documentation]    IFS-8769
     Given Requesting IDs of this application
     Then the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
+
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
