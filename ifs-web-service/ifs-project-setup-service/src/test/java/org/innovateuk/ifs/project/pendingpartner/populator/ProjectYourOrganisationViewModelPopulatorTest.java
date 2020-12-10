@@ -76,7 +76,7 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(yourOrganisationRestService.isShowStateAidAgreement(projectId, organisationId)).thenReturn(serviceSuccess(true));
+        when(yourOrganisationRestService.isShowAidAgreement(projectId, organisationId)).thenReturn(serviceSuccess(true));
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId)).thenReturn(restSuccess(progress));
 
         ProjectYourOrganisationViewModel actual = yourOrganisationViewModelPopulator.populate(projectId,
