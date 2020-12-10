@@ -5,7 +5,7 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8769: Email notification for application submission
 ...
-...               IFS-8752: Email notification for application submission
+...               IFS-8752: Application Submission confirmation page
 ...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
@@ -49,14 +49,28 @@ Lead applicant can submit application
     Then the user can submit the application
 
 Lead applicant is presented with the Application Summary page when an application is submitted
+    [Documentation]  IFS-8752
+    Given the user should see the element       jQuery = h1:contains("Application status")
+    Then the user is presented with the agreed Application Summary page
 
-
+The Application Summary page must not include: Assessment process, Decision notification, Application Feeback sections
+    [Documentation]  IFS-8752
+    Given the user should not see the element     jQuery = h3:contains("Assessment process")
+    When the user should not see the element      jQuery = h3:contains("Decision notification")
+    Then the user should not see the element      jQuery = p:contains("Application feedback will be provided by")
 
 Lead applicant should get a confirmation email after application submission
-    [Documentation]    IFS-8769
+    [Documentation]  IFS-8769
     Given Requesting IDs of this application
     Then the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
 
+The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
+    [Documentation]  IFS-8752
+    Given Log in as a different user        &{Comp_admin1_credentials}
+    And Requesting IDs of this competition
+    When the internal team mark the application as successful
+    And Log in as a different user          email=${newLeadApplicantEmail}    password=${short_password}
+    Then the application summary page must not include the reopen application link
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
@@ -89,6 +103,10 @@ the competition admin creates HEUKAR competition
 Requesting IDs of this application
     ${ApplicationID} =  get application id by name    ${heukarApplicationName}
     Set suite variable    ${ApplicationID}
+
+Requesting IDs of this competition
+    ${competitionId} =  get comp id from comp title  ${heukarCompetitionName}
+    Set suite variable  ${competitionId}
 
 user selects where is organisation based
     [Arguments]  ${org_type}
@@ -132,6 +150,33 @@ the user successfully completes application
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(heukar)
     the user accept the competition terms and conditions            Back to application overview
+
+the user is presented with the agreed Application Summary page
+    the user should see the element     jQuery = h2:contains("Application submitted")
+    the user should see the element     jQuery = .govuk-panel:contains("Application number: ${ApplicationID}")
+    the user should see the element     jQuery = br ~ br ~ br
+    the user should see the element     link = Reopen application
+    the user should see the element     jQuery = h2:contains("What happens next?")
+    the user should see the element     jQuery = p:contains("You have already applied directly to the European Commission for an EU grant.")
+    the user should see the element     jQuery = h3:contains("Verification checks")
+    the user should see the element     jQuery = h3:contains("Stage 2")
+    the user should see the element     jQuery = h3:contains("If your application is successful")
+    the user should see the element     jQuery = h3:contains("If your application is successful")
+    the user should see the element     jQuery = p:contains("You will proceed to stage 2 of our process.")
+    the user should see the element     jQuery = h3:contains("If your application is unsuccessful")
+    the user should see the element     jQuery = p:contains("After registering your Horizon Europe UK Application, you may still be unsuccessful.")
+    the user should see the element     jQuery = h3:contains("Application feedback")
+    the user should see the element     jQuery = p:contains("Since we do not assess your application for EU grants we do not provide individual feedback.")
+
+the internal team mark the application as successful
+    the user navigates to the page      ${server}/management/competition/${competitionId}
+    the user clicks the button/link     link = Input and review funding decision
+    the user clicks the button/link     jQuery = tr:contains("${heukarApplicationName}") label
+    the user clicks the button/link     css = [type="submit"][value="FUNDED"]
+
+the application summary page must not include the reopen application link
+    the user navigates to the page          ${server}/application/${ApplicationID}/track
+    the user should not see the element     link = Reopen application
 
 Custom Suite Setup
     Set predefined date variables
