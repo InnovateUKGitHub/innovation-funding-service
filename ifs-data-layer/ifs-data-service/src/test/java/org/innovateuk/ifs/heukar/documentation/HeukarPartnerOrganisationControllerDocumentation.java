@@ -48,7 +48,7 @@ public class HeukarPartnerOrganisationControllerDocumentation extends BaseContro
                         responseFields(
                                 fieldWithPath("[]").description("list of partner orgs"))
                                 .andWithPrefix("[]", heukarPartnerOrganisationFields)
-                                .andWithPrefix("[].organisationTypeResource.", organisationTypeFields))
+                        )
                 );
     }
 
@@ -65,8 +65,7 @@ public class HeukarPartnerOrganisationControllerDocumentation extends BaseContro
                         pathParameters(
                                 parameterWithName("id").description("Id for the existing partner resource being requested")
                         ),
-                        responseFields(heukarPartnerOrganisationFields)
-                                .andWithPrefix("organisationTypeResource.", organisationTypeFields))
+                        responseFields(heukarPartnerOrganisationFields))
                 );
     }
 
