@@ -22,6 +22,7 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -86,6 +87,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private MilestoneRepository milestoneRepository;
     @Autowired
     private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
+    @Autowired
+    private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
 
     @Value("${ifs.data.service.file.storage.competition.terms.max.filesize.bytes}")
     private Long maxFileSize;
@@ -353,6 +356,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                     deleteAllStakeholders(competition);
                     deleteSetupStatus(competition);
                     deleteCompetitionFinanceRowsTypesForCompetition(competition);
+                    deleteGrantProcessConfiguration(competition);
                     competitionRepository.delete(competition);
                     return serviceSuccess();
                 }));
@@ -421,6 +425,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private void deleteCompetitionFinanceRowsTypesForCompetition(Competition competition) {
         competitionFinanceRowsTypesRepository.deleteAllByCompetitionFinanceRowTypesIdCompetition(competition);
+    }
+    private void deleteGrantProcessConfiguration(Competition competition) {
+        grantProcessConfigurationRepository.deleteByCompetitionId(competition.getId());
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
