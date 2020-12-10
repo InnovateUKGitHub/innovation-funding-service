@@ -219,7 +219,7 @@ public class GrantOfferLetterModelTest {
     }
 
     @Test
-    public void testShowGrantOfferLetterReceivedByInnovateMessageIfSubmittedToInnovate() {
+    public void testNotShowGrantOfferLetterReceivedByInnovateMessageIfSubmittedToInnovate() {
 
         boolean leadPartner = false;
         boolean projectManager = false;
@@ -229,11 +229,11 @@ public class GrantOfferLetterModelTest {
         GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferSubmittedToInternalTeam);
 
-        assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(true));
+        assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(false));
     }
 
     @Test
-    public void testShowGrantOfferLetterReceivedByInnovateMessageIfRejectedAndNotLeadPartnerOrProjectManager() {
+    public void testNotShowGrantOfferLetterReceivedByInnovateMessageIfRejectedAndNotLeadPartnerOrProjectManager() {
 
         boolean leadPartner = false;
         boolean projectManager = false;
@@ -243,7 +243,7 @@ public class GrantOfferLetterModelTest {
         GrantOfferLetterModel model = createGrantOfferLetterModel(leadPartner, projectManager, financeContact, signedGrantOfferUploaded,
                 stateForPartnerSignedGrantOfferRejected);
 
-        assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(true));
+        assertThat(model.isShowGrantOfferLetterReceivedByInnovateMessage(), is(false));
     }
 
     @Test
