@@ -39,7 +39,8 @@
                     <h2 class="govuk-heading-s" th:unless="${model.ktp}" th:text="|Your signed ${model.documentName} has been rejected by Innovate UK|"></h2>
                     <p class="govuk-body" th:unless="${model.ktp}">Someone will be in touch with you soon.</p>
                     <h2 class="govuk-heading-s" th:if="${model.ktp}" th:text="|Your signed ${model.documentName} and annex have been reviewed and rejected|"></h2>
-                    <p class="govuk-body" th:if="${model.ktp}">We will contact you with our reasons for rejection soon.</p>
+                    <p class="govuk-body" th:if="${model.ktp and model.projectManager}">We will contact you with our reasons for rejection soon.</p>
+                    <p class="govuk-body" th:if="${model.ktp and !model.projectManager}">We will contact your project manager with our reasons for rejection soon.</p>
                 </div>
             </th:block>
 
