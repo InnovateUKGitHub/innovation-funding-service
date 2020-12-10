@@ -53,6 +53,9 @@ delete from project_stages where competition_id in (select id from competition w
 
 delete from grant_claim_maximum_competition where competition_id in (select id from competition where template = 1);
 
+SET foreign_key_checks = 0;
 delete from competition_application_config where id in (select competition_application_config_id from competition where template = 1);
-
 delete from competition where template = 1;
+SET foreign_key_checks = 1;
+
+
