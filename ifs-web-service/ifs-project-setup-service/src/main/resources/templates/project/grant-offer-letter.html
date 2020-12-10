@@ -25,7 +25,8 @@
                 <p class="govuk-body" th:unless="${model.ktp}" th:text="|We have received the signed ${model.documentName} and it is waiting to be reviewed.|"></p>
                 <p class="govuk-body" th:unless="${model.ktp}" th:text="|The unsigned ${model.documentName} is available for your records.|"></p>
                 <p class="govuk-body" th:if="${model.ktp}">We have received signed copies of the grant offer letter and the annex, which are now awaiting review.</p>
-                <p class="govuk-body" th:if="${model.ktp}">You may download the documents below for your records.</p>
+                <p class="govuk-body" th:if="${model.ktp and !model.leadPartner}">You may download the unsigned documents below for your records.</p>
+                <p class="govuk-body" th:if="${model.ktp and model.leadPartner}">You may download the documents below for your records.</p>
             </th:block>
 
             <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert govuk-!-margin-bottom-6">

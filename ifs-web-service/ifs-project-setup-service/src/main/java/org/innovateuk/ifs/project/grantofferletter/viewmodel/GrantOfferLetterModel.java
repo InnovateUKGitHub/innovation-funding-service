@@ -197,12 +197,12 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowGrantOfferLetterReceivedByInnovateMessage() {
 
-        if (!isLeadPartner()) {
+        if (isGrantOfferLetterApproved()) {
             return false;
         }
 
-        if (isGrantOfferLetterApproved()) {
-            return false;
+        if (!isLeadPartner()) {
+            return !isGrantOfferLetterRejected();
         }
 
         return isSubmitted();
