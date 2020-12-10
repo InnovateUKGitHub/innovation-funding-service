@@ -64,7 +64,7 @@ public class ApplicationTeamHeukarPartnerOrganisationController {
 
         HeukarPartnerOrganisationResource existingPartner = heukarPartnerOrganisationRestService.getExistingPartnerById(existingId).getSuccess();
         HeukarPartnerOrganisationForm heukarPartnerOrganisationForm = new HeukarPartnerOrganisationForm();
-        heukarPartnerOrganisationForm.setOrganisationTypeId(existingPartner.getOrganisationTypeId());
+        heukarPartnerOrganisationForm.setOrganisationTypeId(existingPartner.getHeukarPartnerOrganisationType().getId());
         heukarPartnerOrganisationForm.setId(existingPartner.getId());
 
         model.addAttribute("model", populate);

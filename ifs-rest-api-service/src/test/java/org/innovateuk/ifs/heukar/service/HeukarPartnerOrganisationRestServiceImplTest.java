@@ -4,6 +4,7 @@ import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -12,7 +13,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarPartnerOrganisationResourceListType;
 import static org.innovateuk.ifs.organisation.builder.HeukarPartnerOrganisationResourceBuilder.newHeukarPartnerOrganisationResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.junit.Assert.assertTrue;
 
 public class HeukarPartnerOrganisationRestServiceImplTest extends BaseRestServiceUnitTest<HeukarPartnerOrganisationRestServiceImpl> {
@@ -26,7 +26,7 @@ public class HeukarPartnerOrganisationRestServiceImplTest extends BaseRestServic
         List<HeukarPartnerOrganisationResource> resourceList = newHeukarPartnerOrganisationResource()
                 .withId(1L)
                 .withApplicationId(1L)
-                .withOrganisationTypeResource(newOrganisationTypeResource().withName("test").withId(1L).build())
+                .withOrganisationTypeResource(HeukarPartnerOrganisationTypeEnum.BUSINESS)
                 .build(2);
 
         setupGetWithRestResultExpectations(heukarUrl + "/find-by-application-id/" + applicationId, heukarPartnerOrganisationResourceListType(), resourceList);
@@ -57,7 +57,7 @@ public class HeukarPartnerOrganisationRestServiceImplTest extends BaseRestServic
         HeukarPartnerOrganisationResource resource = newHeukarPartnerOrganisationResource()
                 .withId(1L)
                 .withApplicationId(1L)
-                .withOrganisationTypeResource(newOrganisationTypeResource().withName("test").withId(1L).build())
+                .withOrganisationTypeResource(HeukarPartnerOrganisationTypeEnum.RESEARCH)
                 .build();
 
         setupGetWithRestResultExpectations(heukarUrl + "/" + resource.getId(), HeukarPartnerOrganisationResource.class, resource);

@@ -17,9 +17,7 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
         HeukarPartnerOrganisationResource resource = new HeukarPartnerOrganisationResource();
         resource.setApplicationId(domain.getApplicationId());
         resource.setId(domain.getId());
-        resource.setOrganisationTypeId(domain.getOrganisationType().getId());
-        resource.setName(domain.getOrganisationType().getName());
-        resource.setDescription(domain.getOrganisationType().getDescription());
+        resource.setHeukarPartnerOrganisationType(domain.getOrganisationType());
         return resource;
     }
 
@@ -38,7 +36,7 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
 
     @Override
     public HeukarPartnerOrganisation mapToDomain(HeukarPartnerOrganisationResource resource) {
-        return mapWithApplicationIdToDomain(resource.getApplicationId(), resource.getOrganisationTypeId());
+        return mapWithApplicationIdToDomain(resource.getApplicationId(), resource.getHeukarPartnerOrganisationType().getId());
     }
 
     public HeukarPartnerOrganisation mapWithApplicationIdToDomain(Long applicationId, Long organisationTypeId) {

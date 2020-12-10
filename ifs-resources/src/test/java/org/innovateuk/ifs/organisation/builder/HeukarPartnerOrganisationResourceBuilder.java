@@ -2,7 +2,7 @@ package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -39,9 +39,9 @@ public class HeukarPartnerOrganisationResourceBuilder extends BaseBuilder<Heukar
         return withArraySetFieldByReflection("applicationId", ids);
     }
 
-    public HeukarPartnerOrganisationResourceBuilder withOrganisationTypeResource(OrganisationTypeResource... organisationTypeResources) {
+    public HeukarPartnerOrganisationResourceBuilder withOrganisationTypeResource(HeukarPartnerOrganisationTypeEnum... organisationTypeResources) {
         return withArray((organisationTypeResource, heukarPartnerOrganisationResource) ->
-                setField("organisationTypeResource", organisationTypeResource, heukarPartnerOrganisationResource), organisationTypeResources);
+                setField("heukarPartnerOrganisationType", organisationTypeResource, heukarPartnerOrganisationResource), organisationTypeResources);
     }
 
 }

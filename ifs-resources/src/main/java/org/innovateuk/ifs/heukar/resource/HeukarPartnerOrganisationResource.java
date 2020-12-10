@@ -4,9 +4,7 @@ public class HeukarPartnerOrganisationResource {
     private Long id;
     private Long applicationId;
 
-    private Long organisationTypeId;
-    private String name;
-    private String description;
+    private HeukarPartnerOrganisationTypeEnum heukarPartnerOrganisationType;
 
     public Long getId() {
         return id;
@@ -24,27 +22,12 @@ public class HeukarPartnerOrganisationResource {
         this.applicationId = applicationId;
     }
 
-    public Long getOrganisationTypeId() {
-        return organisationTypeId;
+    public HeukarPartnerOrganisationTypeEnum getHeukarPartnerOrganisationType() {
+        return heukarPartnerOrganisationType;
     }
 
-    public void setOrganisationTypeId(Long organisationTypeId) {
-        this.organisationTypeId = organisationTypeId;
+    public void setHeukarPartnerOrganisationType(HeukarPartnerOrganisationTypeEnum heukarPartnerOrganisationType) {
+        this.heukarPartnerOrganisationType = heukarPartnerOrganisationType;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

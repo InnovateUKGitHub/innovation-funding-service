@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
@@ -29,7 +30,7 @@ public class ApplicationTeamViewModelTest {
         HeukarPartnerOrganisationResource org1 = newHeukarPartnerOrganisationResource()
                 .withId(1L, 2L)
                 .withApplicationId(1L, 2L)
-                .withOrganisationTypeResource(newOrganisationTypeResource().withId(1L).withName("test").build())
+                .withOrganisationTypeResource(HeukarPartnerOrganisationTypeEnum.BUSINESS)
                 .build();
 
         partnerOrganisationResourceList.add(org1);

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
 import org.innovateuk.ifs.heukar.mapper.HeukarPartnerOrganisationMapper;
 import org.innovateuk.ifs.heukar.repository.HeukarPartnerOrganisationRepository;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.junit.Before;
@@ -42,7 +43,7 @@ public class HeukarPartnerOrganisationServiceImplTest extends BaseServiceUnitTes
     public void setup() {
         partnerOrganisation = new HeukarPartnerOrganisation();
         partnerOrganisation.setApplicationId(1L);
-        partnerOrganisation.setOrganisationType(new OrganisationType());
+        partnerOrganisation.setOrganisationType(HeukarPartnerOrganisationTypeEnum.BUSINESS);
         when(heukarPartnerOrganisationRepository.findAllByApplicationId(1L)).thenReturn(newArrayList(partnerOrganisation));
         resource = new HeukarPartnerOrganisationResource();
         when(mapper.mapToResource(partnerOrganisation)).thenReturn(resource);

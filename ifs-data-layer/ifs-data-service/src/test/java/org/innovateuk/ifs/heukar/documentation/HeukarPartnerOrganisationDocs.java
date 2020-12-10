@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.heukar.documentation;
 
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.builder.HeukarPartnerOrganisationResourceBuilder;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.organisation.builder.HeukarPartnerOrganisationResourceBuilder.newHeukarPartnerOrganisationResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 
 public class HeukarPartnerOrganisationDocs {
 
@@ -27,7 +25,7 @@ public class HeukarPartnerOrganisationDocs {
 
     public static final HeukarPartnerOrganisationResourceBuilder heukarParterOrganisationResourceBuilder =
             newHeukarPartnerOrganisationResource()
-                    .withOrganisationTypeResource(newOrganisationTypeResource().withId(1L).withName("test").build())
+                    .withOrganisationTypeResource(HeukarPartnerOrganisationTypeEnum.fromId(1))
                     .withId(1L)
                     .withApplicationId(1L);
 
