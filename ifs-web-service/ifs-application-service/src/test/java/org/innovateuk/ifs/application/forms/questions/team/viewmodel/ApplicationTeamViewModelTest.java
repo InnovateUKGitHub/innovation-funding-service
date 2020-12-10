@@ -2,15 +2,13 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.organisation.resource;
+package org.innovateuk.ifs.heukar.resource;
 
 public class HeukarPartnerOrganisationResource {
     private Long id;
@@ -7,7 +7,6 @@ public class HeukarPartnerOrganisationResource {
     private Long organisationTypeId;
     private String name;
     private String description;
-//    private OrganisationTypeResource organisationTypeResource;
 
     public Long getId() {
         return id;
@@ -24,15 +23,6 @@ public class HeukarPartnerOrganisationResource {
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
     }
-
-//    public OrganisationTypeResource getOrganisationTypeResource() {
-//        return organisationTypeResource;
-//    }
-//
-//    public void setOrganisationTypeResource(OrganisationTypeResource organisationTypeResource) {
-//        this.organisationTypeResource = organisationTypeResource;
-//    }
-
 
     public Long getOrganisationTypeId() {
         return organisationTypeId;

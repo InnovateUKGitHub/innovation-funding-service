@@ -2,27 +2,21 @@ package org.innovateuk.ifs.heukar.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
-import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisationTypeEnum.fromId;
+import static org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum.fromId;
 
 @Component
 public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
-
-    @Autowired
-    private OrganisationTypeMapper organisationTypeMapper;
 
     @Override
     public HeukarPartnerOrganisationResource mapToResource(HeukarPartnerOrganisation domain) {
         HeukarPartnerOrganisationResource resource = new HeukarPartnerOrganisationResource();
         resource.setApplicationId(domain.getApplicationId());
         resource.setId(domain.getId());
-//        resource.setOrganisationTypeResource(organisationTypeMapper.mapToResource(domain.getOrganisationType()));
         resource.setOrganisationTypeId(domain.getOrganisationType().getId());
         resource.setName(domain.getOrganisationType().getName());
         resource.setDescription(domain.getOrganisationType().getDescription());
@@ -36,8 +30,8 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
 
     public HeukarPartnerOrganisation mapExistingToDomain(Long partnerOrgId, Long applicationId, Long orgTypeId) {
         HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
+        domain.setOrganisationType(fromId(orgTypeId));
         domain.setApplicationId(applicationId);
-//        domain.setOrganisationType(organisationTypeMapper.mapIdToDomain(orgTypeId));
         domain.setId(partnerOrgId);
         return domain;
     }

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.heukar.domain;
+package org.innovateuk.ifs.heukar.resource;
 
 import static java.util.Arrays.stream;
 

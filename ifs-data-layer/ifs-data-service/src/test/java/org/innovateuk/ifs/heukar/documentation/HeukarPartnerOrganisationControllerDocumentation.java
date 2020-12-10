@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.heukar.controller.HeukarPartnerOrganisationController;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
 import org.innovateuk.ifs.heukar.transactional.HeukarPartnerOrganisationService;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.junit.Test;
 import org.mockito.Mock;
 

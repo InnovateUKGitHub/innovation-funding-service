@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.forms.questions.team.populator;
 
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamHeukarPartnerOrganisationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
+import org.innovateuk.ifs.heukar.service.HeukarPartnerOrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +13,12 @@ import java.util.List;
 public class ApplicationTeamHeukarPartnerOrganisationPopulator {
 
     @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
+    private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
 
     public ApplicationTeamHeukarPartnerOrganisationViewModel populate(ApplicationResource applicationResource, long questionId) {
-        List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess();
+        List<HeukarPartnerOrganisationTypeEnum> organisationTypeResourceList =
+                heukarPartnerOrganisationRestService.getAllHeukarPartnerOrganisationTypes().getSuccess();
+
         return new ApplicationTeamHeukarPartnerOrganisationViewModel(applicationResource, questionId, organisationTypeResourceList);
     }
 

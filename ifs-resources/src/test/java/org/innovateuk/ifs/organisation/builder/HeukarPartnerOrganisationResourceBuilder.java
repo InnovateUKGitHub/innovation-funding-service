@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;

@@ -3,7 +3,8 @@ package org.innovateuk.ifs.heukar.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -30,4 +31,7 @@ public interface HeukarPartnerOrganisationService {
     @SecuredBySpring(value = "READ", description = "An applicant can view the partner organisations for their application")
     ServiceResult<HeukarPartnerOrganisationResource> findOne(Long id);
 
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "READ", description = "An applicant can view the partner organisations for their application")
+    ServiceResult<List<HeukarPartnerOrganisationTypeEnum>> getAllHeukarPartnerOrganisationTypes();
 }

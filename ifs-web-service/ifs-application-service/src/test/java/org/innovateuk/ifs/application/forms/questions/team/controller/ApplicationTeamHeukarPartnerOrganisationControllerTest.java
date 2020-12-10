@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.heukar.service.HeukarPartnerOrganisationRestService;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.junit.Test;
 import org.mockito.Mock;

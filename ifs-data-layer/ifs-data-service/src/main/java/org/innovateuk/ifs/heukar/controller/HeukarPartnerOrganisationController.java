@@ -2,8 +2,9 @@ package org.innovateuk.ifs.heukar.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.innovateuk.ifs.heukar.transactional.HeukarPartnerOrganisationService;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,11 @@ public class HeukarPartnerOrganisationController {
     @GetMapping("/{id}")
     public RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(@PathVariable long id) {
         return heukarPartnerOrganisationService.findOne(id).toGetResponse();
+    }
+
+    @GetMapping("/all-org-types")
+    public RestResult<List<HeukarPartnerOrganisationTypeEnum>> getAllHeukarPartnerOrganisationTypes(){
+        return heukarPartnerOrganisationService.getAllHeukarPartnerOrganisationTypes().toGetResponse();
     }
 
 }

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.heukar.domain;
 
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 
 import javax.persistence.*;
 
@@ -17,10 +17,6 @@ public class HeukarPartnerOrganisation {
 
     @Enumerated(EnumType.STRING)
     private HeukarPartnerOrganisationTypeEnum organisationType;
-
-//    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "organisation_type_id", referencedColumnName = "id")
-//    private OrganisationType organisationType;
 
     public HeukarPartnerOrganisation() {
         // no arg constructor
@@ -41,14 +37,6 @@ public class HeukarPartnerOrganisation {
     public void setOrganisationType(HeukarPartnerOrganisationTypeEnum organisationType) {
         this.organisationType = organisationType;
     }
-
-    //    public OrganisationType getOrganisationType() {
-//        return organisationType;
-//    }
-//
-//    public void setOrganisationType(OrganisationType organisationType) {
-//        this.organisationType = organisationType;
-//    }
 
     public long getId() {
         return id;

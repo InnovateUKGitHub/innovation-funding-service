@@ -3,7 +3,7 @@ package org.innovateuk.ifs.heukar.service;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 

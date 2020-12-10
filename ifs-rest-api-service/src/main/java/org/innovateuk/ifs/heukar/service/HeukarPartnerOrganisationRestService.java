@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.heukar.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface HeukarPartnerOrganisationRestService {
     RestResult<Void> removeHeukarPartnerOrganisation(Long id);
 
     RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(long selectedId);
+
+    RestResult<List<HeukarPartnerOrganisationTypeEnum>> getAllHeukarPartnerOrganisationTypes();
 }

@@ -4,16 +4,17 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
 import org.innovateuk.ifs.heukar.mapper.HeukarPartnerOrganisationMapper;
 import org.innovateuk.ifs.heukar.repository.HeukarPartnerOrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarPartnerOrganisationResourceListType;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -59,6 +60,11 @@ public class HeukarPartnerOrganisationServiceImpl implements HeukarPartnerOrgani
     public ServiceResult<HeukarPartnerOrganisationResource> findOne(Long id) {
         return find(heukarPartnerOrganisationRepository.findById(id), notFoundError(HeukarPartnerOrganisation.class))
                 .andOnSuccessReturn(partnerOrganisation -> mapper.mapToResource(partnerOrganisation));
+    }
+
+    @Override
+    public ServiceResult<List<HeukarPartnerOrganisationTypeEnum>> getAllHeukarPartnerOrganisationTypes() {
+        return serviceSuccess(Arrays.asList(HeukarPartnerOrganisationTypeEnum.values()));
     }
 
 }

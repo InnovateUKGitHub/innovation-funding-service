@@ -8,7 +8,7 @@ import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
 import org.innovateuk.ifs.heukar.mapper.HeukarPartnerOrganisationMapper;
 import org.innovateuk.ifs.heukar.repository.HeukarPartnerOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 
 import java.util.List;
 
@@ -12,10 +12,10 @@ public class ApplicationTeamHeukarPartnerOrganisationViewModel implements BaseAn
     private final long applicationId;
     private final String applicationName;
     private final String competitionName;
-    private final List<OrganisationTypeResource> types;
+    private final List<HeukarPartnerOrganisationTypeEnum> types;
 
     public ApplicationTeamHeukarPartnerOrganisationViewModel(ApplicationResource application, long questionId,
-                                                             List<OrganisationTypeResource> types
+                                                             List<HeukarPartnerOrganisationTypeEnum> types
                                                        ) {
         this.questionId = questionId;
         this.applicationId = application.getId();
@@ -42,7 +42,7 @@ public class ApplicationTeamHeukarPartnerOrganisationViewModel implements BaseAn
         return questionId;
     }
 
-    public List<OrganisationTypeResource> getTypes() {
+    public List<HeukarPartnerOrganisationTypeEnum> getTypes() {
         return types;
     }
 

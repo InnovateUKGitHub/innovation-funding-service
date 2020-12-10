@@ -2,12 +2,14 @@ package org.innovateuk.ifs.heukar.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.organisation.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarPartnerOrganisationResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.heukarPartnerOrganisationTypeEnumListType;
 
 @Service
 public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService implements HeukarPartnerOrganisationRestService {
@@ -37,6 +39,11 @@ public class HeukarPartnerOrganisationRestServiceImpl extends BaseRestService im
     @Override
     public RestResult<HeukarPartnerOrganisationResource> getExistingPartnerById(long id) {
         return getWithRestResult(heukarRestUrl + "/" + id, HeukarPartnerOrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<List<HeukarPartnerOrganisationTypeEnum>> getAllHeukarPartnerOrganisationTypes() {
+        return getWithRestResult(heukarRestUrl + "/all-org-types", heukarPartnerOrganisationTypeEnumListType());
     }
 
 }
