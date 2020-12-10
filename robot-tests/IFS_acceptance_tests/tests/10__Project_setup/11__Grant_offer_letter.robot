@@ -189,7 +189,7 @@ PM can view the grant offer letter page
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
-    Then the user should see the element             jQuery = p:contains("The grant offer (GOL) letter has been created using the information provided during project setup.")
+    Then the user should see the element             jQuery = p:contains("The grant offer letter (GOL) has been created using the information provided during project setup.")
     And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
