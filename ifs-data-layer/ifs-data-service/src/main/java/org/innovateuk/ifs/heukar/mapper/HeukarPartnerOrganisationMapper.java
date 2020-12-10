@@ -1,29 +1,38 @@
 package org.innovateuk.ifs.heukar.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
+import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.heukar.domain.HeukarPartnerOrganisation;
 import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
-import org.springframework.stereotype.Component;
-
-import java.util.stream.Stream;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import static org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum.fromId;
 
-@Component
-public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
+@Mapper(
+        config = GlobalMapperConfig.class
+)
+public abstract class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrganisation, HeukarPartnerOrganisationResource, Long> {
 
+    @Mappings({
+            @Mapping(source = "organisationType", target = "heukarPartnerOrganisationType"),
+    })
     @Override
-    public HeukarPartnerOrganisationResource mapToResource(HeukarPartnerOrganisation domain) {
-        HeukarPartnerOrganisationResource resource = new HeukarPartnerOrganisationResource();
-        resource.setApplicationId(domain.getApplicationId());
-        resource.setId(domain.getId());
-        resource.setHeukarPartnerOrganisationType(domain.getOrganisationType());
-        return resource;
-    }
+    public abstract HeukarPartnerOrganisationResource mapToResource(HeukarPartnerOrganisation domain);
 
+
+    @Mappings({
+            @Mapping(source = "heukarPartnerOrganisationType", target = "organisationType")
+    })
     @Override
-    public Iterable<HeukarPartnerOrganisationResource> mapToResource(Iterable<HeukarPartnerOrganisation> domain) {
-        return (Iterable<HeukarPartnerOrganisationResource>) Stream.of(domain).map(this::mapToResource);
+    public abstract HeukarPartnerOrganisation mapToDomain(HeukarPartnerOrganisationResource resource);
+
+    public HeukarPartnerOrganisation mapWithApplicationIdToDomain(Long applicationId, Long organisationTypeId) {
+        HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
+        domain.setOrganisationType(fromId(organisationTypeId));
+        domain.setApplicationId(applicationId);
+        return domain;
     }
 
     public HeukarPartnerOrganisation mapExistingToDomain(Long partnerOrgId, Long applicationId, Long orgTypeId) {
@@ -34,20 +43,4 @@ public class HeukarPartnerOrganisationMapper extends BaseMapper<HeukarPartnerOrg
         return domain;
     }
 
-    @Override
-    public HeukarPartnerOrganisation mapToDomain(HeukarPartnerOrganisationResource resource) {
-        return mapWithApplicationIdToDomain(resource.getApplicationId(), resource.getHeukarPartnerOrganisationType().getId());
-    }
-
-    public HeukarPartnerOrganisation mapWithApplicationIdToDomain(Long applicationId, Long organisationTypeId) {
-        HeukarPartnerOrganisation domain = new HeukarPartnerOrganisation();
-        domain.setOrganisationType(fromId(organisationTypeId));
-        domain.setApplicationId(applicationId);
-        return domain;
-    }
-
-    @Override
-    public Iterable<HeukarPartnerOrganisation> mapToDomain(Iterable<HeukarPartnerOrganisationResource> resource) {
-        return (Iterable<HeukarPartnerOrganisation>) Stream.of(resource).map(this::mapToDomain);
-    }
 }
