@@ -136,6 +136,10 @@ public class GrantOfferLetterModel {
 
     public boolean getSignedGrantOfferLetterFileAvailable() { return grantOfferState.isSignedGrantOfferLetterReceivedByInternalTeam(); }
 
+    public boolean getSignedAdditionalContractFileAvailable() {
+        return getSignedGrantOfferLetterFileAvailable() && (signedAdditionalContractFile != null);
+    }
+
     public boolean isShowRemoveOfferLetterButton() {
         return grantOfferLetterFile != null && !grantOfferState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }

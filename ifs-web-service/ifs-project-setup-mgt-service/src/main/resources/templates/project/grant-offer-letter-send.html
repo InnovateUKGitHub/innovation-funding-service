@@ -190,20 +190,23 @@
             </div>
 
             <th:block th:if="${model.ktp}">
-                <h2 class="govuk-heading-m govuk-!-margin-top-6" >Signed annex</h2>
-                <div class="upload-section">
-                    <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <th:block th:if="${model.getSignedAdditionalContractFileAvailable()}">
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6" >Signed annex</h2>
+                    <div class="upload-section">
                         <p class="uploaded-file govuk-body">
                             <a class="govuk-link"
                                target="_blank"
                                th:href="@{/project/{id}/grant-offer-letter/signed-additional-contract(id=${model.projectId})}"
                                th:text="|${model.signedAdditionalContractFile?.filename} (opens in a new window)|">signed-annex.PDF</a>
                         </p>
-                    </th:block>
-                    <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                    </div>
+                </th:block>
+                <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6" >Signed annex</h2>
+                    <div class="upload-section">
                         <p class="govuk-body">Awaiting upload by the Project Manager</p>
-                    </th:block>
-                </div>
+                    </div>
+                </th:block>
             </th:block>
         </th:block>
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
