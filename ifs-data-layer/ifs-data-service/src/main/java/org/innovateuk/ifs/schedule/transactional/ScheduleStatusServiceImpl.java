@@ -33,9 +33,7 @@ public class ScheduleStatusServiceImpl implements ScheduleStatusService {
         scheduleStatusRepository.save(new ScheduleStatus(jobName));
     }
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void clearTimedOutJobs() {
+    private void clearTimedOutJobs() {
         int timeoutMins = 5;
         scheduleStatusRepository.deleteAll(
                 scheduleStatusRepository.findByCreatedOnBefore(ZonedDateTime.now().minusMinutes(timeoutMins))

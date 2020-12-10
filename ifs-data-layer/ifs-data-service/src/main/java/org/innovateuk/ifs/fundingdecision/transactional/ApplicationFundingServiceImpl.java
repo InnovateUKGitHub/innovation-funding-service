@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflow
 import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
 import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -19,6 +20,8 @@ import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
@@ -31,11 +34,11 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NONE_PROVIDED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HORIZON_2020_FUNDING;
@@ -71,6 +74,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     @Autowired
     private AverageAssessorScoreRepository averageAssessorScoreRepository;
 
+    @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -92,7 +98,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<List<FundingDecisionToSendApplicationResource>> getNotificationResourceForApplications(List<Long> applicationIds) {
-        return serviceSuccess(StreamSupport.stream( applicationRepository.findAllById(applicationIds).spliterator(), false)
+        return serviceSuccess(StreamSupport.stream(applicationRepository.findAllById(applicationIds).spliterator(), false)
                 .map(application -> {
                     Organisation organisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
                     return new FundingDecisionToSendApplicationResource(application.getId(), application.getName(), organisation.getName(), FundingDecision.valueOf(application.getFundingDecision().name()));
@@ -105,48 +111,91 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     public ServiceResult<Void> notifyApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
 
         List<Application> applications = getFundingApplications(fundingNotificationResource.getFundingDecisions());
-        setApplicationState(fundingNotificationResource.getFundingDecisions(), applications);
+        ServiceResult<Void> result = setApplicationState(fundingNotificationResource.getFundingDecisions(), applications);
+        if (!applications.isEmpty() && applications.get(0).getCompetition().isKtp()) {
+            result = result.andOnSuccess(() -> setKtpFundingState(applications, fundingNotificationResource.getFundingDecisions()));
+        }
+        return result.andOnSuccess(() -> {
+            List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets;
+            if (!applications.isEmpty() && applications.get(0).getCompetition().isKtp()) {
+                fundingNotificationTargets = getKtpApplicantNotificationTargets(applications);
+            } else {
+                fundingNotificationTargets = getApplicantNotificationTargets(fundingNotificationResource.calculateApplicationIds());
+            }
+            ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
 
-        List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getApplicantNotificationTargets(fundingNotificationResource.calculateApplicationIds());
-        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
+            return aggregatedFundingTargets.handleSuccessOrFailure(
+                    failure -> serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS),
+                    success -> {
 
-        return aggregatedFundingTargets.handleSuccessOrFailure(
-                failure -> serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS),
-                success -> {
+                        Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess());
+                        ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotificationWithFlush(fundingNotification, EMAIL);
 
-                    Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess());
-                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotificationWithFlush(fundingNotification, EMAIL);
-
-                    ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
-                            aggregate(simpleMap(
-                                    applications, application ->
-                                            applicationService.setApplicationFundingEmailDateTime(application.getId(), ZonedDateTime.now()))))
-                            .andOnSuccessReturnVoid();
-                    return setEmailDateTimeResult.andOnSuccess(() -> {
-                        if (!applications.isEmpty()) {
-                            return competitionService.manageInformState(
-                                    applications.get(0)
-                                            .getCompetition()
-                                            .getId());
-                        }
-                        return serviceSuccess();
+                        ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
+                                aggregate(simpleMap(
+                                        applications, application ->
+                                                applicationService.setApplicationFundingEmailDateTime(application.getId(), ZonedDateTime.now()))))
+                                .andOnSuccessReturnVoid();
+                        return setEmailDateTimeResult.andOnSuccess(() -> {
+                            if (!applications.isEmpty()) {
+                                return competitionService.manageInformState(
+                                        applications.get(0)
+                                                .getCompetition()
+                                                .getId());
+                            }
+                            return serviceSuccess();
+                        });
                     });
+        });
+    }
+
+    private List<ServiceResult<Pair<Long, NotificationTarget>>> getKtpApplicantNotificationTargets(List<Application> applications) {
+        return applications.stream().map(application -> {
+            List<NotificationTarget> targets = application.getProject().getProjectUsers().stream()
+                    .filter(pu -> pu.getRole() == ProjectParticipantRole.PROJECT_PARTNER)
+                    .map(pu -> new UserNotificationTarget(pu.getUser().getName(), pu.getUser().getEmail()))
+                    .collect(toList());
+            application.getProject().getProjectMonitoringOfficer().ifPresent(mo -> targets.add(new UserNotificationTarget(mo.getUser().getName(), mo.getUser().getEmail())));
+            return targets.stream().map(target -> Pair.of(application.getId(), target)).collect(toList());
+        })
+                .flatMap(List::stream)
+                .map(ServiceResult::serviceSuccess)
+                .collect(toList());
+    }
+
+    private ServiceResult<Void> setKtpFundingState(List<Application> applications, Map<Long, FundingDecision> fundingDecisions) {
+        return aggregate(applications.stream().map(application -> {
+            if (application.getProject() == null) {
+                return serviceFailure(new Error(FUNDING_DECISION_KTP_PROJECT_NOT_YET_CREATED, application.getId())).andOnSuccessReturnVoid();
+            }
+            if (fundingDecisions.get(application.getId()) == UNFUNDED) {
+                return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+                    if (projectWorkflowHandler.markAsUnsuccessful(application.getProject(), user)) {
+                        return serviceSuccess();
+                    }
+                    return serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW).andOnSuccessReturnVoid();
                 });
+            }
+            return serviceSuccess();
+        }).collect(toList()))
+                .andOnSuccessReturnVoid();
     }
 
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
-
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
-        return (List) applicationRepository.findAllById(applicationIds);
+        return newArrayList(applicationRepository.findAllById(applicationIds));
     }
 
-    private void setApplicationState(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
-
-        applications.forEach(app -> {
+    private ServiceResult<Void> setApplicationState(Map<Long, FundingDecision> applicationFundingDecisions, List<Application> applications) {
+        return aggregate(applications.stream().map(app -> {
             FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
             ApplicationState state = stateFromDecision(applicationFundingDecision);
-            applicationWorkflowHandler.notifyFromApplicationState(app, state);
-        });
+            if (state == app.getApplicationProcess().getProcessState() || applicationWorkflowHandler.notifyFromApplicationState(app, state)) {
+                return serviceSuccess();
+            }
+            return serviceFailure(FUNDING_DECISION_WORKFLOW_FAILURE).andOnSuccessReturnVoid();
+        }).collect(toList()))
+                .andOnSuccessReturnVoid();
     }
 
     private List<Application> findValidApplications(Map<Long, FundingDecision> applicationFundingDecisions, long competitionId) {
@@ -198,7 +247,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId
     ) {
         Competition competition = applications.get(0)
-                        .getCompetition();
+                .getCompetition();
         boolean includeAsesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
         Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
@@ -230,7 +279,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         List<ServiceResult<Pair<Long, NotificationTarget>>> applicationNotificationTargets = new ArrayList<>();
         applicationIds.forEach(applicationId -> {
             ServiceResult<List<ProcessRole>> processRoles = getProcessRoles(applicationId, COLLABORATOR);
-            if(processRoles.isSuccess()) {
+            if (processRoles.isSuccess()) {
                 processRoles.getSuccess()
                         .stream()
                         .filter(pr -> pr.getUser().isActive())
