@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
@@ -92,7 +93,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     @Test
     public void revertToDefault() {
         Competition competition = newCompetition()
-                .withStateAid(true)
+                .withFundingRules(FundingRules.STATE_AID)
                 .withResearchCategories(newResearchCategory().buildSet(1))
                 .build();
 
@@ -145,8 +146,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     @Test
     public void revertToDefault_nonaid() {
         Competition competition = newCompetition()
-                .withStateAid(true)
-                .withResearchCategories(newResearchCategory().buildSet(1))
+                .withFundingRules(FundingRules.NOT_AID)
                 .build();
 
         ResearchCategory feasability = newResearchCategory().build();
@@ -167,33 +167,33 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == 70)));
+                && max.getMaximum() == null)));
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == 60)));
+                && max.getMaximum() == null)));
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(feasability.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == 50)));
+                && max.getMaximum() == null)));
 
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == 70)));
+                && max.getMaximum() == null)));
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == 60)));
+                && max.getMaximum() == null)));
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(industrial.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == 50)));
+                && max.getMaximum() == null)));
 
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.SMALL
-                && max.getMaximum() == 45)));
+                && max.getMaximum() == null)));
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.MEDIUM
-                && max.getMaximum() == 35)));
+                && max.getMaximum() == null)));
         verify(grantClaimMaximumRepository).save(argThat(lambdaMatches(max -> max.getResearchCategory().getId().equals(experimental.getId())
                 && max.getOrganisationSize() == OrganisationSize.LARGE
-                && max.getMaximum() == 25)));
+                && max.getMaximum() == null)));
     }
 
     @Test
