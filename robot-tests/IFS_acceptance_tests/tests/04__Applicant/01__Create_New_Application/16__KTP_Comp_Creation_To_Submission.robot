@@ -879,7 +879,7 @@ Internal user can see KTP GOL template
     Given log in as a different user                    &{ifs_admin_user_credentials}
     And the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link                jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("Review")
-    Then the user should see the element                link = View the grant offer letter page (opens in a new window)
+    And the user clicks the button/link                 link = View the grant offer letter page (opens in a new window)
     And Select Window                                   title = Print version with CSS
     Then element should contain                         xpath = //p[4]     Knowledge transfer partnership (KTP) grant offer letter
     [Teardown]  the user closes the last opened tab
