@@ -7,7 +7,7 @@
                     <th:block th:if="${model.currentCompetition.isH2020()}">Grant transfer submission complete</th:block>
                     <th:block th:unless="${model.currentCompetition.isH2020()}">Application submitted</th:block>
                 </h2>
-        <div class="govuk-panel__body govuk-!-font-size-24">
+        <div class="govuk-panel__body govuk-!-font-size-19">
             Application number: <span th:text="${model.currentApplication.id}" /><br/>
             Your application for the competition '<span th:text="${model.currentCompetition.name}" />'<br/>
             was submitted
