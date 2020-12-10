@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.v
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
@@ -43,6 +44,8 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
     }
 
     public boolean isShowResetButton() {
-        return !generalSetupViewModel.getState().isPreventEdit() && Boolean.TRUE.equals(generalSetupViewModel.getCompetition().getStateAid()) && !categories.isEmpty();
+        return !generalSetupViewModel.getState().isPreventEdit() &&
+                generalSetupViewModel.getCompetition().getFundingRules() == FundingRules.STATE_AID &&
+                !categories.isEmpty();
     }
 }

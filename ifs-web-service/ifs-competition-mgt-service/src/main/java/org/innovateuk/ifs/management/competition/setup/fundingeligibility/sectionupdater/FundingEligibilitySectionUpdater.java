@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -72,7 +73,7 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
 
     private ServiceResult<Void> revertFundingLevels(CompetitionResource competition) {
         return grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()).toServiceResult().andOnSuccess(() -> {
-            if (TRUE.equals(competition.getStateAid()) && !competition.getResearchCategories().isEmpty()) {
+            if (TRUE.equals(competition.getFundingRules() == FundingRules.STATE_AID) && !competition.getResearchCategories().isEmpty()) {
                 return competitionSetupRestService.markSectionComplete(competition.getId(), FUNDING_LEVEL_PERCENTAGE).toServiceResult();
             }
             return serviceSuccess();
