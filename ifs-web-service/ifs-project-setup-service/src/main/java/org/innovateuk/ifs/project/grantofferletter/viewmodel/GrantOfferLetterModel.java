@@ -202,7 +202,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         }
 
         if (!isLeadPartner()) {
-            return !isGrantOfferLetterRejected();
+            return isSubmitted() && !isGrantOfferLetterRejected();
         }
 
         return isSubmitted();
