@@ -117,7 +117,7 @@
                 <th:block th:if="${model.projectManager and !model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section govuk-!-margin-top-6">
                         <h2 class="govuk-heading-m" th:text="|Sending your signed ${model.documentName} to Innovate UK|"></h2>
-                        <h2 class="govuk-heading-s govuk-!-margin-top-4" th:text="|Upload signed ${model.documentName}|"></h2>
+                        <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-0" th:text="|Upload signed ${model.documentName}|"></h2>
                         <p class="govuk-body" th:text="|The project manager is required to provide a signed copy of the ${model.documentName}.|"></p>
                         <details class="govuk-details">
                             <summary class="govuk-details__summary">
@@ -172,7 +172,7 @@
 
                     <div th:if="${model.grantOfferLetterSent and !model.submitted}" class="upload-section govuk-!-margin-top-6">
                         <h2 class="govuk-heading-m" th:text="|Sending your signed annex to Innovate UK|"></h2>
-                        <h2 class="govuk-heading-s govuk-!-margin-top-4">Upload signed annex</h2>
+                        <h2 class="govuk-heading-s govuk-!-margin-top-4 govuk-!-margin-bottom-0">Upload signed annex</h2>
                         <p class="govuk-body">The finance contact must provide a signed copy of the annex.</p>
                         <details class="govuk-details">
                             <summary class="govuk-details__summary">
