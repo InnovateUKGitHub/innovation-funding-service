@@ -125,8 +125,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return projectManager
                 && !isSubmitted()
                 && isOfferSigned()
-                && grantOfferLetterFile != null
-                && (ktp ? additionalContractFile != null && isAdditionalContractSigned() : true);
+                && grantOfferLetterFile != null;
     }
 
     public boolean isProjectManager() {
