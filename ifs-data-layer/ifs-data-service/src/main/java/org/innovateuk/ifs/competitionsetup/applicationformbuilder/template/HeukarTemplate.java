@@ -73,7 +73,7 @@ public class HeukarTemplate implements CompetitionTemplate {
         competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
-        competition.setMaxProjectDuration(60);
+        competition.setMaxProjectDuration(84);
         competition.setCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE);
         competition.setUseResubmissionQuestion(false);
         competition.setApplicationFinanceType(NO_FINANCES);

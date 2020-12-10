@@ -81,6 +81,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...            IFS-8614 KTP Project setup: GOL template
+...
 ...            IFS-8619 Application status page for KTP comp - content incorrect
 ...
 Suite Setup       Custom Suite Setup
@@ -609,7 +611,7 @@ the project finance user cannot see the project start date
     When the user navigates to the page                ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user clicks the button/link               link = ${ApplicationID}
     And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
-    And the user should see the element                jQuery = dt:contains("Duration in months")
+    And the user should see the element                jQuery = dt:contains("Project duration in months")
 
 The lead cannot view the project start date and duration and can see the correspondance address
     [Documentation]  IFS-7805 IFS-8070 IFS-8116
@@ -864,6 +866,16 @@ Monitoring officer sees correct label for T&C's
     When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
 
+Internal user can see KTP GOL template
+    [Documentation]  IFS-8614
+    Given log in as a different user                    &{ifs_admin_user_credentials}
+    And the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link                jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("Review")
+    And the user clicks the button/link                 link = View the grant offer letter page (opens in a new window)
+    And Select Window                                   title = Print version with CSS
+    Then element should contain                         xpath = //p[4]     Knowledge transfer partnership (KTP) grant offer letter
+    [Teardown]  the user closes the last opened tab
+
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
     Given log in as a different user                                &{ktpExistingLeadCredentials}
@@ -1084,17 +1096,6 @@ the user should see knowledge based organisation fields
     the user should see the element     jQuery = label:contains("Find your organisation")
     the user should see the element     link = checking your organisation's alternative name (opens in a new window)
     the user should see the element     link = enter its details manually
-
-#the user selects a knowledge based organisation
-#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-#    input text                          id = knowledgeBase        ${knowledgeBase}
-#    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
-#
-#the user apply with knowledge base organisation
-#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-#    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
-#    the user clicks the button/link                     jQuery = button:contains("Confirm")
-#    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
 
 the user should only see KB partner organisations
     the user should see the element         jQuery = span:contains("${businessOrganisationName}") + span:contains("${bussinessOrgInfoText}")
