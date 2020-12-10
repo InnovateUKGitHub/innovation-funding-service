@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.security;
+package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;

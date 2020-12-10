@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.forms.questions.granttransferdetails.saver
 import org.innovateuk.ifs.application.forms.questions.granttransferdetails.viewmodel.GrantTransferDetailsViewModel;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -37,14 +37,14 @@ public class GrantTransferDetailsControllerTest extends BaseControllerMockMVCTes
     private GrantTransferDetailsSaver grantTransferDetailsSaver;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private QuestionStatusRestService questionStatusRestService;
 
     @Override
     protected GrantTransferDetailsController supplyControllerUnderTest() {
-        return new GrantTransferDetailsController(grantTransferDetailsFormPopulator, grantTransferDetailsViewModelPopulator, grantTransferDetailsSaver, userRestService, questionStatusRestService);
+        return new GrantTransferDetailsController(grantTransferDetailsFormPopulator, grantTransferDetailsViewModelPopulator, grantTransferDetailsSaver, processRoleRestService, questionStatusRestService);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class GrantTransferDetailsControllerTest extends BaseControllerMockMVCTes
         ProcessRoleResource role = newProcessRoleResource().build();
 
         when(grantTransferDetailsSaver.save(grantTransferDetailsForm, applicationId)).thenReturn(restSuccess());
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(Collections.emptyList()));
 
         mockMvc.perform(
@@ -125,7 +125,7 @@ public class GrantTransferDetailsControllerTest extends BaseControllerMockMVCTes
         long applicationId = 2L;
 
         ProcessRoleResource role = newProcessRoleResource().build();
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(role));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
         GrantTransferDetailsViewModel viewModel = mock(GrantTransferDetailsViewModel.class);
         when(grantTransferDetailsViewModelPopulator.populate(applicationId, questionId, loggedInUser.getId())).thenReturn(viewModel);

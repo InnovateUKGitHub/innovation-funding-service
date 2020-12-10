@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
+import org.innovateuk.ifs.project.grantofferletter.template.domain.GolTemplate;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -152,7 +153,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean locationPerPartner = true;
 
+    @ZeroDowntime(reference = "IFS-8787", description = "TODO")
     private Boolean stateAid;
+
+    @Enumerated(EnumType.STRING)
+    private FundingRules fundingRules;
 
     private Boolean includeYourOrganisationSection;
 
@@ -197,6 +202,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "golTemplateId", referencedColumnName = "id")
+    private GolTemplate golTemplate;
 
     public Competition() {
         setupComplete = false;
@@ -763,6 +772,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isHeukar() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(CompetitionTypeEnum.HEUKAR.getText()))
+                .orElse(false);
+    }
+
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
@@ -875,12 +892,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.minProjectDuration = minProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -1018,5 +1035,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public boolean isAssessmentClosed() {
         return getCompetitionStatus() != null && getCompetitionStatus().isLaterThan(IN_ASSESSMENT);
+    }
+
+    public GolTemplate getGolTemplate() {
+        return golTemplate;
+    }
+
+    public void setGolTemplate(GolTemplate golTemplate) {
+        this.golTemplate = golTemplate;
     }
 }

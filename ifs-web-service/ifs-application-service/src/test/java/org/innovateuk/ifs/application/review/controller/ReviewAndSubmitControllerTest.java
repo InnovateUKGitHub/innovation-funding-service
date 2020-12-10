@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +44,8 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private CompetitionRestService competitionRestService;
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private UserService userService;
 

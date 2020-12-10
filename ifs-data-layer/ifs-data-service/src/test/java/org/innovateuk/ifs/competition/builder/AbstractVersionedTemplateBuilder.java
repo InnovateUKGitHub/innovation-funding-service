@@ -2,16 +2,16 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
-import org.innovateuk.ifs.competition.domain.TermsAndConditions;
+import org.innovateuk.ifs.competition.domain.VersionedTemplate;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-abstract class AbstractTermsAndConditionsBuilder<T extends TermsAndConditions, B> extends BaseBuilder<T, B> {
+abstract class AbstractVersionedTemplateBuilder<T extends VersionedTemplate, B> extends BaseBuilder<T, B> {
 
-    protected AbstractTermsAndConditionsBuilder(List<BiConsumer<Integer, T>> newActions) {
+    protected AbstractVersionedTemplateBuilder(List<BiConsumer<Integer, T>> newActions) {
         super(newActions);
     }
 

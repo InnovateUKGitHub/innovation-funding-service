@@ -7,10 +7,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
@@ -108,7 +105,11 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setName(initialDetailsForm.getTitle());
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
-        competition.setStateAid(initialDetailsForm.getStateAid());
+        if (Boolean.TRUE.equals(initialDetailsForm.getStateAid())) {
+            competition.setFundingRules(FundingRules.STATE_AID);
+        } else {
+            competition.setFundingRules(FundingRules.NOT_AID);
+        }
         competition.setFundingType(initialDetailsForm.getFundingType());
 
         errors.addAll(attemptOpeningDateSave(initialDetailsForm, competition));
