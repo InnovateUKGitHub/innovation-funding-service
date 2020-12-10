@@ -38,7 +38,7 @@
                     <h2 class="govuk-heading-s" th:unless="${model.ktp}" th:text="|Your signed ${model.documentName} has been rejected by Innovate UK|"></h2>
                     <p class="govuk-body" th:unless="${model.ktp}">Someone will be in touch with you soon.</p>
                     <h2 class="govuk-heading-s" th:if="${model.ktp}" th:text="|Your signed ${model.documentName} and annex have been reviewed and rejected|"></h2>
-                    <p class="govuk-body" th:if="${model.ktp}">We will contact you with our reasons for rejecting soon.</p>
+                    <p class="govuk-body" th:if="${model.ktp}">We will contact you with our reasons for rejection soon.</p>
                 </div>
             </th:block>
 
@@ -150,7 +150,7 @@
                 <th:block th:if="${model.additionalContractFile != null and (model.financeContact or model.projectManager) and !model.useDocusign}">
                     <h2 class="govuk-heading-m">Annex</h2>
                     <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts that were agreed upon during the application. Any supporting documents should be uploaded with the annex.|"></p>
-                    <p class="govuk-body" th:if="${model.ktp and !model.submitted}" th:text="|The annex contains any additional contracts agreed upon during the application process.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp and !model.submitted}" th:text="|The annex contains any additional contracts agreed upon during the application.|"></p>
 
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
@@ -218,6 +218,8 @@
                     <p class="govuk-body">You may download the unsigned documents below for your records.</p>
                 </th:block>
 
+                <p class="govuk-body"th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}">You may download the unsigned documents below for your records.</p>
+
                 <h2 class="govuk-heading-m" th:text="|${model.title}|"></h2>
                 <p class="govuk-body" th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">This document is awaiting signature by the project manager.</p>
 
@@ -231,7 +233,7 @@
                 <th:block th:if="${model.additionalContractFile}">
                     <h2 class="govuk-heading-m">Annex</h2>
                     <p class="govuk-body" th:unless="${model.ktp}" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.documentName} you also agree to any conditions set out in the annex.|"></p>
-                    <p class="govuk-body" th:if="${model.ktp and !model.submitted}" th:text="|The annex contains any additional contracts agreed upon during the application process.|"></p>
+                    <p class="govuk-body" th:if="${model.ktp and !model.submitted}" th:text="|The annex contains any additional contracts agreed upon during the application.|"></p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
