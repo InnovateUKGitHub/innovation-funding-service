@@ -2,6 +2,9 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
+${competitionName}
+Your application number: ${applicationId}
+
 ${message}
 
 Yours sincerely,
