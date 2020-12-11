@@ -122,8 +122,8 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingRule">
                             <h2 class="govuk-fieldset__heading">Competition funding rules</h2>
-                            <p class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                         </legend>
+                        <p class="govuk-hint">This selection cannot be edited once you have clicked 'Done'.</p>
                         <th:block th:if="${#fields.hasErrors('fundingRule')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('fundingRule')}" th:text="${err}" />
                         </th:block>
