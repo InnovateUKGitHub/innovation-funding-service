@@ -110,7 +110,6 @@ public class CsvUtils {
         return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
     }
 
-
     public static List<ProjectLine> readProjects() {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
