@@ -6,7 +6,7 @@ import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,7 +36,7 @@ public class InterviewFeedbackViewModelPopulatorTest {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Test
     public void testPopulate() {
@@ -45,7 +45,7 @@ public class InterviewFeedbackViewModelPopulatorTest {
         ProcessRoleResource role = newProcessRoleResource().withRole(Role.LEADAPPLICANT).build();
         when(interviewResponseRestService.findResponse(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("response").build()));
         when(interviewAssignmentRestService.findFeedback(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("feedback").build()));
-        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(role));
+        when(processRoleRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(role));
 
         InterviewFeedbackViewModel viewModel = viewModelPopulator.populate(applicationId, "CompetitionName", user, true);
 

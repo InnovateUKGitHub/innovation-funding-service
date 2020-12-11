@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -27,6 +28,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -241,6 +244,12 @@ public class Application implements ProcessActivity {
         return this.processRoles.stream()
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)
                 .collect(toList());
+    }
+
+    public List<ProcessRole> getProcessRolesByRoles(Set<Role> roles) {
+        return this.processRoles.stream()
+                .filter(processRole -> roles.contains(processRole.getRole()))
+                .collect(Collectors.toList());
     }
 
     public User getLeadApplicant() {

@@ -174,6 +174,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         newAssociateSalaryCost().
                                 withId(1L, 2L).
                                 withRole("Role 1", "Role 2").
+                                withDuration(5, 10).
                                 withCost(new BigInteger("100"), new BigInteger("200")).
                                 build(2))
                         .build(),

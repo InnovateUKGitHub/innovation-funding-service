@@ -18,6 +18,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,10 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -247,6 +245,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -349,6 +348,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -456,6 +456,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -545,6 +546,87 @@ public class ApplicationNotificationServiceImplTest {
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
+    }
+
+    @Test
+    public void notifyKtpApplicantsByCompetition() {
+        Long competitionId = 1L;
+        Long applicationOneId = 2L;
+        Long applicationTwoId = 3L;
+        Long applicationThreeId = 4L;
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .withName("Competition")
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("John", "Jane", "Bob", "innactive")
+                .withLastName("Smith", "Jones", "Davies", "gone")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com", "nolongeron@ifs.com")
+                .withStatus(UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.INACTIVE)
+                .build(4);
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(applicationOneId, applicationTwoId, applicationThreeId)
+                .withName("App1", "App2", "App3")
+                .build(3);
+
+        ProcessRole ktaRole = newProcessRole()
+                .withUser(users.get(0))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        ProcessRole applicantRole = newProcessRole()
+                .withUser(users.get(1))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        ProcessRole collaboratorRole = newProcessRole()
+                .withUser(users.get(2))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        applications.get(0).setProcessRoles(asList(ktaRole, applicantRole));
+        applications.get(1).setProcessRoles(singletonList(applicantRole));
+        applications.get(2).setProcessRoles(Arrays.asList(applicantRole, collaboratorRole));
+
+        NotificationTarget notificationTarget = new UserNotificationTarget(
+                users.get(0).getName(), users.get(0).getEmail()
+        );
+
+        Notification notification = new Notification(
+                systemNotificationSource,
+                notificationTarget,
+                KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
+                asMap("name", users.get(0).getName(),
+                        "applicationName", applications.get(0).getName(),
+                        "applicationId", applications.get(0).getId(),
+                        "competitionName", competition.getName(),
+                        "dashboardUrl", WEB_BASE_URL)
+        );
+
+        when(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+
+        when(applicationRepository.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+
+        inOrder.verify(applicationRepository).findById(applicationOneId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isSuccess());
     }
 
     @Test

@@ -44,4 +44,11 @@
         </li>
     </ul>
 </th:block>
+
+<th:block th:fragment="ktp-gol-finance-row(path)">
+    <td style="text-align:right;" th:text="${__${path}__.cost}"></td>
+    <td style="text-align:right;" th:text="${__${path}__.contribution}"></td>
+    <td style="text-align:right;" th:text="${__${path}__.funding}"></td>
+</th:block>
+
 </html>

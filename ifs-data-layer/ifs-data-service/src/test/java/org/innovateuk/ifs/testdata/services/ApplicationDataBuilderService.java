@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -305,7 +304,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-        if (asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.competitionStatus)) {
+        if (!competition.getCompetition().isKtp() && asList(CompetitionStatus.PROJECT_SETUP, CompetitionStatus.ASSESSOR_FEEDBACK).contains(competitionLine.competitionStatus)) {
 
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
