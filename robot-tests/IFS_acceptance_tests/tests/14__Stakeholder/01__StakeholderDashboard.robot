@@ -214,8 +214,6 @@ The stakeholder partner organisation provides organisation details and do not se
     [Documentation]    IFS-7639
     [Tags]  HappyPath
     Given the user provides organisation details
-    And the user selects the checkbox                     agree
-    When the user clicks the button/link                  jQuery = button:contains("Continue")
     Then the user should not see an error in the page
 
 Innovation lead can see the application of a project

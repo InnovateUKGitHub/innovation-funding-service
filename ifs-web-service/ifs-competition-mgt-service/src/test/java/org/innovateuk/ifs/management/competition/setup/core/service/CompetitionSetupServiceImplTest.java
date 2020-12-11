@@ -88,7 +88,8 @@ public class CompetitionSetupServiceImplTest {
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(INITIAL_DETAILS);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
                 .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(INITIAL_DETAILS, competition),
-                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false));
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), false,
+                        true));
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionSetupSection section = INITIAL_DETAILS;

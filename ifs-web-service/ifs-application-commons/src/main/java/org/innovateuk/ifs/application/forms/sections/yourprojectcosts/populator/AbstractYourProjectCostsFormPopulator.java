@@ -181,6 +181,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             int index = 1;
             for (Entry<String, AssociateDevelopmentCostRowForm> entry : rows.entrySet()) {
                 entry.getValue().setRole("Associate " + index);
+                entry.getValue().setDuration(getAssociateSalaryDuration(finance, index - 1));
                 index++;
             }
             return rows;

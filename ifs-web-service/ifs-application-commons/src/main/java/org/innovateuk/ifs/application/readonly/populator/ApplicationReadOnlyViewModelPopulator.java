@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationSectionReadOnlyViewModel;
+import org.innovateuk.ifs.application.readonly.viewmodel.SupporterAssignmentReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -25,11 +26,13 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
+import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,10 +41,10 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 @Component
 public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
@@ -74,10 +77,13 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Autowired
+    private SupporterAssignmentRestService supporterAssignmentRestService;
 
     private Map<QuestionSetupType, QuestionReadOnlyViewModelPopulator<?>> populatorMap;
 
@@ -102,16 +108,26 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<SectionResource>> sectionsFuture = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
         Future<List<ProcessRoleResource>> processRolesFuture = async(() -> getProcessRoles(application));
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRolesFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
+        Future<List<SupporterAssignmentResource>> supporterResponseFuture = async(() -> getSupporterFeedbackResponses(application, settings));
+
+        List<ProcessRoleResource> processRoles = resolve(processRolesFuture);
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, processRoles,
+                resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture),
+                resolve(assessorResponseFuture), resolve(supporterResponseFuture));
 
         if (settings.isIncludeAllAssessorFeedback()) {
             settings.setIncludeAllAssessorFeedback(data.getAssessmentToApplicationAssessment().size() > 0);
         }
 
+        if (settings.isIncludeAllSupporterFeedback()) {
+            settings.setIncludeAllSupporterFeedback(data.getFeedbackToApplicationSupport().size() > 0);
+        }
+
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
-                .filter(section -> section.getType() != SectionType.KTP_ASSESSMENT)
+                .filter(section -> settings.isIncludeAllAssessorFeedback() || section.getType() != SectionType.KTP_ASSESSMENT)
                 .map(section -> async(() -> sectionView(competition, section, settings, data)))
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
@@ -119,7 +135,23 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return new ApplicationReadOnlyViewModel(settings,
                 sectionViews,
                 settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
-                settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
+                settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream()
+                        .map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList(),
+                settings.isIncludeAllSupporterFeedback() ? data.getFeedbackToApplicationSupport().values().stream()
+                        .map(assignment -> new SupporterAssignmentReadOnlyViewModel(
+                                assignment.getState().getStateName().toLowerCase(),
+                                assignment.getComments(),
+                                assignment.getUserSimpleOrganisation()))
+                        .collect(Collectors.groupingBy(SupporterAssignmentReadOnlyViewModel::getState)) : emptyMap(),
+                shouldDisplayKtpApplicationFeedback(competition, user, processRoles),
+                competition.isKtp()
+        );
+    }
+
+    private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {
+        boolean isKta = processRoles.stream()
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
+        return competition.isKtp() && isKta;
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
@@ -149,7 +181,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     }
 
     private List<ProcessRoleResource> getProcessRoles(ApplicationResource application) {
-        return userRestService.findProcessRole(application.getId()).getSuccess();
+        return processRoleRestService.findProcessRole(application.getId()).getSuccess();
     }
 
     private List<QuestionStatusResource> getQuestionStatuses(ApplicationResource application, UserResource user, ApplicationReadOnlySettings settings) {
@@ -177,6 +209,14 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         if (settings.isIncludeAllAssessorFeedback()) {
             return assessorFormInputResponseRestService.getApplicationAssessments(application.getId()).getSuccess().getAssessments();
         }
+        return emptyList();
+    }
+
+    private List<SupporterAssignmentResource> getSupporterFeedbackResponses(ApplicationResource application, ApplicationReadOnlySettings settings) {
+        if (settings.isIncludeAllSupporterFeedback()) {
+            return supporterAssignmentRestService.getAssignmentsByApplicationId(application.getId()).getSuccess();
+        }
+
         return emptyList();
     }
 }

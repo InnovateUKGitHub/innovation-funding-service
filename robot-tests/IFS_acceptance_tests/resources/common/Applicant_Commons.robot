@@ -522,12 +522,12 @@ the user selects medium organisation size
     the user selects the radio button  organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user accept the competition terms and conditions
-    [Arguments]  ${retrunLink}
+    [Arguments]  ${returnLink}
     the user clicks the button/link    link = Award terms and conditions
     the user selects the checkbox      agreed
     the user clicks the button/link    jQuery = button:contains("Agree and continue")
     the user should see the element    jQuery = .form-footer:contains("Terms and conditions accepted")
-    the user clicks the button/link    link = ${retrunLink}
+    the user clicks the button/link    link = ${returnLink}
 
 the user accept the procurement terms and conditions
     the user clicks the button/link    link = Award terms and conditions
@@ -722,3 +722,14 @@ the user selected organisation if available
     [Arguments]   ${organisationID}   ${pageText}
     ${status}   ${value} =  Run Keyword And Ignore Error Without Screenshots    page should contain     ${pageText}
     Run Keyword If   '${status}' == 'PASS'     the user selects the radio button     selectedOrganisationId   ${organisationID}
+
+the user selects a knowledge based organisation
+    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+    input text                          id = knowledgeBase        ${knowledgeBase}
+    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
+
+the user apply with knowledge base organisation
+    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
+    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
+    the user clicks the button/link                     jQuery = button:contains("Confirm")
+    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta

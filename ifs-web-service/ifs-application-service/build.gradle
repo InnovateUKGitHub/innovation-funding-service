@@ -22,6 +22,9 @@ afterEvaluate {
     }
 }
 
+ext.IFS_WEB_VIRTUALASSISTANT_BOTSECRET = ext.has('ifs.web.virtualAssistant.botSecret') ? ext.get('ifs.web.virtualAssistant.botSecret') : 'authSecretNotConfigured'
+ext.IFS_WEB_VIRTUALASSISTANT_BOTID = ext.has('ifs.web.virtualAssistant.botId') ? ext.get('ifs.web.virtualAssistant.botId') : 'ukridev-qnamaker-bot'
+
 group 'innovateuk'
 version project.version
 

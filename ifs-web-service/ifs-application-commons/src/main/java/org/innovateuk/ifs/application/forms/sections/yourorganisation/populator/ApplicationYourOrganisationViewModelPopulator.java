@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.finance.service.YourOrganisationRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -40,8 +39,8 @@ public class ApplicationYourOrganisationViewModelPopulator {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        boolean showStateAidAgreement =
-                yourOrganisationRestService.isShowStateAidAgreement(applicationId, organisationId).getSuccess();
+        boolean showAidAgreement =
+                yourOrganisationRestService.isShowAidAgreement(applicationId, organisationId).getSuccess();
 
         List<SectionResource> fundingSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES);
 
@@ -58,6 +57,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
             showOrganisationSizeAlert = fundingSectionComplete;
         }
 
-        return new YourOrganisationViewModel(applicationId, competition.getName(), showStateAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
+        return new YourOrganisationViewModel(applicationId, competition.getName(), showAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
     }
 }

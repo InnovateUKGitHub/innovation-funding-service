@@ -15,7 +15,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,10 +43,12 @@ public class ApplicationSummaryViewModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
-        ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user));
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application, user))
+                .setIncludeAllSupporterFeedback(shouldDisplaySupporterFeedback(competition, application, user));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
@@ -57,7 +59,7 @@ public class ApplicationSummaryViewModelPopulator {
         }
 
         OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
-        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         List<OrganisationResource> collaboratorOrganisations = processRoleResources.stream()
                 .filter(pr -> Role.COLLABORATOR == pr.getRole())
                 .map(pr -> pr.getOrganisationId())
@@ -82,6 +84,11 @@ public class ApplicationSummaryViewModelPopulator {
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
         boolean feedbackAvailable = feedbackReleased || isApplicationAssignedToInterview;
         return application.isSubmitted() && feedbackAvailable;
+    }
+
+    private boolean shouldDisplaySupporterFeedback(CompetitionResource competition, ApplicationResource application, UserResource user) {
+        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
+        return competition.isKtp() && user.hasAnyRoles(Role.KNOWLEDGE_TRANSFER_ADVISER) && application.isSubmitted() && feedbackReleased;
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

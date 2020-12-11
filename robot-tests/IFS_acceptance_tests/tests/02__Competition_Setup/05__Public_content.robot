@@ -20,6 +20,9 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 ...
 ...               IFS-5370 Public content review button is always redirecting to Dates page
+...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -471,7 +474,7 @@ User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery = .govuk-button:contains("Create competition")
-    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Milestones     PROJECT_SETUP   ${month}   ${nextyear}
 

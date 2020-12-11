@@ -77,7 +77,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
                 .withFileEntryResource(fileEntryResource)
                 .build();
 
-        when(userRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
+        when(processRoleRestService.findProcessRole(anyLong())).thenReturn(restSuccess(Collections.singletonList(processRoleResource)));
         when(formInputResponseRestService.getFile(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(byteArrayResource));
         when(formInputResponseRestService.getFileDetails(anyLong(), anyLong(), anyLong(), anyLong())).thenReturn(restSuccess(formInputResponseFileEntryResource));
 
