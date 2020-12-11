@@ -2,8 +2,8 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
 <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-<p style="margin: 0 0 1em 0;"><strong>${applicationName}</strong></p>
-<p style="margin: 0 0 1em 0;"><strong>Your application reference: ${applicationId?c}</strong></p>
+<p style="margin: 0 0 1em 0;">${competitionName}</p>
+<p style="margin: 0 0 1em 0;"><strong>Your application number:</strong> ${applicationId?c}</p>
 <p style="margin: 0 0 1em 0;">${message?no_esc}</p>
 <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
 <@layout.heukarSenderHTML />
