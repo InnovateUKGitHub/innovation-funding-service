@@ -51,6 +51,7 @@ Lead applicant can submit application
 Lead applicant is presented with the Application Summary page when an application is submitted
     [Documentation]  IFS-8752
     Given the user should see the element       jQuery = h1:contains("Application status")
+    And Requesting IDs of this application
     Then the user is presented with the agreed Application Summary page
 
 The Application Summary page must not include: Assessment process, Decision notification, Application Feeback sections
@@ -154,7 +155,6 @@ the user successfully completes application
 the user is presented with the agreed Application Summary page
     the user should see the element     jQuery = h2:contains("Application submitted")
     the user should see the element     jQuery = .govuk-panel:contains("Application number: ${ApplicationID}")
-    the user should see the element     jQuery = br ~ br ~ br
     the user should see the element     link = Reopen application
     the user should see the element     jQuery = h2:contains("What happens next?")
     the user should see the element     jQuery = p:contains("You have already applied directly to the European Commission for an EU grant.")
