@@ -7,6 +7,8 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8752: Application Submission confirmation page
 ...
+...               IFS-8641: Email notification of unsuccessful application
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -62,6 +64,10 @@ The Application Summary page must not include the Reopen Application link when t
     When the internal team mark the application as successful
     And Log in as a different user          email=${newLeadApplicantEmail}    password=${short_password}
     Then the application summary page must not include the reopen application link
+
+Lead applicant receives email notifiction when internal user marks application unsuccessful
+    [Documentation]  IFS-8641
+    Given Log in as a different user        &{Comp_admin1_credentials}
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
