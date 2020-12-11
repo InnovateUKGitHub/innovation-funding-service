@@ -198,7 +198,6 @@ internal user uploads the GOL
 
 internal user uploads the Annex
     [Arguments]  ${projectID}
-    #the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          annex  ${valid_pdf}
     the user should see the element    jQuery = a:contains("testing.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
