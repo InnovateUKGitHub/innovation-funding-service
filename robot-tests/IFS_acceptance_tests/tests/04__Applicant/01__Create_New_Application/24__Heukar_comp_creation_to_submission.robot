@@ -55,14 +55,14 @@ Lead applicant is presented with the Application Summary page when an applicatio
     Given the user should see the element       jQuery = h1:contains("Application status")
     When Requesting IDs of this application
     Then the user is presented with the Application Summary page
-    And the user reads his email     ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
+    And the user reads his email                ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationSubmissionEmailSubject}  ${huekarApplicationSubmissionEmail}
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-8752
-    Given Log in as a different user        &{Comp_admin1_credentials}
+    Given Log in as a different user            &{Comp_admin1_credentials}
     And Requesting IDs of this competition
     When the internal team mark the application as successful
-    And Log in as a different user          email=${newLeadApplicantEmail}    password=${short_password}
+    And Log in as a different user              email=${newLeadApplicantEmail}    password=${short_password}
     Then the application summary page must not include the reopen application link
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
