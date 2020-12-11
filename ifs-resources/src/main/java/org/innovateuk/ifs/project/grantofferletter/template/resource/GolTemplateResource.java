@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.resource.VersionedTemplateResource;
  */
 public class GolTemplateResource extends VersionedTemplateResource {
 
+    public static final String DEFAULT_GOL_TEMPLATE = "Default GOL Template";
+
     public GolTemplateResource() {
     }
 
