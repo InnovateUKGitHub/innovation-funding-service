@@ -95,6 +95,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         Competition competition = newCompetition()
                 .withFundingRules(FundingRules.STATE_AID)
                 .withResearchCategories(newResearchCategory().buildSet(1))
+                .withSections(newSection().withSectionType(SectionType.FINANCE).build(1))
                 .build();
 
         ResearchCategory feasability = newResearchCategory().build();
@@ -147,6 +148,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     public void revertToDefault_nonaid() {
         Competition competition = newCompetition()
                 .withFundingRules(FundingRules.NOT_AID)
+                .withSections(newSection().withSectionType(SectionType.FINANCE).build(1))
                 .build();
 
         ResearchCategory feasability = newResearchCategory().build();
@@ -200,7 +202,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     public void save() {
         GrantClaimMaximum gcm = newGrantClaimMaximum().build();
         GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().build();
-        when(grantClaimMaximumRepository.findById(gcm.getId())).thenReturn(Optional.of(gcm));
+        when(grantClaimMaximumRepository.findById(gcmResource.getId())).thenReturn(Optional.of(gcm));
 
         when(grantClaimMaximumRepository.save(gcm)).thenReturn(gcm);
         when(grantClaimMaximumMapper.mapToResource(gcm)).thenReturn(gcmResource);

@@ -113,6 +113,7 @@ public class QuestionPriorityOrderService {
 
             int si = 0;
             for (Section section : sections) {
+                competition.getSections().add(section);
                 section.setCompetition(competition);
                 section.setParentSection(parent);
                 section.setPriority(si);

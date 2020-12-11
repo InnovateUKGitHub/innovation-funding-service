@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.emptySet;
 import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -79,6 +80,9 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     @Transactional
     public ServiceResult<Set<Long>> revertToDefault(long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+            if (competition.isNonFinanceType()) {
+                return emptySet();
+            }
             List<GrantClaimMaximum> maximums;
             if (competition.getFundingRules() == FundingRules.STATE_AID && !competition.getResearchCategories().isEmpty()) {
                 maximums = getStateAidGrantClaimMaxmimums();

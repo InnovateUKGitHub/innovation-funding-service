@@ -56,7 +56,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(gcm)));
 
-        verify(grantClaimMaximumService, only()).getGrantClaimMaximumById(competitionId);
+        verify(grantClaimMaximumService, only()).getGrantClaimMaximumByCompetitionId(competitionId);
     }
 
     @Test
