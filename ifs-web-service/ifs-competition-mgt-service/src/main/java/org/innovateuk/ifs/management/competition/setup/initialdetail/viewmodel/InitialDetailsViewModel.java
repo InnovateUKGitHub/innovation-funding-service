@@ -4,6 +4,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -19,12 +20,14 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
     private final List<CompetitionTypeResource> competitionTypes;
     private final List<UserResource> innovationLeadTechUsers;
     private final List<FundingType> fundingTypes;
+    private final List<FundingRules> fundingRules;
     private final boolean restricted;
+    private final boolean fundingRuleEnabled;
 
     public InitialDetailsViewModel(GeneralSetupViewModel generalSetupViewModel,
                                    List<UserResource> competitionExecutiveUsers, List<InnovationSectorResource> innovationSectors,
                                    List<InnovationAreaResource> innovationAreas, List<CompetitionTypeResource> competitionTypes,
-                                   List<UserResource> innovationLeadTechUsers, boolean restricted) {
+                                   List<UserResource> innovationLeadTechUsers, boolean restricted, boolean fundingRuleEnabled) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.competitionExecutiveUsers = competitionExecutiveUsers;
         this.innovationSectors = innovationSectors;
@@ -32,7 +35,9 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         this.competitionTypes = competitionTypes;
         this.innovationLeadTechUsers = innovationLeadTechUsers;
         this.fundingTypes = asList(FundingType.values());
+        this.fundingRules = asList(FundingRules.values());
         this.restricted = restricted;
+        this.fundingRuleEnabled = fundingRuleEnabled;
     }
 
     public List<UserResource> getCompetitionExecutiveUsers() {
@@ -59,7 +64,15 @@ public class InitialDetailsViewModel extends CompetitionSetupViewModel {
         return fundingTypes;
     }
 
+    public List<FundingRules> getFundingRules() {
+        return fundingRules;
+    }
+
     public boolean getRestricted() {
         return restricted || generalSetupViewModel.getCompetition().isSetupAndLive();
+    }
+
+    public boolean isFundingRuleEnabled() {
+        return fundingRuleEnabled;
     }
 }

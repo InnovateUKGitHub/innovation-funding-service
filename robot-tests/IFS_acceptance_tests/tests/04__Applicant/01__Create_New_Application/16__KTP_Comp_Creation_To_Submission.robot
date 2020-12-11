@@ -79,6 +79,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8770 Bring back bank details for KTP
 ...
+...            IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 ...            IFS-8614 KTP Project setup: GOL template
 ...
 ...            IFS-8619 Application status page for KTP comp - content incorrect
@@ -145,9 +147,9 @@ ${leadTeamMember}                     susan.brown@gmail.com
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
