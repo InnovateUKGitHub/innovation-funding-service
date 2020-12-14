@@ -50,7 +50,7 @@ public class FundingLevelPercentageValidator {
     private void validateSingleForm(FundingLevelPercentageForm form, ValidationHandler validationHandler) {
         Integer maximum = form.getMaximums().get(0).get(0).getMaximum();
         if (maximum == null || maximum > 100 || maximum < 0) {
-            validationHandler.addError(Error.fieldError("maximums[0].maximum", "maximum",
+            validationHandler.addError(Error.fieldError("maximums[0][0].maximum", "maximum",
                     "validation.competitionsetup.fundinglevelpercentage.single.numberbetween", newArrayList(0, 100)));
         }
     }

@@ -28,7 +28,7 @@
                                    class="govuk-radios__input"
                                    id="comp-researchCategoriesApplicable-yes"
                                    name="researchCategoriesApplicable"
-                                   th:checked="${!unchecked && competitionSetupForm.researchCategoriesApplicable}"
+                                   th:checked="${!unchecked && competitionSetupForm.researchCategoriesApplicable == true}"
                                    value="true"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.eligibilityform.researchCategoriesApplicable.required}"/>
@@ -71,7 +71,7 @@
                                    class="govuk-radios__input"
                                    id="comp-researchCategoriesApplicable-no"
                                    name="researchCategoriesApplicable"
-                                   th:checked="${!unchecked && !competitionSetupForm.researchCategoriesApplicable}"
+                                   th:checked="${!unchecked && competitionSetupForm.researchCategoriesApplicable == false}"
                                    value="false"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.eligibilityform.researchCategoriesApplicable.required}"/>

@@ -25,7 +25,7 @@
                     <label class="govuk-label govuk-visually-hidden" for="maximum">
                         Funding level percentage
                     </label>
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('maximums[0].maximum')}"
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('maximums[0][0].maximum')}"
                           th:text="${err}"/>
                     <input id="maximum"
                            type="number"
@@ -44,7 +44,7 @@
                 </div>
             </th:block>
             <th:block th:unless="${model.general.editable}">
-                <p class="govuk-body">Maximum funding level percentage is set to <th:block th:text="*{maximums[0].maximum}"/>%</p>
+                <p class="govuk-body">Maximum funding level percentage is set to <th:block th:text="*{maximums[0][0].maximum}"/>%</p>
             </th:block>
         </th:block>
 
