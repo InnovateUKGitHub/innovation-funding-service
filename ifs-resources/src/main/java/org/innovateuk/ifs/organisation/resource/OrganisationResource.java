@@ -26,6 +26,7 @@ public class OrganisationResource {
     private List<OrganisationSicCodeResource> sicCodes = new ArrayList<>();
     private String organisationNumber;
     private List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
+    private String businessType;
 
 
 
@@ -141,6 +142,14 @@ public class OrganisationResource {
 
     public void setExecutiveOfficers(List<OrganisationExecutiveOfficerResource> executiveOfficers) {
         this.executiveOfficers = executiveOfficers;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     @JsonIgnore

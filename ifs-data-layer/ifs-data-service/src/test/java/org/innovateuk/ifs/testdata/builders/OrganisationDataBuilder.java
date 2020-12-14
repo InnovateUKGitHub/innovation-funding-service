@@ -38,7 +38,8 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                                                       LocalDate dateofIncorporation,
                                                       List<OrganisationSicCodeResource> sicCodes,
                                                       String organisationNumber,
-                                                      List<OrganisationExecutiveOfficerResource> officers) {
+                                                      List<OrganisationExecutiveOfficerResource> officers,
+                                                      String businessType) {
 
         return with(data -> {
             doAs(systemRegistrar(), () -> {
@@ -52,6 +53,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         withInternationalRegistrationNumber(internationalRegistrationNumber).
                         withDateOfIncorporation(dateofIncorporation).
                         withOrganisationNumber(organisationNumber).
+                        withBusinessType(businessType).
                         build();
 
                 List<OrganisationAddressResource> addresses = new ArrayList<>();
