@@ -645,6 +645,7 @@ public class CsvUtils {
         public List<OrganisationSicCodeResource> sicCodes;
         public String organisationNumber;
         public List<OrganisationExecutiveOfficerResource> executiveOfficers;
+        public String businessType;
 
         private OrganisationLine(List<String> line) {
 

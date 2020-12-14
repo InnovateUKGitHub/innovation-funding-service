@@ -64,7 +64,8 @@ public class OrganisationDataBuilderService {
                         line.dateOfIncorporation,
                         line.sicCodes,
                         line.organisationNumber,
-                        line.executiveOfficers
+                        line.executiveOfficers,
+                        line.businessType
                 );
 
         organisation.build();
