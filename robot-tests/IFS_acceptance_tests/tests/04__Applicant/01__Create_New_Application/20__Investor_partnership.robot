@@ -2,6 +2,9 @@
 Documentation     IFS-7213  Investor Partnerships Funding type & T&Cs
 ...
 ...               IFS-7235  Change to terms and conditions labelling for Investor Partnerships
+...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -89,7 +92,7 @@ Custom Suite teardown
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     Investor comp  ${month}  ${nextyear}  ${compType_Programme}  1  INVESTOR_PARTNERSHIPS
+    the user fills in the CS Initial details     Investor comp  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  INVESTOR_PARTNERSHIPS
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")

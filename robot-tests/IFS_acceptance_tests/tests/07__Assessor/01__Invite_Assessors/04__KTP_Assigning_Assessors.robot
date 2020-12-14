@@ -11,6 +11,8 @@ Documentation    IFS-8260  KTP Assigning assessors
 ...
 ...              IFS-8617  Assessment overview - missing print link and spacing of score assessment
 ...
+...              IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 ...              IFS-8548  KTP project setup banners
 ...
 ...              IFS-8550 Release supporter feedback to KTA
@@ -244,11 +246,11 @@ Assessor can submit the KTP application assessment
     Then the user should see the element            jQuery = li:contains("KTP assessment application") .msg-progress:contains("Recommended")
 
 Deafult value of assessor view finance config set to all for ktp competitions
-    [Documentation]   IFS-8594
+    [Documentation]   IFS-8594  IFS-8779
     Given Log in as a different user                 &{Comp_admin1_credentials}
     When the user navigates to the page              ${CA_UpcomingComp}
     And the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  1  KTP
+    And the user fills in the CS Initial details     competition config  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
     And the user clicks the button/link              link = Assessors
     Then radio button should be set to               assessorFinanceView   ALL
 
@@ -309,14 +311,14 @@ KTA can see application successfull banner and feedback information with date on
     [Documentation]  IFS-8548
     Given IFS Admin makes the application decision           ${ktpAssessmentCompetitionName}  Successful
     And IFS Admin notifies all applicants
-    When MO navigates to application overview page           ${ktpAssessmentApplicationName}
+    When MO navigates to application overview page           ${ktpAssessmentApplicationName}  This application was successful.
     Then the user should see the element                     jQuery = h2:contains("This application was successful.")
     And the user should see the element                      jQuery = p:contains("All application feedback will be available here from ${ktpAssessmentCompetitionReleaseFeedbackDayMonthYear}.")
 
 KTA can see application successful banner and feedback information after the feedback is released
     [Documentation]  IFS-8548
     Given IFS admin releases feedback to the applicant    ${ktpAssessmentCompetitionName}
-    When MO navigates to application overview page        ${ktpAssessmentApplicationName}
+    When MO navigates to application overview page        ${ktpAssessmentApplicationName}  This application was successful.
     Then the user should see the element                  jQuery = h2:contains("This application was successful.")
     And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
 
@@ -324,14 +326,14 @@ KTA can see application unsuccessful banner and feedback information with date o
     [Documentation]  IFS-8548
     Given IFS Admin makes the application decision        ${ktpDetailsFinanceCompetitionName}  Unsuccessful
     And IFS Admin notifies all applicants
-    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}
+    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}  This application was unsuccessful.
     Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
     And the user should see the element                   jQuery = p:contains("All application feedback will be available here from ${ktpDetailsFinanceCompetitionReleaseFeedbackDayMonthYear}.")
 
 KTA can see application unsuccessful banner and feedback information after the feedback is released
     [Documentation]  IFS-8548
     Given IFS admin releases feedback to the applicant    ${ktpDetailsFinanceCompetitionName}
-    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}
+    When MO navigates to application overview page        ${ktpDetailsFinanceApplicationName}  This application was unsuccessful.
     Then the user should see the element                  jQuery = h2:contains("This application was unsuccessful.")
     And the user should see the element                   jQuery = p:contains("You can view all scores and application feedback in the relevant sections.")
 
@@ -462,10 +464,10 @@ Invite KTA to assess the competition
 
 IFS Admin makes the application decision
     [Arguments]   ${competitionName}  ${decision}
-    log in as a different user                &{ifs_admin_user_credentials}
-    the user clicks the button/link           link = ${competitionName}
-    the user clicks the button/link           id = close-assessment-button
-    IFS admin inputs the funding decision     ${decision}
+    log in as a different user                            &{ifs_admin_user_credentials}
+    the user clicks the button/link                       link = ${competitionName}
+    the user clicks the button/link                       id = close-assessment-button
+    IFS admin inputs the funding decision                 ${decision}
 
 IFS admin inputs the funding decision
     [Arguments]   ${decision}
@@ -475,11 +477,12 @@ IFS admin inputs the funding decision
     the user clicks the button/link     link = Competition
 
 IFS Admin notifies all applicants
-    the user clicks the button/link     link = Manage funding notifications
-    the user clicks the button/link     id = select-all-1
-    the user clicks the button/link     id = write-and-send-email
-    the user clicks the button/link     id = send-email-to-all-applicants
-    the user clicks the button/link     id = send-email-to-all-applicants-button
+    the user clicks the button/link                      link = Manage funding notifications
+    the user clicks the button/link                      id = select-all-1
+    the user clicks the button/link                      id = write-and-send-email
+    the user clicks the button/link                      id = send-email-to-all-applicants
+    the user clicks the button/link                      id = send-email-to-all-applicants-button
+    the user refreshes until element appears on page     jQuery = td:contains("Sent")
 
 IFS admin releases feedback to the applicant
     [Arguments]  ${competitionName}
@@ -488,9 +491,10 @@ IFS admin releases feedback to the applicant
     the user clicks the button/link     id = release-feedback-button
 
 MO navigates to application overview page
-    [Arguments]  ${applicationName}
-    log in as a different user                     ${monitoringOfficerEmail}  ${short_password}
-    the user navigates to application overview     ${applicationName}
+    [Arguments]  ${applicationName}  ${message}
+    log in as a different user                            ${monitoringOfficerEmail}  ${short_password}
+    the user navigates to application overview            ${applicationName}
+    the user refreshes until element appears on page      jQuery = h2:contains("${message}")
 
 the user navigates to application overview
     [Arguments]  ${applicationName}

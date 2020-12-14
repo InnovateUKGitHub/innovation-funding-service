@@ -189,7 +189,7 @@ PM can view the grant offer letter page
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
-    Then the user should see the element             jQuery = p:contains("We have provided the grant offer letter")
+    Then the user should see the element             jQuery = p:contains("The grant offer letter (GOL) has been created using the information provided during project setup.")
     And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
@@ -426,7 +426,7 @@ PM is uploading the GOL one more time
     [Tags]  HappyPath
     [Setup]  log in as a different user     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
-    When the user should see the element    jQuery = .fail-alert:contains("grant offer letter has been rejected")
+    When the user should see the element    jQuery = .warning-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
     Then the user removes existing and uploads new grant offer letter
 
 Internal user accepts signed grant offer letter
@@ -535,7 +535,7 @@ the user is able to see the Grant Offer letter page
 
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css = button[name = "removeSignedGrantOfferLetterClicked"]
-    the user should see the element  jQuery = label:contains("Upload")
+    Wait Until Page Contains Without Screenshots    No file currently uploaded.
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css = .govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id = submit-gol-for-review

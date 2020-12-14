@@ -140,7 +140,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest, CompletableFuture<OrganisationResource> organisationRequest) {
 
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(resolve(teamStatusRequest));
-        boolean projectComplete = project.getProjectState().isLive();
+        boolean projectComplete = project.getProjectState().isComplete();
         boolean isLeadPartner = isLeadPartner(resolve(teamStatusRequest), resolve(organisationRequest));
         ProjectPartnerStatusResource ownOrganisation = resolve(teamStatusRequest).getPartnerStatusForOrganisation(resolve(organisationRequest).getId()).get();
         switch (stage) {
