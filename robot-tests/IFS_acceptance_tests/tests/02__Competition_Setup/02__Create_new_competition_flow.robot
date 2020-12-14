@@ -738,7 +738,7 @@ User deletes the competition
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
-    Given The comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative
+    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative
     When the user clicks the button/link                                  link = Delete competition
     And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
     And the user navigates to the page                                    ${CA_UpcomingComp}
@@ -766,7 +766,7 @@ The Applicant should see the selected research cartegories
     Then the user should see the element       css = label[for="researchCategory1"]
     And the user should see the element        css = label[for="researchCategory2"]
     When the user clicks the button twice      jQuery = label:contains("Feasibility studies")
-    And the user clicks the button/link        id = application-question-save
+    Then the user clicks the button/link        id = application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
@@ -779,7 +779,6 @@ The Applicant is able to enter duration
     Given the user clicks the button/link  link = Application details
     When the user fills new application details
     the user should see the element       jQuery = li:contains("Application details") .task-status-complete
-
 
 *** Keywords ***
 the total should be correct
@@ -979,7 +978,7 @@ Custom suite teardown
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
 
-The comp admin creates competition with all sections details
+the comp admin creates competition with all sections details
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
