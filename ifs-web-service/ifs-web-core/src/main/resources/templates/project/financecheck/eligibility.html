@@ -204,7 +204,7 @@
                   enctype="multipart/form-data"
                   th:attr="data-row-operation-url=@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"
-                        th:unless="${model.isReadOnly(financeType)}" th:attr="name= ${model.editableRowType == null} ? 'save-and-continue' : 'save-eligibility'" , th:value="${model.editableRowType}">
+                        th:attr="name=${model.editableRowType == null} ? 'save-and-continue' : 'save-eligibility'" , th:value="${model.editableRowType}">
                     Save form
                 </button>
 
@@ -243,9 +243,10 @@
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${academicCostForm}"
                   enctype="multipart/form-data">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"
-                        name="save-and-continue">
+                        th:attr="name=${!summaryModel.canEditAcademicFinances} ? 'save-and-continue' : 'save-academic-costs'" , th:value="${summaryModel.canEditAcademicFinances}">
                     Save form
                 </button>
+
                 <th:block th:insert="application/academic-costs-fragments :: costs (
                     form=${academicCostForm},
                     readOnly=${!summaryModel.canEditAcademicFinances},
