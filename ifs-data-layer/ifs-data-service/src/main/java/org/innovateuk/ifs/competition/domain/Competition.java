@@ -153,9 +153,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean locationPerPartner = true;
 
-    @ZeroDowntime(reference = "IFS-8787", description = "TODO")
-    private Boolean stateAid;
-
     @Enumerated(EnumType.STRING)
     private FundingRules fundingRules;
 
