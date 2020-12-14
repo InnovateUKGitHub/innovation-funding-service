@@ -78,7 +78,7 @@ Lead applicant receives email notifiction when internal user marks application u
     When the internal team mark the application as successful / unsuccessful        ${newHeukarApplicationName}   UNFUNDED
     And the user clicks the button/link                                             link = Competition
     And Requesting IDs of this application                                          ${newHeukarApplicationName}
-    And the iternal team notifies all applicants
+    And the internal team notifies all applicants
     Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationUnsuccessfulEmailSubject}  ${huekarApplicationUnsuccessfulEmail}
 
 *** Keywords ***
@@ -189,7 +189,7 @@ the internal team mark the application as successful / unsuccessful
     the user clicks the button/link     jQuery = tr:contains("${applicationName}") label
     the user clicks the button/link     css = [type="submit"][value="${decision}"]
 
-the iternal team notifies all applicants
+the internal team notifies all applicants
     the user clicks the button/link                      link = Manage funding notifications
     the user clicks the button/link                      id = app-row-${ApplicationID}
     the user clicks the button/link                      id = write-and-send-email
