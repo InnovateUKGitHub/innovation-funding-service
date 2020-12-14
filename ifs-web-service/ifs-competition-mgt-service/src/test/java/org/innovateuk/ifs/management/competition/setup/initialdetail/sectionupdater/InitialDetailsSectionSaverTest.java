@@ -93,7 +93,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setInnovationLeadUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
-        competitionSetupForm.setStateAid(Boolean.TRUE);
+        competitionSetupForm.setFundingRule(FundingRules.STATE_AID);
         competitionSetupForm.setFundingType(FundingType.GRANT);
 
         InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();

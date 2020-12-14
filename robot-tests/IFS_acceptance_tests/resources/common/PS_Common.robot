@@ -185,11 +185,25 @@ The user adds a new team member
 
 internal user generates the GOL
     [Arguments]  ${projectID}
+    internal user uploads the GOL                  ${projectID}
+    internal user sends letter to project team
+
+internal user uploads the GOL
+    [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
     #horrible hack but we need to wait for virus scanning
     sleep  5s
+
+internal user uploads the Annex
+    [Arguments]  ${projectID}
+    the user uploads the file          annex  ${valid_pdf}
+    the user should see the element    jQuery = a:contains("testing.pdf (opens in a new window)")
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
+
+internal user sends letter to project team
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send letter to project team")
     the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
@@ -257,7 +271,7 @@ the applicant is able to see the rejected GOL
     [Arguments]  ${projectID}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           link = Grant offer letter
-    the user should see the element           jQuery = .fail-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
+    the user should see the element           jQuery = .warning-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
 
 The user is able to complete project details section
     the user clicks the button/link         link = Project details
@@ -413,6 +427,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery = .govuk-button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
+    the user refreshes until element appears on page         jQuery = td:contains("Sent")
     the user should see the element         jQuery = h1:contains("Manage funding applications")
 
 lead partner navigates to project and fills project details
