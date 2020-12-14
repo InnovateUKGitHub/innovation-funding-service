@@ -315,9 +315,3 @@ the user enters the details and create account
     the user enters text to a text field     id = lastName  Holder
     the user enters text to a text field     id = password  ${short_password}
     the user clicks the button/link          jQuery = .govuk-button:contains("Create account")
-
-#the user select stakeholder and add to competition
-#    the user clicks the button/link           css = a[href="?tab=add"]
-#    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
-#    And the user clicks the button/link       jQuery = a:contains("Added to competition")
-#    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
