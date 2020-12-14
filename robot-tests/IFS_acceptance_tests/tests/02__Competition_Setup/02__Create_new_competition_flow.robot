@@ -738,7 +738,7 @@ User deletes the competition
 
 User deletes the competition on completing all competition details
     [Documentation]  IFS-8496
-    Given The comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  2  GRANT  PROJECT_SETUP  no  1  true  collaborative
+    Given The comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative
     When the user clicks the button/link                                  link = Delete competition
     And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
     And the user navigates to the page                                    ${CA_UpcomingComp}
@@ -980,10 +980,10 @@ the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
 
 The comp admin creates competition with all sections details
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information

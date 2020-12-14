@@ -71,7 +71,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
     the user selects the radio button                    fundingType  ${fundingType}
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
-    And the user selects the radio button                fundingRule  ${fundingRule}
+    the user selects the radio button                    fundingRule  ${fundingRule}
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
     the user enters text to a text field                 css = #openingDateDay  1
