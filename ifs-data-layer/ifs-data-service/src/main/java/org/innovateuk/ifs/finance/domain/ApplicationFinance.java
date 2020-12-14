@@ -3,11 +3,10 @@ package org.innovateuk.ifs.finance.domain;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.
@@ -27,6 +26,9 @@ public class ApplicationFinance extends Finance {
     private FileEntry financeFileEntry;
 
     private String justification;
+
+    @OneToMany(mappedBy="applicationFinance")
+    private List<ApplicationProcurementMilestone> milestones;
 
     public ApplicationFinance() {
     }
@@ -75,5 +77,13 @@ public class ApplicationFinance extends Finance {
 
     public void setJustification(String justification) {
         this.justification = justification;
+    }
+
+    public List<ApplicationProcurementMilestone> getMilestones() {
+        return milestones;
+    }
+
+    public void setMilestones(List<ApplicationProcurementMilestone> milestones) {
+        this.milestones = milestones;
     }
 }
