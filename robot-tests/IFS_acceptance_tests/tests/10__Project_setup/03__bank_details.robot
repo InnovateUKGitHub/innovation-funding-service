@@ -291,7 +291,7 @@ Verify bank details experian validations
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     the user submits the bank account details       12345673    000003
     the user should see the element                 jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
-    the user submits the bank account details       00000123    000004 
+    the user submits the bank account details       00000123    000004
     the user should see the element                 jQuery = .govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
 
 Verify bank details blank submission page validation
