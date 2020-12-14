@@ -26,9 +26,12 @@ delete from guidance_row where form_input_id in (
   where q.competition_id in (select id from competition where template = 1)
 );
 
+SET foreign_key_checks = 0;
 delete from form_input where question_id in (
   select q.id from question q join section s on s.id = q.section_id where s.competition_id in (select id from competition where template = 1)
 );
+delete from form_input_validator where form_input_id not in (select id from form_input);
+SET foreign_key_checks = 1;
 
 delete from question where section_id in (
   select id from section
