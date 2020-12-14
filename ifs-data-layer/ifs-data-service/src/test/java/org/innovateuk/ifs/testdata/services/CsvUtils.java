@@ -675,6 +675,7 @@ public class CsvUtils {
             executiveOfficers = executiveOfficersLine != null ?
                     simpleMap(asList(executiveOfficersLine.split(",")), OrganisationExecutiveOfficerResource::new) :
                     emptyList();
+            businessType  = nullable(line.get(i++));
         }
     }
 
