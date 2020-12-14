@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -56,9 +57,8 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long innovationLeadUserId;
-
-    @NotNull(message = "{validation.initialdetailsform.stateaid.required}")
-    private Boolean stateAid;
+    
+    private FundingRules fundingRule;
 
     private String innovationAreaNamesFormatted;
 
@@ -83,6 +83,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
             LOG.trace("invalid opening date", e);
             return null;
         }
+    }
+
+    public FundingRules getFundingRule() {
+        return fundingRule;
+    }
+
+    public void setFundingRule(FundingRules fundingRules) {
+        this.fundingRule = fundingRules;
     }
 
     public Integer getOpeningDateDay() {
@@ -147,14 +155,6 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     public void setInnovationLeadUserId(Long innovationLeadUserId) {
         this.innovationLeadUserId = innovationLeadUserId;
-    }
-
-    public Boolean getStateAid() {
-        return stateAid;
-    }
-
-    public void setStateAid(final Boolean stateAid) {
-        this.stateAid = stateAid;
     }
 
     public String getInnovationAreaNamesFormatted() {

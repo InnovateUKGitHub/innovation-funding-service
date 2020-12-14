@@ -13,8 +13,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -40,8 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<ApplicationTermsController> {
 
     @Mock
-    private UserRestService userRestService;
-
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private QuestionStatusRestService questionStatusRestService;
 
@@ -64,8 +63,12 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
 
     @Override
     protected ApplicationTermsController supplyControllerUnderTest() {
-        return new ApplicationTermsController(userRestService, questionStatusRestService, applicationRestService,
-                applicationTermsPartnerModelPopulator, applicationTermsModelPopulator);
+        return new ApplicationTermsController(
+                processRoleRestService,
+                questionStatusRestService,
+                applicationRestService,
+                applicationTermsPartnerModelPopulator,
+                applicationTermsModelPopulator);
     }
 
     @Before
@@ -176,7 +179,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplication(application.getId())
                 .build();
 
-        when(userRestService.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestService.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
         when(questionStatusRestService.markAsComplete(questionId, application.getId(), processRole.getId())).thenReturn(restSuccess(emptyList()));
 
         ApplicationTermsForm form = new ApplicationTermsForm();
@@ -188,8 +191,8 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().hasNoErrors())
                 .andExpect(redirectedUrlTemplate("/application/{applicationId}/form/question/{questionId}/terms-and-conditions#terms-accepted", application.getId(), questionId));
 
-        InOrder inOrder = inOrder(userRestService, questionStatusRestService);
-        inOrder.verify(userRestService).findProcessRole(processRole.getUser(), processRole.getApplicationId());
+        InOrder inOrder = inOrder(processRoleRestService, questionStatusRestService);
+        inOrder.verify(processRoleRestService).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestService).markAsComplete(questionId, application.getId(), processRole.getId());
         inOrder.verifyNoMoreInteractions();
     }
@@ -202,7 +205,7 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplication(application.getId())
                 .build();
 
-        when(userRestService.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
+        when(processRoleRestService.findProcessRole(processRole.getUser(), processRole.getApplicationId())).thenReturn(restSuccess(processRole));
         when(questionStatusRestService.markAsComplete(questionId, application.getId(), processRole.getId()))
                 .thenReturn(restFailure(fieldError("agreed", "false", "")));
 
@@ -232,8 +235,8 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .andExpect(model().attributeHasFieldErrors("form", "agreed"))
                 .andExpect(view().name("application/sections/terms-and-conditions/terms-and-conditions"));
 
-        InOrder inOrder = inOrder(userRestService, questionStatusRestService, applicationTermsModelPopulator);
-        inOrder.verify(userRestService).findProcessRole(processRole.getUser(), processRole.getApplicationId());
+        InOrder inOrder = inOrder(processRoleRestService, questionStatusRestService, applicationTermsModelPopulator);
+        inOrder.verify(processRoleRestService).findProcessRole(processRole.getUser(), processRole.getApplicationId());
         inOrder.verify(questionStatusRestService).markAsComplete(questionId, application.getId(), processRole.getId());
         inOrder.verify(applicationTermsModelPopulator).populate(loggedInUser, application.getId(), questionId, false);
         inOrder.verifyNoMoreInteractions();
@@ -281,7 +284,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplicationState(OPENED)
                 .build();
 
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions/partner-status", application.getId(), questionId))
@@ -305,7 +307,6 @@ public class ApplicationTermsControllerTest extends BaseControllerMockMVCTest<Ap
                 .withApplicationState(SUBMITTED)
                 .build();
 
-        ApplicationTermsPartnerViewModel viewModel = new ApplicationTermsPartnerViewModel(application.getId(), "compName", questionId, emptyList());
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
 
         mockMvc.perform(get("/application/{applicationId}/form/question/{questionId}/terms-and-conditions/partner-status", application.getId(), questionId))

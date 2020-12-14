@@ -219,8 +219,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
-    public CompetitionResourceBuilder withStateAid(Boolean... stateAid) {
-        return withArraySetFieldByReflection("stateAid", stateAid);
+    public CompetitionResourceBuilder withFundingRules(FundingRules... fundingRules) {
+        return withArraySetFieldByReflection("fundingRules", fundingRules);
     }
 
     public CompetitionResourceBuilder withIncludeYourOrganisationSection(Boolean... includeYourOrganisationSection) {
@@ -289,11 +289,9 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((type, competitionResource) -> competitionResource.setCompetitionTypeEnum(type), types);
     }
 
-    public CompetitionResourceBuilder withGolTemplate(String... golTemplates) {
+    public CompetitionResourceBuilder withGolTemplate(GolTemplateResource... golTemplates) {
         return withArray((golTemplate, competitionResource) -> {
-            GolTemplateResource resource = new GolTemplateResource();
-            resource.setTemplate(golTemplate);
-            competitionResource.setGolTemplate(resource);
+            competitionResource.setGolTemplate(golTemplate);
         }, golTemplates);
     }
 

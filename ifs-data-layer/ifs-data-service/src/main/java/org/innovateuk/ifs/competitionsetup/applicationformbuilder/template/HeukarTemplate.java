@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
@@ -72,7 +73,7 @@ public class HeukarTemplate implements CompetitionTemplate {
         competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);
-        competition.setMaxProjectDuration(60);
+        competition.setMaxProjectDuration(84);
         competition.setCollaborationLevel(CollaborationLevel.SINGLE_OR_COLLABORATIVE);
         competition.setUseResubmissionQuestion(false);
         competition.setApplicationFinanceType(NO_FINANCES);
@@ -81,7 +82,7 @@ public class HeukarTemplate implements CompetitionTemplate {
         competition.setHasAssessmentPanel(false);
         competition.setHasInterviewStage(false);
         competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
-        competition.setStateAid(false);
+        competition.setFundingRules(FundingRules.NOT_AID);
 
         return competition;
     }

@@ -12,7 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -27,20 +27,20 @@ public class ApplicationTermsModelPopulator {
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private OrganisationService organisationService;
     private QuestionStatusRestService questionStatusRestService;
 
     public ApplicationTermsModelPopulator(ApplicationRestService applicationRestService,
                                           CompetitionRestService competitionRestService,
                                           SectionService sectionService,
-                                          UserRestService userRestService,
+                                          ProcessRoleRestService processRoleRestService,
                                           OrganisationService organisationService,
                                           QuestionStatusRestService questionStatusRestService) {
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.organisationService = organisationService;
         this.questionStatusRestService = questionStatusRestService;
     }
@@ -51,7 +51,7 @@ public class ApplicationTermsModelPopulator {
                                               boolean readOnly) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
+        List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         boolean additionalTerms = competition.getCompetitionTerms() != null;
 
         if (!readOnly && !competition.isExpressionOfInterest())  {
