@@ -13,6 +13,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-7793 Partner organisation can not upload a new appendices file
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -63,10 +65,10 @@ ${excel_file}                                          testing.xlsx
 
 *** Test Cases ***
 Comp admin can only access organisational eligibility category after intial details entered
-     [Documentation]  IFS-7195
+     [Documentation]  IFS-7195  IFS-8779
      Given the user navigates to the page              ${CA_UpcomingComp}
      And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
-     When the user fills in the CS Initial details     ${internationalLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     When the user fills in the CS Initial details     ${internationalLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      Then the user should see the enabled element      link = ${organisationalEligibilityTitle}
      And the user should not see the element           jQuery = li:contains("${organisationalEligibilityTitle}") .task-status-complete
 
@@ -662,7 +664,7 @@ comp admin can view organisation eligibility response question and answer
 
 comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
-     the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     the user fills in the CS Initial details                                          ${ukLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      the user selects the organisational eligibility                                   true    false
      the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative
      the user clicks the button/link                                                   jQuery = a:contains("Complete")

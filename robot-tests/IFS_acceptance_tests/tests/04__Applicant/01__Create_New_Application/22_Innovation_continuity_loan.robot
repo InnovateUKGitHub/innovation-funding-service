@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-8002  New set of T&Cs for innovation continuity loan
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -25,7 +27,7 @@ ${applicationT&CLink}                Award terms and conditions
 
 *** Test Cases ***
 Innovation continuity loan T&C's can be confirmed
-    [Documentation]  IFS-8002
+    [Documentation]  IFS-8002  IFS-8779
     Given the user fills in initial details
     When the user clicks the button/link             link = Terms and conditions
     And the user confirmed terms and conditions
@@ -106,7 +108,7 @@ Custom Suite teardown
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     Innovation continuity comp  ${month}  ${nextyear}  ${compType_Programme}  1  GRANT
+    the user fills in the CS Initial details     Innovation continuity comp  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")

@@ -282,7 +282,7 @@ the user completes initial details of the competition
     [Arguments]    ${competitionName}   ${fundingType}
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     ${competitionName}  ${month}  ${nextyear}  ${compType_Programme}  2   ${fundingType}
+    the user fills in the CS Initial details     ${competitionName}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL   ${fundingType}
 
 the user navigates to completition stage
     the user clicks the button/link     link = Initial details

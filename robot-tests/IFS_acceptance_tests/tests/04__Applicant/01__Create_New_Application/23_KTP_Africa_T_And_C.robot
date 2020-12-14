@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-8164  KTP AFRICA - T&Cs
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -23,7 +25,7 @@ ${ktpAfricaFeedbackLink}        ${server}/application/${ktpAfricaPSApplicationId
 
 *** Test Cases ***
 Creating a new KTP africa comp to confirm T&c's
-    [Documentation]  IFS-8164
+    [Documentation]  IFS-8164  IFS-8779
     Given the user fills in initial details
     When the user clicks the button/link        link = Terms and conditions
     And the user selects the radio button       termsAndConditionsId  termsAndConditionsId9
@@ -99,7 +101,7 @@ Custom Suite teardown
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     KTP Africa competition  ${month}  ${nextyear}  ${compType_Programme}  1  KTP
+    the user fills in the CS Initial details     KTP Africa competition  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
 
 Update the competition with KTP africa T&C's
     [Arguments]  ${competitionID}
