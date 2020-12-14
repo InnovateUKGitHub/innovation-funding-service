@@ -256,7 +256,13 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), canReopenApplication(application, user)));
+        model.addAttribute("model", new TrackViewModel(
+                competition,
+                application,
+                earlyMetricsUrl,
+                application.getCompletion(),
+                canReopenApplication(application, user)
+        ));
         return getTrackingPage(competition);
     }
 
@@ -267,6 +273,8 @@ public class ReviewAndSubmitController {
             return "h2020-grant-transfer-track";
         } else if (competition.isLoan()) {
             return "loan-application-track";
+        } else if (competition.isHeukar()) {
+            return "heukar-application-track";
         } else {
             return "application-track";
         }

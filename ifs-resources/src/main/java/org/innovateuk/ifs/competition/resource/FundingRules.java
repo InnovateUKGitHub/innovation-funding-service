@@ -2,9 +2,9 @@ package org.innovateuk.ifs.competition.resource;
 
 public enum FundingRules {
 
-    STATE_AID("State Aid Rules"),
-    SUBSIDY_CONTROL("Subsidy Control Rules"),
-    NOT_AID("Not Aid");
+    SUBSIDY_CONTROL("Subsidy control"),
+    STATE_AID("State aid"),
+    NOT_AID("Non-aid");
 
     private String displayName;
 

@@ -17,6 +17,8 @@ Documentation     Suite description
 ...
 ...               IFS-7718 EDI question - application form
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -37,9 +39,9 @@ ${EOI_application_id}    ${application_ids["${EOI_application1}"]}
 
 *** Test Cases ***
 Comp Admin Creates EOI type competition
-    [Documentation]  IFS-2192
+    [Documentation]  IFS-2192  IFS-8779
     Given Logging in and Error Checking               &{Comp_admin1_credentials}
-    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  2  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative
+    Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative
 
 Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
