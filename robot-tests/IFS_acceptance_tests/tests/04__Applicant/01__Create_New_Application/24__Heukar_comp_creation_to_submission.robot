@@ -27,7 +27,7 @@ ${newLeadApplicantEmail}                        barry.barrington@heukar.com
 ${heukarApplicationSubmissionEmailSubject}      confirmation of your Horizon Europe UK Application Registration
 ${heukarApplicationUnsuccessfulEmailSubject}    update about your Horizon Europe UK Application Registration for government-backed funding
 ${huekarApplicationSubmissionEmail}             We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${huekarApplicationUnsuccessfulEmail}           We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European    Commission
+${huekarApplicationUnsuccessfulEmail}           We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
