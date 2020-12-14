@@ -44,7 +44,9 @@ public class FundingLevelPercentageFormPopulator implements CompetitionSetupForm
         if (competitionResource.getResearchCategories().isEmpty()) {
             competitionSetupForm.getMaximums().add(newArrayList(singleValueForm(maximums.stream().findAny().map(GrantClaimMaximumResource::getMaximum).orElse(null))));
         } else {
-            List<FundingLevelMaximumForm> forms = maximums.stream().map(FundingLevelMaximumForm::fromGrantClaimMaximumResource).collect(Collectors.toList());
+            List<FundingLevelMaximumForm> forms = maximums.stream()
+                    .filter(maximum -> competitionResource.getResearchCategories().contains(maximum.getResearchCategory().getId()))
+                    .map(FundingLevelMaximumForm::fromGrantClaimMaximumResource).collect(Collectors.toList());
             Multimap<OrganisationSize, FundingLevelMaximumForm> map = index(forms, FundingLevelMaximumForm::getOrganisationSize);
             List<List<FundingLevelMaximumForm>> listOfLists = map.asMap().values().stream().map(ArrayList::new).collect(toList());
             competitionSetupForm.setMaximums(listOfLists);
