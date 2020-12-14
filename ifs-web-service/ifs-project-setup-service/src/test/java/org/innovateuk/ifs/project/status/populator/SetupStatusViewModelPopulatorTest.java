@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.document.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
@@ -233,6 +234,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .withProjectSetupCompleteStatus(NOT_REQUIRED)
+                        .withPartnerProjectLocationStatus(COMPLETE)
                         .build(1))
                 .withProjectState(LIVE)
                 .build();
