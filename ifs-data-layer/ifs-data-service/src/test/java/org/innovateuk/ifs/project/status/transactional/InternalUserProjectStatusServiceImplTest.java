@@ -388,7 +388,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -562,7 +562,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1004,7 +1004,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1085,7 +1085,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
@@ -1234,7 +1234,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false
         );
         Organisation o = newOrganisation().withId(organisationId).build();
-        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withPostcode("S103HR").withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
