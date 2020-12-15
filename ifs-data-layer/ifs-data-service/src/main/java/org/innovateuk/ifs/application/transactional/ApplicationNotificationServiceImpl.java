@@ -38,7 +38,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
-
 /**
  * Service provides notification emails functions to send emails for {@link Application}s.
  */
@@ -287,7 +286,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 notificationArguments
         );
     }
-
 
     enum Notifications {
         APPLICATION_SUBMITTED,

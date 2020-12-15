@@ -110,7 +110,6 @@ public class CsvUtils {
         return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
     }
 
-
     public static List<ProjectLine> readProjects() {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
@@ -646,6 +645,7 @@ public class CsvUtils {
         public List<OrganisationSicCodeResource> sicCodes;
         public String organisationNumber;
         public List<OrganisationExecutiveOfficerResource> executiveOfficers;
+        public String businessType;
 
         private OrganisationLine(List<String> line) {
 
@@ -675,6 +675,7 @@ public class CsvUtils {
             executiveOfficers = executiveOfficersLine != null ?
                     simpleMap(asList(executiveOfficersLine.split(",")), OrganisationExecutiveOfficerResource::new) :
                     emptyList();
+            businessType  = nullable(line.get(i++));
         }
     }
 

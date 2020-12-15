@@ -21,8 +21,6 @@ import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
 
-    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = EnumSet.complementOf(EnumSet.of(COMP_ADMIN, PROJECT_FINANCE));
-
     private GrantOfferLetterPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
 
@@ -41,6 +39,33 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileEntryDetails(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).monitoringOfficerCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
+
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileEntryDetails() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.getSignedAdditionalContractFileEntryDetails(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
@@ -129,6 +154,22 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
+    public void createSignedAdditionalContractFileEntry() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.createSignedAdditionalContractFileEntry(projectId, null, null), () -> {
+            verify(projectGrantOfferPermissionRules).leadPartnerCanUploadSignedAdditionalContract(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).financeContactCanUploadSignedAdditionalContract(project, getLoggedInUser
+                    ());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
     public void getGrantOfferLetterFileEntryContents() {
 
         final Long projectId = 1L;
@@ -206,6 +247,32 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
     }
 
     @Test
+    public void getSignedAdditionalContractFileEntryContents() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.getSignedAdditionalContractFileAndContents(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser
+                    ());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).stakeholdersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+
+    }
+
+    @Test
     public void submitGrantOfferLetter() {
         final ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
@@ -224,6 +291,21 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.removeSignedGrantOfferLetterFileEntry(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project,
+                    getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
+    public void deleteSignedAdditionalContractFileEntry() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.removeSignedAdditionalContractFileEntry(projectId), () -> {
             verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project,
                     getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);

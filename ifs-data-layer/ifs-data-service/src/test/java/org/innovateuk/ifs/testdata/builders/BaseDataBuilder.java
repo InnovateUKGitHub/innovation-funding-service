@@ -224,7 +224,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InviteUserService inviteUserService;
     protected SupporterAssignmentService supporterAssignmentService;
 
-
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
     private static Cache<Long, List<FormInputResource>> formInputsByQuestionId = CacheBuilder.newBuilder().build();

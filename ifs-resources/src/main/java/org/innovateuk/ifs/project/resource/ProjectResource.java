@@ -12,8 +12,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.project.resource.ProjectState.COMPLETED_STATES;
-
 public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
@@ -58,7 +56,7 @@ public class ProjectResource {
 
     @JsonIgnore
     public boolean isCompleted() {
-        return COMPLETED_STATES.contains(projectState);
+        return projectState.isComplete();
     }
 
     public Long getId() {

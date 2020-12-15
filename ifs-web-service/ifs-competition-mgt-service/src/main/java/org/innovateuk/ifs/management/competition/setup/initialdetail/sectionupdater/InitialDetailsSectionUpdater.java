@@ -105,11 +105,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setName(initialDetailsForm.getTitle());
         competition.setCompetitionType(initialDetailsForm.getCompetitionTypeId());
         competition.setInnovationSector(initialDetailsForm.getInnovationSectorCategoryId());
-        if (Boolean.TRUE.equals(initialDetailsForm.getStateAid())) {
-            competition.setFundingRules(FundingRules.STATE_AID);
-        } else {
-            competition.setFundingRules(FundingRules.NOT_AID);
-        }
+        competition.setFundingRules(initialDetailsForm.getFundingRule());
         competition.setFundingType(initialDetailsForm.getFundingType());
 
         errors.addAll(attemptOpeningDateSave(initialDetailsForm, competition));

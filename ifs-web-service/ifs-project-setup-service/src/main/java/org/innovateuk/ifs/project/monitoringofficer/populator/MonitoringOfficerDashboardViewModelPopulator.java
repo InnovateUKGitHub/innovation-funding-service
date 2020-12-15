@@ -23,7 +23,7 @@ public class MonitoringOfficerDashboardViewModelPopulator {
     public MonitoringOfficerDashboardViewModel populate(UserResource user) {
         List<ProjectResource> projects = monitoringOfficerRestService.getProjectsForMonitoringOfficer(user.getId()).getSuccess();
         List<ProjectDashboardRowViewModel> projectViews = projects.stream().map(project ->
-                new ProjectDashboardRowViewModel(project.getApplication(), project.getCompetitionName(), project.getId(), project.getName())).collect(toList());
+                new ProjectDashboardRowViewModel(project)).collect(toList());
         return new MonitoringOfficerDashboardViewModel(projectViews);
     }
 }

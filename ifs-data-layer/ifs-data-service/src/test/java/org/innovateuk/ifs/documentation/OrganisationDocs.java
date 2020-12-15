@@ -22,7 +22,8 @@ public class OrganisationDocs {
             fieldWithPath("dateOfIncorporation").description("The date the company was incorporation").optional(),
             fieldWithPath("sicCodes").description("The sic codes of the organisation").optional(),
             fieldWithPath("executiveOfficers").description("The executive offciers of the organisation.").optional(),
-            fieldWithPath("organisationNumber").description("The number of the organisation, a unique identity number could be a charity number or UTC.").optional()
+            fieldWithPath("organisationNumber").description("The number of the organisation, a unique identity number could be a charity number or UTC.").optional(),
+            fieldWithPath("businessType").description("The type of the organisation , charity, partnership, etc.").optional()
     };
 
     public static final OrganisationResourceBuilder organisationResourceBuilder = newOrganisationResource()
