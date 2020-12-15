@@ -29,7 +29,7 @@ Comp admin can select the competition type option Heukar in Initial details on c
     Given the user logs-in in new browser             &{Comp_admin1_credentials}
     When the user navigates to the page               ${CA_UpcomingComp}
     And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details     ${heukarCompetitionName}  ${month}  ${nextyear}  ${compType_HEUKAR}  2  GRANT
+    Then the user fills in the CS Initial details     ${heukarCompetitionName}  ${month}  ${nextyear}  ${compType_HEUKAR}  SUBSIDY_CONTROL  GRANT
 
 Comp admin can view Heukar competition type in Initial details read only view
     [Documentation]  IFS-8638
