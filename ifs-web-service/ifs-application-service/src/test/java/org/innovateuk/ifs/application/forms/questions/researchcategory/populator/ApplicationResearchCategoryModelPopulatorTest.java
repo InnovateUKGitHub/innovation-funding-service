@@ -10,7 +10,9 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -67,11 +69,15 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
     @Mock
     private UserRestService userRestService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Test
     public void populateWithApplicationFinances() {
         long loggedInUserId = 1L;
 
-        CompetitionResource competitionResource = newCompetitionResource().build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingRules(FundingRules.STATE_AID).build();
 
         ResearchCategoryResource researchCategoryOne = newResearchCategoryResource().withName("one").build();
         CompetitionResearchCategoryLinkResource competitionResearchCategoryLinkOne = newCompetitionResearchCategoryLinkResource()
@@ -97,6 +103,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .build();
         ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().withUser(leadApplicant).build();
 
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
                 .thenReturn(restSuccess(asList(competitionResearchCategoryLinkOne, competitionResearchCategoryLinkTwo)));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
@@ -131,13 +138,16 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertTrue(researchCategoryViewModel.isAllReadOnly());
         assertTrue(researchCategoryViewModel.isUserLeadApplicant());
         assertEquals("Steve Smith", researchCategoryViewModel.getLeadApplicantName());
+        assertEquals("State aid", researchCategoryViewModel.getFundingRulesText());
     }
 
     @Test
     public void populateWithoutApplicationFinancesAndResearchCategorySelected() {
         long loggedInUserId = 1L;
 
-        CompetitionResource competitionResource = newCompetitionResource().build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingRules(FundingRules.STATE_AID).build();
+
         ResearchCategoryResource researchCategory = newResearchCategoryResource().withName("one").build();
         CompetitionResearchCategoryLinkResource competitionResearchCategoryLink = newCompetitionResearchCategoryLinkResource()
                 .withCompetition(competitionResource).withCategory(researchCategory).build();
@@ -158,6 +168,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .build();
         ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().withUser(leadApplicant).build();
 
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
                 .thenReturn(restSuccess(asList(competitionResearchCategoryLink)));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
@@ -192,6 +203,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertTrue(researchCategoryViewModel.isAllReadOnly());
         assertTrue(researchCategoryViewModel.isUserLeadApplicant());
         assertEquals("Steve Smith", researchCategoryViewModel.getLeadApplicantName());
+        assertEquals("State aid", researchCategoryViewModel.getFundingRulesText());
     }
 
     @Test
@@ -204,7 +216,8 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         ResearchCategoryResource researchCategoryTwo = newResearchCategoryResource().withName(researchCategoryNameTwo).build();
 
         CompetitionResource competitionResource = newCompetitionResource()
-                .withResearchCategories(asSet(researchCategoryOne.getId(), researchCategoryTwo.getId())).build();
+                .withResearchCategories(asSet(researchCategoryOne.getId(), researchCategoryTwo.getId()))
+                .withFundingRules(FundingRules.STATE_AID).build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
         UserResource leadApplicant = newUserResource()
@@ -230,6 +243,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withCompetition(competitionResource)
                 .build();
 
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
                 .thenReturn(restSuccess(asList(competitionResearchCategoryOne, competitionResearchCategoryTwo)));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(applicationResource.getCompetition(),
@@ -253,5 +267,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertEquals(asList(researchCategoryOne, researchCategoryTwo), researchCategoryViewModel.getAvailableResearchCategories());
         assertEquals(researchCategoryNameOne, researchCategoryViewModel.getAvailableResearchCategories().get(0).getName());
         assertEquals(researchCategoryNameTwo, researchCategoryViewModel.getAvailableResearchCategories().get(1).getName());
+
+        assertEquals("State aid", researchCategoryViewModel.getFundingRulesText());
     }
 }

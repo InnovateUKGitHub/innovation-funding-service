@@ -60,7 +60,8 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                 ktpCompetition));
 
         if (includeYourOrganisationSection) {
-            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(),
+            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(
+                    project.getApplication(),
                     competition,
                     false,
                     false,

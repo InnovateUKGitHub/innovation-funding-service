@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.forms.questions.researchcategory.viewmode
 
 import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 
 import java.util.List;
