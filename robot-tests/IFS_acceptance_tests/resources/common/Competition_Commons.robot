@@ -118,17 +118,17 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
-    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  #Remove research category?
     the user clicks the button/link       link = Project eligibility
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
-    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
+    #the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
+    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage  #Remove if statement?
+    #Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
     ...   ELSE   run keywords     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     ...   AND    the user selects Research Participation if required   ${researchParticipation}
     the user selects the radio button     resubmission  yes
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
+    #Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
