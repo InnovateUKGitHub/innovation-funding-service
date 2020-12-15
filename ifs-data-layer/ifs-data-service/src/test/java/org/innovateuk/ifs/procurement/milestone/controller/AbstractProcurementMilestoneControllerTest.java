@@ -2,6 +2,7 @@ package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.procurement.milestone.controller.AbstractProcurementMilestoneControllerTest.ControllerClazz;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
 import org.junit.Test;
@@ -46,13 +47,13 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
         ResourceClazz resource = new ResourceClazz();
         resource.setDeliverable("Deliverables");
 
-        when(service.get(id)).thenReturn(serviceSuccess(resource));
+        when(service.get(refEq(IdClazz.of(id)))).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/test/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.deliverable", is("Deliverables")));
 
-        verify(service).get(id);
+        verify(service).get(refEq(IdClazz.of(id)));
     }
 
     @Test
@@ -75,12 +76,12 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
     public void delete() throws Exception {
         long id = 1L;
 
-        when(service.delete(id)).thenReturn(serviceSuccess());
+        when(service.delete(refEq(IdClazz.of(id)))).thenReturn(serviceSuccess());
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/test/{id}", id))
                 .andExpect(status().isNoContent());
 
-        verify(service).delete(id);
+        verify(service).delete(refEq(IdClazz.of(id)));
     }
 
     @Override
@@ -92,6 +93,14 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
 
     private abstract class ServiceClazz implements ProcurementMilestoneService<ResourceClazz> {};
 
+    private static class IdClazz extends ProcurementMilestoneId {
+        public static IdClazz of(long id) {
+            IdClazz idClazz = new IdClazz();
+            idClazz.setId(id);
+            return idClazz;
+        }
+    };
+
     @RestController
     @RequestMapping("/test")
     public class ControllerClazz extends AbstractProcurementMilestoneController<ResourceClazz> {
@@ -99,6 +108,11 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
         @Override
         protected ProcurementMilestoneService<ResourceClazz> getProcurementMilestoneService() {
             return service;
+        }
+
+        @Override
+        protected ProcurementMilestoneId getId(long id) {
+            return IdClazz.of(id);
         }
     }
 }

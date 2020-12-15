@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.transactional.ApplicationProcurementMilestoneService;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,14 @@ public class ApplicationProcurementMilestoneController extends AbstractProcureme
         return applicationProcurementMilestoneService;
     }
 
+    @Override
+    protected ProcurementMilestoneId getId(long id) {
+        return ApplicationProcurementMilestoneId.of(id);
+    }
+
     @GetMapping("application/{applicationId}/organisation/{organisationId}")
     public RestResult<List<ApplicationProcurementMilestoneResource>> getByApplicationIdAndOrganisationId(@PathVariable final long applicationId,
-                                                                         @PathVariable final long organisationId) {
+                                                                                                         @PathVariable final long organisationId) {
         return applicationProcurementMilestoneService.getByApplicationIdAndOrganisationId(applicationId, organisationId).toGetResponse();
     }
 }

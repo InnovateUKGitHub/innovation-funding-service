@@ -4,14 +4,18 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.innovateuk.ifs.procurement.milestone.mapper.ProcurementMilestoneMapper;
 import org.innovateuk.ifs.procurement.milestone.repository.ProcurementMilestoneRepository;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public abstract class AbstractProcurementMilestoneServiceImpl<R extends ProcurementMilestoneResource, D extends ProcurementMilestone> implements ProcurementMilestoneService<R> {
+public abstract class AbstractProcurementMilestoneServiceImpl<R extends ProcurementMilestoneResource, D extends ProcurementMilestone>
+        extends RootTransactionalService
+        implements ProcurementMilestoneService<R> {
 
     @Autowired
     protected ProcurementMilestoneMapper<D, R> mapper;
@@ -30,13 +34,13 @@ public abstract class AbstractProcurementMilestoneServiceImpl<R extends Procurem
         });
     }
 
-    public ServiceResult<Void> delete(long milestoneId) {
-        getRepository().deleteById(milestoneId);
+    public ServiceResult<Void> delete(ProcurementMilestoneId milestoneId) {
+        getRepository().deleteById(milestoneId.getId());
         return serviceSuccess();
     }
 
-    public ServiceResult<R> get(long milestoneId) {
-        return findById(milestoneId).andOnSuccessReturn(mapper::mapToResource);
+    public ServiceResult<R> get(ProcurementMilestoneId milestoneId) {
+        return findById(milestoneId.getId()).andOnSuccessReturn(mapper::mapToResource);
     }
 
     private ServiceResult<D> findById(long milestoneId) {

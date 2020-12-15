@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.testdata.builders.data.ProcurementMilestoneData;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -97,7 +98,9 @@ public class ProcurementMilestoneDataBuilder extends BaseDataBuilder<Procurement
                 }
                 runningTotal[0] = runningTotal[0].add(milestone.getPayment());
 
-                applicationProcurementMilestoneService.create(milestone).getSuccess();
+                ApplicationProcurementMilestoneResource resource = applicationProcurementMilestoneService.create(milestone).getSuccess();
+
+                applicationProcurementMilestoneService.delete(ApplicationProcurementMilestoneId.of(resource.getId())).getSuccess();
             });
         });
     }

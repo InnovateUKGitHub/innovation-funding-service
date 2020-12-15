@@ -288,8 +288,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationData applicationData,
             ApplicationLine applicationLine,
             List<ApplicationQuestionResponseData> questionResponseData,
-            List<ApplicationFinanceData> financeData,
-            List<ProcurementMilestoneData> milestones) {
+            List<ApplicationFinanceData> financeData) {
 
         if (applicationLine.markQuestionsComplete) {
             forEachWithIndex(questionResponseData, (i, response) -> {
@@ -305,17 +304,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             forEachWithIndex(financeData, (i, finance) -> {
                 boolean lastElement = i == financeData.size() - 1;
                 applicationFinanceDataBuilder.
-                        withExistingFinances(
-                                finance.getApplication(),
-                                finance.getCompetition(),
-                                finance.getUser(),
-                                finance.getOrganisation()).
-                        markAsComplete(true, lastElement).
-                        build();
-            });
-            forEachWithIndex(milestones, (i, finance) -> {
-                boolean lastElement = i == financeData.size() - 1;
-                procurementMilestoneDataBuilder.
                         withExistingFinances(
                                 finance.getApplication(),
                                 finance.getCompetition(),

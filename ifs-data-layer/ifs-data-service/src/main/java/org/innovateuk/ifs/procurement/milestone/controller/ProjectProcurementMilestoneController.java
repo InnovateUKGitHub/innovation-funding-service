@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProjectProcurementMilestoneService;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
@@ -22,6 +24,11 @@ public class ProjectProcurementMilestoneController extends AbstractProcurementMi
     @Override
     protected ProcurementMilestoneService<ProjectProcurementMilestoneResource> getProcurementMilestoneService() {
         return projectProcurementMilestoneService;
+    }
+
+    @Override
+    protected ProcurementMilestoneId getId(long id) {
+        return ProjectProcurementMilestoneId.of(id);
     }
 
     @GetMapping("project/{projectId}/organisation/{organisationId}")

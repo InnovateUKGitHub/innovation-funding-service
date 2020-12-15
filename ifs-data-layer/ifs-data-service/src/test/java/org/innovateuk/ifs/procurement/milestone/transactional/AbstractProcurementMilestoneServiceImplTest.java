@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.innovateuk.ifs.procurement.milestone.mapper.ProcurementMilestoneMapper;
 import org.innovateuk.ifs.procurement.milestone.repository.ProcurementMilestoneRepository;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,7 +86,7 @@ public class AbstractProcurementMilestoneServiceImplTest {
     public void delete() {
         long milestoneId = 1L;
 
-        ServiceResult<Void> result = service.delete(milestoneId);
+        ServiceResult<Void> result = service.delete(IdClazz.of(milestoneId));
 
         assertThat(result.isSuccess(), is(true));
         verify(repository).deleteById(milestoneId);
@@ -100,7 +101,7 @@ public class AbstractProcurementMilestoneServiceImplTest {
         when(repository.findById(milestoneId)).thenReturn(Optional.of(domain));
         when(mapper.mapToResource(any(DomainClazz.class))).thenReturn(resource);
 
-        ServiceResult<ResourceClazz> result = service.get(milestoneId);
+        ServiceResult<ResourceClazz> result = service.get(IdClazz.of(milestoneId));
 
         assertThat(result.isSuccess(), is(true));
         assertThat(result.getSuccess(), is(resource));
@@ -114,6 +115,13 @@ public class AbstractProcurementMilestoneServiceImplTest {
 
     private abstract class MapperClazz extends ProcurementMilestoneMapper<DomainClazz, ResourceClazz> {}
 
+    private static class IdClazz extends ProcurementMilestoneId {
+        public static IdClazz of(long id) {
+            IdClazz idClazz = new IdClazz();
+            idClazz.setId(id);
+            return idClazz;
+        }
+    };
 
     private class ServiceClazz extends AbstractProcurementMilestoneServiceImpl<ResourceClazz, DomainClazz> {
         @Override

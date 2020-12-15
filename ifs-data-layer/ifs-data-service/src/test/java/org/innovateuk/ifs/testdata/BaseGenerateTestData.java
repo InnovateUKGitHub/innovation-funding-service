@@ -401,8 +401,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
             List<ApplicationQuestionResponseData> responses = questionResponses.join();
             List<ApplicationFinanceData> finances = applicationFinances.join();
-            List<ProcurementMilestoneData> milestones = procurementMilestones.join();
-            applicationDataBuilderService.completeApplication(applicationData, applicationLine, responses, finances, milestones);
+            applicationDataBuilderService.completeApplication(applicationData, applicationLine, responses, finances);
             return applicationData;
 
         }, taskExecutor);

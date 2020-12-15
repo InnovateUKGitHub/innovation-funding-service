@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public abstract class AbstractProcurementMilestoneController<R extends Procureme
 
     @GetMapping("/{id}")
     public RestResult<R> get(@PathVariable final long id) {
-        return getProcurementMilestoneService().get(id).toGetResponse();
+        return getProcurementMilestoneService().get(getId(id)).toGetResponse();
     }
 
     @PutMapping("/{id}")
@@ -24,9 +25,11 @@ public abstract class AbstractProcurementMilestoneController<R extends Procureme
 
     @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable final long id) {
-        return getProcurementMilestoneService().delete(id).toDeleteResponse();
+        return getProcurementMilestoneService().delete(getId(id)).toDeleteResponse();
     }
 
     protected abstract ProcurementMilestoneService<R> getProcurementMilestoneService();
+
+    protected abstract ProcurementMilestoneId getId(long id);
 
 }
