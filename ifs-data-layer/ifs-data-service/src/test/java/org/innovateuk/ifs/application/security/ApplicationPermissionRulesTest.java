@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
@@ -74,6 +76,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource interviewAssessor;
     private UserResource kta;
     private UserResource supporter;
+    private ProjectResource projectResource;
+    private UserResource projectManager;
 
     private static final Set<Role> applicantRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
@@ -113,6 +117,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         interviewAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
         kta = ktaUser();
         supporter = supporterUser();
+        projectManager = newUserResource().build();
 
         applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPENED).build();
         applicationResource2 = newApplicationResource().build();
@@ -121,6 +126,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         processRole1 = newProcessRole().withRole(LEADAPPLICANT).withApplication(application1).build();
         processRole2 = newProcessRole().withRole(APPLICANT).withApplication(application2).build();
         processRole3 = newProcessRole().withRole(KNOWLEDGE_TRANSFER_ADVISER).withApplication(application1).build();
+        projectResource = newProjectResource().withCompetition(competition.getId()).withApplication(applicationResource1.getId()).build();
 
         when(applicationRepository.existsById(applicationResource1.getId())).thenReturn(true);
         when(applicationRepository.existsById(applicationResource2.getId())).thenReturn(true);
@@ -155,6 +161,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         setupSupporterAssignmentExpectations(applicationResource1.getId(), supporter.getId(), true);
         setupSupporterAssignmentExpectations(applicationResource2.getId(), supporter.getId(), false);
         setupSupporterAssignmentExpectations(applicationResource1.getId(), compAdmin.getId(), false);
+
+        when(projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), projectManager.getId())).thenReturn(true);
     }
 
     @Test
@@ -236,6 +244,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, supporter));
         assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource2, supporter));
         assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
+    }
+
+    @Test
+    public void updateProjectTeamCanSeeTheApplicationFinancesTotals() {
+        assertTrue(rules.updateProjectTeamCanSeeTheApplicationFinanceTotals(applicationResource1, projectManager));
+        assertFalse(rules.updateProjectTeamCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
     }
 
     @Test
@@ -362,6 +376,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void consortiumCanSeeTheResearchParticipantPercentage() {
         assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, leadOnApplication1));
         assertFalse(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
+    }
+
+    @Test
+    public void updateProjectTeamCanSeeTheResearchParticipantPercentage() {
+        assertTrue(rules.updateProjectTeamCanSeeTheResearchParticipantPercentage(applicationResource1, projectManager));
+        assertFalse(rules.updateProjectTeamCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
     }
 
     @Test

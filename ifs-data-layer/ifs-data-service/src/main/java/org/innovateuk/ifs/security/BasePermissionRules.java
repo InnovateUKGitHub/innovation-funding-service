@@ -171,4 +171,8 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isSupporterForCompetition(long competitionId, long loggedInUserId) {
         return supporterAssignmentRepository.existsByParticipantIdAndCompetitionId(loggedInUserId, competitionId);
     }
+
+    protected boolean isUpdatedProjectTeam(long competitionId, long userId) {
+        return projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competitionId, userId);
+    }
 }

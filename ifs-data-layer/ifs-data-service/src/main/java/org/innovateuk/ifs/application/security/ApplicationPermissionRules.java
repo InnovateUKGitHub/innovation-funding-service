@@ -43,6 +43,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Updated project team can see the participation percentage for their applications")
+    public boolean updateProjectTeamCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+        return isUpdatedProjectTeam(applicationResource.getCompetition(), user.getId());
+    }
+
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
     public boolean assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
         return isAssessorForApplication(applicationResource, user);
@@ -105,6 +110,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean consortiumCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "Updated project team can see the application finance totals",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean updateProjectTeamCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isUpdatedProjectTeam(applicationResource.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
