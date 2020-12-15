@@ -379,3 +379,9 @@ hr,
     display:block;
   }
 }
+
+table.hidden-error-labels {
+  .govuk-error-message {
+    display:none;
+  }
+}

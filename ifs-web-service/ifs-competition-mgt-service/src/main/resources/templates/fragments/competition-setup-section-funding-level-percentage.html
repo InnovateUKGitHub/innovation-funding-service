@@ -12,7 +12,7 @@
           th:attr="data-competition=${model.general.competition.id}"
           data-section="funding-level-percentage">
         <th:block th:if="${model.general.editable}">
-            <p class="govuk-body">Set the maximum funding level percentage for the business sizes for each research category</p>
+            <p class="govuk-body">Set the maximum funding level percentage that applicants can apply for.</p>
             <p class="govuk-body govuk-!-font-weight-bold">You can only use whole numbers from 0 to 100.</p>
         </th:block>
 
@@ -50,7 +50,7 @@
 
         <th:block th:unless="${model.categories.isEmpty()}">
             <div class="table-overflow">
-                <table class="govuk-table">
+                <table class="govuk-table hidden-error-labels">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Business sizes</th>
@@ -62,7 +62,7 @@
                     <tbody class="govuk-table__body">
                         <thblock th:each="size : ${model.sizes}"
                                  th:with="sizeIndex=${competitionSetupForm.indexForSize(size)}">
-                            <tr class="govuk-table__row form-group-row-validated"
+                            <tr class="govuk-table__row form-group-row"
                                 th:with="path=${'maximums[__${sizeIndex}__]'}"
                                 th:classappend="${#ifsUtil.hasErrorsStartingWith('competitionSetupForm', path)} ? 'govuk-form-group--error'">
                                 <td class="govuk-table__cell" th:text="${model.descriptionForSize(size)}"></td>
