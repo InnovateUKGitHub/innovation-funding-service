@@ -674,3 +674,9 @@ the user search for an existing user
     [Arguments]   ${name}
     the user enters text to a text field     id = filter   ${name}
     the user clicks the button/link          css = input[type="submit"]
+
+the user select stakeholder and add to competition
+    the user clicks the button/link           css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       jQuery = a:contains("Added to competition")
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")

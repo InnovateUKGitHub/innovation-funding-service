@@ -45,7 +45,7 @@ Comp admin can view Heukar competition type in Initial details read only view
 Comp admin creates Heukar competition
     [Documentation]  IFS-8751
     Given the user clicks the button/link                             link = Back to competition details
-    Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  2  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
     [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
 
 Lead applicant can submit application
@@ -89,7 +89,7 @@ the user can view Heukar competition type in Initial details read only view
     the user clicks the button/link     jQuery = button:contains("Done")
 
 the competition admin creates HEUKAR competition
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
