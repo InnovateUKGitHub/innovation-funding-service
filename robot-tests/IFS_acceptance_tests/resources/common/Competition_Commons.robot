@@ -700,3 +700,9 @@ the user fills in the funding eligibility
     the user enters text to a text field      maximums[2][1].maximum  75
     the user clicks the button/link           jQuery = button:contains("Done")
     the user clicks the button/link           link = Return to setup overview
+    
+the user select stakeholder and add to competition
+    the user clicks the button/link           css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       jQuery = a:contains("Added to competition")
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
