@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.forms.questions.researchcategory.viewmode
 
 import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private String researchCategory;
     private boolean userLeadApplicant;
     private String leadApplicantName;
+    private FundingRules fundingRules;
 
     public ResearchCategoryViewModel(String applicationName,
                                      Long applicationId,
@@ -29,7 +32,8 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      boolean canMarkAsComplete,
                                      boolean allReadonly,
                                      boolean userLeadApplicant,
-                                     String leadApplicantName) {
+                                     String leadApplicantName,
+                                     FundingRules fundingRules) {
         super(questionId, applicationId, competitionName, closed, complete, canMarkAsComplete, allReadonly);
         this.applicationName = applicationName;
         this.availableResearchCategories = availableResearchCategories;
@@ -37,6 +41,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         this.researchCategory = researchCategory;
         this.userLeadApplicant = userLeadApplicant;
         this.leadApplicantName = leadApplicantName;
+        this.fundingRules = fundingRules;
     }
 
     public String getApplicationName() {
@@ -65,6 +70,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public boolean getUseSelectState() {
         return availableResearchCategories.size() > 1;
+    }
+
+    public String getFundingRulesText() {
+        return fundingRules.getDisplayName();
     }
 
     @Override

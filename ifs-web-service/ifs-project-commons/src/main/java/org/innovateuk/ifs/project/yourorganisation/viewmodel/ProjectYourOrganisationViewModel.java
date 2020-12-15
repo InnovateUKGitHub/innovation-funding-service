@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -14,19 +15,17 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     private final boolean isAllEligibilityAndViabilityInReview;
 
     public ProjectYourOrganisationViewModel(long applicationId,
-                                            String competitionName,
+                                            CompetitionResource competitionResource,
                                             boolean showStateAidAgreement,
                                             boolean showOrganisationSizeAlert,
-                                            boolean h2020,
                                             long projectId,
                                             String projectName,
                                             long organisationId,
                                             boolean readOnly,
                                             boolean showHints,
-                                            boolean procurementCompetition,
                                             UserResource loggedInUser,
                                             boolean isAllEligibilityAndViabilityInReview) {
-        super(applicationId, competitionName, showStateAidAgreement, showOrganisationSizeAlert, h2020, procurementCompetition);
+        super(applicationId, competitionResource, showStateAidAgreement, showOrganisationSizeAlert);
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;

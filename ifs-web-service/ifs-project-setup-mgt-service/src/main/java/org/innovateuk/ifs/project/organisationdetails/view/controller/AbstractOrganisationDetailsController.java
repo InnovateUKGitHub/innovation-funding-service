@@ -60,7 +60,8 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                 ktpCompetition));
 
         if (includeYourOrganisationSection) {
-            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(), competition.getName(),false,
+            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(),
+                    competition,
                     false,
                     false,
                     projectId,
@@ -68,7 +69,6 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     organisationId,
                     true,
                     false,
-                    competition.isProcurement(),
                     loggedInUser,
                     isAllEligibilityAndViabilityInReview(projectId)));
 

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestSer
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -79,7 +80,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                "Steve Smith");
+                "Steve Smith",
+                FundingRules.STATE_AID);
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId()))
@@ -150,7 +152,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                "Steve Smith");
+                "Steve Smith",
+                FundingRules.STATE_AID);
 
         ResearchCategoryForm researchCategoryForm = new ResearchCategoryForm();
         researchCategoryForm.setResearchCategory(researchCategoryId);
@@ -259,7 +262,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                "Steve Smith");
+                "Steve Smith",
+                FundingRules.STATE_AID);
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId()))
@@ -304,7 +308,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                "Steve Smith");
+                "Steve Smith",
+                FundingRules.STATE_AID);
 
         when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(restSuccess(processRole));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);

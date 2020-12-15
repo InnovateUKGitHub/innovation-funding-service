@@ -307,7 +307,7 @@
         <th:block th:if="${!readOnly && showStateAidAgreement}">
             <div class="govuk-!-margin-bottom-6">
                 <p class="govuk-body">
-                    If we decide to award you funding you must be eligible to receive State aid at the point of the award.
+                    If we decide to award you funding you must be eligible to receive <span th:text="${model.fundingRulesText}">UK State aid</span> at the point of the award.
                     If you are found to be ineligible, we will withdraw our offer.
                 </p>
             </div>
