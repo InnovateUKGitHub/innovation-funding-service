@@ -10,10 +10,15 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ManageUserPageResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -51,8 +56,11 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final int SEARCH_ITEMS_MAX = 20;
 
-    private static final String COMPANIES_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
+    private static final int IMPROVED_SEARCH_ITEMS_MAX = 10;
 
+    private static final String COMPANIES_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
+    private static final String COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH = "search/companies?q={q}&items_per_page={items_per_page}&start_index={start_index}";
+  //  private static final String COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH = "search/companies?q={q}&items_per_page={items_per_page}&page_number={page_number}";
     private static final String COMPANIES_HOUSE_LIST_DIRECTORS_PATH = "/officers?items_per_page={items_per_page}&register_type={register_type}";
 
     private static final String SEARCH_WORD_KEY = "q";
@@ -65,14 +73,17 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
 
+     private static final String START_INDEX_KEY = "start_index";
+
+ //   private static final String START_INDEX_KEY = "page_number";
+
+
     @Autowired
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
-    @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
-        if (!isImprovedSearchEnabled) {
-            return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
+          return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
                 // encoded in the web-services.
                 JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
                 JsonNode companyItems = companiesResources.path("items");
@@ -80,26 +91,29 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
                 companyItems.forEach(i -> results.add(companySearchMapper(i)));
                 return serviceSuccess(results);
             });
-        }
-        return improvedSearchOrganisations(encodedSearchText);
     }
 
-    public ServiceResult<List<OrganisationSearchResult>> improvedSearchOrganisations(String encodedSearchText) {
-        return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
-            // search prgansiation
-            JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
-            JsonNode searchResultItems = companiesResources.path("items");
-            List<OrganisationSearchResult> results = new ArrayList<>();
-            searchResultItems.forEach(companyItem ->
-            {
-                String comanyHouseNo = companyItem.path("company_number").asText();
-                Optional<JsonNode> companyDetails = getCompanyDetails(comanyHouseNo);
-                Optional<JsonNode> directorsDetails = getDirectorsDetails(comanyHouseNo);
-                OrganisationSearchResult orgResult = companySearchDataMapper(companyItem, companyDetails, directorsDetails);
-                results.add(orgResult);
+    @Override
+    public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText, int indexPos) {
+        if (isImprovedSearchEnabled) {
+            return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
+                // search prgansiation with index
+                JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH, JsonNode.class, companySearchUrlVariablesWithIndex(decodedSearchText, indexPos));
+                JsonNode searchResultItems = companiesResources.path("items");
+                String totalResults = companiesResources.path("total_results").asText();
+                List<OrganisationSearchResult> results = new ArrayList<>();
+                searchResultItems.forEach(companyItem ->
+                {
+                    String comanyHouseNo = companyItem.path("company_number").asText();
+                    Optional<JsonNode> companyDetails = getCompanyDetails(comanyHouseNo);
+                    Optional<JsonNode> directorsDetails = getDirectorsDetails(comanyHouseNo);
+                    OrganisationSearchResult orgResult = companySearchDataMapper(companyItem, companyDetails, directorsDetails, totalResults);
+                    results.add(orgResult);
+                });
+                return serviceSuccess(results);
             });
-            return serviceSuccess(results);
-        });
+        }
+         return searchOrganisations(encodedSearchText);
     }
 
     private Optional<JsonNode> getCompanyDetails(String companiesHouseNo) {
@@ -158,9 +172,17 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         return variables;
     }
 
+    private Map<String, Object> companySearchUrlVariablesWithIndex(String searchWord, int indexPos) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(SEARCH_WORD_KEY, searchWord);
+        variables.put(ITEMS_PER_PAGE_KEY, IMPROVED_SEARCH_ITEMS_MAX);
+        variables.put(START_INDEX_KEY, indexPos);
+        return variables;
+    }
+
     private Map<String, Object> listDirectorsUrlVariables() {
         Map<String, Object> variables = new HashMap<>();
-        variables.put(ITEMS_PER_PAGE_KEY, SEARCH_ITEMS_MAX);
+        variables.put(ITEMS_PER_PAGE_KEY, IMPROVED_SEARCH_ITEMS_MAX);
         variables.put(OFFICERS_TYPE, DIRECTORS);
         return variables;
     }
@@ -254,13 +276,14 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     }
 
     //Now both companySearchMapper and companySearchDataMapper same, but need to check the address
-    private OrganisationSearchResult companySearchDataMapper(JsonNode companyItems, Optional<JsonNode> companyDetails, Optional<JsonNode> directorDetails) {
+    private OrganisationSearchResult companySearchDataMapper(JsonNode companyItems, Optional<JsonNode> companyDetails, Optional<JsonNode> directorDetails, String totalResults) {
         AddressResource officeAddress = getAddress(companyItems, "address");
         OrganisationSearchResult org = new OrganisationSearchResult(companyItems.path("company_number").asText(), companyItems.path("title").asText());
         Map<String, Object> extras = new HashMap<>();
         extras.put("company_type", companyItems.path("company_type").asText());
         extras.put("date_of_creation", companyItems.path("date_of_creation").asText());
         extras.put("description", companyItems.path("description").asText());
+        extras.put("total_results", totalResults);
         org.setExtraAttributes(extras);
         org.setOrganisationAddress(officeAddress);
         if (companyDetails.isPresent()) {

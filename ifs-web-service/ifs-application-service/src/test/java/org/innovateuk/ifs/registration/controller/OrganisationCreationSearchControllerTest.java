@@ -93,7 +93,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
-        when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(restSuccess(new ArrayList<>()));
+        when(organisationSearchRestService.searchOrganisation(anyLong(), anyString(), 0)).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
 
@@ -109,6 +109,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationForm.setManualEntry(false);
         organisationForm.setOrganisationSearchResults(Collections.emptyList());
         organisationForm.setOrganisationName("NOMENSA LTD");
+        organisationForm.setOrganisationStartIndex(0);
 
 
         organisationFormUseSearchResult = new OrganisationCreationForm();

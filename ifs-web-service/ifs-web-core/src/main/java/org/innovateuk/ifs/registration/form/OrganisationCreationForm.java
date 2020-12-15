@@ -4,13 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.util.CollectionFunctions;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
@@ -29,6 +34,10 @@ public class OrganisationCreationForm implements Serializable {
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     private String organisationName;
+
+    private int searchPageIndexPosition = 1;
+
+    private int totalSearchResults = 0;
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
@@ -118,6 +127,21 @@ public class OrganisationCreationForm implements Serializable {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
     }
 
+    public int getSearchPageIndexPosition() {
+        return searchPageIndexPosition;
+    }
+
+    public void setSearchPageIndexPosition(int searchPageIndexPosition) {
+        this.searchPageIndexPosition = searchPageIndexPosition;
+    }
+    public int  getTotalSearchResults() {
+        return  totalSearchResults;
+    }
+
+    public void setTotalSearchResults(int totalSearchResults) {
+        this.totalSearchResults = totalSearchResults;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -135,6 +159,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(searchOrganisationId, that.searchOrganisationId)
                 .append(organisationSearchResults, that.organisationSearchResults)
                 .append(organisationName, that.organisationName)
+                .append(searchPageIndexPosition, that.searchPageIndexPosition)
                 .isEquals();
     }
 
@@ -149,6 +174,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(manualEntry)
                 .append(organisationSearchResults)
                 .append(organisationName)
+                .append(searchPageIndexPosition)
                 .toHashCode();
     }
 }

@@ -44,12 +44,12 @@
             <ul id="org-results" class="govuk-list results-list panel"
                 th:if="${organisationForm.organisationSearching}">
                 <th:block>
-                    <!--   <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
-                           <span th:text="${organisationForm.organisationSearchResults.size()} + ' ' + 'Companies matching the search' + ${organisationForm.organisationSearchName}"></span>
-                       </h2> -->
-
                     <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
-                        <span th:text="${organisationForm.organisationSearchResults.size()}"></span>
+                           <span th:text="${organisationForm.totalSearchResults} + ' ' + 'Companies matching the search' + ' ' + ${organisationForm.organisationSearchName}"></span>
+                       </h2>
+
+                <!--    <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
+                        <span th:text="${organisationForm.totalSearchResults}"></span>
                     </h2>
                     <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-bold">
                         <span th:text=" ' ' + 'Companies'"></span>
@@ -59,7 +59,7 @@
                     </h4>
                     <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-bold">
                         <span th:text=" ' ' + ${organisationForm.organisationSearchName}"></span>
-                    </h3>
+                    </h3> -->
 
                 </th:block>
                 <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">

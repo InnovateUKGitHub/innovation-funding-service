@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     @Override
-    public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
+    public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText, int startIndex) {
         return encodedSearchText.equals("innoavte") ?
                 serviceSuccess(emptyList()) :
                 serviceSuccess(asList(getHiveIt(), getWorthIt(), getNomensa(), getInnovate(), getUniversityOfLiverpool()));
