@@ -75,6 +75,7 @@ the competition admin creates HEUKAR competition
     the user selects the Terms and Conditions
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
+    the user fills in the funding eligibility
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility         true    true
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}

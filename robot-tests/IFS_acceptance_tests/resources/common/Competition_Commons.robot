@@ -16,6 +16,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
+    the user fills in the funding eligibility
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
@@ -674,3 +675,28 @@ the user search for an existing user
     [Arguments]   ${name}
     the user enters text to a text field     id = filter   ${name}
     the user clicks the button/link          css = input[type="submit"]
+
+the user fills in the funding eligibility
+    the user clicks the button/link           link = Funding eligibility
+    the user should see the element           jQuery = h2:contains("Are research categories applicable?")
+    the user selects the radio button         researchCategoriesApplicable  true
+    the user should see the element           jQuery = label:contains("Feasibility studies")
+    the user should see the element           jQuery = label:contains("Industrial research")
+    the user should see the element           jQuery = label:contains("Experimental development")
+    the user selects the checkbox             research-categories-33  #Feasibility
+    the user selects the checkbox             research-categories-34  #Industrial
+    the user selects the checkbox             research-categories-34  #Experimental
+    the user clicks the button/link           jQuery = button:contains("Done")
+    the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category")
+    the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+    the user should see the element           jQuery = td:contains("Micro entity or small company")
+    the user should see the element           jQuery = td:contains("Medium-sized company")
+    the user should see the element           jQuery = td:contains("Large-sized company")
+    the user enters text to a text field      maximums[0][0].maximum  75
+    the user enters text to a text field      maximums[0][1].maximum  75
+    the user enters text to a text field      maximums[1][0].maximum  75
+    the user enters text to a text field      maximums[1][1].maximum  75
+    the user enters text to a text field      maximums[2][0].maximum  75
+    the user enters text to a text field      maximums[2][1].maximum  75
+    the user clicks the button/link           jQuery = button:contains("Done")
+    the user clicks the button/link           link = Return to setup overview

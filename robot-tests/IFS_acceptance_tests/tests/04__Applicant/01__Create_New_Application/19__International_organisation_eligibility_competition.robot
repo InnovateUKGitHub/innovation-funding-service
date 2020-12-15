@@ -86,6 +86,33 @@ Eligibility is changed to project eligibility in pagination
      And the user clicks the button/link                  jQuery = span:contains("${organisationalEligibilityTitle}")
      Then the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
 
+Funding eligibility: Mark as Done 
+    [Documentation]
+    Given the user clicks the button/link         link = Return to setup overview
+    And the user clicks the button/link           link = Funding eligibility
+    And the user should see the element           jQuery = h2:contains("Are research categories applicable?")
+    And the user selects the radio button         researchCategoriesApplicable  true
+    And the user should see the element           jQuery = label:contains("Feasibility studies")
+    And the user should see the element           jQuery = label:contains("Industrial research")
+    And the user should see the element           jQuery = label:contains("Experimental development")
+    When the user selects the checkbox            research-categories-33  #Feasibility
+    And the user selects the checkbox             research-categories-34  #Industrial
+    And the user selects the checkbox             research-categories-34  #Experimental
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category")
+    And the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+    And the user should see the element           jQuery = td:contains("Micro entity or small company")
+    And the user should see the element           jQuery = td:contains("Medium-sized company")
+    And the user should see the element           jQuery = td:contains("Large-sized company")
+    And the user enters text to a text field      maximums[0][0].maximum  75
+    And the user enters text to a text field      maximums[0][1].maximum  75
+    And the user enters text to a text field      maximums[1][0].maximum  75
+    And the user enters text to a text field      maximums[1][1].maximum  75
+    And the user enters text to a text field      maximums[2][0].maximum  75
+    And the user enters text to a text field      maximums[2][1].maximum  75
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    When The user clicks the button/link          link = Return to setup overview
+
 Comp admin can not complete the competition setup without organisational eligibility category completetion
      [Documentation]  IFS-7195
      Given the user clicks the button/link                                                 link = Return to setup overview
