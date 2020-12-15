@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 
@@ -97,6 +98,19 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
     }
 
+    public boolean removeSignedAdditionalContract(Project project, User user) {
+        ProjectUser projectManager = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
+                PROJECT_MANAGER, user.getId());
+        ProjectUser financeContact = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
+                PROJECT_FINANCE_CONTACT, user.getId());
+
+        if ((projectManager == null) && (financeContact == null)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean isApproved(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && GrantOfferLetterState.APPROVED.equals(process.getProcessState());
@@ -131,7 +145,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
             GrantOfferLetterState state = getState(project);
             GrantOfferLetterEvent lastProcessEvent = getLastProcessEvent(project);
 
-            if (project.isPartner(user) && !project.isProjectManager(user)) {
+            if (project.isPartner(user) && !(project.isProjectManager(user) || project.isFinanceContact(user))) {
                 return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
             } else {
                 return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);

@@ -46,13 +46,14 @@ public class SendNotificationsModelPopulator {
         }
 
         return new SendNotificationsViewModel(filteredApplications,
-                                              successfulCount,
-                                              unsuccessfulCount,
-                                              onHoldCount,
-                                              competitionId,
-                                              competitionResource.getName(),
-                                              competitionResource.isH2020(),
-                                              Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()));
+                successfulCount,
+                unsuccessfulCount,
+                onHoldCount,
+                competitionId,
+                competitionResource.getName(),
+                competitionResource.isH2020(),
+                Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()),
+                competitionResource.isHeukar());
     }
 
 

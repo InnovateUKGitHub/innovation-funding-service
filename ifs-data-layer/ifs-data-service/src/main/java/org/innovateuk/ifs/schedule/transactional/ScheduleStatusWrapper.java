@@ -24,7 +24,6 @@ public class ScheduleStatusWrapper {
 
     public void doScheduledJob(String jobName, Supplier<ServiceResult<ScheduleResponse>> runnable, Runnable failedToGetLock) {
         authenticationHelper.loginSystemUser();
-        scheduleStatusService.clearTimedOutJobs();
         try {
             scheduleStatusService.startJob(jobName);
         } catch (Exception e) {

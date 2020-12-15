@@ -86,6 +86,10 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="signedAdditionalContractFileEntryId", referencedColumnName = "id")
+    private FileEntry signedAdditionalContractFile;
+
     @NotNull
     @Enumerated(STRING)
     private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;
@@ -286,6 +290,14 @@ public class Project implements ProcessActivity {
         this.additionalContractFile = additionalContractFile;
     }
 
+    public FileEntry getSignedAdditionalContractFile() {
+        return signedAdditionalContractFile;
+    }
+
+    public void setSignedAdditionalContractFile(FileEntry signedAdditionalContractFile) {
+        this.signedAdditionalContractFile = signedAdditionalContractFile;
+    }
+
     public FileEntry getGrantOfferLetter() {
         return grantOfferLetter;
     }
@@ -337,6 +349,12 @@ public class Project implements ProcessActivity {
                 projectUser.isProjectManager()).isEmpty();
     }
 
+    public boolean isFinanceContact(User user) {
+        return !getProjectUsers(projectUser ->
+                projectUserForUser(user, projectUser) &&
+                        projectUser.isFinanceContact()).isEmpty();
+    }
+
     private boolean projectUserForUser(User user, ProjectUser projectUser) {
         return projectUser.getUser().getId().equals(user.getId());
     }
@@ -384,4 +402,6 @@ public class Project implements ProcessActivity {
     public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
         this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
+
+
 }

@@ -57,9 +57,9 @@ public abstract class AbstractOrganisationFinanceController {
     }
 
     @GetMapping("/show-state-aid")
-    public RestResult<Boolean> isShowStateAidAgreement(
+    public RestResult<Boolean> isShowAidAgreement(
             @PathVariable long targetId,
             @PathVariable long organisationId) {
-        return getOrganisationFinanceService().isShowStateAidAgreement(targetId, organisationId).toGetResponse();
+        return getOrganisationFinanceService().isShowAidAgreement(targetId, organisationId).toGetResponse();
     }
 }
