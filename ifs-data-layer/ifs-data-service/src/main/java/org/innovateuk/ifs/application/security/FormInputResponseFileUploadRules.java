@@ -19,8 +19,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-
 /**
  * Rules defining who is allowed to upload files as part of an Application Form response to a Question
  */
@@ -36,48 +34,18 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+    @Autowired
+    private ApplicationSecurityHelper applicationSecurityHelper;
+
+    @PermissionRule(value = "READ", description = "A user can see the response if they can view the application")
+    public boolean applicantPermissions(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+        return applicationSecurityHelper.canViewApplication(fileEntry.getCompoundId().getApplicationId(), user);
+    }
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).orElse(null);
         return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
-    }
-
-    @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
-    public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return userIsApplicantOnThisApplication(fileEntry, user);
-    }
-
-    @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
-    public boolean ktaCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return isKta(fileEntry.getCompoundId().getApplicationId(), user);
-    }
-
-    @PermissionRule(value = "READ", description = "An internal user can download a file for an answer")
-    public boolean internalUserCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(value = "READ", description = "A monitoring officer can download a file for an answer")
-    public boolean monitoringOfficerCanDownloadFilesInResponses(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return monitoringOfficerCanViewApplication(fileEntry.getCompoundId().getApplicationId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "A supporter can download a file for an answer to one of their own Applications")
-    public boolean supporterCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return isSupporterForApplication(fileEntry.getCompoundId().getApplicationId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "Stakeholders can can download a file for an answer for applications theyre assigned to")
-    public boolean stakeholdersCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
-        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "A external Finance can can download a file for an answer for applications they're assigned to")
-    public boolean externalFinanceCanDownloadFilesInResponse(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).get();
-        return userIsExternalFinanceInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {

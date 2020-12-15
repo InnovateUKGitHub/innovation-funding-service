@@ -7,6 +7,10 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.HashSet;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 public final class SecurityRuleUtil {
@@ -23,11 +27,27 @@ public final class SecurityRuleUtil {
                                            final Long applicationId,
                                            final Long organisationId,
                                            final Role userRoleType,
-                                           final ProcessRoleRepository processRoleRepository)
-    {
+                                           final ProcessRoleRepository processRoleRepository) {
         final Role role = Role.getByName(userRoleType.getName());
         final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(user.getId(), role, applicationId, organisationId);
         return processRole != null;
+    }
+
+    public static boolean checkProcessRole(final UserResource user,
+                                           final Long applicationId,
+                                           final Long organisationId,
+                                           final ProcessRoleRepository processRoleRepository,
+                                           final Role... roles) {
+        final List<ProcessRole> processRole = processRoleRepository.findByUserIdAndRoleInAndApplicationIdAndOrganisationId(user.getId(), asList(roles), applicationId, organisationId);
+        return !processRole.isEmpty();
+    }
+
+    public static boolean checkProcessRole(final UserResource user,
+                                           final Long applicationId,
+                                           final ProcessRoleRepository processRoleRepository,
+                                           final Role... roles) {
+        final List<ProcessRole> processRole = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), new HashSet<>(asList(roles)), applicationId);
+        return !processRole.isEmpty();
     }
 
     public static boolean checkProcessRole(final UserResource user, final long applicationId, Role userRoleType, final ProcessRoleRepository processRoleRepository) {

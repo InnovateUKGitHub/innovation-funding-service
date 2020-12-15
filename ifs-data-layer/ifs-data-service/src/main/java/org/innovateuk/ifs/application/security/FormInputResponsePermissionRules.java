@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,8 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 @PermissionRules
 @Component
@@ -32,60 +30,12 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
-    @PermissionRule(value = "READ", description = "The consortium can see the input responses of their organisation and application")
-    public boolean consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(final FormInputResponseResource response, final UserResource user) {
-        final boolean isLeadApplicantForOrganisation = checkRoleForApplicationAndOrganisation(user, response, LEADAPPLICANT);
-        final boolean isCollaboratorForOrganisation = checkRoleForApplicationAndOrganisation(user, response, COLLABORATOR);
-        return isLeadApplicantForOrganisation || isCollaboratorForOrganisation;
-    }
+    @Autowired
+    private ApplicationSecurityHelper applicationSecurityHelper;
 
-    @PermissionRule(value = "READ", description = "The consortium can see the input responses of the application when the response is shared between organisations")
-    public boolean consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(final FormInputResponseResource response, final UserResource user) {
-        final FormInput formInput = formInputRepository.findById(response.getFormInput()).get();
-        final Question question = formInput.getQuestion();
-        if (!question.getMultipleStatuses()) {
-            final boolean isLeadApplicant = checkProcessRole(user, response.getApplication(), LEADAPPLICANT, processRoleRepository);
-            final boolean isCollaborator = checkProcessRole(user, response.getApplication(), COLLABORATOR, processRoleRepository);
-            return isCollaborator || isLeadApplicant;
-        }
-        return false;
-    }
-
-    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they assess")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
-        return checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository);
-    }
-
-    @PermissionRule(value = "READ", description = "Monitoring officers can see the input responses for the applications they are assigned to")
-    public boolean monitoringOfficersCanSeeTheInputResponsesInApplicationsAssignedToThem(final FormInputResponseResource response, final UserResource user) {
-        return monitoringOfficerCanViewApplication(response.getApplication(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyReview(final FormInputResponseResource response, final UserResource user) {
-        return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository);
-    }
-
-    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they interview")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyInterview(final FormInputResponseResource response, final UserResource user) {
-        return checkProcessRole(user, response.getApplication(), INTERVIEW_ASSESSOR, processRoleRepository);
-    }
-
-    @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")
-    public boolean internalUserCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(value = "READ", description = "Stakeholders can see form input responses for applications they are assigned to")
-    public boolean stakeholdersCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        Application application = applicationRepository.findById(response.getApplication()).get();
-        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
-    }
-
-    @PermissionRule(value = "READ", description = "Competition finance users can see form input responses for applications they are assigned to")
-    public boolean competitionFinanceUsersCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        Application application = applicationRepository.findById(response.getApplication()).get();
-        return userIsExternalFinanceInCompetition(application.getCompetition().getId(), user.getId());
+    @PermissionRule(value = "READ", description = "A user can see the response if they can view the application")
+    public boolean applicationPermissions(final FormInputResponseResource response, final UserResource user) {
+        return applicationSecurityHelper.canViewApplication(response.getApplication(), user);
     }
 
     @PermissionRule(value = "SAVE",
@@ -144,11 +94,5 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
 
     private boolean isMarkedAsComplete(QuestionStatus questionStatus) {
         return questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true);
-    }
-
-    private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, Role userRoleType) {
-        final Long organisationId = processRoleRepository.findById(response.getUpdatedBy()).get().getOrganisationId();
-        final Long applicationId = response.getApplication();
-        return checkProcessRole(user, applicationId, organisationId, userRoleType, processRoleRepository);
     }
 }

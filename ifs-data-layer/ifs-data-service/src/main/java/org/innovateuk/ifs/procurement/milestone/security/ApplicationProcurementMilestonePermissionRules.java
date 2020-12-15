@@ -19,8 +19,8 @@ public class ApplicationProcurementMilestonePermissionRules extends BasePermissi
     @Autowired
     private CompetitionRepository competitionRepository;
 
-    @PermissionRule(value = "CREATE", description = "Applicants attached to applications can create")
-    public boolean innovationLeadsCanViewMilestonesOnAssignedComps(ApplicationProcurementMilestoneResource applicationProcurementMilestone, UserResource user) {
-        return isMemberOfProjectTeam(applicationProcurementMilestone.getApplicationId(), user);
+    @PermissionRule(value = "EDIT", description = "Applicants attached to applications can create")
+    public boolean membersOfTheProjectTeamCanCRUDMilestones(ApplicationProcurementMilestoneResource applicationProcurementMilestone, UserResource user) {
+        return isMemberOfProjectTeamForOrganisation(applicationProcurementMilestone.getApplicationId(), applicationProcurementMilestone.getOrganisationId(), user);
     }
 }

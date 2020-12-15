@@ -20,7 +20,11 @@ public abstract class RootPermissionRules {
     protected UserRepository userRepository;
 
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
-        return isLeadApplicant(applicationId, user) || isCollaborator(applicationId, user);
+        return checkProcessRole(user, applicationId, processRoleRepository, LEADAPPLICANT, COLLABORATOR);
+    }
+
+    protected boolean isMemberOfProjectTeamForOrganisation(long applicationId, long organisationId, final UserResource user) {
+        return checkProcessRole(user, applicationId, organisationId, processRoleRepository, LEADAPPLICANT, COLLABORATOR);
     }
 
     protected boolean isCollaborator(long applicationId, UserResource user) {
