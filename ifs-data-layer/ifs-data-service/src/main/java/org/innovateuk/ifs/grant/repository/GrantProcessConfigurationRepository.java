@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface GrantProcessConfigurationRepository extends CrudRepository<GrantProcessConfiguration, Long> {
     Optional<GrantProcessConfiguration> findByCompetitionId(Long competitionId);
+    void deleteByCompetitionId(long competitionId);
 }
