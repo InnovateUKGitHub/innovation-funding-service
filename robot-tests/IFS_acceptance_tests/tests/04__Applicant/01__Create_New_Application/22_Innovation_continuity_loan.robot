@@ -20,7 +20,7 @@ ${continuityLoanApplicationLink}     ${server}/management/competition/${continui
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
 ${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
 ${continuityLoanT&C'sTitle}          Loans terms and conditions
-${continuityLoanT&CLink}             Innovation Continuity Loan
+${continuityLoanT&CLink}             Innovation Continuity Loan (opens in a new window)
 ${applicationT&CLink}                Award terms and conditions
 
 
@@ -44,7 +44,10 @@ Innovation continuity loan T&C's can be edited
 Internal user is able to see correct T&C's
     [Documentation]  IFS-8002
     Given the user clicks the button/link     link = ${continuityLoanT&CLink}
+    And select window                         title = xxxxxxxx
     Then the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And close window
+    And select window                         title = Competition terms and conditions - Innovation Funding Service
 
 Lead applicant is able to see correct T&C's
     [Documentation]  IFS-8002
@@ -115,7 +118,7 @@ navigate to comp setup of investor comp
     the user clicks the button/link             link = Back to competition details
 
 the user confirmed terms and conditions
-    the user selects the radio button     termsAndConditionsId  termsAndConditionsId8
+    the user selects the radio button     termsAndConditionsId  termsAndConditionsId7
     the user clicks the button/link       jQuery = button:contains("Done")
 
 the user completes the competition setup

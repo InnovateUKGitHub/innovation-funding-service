@@ -112,28 +112,29 @@ the competition admin creates HEUKAR competition
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user selects the HEUKAR Privacy Notice
-    the user clicks the button/link             link = Terms and conditions
+    the user clicks the button/link                     link = Terms and conditions
+    the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
     the user views the HEUKAR privacy notice
-    the user clicks the button/link             jQuery = button:contains("Done")
+    the user clicks the button/link                     jQuery = button:contains("Done")
     the user views the HEUKAR privacy notice
-    the user clicks the button/link             link = Back to competition details
-    the user should see the element             jQuery = li:contains("Terms and conditions") .task-status-complete
+    the user clicks the button/link                     link = Back to competition details
+    the user should see the element                     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user views the HEUKAR privacy notice
-    the user clicks the button/link             link = Horizon Europe UK Application Privacy Notice (opens in a new window)
-    Select Window                               title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
-    the user should see the element             jQuery = h1:contains("Horizon Europe UK Application Privacy Notice")
-    the user should see the element             jQuery = p:contains("Any personal data that you provide to UK Research and Innovation")
-    the user clicks the button/link             link = UK Research and Innovation Privacy Notice (opens in a new window)
-    Select Window                               title = Privacy notice – UKRI
+    the user clicks the button/link                     link = Horizon Europe UK Application Privacy Notice (opens in a new window)
+    Select Window                                       title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    the user should see the element                     jQuery = h1:contains("Horizon Europe UK Application Privacy Notice")
+    the user should see the element                     jQuery = p:contains("Any personal data that you provide to UK Research and Innovation")
+    the user clicks the button/link                     link = UK Research and Innovation Privacy Notice (opens in a new window)
+    Select Window                                       title = Privacy notice – UKRI
     Close Window
-    Select Window                               title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
-    the user clicks the button/link             link = Innovate UK Privacy Notice and Information Management Policy (opens in a new window)
-    Select Window                               title = Privacy notice and information management policy: Innovate UK - GOV.UK
+    Select Window                                       title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    the user clicks the button/link                     link = Innovate UK Privacy Notice and Information Management Policy (opens in a new window)
+    Select Window                                       title = Privacy notice and information management policy: Innovate UK - GOV.UK
     Close Window
-    Select Window                               title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    Select Window                                       title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
     Close Window
-    Select Window                               title = Competition terms and conditions - Innovation Funding Service
+    Select Window                                       title = Competition terms and conditions - Innovation Funding Service
 
 Requesting IDs of this application
     [Arguments]  ${applicationName}
