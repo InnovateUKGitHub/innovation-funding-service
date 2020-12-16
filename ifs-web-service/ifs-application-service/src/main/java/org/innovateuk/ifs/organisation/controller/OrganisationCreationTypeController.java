@@ -44,6 +44,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     public static final String COMPETITION_ID = "competitionId";
 
     protected static final String NOT_ELIGIBLE = "not-eligible";
+    protected static final String NOT_REGISTERED_ON_COMPANIES_HOUSE = "not-registered-on-companies-house";
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -157,5 +158,10 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
         OrganisationCreationForm newOrganisationCreationForm = new OrganisationCreationForm();
         newOrganisationCreationForm.setOrganisationTypeId(organisationTypeForm.getOrganisationType());
         registrationCookieService.saveToOrganisationCreationCookie(newOrganisationCreationForm, response);
+    }
+
+    @GetMapping(NOT_REGISTERED_ON_COMPANIES_HOUSE)
+    public String showNotRegisteredOnCompaniesHouse(Model model, HttpServletRequest request) {
+        return TEMPLATE_PATH + "/" + NOT_REGISTERED_ON_COMPANIES_HOUSE;
     }
 }
