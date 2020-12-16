@@ -329,7 +329,7 @@ Funding eligibility: Mark as Done then Edit again
     And the user selects the checkbox             research-categories-34  #Industrial
     And the user selects the checkbox             research-categories-34  #Experimental
     And the user clicks the button/link           jQuery = button:contains("Done")
-    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category")
+    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
     And the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
     And the user should see the element           jQuery = td:contains("Micro entity or small company")
     And the user should see the element           jQuery = td:contains("Medium-sized company")

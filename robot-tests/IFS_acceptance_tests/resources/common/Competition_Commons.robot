@@ -687,7 +687,7 @@ the user fills in the funding eligibility
     the user selects the checkbox             research-categories-34  #Industrial
     the user selects the checkbox             research-categories-34  #Experimental
     the user clicks the button/link           jQuery = button:contains("Done")
-    the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category")
+    the user should see the element           jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
     the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
     the user should see the element           jQuery = td:contains("Micro entity or small company")
     the user should see the element           jQuery = td:contains("Medium-sized company")
@@ -700,7 +700,7 @@ the user fills in the funding eligibility
     the user enters text to a text field      maximums[2][1].maximum  75
     the user clicks the button/link           jQuery = button:contains("Done")
     the user clicks the button/link           link = Return to setup overview
-    
+
 the user select stakeholder and add to competition
     the user clicks the button/link           css = a[href="?tab=add"]
     When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]

@@ -46,7 +46,7 @@ Comp Admin creates an ATI competition
     [Documentation]  IFS-2396  IFS-8779
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
     Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
-    And user fills in funding overide
+    #And user fills in funding overide
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
@@ -265,6 +265,7 @@ the user completes the application
     the user does not see state aid information
     the user marks the finances as complete                                                  ${ATIapplicationTitle}   Calculate  52,214  yes
     the user clicks the button/link                                                          link = Your project finances
+    #Here!!
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
     the user checks the override value is applied
@@ -279,15 +280,15 @@ the partner selects new answer choice
      the user clicks the button/link                    jQuery = button:contains("Assign to lead for review")
      the user should see the element                    jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
 
-User fills in funding overide
+User fills in funding overide  #Remove?
     the user clicks the button/link                      link = ${ATIcompetitionTitle}
     the user clicks the button/link                      link = View and update competition details
     the user clicks the button/link                      link = Project eligibility
     the user clicks the button/link                      css = .govuk-button[type=submit]
-    the user clicks the button twice                     css = label[for="comp-overrideFundingRules-yes"]
-    the user enters text to a text field                 id = fundingLevelPercentageOverride  100
+    #the user clicks the button twice                     css = label[for="comp-overrideFundingRules-yes"]
+    #the user enters text to a text field                 id = fundingLevelPercentageOverride  100
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user should see the element                      jQuery = dt:contains("Funding level") ~ dd:contains("100%")
+    #the user should see the element                      jQuery = dt:contains("Funding level") ~ dd:contains("100%")
     the user clicks the button/link                      link = Back to competition details
     the user clicks the button/link                      jQuery = a:contains("Complete")
     the user clicks the button/link                      css = button[type="submit"]
