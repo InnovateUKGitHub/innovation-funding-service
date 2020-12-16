@@ -45,6 +45,7 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
     protected static final String NOT_ELIGIBLE = "not-eligible";
     protected static final String NOT_REGISTERED_ON_COMPANIES_HOUSE = "not-registered-on-companies-house";
+    protected static final String MANUALLY_ENTER_ORGANISATION_DETAILS = "manually-enter-organisation-details";
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -163,5 +164,10 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     @GetMapping(NOT_REGISTERED_ON_COMPANIES_HOUSE)
     public String showNotRegisteredOnCompaniesHouse(Model model, HttpServletRequest request) {
         return TEMPLATE_PATH + "/" + NOT_REGISTERED_ON_COMPANIES_HOUSE;
+    }
+
+    @GetMapping(MANUALLY_ENTER_ORGANISATION_DETAILS)
+    public String showManuallyEnterRegistrationDetails(Model model, HttpServletRequest request) {
+        return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 }
