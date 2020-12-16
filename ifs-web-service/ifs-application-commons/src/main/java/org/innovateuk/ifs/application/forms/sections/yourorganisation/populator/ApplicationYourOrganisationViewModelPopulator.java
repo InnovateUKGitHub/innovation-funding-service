@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.populator;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.service.ApplicationYourOrganisationRestService
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,17 +36,15 @@ public class ApplicationYourOrganisationViewModelPopulator {
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    public YourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
+    public ApplicationYourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        boolean showAidAgreement =
-                yourOrganisationRestService.isShowAidAgreement(applicationId, organisationId).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         List<SectionResource> fundingSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES);
 
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
-                () -> organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationTypeEnum(),
+                organisation::getOrganisationTypeEnum,
                 () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
 
         boolean showOrganisationSizeAlert = false;
@@ -57,6 +56,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
             showOrganisationSizeAlert = fundingSectionComplete;
         }
 
-        return new YourOrganisationViewModel(applicationId, competition.getName(), showAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
+        return new ApplicationYourOrganisationViewModel(applicationId, competition, organisation.getOrganisationTypeEnum(), showOrganisationSizeAlert, isMaximumFundingLevelConstant, false);
     }
 }
