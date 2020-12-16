@@ -81,6 +81,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         return new ProjectOrganisationSizeViewModel(project,
+                competition.getId(),
                 organisation.getName(),
                 organisationId,
                 false,

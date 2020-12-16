@@ -13,6 +13,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class ProjectOrganisationSizeViewModel {
 
     private final ProjectResource project;
+    private final long competitionId;
     private final String organisationName;
     private final long organisationId;
     private boolean showStateAidAgreement;
@@ -21,7 +22,7 @@ public class ProjectOrganisationSizeViewModel {
     private boolean readOnly;
     private boolean procurementCompetition;
 
-    public ProjectOrganisationSizeViewModel(ProjectResource project, String organisationName,
+    public ProjectOrganisationSizeViewModel(ProjectResource project, long competitionId, String organisationName,
                                             long organisationId,
                                             boolean showStateAidAgreement,
                                             boolean showOrganisationSizeAlert,
@@ -29,6 +30,7 @@ public class ProjectOrganisationSizeViewModel {
                                             boolean readOnly,
                                             boolean procurementCompetition) {
         this.project = project;
+        this.competitionId = competitionId;
         this.organisationName = organisationName;
         this.organisationId = organisationId;
         this.showStateAidAgreement = showStateAidAgreement;
@@ -44,6 +46,10 @@ public class ProjectOrganisationSizeViewModel {
 
     public ProjectResource getProject() {
         return project;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public String getOrganisationName() {
