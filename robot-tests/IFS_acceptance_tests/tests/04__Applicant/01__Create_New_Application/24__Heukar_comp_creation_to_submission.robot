@@ -44,11 +44,15 @@ Comp admin can view Heukar competition type in Initial details read only view
     Given the user clicks the button/link    link = Initial details
     Then the user can view Heukar competition type in Initial details read only view
 
-Comp admin creates Heukar competition
-    [Documentation]  IFS-8751  IFS-8662
+Comp admin can select Horizon Europe – UK Application Registration Privacy Policy to add to the competition
+    [Documentation]  IFS-8662
     Given the user clicks the button/link                             link = Back to competition details
-    Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
-    [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
+    Then the user selects the HEUKAR Privacy Notice
+
+Comp admin creates Heukar competition
+    [Documentation]  IFS-8751
+    Given the competition admin creates Heukar competition            ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Then get competition id and set open date to yesterday            ${heukarCompetitionName}
 
 Lead applicant can submit application
     [Documentation]  IFS-8751
@@ -92,7 +96,6 @@ the user can view Heukar competition type in Initial details read only view
 
 the competition admin creates HEUKAR competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user selects the HEUKAR Privacy Notice
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
