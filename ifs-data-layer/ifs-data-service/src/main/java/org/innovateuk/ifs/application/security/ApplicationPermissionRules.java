@@ -6,18 +6,12 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
@@ -32,27 +26,21 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
-
-    @Autowired
-    private SupporterAssignmentRepository supporterAssignmentRepository;
-
-    @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
-    public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+    public boolean canViewResearchParticipation(final ApplicationResource applicationResource, UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationResource.getId(), user);
     }
     @PermissionRule(value = "READ_FINANCE_DETAILS",
             description = "The consortium can see the application finance details",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
-    public boolean leadApplicantCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
+    public boolean canViewFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ", description = "Internal users (other than innovation lead) can see all application resources")
-    public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
+    public boolean canViewApplication(final ApplicationResource application, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(application.getId(), user);
     }
 
@@ -68,9 +56,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
-        Set<Role> allApplicantRoles = EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR);
-        List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, application.getId());
-        return !applicantProcessRoles.isEmpty();
+        return isMemberOfProjectTeam(application.getId(), user);
     }
 
     @PermissionRule(value = "READ_AVAILABLE_INNOVATION_AREAS", description = "A user can view the Innovation Areas that are available to their applications")

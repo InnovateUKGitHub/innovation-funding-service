@@ -1,26 +1,16 @@
 package org.innovateuk.ifs.finance.security;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.security.ApplicationSecurityHelper;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * ApplicationFinancePermissionRules are applying rules for seeing / updating the application
@@ -42,45 +32,24 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     private ApplicationSecurityHelper applicationSecurityHelper;
 
     @PermissionRule(value = "READ", description = "If the user can view the application they can view the finances.")
-    public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+    public boolean canFinancesIfCanViewApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationFinanceResource.getApplication(), user);
-    }
-
-    @PermissionRule(value = "READ", description = "The projectUsers can see the application finances of their own organisation")
-    public boolean projectUsersCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAProjectUserForApplication(applicationFinanceResource, user);
     }
 
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user)
-                || isLeadApplicant(applicationFinanceResource.getApplication(), user);
-    }
-
-    @PermissionRule(value = "ADD_COST", description = "Internal users can add a cost to the application finances")
-    public boolean internalUserCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(value = "ADD_COST", description = "Stakeholders can add a cost to the application finances they are assigned to")
-    public boolean stakeholdersCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        Application application = applicationRepository.findById(applicationFinanceResource.getApplication()).get();
-        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
-    }
-
-    @PermissionRule(value = "ADD_COST", description = "An assessor can add a cost to the application finances")
-    public boolean assessorCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAssessor(applicationFinanceResource.getApplication(), user) && hasDetailedView(applicationFinanceResource.getApplication());
+        return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user);
+        //check ats. I'm pretty sure they can't        || isLeadApplicant(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user)
-                || isLeadApplicant(applicationFinanceResource.getApplication(), user);
+        return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user);
+        //check ats. I'm pretty sure they can't        || isLeadApplicant(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "READ_FILE_ENTRY", description = "If then user can view the application they can view the finance file.")
-    public boolean consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+    public boolean canViewApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationFinanceResource.getApplication(), user);
     }
 
@@ -97,30 +66,5 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "DELETE_FILE_ENTRY", description = "A consortium member can delete a file entry for the finance section for their organisation")
     public boolean consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user);
-    }
-
-    private boolean isAProjectUserForApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        Optional<Project> project = projectRepository.findByApplicationId(applicationFinanceResource.getApplication());
-
-        if (project.isPresent()) {
-
-            return project.get().getProjectUsers().stream()
-                    .map(ProjectUser::getUser)
-                    .map(User::getId)
-                    .filter(id -> id.equals(user.getId()))
-                    .findAny()
-                    .isPresent();
-        }
-
-        return false;
-    }
-
-    private boolean hasDetailedView(long applicationId) {
-        Optional<Application> application = applicationRepository.findById(applicationId);
-        if (application.isPresent()) {
-            Competition competition = competitionRepository.findById(application.get().getCompetition().getId()).get();
-            return competition.getCompetitionAssessmentConfig().getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
-        }
-        return false;
     }
 }

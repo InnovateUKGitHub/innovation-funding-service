@@ -8,16 +8,10 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Rules defining who is allowed to upload files as part of an Application Form response to a Question
@@ -45,16 +39,6 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         Application application = applicationRepository.findById(fileEntry.getCompoundId().getApplicationId()).orElse(null);
-        return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
-    }
-
-    private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        return userIsApplicantOnThisApplication(fileEntry.getCompoundId().getApplicationId(), user);
-    }
-
-    private boolean userIsApplicantOnThisApplication(long applicationId, UserResource user) {
-        Set<Role> allApplicantRoles = EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR);
-        List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
-        return !applicantProcessRoles.isEmpty();
+        return isMemberOfProjectTeam(application.getId(), user) && application.isOpen();
     }
 }

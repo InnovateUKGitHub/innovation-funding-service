@@ -24,7 +24,7 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
      */
     public boolean canViewApplication(long applicationId, UserResource user) {
         return isInternal(user)
-        || isMemberOfProjectTeam(applicationId, user)
+        || isApplicantMemberOfProjectTeam(applicationId, user)
         || isAssessor(applicationId, user)
         || isInterviewAssessor(applicationId, user)
         || isExternalFinance(applicationId, user)
@@ -35,7 +35,7 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
         || isLinkedToProject(applicationId, user);
     }
 
-    public boolean isMemberOfProjectTeam(final long applicationId, final UserResource user) {
+    private boolean isApplicantMemberOfProjectTeam(final long applicationId, final UserResource user) {
         return user.hasRole(Role.APPLICANT) && isMemberOfProjectTeam(applicationId, user);
     }
 
