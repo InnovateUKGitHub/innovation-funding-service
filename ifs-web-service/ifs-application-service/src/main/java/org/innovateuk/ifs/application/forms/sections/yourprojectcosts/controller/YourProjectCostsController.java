@@ -22,7 +22,7 @@ import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -68,7 +68,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Autowired
     private OverheadFileRestService overheadFileRestService;
@@ -249,7 +249,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     }
 
     private ProcessRoleResource getProcessRole(long applicationId, long userId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess();
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess();
     }
 
 }

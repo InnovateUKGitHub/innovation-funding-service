@@ -15,7 +15,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -47,7 +47,7 @@ public class AcademicCostViewModelPopulatorTest extends BaseServiceUnitTest<Acad
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Override
     protected AcademicCostViewModelPopulator supplyServiceUnderTest() {
@@ -79,7 +79,7 @@ public class AcademicCostViewModelPopulatorTest extends BaseServiceUnitTest<Acad
         when(organisationRestService.getOrganisationById(ORGANISATION_ID)).thenReturn(restSuccess(organisation));
         when(sectionService.getCompleted(APPLICATION_ID, ORGANISATION_ID)).thenReturn(asList(SECTION_ID));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(finance));
-        when(userRestService.findProcessRole(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(ORGANISATION_ID).build()));
+        when(processRoleRestService.findProcessRole(user.getId(), APPLICATION_ID)).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(ORGANISATION_ID).build()));
 
         AcademicCostViewModel viewModel = service.populate(ORGANISATION_ID, APPLICATION_ID, SECTION_ID, user);
 
@@ -94,9 +94,6 @@ public class AcademicCostViewModelPopulatorTest extends BaseServiceUnitTest<Acad
         assertEquals(viewModel.isOpen(), false);
         assertEquals(viewModel.getFinancesUrl(), String.format("/application/%d/form/FINANCE", APPLICATION_ID));
         assertEquals(viewModel.isInternal(), false);
-
-
     }
-
 
 }

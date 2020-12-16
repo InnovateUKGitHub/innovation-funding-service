@@ -14,6 +14,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -494,6 +496,7 @@ public class CsvUtils {
         public ApplicationFinanceType applicationFinanceType;
         public Boolean includeProjectGrowth;
         public Boolean includeYourOrganisation;
+        public FundingRules fundingRules;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -538,6 +541,7 @@ public class CsvUtils {
             applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
             includeProjectGrowth = nullableBoolean(line.get(i++));
             includeYourOrganisation = nullableBoolean(line.get(i++));
+            fundingRules = FundingRules.valueOf(line.get(i++));
         }
     }
 
@@ -637,6 +641,11 @@ public class CsvUtils {
         public String companyRegistrationNumber;
         public Boolean isInternational;
         public String internationalRegistrationNumber;
+        public LocalDate dateOfIncorporation;
+        public List<OrganisationSicCodeResource> sicCodes;
+        public String organisationNumber;
+        public List<OrganisationExecutiveOfficerResource> executiveOfficers;
+        public String businessType;
 
         private OrganisationLine(List<String> line) {
 
@@ -656,6 +665,17 @@ public class CsvUtils {
             companyRegistrationNumber = nullable(line.get(i++));
             isInternational = nullableBoolean(line.get(i++));
             internationalRegistrationNumber = nullable(line.get(i++));
+            dateOfIncorporation = nullableDate(line.get(i++));
+            String sicCodesLine = nullable(line.get(i++));
+            sicCodes = sicCodesLine != null ?
+                    simpleMap(asList(sicCodesLine.split(",")), OrganisationSicCodeResource::new) :
+                    emptyList();
+            organisationNumber = nullable(line.get(i++));
+            String executiveOfficersLine = nullable(line.get(i++));
+            executiveOfficers = executiveOfficersLine != null ?
+                    simpleMap(asList(executiveOfficersLine.split(",")), OrganisationExecutiveOfficerResource::new) :
+                    emptyList();
+            businessType  = nullable(line.get(i++));
         }
     }
 
@@ -750,6 +770,7 @@ public class CsvUtils {
 
     public static class ExternalUserLine extends UserLine {
         public Role role;
+        public List<Role> additionalRoles;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
@@ -757,6 +778,7 @@ public class CsvUtils {
         @Override
         protected void processLine(List<String> line, int i) {
             this.role = nullableEnum(line.get(i++), Role::valueOf);
+            this.additionalRoles = nullableSplitOnNewLines(line.get(i++)).stream().map(Role::valueOf).collect(Collectors.toList());
         }
 
     }
@@ -772,6 +794,28 @@ public class CsvUtils {
         @Override
         protected void processLine(List<String> line, int i) {
             this.role = nullable(line.get(i++));
+        }
+    }
+
+    public static class SicCodesLine {
+        public String sicCode;
+        public String organisationName;
+
+        private SicCodesLine(List<String> line) {
+            int i = 0;
+            sicCode = nullable(line.get(i++));
+            organisationName = nullable(line.get(i++));
+        }
+    }
+
+    public static class ExecutiveOfficersLine {
+        public String name;
+        public String organisationName;
+
+        private ExecutiveOfficersLine(List<String> line) {
+            int i = 0;
+            name = nullable(line.get(i++));
+            organisationName = nullable(line.get(i++));
         }
     }
 

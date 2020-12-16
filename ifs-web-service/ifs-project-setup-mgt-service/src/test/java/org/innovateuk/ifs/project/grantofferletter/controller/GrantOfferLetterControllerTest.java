@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
@@ -14,10 +15,12 @@ import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTemplatePopulator;
+import org.innovateuk.ifs.project.grantofferletter.populator.KtpGrantOfferLetterTemplatePopulator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.grantofferletter.template.resource.GolTemplateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -76,6 +79,10 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Mock
     private GrantOfferLetterTemplatePopulator populator;
+
+    @Mock
+    private KtpGrantOfferLetterTemplatePopulator ktpGrantOfferLetterTemplatePopulator;
+
     @Test
     public void testView() throws Exception {
         Long competitionId = 1L;
@@ -649,9 +656,12 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void viewGrantOfferLetterTemplate() throws Exception {
         long projectId = 123L;
+        GolTemplateResource golTemplateResource = new GolTemplateResource();
+        golTemplateResource.setName(GolTemplateResource.DEFAULT_GOL_TEMPLATE);
+        golTemplateResource.setTemplate("gol-template");
 
         CompetitionResource competition = newCompetitionResource()
-                .withGolTemplate("gol-template")
+                .withGolTemplate(golTemplateResource)
                 .build();
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         ProjectResource projectResource = newProjectResource()
@@ -695,6 +705,35 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 .andExpect(view().name("project/gol-template"));
 
         verify(populator).populate(projectResource, competition);
+    }
+
+
+    @Test
+    public void viewGrantOfferLetterTemplate_KTP() throws Exception {
+        long projectId = 123L;
+
+        GolTemplateResource golTemplateResource = new GolTemplateResource();
+        golTemplateResource.setName(FundingType.KTP.getGolType());
+        golTemplateResource.setTemplate("gol-template");
+
+        CompetitionResource competition = newCompetitionResource()
+                .withGolTemplate(golTemplateResource)
+                .build();
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        ProjectResource projectResource = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        KtpGrantOfferLetterTemplateViewModel viewModel = mock(KtpGrantOfferLetterTemplateViewModel.class);
+
+        when(ktpGrantOfferLetterTemplatePopulator.populate(projectResource, competition)).thenReturn(viewModel);
+
+        mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/gol-template"))
+                .andExpect(model().attribute("model", viewModel));
     }
 
     private ServiceResult<GrantOfferLetterStateResource> golState(GrantOfferLetterState state) {

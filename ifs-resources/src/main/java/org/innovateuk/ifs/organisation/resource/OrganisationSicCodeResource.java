@@ -8,7 +8,7 @@ public class OrganisationSicCodeResource {
     private String sicCode;
 
     public OrganisationSicCodeResource() {
-        // no-arg constructor
+
     }
 
     public OrganisationSicCodeResource(Long organisation, String sicCode) {
@@ -16,13 +16,10 @@ public class OrganisationSicCodeResource {
         this.sicCode = sicCode;
     }
 
-    public OrganisationSicCodeResource(String sicCode) {
-        this.sicCode = sicCode;
-    }
-
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -39,6 +36,10 @@ public class OrganisationSicCodeResource {
         return sicCode;
     }
 
+    public OrganisationSicCodeResource(String sicCode) {
+        this.sicCode = sicCode;
+    }
+
     public void setSicCode(String sicCode) {
         this.sicCode = sicCode;
     }
@@ -48,9 +49,9 @@ public class OrganisationSicCodeResource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrganisationSicCodeResource that = (OrganisationSicCodeResource) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(organisation, that.organisation) &&
-                Objects.equals(sicCode, that.sicCode);
+        return id.equals(that.id) &&
+                organisation.equals(that.organisation) &&
+                sicCode.equals(that.sicCode);
     }
 
     @Override

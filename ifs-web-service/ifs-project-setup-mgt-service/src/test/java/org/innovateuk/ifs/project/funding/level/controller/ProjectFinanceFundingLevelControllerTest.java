@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingLevelViewModel;
 import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinancePartnerFundingLevelViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -72,6 +73,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     private static final ProjectResource project = newProjectResource()
             .withId(projectId)
             .withName("Project")
+            .withProjectState(ProjectState.SETUP)
             .withApplication(5L)
             .withCompetition(6L)
             .build();

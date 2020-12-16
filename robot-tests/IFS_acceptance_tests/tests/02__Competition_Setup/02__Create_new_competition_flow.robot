@@ -98,6 +98,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8522 Loans - Change of EDI survey link
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -116,7 +118,7 @@ ${customQuestion}           How innovative is your project?
 
 *** Test Cases ***
 User can create a new competition
-    [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725, IFS-1104
+    [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725, IFS-1104,  IFS-8779
     [Tags]  HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
     When the user clicks the button/link       jQuery = .govuk-button:contains("Create competition")
@@ -133,12 +135,11 @@ User can create a new competition
     And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
-    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982
+    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982  IFS-8779
     [Tags]  HappyPath
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
-    And the user clicks the button twice                        css = label[for = "stateAid2"]
     When the user clicks the button/link                        jQuery = button:contains("Done")
     Then the user should see the read-only view of the initial details
 
@@ -165,11 +166,12 @@ Initial Details - drop down menu is populated with comp admin users
     When the user should see the option in the drop-down menu    John Doe    name = executiveUserId
     And the user should see the option in the drop-down menu     Robert Johnson    name = executiveUserId
 
-Initial details - Comp Type and Date should not be editable
-    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
+Initial details - Comp Type, funding rule and Date should not be editable
+    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892,  IFS-8779
     [Tags]
     And the user should not see the element   id = competitionTypeId
     And the user should not see the element   id = openingDateDay
+    And the user should not see the element   id = fundingRule
     And the user clicks the button/link       jQuery = button:contains("Done")
 
 Initial details - should have a green check
@@ -399,14 +401,14 @@ Application: Application details validations
     Then the user should see a field error       ${field_should_be_1_or_higher}
     And the user should see a field error        The maximum must be larger than the minimum.
 
-    When the user enters text to a text field    id = minProjectDuration  66
-    And the user enters text to a text field     id = maxProjectDuration  65
+    When the user enters text to a text field    id = minProjectDuration  86
+    And the user enters text to a text field     id = maxProjectDuration  85
     Then the user should see a field error       The minimum must be smaller than the maximum.
-    And the user should see a field error        This field should be 60 or lower.
+    And the user should see a field error        This field should be 84 or lower.
 
     When the user enters text to a text field    id = minProjectDuration  59
     And the user clicks the button/link          jQuery = button:contains('Done')
-    Then the user should see a summary error     This field should be 60 or lower
+    Then the user should see a summary error     This field should be 84 or lower
     [Teardown]  the user clicks the button/link  link = Application
 
 
@@ -417,13 +419,13 @@ Application: Application details
     And the user should see the element             jQuery = h1:contains("Details")
     When the user selects the radio button          useResubmissionQuestion  false
     Then the user enters text to a text field       id = minProjectDuration  2
-    And the user enters text to a text field        id = maxProjectDuration  60
+    And the user enters text to a text field        id = maxProjectDuration  84
     And The user clicks the button/link             jQuery = button:contains('Done')
     And the user should see the element             jQuery = li:contains("Application details") .task-status-complete
     When the user clicks the button/link            link = Application details
     Then the user should see the element            jQuery = dt:contains("resubmission") + dd:contains("No")
     And the user should see the element             jQuery = dt:contains("Minimum") + dd:contains("2")
-    And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("60")
+    And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("84")
     [Teardown]  the user clicks the button/link     link = Application
 
 External user edits the EDI question.
@@ -847,6 +849,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field                 css = #title  ${competitionTitle}
     And the user selects the radio button                      fundingType  LOAN
     When the user selects the option from the drop-down menu   Sector  id = competitionTypeId
+    And the user selects the radio button                      fundingRule  SUBSIDY_CONTROL
     And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
     And the user selects the value from the drop-down menu     32   name = innovationAreaCategoryIds[0]
     And the user selects the option from the drop-down menu    Open  id = innovationSectorCategoryId
@@ -939,7 +942,6 @@ the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("10 January ${nextyear}")
     the user should see the element    jQuery = dd:contains("Ian Cooper")
     the user should see the element    jQuery = dd:contains("John Doe")
-    the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
 
 the comp admin creates competition
     the user navigates to the page        ${CA_UpcomingComp}

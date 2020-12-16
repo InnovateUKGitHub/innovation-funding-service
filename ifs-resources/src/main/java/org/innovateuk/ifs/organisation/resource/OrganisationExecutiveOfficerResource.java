@@ -1,6 +1,11 @@
 package org.innovateuk.ifs.organisation.resource;
 
+
+import java.util.Objects;
+
 public class OrganisationExecutiveOfficerResource {
+
+
     private Long id;
     private Long organisation;
     private String name;
@@ -10,7 +15,7 @@ public class OrganisationExecutiveOfficerResource {
     }
 
     public OrganisationExecutiveOfficerResource(Long organisation, String name) {
-        this.id = id;
+
         this.organisation = organisation;
         this.name = name;
     }
@@ -42,4 +47,20 @@ public class OrganisationExecutiveOfficerResource {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrganisationExecutiveOfficerResource that = (OrganisationExecutiveOfficerResource) o;
+        return id.equals(that.id) &&
+                organisation.equals(that.organisation) &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, organisation, name);
+    }
+
 }
