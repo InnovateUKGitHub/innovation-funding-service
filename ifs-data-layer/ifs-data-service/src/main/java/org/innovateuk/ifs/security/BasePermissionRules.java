@@ -82,7 +82,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return monitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId);
     }
 
-    protected boolean monitoringOfficerCanViewApplication(long applicationId, long userId) {
+    protected boolean isMonitoringOfficerForProjectLinkedToApplication(long applicationId, long userId) {
         Project project = projectRepository.findOneByApplicationId(applicationId);
         return project != null && isMonitoringOfficer(project.getId(), userId);
     }

@@ -28,7 +28,7 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
         || isAssessor(applicationId, user)
         || isInterviewAssessor(applicationId, user)
         || isExternalFinance(applicationId, user)
-        || monitoringOfficerCanViewApplication(applicationId, user.getId())
+        || isMonitoringOfficerForProjectLinkedToApplication(applicationId, user.getId())
         || isStakeHolder(applicationId, user)
         || isKta(applicationId, user)
         || isSupporterForApplication(applicationId, user.getId())
