@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -15,6 +17,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,8 +28,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.PendingPartnerProgressResourceBuilder.newPendingPartnerProgressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -47,6 +50,9 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
     private ProjectRestService projectRestService;
 
     @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
     @InjectMocks
@@ -55,7 +61,6 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
     @Test
     public void populate() {
         long projectId = 1L;
-        long organisationId = 2L;
 
         CompetitionResource competition = newCompetitionResource()
             .withFundingType(FundingType.GRANT)
@@ -73,23 +78,23 @@ public class ProjectYourOrganisationViewModelPopulatorTest extends BaseUnitTest 
             .withTermsAndConditionsCompletedOn(ZonedDateTime.now())
             .build();
         UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                .build();
 
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(yourOrganisationRestService.isShowAidAgreement(projectId, organisationId)).thenReturn(serviceSuccess(true));
-        when(pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId)).thenReturn(restSuccess(progress));
+        when(pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisation.getId())).thenReturn(restSuccess(progress));
+        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
 
         ProjectYourOrganisationViewModel actual = yourOrganisationViewModelPopulator.populate(projectId,
-            organisationId, user);
+            organisation.getId(), user);
 
         List<FormOption> expectedOrgSizeOptions = simpleMap(OrganisationSize.values(), size -> new FormOption(size.getDescription(), size.name()));
 
         assertEquals(expectedOrgSizeOptions, actual.getOrganisationSizeOptions());
-        assertTrue(actual.isH2020());
         assertFalse(actual.isShowOrganisationSizeAlert());
-        assertTrue(actual.isShowStateAidAgreement());
-        assertTrue(actual.isShowHints());
-        assertEquals(organisationId, actual.getOrganisationId());
+        assertEquals((long) organisation.getId(), actual.getOrganisationId());
         assertEquals(projectId, actual.getProjectId());
         assertEquals("proj", actual.getProjectName());
         assertTrue(actual.isReadOnly());
