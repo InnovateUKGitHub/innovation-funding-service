@@ -57,6 +57,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
             showOrganisationSizeAlert = fundingSectionComplete;
         }
 
-        return new YourOrganisationViewModel(applicationId, competition, showAidAgreement, showOrganisationSizeAlert);
+        return new YourOrganisationViewModel(applicationId, competition.getName(), showAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
     }
 }

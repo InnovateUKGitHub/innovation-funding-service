@@ -8,9 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -34,29 +32,23 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
     private FinanceService financeService;
     private UserService userService;
     private UserRestService userRestService;
-    private CompetitionRestService competitionRestService;
 
     public ApplicationResearchCategoryModelPopulator(final ApplicantRestService applicantRestService,
                                                      final CompetitionResearchCategoryRestService competitionResearchCategoryRestService,
                                                      final FinanceService financeService,
                                                      final QuestionRestService questionRestService,
                                                      final UserService userService,
-                                                     final UserRestService userRestService,
-                                                     final CompetitionRestService competitionRestService) {
+                                                     final UserRestService userRestService) {
         super(applicantRestService, questionRestService);
         this.competitionResearchCategoryRestService = competitionResearchCategoryRestService;
         this.financeService = financeService;
         this.userService = userService;
         this.userRestService = userRestService;
-        this.competitionRestService = competitionRestService;
     }
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
                                               long loggedInUserId,
                                               Long questionId) {
-
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
-
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
 
         boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
@@ -78,8 +70,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                 userIsLeadApplicant,
                 allReadonly,
                 userIsLeadApplicant,
-                getLeadApplicantName(applicationResource.getId()),
-                competitionResource.getFundingRules());
+                getLeadApplicantName(applicationResource.getId()));
     }
 
     private boolean hasApplicationFinances(ApplicationResource applicationResource) {

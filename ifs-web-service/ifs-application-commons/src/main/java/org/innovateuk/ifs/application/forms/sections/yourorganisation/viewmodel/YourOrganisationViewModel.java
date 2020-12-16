@@ -2,8 +2,6 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import java.util.List;
@@ -21,16 +19,14 @@ public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
     private boolean showOrganisationSizeAlert;
     private boolean h2020;
     private boolean procurementCompetition;
-    private FundingRules fundingRules;
 
-    public YourOrganisationViewModel(long applicationId, CompetitionResource competitionResource, boolean showStateAidAgreement, boolean showOrganisationSizeAlert) {
+    public YourOrganisationViewModel(long applicationId, String competitionName, boolean showStateAidAgreement, boolean showOrganisationSizeAlert, boolean h2020, boolean procurementCompetition) {
         this.applicationId = applicationId;
-        this.competitionName = competitionResource.getName();
+        this.competitionName = competitionName;
         this.showStateAidAgreement = showStateAidAgreement;
         this.showOrganisationSizeAlert = showOrganisationSizeAlert;
-        this.h2020 = competitionResource.isH2020();
-        this.procurementCompetition = competitionResource.isProcurement();
-        this.fundingRules = competitionResource.getFundingRules();
+        this.h2020 = h2020;
+        this.procurementCompetition = procurementCompetition;
     }
 
     @Override
@@ -61,9 +57,5 @@ public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
 
     public boolean isProcurementCompetition() {
         return procurementCompetition;
-    }
-
-    public String getFundingRulesText() {
-        return fundingRules.getDisplayName();
     }
 }
