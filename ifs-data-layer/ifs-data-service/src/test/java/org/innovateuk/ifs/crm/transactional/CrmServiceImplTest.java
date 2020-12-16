@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOffic
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -52,7 +53,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     @Override
     protected CrmServiceImpl supplyServiceUnderTest() {
         CrmServiceImpl service = new CrmServiceImpl();
-        ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
+        ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", false);
         return service;
     }
 
@@ -93,6 +94,7 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         when(organisationService.getAllByUserId(userId)).thenReturn(serviceSuccess(Collections.singletonList(organisation)));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
+        ReflectionTestUtils.setField(service, "newOrganisationSearchEnabled", true);
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
         assertThat(result.isSuccess(), equalTo(true));
@@ -138,6 +140,9 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
         return silContact -> {
             assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getRegistrationNumber(), equalTo(organisation.getCompaniesHouseNumber()));
+            assertNull(silContact.getOrganisation().getDateOfIncorporation());
+            assertNull(silContact.getOrganisation().getSicCodes());
+            assertNull(silContact.getOrganisation().getExecutiveOfficers());
             return true;
         };
     }
