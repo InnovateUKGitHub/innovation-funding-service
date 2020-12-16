@@ -32,10 +32,18 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     public boolean canViewResearchParticipation(final ApplicationResource applicationResource, UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationResource.getId(), user);
     }
+
     @PermissionRule(value = "READ_FINANCE_DETAILS",
             description = "The consortium can see the application finance details",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
-    public boolean canViewFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
+    public boolean leadApplicantCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "The consortium can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean canReadFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationResource.getId(), user);
     }
 
