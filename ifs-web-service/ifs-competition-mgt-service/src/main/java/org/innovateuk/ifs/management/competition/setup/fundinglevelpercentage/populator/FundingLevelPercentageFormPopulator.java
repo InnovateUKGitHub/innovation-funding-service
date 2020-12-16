@@ -40,16 +40,20 @@ public class FundingLevelPercentageFormPopulator implements CompetitionSetupForm
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         FundingLevelPercentageForm competitionSetupForm = new FundingLevelPercentageForm();
 
-        List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competitionResource.getId()).getSuccess();
-        if (competitionResource.getResearchCategories().isEmpty()) {
-            competitionSetupForm.getMaximums().add(newArrayList(singleValueForm(maximums.stream().findAny().map(GrantClaimMaximumResource::getMaximum).orElse(null))));
+        if (competitionResource.isNonFinanceType()) {
+            competitionSetupForm.getMaximums().add(newArrayList(singleValueForm(null)));
         } else {
-            List<FundingLevelMaximumForm> forms = maximums.stream()
-                    .filter(maximum -> competitionResource.getResearchCategories().contains(maximum.getResearchCategory().getId()))
-                    .map(FundingLevelMaximumForm::fromGrantClaimMaximumResource).collect(Collectors.toList());
-            Multimap<OrganisationSize, FundingLevelMaximumForm> map = index(forms, FundingLevelMaximumForm::getOrganisationSize);
-            List<List<FundingLevelMaximumForm>> listOfLists = map.asMap().values().stream().map(ArrayList::new).collect(toList());
-            competitionSetupForm.setMaximums(listOfLists);
+            List<GrantClaimMaximumResource> maximums = grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competitionResource.getId()).getSuccess();
+            if (competitionResource.getResearchCategories().isEmpty()) {
+                competitionSetupForm.getMaximums().add(newArrayList(singleValueForm(maximums.stream().findAny().map(GrantClaimMaximumResource::getMaximum).orElse(null))));
+            } else {
+                List<FundingLevelMaximumForm> forms = maximums.stream()
+                        .filter(maximum -> competitionResource.getResearchCategories().contains(maximum.getResearchCategory().getId()))
+                        .map(FundingLevelMaximumForm::fromGrantClaimMaximumResource).collect(Collectors.toList());
+                Multimap<OrganisationSize, FundingLevelMaximumForm> map = index(forms, FundingLevelMaximumForm::getOrganisationSize);
+                List<List<FundingLevelMaximumForm>> listOfLists = map.asMap().values().stream().map(ArrayList::new).collect(toList());
+                competitionSetupForm.setMaximums(listOfLists);
+            }
         }
         return competitionSetupForm;
     }

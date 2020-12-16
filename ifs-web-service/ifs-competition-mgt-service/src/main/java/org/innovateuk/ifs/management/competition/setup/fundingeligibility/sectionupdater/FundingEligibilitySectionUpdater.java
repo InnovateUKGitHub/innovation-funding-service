@@ -57,9 +57,13 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
         if (!projectEligibilityForm.getResearchCategoriesApplicable()) {
             projectEligibilityForm.getResearchCategoryId().clear();
         }
+
         return handleResearchCategoryApplicableChanges(competition, projectEligibilityForm)
                 .andOnSuccess((researchCategoriesYesNoChanged) -> {
                     boolean researchCategoriesChanged = !competition.getResearchCategories().equals(projectEligibilityForm.getResearchCategoryId());
+                    if (competition.isNonFinanceType()) {
+                        return markFundingLevelComplete(competition);
+                    }
                     if (researchCategoriesYesNoChanged || researchCategoriesChanged) {
                         competition.setResearchCategories(projectEligibilityForm.getResearchCategoryId());
                         return competitionSetupRestService.update(competition).toServiceResult().andOnSuccess(() ->
@@ -74,10 +78,14 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
     private ServiceResult<Void> revertFundingLevels(CompetitionResource competition) {
         return grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()).toServiceResult().andOnSuccess(() -> {
             if (TRUE.equals(competition.getFundingRules() == FundingRules.STATE_AID) && !competition.getResearchCategories().isEmpty()) {
-                return competitionSetupRestService.markSectionComplete(competition.getId(), FUNDING_LEVEL_PERCENTAGE).toServiceResult();
+                return markFundingLevelComplete(competition);
             }
             return serviceSuccess();
         });
+    }
+
+    private ServiceResult<Void> markFundingLevelComplete(CompetitionResource competition) {
+        return competitionSetupRestService.markSectionComplete(competition.getId(), FUNDING_LEVEL_PERCENTAGE).toServiceResult();
     }
 
     private ServiceResult<Boolean> handleResearchCategoryApplicableChanges(CompetitionResource competitionResource,
