@@ -5,5 +5,5 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("GRANT")
-public class GrantTermsAndConditions extends TermsAndConditions {
+public class GrantTermsAndConditions extends VersionedTemplate {
 }

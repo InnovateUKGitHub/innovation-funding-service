@@ -5,5 +5,5 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("SITE")
-public class SiteTermsAndConditions extends TermsAndConditions {
+public class SiteTermsAndConditions extends VersionedTemplate {
 }
