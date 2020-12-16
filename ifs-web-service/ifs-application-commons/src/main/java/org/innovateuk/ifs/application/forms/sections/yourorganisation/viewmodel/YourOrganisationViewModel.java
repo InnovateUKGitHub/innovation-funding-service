@@ -14,14 +14,16 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
 
     private long applicationId;
+    private long competitionId;
     private String competitionName;
     private boolean showStateAidAgreement;
     private boolean showOrganisationSizeAlert;
     private boolean h2020;
     private boolean procurementCompetition;
 
-    public YourOrganisationViewModel(long applicationId, String competitionName, boolean showStateAidAgreement, boolean showOrganisationSizeAlert, boolean h2020, boolean procurementCompetition) {
+    public YourOrganisationViewModel(long applicationId, long competitionId, String competitionName, boolean showStateAidAgreement, boolean showOrganisationSizeAlert, boolean h2020, boolean procurementCompetition) {
         this.applicationId = applicationId;
+        this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.showStateAidAgreement = showStateAidAgreement;
         this.showOrganisationSizeAlert = showOrganisationSizeAlert;
@@ -32,6 +34,10 @@ public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
     @Override
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     @Override

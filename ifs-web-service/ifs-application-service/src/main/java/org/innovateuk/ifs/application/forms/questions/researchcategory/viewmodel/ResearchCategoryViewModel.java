@@ -19,6 +19,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public ResearchCategoryViewModel(String applicationName,
                                      Long applicationId,
+                                     Long competitionId,
                                      String competitionName,
                                      Long questionId,
                                      List<ResearchCategoryResource> availableResearchCategories,
@@ -30,7 +31,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      boolean allReadonly,
                                      boolean userLeadApplicant,
                                      String leadApplicantName) {
-        super(questionId, applicationId, competitionName, closed, complete, canMarkAsComplete, allReadonly);
+        super(questionId, applicationId, competitionId, competitionName, closed, complete, canMarkAsComplete, allReadonly);
         this.applicationName = applicationName;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;

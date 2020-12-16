@@ -303,11 +303,11 @@
         </th:block>
     </th:block>
 
-    <th:block th:fragment="state-aid-warning(readOnly, howStateAidAgreement)">
+    <th:block th:fragment="state-aid-warning(readOnly, showStateAidAgreement)">
         <th:block th:if="${!readOnly && showStateAidAgreement}">
             <div class="govuk-!-margin-bottom-6">
                 <p class="govuk-body">
-                    If we decide to award you funding you must meet our eligibility criteria at the point of the award. If you are found to be ineligible, we will withdraw our offer.
+                    If we decide to award you funding you must meet our <a class="govuk-link" th:href="@{/competition/{competitionId}/overview#eligibility(competitionId=${model.competitionId})}">eligibility criteria</a> at the point of the award. If you are found to be ineligible, we will withdraw our offer.
                 </p>
             </div>
         </th:block>

@@ -9,6 +9,7 @@ public abstract class AbstractLeadOnlyViewModel implements BaseAnalyticsViewMode
 
     private Long questionId;
     private Long applicationId;
+    private Long competitionId;
     private String competitionName;
     private boolean closed;
     private boolean complete;
@@ -17,12 +18,14 @@ public abstract class AbstractLeadOnlyViewModel implements BaseAnalyticsViewMode
 
     protected AbstractLeadOnlyViewModel(Long questionId,
                                         Long applicationId,
+                                        Long competitionId,
                                         String competitionName,
                                         boolean closed,
                                         boolean complete,
                                         boolean canMarkAsComplete,
                                         boolean allReadOnly) {
         this.questionId = questionId;
+        this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applicationId = applicationId;
         this.closed = closed;
@@ -39,6 +42,10 @@ public abstract class AbstractLeadOnlyViewModel implements BaseAnalyticsViewMode
     @Override
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
     public Long getQuestionId() {

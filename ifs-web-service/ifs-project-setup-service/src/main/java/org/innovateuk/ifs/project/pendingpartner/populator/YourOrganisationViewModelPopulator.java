@@ -53,6 +53,7 @@ public class YourOrganisationViewModelPopulator {
         boolean showOrganisationSizeAlert = !isMaximumFundingLevelConstant && pendingPartner.isYourFundingComplete();
         return new ProjectYourOrganisationViewModel(
                 project.getApplication(),
+                competition.getId(),
                 competition.getName(),
                 showStateAidAgreement,
                 showOrganisationSizeAlert,

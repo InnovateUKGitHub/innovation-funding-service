@@ -69,6 +69,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
                 "test competition",
                 applicationResource.getId(),
+                applicationResource.getCompetition(),
                 "comp name",
                 questionId,
                 newResearchCategoryResource().build(2),
@@ -140,6 +141,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
                 "test competition",
                 applicationResource.getId(),
+                applicationResource.getCompetition(),
                 "comp name",
                 questionId,
                 newResearchCategoryResource().build(2),
@@ -249,6 +251,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
                 "test competition",
                 applicationResource.getId(),
+                applicationResource.getCompetition(),
                 "comp name",
                 questionId,
                 newResearchCategoryResource().build(2),
@@ -294,6 +297,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
                 "test competition",
                 applicationResource.getId(),
+                applicationResource.getCompetition(),
                 "comp name",
                 questionId,
                 newResearchCategoryResource().build(2),
