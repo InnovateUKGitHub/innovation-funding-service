@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -76,8 +77,8 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
             when(applicationFinanceRowRepositoryMock.findById(cost.getId())).thenReturn(Optional.of(cost));
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(leadApplicant.getId(), EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(collaborator.getId(), EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
         }
 
         {
