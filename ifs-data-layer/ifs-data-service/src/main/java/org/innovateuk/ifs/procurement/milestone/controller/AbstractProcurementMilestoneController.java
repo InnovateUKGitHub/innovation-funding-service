@@ -6,7 +6,7 @@ import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneRes
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
 import org.springframework.web.bind.annotation.*;
 
-public abstract class AbstractProcurementMilestoneController<R extends ProcurementMilestoneResource> {
+public abstract class AbstractProcurementMilestoneController<R extends ProcurementMilestoneResource, I extends ProcurementMilestoneId> {
 
     @PostMapping
     public RestResult<R> create(@RequestBody final R milestone) {
@@ -28,8 +28,8 @@ public abstract class AbstractProcurementMilestoneController<R extends Procureme
         return getProcurementMilestoneService().delete(getId(id)).toDeleteResponse();
     }
 
-    protected abstract ProcurementMilestoneService<R> getProcurementMilestoneService();
+    protected abstract ProcurementMilestoneService<R, I> getProcurementMilestoneService();
 
-    protected abstract ProcurementMilestoneId getId(long id);
+    protected abstract I getId(long id);
 
 }

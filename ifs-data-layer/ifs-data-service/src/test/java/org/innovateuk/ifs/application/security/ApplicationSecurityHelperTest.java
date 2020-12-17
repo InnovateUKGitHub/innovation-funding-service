@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
@@ -93,11 +92,10 @@ public class ApplicationSecurityHelperTest {
         UserResource supporterNotLinkedToApplication = newUserResource().withRoleGlobal(Role.SUPPORTER).build();
         UserResource applicantLinkedToProjectNotApplication = newUserResource().withRoleGlobal(Role.APPLICANT).build();
 
-        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(anyLong(), eq(EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR)), eq(application.getId()))).thenReturn(false);
-        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(applicantMember.getId(), EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR), application.getId())).thenReturn(true);
-
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(anyLong(), eq(application.getId()), eq(Role.ASSESSOR))).thenReturn(false);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessorLinkedToApplication.getId(), application.getId(), Role.ASSESSOR)).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndApplicationId(anyLong(), eq(application.getId()))).thenReturn(false);
+        when(processRoleRepository.existsByUserIdAndApplicationId(applicantMember.getId(), application.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndApplicationId(assessorLinkedToApplication.getId(), application.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndApplicationId(ktaLinkedToCompetition.getId(), application.getId())).thenReturn(true);
 
         when(externalFinanceRepository.existsByCompetitionIdAndUserId(eq(competition.getId()), anyLong())).thenReturn(false);
         when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), externalFinanceLinkedToCompetition.getId())).thenReturn(true);
@@ -107,9 +105,6 @@ public class ApplicationSecurityHelperTest {
 
         when(stakeholderRepository.existsByCompetitionIdAndUserId(eq(competition.getId()), anyLong())).thenReturn(false);
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeHolderLinkedToCompetition.getId())).thenReturn(true);
-
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(anyLong(), eq(application.getId()), eq(Role.KNOWLEDGE_TRANSFER_ADVISER))).thenReturn(false);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(ktaLinkedToCompetition.getId(), application.getId(), Role.KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
         when(supporterAssignmentRepository.existsByParticipantIdAndTargetId(anyLong(), eq(application.getId()))).thenReturn(false);
         when(supporterAssignmentRepository.existsByParticipantIdAndTargetId(supporterLinkedToApplication.getId(), application.getId())).thenReturn(true);

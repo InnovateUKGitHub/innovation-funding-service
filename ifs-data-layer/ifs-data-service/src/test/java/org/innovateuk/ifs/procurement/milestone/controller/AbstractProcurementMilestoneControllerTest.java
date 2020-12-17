@@ -103,7 +103,7 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
 
     @RestController
     @RequestMapping("/test")
-    public class ControllerClazz extends AbstractProcurementMilestoneController<ResourceClazz> {
+    public class ControllerClazz extends AbstractProcurementMilestoneController<ResourceClazz, IdClazz> {
 
         @Override
         protected ProcurementMilestoneService<ResourceClazz, IdClazz> getProcurementMilestoneService() {

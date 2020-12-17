@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
-import org.innovateuk.ifs.procurement.milestone.transactional.ProjectProcurementMilestoneService;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
+import org.innovateuk.ifs.procurement.milestone.transactional.ProjectProcurementMilestoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +15,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/project-procurement-milestone")
-public class ProjectProcurementMilestoneController extends AbstractProcurementMilestoneController<ProjectProcurementMilestoneResource> {
+public class ProjectProcurementMilestoneController extends AbstractProcurementMilestoneController<ProjectProcurementMilestoneResource, ProjectProcurementMilestoneId> {
 
     @Autowired
     private ProjectProcurementMilestoneService projectProcurementMilestoneService;
 
     @Override
-    protected ProcurementMilestoneService<ProjectProcurementMilestoneResource> getProcurementMilestoneService() {
+    protected ProcurementMilestoneService<ProjectProcurementMilestoneResource, ProjectProcurementMilestoneId> getProcurementMilestoneService() {
         return projectProcurementMilestoneService;
     }
 
     @Override
-    protected ProcurementMilestoneId getId(long id) {
+    protected ProjectProcurementMilestoneId getId(long id) {
         return ProjectProcurementMilestoneId.of(id);
     }
 

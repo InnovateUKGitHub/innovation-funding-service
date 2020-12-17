@@ -24,19 +24,13 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
      */
     public boolean canViewApplication(long applicationId, UserResource user) {
         return isInternal(user)
-        || isApplicantMemberOfProjectTeam(applicationId, user)
-        || isAssessor(applicationId, user)
+        || hasProcessRole(applicationId, user)
         || isInterviewAssessor(applicationId, user)
         || isExternalFinance(applicationId, user)
         || isMonitoringOfficerForProjectLinkedToApplication(applicationId, user.getId())
         || isStakeHolder(applicationId, user)
-        || isKta(applicationId, user)
         || isSupporterForApplication(applicationId, user.getId())
         || isLinkedToProject(applicationId, user);
-    }
-
-    private boolean isApplicantMemberOfProjectTeam(final long applicationId, final UserResource user) {
-        return user.hasRole(Role.APPLICANT) && isMemberOfProjectTeam(applicationId, user);
     }
 
     private boolean isExternalFinance(long applicationId, final UserResource user) {
@@ -48,7 +42,6 @@ public class ApplicationSecurityHelper extends BasePermissionRules {
         if (project.isPresent()) {
             return userIsExternalFinanceOnCompetitionForProject(project.get().getId(), user.getId());
         }
-
         return false;
     }
 

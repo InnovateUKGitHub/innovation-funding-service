@@ -49,6 +49,13 @@ public final class SecurityRuleUtil {
         return user.getId() != null && processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, Role.getByName(userRoleType.getName()));
     }
 
+    public static boolean checkHasAnyProcessRole(final UserResource user,
+                                                 final Long applicationId,
+                                                 final ProcessRoleRepository processRoleRepository) {
+        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), applicationId);
+    }
+
+
     public static boolean isAnonymous(final UserResource user) {
         return DefaultPermissionMethodHandler.isAnonymous(user);
     }
