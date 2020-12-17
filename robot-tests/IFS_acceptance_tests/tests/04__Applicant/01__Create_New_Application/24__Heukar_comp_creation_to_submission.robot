@@ -11,6 +11,8 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8662: HEUKAR stage 1 privacy notice
 ...
+...               IFS-8667: Hesta - Ability to add partner organisation
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -51,9 +53,28 @@ Comp admin can select Horizon Europe – UK Application Registration Privacy Pol
     Then the user views the HEUKAR privacy notice
     And the user should see the element                 jQuery = li:contains("Terms and conditions") .task-status-complete
 
+
+
+
+Comp admin can select Single or Collaborative in the Project eligibility section of competition setup
+    [Documentation]  IFS-8667
+    Given the user clicks the button/link                    link = Project eligibility
+    When the user sees that the radio button is selected     singleOrCollaborative  single-or-collaborative-single-or-collaborative
+    Then the user clicks the button twice                    css = label[for="single-or-collaborative-single-or-collaborative"]
+
+Comp admin can select all the options in the Lead Applicant Type section in the Project eligibility section of competition setup
+    [Documentation]  IFS-8667
+    When the user sees all lead applicant types selected by default
+    Then the user selects all the Lead Applicant Type options
+
+
+
+
+
+
 Comp admin creates Heukar competition
     [Documentation]  IFS-8751
-    Given the competition admin creates Heukar competition     ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Given the competition admin creates Heukar competition     ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false
     Then get competition id and set open date to yesterday     ${heukarCompetitionName}
 
 Lead applicant can submit application
@@ -96,25 +117,49 @@ the user can view Heukar competition type in Initial details read only view
     the user should see the element     jQuery = ${heukarCompTypeSelector}
     the user clicks the button/link     jQuery = button:contains("Done")
 
+the user sees all lead applicant types selected by default
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-1
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-2
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-3
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-4
+
+the user selects all the Lead Applicant Type options
+    the user clicks the button twice     css = label[for="lead-applicant-type-1"]
+    the user clicks the button twice     css = label[for="lead-applicant-type-2"]
+    the user clicks the button twice     css = label[for="lead-applicant-type-3"]
+    the user clicks the button twice     css = label[for="lead-applicant-type-4"]
+
+the user fills in the heukar CS Project eligibility section
+    [Arguments]  ${researchParticipation}  ${researchCategory}
+    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
+    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
+    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
+    the user selects Research Participation if required   ${researchParticipation}
+    the user selects the radio button     resubmission  yes
+    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user clicks the button/link       link = Back to competition details
+    the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
+
 the competition admin creates HEUKAR competition
-    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}
+    the user fills in the heukar CS Project eligibility section     ${researchParticipation}  ${researchCategory}  # 1 means 30%
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user selects the organisational eligibility         true    true
-    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
-    the user marks the application as done                  ${projectGrowth}  ${compType}  ${competition}
+    the user selects the organisational eligibility                 true    true
+    the user fills in the CS Milestones                             ${completionStage}   ${month}   ${nextyear}
+    the user marks the application as done                          ${projectGrowth}  ${compType}  ${competition}
 # REMOVE/ADD NEGATIVE CASE ASSESSORS IN NEXT SPRINT
 #    the user fills in the CS Assessors                      ${fundingType}
 # REMOVE/ADD NEGATIVE CASE DOCUMENTS IN NEXT SPRINT
 #    the user fills in the CS Documents in other projects
-    the user clicks the button/link                         link = Public content
-    the user fills in the Public content and publishes      ${extraKeyword}
-    the user clicks the button/link                         link = Return to setup overview
-    the user clicks the button/link                         jQuery = a:contains("Complete")
-    the user clicks the button/link                         jQuery = button:contains('Done')
-    the user navigates to the page                          ${CA_UpcomingComp}
-    the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user clicks the button/link                                 link = Public content
+    the user fills in the Public content and publishes              ${extraKeyword}
+    the user clicks the button/link                                 link = Return to setup overview
+    the user clicks the button/link                                 jQuery = a:contains("Complete")
+    the user clicks the button/link                                 jQuery = button:contains('Done')
+    the user navigates to the page                                  ${CA_UpcomingComp}
+    the user should see the element                                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user selects the HEUKAR Privacy Notice
     the user clicks the button/link                     link = Terms and conditions
