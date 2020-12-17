@@ -2,6 +2,9 @@
 Documentation     IFS-7213  Investor Partnerships Funding type & T&Cs
 ...
 ...               IFS-7235  Change to terms and conditions labelling for Investor Partnerships
+...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -37,13 +40,15 @@ Creating a new investor comp points to the correct T&C
     [Documentation]  IFS-7213
     Given the user fills in initial details
     When the user clicks the button/link                     link = Terms and conditions
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
+    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId8
 
 The Investor partnership t&c's are correct
     [Documentation]  IFS-7213
-    When the user clicks the button/link     link = Investor Partnerships
+    When the user clicks the button/link     link = Investor Partnerships (opens in a new window)
+    And select window                        title = Award terms and conditions - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an Innovate UK investor partnerships competition")
-    [Teardown]   the user goes back to the previous page
+    And close window
+    And select window                        title = Competition terms and conditions - Innovation Funding Service
 
 T&c's can be confirmed
     [Documentation]  IFS-7213
@@ -89,7 +94,7 @@ Custom Suite teardown
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     Investor comp  ${month}  ${nextyear}  ${compType_Programme}  1  INVESTOR_PARTNERSHIPS
+    the user fills in the CS Initial details     Investor comp  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  INVESTOR_PARTNERSHIPS
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")

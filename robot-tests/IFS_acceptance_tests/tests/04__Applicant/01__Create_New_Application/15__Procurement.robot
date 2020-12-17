@@ -17,6 +17,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-7596 Print Preview Format
 ...
+...             IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -35,9 +37,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700  IFS-8779
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  SUBSIDY_CONTROL  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688

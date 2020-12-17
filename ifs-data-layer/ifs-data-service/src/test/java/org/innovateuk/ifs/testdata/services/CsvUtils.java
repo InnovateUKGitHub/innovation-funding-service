@@ -752,6 +752,7 @@ public class CsvUtils {
 
     public static class ExternalUserLine extends UserLine {
         public Role role;
+        public List<Role> additionalRoles;
         private ExternalUserLine(List<String> line) {
             super(line);
         }
@@ -759,6 +760,7 @@ public class CsvUtils {
         @Override
         protected void processLine(List<String> line, int i) {
             this.role = nullableEnum(line.get(i++), Role::valueOf);
+            this.additionalRoles = nullableSplitOnNewLines(line.get(i++)).stream().map(Role::valueOf).collect(Collectors.toList());
         }
 
     }

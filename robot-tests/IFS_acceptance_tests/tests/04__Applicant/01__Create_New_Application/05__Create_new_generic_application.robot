@@ -2,6 +2,9 @@
 Documentation     IFS-747 As a comp exec I am able to select a Competition type of Generic in Competition setup
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -22,10 +25,10 @@ User can edit the assesed question
     Then the user should see the element              jQuery = button:contains("Mark")
 
 CompAdmin creates a new Generic competition
-    [Documentation]  IFS-3261
+    [Documentation]  IFS-3261  IFS-8779
     [Tags]  HappyPath
     [Setup]  log in as a different user                  &{Comp_admin1_credentials}
-    Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  2  GRANT  PROJECT_SETUP  no  1  true  collaborative
+    Given the competition admin creates competition      4  ${competitionName}  Generic  Generic  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  no  1  true  collaborative
     Then get competition id and set open date to yesterday  ${competitionName}
 
 Applicant Applies to Generic competition and is able to see the Ts&Cs

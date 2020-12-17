@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="application-submitted-panel">
+    <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
+                <h2 class="govuk-panel__title">
+                    <th:block th:if="${model.currentCompetition.isH2020()}">Grant transfer submission complete</th:block>
+                    <th:block th:unless="${model.currentCompetition.isH2020()}">Application submitted</th:block>
+                </h2>
+        <div class="govuk-panel__body govuk-!-font-size-19">
+            Application number: <span th:text="${model.currentApplication.id}" /><br/>
+            Your application for the competition '<span th:text="${model.currentCompetition.name}" />'<br/>
+            was submitted
+            <th:block th:if="${model.currentApplication.submittedDate}">
+                on
+                <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>
+                at
+                <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}" />.
+            </th:block><br />
+            <div class="govuk-!-margin-top-6">
+                <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
+                   class="govuk-link govuk-!-margin-right-6">View application</a>
+                <a th:if="${model.reopenLinkVisible}" th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
+                   class="govuk-link govuk-!-margin-right-6">Reopen application</a>
+                <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
+                   class="govuk-link">Print application</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>
