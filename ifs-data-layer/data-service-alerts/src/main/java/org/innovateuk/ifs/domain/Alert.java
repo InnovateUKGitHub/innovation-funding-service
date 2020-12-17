@@ -21,7 +21,6 @@ public class Alert {
     private Long id;
 
     @NotNull
-    @Column(length=5000)
     private String message;
 
     @NotNull
