@@ -16,7 +16,11 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the funding eligibility
+
+    Run Keyword If  '${compType}' == 'Expression of interest'  the user fills in the EOI/Heukar/PT funding eligibility
+    ...  ELSE  the user fills in the funding eligibility
+    
+    
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
@@ -123,7 +127,7 @@ the user fills in the CS Project eligibility
     the user clicks the button/link       link = Project eligibility
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
     #the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage  #Remove if statement?
+    #Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage  #Remove if statement?
     #Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
     ...   ELSE   run keywords     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
@@ -687,7 +691,7 @@ the user fills in the funding eligibility
     the user selects the checkbox             research-categories-34  #Industrial
     the user selects the checkbox             research-categories-34  #Experimental
     the user clicks the button/link           jQuery = button:contains("Done")
-    the user should see the element           jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
+    the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
     the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
     the user should see the element           jQuery = td:contains("Micro entity or small company")
     the user should see the element           jQuery = td:contains("Medium-sized company")
@@ -699,6 +703,19 @@ the user fills in the funding eligibility
     the user enters text to a text field      maximums[2][0].maximum  75
     the user enters text to a text field      maximums[2][1].maximum  75
     the user clicks the button/link           jQuery = button:contains("Done")
+    the user clicks the button/link           link = Return to setup overview
+
+the user fills in the EOI/Heukar/PT funding eligibility
+    the user clicks the button/link           link = Funding eligibility
+    the user should see the element           jQuery = h2:contains("Are research categories applicable?")
+    the user selects the radio button         researchCategoriesApplicable  true
+    the user should see the element           jQuery = label:contains("Feasibility studies")
+    the user should see the element           jQuery = label:contains("Industrial research")
+    the user should see the element           jQuery = label:contains("Experimental development")
+    the user selects the checkbox             research-categories-33  #Feasibility
+    the user clicks the button/link           jQuery = button:contains("Done")
+    the user should see the element           jQuery = p:contains("Maximum funding level percentage is set to %")
+    the user should see the element           jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     the user clicks the button/link           link = Return to setup overview
 
 the user select stakeholder and add to competition

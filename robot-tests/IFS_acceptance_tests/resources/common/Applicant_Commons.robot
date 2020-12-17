@@ -323,8 +323,8 @@ the user checks for funding level guidance at application level
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     jQuery = button:contains("Edit your funding")
     the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
-    the user clicks the button/link     link = competition's rules (opens in a new window)
-    the user closes the last opened tab
+    #the user clicks the button/link     link = competition's rules (opens in a new window)
+    #the user closes the last opened tab
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Back to application overview
 

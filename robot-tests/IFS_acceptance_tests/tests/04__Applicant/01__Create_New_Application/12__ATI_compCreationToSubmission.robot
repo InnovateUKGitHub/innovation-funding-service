@@ -268,7 +268,7 @@ the user completes the application
     #Here!!
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
-    the user checks the override value is applied
+    #the user checks the override value is applied
     the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
