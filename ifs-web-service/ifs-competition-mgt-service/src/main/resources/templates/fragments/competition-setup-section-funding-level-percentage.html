@@ -12,8 +12,15 @@
           th:attr="data-competition=${model.general.competition.id}"
           data-section="funding-level-percentage">
         <th:block th:if="${model.general.editable}">
-            <p class="govuk-body">Set the maximum funding level percentage that applicants can apply for.</p>
+            <p class="govuk-body" th:unless="${competitionSetupForm.maximums.size() == 1}">Set the maximum funding level percentage for the business sizes for each research category.</p>
+            <p class="govuk-body" th:if="${competitionSetupForm.maximums.size() == 1}">Set the maximum funding level percentage that applicants can apply for.</p>
             <p class="govuk-body govuk-!-font-weight-bold">You can only use whole numbers from 0 to 100.</p>
+        </th:block>
+        <th:block th:unless="${model.general.editable and model.showFundingRules}">
+            <dl class="standard-definition-list column-definition-list">
+                <dt>Competition funding rules</dt>
+                <dd th:text="${model.general.competition.fundingRules.displayName}"></dd>
+            </dl>
         </th:block>
 
         <th:block th:if="${model.categories.isEmpty()}">

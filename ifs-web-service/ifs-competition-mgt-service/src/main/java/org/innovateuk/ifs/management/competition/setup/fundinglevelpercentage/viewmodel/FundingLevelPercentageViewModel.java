@@ -48,4 +48,8 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
                 generalSetupViewModel.getCompetition().getFundingRules() == FundingRules.STATE_AID &&
                 !categories.isEmpty();
     }
+
+    public boolean isShowFundingRules() {
+        return generalSetupViewModel.getCompetition().getFundingRules() != FundingRules.NOT_AID;
+    }
 }
