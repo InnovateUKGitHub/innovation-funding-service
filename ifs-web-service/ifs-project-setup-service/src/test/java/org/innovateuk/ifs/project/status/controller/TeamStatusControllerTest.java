@@ -192,7 +192,6 @@ public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStat
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
-                .withLocationPerPartner(true)
                 .build();
 
         ProjectTeamStatusResource teamStatus = buildTeamStatus(leadProjectDetailsStatus,
