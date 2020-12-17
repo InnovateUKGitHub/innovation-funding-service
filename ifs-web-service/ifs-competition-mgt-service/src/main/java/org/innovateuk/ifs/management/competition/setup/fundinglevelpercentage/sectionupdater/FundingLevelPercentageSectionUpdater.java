@@ -45,7 +45,9 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
             CompetitionSetupForm competitionSetupForm
     ) {
         FundingLevelPercentageForm form = (FundingLevelPercentageForm) competitionSetupForm;
-
+        if (competition.isNonFinanceType()) {
+            return serviceSuccess();
+        }
         if (form.getMaximums().size() == 1) {
             return saveSingleValue(form.getMaximums().get(0).get(0), competition);
         } else {
