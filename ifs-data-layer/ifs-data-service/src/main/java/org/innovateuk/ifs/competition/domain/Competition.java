@@ -150,10 +150,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
         private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
-
-    @ZeroDowntime(reference = "IFS-8787", description = "TODO")
-    private Boolean stateAid;
-
+    
     @Enumerated(EnumType.STRING)
     private FundingRules fundingRules;
 
