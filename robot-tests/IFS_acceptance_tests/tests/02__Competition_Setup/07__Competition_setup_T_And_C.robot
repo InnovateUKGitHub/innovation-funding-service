@@ -9,24 +9,25 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${atiSubsidyControl}            Aerospace Technology Institute (ATI) - Subsidy control
-${innovateUKSubsidyControl}     Innovate UK - Subsidy control
+${atiSubsidyControl}            Aerospace Technology Institute (ATI) - Subsidy control (opens in a new window)
+${innovateUKSubsidyControl}     Innovate UK - Subsidy control (opens in a new window)
 
 *** Test Cases ***
 Creating a new comp to confirm ATI subsidy control T&C's
     [Documentation]  IFS-8994
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  termsAndConditionsId15
+    And the user selects the radio button       termsAndConditionsId  41
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${atiSubsidyControl}
 
 ATI subsidy control t&c's are correct
     [Documentation]  IFS-8994
     When the user clicks the button/link     link = ${atiSubsidyControl}
+    And select window                        title = Terms and conditions of an ATI Programme grant - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an ATI Programme grant")
     And the user should see the element      jQuery = li:contains("State Aid/Subsidy Control obligations")
-    [Teardown]   the user goes back to the previous page
+    [Teardown]   the user closes the last opened tab
 
 ATI subsidy control T&C's section should be completed
     [Documentation]  IFS-8994
@@ -37,16 +38,17 @@ Creating a new comp to confirm Innovateuk subsidy control T&C's
     [Documentation]  IFS-8994
     Given the user fills in initial details     ATI Subsidy Control Comp
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  termsAndConditionsId16
+    And the user selects the radio button       termsAndConditionsId  42
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${innovateUKSubsidyControl}
 
 Innovateuk subsidy control t&c's are correct
     [Documentation]  IFS-8994
     When the user clicks the button/link     link = ${innovateUKSubsidyControl}
+    And select window                        title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
     And the user should see the element      jQuery = li:contains("Subsidy Control/ State aid obligations")
-    [Teardown]   the user goes back to the previous page
+    [Teardown]   the user closes the last opened tab
 
 Innovateuk subsidy control T&C's section should be completed
     [Documentation]  IFS-8994
