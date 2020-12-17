@@ -17,7 +17,8 @@ public interface GrantTermsAndConditionsRepository extends CrudRepository<GrantT
     String FIND_LATEST_VERSION = "SELECT t1 " +
             "FROM GrantTermsAndConditions t1 " +
             "WHERE version=(SELECT MAX(t2.version) FROM GrantTermsAndConditions t2 WHERE " +
-            "t1.name=t2.name)";
+            "t1.name=t2.name)" +
+            "ORDER BY t1.name";
 
     GrantTermsAndConditions findOneByTemplate(String templateName);
 
