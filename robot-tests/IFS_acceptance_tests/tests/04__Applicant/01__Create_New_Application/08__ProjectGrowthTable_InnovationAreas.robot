@@ -556,7 +556,7 @@ the user selects temporary framework terms and conditions
     the user clicks the button/link         link = Terms and conditions
     the user selects the radio button       termsAndConditionsId  37
     the user clicks the button/link         jQuery = button:contains("Done")
-    the user should see the element         link = New projects temporary framework
+    the user should see the element         link = New projects temporary framework (opens in a new window)
     the user clicks the button/link         link = Back to competition details
     the user should see the element         jQuery = li:contains("Terms and conditions") .task-status-complete
 
