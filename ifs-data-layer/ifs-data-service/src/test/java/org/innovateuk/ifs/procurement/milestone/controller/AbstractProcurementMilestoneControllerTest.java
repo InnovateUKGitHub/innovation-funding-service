@@ -111,7 +111,7 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
         }
 
         @Override
-        protected ProcurementMilestoneId getId(long id) {
+        protected IdClazz getId(long id) {
             return IdClazz.of(id);
         }
     }

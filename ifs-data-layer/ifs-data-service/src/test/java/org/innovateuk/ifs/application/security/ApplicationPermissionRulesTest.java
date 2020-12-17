@@ -185,8 +185,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void leadApplicantCanSeeTheApplicationFinanceDetails() {
         when(applicationSecurityHelper.canViewApplication(applicationResource1.getId(), leadOnApplication1)).thenReturn(true);
-        assertTrue(rules.canViewFinanceDetails(applicationResource1, leadOnApplication1));
-        assertFalse(rules.canViewFinanceDetails(applicationResource1, user2));
+        assertTrue(rules.canReadFinanceTotals(applicationResource1, leadOnApplication1));
+        assertFalse(rules.canReadFinanceTotals(applicationResource1, user2));
     }
 
     @Test
