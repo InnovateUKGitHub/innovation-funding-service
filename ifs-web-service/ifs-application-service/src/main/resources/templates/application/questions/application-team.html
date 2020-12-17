@@ -43,10 +43,12 @@
                     these people accept or are removed.</p>
             </div>
 
-            <p class="govuk-body">These are the organisations that will work together on the project. You can invite
+            <p th:unless="${model.heukar}" class="govuk-body">These are the organisations that will work together on the project. You can invite
                 people
                 from these organisations to help you with the application. They can invite other people from their own
                 organisation.</p>
+
+            <p th:if="${model.heukar}" class="govuk-body">These are the organisations that will work on your project. This includes project partners. We will ask for more details and information about these when you submit a full application.</p>
 
             <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
@@ -62,21 +64,23 @@
 
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
                         <th:block th:text="${organisation.name}"></th:block>
-                        <th:block th:if="${organisation.lead}">(Lead)</th:block>
+                        <th:block th:unless="${model.heukar}" th:if="${organisation.lead}">(Lead)</th:block>
                     </h2>
 
                     <th:block th:if="${organisation.type != null}">
                         <table class="govuk-table">
                             <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
-                                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
+                                <th th:unless="${model.heukar}" scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
+                                <th th:if="${model.heukar}" scope="col" class="govuk-table__header govuk-!-width-one-third">Lead organisation</th>
                                 <th scope="col" class="govuk-table__header"></th>
                                 <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Edit</span></th>
                                 </tr>
                             </thead>
                             <tbody class="govuk-table__body">
                                 <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">Type</td>
+                                    <td th:unless="${model.heukar}" class="govuk-table__cell">Type</td>
+                                    <td th:if="${model.heukar}" class="govuk-table__cell"><strong>Type</strong></td>
                                     <td class="govuk-table__cell"th:text="${organisation.type}">Research and technology organisations</td>
                                     <td class="govuk-table__cell"></td>
                                 </tr>
@@ -168,7 +172,6 @@
                                                 <h3 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-!-margin-top-4">
                                                     Partner
                                                     <span th:text="${partnerOrganisationStat.index + 1}"></span>
-                                                    details
                                                 </h3>
                                             </th>
                                             <th scope="col" class="govuk-table__header govuk-!-width-one-third">

@@ -32,7 +32,7 @@
         <th:block
             th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle='Partner organisation type',subTitle=${subtitle},size='govuk-heading-xl'"/>
+                      th:with="pageTitle='Partner organisation type',subTitle=${applicationName},size='govuk-heading-xl'"/>
         </th:block>
 
         <p class="govuk-body">
