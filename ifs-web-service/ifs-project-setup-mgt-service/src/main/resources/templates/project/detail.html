@@ -80,39 +80,36 @@
                 </tr>
             </tbody>
         </table>
+        
+        <h2 class="govuk-heading-m">Partner details</h2>
 
-        <!--/* If project setup location is enabled */-->
-        <th:block th:if="${model.locationPerPartnerRequired}">
-            <h2 class="govuk-heading-m">Partner details</h2>
-
-            <th:block th:unless="${model.ktpCompetition}">
-                <p class="govuk-body">Each partner must provide a project location. We will assign the monitoring officer based on the location.</p>
-            </th:block>
-
-            <th:block th:if="${model.ktpCompetition}">
-                <p class="govuk-body">Each partner provided their own project location.</p>
-            </th:block>
-
-            <table class="govuk-table" id="project-details-finance">
-                <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Partner</th>
-                    <th class="govuk-table__header govuk-!-width-one-half" scope="col">Project location</th>
-                </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                <tr class="govuk-table__row" th:each="partnerOrganisation: ${model.partnerOrganisations}">
-                    <td class="govuk-table__cell" th:with="showLead=${partnerOrganisation.organisationName.equals(model.leadOrganisation.name) && model.project.collaborativeProject}">
-                        <th:block th:if="${showLead}" th:text="${partnerOrganisation.organisationName + ' (Lead)'}"></th:block>
-                        <th:block th:unless="${showLead}" th:text="${partnerOrganisation.organisationName}"></th:block>
-                    </td>
-                    <td class="govuk-table__cell" th:text="${model.getLocationForPartnerOrganisation(partnerOrganisation.organisation)}">
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
+        <th:block th:unless="${model.ktpCompetition}">
+            <p class="govuk-body">Each partner must provide a project location. We will assign the monitoring officer based on the location.</p>
         </th:block>
+
+        <th:block th:if="${model.ktpCompetition}">
+            <p class="govuk-body">Each partner provided their own project location.</p>
+        </th:block>
+
+        <table class="govuk-table" id="project-details-finance">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">Partner</th>
+                <th class="govuk-table__header govuk-!-width-one-half" scope="col">Project location</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="partnerOrganisation: ${model.partnerOrganisations}">
+                <td class="govuk-table__cell" th:with="showLead=${partnerOrganisation.organisationName.equals(model.leadOrganisation.name) && model.project.collaborativeProject}">
+                    <th:block th:if="${showLead}" th:text="${partnerOrganisation.organisationName + ' (Lead)'}"></th:block>
+                    <th:block th:unless="${showLead}" th:text="${partnerOrganisation.organisationName}"></th:block>
+                </td>
+                <td class="govuk-table__cell" th:text="${model.getLocationForPartnerOrganisation(partnerOrganisation.organisation)}">
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
 
         <p class="govuk-body">
             <a th:href="@{/competition/{competitionId}/project/{projectId}/organisation/select(competitionId=${model.competitionId},projectId=${model.project.id})}"

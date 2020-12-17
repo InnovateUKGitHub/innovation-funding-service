@@ -71,7 +71,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css = #title  ${compTitle}
     the user selects the radio button                    fundingType  ${fundingType}
     the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
-    And the user selects the radio button                fundingRule  ${fundingRule}
+    the user selects the radio button                    fundingRule  ${fundingRule}
     the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
     the user enters text to a text field                 css = #openingDateDay  1
@@ -674,3 +674,9 @@ the user search for an existing user
     [Arguments]   ${name}
     the user enters text to a text field     id = filter   ${name}
     the user clicks the button/link          css = input[type="submit"]
+
+the user select stakeholder and add to competition
+    the user clicks the button/link           css = a[href="?tab=add"]
+    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
+    And the user clicks the button/link       jQuery = a:contains("Added to competition")
+    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
