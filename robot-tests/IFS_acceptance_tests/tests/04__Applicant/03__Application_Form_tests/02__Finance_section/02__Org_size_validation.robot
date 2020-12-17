@@ -27,6 +27,14 @@ Small org can be selected
     And the user clicks the button/link         link = Your organisation
     And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
 
+Eligibility criteria link navigates to competition eligibility page
+    [Documentation]     IFS-8991
+    Given the user clicks the button/link         link = Your organisation
+    And the user clicks the button/link           id = mark_as_incomplete
+    When the user clicks the button/link          jQuery = a:contains('eligibility criteria')
+    Then the user should see the element          id = eligibility
+    [Teardown]  the user goes back to the previous page
+
 Funding section is now available
     [Documentation]    INFUND-6394
     [Tags]  HappyPath
