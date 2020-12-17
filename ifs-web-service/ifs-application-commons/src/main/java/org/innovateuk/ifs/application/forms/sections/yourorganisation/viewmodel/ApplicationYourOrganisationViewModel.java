@@ -11,10 +11,10 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-/**
- * View model to support "Your organisation" pages
- */
 public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewModel {
+
+    private static final String NON_STATE_AID_URL = "https://www.gov.uk/guidance/innovation-apply-for-a-funding-award#funding-rules";
+    private static final String STATE_AID_URL = "http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm";
 
     private long applicationId;
     private long competitionId;
@@ -78,39 +78,20 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
     public boolean isShowEligibilityMessage() {
         return organisationType == OrganisationTypeEnum.BUSINESS && fundingRules != FundingRules.NOT_AID;
     }
-    /*
-
--                                      business size using the <a class=&quot;govuk-link&quot; href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
--                                      target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition (opens in a new window)</a> for guidance.'},
--                           internalHint=${'To determine the level of funding the organisation are eligible to receive please provide their
--                                      business size using the <a class=&quot;govuk-link&quot; href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
--                                      target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition (opens in a new window)</a> for guidance.'},
--                           procurementHint=${'Select the size of your organisation. Use the <a class=&quot;govuk-link&quot; href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
--                                      target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition (opens in a new window)</a> if you''re unsure.'},
--                           defaultHint=${'To determine the level of funding you are eligible to receive please provide your
--                                      business size using the <a class=&quot;govuk-link&quot; href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;
--                                      target=&quot;_blank&quot; aria-describedby=&quot;definition-hint&quot;> EU definition (opens in a new window)</a> for guidance.'},
-     */
 
     public String getHint() {
         String organisation = internal ? "the organisation" : "your organisation";
         String you = internal ? "the organisation" : "you";
+        String url = fundingRules == FundingRules.STATE_AID ? STATE_AID_URL : NON_STATE_AID_URL;
 
-        String maximumFundingLevelConstantMessage = "<p class=\"govuk-body\">You must tell us the size of " + organisation + " to determine the level of funding " + you + " are eligible for.</p>";
+        String maximumFundingLevelConstantMessage = String.format("<p class=\"govuk-body\">You must tell us the size of %s to determine the level of funding %s are eligible for.</p>", organisation, you);
+        String sizeDefinition = String.format("<p class=\"govuk-body\">Please use <a href=\"%s\">our guidance (opens in a new window)</a> to determine %s.</p>", url, organisation);
 
-        String nonStateAidUrl = "https://www.gov.uk/guidance/innovation-apply-for-a-funding-award#funding-rules";
-        String stateAidUrl = "http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm";
-
-        String url = fundingRules == FundingRules.STATE_AID ? stateAidUrl : nonStateAidUrl;
-
-        String sizeDefinition = "<p class=\"govuk-body\">Please use <a href=\"" + url + "\">our guidance (opens in a new window)</a> to determine " + organisation + ".</p>";
-
-        String message = "";
-
-        if (!maximumFundingLevelConstant) {
-            message += maximumFundingLevelConstantMessage;
+        if (maximumFundingLevelConstant) {
+            return maximumFundingLevelConstantMessage;
+        } else {
+            return maximumFundingLevelConstantMessage + sizeDefinition;
         }
-        message += sizeDefinition;
-        return message;
+
     }
 }

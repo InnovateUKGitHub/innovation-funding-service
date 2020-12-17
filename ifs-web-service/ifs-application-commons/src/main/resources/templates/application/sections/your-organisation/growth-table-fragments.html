@@ -235,7 +235,7 @@
                             min=0
                             )" />
 
-        <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
+        <th:block th:insert="this::state-aid-warning(${readOnly}, ${model})"/>
     </th:block>
 
     <th:block th:fragment="ktp-year(form, field, rowName, readOnly)">
@@ -266,7 +266,7 @@
     <th:block th:fragment="organisation-size(form, model, readOnly)">
             <th:block th:insert="fragments/form-elements/radiofield ::
                             radiofield(
-                                legend='Size',
+                                legend='Organisation size',
                                 id='organisationSize',
                                 value=${form.organisationSize},
                                 optionDescriptionsAndValues=${model.organisationSizeOptions},
