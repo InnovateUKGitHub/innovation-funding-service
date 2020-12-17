@@ -91,7 +91,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
     private GolTemplateResource golTemplate;
-    private boolean locationPerPartner = true;
     private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
     private Set<Long> grantClaimMaximums;
@@ -664,14 +663,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
-    }
-
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
-    }
-
     public Integer getMinProjectDuration() {
         return minProjectDuration;
     }
@@ -820,7 +811,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return new EqualsBuilder()
                 .append(setupComplete, that.setupComplete)
                 .append(nonIfs, that.nonIfs)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -928,7 +918,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
-                .append(locationPerPartner)
                 .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
