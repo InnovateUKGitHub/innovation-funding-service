@@ -60,7 +60,13 @@
                                    id="agreed"
                                    th:field="*{agreed}" />
                             <label th:unless="${model.additionalTerms}" for="agreed" class="govuk-label govuk-checkboxes__label">
-                                I agree to the award terms and conditions set out by Innovate UK.
+                                <th:block th:if="${model.isHeukar()}">
+                                    I agree to abide by this privacy notice and all
+                                    listed documents as set out by Innovate UK and UK Research and Investment.
+                                </th:block>
+                                <th:block th:unless="${model.isHeukar()}">
+                                    I agree to the award terms and conditions set out by Innovate UK.
+                                </th:block>
                             </label>
                             <label th:if="${model.additionalTerms}" for="agreed" class="govuk-label govuk-checkboxes__label">
                                 I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions/full(competitionId=${model.competitionId})}">full terms and conditions</a> set out by the funding authority.

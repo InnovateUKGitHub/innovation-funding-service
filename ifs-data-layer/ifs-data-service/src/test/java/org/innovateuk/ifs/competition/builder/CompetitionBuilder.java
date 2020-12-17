@@ -61,10 +61,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("setupComplete", setupComplete);
     }
 
-    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
-        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
-    }
-
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
