@@ -6,6 +6,9 @@ Documentation     INFUND-1110: As an applicant/partner applicant I want to add m
 ...               INFUND-6894: As an Applicant I will be advised that changing my 'Organisation size' after completing 'Funding level' will reset the 'Funding level'
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
+...
+...               IFS-8991 Applicant journey - update content - 'Research category' & 'Your organisation'
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
