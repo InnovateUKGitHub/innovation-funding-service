@@ -56,6 +56,6 @@ public class ApplicationYourOrganisationViewModelPopulator {
             showOrganisationSizeAlert = fundingSectionComplete;
         }
 
-        return new ApplicationYourOrganisationViewModel(applicationId, competition, organisation.getOrganisationTypeEnum(), showOrganisationSizeAlert, isMaximumFundingLevelConstant, false);
+        return new ApplicationYourOrganisationViewModel(applicationId, competition, organisation.getOrganisationTypeEnum(), isMaximumFundingLevelConstant, showOrganisationSizeAlert, false);
     }
 }
