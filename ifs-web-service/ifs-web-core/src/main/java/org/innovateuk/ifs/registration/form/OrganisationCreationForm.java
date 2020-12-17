@@ -29,6 +29,9 @@ public class OrganisationCreationForm implements Serializable {
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     private String organisationName;
+    private String organisationNumber;
+    private String businessType;
+
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
@@ -113,6 +116,22 @@ public class OrganisationCreationForm implements Serializable {
         this.triedToSave = triedToSave;
     }
 
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public void setOrganisationNumber(String organisationNumber) {
+        this.organisationNumber = organisationNumber;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
     @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
@@ -135,6 +154,8 @@ public class OrganisationCreationForm implements Serializable {
                 .append(searchOrganisationId, that.searchOrganisationId)
                 .append(organisationSearchResults, that.organisationSearchResults)
                 .append(organisationName, that.organisationName)
+                .append(organisationNumber, that.organisationNumber)
+                .append(businessType,that.businessType)
                 .isEquals();
     }
 
@@ -149,6 +170,8 @@ public class OrganisationCreationForm implements Serializable {
                 .append(manualEntry)
                 .append(organisationSearchResults)
                 .append(organisationName)
+                .append(organisationNumber)
+                .append(businessType)
                 .toHashCode();
     }
 }

@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account'"/>
 </head>
 <body class="govuk-template__body create-application-eligibility">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manually enter your organisation/'s details',subTitle='Create an account',size='govuk-heading-l'" />
-        <p class="govuk-body">This page is only for organisations that cannot be registered on Companies House, for example:</p>
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Manually enter your organisation\'s details',subTitle='Create an account',size='govuk-heading-l'"/>
+        <p class="govuk-body">This page is only for organisations that cannot be registered on Companies House, for
+            example:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>charities</li>
             <li>local authorities</li>
@@ -22,32 +24,67 @@
             <li>sole traders</li>
             <li>trusts</li>
         </ul>
-        <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you make will slow down the application process, which could delay your funding payments.</p>
-        Organisation name
+        <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you make will
+            slow down the application process, which could delay your funding payments.</p>
 
-        Organisation number
-        Enter your organisation’s unique identification number, such as your HMRC Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.
+        <form th:object="${organisationForm}"
+              th:action="@{/organisation/create/international-organisation/details}" method="POST"
+              novalidate="novalidate">
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s"
+                       for="name">
+                    Organisation name
+                </label>
+                <span class="govuk-error-message"
+                      th:if="${#fields.hasErrors('*{organisationName}')}"
+                      th:errors="*{name}"></span>
+                <input class="govuk-input govuk-!-width-one-half"
+                       id="name"
+                       th:field="*{organisationName}"
+                       th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
+                       type="text" required="required"/>
+            </div>
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('*{organisationNumber}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s"
+                       for="name">
+                    Organisation number
+                </label>
+                <div class="govuk-hint"><small>Enter your organisation’s unique identification number, such as your HMRC
+                    Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.</small></div>
+                <span class="govuk-error-message"
+                      th:if="${#fields.hasErrors('*{organisationNumber}')}"
+                      th:errors="*{organisationNumber}"></span>
+                <input class="govuk-input govuk-!-width-one-half"
+                       id="number"
+                       th:field="*{organisationNumber}"
+                       th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
+                       type="text" required="required"/>
+            </div>
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('*{businessType}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s"
+                       for="name">
+                    Business type
+                </label>
+                <div class="govuk-hint"><small>For example: charity, partnership, sole trader.</small></div>
+                <span class="govuk-error-message"
+                      th:if="${#fields.hasErrors('*{businessType}')}"
+                      th:errors="*{businessType}"></span>
+                <input class="govuk-input govuk-!-width-one-half"
+                       id="busType"
+                       th:field="*{businessType}"
+                       th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
+                       type="text" required="required"/>
+            </div>
+        </form>
 
-        Business type
-        For example: charity, partnership, sole trader.
-
-        Executive officers
-        Enter the first and last names of all company directors, if your organisation has any.
-
-        Registered address
-
-        Postcode
-
-        Find address
-
-        Enter address manually
-
-        Save and continue
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 </body>
 </html>
