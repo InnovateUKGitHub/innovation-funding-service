@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
 import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
 import org.innovateuk.ifs.procurement.milestone.repository.ProcurementMilestoneRepository;
+import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationProcurementMilestoneServiceImpl
-        extends AbstractProcurementMilestoneServiceImpl<ApplicationProcurementMilestoneResource, ApplicationProcurementMilestone>
+        extends AbstractProcurementMilestoneServiceImpl<ApplicationProcurementMilestoneResource, ApplicationProcurementMilestone, ApplicationProcurementMilestoneId>
         implements ApplicationProcurementMilestoneService {
 
     @Autowired

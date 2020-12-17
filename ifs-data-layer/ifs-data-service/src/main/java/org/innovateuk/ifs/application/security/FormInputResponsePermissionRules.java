@@ -34,7 +34,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
     private ApplicationSecurityHelper applicationSecurityHelper;
 
     @PermissionRule(value = "READ", description = "A user can see the response if they can view the application")
-    public boolean applicationPermissions(final FormInputResponseResource response, final UserResource user) {
+    public boolean userCanSeeResponseIfTheyCanViewApplication(final FormInputResponseResource response, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(response.getApplication(), user);
     }
 

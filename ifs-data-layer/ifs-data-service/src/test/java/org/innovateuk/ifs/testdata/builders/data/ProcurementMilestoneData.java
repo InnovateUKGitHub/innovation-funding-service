@@ -6,7 +6,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 /**
- * Running data context for generating Application Finances (either academic or industrial)
+ * Running data context for generating procurement milestones
  */
 public class ProcurementMilestoneData {
     private ApplicationResource application;

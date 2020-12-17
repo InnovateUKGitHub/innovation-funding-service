@@ -143,8 +143,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         when(applicationSecurityHelper.canViewApplication(applicationFinance.getApplication(), canView)).thenReturn(true);
         when(applicationSecurityHelper.canViewApplication(applicationFinance.getApplication(), cantView)).thenReturn(false);
 
-        assertTrue(rules.canFinancesIfCanViewApplication(applicationFinance, canView));
-        assertFalse(rules.canFinancesIfCanViewApplication(applicationFinance, cantView));
+        assertTrue(rules.canViewFinancesIfCanViewApplication(applicationFinance, canView));
+        assertFalse(rules.canViewFinancesIfCanViewApplication(applicationFinance, cantView));
     }
 
     @Test

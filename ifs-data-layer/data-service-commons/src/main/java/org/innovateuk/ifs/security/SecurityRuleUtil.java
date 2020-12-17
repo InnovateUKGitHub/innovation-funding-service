@@ -30,18 +30,18 @@ public final class SecurityRuleUtil {
         return processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(user.getId(), role, applicationId, organisationId);
     }
 
-    public static boolean checkProcessRole(final UserResource user,
-                                           final Long applicationId,
-                                           final Long organisationId,
-                                           final ProcessRoleRepository processRoleRepository,
-                                           final Role... roles) {
+    public static boolean checkHasAnyProcessRole(final UserResource user,
+                                                 final Long applicationId,
+                                                 final Long organisationId,
+                                                 final ProcessRoleRepository processRoleRepository,
+                                                 final Role... roles) {
         return processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(user.getId(), new HashSet<>(asList(roles)), applicationId, organisationId);
     }
 
-    public static boolean checkProcessRole(final UserResource user,
-                                           final Long applicationId,
-                                           final ProcessRoleRepository processRoleRepository,
-                                           final Role... roles) {
+    public static boolean checkHasAnyProcessRole(final UserResource user,
+                                                 final Long applicationId,
+                                                 final ProcessRoleRepository processRoleRepository,
+                                                 final Role... roles) {
         return processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user.getId(), new HashSet<>(asList(roles)), applicationId);
     }
 

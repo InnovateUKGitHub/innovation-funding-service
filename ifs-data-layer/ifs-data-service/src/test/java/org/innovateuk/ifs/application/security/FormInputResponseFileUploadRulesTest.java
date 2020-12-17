@@ -44,10 +44,28 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     @Mock
     private ApplicationRepository applicationRepository;
 
+    @Mock
+    private ApplicationSecurityHelper applicationSecurityHelper;
+
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
     private static final long processRoleId = 789L;
     private static final long fileEntryId = 111L;
+
+    @Test
+    public void userCanSeeResponseIfTheyCanViewApplication() {
+        UserResource canView = newUserResource().build();
+        UserResource cantView = newUserResource().build();
+
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);
+
+        when(applicationSecurityHelper.canViewApplication(applicationId, canView)).thenReturn(true);
+        when(applicationSecurityHelper.canViewApplication(applicationId, cantView)).thenReturn(false);
+
+        assertTrue(fileUploadRules.userCanSeeResponseIfTheyCanViewApplication(file, canView));
+        assertFalse(fileUploadRules.userCanSeeResponseIfTheyCanViewApplication(file, cantView));
+    }
 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {

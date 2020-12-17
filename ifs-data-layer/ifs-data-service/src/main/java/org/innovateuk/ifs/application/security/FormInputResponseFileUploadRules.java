@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,15 +23,12 @@ public class FormInputResponseFileUploadRules extends BasePermissionRules {
     private static final Log LOG = LogFactory.getLog(FormInputResponseFileUploadRules.class);
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
 
     @PermissionRule(value = "READ", description = "A user can see the response if they can view the application")
-    public boolean applicantPermissions(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+    public boolean userCanSeeResponseIfTheyCanViewApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return applicationSecurityHelper.canViewApplication(fileEntry.getCompoundId().getApplicationId(), user);
     }
 

@@ -32,7 +32,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     private ApplicationSecurityHelper applicationSecurityHelper;
 
     @PermissionRule(value = "READ", description = "If the user can view the application they can view the finances.")
-    public boolean canFinancesIfCanViewApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+    public boolean canViewFinancesIfCanViewApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return applicationSecurityHelper.canViewApplication(applicationFinanceResource.getApplication(), user);
     }
 

@@ -126,9 +126,8 @@ public class FinanceChecksGenerator {
                 projectFinanceRepository.save(projectFinance);
 
         List<ApplicationProcurementMilestone> applicationProcurementMilestones = applicationFinanceForOrganisation.getMilestones();
-        List<ProjectProcurementMilestone> projectProcurementMilestones = new ArrayList<>();
         if (applicationProcurementMilestones != null && !applicationProcurementMilestones.isEmpty()) {
-            copyMilestones(applicationProcurementMilestones, projectProcurementMilestones, projectFinanceForOrganisation);
+            projectFinance.setMilestones(copyMilestones(applicationProcurementMilestones, projectFinanceForOrganisation));
         }
 
         List<ApplicationFinanceRow> originalFinanceFigures = applicationFinanceRowRepository.findByTargetId(applicationFinanceForOrganisation.getId());
@@ -160,11 +159,12 @@ public class FinanceChecksGenerator {
         return serviceSuccess(projectFinance);
     }
 
-    private void copyMilestones(List<ApplicationProcurementMilestone> applicationProcurementMilestones, List<ProjectProcurementMilestone> projectProcurementMilestones, ProjectFinance projectFinance) {
+    private List<ProjectProcurementMilestone> copyMilestones(List<ApplicationProcurementMilestone> applicationProcurementMilestones, ProjectFinance projectFinance) {
+        List<ProjectProcurementMilestone> projectProcurementMilestones = new ArrayList<>();
         applicationProcurementMilestones.forEach(milestone ->
                 projectProcurementMilestones.add(projectProcurementMilestoneRepository.save(new ProjectProcurementMilestone(milestone, projectFinance)))
         );
-        projectFinance.setMilestones(projectProcurementMilestones);
+        return projectProcurementMilestones;
     }
 
     private FinanceCheck createMvpFinanceCheckEmptyCosts(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {

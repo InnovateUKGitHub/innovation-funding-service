@@ -91,7 +91,7 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
 
     private static class ResourceClazz extends ProcurementMilestoneResource {}
 
-    private abstract class ServiceClazz implements ProcurementMilestoneService<ResourceClazz> {};
+    private abstract class ServiceClazz implements ProcurementMilestoneService<ResourceClazz, IdClazz> {};
 
     private static class IdClazz extends ProcurementMilestoneId {
         public static IdClazz of(long id) {
@@ -106,7 +106,7 @@ public class AbstractProcurementMilestoneControllerTest extends BaseControllerMo
     public class ControllerClazz extends AbstractProcurementMilestoneController<ResourceClazz> {
 
         @Override
-        protected ProcurementMilestoneService<ResourceClazz> getProcurementMilestoneService() {
+        protected ProcurementMilestoneService<ResourceClazz, IdClazz> getProcurementMilestoneService() {
             return service;
         }
 

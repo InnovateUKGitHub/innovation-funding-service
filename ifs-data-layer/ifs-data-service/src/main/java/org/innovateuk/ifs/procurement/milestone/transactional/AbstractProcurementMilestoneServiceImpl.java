@@ -13,9 +13,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public abstract class AbstractProcurementMilestoneServiceImpl<R extends ProcurementMilestoneResource, D extends ProcurementMilestone>
+public abstract class AbstractProcurementMilestoneServiceImpl<R extends ProcurementMilestoneResource, D extends ProcurementMilestone, S extends ProcurementMilestoneId>
         extends RootTransactionalService
-        implements ProcurementMilestoneService<R> {
+        implements ProcurementMilestoneService<R, S> {
 
     @Autowired
     protected ProcurementMilestoneMapper<D, R> mapper;

@@ -123,7 +123,7 @@ public class AbstractProcurementMilestoneServiceImplTest {
         }
     };
 
-    private class ServiceClazz extends AbstractProcurementMilestoneServiceImpl<ResourceClazz, DomainClazz> {
+    private class ServiceClazz extends AbstractProcurementMilestoneServiceImpl<ResourceClazz, DomainClazz, IdClazz> {
         @Override
         protected ServiceResult<DomainClazz> newDomain(ResourceClazz resource) {
             return serviceSuccess(new DomainClazz());
