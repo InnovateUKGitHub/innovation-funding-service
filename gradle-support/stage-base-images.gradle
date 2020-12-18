@@ -1,0 +1,65 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+def sqlVersion = "5.6.39"
+def cacheProviderVersion = "5.0.5"
+
+task tagDockerDB(type: DockerTagImage) {
+    imageId = "innovateuk/ifs-mysql:5.6.39"
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "ifs-mysql"
+    tag = sqlVersion
+}
+
+task tagDockerCP(type: DockerTagImage) {
+    imageId = "innovateuk/cache-provider:5.0.5"
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "cache-provider"
+    tag = cacheProviderVersion
+}
+task tagDockerMS(type: DockerTagImage) {
+    imageId = "innovateuk/mail-sink"
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "mail-sink"
+    tag = project.version
+}
+task osStageRemoteForDB(type: DockerPushImage) {
+    dependsOn tagDockerDB
+    registryCredentials = getRemoteOCCredentials()
+    imageName = registryCredentials.url + "/" + openshiftEnv + "/" + "ifs-mysql"
+    tag = sqlVersion
+}
+task osStageRemoteForCP(type: DockerPushImage) {
+    dependsOn tagDockerCP
+    registryCredentials = getRemoteOCCredentials()
+    imageName = registryCredentials.url + "/" + openshiftEnv + "/" + "cache-provider"
+    tag = cacheProviderVersion
+}
+task osStageRemoteForMS(type: DockerPushImage) {
+    dependsOn tagDockerMS
+    registryCredentials = getRemoteOCCredentials()
+    imageName = registryCredentials.url + "/" + openshiftEnv + "/" + "mail-sink"
+}
+
+task onStageRemoteBase {
+    dependsOn osStageRemoteForDB, osStageRemoteForCP, osStageRemoteForMS
+}
+
+
+def getRemoteOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    try {
+        // Get the docker repository for the remote OS cluster
+        dockerRegistryCredentials.url = "docker-registry-default.apps." + project.openshiftDomain
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = dockerRegistryCredentials.password ?: System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
+    return dockerRegistryCredentials
+}
