@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance', 'supporter')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
@@ -61,7 +61,7 @@ public class ApplicationTermsController {
         this.applicationTermsPartnerModelPopulator = applicationTermsPartnerModelPopulator;
     }
 
-    @GetMapping({"/terms-and-conditions", "/privacy-notice"})
+    @GetMapping
     public String getTerms(@PathVariable long applicationId,
                            @PathVariable long questionId,
                            UserResource user,
@@ -75,7 +75,7 @@ public class ApplicationTermsController {
         return "application/sections/terms-and-conditions/terms-and-conditions";
     }
 
-    @PostMapping({"/terms-and-conditions", "/privacy-notice"})
+    @PostMapping
     public String acceptTerms(@PathVariable long applicationId,
                               @PathVariable long questionId,
                               UserResource user,
@@ -97,7 +97,7 @@ public class ApplicationTermsController {
         });
     }
 
-    @GetMapping("/terms-and-conditions/partner-status")
+    @GetMapping("/partner-status")
     public String getPartnerStatus(@PathVariable long applicationId, @PathVariable long questionId, Model model) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         if (!application.isOpen()) {
