@@ -239,7 +239,7 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
                 CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
-                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE)
+                CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE)
         );
 
