@@ -20,6 +20,8 @@ IFS.competitionManagement.repeater = (function () {
     // Add row
     handleAddRow: function (el) {
       var type = jQuery(el).attr('data-add-row')
+      var alert
+      alert('2')
       switch (type) {
         case 'cofunder':
           IFS.competitionManagement.repeater.addCoFunder()
@@ -38,6 +40,9 @@ IFS.competitionManagement.repeater = (function () {
           break
         case 'multipleChoice':
           IFS.competitionManagement.repeater.addMultipleChoiceRow(el)
+          break
+        case 'sicCode':
+          IFS.competitionManagement.repeater.addSicCodeRow(el)
           break
       }
       jQuery('body').trigger('updateSerializedFormState')
@@ -77,6 +82,10 @@ IFS.competitionManagement.repeater = (function () {
           inst.closest('[id^="multiple-choice-row-"]').remove()
           IFS.competitionManagement.repeater.reindexRows('[id^="multiple-choice-row-"]')
           jQuery('#add-multiple-choice-option').show()
+          break
+        case 'sicCode':
+          inst.closest('[id^="sic-code-row-"]').remove()
+          IFS.competitionManagement.repeater.reindexRows('[id^="sic-code-row-"]')
           break
       }
     },
@@ -298,6 +307,25 @@ IFS.competitionManagement.repeater = (function () {
       if (count === 14) {
         jQuery(button).hide()
       }
+    },
+    addSicCode: function () {
+      var alert
+      alert('1')
+      var idCount = 0
+      if (jQuery('.sic-code-row').length) {
+        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
+      }
+      var html = '<div class="govuk-grid-row sic-code-row" id="sic-code-row-' + idCount + '">' +
+                     '<div class="govuk-grid-column-one-half">' +
+                       '<div class="govuk-form-group">' +
+                         '<input>ello</input>' +
+                       '</div>' +
+                     '</div>' +
+                   '</div>'
+      jQuery('.sic-code-row').last().after(html)
+      jQuery('.sic-code-' + idCount).val('')
+      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('.sic-code-' + idCount))
     },
     reindexRows: function (rowSelector) {
       jQuery(rowSelector + ' [name]').each(function () {

@@ -78,6 +78,35 @@
                        th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
                        type="text" required="required"/>
             </div>
+            <label class="govuk-label govuk-label--s"
+                   for="name">
+                SIC code
+            </label>
+            <div class="govuk-hint">Enter your 5 digit Standard Industrial Classification code.</div>
+            <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row" th:id="'sic-code-row-'+${iteration.index}">
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sicCodes[__${iteration.index}__]')} ? 'govuk-form-group--error'">
+                        <th:block th:if="${#fields.hasErrors('sicCodes[__${iteration.index}__]')}">
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('sicCodes[__${iteration.index}__].sic-code')}" th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input govuk-!-width-one-half"
+                               id="sicCode"
+                               th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
+                               type="text" required="required"/>
+                    </div>
+                    </div>
+                </div>
+
+            <div class="govuk-grid-row" id="dynamic-row-pointer">
+                <div class="govuk-grid-column-one-half">
+                    <div class="alignright">
+                        <input type="hidden" name="removeFunder" />
+                        <button class="button-clear" name="add-sic-code" data-add-row="sicCode" type="button">+Sic code</button>
+                    </div>
+                </div>
+            </div>
+
+
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
