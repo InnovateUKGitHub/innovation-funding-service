@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -43,9 +42,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
-    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Updated project team can see the participation percentage for their applications")
-    public boolean updateProjectTeamCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
-        return isUpdatedProjectTeam(applicationResource.getCompetition(), user.getId());
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Project partner can see the participation percentage for their applications")
+    public boolean projectPartnerCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+        return isProjectPartnerForApplication(applicationResource, user);
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
@@ -113,10 +112,10 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
-            description = "Updated project team can see the application finance totals",
+            description = "Project partner can see the application finance totals",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
-    public boolean updateProjectTeamCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isUpdatedProjectTeam(applicationResource.getCompetition(), user.getId());
+    public boolean projectPartnerCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
+        return isProjectPartnerForApplication(applicationResource, user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -215,11 +214,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
     public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user) {
-        Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
-        if (linkedProject == null) {
-            return false;
-        }
-        return isPartner(linkedProject.getId(), user.getId());
+        return isProjectPartnerForApplication(application, user);
     }
 
     @PermissionRule(value = "READ", description = "Supporters can can see application resources for applications assigned to them.")
