@@ -1,14 +1,18 @@
 apply from: rootProject.file("docker/ifs-mysql/mysql-support.gradle")
+buildDocker.enabled = false
+tagDocker.enabled = false
+osStageRemote.enabled = false
 
 ext.sqlContainer = "ifs-survey-database"
 ext.testSchema = "ifs_survey_test"
-
+def sqlVersion = "5.6.39"
 buildscript {
     repositories { jcenter() }
 }
 
 createContainer.containerName = "ifs-survey-database"
 createContainer.containerId = "ifs-survey-database"
+createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/ifs-mysql:" + sqlVersion
 createContainer.env = ["MYSQL_ROOT_PASSWORD=password", "MYSQL_DATABASE=ifs_survey"]
 createContainer.cmd = ["--character-set-server=utf8, --collation-server=utf8_bin"]
 createContainer.portBindings = ['3308:3306']

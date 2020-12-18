@@ -7,6 +7,8 @@ apply from: "gradle-support/certificates.gradle"
 apply from: "gradle-support/taurus.gradle"
 apply from: "gradle-support/gradle-versions.gradle"
 apply from: "gradle-support/dependency-check.gradle"
+apply from: "gradle-support/pullimages.gradle"
+apply from: "gradle-support/stage-base-images.gradle"
 
 if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
     apply from: "gradle-support/zipkin.gradle"
