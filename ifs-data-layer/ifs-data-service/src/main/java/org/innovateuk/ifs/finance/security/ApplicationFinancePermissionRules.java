@@ -39,13 +39,11 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user);
-        //check ats. I'm pretty sure they can't        || isLeadApplicant(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isMemberOfProjectTeamForOrganisation(applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), user);
-        //check ats. I'm pretty sure they can't        || isLeadApplicant(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "READ_FILE_ENTRY", description = "If then user can view the application they can view the finance file.")

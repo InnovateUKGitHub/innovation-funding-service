@@ -142,21 +142,6 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
         assertFalse(rules.consortiumCanReadACostForTheirApplicationAndOrganisation(cost, compAdmin));
     }
 
-//    @Test
-//    public void monitoringOfficerCanReadACostForTheirApplicationAndOrganisation() {
-//        Project project = newProject().withId(1L).build();
-//        when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
-//        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
-//
-//        allGlobalRoleUsers.forEach(user -> {
-//            if (user.hasRole(MONITORING_OFFICER)) {
-//                assertTrue(rules.monitoringOfficerCanReadACostForTheApplication(cost, monitoringOfficerUser()));
-//            } else {
-//                assertFalse(rules.monitoringOfficerCanReadACostForTheApplication(cost, user));
-//            }
-//        });
-//    }
-
     @Test
     public void consortiumCanReadACostForTheirApplicationAndOrganisation2() {
         assertTrue(rules.consortiumCanReadACostItemForTheirApplicationAndOrganisation(costItem, leadApplicant));
