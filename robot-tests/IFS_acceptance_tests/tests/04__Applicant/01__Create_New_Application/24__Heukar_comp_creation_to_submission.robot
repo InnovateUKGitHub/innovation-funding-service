@@ -192,8 +192,7 @@ the user successfully completes application
     the user completes Heukar Application details                   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the applicant marks EDI question as complete
-    
-    the user clicks the button/link                                 jQuery = button:contains("Research category")
+    the user clicks the button/link                                 jQuery = a:contains("Research category")
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
 
     the lead applicant fills all the questions and marks as complete(heukar)
