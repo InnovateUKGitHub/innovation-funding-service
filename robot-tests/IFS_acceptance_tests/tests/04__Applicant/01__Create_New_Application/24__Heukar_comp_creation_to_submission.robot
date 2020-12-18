@@ -100,9 +100,8 @@ the competition admin creates HEUKAR competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
-    the user fills in the EOI/Heukar/PT funding eligibility
-    #the user fills in the funding eligibility
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Funding eligibility            ${researchCategory}
     the user selects the organisational eligibility         true    true
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     the user marks the application as done                  ${projectGrowth}  ${compType}  ${competition}
@@ -192,10 +191,6 @@ the user successfully completes application
     the user completes Heukar Application details                   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
     the applicant completes Application Team
     the applicant marks EDI question as complete
-    
-    the user clicks the button/link                                 jQuery = button:contains("Research category")
-    the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
-
     the lead applicant fills all the questions and marks as complete(heukar)
     the user accept the competition terms and conditions            Back to application overview
 
