@@ -200,7 +200,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086  IFS-6205
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user should see the element     link = Loans
+    When the user should see the element     link = Loans (opens in a new window)
     And the user clicks the button/link      jQuery = button:contains("Done")
     And the user clicks the button/link      link = Back to competition details
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
