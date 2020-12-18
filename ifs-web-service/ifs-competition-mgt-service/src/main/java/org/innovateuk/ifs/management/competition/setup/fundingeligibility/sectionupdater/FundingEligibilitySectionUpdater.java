@@ -61,9 +61,6 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
         return handleResearchCategoryApplicableChanges(competition, projectEligibilityForm)
                 .andOnSuccess((researchCategoriesYesNoChanged) -> {
                     boolean researchCategoriesChanged = !competition.getResearchCategories().equals(projectEligibilityForm.getResearchCategoryId());
-                    if (competition.isNonFinanceType()) {
-                        return markFundingLevelComplete(competition);
-                    }
                     if (researchCategoriesYesNoChanged || researchCategoriesChanged) {
                         competition.setResearchCategories(projectEligibilityForm.getResearchCategoryId());
                         return competitionSetupRestService.update(competition).toServiceResult().andOnSuccess(() ->
@@ -76,12 +73,15 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
     }
 
     private ServiceResult<Void> revertFundingLevels(CompetitionResource competition) {
-        return grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()).toServiceResult().andOnSuccess(() -> {
-            if (TRUE.equals(competition.getFundingRules() == FundingRules.STATE_AID) && !competition.getResearchCategories().isEmpty()) {
-                return markFundingLevelComplete(competition);
-            }
-            return serviceSuccess();
-        });
+        if (competition.isNonFinanceType()) {
+            return grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()).toServiceResult().andOnSuccess(() -> {
+                if (TRUE.equals(competition.getFundingRules() == FundingRules.STATE_AID) && !competition.getResearchCategories().isEmpty()) {
+                    return markFundingLevelComplete(competition);
+                }
+                return serviceSuccess();
+            });
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> markFundingLevelComplete(CompetitionResource competition) {

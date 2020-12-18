@@ -23,7 +23,7 @@
             </dl>
         </th:block>
 
-        <th:block th:if="${model.categories.isEmpty()}">
+        <th:block th:if="${competitionSetupForm.maximums.size() == 1}">
 
             <th:block th:if="${model.general.editable}">
                 <div th:class="govuk-form-group"
@@ -55,7 +55,7 @@
             </th:block>
         </th:block>
 
-        <th:block th:unless="${model.categories.isEmpty()}">
+        <th:block th:unless="${competitionSetupForm.maximums.size() == 1}">
             <div class="table-overflow">
                 <table class="govuk-table hidden-error-labels">
                     <thead class="govuk-table__head">
