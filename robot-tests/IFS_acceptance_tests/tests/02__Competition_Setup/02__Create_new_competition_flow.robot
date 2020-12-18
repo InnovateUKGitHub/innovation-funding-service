@@ -102,6 +102,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -317,8 +319,8 @@ Project eligibility: Should have a Green Check
     Then the user should see the element    jQuery = li:contains("Project eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
-Funding eligibility: Mark as Done then Edit again
-    [Documentation]
+Funding eligibility: Mark as Done
+    [Documentation]  IFS-8791
     Given the user clicks the button/link         link = Funding eligibility
     And the user should see the element           jQuery = h2:contains("Are research categories applicable?")
     And the user selects the radio button         researchCategoriesApplicable  true
@@ -329,7 +331,7 @@ Funding eligibility: Mark as Done then Edit again
     And the user selects the checkbox             research-categories-34  #Industrial
     And the user selects the checkbox             research-categories-34  #Experimental
     And the user clicks the button/link           jQuery = button:contains("Done")
-    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
+    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
     And the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
     And the user should see the element           jQuery = td:contains("Micro entity or small company")
     And the user should see the element           jQuery = td:contains("Medium-sized company")
@@ -341,8 +343,7 @@ Funding eligibility: Mark as Done then Edit again
     And the user enters text to a text field      maximums[2][0].maximum  75
     And the user enters text to a text field      maximums[2][1].maximum  75
     And the user clicks the button/link           jQuery = button:contains("Done")
-    #Add editing in here?
-    When The user clicks the button/link      link = Return to setup overview
+    When The user clicks the button/link          link = Return to setup overview
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
