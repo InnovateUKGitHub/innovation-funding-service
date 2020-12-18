@@ -35,8 +35,8 @@ the user selects Research category
     Run Keyword If  '${status}' == 'PASS'  Run keywords    the user should not see the element   css = label[for="researchCategory2"]
     ...    AND             the user should not see the element   css = label[for="researchCategory3"]
     ...    AND             the user selects the checkbox         researchCategory
-    Run Keyword If  '${status}' == 'FAIL'    the user clicks the button twice  jQuery=p:contains("${res_category}")
-    #the user clicks the button/link   id=application-question-complete
+    Run Keyword If  '${status}' == 'FAIL'    the user clicks the button twice  jQuery=label:contains("${res_category}")
+    the user clicks the button/link   id=application-question-complete
     the user clicks the button/link   link=Back to application overview
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
