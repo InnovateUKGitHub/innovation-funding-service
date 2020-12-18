@@ -30,14 +30,6 @@ Small org can be selected
     And the user clicks the button/link         link = Your organisation
     And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
 
-Eligibility criteria link navigates to competition eligibility page
-    [Documentation]     IFS-8991
-    Given the user clicks the button/link         link = Your organisation
-    And the user clicks the button/link           id = mark_as_incomplete
-    When the user clicks the button/link          jQuery = a:contains('eligibility criteria')
-    Then the user should see the element          id = eligibility
-    [Teardown]  the user goes back to the previous page
-
 Funding section is now available
     [Documentation]    INFUND-6394
     [Tags]  HappyPath
@@ -102,10 +94,9 @@ User still sees warning that the funding section will be reset
     And the user should see the element              jQuery = .message-alert p:contains("Changing this selection will reset your funding level.")
 
 Large organisation can be selected
-    [Documentation]    INFUND-1110, INFUND_6394
+    [Documentation]    INFUND-1110, INFUND_6394, IFS-8991
     [Tags]  HappyPath
     Given the user clicks the button/link       jQuery = button:contains("Edit")
-    And the user should see the element         jQuery = p:contains("If we decide to award you funding you must be eligible to receive State aid at the point of the award.")
     Then the user marks their organisation as   ${LARGE_ORGANISATION_SIZE}
 
 Funding section shows as incomplete again
@@ -132,6 +123,15 @@ Funding section can be completed with under 50%
     When the user completes the funding section with funding level    25
     Then the user should not see the element    jQuery = .govuk-error-message
     And the user marks the 'your funding' section as incomplete again
+
+Eligibility criteria link navigates to competition eligibility page
+    [Documentation]     IFS-8991
+    Given the user clicks the button/link         jQuery = button:contains('Save and return to project finances')
+    And the user clicks the button/link           link = Your organisation
+    And the user clicks the button/link           id = mark_as_incomplete
+    When the user clicks the button/link          jQuery = a:contains('eligibility criteria')
+    Then the user should see the element          id = eligibility
+    [Teardown]  the user goes back to the previous page
 
 *** Keywords ***
 Custom Suite Setup
