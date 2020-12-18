@@ -163,7 +163,7 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId9
+    Then the user sees that the radio button is selected     termsAndConditionsId  27
     And the user should see the element                      link = Knowledge Transfer Partnership (KTP) (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
