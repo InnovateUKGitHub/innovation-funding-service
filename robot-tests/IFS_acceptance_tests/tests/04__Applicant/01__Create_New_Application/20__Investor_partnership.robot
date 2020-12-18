@@ -40,13 +40,15 @@ Creating a new investor comp points to the correct T&C
     [Documentation]  IFS-7213
     Given the user fills in initial details
     When the user clicks the button/link                     link = Terms and conditions
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId7
+    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId8
 
 The Investor partnership t&c's are correct
     [Documentation]  IFS-7213
-    When the user clicks the button/link     link = Investor Partnerships
+    When the user clicks the button/link     link = Investor Partnerships (opens in a new window)
+    And select window                        title = Award terms and conditions - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an Innovate UK investor partnerships competition")
-    [Teardown]   the user goes back to the previous page
+    And close window
+    And select window                        title = Competition terms and conditions - Innovation Funding Service
 
 T&c's can be confirmed
     [Documentation]  IFS-7213

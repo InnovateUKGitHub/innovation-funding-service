@@ -29,9 +29,7 @@ public class AllProjectDetailsSuppliedGuard implements Guard<ProjectDetailsState
     }
 
     private boolean projectLocationComplete(Project project) {
-        boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
-        return !locationPerPartnerRequired
-                || project.getPartnerOrganisations()
+        return project.getPartnerOrganisations()
                 .stream()
                 .noneMatch(partnerOrganisation -> {
                     if (partnerOrganisation.getOrganisation().isInternational()) {

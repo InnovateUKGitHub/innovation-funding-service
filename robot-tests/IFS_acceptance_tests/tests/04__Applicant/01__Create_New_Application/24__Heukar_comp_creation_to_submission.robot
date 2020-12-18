@@ -9,6 +9,8 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8641: Email notification of unsuccessful application
 ...
+...               IFS-8662: HEUKAR stage 1 privacy notice
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -42,16 +44,22 @@ Comp admin can view Heukar competition type in Initial details read only view
     Given the user clicks the button/link    link = Initial details
     Then the user can view Heukar competition type in Initial details read only view
 
+Comp admin can select Horizon Europe – UK Application Registration Privacy Policy to add to the competition
+    [Documentation]  IFS-8662
+    Given the user clicks the button/link               link = Back to competition details
+    When the user selects the HEUKAR Privacy Notice
+    Then the user views the HEUKAR privacy notice
+    And the user should see the element                 jQuery = li:contains("Terms and conditions") .task-status-complete
+
 Comp admin creates Heukar competition
     [Documentation]  IFS-8751
-    Given the user clicks the button/link                             link = Back to competition details
-    Then the competition admin creates Heukar competition             ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
-    [Teardown]  Get competition id and set open date to yesterday     ${heukarCompetitionName}
+    Given the competition admin creates Heukar competition     ${BUSINESS_TYPE_ID}  ${heukarCompetitionName}  ${compType_HEUKAR}  ${compType_HEUKAR}  GRANT  RELEASE_FEEDBACK  no  1  false  single-or-collaborative
+    Then get competition id and set open date to yesterday     ${heukarCompetitionName}
 
 Lead applicant can submit application
     [Documentation]  IFS-8751
     Given the user logs out if they are logged in
-    When the user successfully completes application                  tim   timmy   ${leadApplicantEmail}   ${heukarApplicationName}
+    When the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${heukarApplicationName}
     Then the user can submit the application
 
 Lead applicant is presented with the Application Summary page when an application is submitted and should get a confirmation email
@@ -72,14 +80,14 @@ The Application Summary page must not include the Reopen Application link when t
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-8641
     Given the user logs out if they are logged in
-    And the user successfully completes application                                 barry   barrington   ${newLeadApplicantEmail}   ${newHeukarApplicationName}
+    And the user successfully completes application                              barry   barrington   ${newLeadApplicantEmail}   ${newHeukarApplicationName}
     And the user can submit the application
-    And log in as a different user                                                  &{Comp_admin1_credentials}
-    When the internal team mark the application as successful / unsuccessful        ${newHeukarApplicationName}   UNFUNDED
-    And the user clicks the button/link                                             link = Competition
-    And Requesting IDs of this application                                          ${newHeukarApplicationName}
+    And log in as a different user                                               &{Comp_admin1_credentials}
+    When the internal team mark the application as successful / unsuccessful     ${newHeukarApplicationName}   UNFUNDED
+    And the user clicks the button/link                                          link = Competition
+    And Requesting IDs of this application                                       ${newHeukarApplicationName}
     And the internal team notifies all applicants
-    Then the user reads his email                                                   ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationUnsuccessfulEmailSubject}  ${huekarApplicationUnsuccessfulEmail}
+    Then the user reads his email                                                ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationUnsuccessfulEmailSubject}  ${huekarApplicationUnsuccessfulEmail}
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
@@ -90,7 +98,6 @@ the user can view Heukar competition type in Initial details read only view
 
 the competition admin creates HEUKAR competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user selects the Terms and Conditions
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
@@ -108,6 +115,29 @@ the competition admin creates HEUKAR competition
     the user clicks the button/link                         jQuery = button:contains('Done')
     the user navigates to the page                          ${CA_UpcomingComp}
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+
+the user selects the HEUKAR Privacy Notice
+    the user clicks the button/link                     link = Terms and conditions
+    the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
+    the user should see the element                     link = Horizon Europe UK Application Privacy Notice (opens in a new window)
+    the user clicks the button/link                     jQuery = button:contains("Done")
+
+the user views the HEUKAR privacy notice
+    the user clicks the button/link     link = Horizon Europe UK Application Privacy Notice (opens in a new window)
+    Select Window                       title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    the user should see the element     jQuery = h1:contains("Horizon Europe UK Application Privacy Notice")
+    the user should see the element     jQuery = p:contains("Any personal data that you provide to UK Research and Innovation")
+    the user clicks the button/link     link = UK Research and Innovation Privacy Notice (opens in a new window)
+    Select Window                       title = Privacy notice – UKRI
+    Close Window
+    Select Window                       title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    the user clicks the button/link     link = Innovate UK Privacy Notice and Information Management Policy (opens in a new window)
+    Select Window                       title = Privacy notice and information management policy: Innovate UK - GOV.UK
+    Close Window
+    Select Window                       title = Terms and conditions of an Innovate UK grant award - Innovation Funding Service
+    Close Window
+    Select Window                       title = Competition terms and conditions - Innovation Funding Service
+    the user clicks the button/link     link = Back to competition details
 
 Requesting IDs of this application
     [Arguments]  ${applicationName}

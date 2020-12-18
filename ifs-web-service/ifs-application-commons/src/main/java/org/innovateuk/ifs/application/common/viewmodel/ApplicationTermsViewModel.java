@@ -21,6 +21,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
     private final boolean termsAcceptedByAllOrganisations;
     private final boolean showHeaderAndFooter;
     private final boolean additionalTerms;
+    private final boolean heukarCompetition;
 
     public ApplicationTermsViewModel(long applicationId,
                                      String competitionName,
@@ -32,7 +33,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String termsAcceptedByName,
                                      ZonedDateTime termsAcceptedOn,
                                      boolean termsAcceptedByAllOrganisations,
-                                     boolean additionalTerms) {
+                                     boolean additionalTerms,
+                                     boolean heukarCompetition) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.competitionId = competitionId;
@@ -45,6 +47,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.termsAcceptedByAllOrganisations = termsAcceptedByAllOrganisations;
         this.additionalTerms = additionalTerms;
         this.showHeaderAndFooter = true;
+        this.heukarCompetition = heukarCompetition;
     }
 
     public ApplicationTermsViewModel(long applicationId,
@@ -54,7 +57,8 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
                                      String competitionTermsTemplate,
                                      boolean collaborativeApplication,
                                      boolean termsAcceptedByAllOrganisation,
-                                     boolean additionalTerms) {
+                                     boolean additionalTerms,
+                                     boolean heukarCompetition) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.competitionId = competitionId;
@@ -62,6 +66,7 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
         this.competitionTermsTemplate = competitionTermsTemplate;
         this.collaborativeApplication = collaborativeApplication;
         this.additionalTerms = additionalTerms;
+        this.heukarCompetition = heukarCompetition;
         this.termsAccepted = null;
         this.termsAcceptedByName = null;
         this.termsAcceptedOn = null;
@@ -121,5 +126,9 @@ public class ApplicationTermsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isAdditionalTerms() {
         return additionalTerms;
+    }
+
+    public boolean isHeukar() {
+        return heukarCompetition;
     }
 }
