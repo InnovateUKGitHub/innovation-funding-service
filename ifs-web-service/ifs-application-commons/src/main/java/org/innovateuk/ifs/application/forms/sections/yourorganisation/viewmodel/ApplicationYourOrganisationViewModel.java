@@ -84,13 +84,13 @@ public class ApplicationYourOrganisationViewModel implements BaseAnalyticsViewMo
         String you = internal ? "the organisation" : "you";
         String url = fundingRules == FundingRules.STATE_AID ? STATE_AID_URL : NON_STATE_AID_URL;
 
-        String maximumFundingLevelConstantMessage = String.format("<p class=\"govuk-body\">You must tell us the size of %s to determine the level of funding %s are eligible for.</p>", organisation, you);
+        String fundingLevelDependsOnOrganisationSizeMessage = String.format("<p class=\"govuk-body\">You must tell us the size of %s to determine the level of funding %s are eligible for.</p>", organisation, you);
         String sizeDefinition = String.format("<p class=\"govuk-body\">Please use <a href=\"%s\">our guidance (opens in a new window)</a> to determine %s.</p>", url, organisation);
 
         if (maximumFundingLevelConstant) {
-            return maximumFundingLevelConstantMessage;
+            return sizeDefinition;
         } else {
-            return maximumFundingLevelConstantMessage + sizeDefinition;
+            return fundingLevelDependsOnOrganisationSizeMessage + sizeDefinition;
         }
 
     }
