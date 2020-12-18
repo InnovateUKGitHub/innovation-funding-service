@@ -13,8 +13,10 @@ import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationTypeRepository;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder.aQuestion;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder.aSection;
 
 @Component
 public class HeukarTemplate implements CompetitionTemplate {
@@ -108,8 +112,23 @@ public class HeukarTemplate implements CompetitionTemplate {
                         .withQuestions(newArrayList(
                                 question()
                         )),
-                termsAndConditions()
+                privacyNotice()
         );
+    }
+
+    public static SectionBuilder privacyNotice() {
+        return aSection()
+                .withName("Privacy notice")
+                .withType(SectionType.PRIVACY_NOTICE)
+                .withDescription("You must agree to these before you submit your application.")
+                .withQuestions(newArrayList(aQuestion()
+                        .withShortName("Privacy Notice")
+                        .withName("Privacy Notice")
+                        .withDescription("Privacy Notice")
+                        .withMarkAsCompletedEnabled(true)
+                        .withMultipleStatuses(true)
+                        .withAssignEnabled(false)
+                        .withQuestionSetupType(QuestionSetupType.PRIVACY_NOTICE)));
     }
 
     public static QuestionBuilder question() {

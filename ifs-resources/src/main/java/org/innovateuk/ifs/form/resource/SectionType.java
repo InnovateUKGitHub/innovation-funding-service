@@ -17,7 +17,8 @@ public enum SectionType {
     OVERVIEW_FINANCES,
 	GENERAL,
     TERMS_AND_CONDITIONS,
-    KTP_ASSESSMENT;
+    KTP_ASSESSMENT,
+    PRIVACY_NOTICE;
 
     private final SectionType parent;
 
