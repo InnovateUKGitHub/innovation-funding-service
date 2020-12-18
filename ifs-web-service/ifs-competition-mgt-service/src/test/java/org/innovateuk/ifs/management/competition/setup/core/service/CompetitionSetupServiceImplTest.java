@@ -240,6 +240,7 @@ public class CompetitionSetupServiceImplTest {
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
                 CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE)
+                CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE)
         );
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
@@ -294,6 +295,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
         testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.FUNDING_ELIGIBILITY, Optional.of(Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)

@@ -291,7 +291,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         requiredSections.add(PROJECT_ELIGIBILITY);
         requiredSections.add(ORGANISATIONAL_ELIGIBILITY);
         requiredSections.add(FUNDING_ELIGIBILITY);
-        requiredSections.add(FUNDING_LEVEL_PERCENTAGE);
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);
