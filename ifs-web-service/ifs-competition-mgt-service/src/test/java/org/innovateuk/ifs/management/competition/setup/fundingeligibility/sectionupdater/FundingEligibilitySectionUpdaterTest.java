@@ -54,6 +54,7 @@ public class FundingEligibilitySectionUpdaterTest {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionType(1L)
                 .withResearchCategories(new HashSet<>())
+                .withNonFinanceType(false)
                 .build();
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
