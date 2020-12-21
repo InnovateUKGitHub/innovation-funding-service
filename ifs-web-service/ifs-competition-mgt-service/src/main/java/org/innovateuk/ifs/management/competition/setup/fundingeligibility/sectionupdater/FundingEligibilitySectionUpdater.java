@@ -73,7 +73,7 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
     }
 
     private ServiceResult<Void> revertFundingLevels(CompetitionResource competition) {
-        if (competition.isNonFinanceType()) {
+        if (competition.isFinanceType()) {
             return grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getId()).toServiceResult().andOnSuccess(() -> {
                 if (TRUE.equals(competition.getFundingRules() == FundingRules.STATE_AID) && !competition.getResearchCategories().isEmpty()) {
                     return markFundingLevelComplete(competition);
@@ -81,7 +81,7 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
                 return serviceSuccess();
             });
         }
-        return serviceSuccess();
+        return markFundingLevelComplete(competition);
     }
 
     private ServiceResult<Void> markFundingLevelComplete(CompetitionResource competition) {
@@ -96,10 +96,12 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
 
         if (projectEligibilityForm.getResearchCategoriesApplicable()) {
             if (!researchCategoryQuestionIfExists.isPresent()) {
-                return questionSetupCompetitionRestService.addResearchCategoryQuestionToCompetition(competitionResource
-                        .getId())
-                        .toServiceResult()
-                        .andOnSuccessReturn(() -> true);
+                if (!competitionResource.isH2020()) {
+                    return questionSetupCompetitionRestService.addResearchCategoryQuestionToCompetition(competitionResource
+                            .getId())
+                            .toServiceResult()
+                            .andOnSuccessReturn(() -> true);
+                }
             }
         } else {
             if (researchCategoryQuestionIfExists.isPresent()) {
