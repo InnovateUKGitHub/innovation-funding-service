@@ -4,8 +4,6 @@ import com.bmuschko.gradle.docker.DockerRegistryCredentials
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
-apply from: "gradle-support/common-functions.gradle"
-
 task tagDockerDB(type: DockerTagImage) {
     imageId = "innovateuk/ifs-mysql:"+sqlVersion
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "ifs-mysql"
