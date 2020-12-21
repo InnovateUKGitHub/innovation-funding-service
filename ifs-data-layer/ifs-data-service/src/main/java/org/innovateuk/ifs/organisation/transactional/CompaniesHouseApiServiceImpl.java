@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
@@ -65,6 +63,8 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final String START_INDEX_KEY = "start_index";
 
+    private static final String EMPTY_NAME_STRING = " ";
+
     @Autowired
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -96,7 +96,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         if (isImprovedSearchEnabled) {
             Optional<JsonNode> companyDetails = getCompanyDetails(id);
             Optional<JsonNode> directorsDetails = getDirectorsDetails(id);
-            OrganisationSearchResult orgResult = companyProfileSicCodeDirectorsMapper(companyDetails, companyDetails, directorsDetails);
+            OrganisationSearchResult orgResult = companyProfileSicCodeDirectorsMapper(companyDetails, directorsDetails);
             return serviceSuccess(orgResult);
         }
         return ofNullable(restGet("company/" + id, JsonNode.class)).
@@ -143,21 +143,19 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         return org;
     }
 
-    private OrganisationSearchResult companyProfileSicCodeDirectorsMapper(Optional<JsonNode> companyItems, Optional<JsonNode> companyDetails, Optional<JsonNode> directorDetails) {
-        if (companyItems.isPresent()) {
-            JsonNode companyItemsNode = companyItems.get();
+    private OrganisationSearchResult companyProfileSicCodeDirectorsMapper(Optional<JsonNode> companyDetails, Optional<JsonNode> directorDetails) {
+        if (companyDetails.isPresent()) {
+            JsonNode companyItemsNode = companyDetails.get();
             AddressResource registeredOfficeAddress = getAddress(companyItemsNode, "registered_office_address");
-            OrganisationAddressResource orgAddressResource = new OrganisationAddressResource(registeredOfficeAddress, new AddressTypeResource());
             ObjectMapper mapper = new ObjectMapper();
 
             OrganisationSearchResult org = new OrganisationSearchResult(companyItemsNode.path("company_number").asText(), companyItemsNode.path("company_name").asText());
             org.setExtraAttributes(mapper.convertValue(companyItemsNode, Map.class));
             org.setOrganisationAddress(registeredOfficeAddress);
 
-            if (companyDetails.isPresent()) {
-                List<OrganisationSicCodeResource> sicCodeResources = getSicCode(companyDetails.get(), "sic_codes");
-                org.setOrganisationSicCodes(sicCodeResources);
-            }
+            List<OrganisationSicCodeResource> sicCodeResources = getSicCode(companyDetails.get(), "sic_codes");
+            org.setOrganisationSicCodes(sicCodeResources);
+
             if (directorDetails.isPresent()) {
                 List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getCurrentDirectors(directorDetails.get(), "items");
                 org.setOrganisationExecutiveOfficers(executiveOfficerResources);
@@ -227,29 +225,48 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     private List<OrganisationSicCodeResource> getSicCode(JsonNode jsonNode, String fieldName) {
         List<OrganisationSicCodeResource> sicCodeResources = new ArrayList<>();
         JsonNode sicCodesArray = jsonNode.get(fieldName);
-        sicCodesArray.forEach(sicCode -> {
-            OrganisationSicCodeResource sicCodeResource = new OrganisationSicCodeResource();
-            sicCodeResource.setSicCode(sicCode.asText());
-            sicCodeResources.add(sicCodeResource);
+       if (sicCodesArray != null) {
+           sicCodesArray.forEach(sicCode -> {
+            setSicCodeValue(sicCodeResources, sicCode.asText());
         });
+        } else {
+           setSicCodeValue(sicCodeResources, EMPTY_NAME_STRING);
+       }
         return sicCodeResources;
 
     }
 
+    private void setSicCodeValue(List<OrganisationSicCodeResource> sicCodeResources, String sicCode) {
+        OrganisationSicCodeResource sicCodeResource = new OrganisationSicCodeResource();
+        sicCodeResource.setSicCode(sicCode);
+        sicCodeResources.add(sicCodeResource);
+    }
+
     private List<OrganisationExecutiveOfficerResource> getCurrentDirectors(JsonNode jsonNode, String pathName) {
-        List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
+        List<OrganisationExecutiveOfficerResource> executiveOfficersResource = new ArrayList<>();
         JsonNode directorsDetails = jsonNode.path("items");
-        directorsDetails.forEach(directorItem -> {
-            if (directorItem.get("resigned_on") == null) {
-                String officerRole = directorItem.get("officer_role").asText();
-                if (!officerRole.isEmpty() && officerRole.equalsIgnoreCase(DIRECTOR)) {
-                    OrganisationExecutiveOfficerResource executiveOfficerResource = new OrganisationExecutiveOfficerResource();
-                    executiveOfficerResource.setName(directorItem.get("name").asText());
-                    executiveOfficers.add(executiveOfficerResource);
+        if(directorsDetails != null) {
+            directorsDetails.forEach(directorItem -> {
+                if (directorItem.get("resigned_on") == null) {
+                    String officerRole = directorItem.get("officer_role").asText();
+                    if (!officerRole.isEmpty() && officerRole.equalsIgnoreCase(DIRECTOR)) {
+                        setDirectorsValue(executiveOfficersResource, directorItem.get("name").asText());
+                    } else {
+                        setDirectorsValue(executiveOfficersResource, EMPTY_NAME_STRING);
+                    }
                 }
-            }
-        });
-        return executiveOfficers;
+            });
+        }
+        else {
+            setDirectorsValue(executiveOfficersResource, EMPTY_NAME_STRING);
+        }
+        return executiveOfficersResource;
+    }
+
+    private void setDirectorsValue(List<OrganisationExecutiveOfficerResource> executiveOfficers, String directorName) {
+        OrganisationExecutiveOfficerResource executiveOfficerResource = new OrganisationExecutiveOfficerResource();
+        executiveOfficerResource.setName(directorName);
+        executiveOfficers.add(executiveOfficerResource);
     }
 
     private String stringOrNull(JsonNode jsonNode, String path, String path2) {
