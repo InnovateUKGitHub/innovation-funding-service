@@ -5,7 +5,7 @@ osStageRemote.enabled = false
 
 ext.sqlContainer = "ifs-survey-database"
 ext.testSchema = "ifs_survey_test"
-def sqlVersion = "5.6.39"
+
 buildscript {
     repositories { jcenter() }
 }

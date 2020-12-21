@@ -28,27 +28,27 @@ task pullImageNexusOPENJDK(type: DockerPullImage) {
 
 task pullImageNexusCACHEPROV(type: DockerPullImage) {
     registryCredentials = getNexusCredentials()
-    repository = project.nexusRegistry + "/releases/" + "cache-provider:5.0.5"
+    repository = project.nexusRegistry + "/releases/" + "cache-provider:"+cacheProviderVersion
 }
 task pullImageNexusMAILSINK(type: DockerPullImage) {
     registryCredentials = getNexusCredentials()
-    repository = project.nexusRegistry + "/releases/" + "mail-sink:1.0.0"
+    repository = project.nexusRegistry + "/releases/" + "mail-sink:"+mailsinkVersion
 }
 task pullImageNexusMYSQL(type: DockerPullImage) {
     registryCredentials = getNexusCredentials()
-    repository = project.nexusRegistry + "/releases/" + "ifs-mysql:5.6.39"
+    repository = project.nexusRegistry + "/releases/" + "ifs-mysql:"+sqlVersion
 }
 task pullImageNexusMYSQLC(type: DockerPullImage) {
     registryCredentials = getNexusCredentials()
-    repository = project.nexusRegistry + "/releases/" + "ifs-mysql-client:5.6.39"
+    repository = project.nexusRegistry + "/releases/" + "ifs-mysql-client:"+sqlVersion
 }
 
 task pullImageNexusAWSCLI(type: DockerPullImage) {
     registryCredentials = getNexusCredentials()
-    repository = project.nexusRegistry + "/releases/" + "aws-cli:1.16.302"
+    repository = project.nexusRegistry + "/releases/" + "aws-cli:"+awsCliVersion
 }
 
 
-task pullImageNexus {
+task pullBaseImageNexus {
     dependsOn pullImageNexusBASE, pullImageNexusOPENJDK, pullImageNexusCACHEPROV, pullImageNexusMAILSINK, pullImageNexusMYSQL, pullImageNexusMYSQLC, pullImageNexusAWSCLI
 }

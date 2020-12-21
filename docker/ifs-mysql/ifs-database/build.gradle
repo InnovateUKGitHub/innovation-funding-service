@@ -6,7 +6,7 @@ osStageRemote.enabled = false
 
 ext.sqlContainer = "ifs-database"
 ext.testSchema = "ifs_test"
-def sqlVersion = "5.6.39"
+
 
 buildscript {
     repositories { jcenter() }
@@ -21,7 +21,6 @@ task updateIfsWebUser(type: Exec) {
 createContainer.containerName = "ifs-database"
 createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/ifs-mysql:" + sqlVersion
 createContainer.containerId = "ifs-database"
-createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/ifs-mysql:"+ sqlVersion
 createContainer.env = ["MYSQL_ROOT_PASSWORD=password","MYSQL_DATABASE=ifs" ]
 createContainer.cmd = ["--character-set-server=utf8, --collation-server=utf8_bin"]
 createContainer.portBindings = ['3306:3306']
