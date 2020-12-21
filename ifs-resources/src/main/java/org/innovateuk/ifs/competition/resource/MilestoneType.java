@@ -25,7 +25,8 @@ public enum MilestoneType {
     FUNDERS_PANEL("11. Funders panel", false, 14),
     NOTIFICATIONS("12. Notifications", false, 15),
     RELEASE_FEEDBACK("13. Release feedback", false,  16),
-    FEEDBACK_RELEASED("Feedback released", false, false, 17);
+    FEEDBACK_RELEASED("Feedback released", false, false, 17),
+    ASSESSMENT_PERIOD("Assessment period", false, false, 18);
 
     private String milestoneDescription;
     private boolean presetDate;
