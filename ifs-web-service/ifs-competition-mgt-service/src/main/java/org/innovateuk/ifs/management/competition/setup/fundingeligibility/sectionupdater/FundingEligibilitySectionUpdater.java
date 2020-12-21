@@ -101,6 +101,8 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
                             .getId())
                             .toServiceResult()
                             .andOnSuccessReturn(() -> true);
+                } else {
+                    return serviceSuccess(true);
                 }
             }
         } else {
