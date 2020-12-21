@@ -40,7 +40,7 @@ Creating a new investor comp points to the correct T&C
     [Documentation]  IFS-7213
     Given the user fills in initial details
     When the user clicks the button/link                     link = Terms and conditions
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId8
+    Then the user sees that the radio button is selected     termsAndConditionsId  31
 
 The Investor partnership t&c's are correct
     [Documentation]  IFS-7213
