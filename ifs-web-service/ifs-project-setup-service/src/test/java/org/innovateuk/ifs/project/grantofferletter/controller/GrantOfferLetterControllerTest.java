@@ -383,6 +383,34 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     }
 
     @Test
+    public void testUploadSignedAdditionalContract() throws Exception {
+
+        FileEntryResource createdFileDetails = newFileEntryResource().withName("A name").build();
+
+        MockMultipartFile uploadedFile = new MockMultipartFile("signedAdditionalContract", "filename.txt", "text/plain", "My content!".getBytes());
+
+        ProjectResource project = newProjectResource().withId(123L).build();
+
+        List<ProjectUserResource> pmUser = newProjectUserResource().
+                withRole(PROJECT_MANAGER).
+                withUser(loggedInUser.getId()).
+                build(1);
+
+        when(projectService.getById(123L)).thenReturn(project);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(pmUser);
+        when(grantOfferLetterService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
+        when(grantOfferLetterService.addSignedAdditionalContract(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
+                thenReturn(serviceSuccess(createdFileDetails));
+
+        mockMvc.perform(
+                fileUpload("/project/123/offer").
+                        file(uploadedFile).
+                        param("uploadSignedAdditionalContractFileClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/offer"));
+    }
+
+    @Test
     public void testConfirmationView() throws Exception {
         ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
         when(projectRestService.getProjectById(123L)).thenReturn(restSuccess(project));
@@ -414,6 +442,19 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         mockMvc.perform(
                 post("/project/123/offer").
                         param("removeSignedGrantOfferLetterClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/offer"));
+    }
+
+    @Test
+    public void testRemoveSignedAdditionalContract() throws Exception {
+
+        when(grantOfferLetterService.removeSignedAdditionalContract(123L)).
+                thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/project/123/offer").
+                        param("removeSignedAdditionalContractFileClicked", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/123/offer"));
     }

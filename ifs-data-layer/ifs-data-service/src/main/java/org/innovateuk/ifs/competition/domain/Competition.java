@@ -150,10 +150,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
         private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
-
-    private boolean locationPerPartner = true;
-
-    private Boolean stateAid;
+    
+    @Enumerated(EnumType.STRING)
+    private FundingRules fundingRules;
 
     private Boolean includeYourOrganisationSection;
 
@@ -768,6 +767,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isHeukar() {
+        return ofNullable(competitionType)
+                .map(CompetitionType::getName)
+                .map(name -> name.equals(CompetitionTypeEnum.HEUKAR.getText()))
+                .orElse(false);
+    }
+
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
@@ -856,14 +863,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.termsAndConditions = termsAndConditions;
     }
 
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
-    }
-
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
-    }
-
     public Integer getMaxProjectDuration() {
         return maxProjectDuration;
     }
@@ -880,12 +879,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.minProjectDuration = minProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {

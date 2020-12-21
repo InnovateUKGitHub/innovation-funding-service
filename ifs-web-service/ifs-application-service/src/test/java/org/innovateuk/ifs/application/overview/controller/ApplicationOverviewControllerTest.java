@@ -6,10 +6,8 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewView
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -43,14 +41,14 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
     @Mock
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private ApplicationRestService applicationRestService;
 
     @Override
     protected ApplicationOverviewController supplyControllerUnderTest() {
         return new ApplicationOverviewController(applicationOverviewModelPopulator,
-                userRestService, applicationRestService);
+                processRoleRestService, applicationRestService);
     }
 
     @Test
@@ -62,11 +60,11 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
         when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(
                 restSuccess(newProcessRoleResource()
                         .withUser(loggedInUser)
                         .withRole(LEADAPPLICANT).build()));
-        when(userRestService.findProcessRole(application.getId())).thenReturn(
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(
                 restSuccess(Collections.singletonList(newProcessRoleResource()
                         .withUser(loggedInUser)
                         .withRole(LEADAPPLICANT).build())));
@@ -91,7 +89,7 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
         when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
-        when(userRestService.findProcessRole(application.getId())).thenReturn(
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(
                 restSuccess(Collections.singletonList(newProcessRoleResource()
                         .withUser(loggedInUser)
                         .withRole(KNOWLEDGE_TRANSFER_ADVISER).build())));
@@ -110,7 +108,7 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
         when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
-        when(userRestService.findProcessRole(application.getId())).thenReturn(
+        when(processRoleRestService.findProcessRole(application.getId())).thenReturn(
                 restSuccess(Collections.singletonList(newProcessRoleResource()
                         .withUser(loggedInUser)
                         .withRole(KNOWLEDGE_TRANSFER_ADVISER).build())));
