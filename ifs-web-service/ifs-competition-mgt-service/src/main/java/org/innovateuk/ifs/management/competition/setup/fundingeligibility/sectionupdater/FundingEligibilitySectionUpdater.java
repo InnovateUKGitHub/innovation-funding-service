@@ -61,15 +61,21 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
         return handleResearchCategoryApplicableChanges(competition, projectEligibilityForm)
                 .andOnSuccess((researchCategoriesYesNoChanged) -> {
                     boolean researchCategoriesChanged = !competition.getResearchCategories().equals(projectEligibilityForm.getResearchCategoryId());
-                    if (researchCategoriesYesNoChanged || researchCategoriesChanged) {
                         competition.setResearchCategories(projectEligibilityForm.getResearchCategoryId());
-                        return competitionSetupRestService.update(competition).toServiceResult().andOnSuccess(() ->
-                                revertFundingLevels(competition));
-                    } else {
-                        //No form changes. So no need to reset funding levels or update competition.
-                        return serviceSuccess();
-                    }
+                        return competitionSetupRestService.update(competition).toServiceResult().andOnSuccess(() -> {
+                            if (researchCategoriesYesNoChanged || researchCategoriesChanged) {
+                                return revertFundingLevels(competition);
+                            } else if (!competitionHasFundingLevels(competition)) {
+                                return revertFundingLevels(competition);
+                            }
+                            //No need to reset.
+                            return serviceSuccess();
+                        });
                 });
+    }
+
+    private boolean competitionHasFundingLevels(CompetitionResource competition) {
+        return grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).isSuccess();
     }
 
     private ServiceResult<Void> revertFundingLevels(CompetitionResource competition) {
@@ -101,8 +107,6 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
                             .getId())
                             .toServiceResult()
                             .andOnSuccessReturn(() -> true);
-                } else {
-                    return serviceSuccess(true);
                 }
             }
         } else {
