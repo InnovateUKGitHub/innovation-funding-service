@@ -38,6 +38,7 @@ task osStageRemoteForMS(type: DockerPushImage) {
     dependsOn tagDockerMS
     registryCredentials = getRemoteOCCredentials()
     imageName = registryCredentials.url + "/" + openshiftEnv + "/" + "mail-sink"
+    tag = mailsinkVersion
 }
 
 task onStageRemoteBase {
