@@ -20,7 +20,7 @@ task tagDockerCP(type: DockerTagImage) {
 task tagDockerMS(type: DockerTagImage) {
     imageId = registryBase+"mail-sink:"+mailsinkVersion
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "mail-sink"
-    tag = mailsinkVersion
+    tag = project.version
 }
 task osStageRemoteForDB(type: DockerPushImage) {
     dependsOn tagDockerDB
@@ -38,7 +38,6 @@ task osStageRemoteForMS(type: DockerPushImage) {
     dependsOn tagDockerMS
     registryCredentials = getRemoteOCCredentials()
     imageName = registryCredentials.url + "/" + openshiftEnv + "/" + "mail-sink"
-    tag = mailsinkVersion
 }
 
 task onStageRemoteBase {
