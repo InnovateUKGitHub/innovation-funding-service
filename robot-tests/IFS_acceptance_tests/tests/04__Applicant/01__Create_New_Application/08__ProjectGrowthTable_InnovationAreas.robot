@@ -52,9 +52,10 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
-    And the user fills in the funding eligibility
-    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Funding eligibility            true
+    #And the user fills in the funding eligibility
+    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  collaborative     # 1 means 30%
+    #And the user fills in the CS Funding eligibility            true
+    And the user fills in funding eligibility                   true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
