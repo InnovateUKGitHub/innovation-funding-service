@@ -51,7 +51,8 @@
                 </div>
             </th:block>
             <th:block th:unless="${model.general.editable}">
-                <p class="govuk-body">Maximum funding level percentage is set to <th:block th:text="*{maximums[0][0].maximum}"/>%</p>
+                <p class="govuk-body" th:if="${model.general.competition.financeType}">Maximum funding level percentage is set to <th:block th:text="*{maximums[0][0].maximum}"/>%</p>
+                <p class="govuk-body" th:unless="${model.general.competition.financeType}">Competition does not request applicants finance details.</p>
             </th:block>
         </th:block>
 
@@ -115,11 +116,10 @@
                     </tbody>
                 </table>
                 <button class="govuk-button button-clear" name="reset-maximum-funding-levels"  th:if="${model.showResetButton}">reset funding levels to State aid default</button>
-
             </div>
         </th:block>
 
-        <th:block th:if="${model.general.editable}">
+        <th:block th:if="${model.general.editable and model.general.competition.financeType}">
             <button class="govuk-button">Done</button>
         </th:block>
         <th:block th:unless="${model.general.editable}">

@@ -68,7 +68,6 @@ public class FundingEligibilitySectionUpdater extends AbstractSectionUpdater imp
                             } else if (!competitionHasFundingLevels(competition)) {
                                 return revertFundingLevels(competition);
                             }
-                            //No need to reset.
                             return serviceSuccess();
                         });
                 });
