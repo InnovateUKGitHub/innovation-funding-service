@@ -5,30 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.ManageUserPageResource;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.util.UriUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPANIES_HOUSE_NO_RESPONSE;
@@ -60,7 +51,6 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final String COMPANIES_HOUSE_SEARCH_PATH = "search/companies?items_per_page={items_per_page}&q={q}";
     private static final String COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH = "search/companies?q={q}&items_per_page={items_per_page}&start_index={start_index}";
-  //  private static final String COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH = "search/companies?q={q}&items_per_page={items_per_page}&page_number={page_number}";
     private static final String COMPANIES_HOUSE_LIST_DIRECTORS_PATH = "/officers?items_per_page={items_per_page}&register_type={register_type}";
 
     private static final String SEARCH_WORD_KEY = "q";
@@ -73,47 +63,52 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
 
-     private static final String START_INDEX_KEY = "start_index";
-
- //   private static final String START_INDEX_KEY = "page_number";
-
+    private static final String START_INDEX_KEY = "start_index";
 
     @Autowired
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
-          return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
-                // encoded in the web-services.
-                JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
-                JsonNode companyItems = companiesResources.path("items");
-                List<OrganisationSearchResult> results = new ArrayList<>();
-                companyItems.forEach(i -> results.add(companySearchMapper(i)));
-                return serviceSuccess(results);
-            });
+        return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
+            // encoded in the web-services.
+            JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
+            return getSearchOrganisationResults(companiesResources, "");
+        });
     }
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText, int indexPos) {
         if (isImprovedSearchEnabled) {
             return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
-                // search prgansiation with index
+                // search organsiation with index
                 JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH, JsonNode.class, companySearchUrlVariablesWithIndex(decodedSearchText, indexPos));
-                JsonNode searchResultItems = companiesResources.path("items");
                 String totalResults = companiesResources.path("total_results").asText();
-                List<OrganisationSearchResult> results = new ArrayList<>();
-                searchResultItems.forEach(companyItem ->
-                {
-                    String comanyHouseNo = companyItem.path("company_number").asText();
-                    Optional<JsonNode> companyDetails = getCompanyDetails(comanyHouseNo);
-                    Optional<JsonNode> directorsDetails = getDirectorsDetails(comanyHouseNo);
-                    OrganisationSearchResult orgResult = companySearchDataMapper(companyItem, companyDetails, directorsDetails, totalResults);
-                    results.add(orgResult);
-                });
-                return serviceSuccess(results);
+                return getSearchOrganisationResults(companiesResources, totalResults);
             });
         }
-         return searchOrganisations(encodedSearchText);
+        return searchOrganisations(encodedSearchText);
+    }
+
+    @Override
+    public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
+        LOG.debug("getOrganisationById " + id);
+        if (isImprovedSearchEnabled) {
+            Optional<JsonNode> companyDetails = getCompanyDetails(id);
+            Optional<JsonNode> directorsDetails = getDirectorsDetails(id);
+            OrganisationSearchResult orgResult = companyProfileSicCodeDirectorsMapper(companyDetails, companyDetails, directorsDetails);
+            return serviceSuccess(orgResult);
+        }
+        return ofNullable(restGet("company/" + id, JsonNode.class)).
+                map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
+                orElse(serviceFailure(COMPANIES_HOUSE_NO_RESPONSE));
+    }
+
+    private ServiceResult<List<OrganisationSearchResult>> getSearchOrganisationResults(JsonNode companiesResources, String totalResults) {
+        JsonNode companyItems = companiesResources.path("items");
+        List<OrganisationSearchResult> results = new ArrayList<>();
+        companyItems.forEach(i -> results.add(companySearchMapper(i, totalResults)));
+        return serviceSuccess(results);
     }
 
     private Optional<JsonNode> getCompanyDetails(String companiesHouseNo) {
@@ -121,24 +116,55 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     }
 
     private Optional<JsonNode> getDirectorsDetails(String companiesHouseNo) {
-        try {
-           return ofNullable(restGet("company/" + companiesHouseNo + COMPANIES_HOUSE_LIST_DIRECTORS_PATH,
-                    JsonNode.class, listDirectorsUrlVariables()));
-        } catch (HttpStatusCodeException exe) {
-            if (exe.getStatusCode() == HttpStatus.NOT_FOUND) {
-                LOG.warn(exe.getMessage());
-            }
-        }
-        return Optional.empty();
+        return ofNullable(restGet("company/" + companiesHouseNo + COMPANIES_HOUSE_LIST_DIRECTORS_PATH,
+                JsonNode.class, listDirectorsUrlVariables()));
     }
 
-    @Override
-    public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
-        LOG.debug("getOrganisationById " + id);
+    private OrganisationSearchResult companySearchMapper(JsonNode jsonNode, String totalResults) {
+        AddressResource officeAddress = getAddress(jsonNode, "address");
+        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("title").asText());
+        Map<String, Object> extras = new HashMap<>();
+        extras.put("company_type", jsonNode.path("company_type").asText());
+        extras.put("date_of_creation", jsonNode.path("date_of_creation").asText());
+        extras.put("description", jsonNode.path("description").asText());
+        extras.put("total_results", totalResults);
+        org.setExtraAttributes(extras);
+        org.setOrganisationAddress(officeAddress);
+        return org;
+    }
 
-        return ofNullable(restGet("company/" + id, JsonNode.class)).
-                map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
-                orElse(serviceFailure(COMPANIES_HOUSE_NO_RESPONSE));
+    private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {
+        AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
+        ObjectMapper mapper = new ObjectMapper();
+
+        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("company_name").asText());
+        org.setExtraAttributes(mapper.convertValue(jsonNode, Map.class));
+        org.setOrganisationAddress(officeAddress);
+        return org;
+    }
+
+    private OrganisationSearchResult companyProfileSicCodeDirectorsMapper(Optional<JsonNode> companyItems, Optional<JsonNode> companyDetails, Optional<JsonNode> directorDetails) {
+        if (companyItems.isPresent()) {
+            JsonNode companyItemsNode = companyItems.get();
+            AddressResource registeredOfficeAddress = getAddress(companyItemsNode, "registered_office_address");
+            OrganisationAddressResource orgAddressResource = new OrganisationAddressResource(registeredOfficeAddress, new AddressTypeResource());
+            ObjectMapper mapper = new ObjectMapper();
+
+            OrganisationSearchResult org = new OrganisationSearchResult(companyItemsNode.path("company_number").asText(), companyItemsNode.path("company_name").asText());
+            org.setExtraAttributes(mapper.convertValue(companyItemsNode, Map.class));
+            org.setOrganisationAddress(registeredOfficeAddress);
+
+            if (companyDetails.isPresent()) {
+                List<OrganisationSicCodeResource> sicCodeResources = getSicCode(companyDetails.get(), "sic_codes");
+                org.setOrganisationSicCodes(sicCodeResources);
+            }
+            if (directorDetails.isPresent()) {
+                List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getCurrentDirectors(directorDetails.get(), "items");
+                org.setOrganisationExecutiveOfficers(executiveOfficerResources);
+            }
+            return org;
+        }
+        return new OrganisationSearchResult();
     }
 
     protected <T> T restGet(String path, Class<T> c) {
@@ -151,8 +177,8 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
      * Rest Template.
      *
      * @param path - URL path
-     * @param c    - Return class type
-     * @param <T>  - Return data type from the method
+     * @param c - Return class type
+     * @param <T> - Return data type from the method
      * @return
      */
     protected <T> T restGet(String path, Class<T> c, Map<String, Object> variables) {
@@ -187,28 +213,6 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         return variables;
     }
 
-    private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {
-        AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
-        ObjectMapper mapper = new ObjectMapper();
-
-        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("company_name").asText());
-        org.setExtraAttributes(mapper.convertValue(jsonNode, Map.class));
-        org.setOrganisationAddress(officeAddress);
-        return org;
-    }
-
-    private OrganisationSearchResult companyProfileMapperWithSicCode(JsonNode jsonNode, OrganisationSearchResult org) {
-        //    AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
-        List<OrganisationSicCodeResource> sicCodeResources = getSicCode(jsonNode, "sic_codes");
-        ObjectMapper mapper = new ObjectMapper();
-
-        //   OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("company_name").asText());
-        org.setExtraAttributes(mapper.convertValue(jsonNode, Map.class));
-        //   org.setOrganisationAddress(officeAddress);
-        org.setOrganisationSicCodes(sicCodeResources);
-        return org;
-    }
-
     private AddressResource getAddress(JsonNode jsonNode, String path) {
         String line1 = stringOrNull(jsonNode, path, "address_line_1");
         String line2 = stringOrNull(jsonNode, path, "address_line_2");
@@ -222,26 +226,29 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
     private List<OrganisationSicCodeResource> getSicCode(JsonNode jsonNode, String fieldName) {
         List<OrganisationSicCodeResource> sicCodeResources = new ArrayList<>();
-        JsonNode sicCodeArray = jsonNode.get(fieldName);
-        if (sicCodeArray != null) {
-            for (JsonNode action : sicCodeArray) {
-                sicCodeResources.add(new OrganisationSicCodeResource(action.asText()));
-            }
-        }
+        JsonNode sicCodesArray = jsonNode.get(fieldName);
+        sicCodesArray.forEach(sicCode -> {
+            OrganisationSicCodeResource sicCodeResource = new OrganisationSicCodeResource();
+            sicCodeResource.setSicCode(sicCode.asText());
+            sicCodeResources.add(sicCodeResource);
+        });
         return sicCodeResources;
+
     }
 
-    private List<OrganisationExecutiveOfficerResource> getExecutiveOfficers(JsonNode jsonNode, String pathName) {
+    private List<OrganisationExecutiveOfficerResource> getCurrentDirectors(JsonNode jsonNode, String pathName) {
         List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
         JsonNode directorsDetails = jsonNode.path("items");
         directorsDetails.forEach(directorItem -> {
-            if(directorItem.get("resigned_on") == null) {
+            if (directorItem.get("resigned_on") == null) {
                 String officerRole = directorItem.get("officer_role").asText();
-                if(!officerRole.isEmpty() && officerRole.equalsIgnoreCase(DIRECTOR)) {
-                    executiveOfficers.add(new OrganisationExecutiveOfficerResource(directorItem.get("name").asText()));
+                if (!officerRole.isEmpty() && officerRole.equalsIgnoreCase(DIRECTOR)) {
+                    OrganisationExecutiveOfficerResource executiveOfficerResource = new OrganisationExecutiveOfficerResource();
+                    executiveOfficerResource.setName(directorItem.get("name").asText());
+                    executiveOfficers.add(executiveOfficerResource);
                 }
             }
-       });
+        });
         return executiveOfficers;
     }
 
@@ -260,41 +267,6 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
             LOG.error("Unable to decode search string " + encodedSearchText, e);
             return serviceFailure(COMPANIES_HOUSE_UNABLE_TO_DECODE_SEARCH_STRING);
         }
-    }
-
-    private OrganisationSearchResult companySearchMapper(JsonNode jsonNode) {
-        AddressResource officeAddress = getAddress(jsonNode, "address");
-
-        OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("title").asText());
-        Map<String, Object> extras = new HashMap<>();
-        extras.put("company_type", jsonNode.path("company_type").asText());
-        extras.put("date_of_creation", jsonNode.path("date_of_creation").asText());
-        extras.put("description", jsonNode.path("description").asText());
-        org.setExtraAttributes(extras);
-        org.setOrganisationAddress(officeAddress);
-        return org;
-    }
-
-    //Now both companySearchMapper and companySearchDataMapper same, but need to check the address
-    private OrganisationSearchResult companySearchDataMapper(JsonNode companyItems, Optional<JsonNode> companyDetails, Optional<JsonNode> directorDetails, String totalResults) {
-        AddressResource officeAddress = getAddress(companyItems, "address");
-        OrganisationSearchResult org = new OrganisationSearchResult(companyItems.path("company_number").asText(), companyItems.path("title").asText());
-        Map<String, Object> extras = new HashMap<>();
-        extras.put("company_type", companyItems.path("company_type").asText());
-        extras.put("date_of_creation", companyItems.path("date_of_creation").asText());
-        extras.put("description", companyItems.path("description").asText());
-        extras.put("total_results", totalResults);
-        org.setExtraAttributes(extras);
-        org.setOrganisationAddress(officeAddress);
-        if (companyDetails.isPresent()) {
-            List<OrganisationSicCodeResource> sicCodeResources = getSicCode(companyDetails.get(), "sic_codes");
-            org.setOrganisationSicCodes(sicCodeResources);
-        }
-        if(directorDetails.isPresent()) {
-            List<OrganisationExecutiveOfficerResource> executiveOfficerResources = getExecutiveOfficers(directorDetails.get(), "items");
-            org.setOrganisationExecutiveOfficers(executiveOfficerResources);
-        }
-        return org;
     }
 
     protected void setCompaniesHouseUrl(String companiesHouseUrl) {

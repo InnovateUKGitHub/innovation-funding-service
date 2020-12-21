@@ -68,7 +68,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
 
         String searchText = "Batman Robin";
 
-        when(companyHouseService.searchOrganisations(any()))
+        when(companyHouseService.searchOrganisations(any(), 0))
                 .thenReturn(ServiceResult.serviceSuccess(Arrays.asList(organisationSearchResults)));
 
         mockMvc.perform(get("/companies-house/search/{searchText}",searchText)
@@ -85,7 +85,7 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
                                 .and(fieldWithPath("[].extraAttributes.Key").description("extra attribute"))
                 ));
 
-        verify(companyHouseService,only()).searchOrganisations(searchText);
+        verify(companyHouseService,only()).searchOrganisations(searchText, 0);
     }
 
     @Test

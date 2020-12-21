@@ -5,11 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
+import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,20 +46,10 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final String REFERER = "referer";
     private static final String ORGANISATION_NAME = "organisationName";
     private static final String MODEL = "model";
-
     private static final String SEARCH_ORGANISATION = "search-organisation";
-
-
+    private static final String DEFAULT_PAGE_NUMBER = "1";
     @Autowired
     private MessageSource messageSource;
-
-
-    private static final String DEFAULT_PAGE_NUMBER = "1";
-
-
-    @Value("${ifs.new.organisation.search.enabled:false}")
-    private Boolean newOrganisationSearchEnabled;
-
 
     @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -71,7 +60,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.deleteOrganisationIdCookie(response);
 
         organisationForm.setOrganisationSearching(false);
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE );
+        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false );
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -80,9 +69,22 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute("improvedSearchEnabled", newOrganisationSearchEnabled);
+        model.addAttribute("isImprovedSearchEnabled", isNewOrganisationSearchEnabled);
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
+    }
+
+    @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION)
+    public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                     HttpServletRequest request, HttpServletResponse response){
+        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
+        organisationForm.setOrganisationSearching(true);
+        organisationForm.setManualEntry(false);
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+        if (isNewOrganisationSearchEnabled) {
+            return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        }
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
 
     @GetMapping("/" + EXISTING_ORGANISATION + "/{selectedExistingOrganisationId}")
@@ -100,20 +102,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return createOrganisation(organisationForm, model, user, request, response);
     }
 
-    @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION)
-    public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                     HttpServletRequest request, HttpServletResponse response){
-        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
-        organisationForm.setOrganisationSearching(true);
-        organisationForm.setManualEntry(false);
-
-        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        if (newOrganisationSearchEnabled) {
-            return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
-        }
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
-    }
-
     @GetMapping(value = {"/" + SEARCH_RESULT_ORGANISATION + "/**" })
     public String searchOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                      Model model,
@@ -123,9 +111,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                      @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber) {
 
         registrationCookieService.deleteOrganisationIdCookie(response);
-
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, pageNumber);
-        organisationForm.setOrganisationSearching(true);
+        organisationForm = getOrganisationCreationForm(organisationForm, model, request, pageNumber, true);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -141,13 +127,14 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
-    public String amendOrganisationAddress(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String selectOrganisationForConfiramtion(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                            HttpServletRequest request,
                                            HttpServletResponse response,
                                            UserResource user) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
+
+        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
         organisationForm.setSearchOrganisationId(searchOrganisationId);
 
         addSelectedOrganisation(organisationForm, model);
@@ -217,7 +204,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
         boolean improvedSearchEnabled = orgTypeEnum != null
                 && orgTypeEnum != OrganisationTypeEnum.RESEARCH
-                && newOrganisationSearchEnabled;
+                && isNewOrganisationSearchEnabled;
 
         String key = improvedSearchEnabled ? String.format("improved.registration.%s", textKey)
                 : String.format("registration.%s.%s", orgTypeEnum.toString(), textKey);

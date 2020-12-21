@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -18,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
  */
@@ -34,7 +40,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                  Model model,
                                  HttpServletRequest request,
                                  UserResource user) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
+        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -52,26 +58,38 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
+        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
 
-        BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
-        validator.validate(organisationForm, bindingResult);
+            BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
+            validator.validate(organisationForm, bindingResult);
 
-        //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
-        if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
-            return "redirect:/";
-        }
+            //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
+            if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
+                return "redirect:/";
+            }
+        OrganisationResource organisationResource = getOrganisationResourceToPersist(organisationForm);
+        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
+        return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
+    }
 
+     private OrganisationResource getOrganisationResourceToPersist(OrganisationCreationForm organisationForm) {
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
 
+        if (isNewOrganisationSearchEnabled)  {
+            organisationResource.setDateOfIncorporation(organisationForm.getDateOfIncorporation());
+            AddressResource addressResource = organisationForm.getOrganisationAddress();
+            OrganisationAddressResource orgAddressResource = new OrganisationAddressResource(organisationResource, addressResource, new AddressTypeResource(REGISTERED.getId(), REGISTERED.name()));
+            organisationResource.setAddresses(asList(orgAddressResource));
+            organisationResource.setSicCodes(organisationForm.getSicCodes());
+            organisationResource.setExecutiveOfficers(organisationForm.getExecutiveOfficers());
+        }
+
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());
         }
-
-        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
-
-        return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
+        return organisationResource;
     }
+
 }

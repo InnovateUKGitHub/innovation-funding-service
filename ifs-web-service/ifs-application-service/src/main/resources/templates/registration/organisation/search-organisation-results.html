@@ -38,49 +38,37 @@
                      </div>
                 </div>
             </div>
+               <p class="govuk-body govuk-!-margin-0 govuk-!-font-size-27">
+                       <span th:text="${organisationForm.totalSearchResults}" class="govuk-!-font-size-48" govuk-!-font-weight-bold></span>
+                        <span class="govuk-!-font-weight-bold">Companies</span> matching the search
+                        <span class="govuk-!-font-weight-bold" th:text="${organisationForm.organisationSearchName}"></span></p>
 
-
-
-            <ul id="org-results" class="govuk-list results-list panel"
-                th:if="${organisationForm.organisationSearching}">
-                <th:block>
-                    <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
-                           <span th:text="${organisationForm.totalSearchResults} + ' ' + 'Companies matching the search' + ' ' + ${organisationForm.organisationSearchName}"></span>
-                       </h2>
-
-                <!--    <h2 class="govuk-!-font-size-27 govuk-!-margin-0 govuk-!-font-weight-bold">
-                        <span th:text="${organisationForm.totalSearchResults}"></span>
-                    </h2>
-                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-bold">
-                        <span th:text=" ' ' + 'Companies'"></span>
-                    </h3>
-                    <h4 class="govuk-!-font-size-16 govuk-!-margin-0 govuk-!-font-weight-normal">
-                        <span th:text=" ' ' + 'matching the search'"></span>
-                    </h4>
-                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-bold">
-                        <span th:text=" ' ' + ${organisationForm.organisationSearchName}"></span>
-                    </h3> -->
-
-                </th:block>
-                <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
-                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
-                        <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
-                           title="View organisation"
-                           th:text="${organisation.name}"
-                           class="govuk-link">
-                        </a>
-                    </h3>
-                    <th:block th:unless="${organisationForm.research}">
+               <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-bottom-3">
+               <ul id="org-results" class="govuk-list govuk-!-margin-0">
+                    <li class="type-company" th:each="(organisation, iteration : ${organisationForm.organisationSearchResults})">
+                       <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
+                           <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
+                                    title="View organisation"
+                                    th:text="${organisation.name}"
+                                     class="govuk-link">
+                           </a>
+                       </h3>
+                       <th:block th:unless="${organisationForm.research}">
                         <p class="govuk-body meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
                         <p class="govuk-body" th:text="${organisation.location}"></p>
-                    </th:block>
-                </li>
-
-            </ul>
+                       </th:block>
+                   <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3"/>
+                   </li>
+             </ul>
         </form>
-     <th:block th:insert="fragments/layout :: main-content-end"/>
-    <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})"/>
-    </main>
+        <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})"/>
+        <th:block>
+           <h3 class="govuk-heading-m">My organisation is not registered on Companies House</h3>
+                <p class="govuk-body"><a th:href="'#'">Find out what to do </a> if your organisation has not yet been registered or does not need to be registered on
+                   Companies House.</p>
+         </th:block>
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+     </main>
 </div>
 
 <th:block th:insert="fragments/layout :: footer"/>

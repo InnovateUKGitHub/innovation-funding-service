@@ -116,7 +116,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationForm.setManualEntry(false);
         organisationForm.setOrganisationSearchResults(Collections.emptyList());
         organisationForm.setOrganisationName("NOMENSA LTD");
-        organisationForm.setOrganisationStartIndex(0);
+
 
 
         organisationFormUseSearchResult = new OrganisationCreationForm();

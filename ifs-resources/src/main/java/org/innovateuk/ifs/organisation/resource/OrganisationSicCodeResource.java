@@ -36,10 +36,6 @@ public class OrganisationSicCodeResource {
         return sicCode;
     }
 
-    public OrganisationSicCodeResource(String sicCode) {
-        this.sicCode = sicCode;
-    }
-
     public void setSicCode(String sicCode) {
         this.sicCode = sicCode;
     }
