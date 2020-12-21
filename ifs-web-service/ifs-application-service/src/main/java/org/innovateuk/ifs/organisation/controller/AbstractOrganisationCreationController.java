@@ -214,7 +214,8 @@ public abstract class AbstractOrganisationCreationController {
     public int setTotalSearchResults(List<OrganisationSearchResult> searchResults) {
        Optional<OrganisationSearchResult> searchResult = searchResults.stream().findFirst();
         if(searchResult.isPresent()) {
-            String totalSearch = (String)searchResult.get().getExtraAttributes().get("total_results");
+            String totalSearch = "";
+            totalSearch = (String)searchResult.get().getExtraAttributes().get("total_results");
            return totalSearch.isEmpty() ? 0 : Integer.parseInt(totalSearch);
         }
         return 0;
