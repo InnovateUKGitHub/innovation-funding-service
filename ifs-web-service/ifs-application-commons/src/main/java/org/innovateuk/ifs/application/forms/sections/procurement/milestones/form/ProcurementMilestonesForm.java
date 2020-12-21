@@ -3,6 +3,11 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.for
 import java.util.Map;
 
 public class ProcurementMilestonesForm {
+    public ProcurementMilestonesForm() {}
+
+    public ProcurementMilestonesForm(Map<String, ProcurementMilestoneForm> milestones) {
+        this.milestones = milestones;
+    }
 
     private Map<String, ProcurementMilestoneForm> milestones;
 

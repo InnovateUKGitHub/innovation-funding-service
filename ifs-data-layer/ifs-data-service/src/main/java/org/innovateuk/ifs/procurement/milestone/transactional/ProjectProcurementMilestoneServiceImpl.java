@@ -47,7 +47,7 @@ public class ProjectProcurementMilestoneServiceImpl
 
     @Override
     public ServiceResult<List<ProjectProcurementMilestoneResource>> getByProjectIdAndOrganisationId(long applicationId, long organisationId) {
-        return find(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationId(applicationId, organisationId), notFoundError(ProjectProcurementMilestone.class, applicationId, organisationId))
+        return find(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId), notFoundError(ProjectProcurementMilestone.class, applicationId, organisationId))
                 .andOnSuccessReturn((milestones) ->
                         milestones.stream()
                                 .map(mapper::mapToResource)

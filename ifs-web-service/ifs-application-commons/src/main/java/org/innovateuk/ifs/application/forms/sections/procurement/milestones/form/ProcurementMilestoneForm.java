@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.form;
 
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
+
 import java.math.BigInteger;
 
 public class ProcurementMilestoneForm {
@@ -11,6 +13,18 @@ public class ProcurementMilestoneForm {
     private String deliverable;
     private String successCriteria;
     private BigInteger payment;
+
+    public ProcurementMilestoneForm() {}
+
+    public <R extends ProcurementMilestoneResource> ProcurementMilestoneForm(R resource) {
+        this.id = resource.getId();
+        this.month = resource.getMonth();
+        this.description = resource.getDescription();
+        this.taskOrActivity = resource.getTaskOrActivity();
+        this.deliverable = resource.getDeliverable();
+        this.successCriteria = resource.getSuccessCriteria();
+        this.payment = resource.getPayment();
+    }
 
     public Long getId() {
         return id;

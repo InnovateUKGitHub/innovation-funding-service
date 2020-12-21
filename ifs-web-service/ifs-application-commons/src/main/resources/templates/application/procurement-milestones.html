@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm"*/-->
+
+<th:block th:fragment="milestones-form(form)">
+    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
+        <div class="govuk-accordion__section"
+            th:each="entry, iterStat : ${form.milestones}"
+            th:with="milestone=${entry.value}">
+            <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
+            <div class="govuk-accordion__section-header">
+                <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" th:id="|accordion-finances-heading-${iterStat.index}|"
+                th:text="${milestone.description}">
+                </span>
+                    <!--/*<span class="finance-total" data-mirror="#section-total-labour"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*"
+                          data-calculation-fields="100, #total-cost, #section-total-labour"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
+                    <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
+                         class="section-status section-incomplete icon-only error-marker"></div>*/-->
+                </h3>
+
+            </div>
+            <div  th:id="|accordion-finances-content-${iterStat.index}|" class="govuk-accordion__section-content"
+                  th:attr="aria-labelledby=|accordion-finances-heading-${iterStat.index}|">
+                <p class="govuk-body" th:text="${milestone.month}"></p>
+                <p class="govuk-body" th:text="${milestone.description}"></p>
+                <p class="govuk-body" th:text="${milestone.deliverable}"></p>
+                <p class="govuk-body" th:text="${milestone.successCriteria}"></p>
+                <p class="govuk-body" th:text="${milestone.taskOrActivity}"></p>
+                <p class="govuk-body" th:text="${milestone.payment}"></p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>

@@ -78,7 +78,7 @@ public class ProcurementMilestoneDataBuilder extends BaseDataBuilder<Procurement
                 milestone.setOrganisationId(applicationFinance.getOrganisation());
 
                 milestone.setMonth(Math.toIntExact(zeroBasedIndex + 1));
-                milestone.setDescription("Milestone for month " + zeroBasedIndex + 1);
+                milestone.setDescription("Milestone for month " + (zeroBasedIndex + 1));
                 milestone.setDeliverable("Oh! You better watch out\n" +
                         "You better not cry\n" +
                         "You better not pout I'm telling you why\n" +
