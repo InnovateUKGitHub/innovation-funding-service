@@ -37,7 +37,7 @@ All the services relies on base images, so you need to pull or build base images
 
 Either you can pull released images 
 
-    ./gradlew pullImageNexus -Pnexus_username="XXXXX" -Pnexus_password="XXXXXX"
+    ./gradlew pullBaseImageNexus -Pnexus_username="XXXXX" -Pnexus_password="XXXXXX"
 
 or build those images locally 
 
