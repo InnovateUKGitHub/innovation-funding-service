@@ -7,6 +7,7 @@ public class MilestoneResource {
     private MilestoneType type;
     private ZonedDateTime date;
     private Long competitionId;
+    private Long assessmentPeriod;
 
     public MilestoneResource() {
     }
@@ -15,6 +16,7 @@ public class MilestoneResource {
         this.type = type;
         this.date = date;
         this.competitionId = competitionId;
+        this.assessmentPeriod = null;
     }
 
     public Long getId() {
@@ -47,5 +49,13 @@ public class MilestoneResource {
 
     public void setCompetitionId(Long competitionId) {
         this.competitionId = competitionId;
+    }
+
+    public Long getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public void setAssessmentPeriod(Long assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
     }
 }
