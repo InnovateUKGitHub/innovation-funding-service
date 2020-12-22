@@ -1,3 +1,4 @@
+
 package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.identity.IdentifiableEnum;

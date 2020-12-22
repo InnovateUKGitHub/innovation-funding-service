@@ -204,7 +204,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                                            UserResource user) {
 
         Supplier<String> successView = () -> getRedirectUrlToEligibility(projectId, organisationId);
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, null, false);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, type, false);
         yourProjectCostsFormValidator.validateType(form, type, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(yourProjectCostsSaver.saveType(form, type, projectId, organisationId));
@@ -255,8 +255,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form,
-                validationHandler, successView, model);
+        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form, validationHandler, successView, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -299,14 +298,10 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     private EligibilityRagStatus getRagStatus(FinanceChecksEligibilityForm form) {
-        EligibilityRagStatus statusToSend;
-
-        if (form.isConfirmEligibilityChecked()) {
-            statusToSend = form.getEligibilityRagStatus();
-        } else {
-            statusToSend = EligibilityRagStatus.UNSET;
+        if (form != null && form.isConfirmEligibilityChecked()) {
+           return form.getEligibilityRagStatus();
         }
-        return statusToSend;
+        return EligibilityRagStatus.UNSET;
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {

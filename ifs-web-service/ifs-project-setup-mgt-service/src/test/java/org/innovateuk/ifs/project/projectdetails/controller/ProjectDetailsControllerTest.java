@@ -94,7 +94,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withId(competitionId)
                 .withName("Comp 1")
                 .withFundingType(FundingType.GRANT)
-                .withLocationPerPartner(true)
                 .build();
 
         ProjectResource project = newProjectResource()
@@ -161,7 +160,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals("Comp 1", model.getCompetitionName());
         assertTrue(model.isAbleToManageProjectState());
         assertEquals("Lead Org 1", model.getLeadOrganisation().getName());
-        assertTrue(model.isLocationPerPartnerRequired());
         assertEquals("TW14 9QG", model.getPostcodeForPartnerOrganisation(1L));
         assertEquals("UB7 8QF", model.getPostcodeForPartnerOrganisation(2L));
         assertFalse(model.isKtpCompetition());
@@ -177,7 +175,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withId(competitionId)
                 .withName("Comp 1")
                 .withFundingType(FundingType.KTP)
-                .withLocationPerPartner(true)
                 .build();
 
         ProjectResource project = newProjectResource()
@@ -244,7 +241,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals("Comp 1", model.getCompetitionName());
         assertTrue(model.isAbleToManageProjectState());
         assertEquals("Lead Org 1", model.getLeadOrganisation().getName());
-        assertTrue(model.isLocationPerPartnerRequired());
         assertEquals("TW14 9QG", model.getPostcodeForPartnerOrganisation(1L));
         assertEquals("UB7 8QF", model.getPostcodeForPartnerOrganisation(2L));
         assertTrue(model.isKtpCompetition());
@@ -259,7 +255,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withId(competitionId)
                 .withName("Comp 1")
                 .withFundingType(FundingType.GRANT)
-                .withLocationPerPartner(true)
                 .build();
 
         ProjectResource project = newProjectResource().
@@ -398,7 +393,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getCompetition(), (long) viewModel.getCompetitionId());
         assertEquals(project.getCompetitionName(), viewModel.getCompetitionName());
         assertNull(viewModel.getLeadOrganisation());
-        assertFalse(viewModel.isLocationPerPartnerRequired());
         assertFalse(viewModel.isKtpCompetition());
 
         ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");
@@ -444,7 +438,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getCompetition(), (long) viewModel.getCompetitionId());
         assertEquals(project.getCompetitionName(), viewModel.getCompetitionName());
         assertNull(viewModel.getLeadOrganisation());
-        assertFalse(viewModel.isLocationPerPartnerRequired());
         assertTrue(viewModel.isKtpCompetition());
 
         ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");

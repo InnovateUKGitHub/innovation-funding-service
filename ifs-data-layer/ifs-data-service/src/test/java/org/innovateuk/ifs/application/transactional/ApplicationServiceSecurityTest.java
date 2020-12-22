@@ -49,13 +49,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         assertAccessDenied(
                 () -> serviceMethod.accept(applicationId),
                 () -> {
-                    verify(applicationRules).usersConnectedToTheApplicationCanView(eq(application),
-                            isA(UserResource.class));
-                    verify(applicationRules).projectPartnerCanViewApplicationsLinkedToTheirProjects(eq(application),
-                            isA(UserResource.class));
-                    verify(applicationRules).internalUsersCanViewApplications(eq(application),
-                            isA(UserResource.class));
-                    verify(applicationRules).innovationLeadAssignedToCompetitionCanViewApplications(eq(application),
+                    verify(applicationRules).canViewApplication(eq(application),
                             isA(UserResource.class));
                 }
         );
