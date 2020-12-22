@@ -134,6 +134,8 @@
         th:remove="${print} ? tag : none">
         <h2 class="govuk-heading-s print-break-before" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+
+        <th:block th:insert="finance/finance-summary :: payment-milestones-table (${model.applicationFundingBreakdownViewModel})"/>
     </section>
 </th:block>
 
