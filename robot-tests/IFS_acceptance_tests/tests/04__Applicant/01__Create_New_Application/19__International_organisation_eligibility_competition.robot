@@ -76,46 +76,19 @@ Eligibility is changed to project eligibility in project eligibility category
      [Documentation]  IFS-7195
      When the user clicks the button/link                 link = ${projectEligibilityLink}
      Then the user should see the text in the element     jQuery = h1:contains("${projectEligibilityLink}")        ${ProjectEligibilityLink}
-     And the user should see the element                  jQuery = span:contains("${organisationalEligibilityTitle}")
+     And the user should see the element                  jQuery = span:contains("${fundingEligibilityTitle}")
 
 Eligibility is changed to project eligibility in pagination
      [Documentation]  IFS-7195
      Given the user clicks the button/link                css = a[rel="Prev"]
      When the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
      And the user clicks the button/link                  jQuery = span:contains("${projectEligibilityLink}")
-     And the user clicks the button/link                  jQuery = span:contains("${organisationalEligibilityTitle}")
+     And the user clicks the button/link                  jQuery = span:contains("${fundingEligibilityTitle}")
      Then the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
-
-Funding eligibility: Mark as Done 
-    [Documentation]
-    Given the user clicks the button/link         link = Return to setup overview
-    And the user clicks the button/link           link = Funding eligibility
-    And the user should see the element           jQuery = h2:contains("Are research categories applicable?")
-    And the user selects the radio button         researchCategoriesApplicable  true
-    And the user should see the element           jQuery = label:contains("Feasibility studies")
-    And the user should see the element           jQuery = label:contains("Industrial research")
-    And the user should see the element           jQuery = label:contains("Experimental development")
-    When the user selects the checkbox            research-categories-33  #Feasibility
-    And the user selects the checkbox             research-categories-34  #Industrial
-    And the user selects the checkbox             research-categories-34  #Experimental
-    And the user clicks the button/link           jQuery = button:contains("Done")
-    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
-    And the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
-    And the user should see the element           jQuery = td:contains("Micro entity or small company")
-    And the user should see the element           jQuery = td:contains("Medium-sized company")
-    And the user should see the element           jQuery = td:contains("Large-sized company")
-    And the user enters text to a text field      maximums[0][0].maximum  75
-    And the user enters text to a text field      maximums[0][1].maximum  75
-    And the user enters text to a text field      maximums[1][0].maximum  75
-    And the user enters text to a text field      maximums[1][1].maximum  75
-    And the user enters text to a text field      maximums[2][0].maximum  75
-    And the user enters text to a text field      maximums[2][1].maximum  75
-    And the user clicks the button/link           jQuery = button:contains("Done")
-    When The user clicks the button/link          link = Return to setup overview
 
 Comp admin can not complete the competition setup without organisational eligibility category completetion
      [Documentation]  IFS-7195
-     Given the user clicks the button/link                                                 link = Return to setup overview
+     Given the user clicks the button/link          link = Return to setup overview
      When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative
      Then The user should see the element                                                  css = #compCTA[disabled]
 
@@ -652,7 +625,7 @@ the user checks for organisational eligibility fields
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-yes"]
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-no"]
     the user should see the element           jQuery = button:contains("Save and continue")
-    the user should see the element           jQuery = span:contains("${projectEligibilityLink}")
+    the user should see the element           jQuery = span:contains("Funding eligibility")
     the user should see the element           link = Back to competition details
     the user should see the element           link = Return to setup overview
 
@@ -671,7 +644,8 @@ the user completes all categories except organisational eligibility category
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}     ${collaborative}  # 1 means 30%
-    the user fills in the CS Funding eligibility            ${researchCategory}
+    #the user fills in the CS Funding eligibility            ${researchCategory}
+    the user fills in funding eligibility                   ${researchCategory}    ${compType}
     the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}
     the user marks the Application as done                  ${projectGrowth}       ${compType}                 ${internationalLeadInternationalCompetition}
     the user fills in the CS Assessors                      GRANT
