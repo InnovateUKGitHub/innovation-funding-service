@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -59,7 +59,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
             getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser));
 
-        Future<YourOrganisationViewModel> viewModelRequest = async(() ->
+        Future<ApplicationYourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
 
         Future<F> formRequest = async(() ->
@@ -115,7 +115,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
 
         Supplier<String> failureHandler = () -> {
             CommonYourProjectFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser);
-            YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
+            ApplicationYourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -152,7 +152,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         return redirectToViewPage(applicationId, competitionId, organisationId, sectionId);
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
+    private ApplicationYourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
         return viewModelPopulator.populate(applicationId, competitionId, organisationId);
     }
 

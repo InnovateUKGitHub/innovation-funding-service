@@ -79,6 +79,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8770 Bring back bank details for KTP
 ...
+...            IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 ...            IFS-8614 KTP Project setup: GOL template
 ...
 ...            IFS-8619 Application status page for KTP comp - content incorrect
@@ -145,9 +147,9 @@ ${leadTeamMember}                     susan.brown@gmail.com
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -161,13 +163,16 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
-    And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
+    Then the user sees that the radio button is selected     termsAndConditionsId  27
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    And select window                        title = Terms and conditions of a Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+    And close window
+    And select window                        title = Competition terms and conditions - Innovation Funding Service
     [Teardown]   the user goes back to the previous page
 
 T&c's can be confirmed

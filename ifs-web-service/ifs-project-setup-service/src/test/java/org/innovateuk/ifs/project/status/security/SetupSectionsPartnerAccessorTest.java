@@ -99,23 +99,13 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     }
 
     @Test
-    public void canAccessPartnerProjectLocationPageWhenPartnerProjectLocationNotRequired() {
-
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, false));
-
-        verifyInteractions(
-                mock -> mock.isOfflineOrWithdrawn()
-        );
-    }
-
-    @Test
     public void canAccessPartnerProjectLocationPageWhenCompaniesHouseIsIncomplete() {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
         when(setupProgressCheckerMock.isOfflineOrWithdrawn()).thenReturn(false);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),

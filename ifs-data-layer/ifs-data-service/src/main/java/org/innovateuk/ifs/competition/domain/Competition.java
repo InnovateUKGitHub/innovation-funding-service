@@ -148,12 +148,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
         private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
-
-    private boolean locationPerPartner = true;
-
-    @ZeroDowntime(reference = "IFS-8787", description = "TODO")
-    private Boolean stateAid;
-
+    
     @Enumerated(EnumType.STRING)
     private FundingRules fundingRules;
 
@@ -856,14 +851,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setTermsAndConditions(GrantTermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
-    }
-
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
-    }
-
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
     }
 
     public Integer getMaxProjectDuration() {
