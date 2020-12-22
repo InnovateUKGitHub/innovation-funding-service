@@ -119,7 +119,7 @@ the competition admin creates HEUKAR competition
 
 the user selects the HEUKAR Privacy Notice
     the user clicks the button/link                     link = Terms and conditions
-    the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
+    the user sees that the radio button is selected     termsAndConditionsId  40
     the user should see the element                     link = Horizon Europe UK Application Privacy Notice (opens in a new window)
     the user clicks the button/link                     jQuery = button:contains("Done")
 

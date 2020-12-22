@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
-import org.innovateuk.ifs.finance.security.GrantClaimMaximumPermissionRules;
+import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,12 +20,12 @@ import static org.mockito.Mockito.when;
 
 public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTest<GrantClaimMaximumService> {
 
-    private GrantClaimMaximumPermissionRules grantClaimMaximumPermissionRules;
+    private CompetitionPermissionRules competitionPermissionRules;
     private CompetitionLookupStrategy competitionLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-        grantClaimMaximumPermissionRules = getMockPermissionRulesBean(GrantClaimMaximumPermissionRules.class);
+        competitionPermissionRules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
         competitionLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
     }
 
@@ -54,8 +54,8 @@ public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(
                 () -> classUnderTest.isMaximumFundingLevelConstant(competition.getId()),
-                () -> verify(grantClaimMaximumPermissionRules)
-                        .internalUserCanCheckMaxFundingLevelOverridden(
+                () -> verify(competitionPermissionRules)
+                        .externalUsersCannotViewCompetitionsInSetup(
                                 isA(CompetitionResource.class), isA(UserResource.class))
         );
     }

@@ -28,7 +28,7 @@ public interface GrantClaimMaximumService {
     ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource);
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', " +
-            "'MAX_FUNDING_LEVEL_OVERRIDDEN')")
+            "'READ')")
     ServiceResult<Boolean> isMaximumFundingLevelConstant(long competitionId);
 
     @SecuredBySpring(value = "UPDATE", securedType = GrantClaimMaximumResource.class,
