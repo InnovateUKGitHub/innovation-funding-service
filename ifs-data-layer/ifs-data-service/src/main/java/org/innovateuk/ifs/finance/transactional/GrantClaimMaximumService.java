@@ -23,7 +23,7 @@ public interface GrantClaimMaximumService {
     @SecuredBySpring(value = "READ_GRANT_CLAIM_MAXIMUM", description = "A user can see the grant claim maximums for " +
             "if they have an application for the competition")
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', " +
-            "'MAX_FUNDING_LEVEL_OVERRIDDEN')")
+            "'READ')")
     ServiceResult<Boolean> isMaximumFundingLevelOverridden(long competitionId);
 
     @SecuredBySpring(value = "UPDATE", securedType = GrantClaimMaximumResource.class,
