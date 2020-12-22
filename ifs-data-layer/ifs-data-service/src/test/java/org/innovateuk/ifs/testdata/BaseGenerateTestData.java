@@ -17,10 +17,7 @@ import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
-import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -190,7 +187,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:KTP cofunding single application}")
+    @Value("${ifs.generate.test.data.competition.filter.name:SBRI competition}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -391,7 +388,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines, externalUserLines),
                 taskExecutor);
 
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
+        applicationFinances.join(); //wait for finances to be created.
+
+        CompletableFuture<List<ProcurementMilestoneData>> procurementMilestones = CompletableFuture.supplyAsync(() ->
+                        applicationDataBuilderService.createProcurementMilestones(applicationData, applicationLine, externalUserLines),
+                taskExecutor);
+
+
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances, procurementMilestones);
 
         return allQuestionsAnswered.thenApplyAsync(done -> {
 
