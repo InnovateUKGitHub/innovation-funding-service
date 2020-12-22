@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-8549 KTP - Notification: unsuccessful and successful
 ...
+...               IFS-8974 New project team members get ISE when trying to access application team page
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
@@ -23,11 +25,22 @@ ${ktp_Lead_email}                   bob@knowledge.base
 &{ktp_Lead_Credentials}             email=${ktp_Lead_email}    password=${short_password}
 ${ktp_Partner_email}                jessica.doe@ludlow.co.uk
 &{ktp_Partner_Credentials}          email=${ktp_Partner_email}    password=${short_password}
+${MemberName}                       Member
+${MemberEmail}                      member_email@gmail.com
+&{MemberCredentials}                email=${MemberEmail}    password=${short_password}
 
 *** Test Cases ***
+Lead invites a new team member to the project
+    [Documentation]  IFS-8974
+    Given the user navigates to the page        ${server}/applicant/dashboard
+    And the user should see the element         jQuery = .task:contains("${KTP_application}") ~ .status:contains("Project in setup")
+    When The user clicks the button/link        link = ${KTP_application}
+    Then the lead invites a team member to the project
+
 Internal user marks the KTP application as unsuccessful
     [Documentation]  IFS-8549
-    Given the user navigates to the page                                        ${server}/management/competition/${KTP_competitonId}
+    Given Log in as a different user                                          &{ifs_admin_user_credentials}
+    And the user navigates to the page                                        ${server}/management/competition/${KTP_competitonId}
     When the user makes the application unsuccessful and sends notification
     Then Project users checks their email
 
@@ -62,9 +75,28 @@ The KTA checks the status of the application
     And the project user is unable to make any changes
     And the user is able to view the application overview page
 
+The new member is able to access the application overview
+    [Documentation]  IFS-8974
+    Given Log in as a different user                                &{MemberCredentials}
+    And the user should see the element                             jQuery = h2:contains("Previous") ~ ul li:contains("${KTP_application}"):contains("Unsuccessful")
+    When The user clicks the button/link                            link = ${KTP_application}
+    Then the user is able to view the application overview page
+
+Internal user sends funding notifications and releases feedback
+    [Documentation]  IFS-8974
+    Given Log in as a different user         &{ifs_admin_user_credentials}
+    When the user navigates to the page      ${server}/management/competition/${KTP_competitonId}
+    Then The user clicks the button/link     jQuery = button:contains("Release feedback")
+
+The new member is able to access the application overview after feedback is released
+    [Documentation]  IFS-8974
+    Given Log in as a different user                                &{MemberCredentials}
+    When The user clicks the button/link                            link = ${KTP_application}
+    Then the user is able to view the application overview page
+
 *** Keywords ***
 Custom suite setup
-    the user logs-in in new browser   &{ifs_admin_user_credentials}
+    the user logs-in in new browser   &{ktp_Lead_Credentials}
 
 the user makes the application unsuccessful and sends notification
      the user clicks the button/link    link = Input and review funding decision
@@ -144,3 +176,35 @@ Project users checks their email
     The user reads his email     ${ktp_Lead_email}              KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
     The user reads his email     bobs.mate@knowledge.base       KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
     The user reads his email     kevin.summers@ludlow.co.uk     KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+    The user reads his email     ${MemberEmail}                 KTP notifications: Notification regarding your application ${KTP_applicationId}: ${KTP_application}     Thank you for submitting your application for this funding competition
+
+the lead invites a team member to the project
+    the user clicks the button/link          link = Project team
+    the user clicks the button/link          jQuery = button:contains("Add team member")
+    the user enters text to a text field     css = input[name=name]   ${MemberName}
+    the user enters text to a text field     css = input[name=email]  ${MemberEmail}
+    the user clicks the button/link          jQuery = button:contains("Invite to")
+    Logout as user
+    the new member accepts the invitation
+
+the new member accepts the invitation
+    the user reads his email and clicks the link   ${MemberEmail}  KTP notifications: ${KTP_application}: Invitation for project ${KTP_applicationId}.  You have been invited to join the project ${KTP_application} by ${ktp_LeadOrgName}.  1
+    the member creates a new account               Memfname   Memlname   ${MemberEmail}
+
+the member creates a new account
+    [Arguments]   ${MemberFName}   ${MemberLName}   ${MemberEmail}
+    the user should see the element     jQuery = h1:contains("Join a project")
+    the user clicks the button/link     jQuery = a:contains("Create account")
+    the user fills in account details   ${MemberFName}   ${MemberLName}
+    the user clicks the button/link     jQuery = button:contains("Create account")
+    the user verifies their account     ${MemberEmail}
+    the user clicks the button/link     link = Sign in
+    the user can view the project       ${MemberEmail}
+
+The user can view the project
+     [Arguments]  ${MemberEmail}
+     Logging in and Error Checking     ${MemberEmail}   ${short_password}
+     the user should see the element   link = ${KTP_application}
+
+
+
