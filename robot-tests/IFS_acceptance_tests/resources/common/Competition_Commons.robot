@@ -158,12 +158,12 @@ the user fills in funding eligibility
     [Arguments]   ${researchCategory}  ${compType}
     the user clicks the button/link       link = Funding eligibility
     the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If   '${researchCategory}' == 'true' and '${compType}' == 'Expression of interest'    the user selects the checkbox     research-categories-33  #Feasibility
+    Run Keyword If   '${researchCategory}' == 'true' and "${compType}" == "Expression of interest"    the user selects the checkbox     research-categories-33  #Feasibility
     ...   ELSE IF    '${researchCategory}' == 'true'    run keywords     the user selects the checkbox     research-categories-33  #Feasibility
     ...                                   AND              the user selects the checkbox     research-categories-34  #Industrial
     ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
     the user clicks the button/link       jQuery = button:contains("Done")
-    Run Keyword If  '${compType}' == '${compType_HEUKAR}' or '${compType}' == '${compType_EOI}' or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
+    Run Keyword If  "${compType}" == "${compType_HEUKAR}" or "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
     ...  ELSE IF    '${researchCategory}' == 'false'       run keywords                        the user fills in maximum funding level percentage
     ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                   AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
@@ -196,8 +196,6 @@ the user fills in maximum funding level percentage
     the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
 
 the user should see read only funding level page
-    #the user should see the element         jQuery = p:contains("Maximum funding level percentage is set to %")
-    #the user should see the element         jQuery = p:contains("Click edit to change the maximum funding level percentage.")
     the user should see the element         jQuery = p:contains("Competition does not request applicants finance details.")
     the user should not see the element     jQuery = button:contains("Edit")
 

@@ -137,7 +137,8 @@ Once the project growth table is selected
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  collaborative     # 1 means 30%
-    And the user fills in the CS Funding eligibility            true
+    #And the user fills in the CS Funding eligibility            true
+    And the user fills in funding eligibility                   true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}

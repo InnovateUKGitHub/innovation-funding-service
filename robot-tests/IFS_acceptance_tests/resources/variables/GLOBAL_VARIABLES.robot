@@ -59,6 +59,7 @@ ${internationalLeadInternationalCompetition}             International Lead Inte
 ${openCompetitionPerformance_name}                       Performance testing competition
 ${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
 ${projectEligibilityLink}                                Project eligibility
+${fundingEligibilityTitle}                               Funding eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
