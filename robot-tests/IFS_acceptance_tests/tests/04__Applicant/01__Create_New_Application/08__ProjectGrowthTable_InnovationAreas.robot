@@ -52,9 +52,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
-    #And the user fills in the funding eligibility
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  collaborative     # 1 means 30%
-    #And the user fills in the CS Funding eligibility            true
     And the user fills in funding eligibility                   true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
@@ -240,7 +238,6 @@ Organisation server side validation when yes
     And the user should see the element    jQuery = .govuk-error-message:contains("${enter_a_valid_date}")
     And The user should see a field error  ${empty_field_warning_message}
     And The user should see a field error  ${enter_a_valid_date}
-    #And The user should see a field error    Enter your organisation size
     #TODO Enable the above checks when IFS-535 is ready
 
 Organisation client side validation when yes
