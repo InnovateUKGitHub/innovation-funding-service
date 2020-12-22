@@ -122,9 +122,9 @@
         <th:block th:if="${model.general.editable}">
             <button class="govuk-button">Done</button>
         </th:block>
-        <th:block th:if="${!model.general.editable and model.general.competition.financeType}">
+        <th:block th:if="${!model.general.editable and !model.general.state.preventEdit and model.general.competition.financeType}">
             <p class="govuk-body govuk-!-font-weight-bold">Click edit to change the maximum funding level percentage.</p>
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
+            <button type="submit" class="govuk-button">Edit</button>
         </th:block>
 
     </form>

@@ -104,7 +104,7 @@
                 <span class="pagination-part-title">Project eligibility</span>
             </a>
         </li>
-        <li class="next">
+        <li class="next" th:if="${!model.general.editable}">
             <a rel="next" title="Navigate to next part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='funding-level-percentage')}">
                 <span class="pagination-label">Next</span>
