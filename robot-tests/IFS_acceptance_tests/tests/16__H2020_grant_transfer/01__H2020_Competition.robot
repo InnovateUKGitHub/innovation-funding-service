@@ -48,7 +48,7 @@ User can populate Funding information and Project eligibility
     When the user completes funding information
     Then the user clicks the button/link                                        link = Return to setup overview
     And the user fills in the Competition Setup Project eligibility section     ${BUSINESS_TYPE_ID}  4
-    And the user fills in funding eligibility                                   false   ${compType_H2020}
+    And the user fills in the CS funding eligibility                            false   ${compType_H2020}
 
 User can complete the Application
     [Documentation]  IFS-5158

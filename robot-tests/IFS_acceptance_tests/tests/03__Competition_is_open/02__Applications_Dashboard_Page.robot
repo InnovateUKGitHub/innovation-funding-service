@@ -82,8 +82,6 @@ Comp admin can open the view mode of the application
     Then the user uploads the file                                         css = input.inputfile  ${5mb_pdf}
     When log in as a different user                                        &{Comp_admin1_credentials}
     And the user navigates to the page                                     ${applicationsForRTOComp}
-    #Then the user should see the element  id = sort-by
-    #And the user selects the option from the drop-down menu               id  id = sort-by
     And the user clicks the button/link                                    link = All applications
     When the user clicks the button/link                                   link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should be redirected to the correct page                 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}

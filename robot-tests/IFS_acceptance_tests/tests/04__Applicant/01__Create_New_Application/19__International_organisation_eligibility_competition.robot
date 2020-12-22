@@ -645,7 +645,7 @@ the user completes all categories except organisational eligibility category
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}     ${collaborative}  # 1 means 30%
     #the user fills in the CS Funding eligibility            ${researchCategory}
-    the user fills in funding eligibility                   ${researchCategory}    ${compType}
+    the user fills in the CS funding eligibility            ${researchCategory}    ${compType}
     the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}
     the user marks the Application as done                  ${projectGrowth}       ${compType}                 ${internationalLeadInternationalCompetition}
     the user fills in the CS Assessors                      GRANT

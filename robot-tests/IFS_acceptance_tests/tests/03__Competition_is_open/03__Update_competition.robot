@@ -377,10 +377,7 @@ the user resets the milestone data
 if textarea is empty user enters the text
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css = .editor  Funding rules for this competition are now entered.
     run keyword if  '${status}'=='FAIL'  Run keywords  Set Focus To Element     css = .editor
-     ...                                           AND  Set Focus To Element     css = .govuk-button[type="submit"]
-#    ...                                           AND  the user should not see a field error  ${empty_field_warning_message}
-#    ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
-#    ...                                           AND  the user should not see a field and summary error  ${empty_field_warning_message}
+     ...                                          AND  Set Focus To Element     css = .govuk-button[type="submit"]
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 the user resets the milestone data for milestone
