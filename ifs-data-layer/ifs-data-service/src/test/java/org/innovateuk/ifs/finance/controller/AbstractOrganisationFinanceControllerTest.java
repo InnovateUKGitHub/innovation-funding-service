@@ -1,17 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
@@ -20,6 +8,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AbstractOrganisationFinanceControllerTest extends BaseControllerMockMVCTest<AbstractOrganisationFinanceController> {
 
@@ -106,14 +103,5 @@ public class AbstractOrganisationFinanceControllerTest extends BaseControllerMoc
 
         verify(organisationFinanceService, times(1)).updateOrganisationWithoutGrowthTable(targetId, organisationId,
             organisationFinances);
-    }
-
-    @Test
-    public void isShowAidAgreement() throws Exception {
-        when(organisationFinanceService.isShowAidAgreement(targetId, organisationId)).thenReturn(serviceSuccess(true));
-
-        mockMvc.perform(get("/root/{targetId}/organisation/{organisationId}/finance/show-state-aid", targetId,
-            organisationId)).andExpect(status().isOk())
-            .andExpect(content().string("true"));
     }
 }

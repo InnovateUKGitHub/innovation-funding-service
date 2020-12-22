@@ -22,9 +22,11 @@ import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
-import org.innovateuk.ifs.supporter.transactional.SupporterAssignmentService;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionOrganisationConfigRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -59,6 +61,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationTypeService;
+import org.innovateuk.ifs.procurement.milestone.transactional.ApplicationProcurementMilestoneService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -85,6 +88,7 @@ import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRem
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
+import org.innovateuk.ifs.supporter.transactional.SupporterAssignmentService;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -223,6 +227,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
     protected InviteUserService inviteUserService;
     protected SupporterAssignmentService supporterAssignmentService;
+    protected ApplicationProcurementMilestoneService applicationProcurementMilestoneService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -346,6 +351,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         inviteUserService = serviceLocator.getBean(InviteUserService.class);
         supporterAssignmentService = serviceLocator.getBean(SupporterAssignmentService.class);
+        applicationProcurementMilestoneService = serviceLocator.getBean(ApplicationProcurementMilestoneService.class);
     }
 
     protected UserResource compAdmin() {
