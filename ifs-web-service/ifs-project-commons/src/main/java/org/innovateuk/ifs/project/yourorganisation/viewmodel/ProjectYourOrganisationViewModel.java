@@ -1,37 +1,34 @@
 package org.innovateuk.ifs.project.yourorganisation.viewmodel;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel {
+public class ProjectYourOrganisationViewModel extends ApplicationYourOrganisationViewModel {
     private final long projectId;
     private final String projectName;
     private final long organisationId;
     private final boolean readOnly;
-    private final boolean showHints;
     private final UserResource loggedInUser;
     private final boolean isAllEligibilityAndViabilityInReview;
 
     public ProjectYourOrganisationViewModel(long applicationId,
-                                            String competitionName,
-                                            boolean showStateAidAgreement,
+                                            CompetitionResource competition,
+                                            OrganisationResource organisation,
+                                            boolean maximumFundingLevelConstant,
                                             boolean showOrganisationSizeAlert,
-                                            boolean h2020,
                                             long projectId,
                                             String projectName,
-                                            long organisationId,
                                             boolean readOnly,
-                                            boolean showHints,
-                                            boolean procurementCompetition,
                                             UserResource loggedInUser,
                                             boolean isAllEligibilityAndViabilityInReview) {
-        super(applicationId, competitionName, showStateAidAgreement, showOrganisationSizeAlert, h2020, procurementCompetition);
+        super(applicationId, competition, organisation.getOrganisationTypeEnum(), maximumFundingLevelConstant, showOrganisationSizeAlert, false);
         this.projectId = projectId;
         this.projectName = projectName;
-        this.organisationId = organisationId;
+        this.organisationId = organisation.getId();
         this.readOnly = readOnly;
-        this.showHints = showHints;
         this.loggedInUser = loggedInUser;
         this.isAllEligibilityAndViabilityInReview = isAllEligibilityAndViabilityInReview;
     }
@@ -46,10 +43,6 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
 
     public long getOrganisationId() {
         return organisationId;
-    }
-
-    public boolean isShowHints() {
-        return showHints;
     }
 
     public boolean isReadOnly() {

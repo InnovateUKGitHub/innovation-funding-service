@@ -134,6 +134,8 @@ public class ApplicationFinanceServiceSecurityTest extends BaseServiceSecurityTe
                             .consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules)
                             .assessorCanSeeTheApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .projectPartnerCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 
@@ -150,6 +152,8 @@ public class ApplicationFinanceServiceSecurityTest extends BaseServiceSecurityTe
                             .internalUsersCanSeeTheResearchParticipantPercentageInApplications(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules)
                             .consortiumCanSeeTheResearchParticipantPercentage(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules)
+                            .projectPartnerCanSeeTheResearchParticipantPercentage(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 

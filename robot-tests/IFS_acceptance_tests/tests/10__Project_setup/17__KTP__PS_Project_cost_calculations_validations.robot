@@ -96,29 +96,29 @@ The user edits the KTP costs section
     the user enters text to a text field     jQuery = td:contains("Associate 1") ~ td input[id$="cost"]    30
     the user enters text to a text field     jQuery = td:contains("Associate 2") ~ td input[id$="duration"]    15
     the user enters text to a text field     jQuery = td:contains("Associate 2") ~ td input[id$="cost"]    35
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=ASSOCIATE_DEVELOPMENT_COSTS"]
     the user enters text to a text field     jQuery = td:contains("Associate 1") ~ td input[id$="cost"]    40
     the user enters text to a text field     jQuery = td:contains("Associate 2") ~ td input[id$="cost"]    45
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=KTP_TRAVEL"]
     the user enters text to a text field     jQuery = div:contains(Travel and subsistence) tr:nth-of-type(1) input[name^="ktp"][name$="eachCost"]    50
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=CONSUMABLES"]
     the user enters text to a text field     css = input[id^="consumableCost"][id$="cost"]    60
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=KNOWLEDGE_BASE"]
     the user enters text to a text field     css = table[id="knowledge-base-table"] input[id$="cost"]    70
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=ESTATE_COSTS"]
     the user enters text to a text field     css = input[id^="estate"][id$="cost"]    80
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=ASSOCIATE_SUPPORT"]
     the user enters text to a text field     css = input[id^="associateSupport"][id$="cost"]    90
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user clicks the button/link          css = a[href="?financeType=OTHER_COSTS"]
     the user enters text to a text field     css = input[id^="otherRows"][id$="estimate"]    100
-    the user clicks the button/link          css = button[name="save-eligibility"]
+    the user clicks the button/link          jQuery = .govuk-button:contains("Save")
     the user should see the element          css = [id = 'total-cost'][value='£720']
 
 the user approves viability

@@ -78,11 +78,4 @@ public class ApplicationYourOrganisationRestServiceImpl extends BaseRestService 
         return postWithRestResult(format(baseUrl + "/ktp-financial-years", applicationId, organisationId), finances, Void.class).
                 toServiceResult();
     }
-
-    @Override
-    public ServiceResult<Boolean> isShowAidAgreement(long applicationId, long organisationId) {
-        String url = format(baseUrl + "/show-state-aid", applicationId, organisationId);
-        return getWithRestResult(url, Boolean.class).toServiceResult();
-    }
-
 }
