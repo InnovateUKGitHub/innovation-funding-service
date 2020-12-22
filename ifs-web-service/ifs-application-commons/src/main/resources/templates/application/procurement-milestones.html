@@ -6,31 +6,34 @@
     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
         <div class="govuk-accordion__section"
             th:each="entry : ${form.milestones}">
-            <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value})"></th:block>
+            <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${form.getTotalCosts()})"></th:block>
         </div>
     </div>
+
+    <p class="govuk-body">Total payment requested <span class="govuk-!-margin-left-3" th:text="${form.totalPercentages}"></span><span class="govuk-!-margin-left-3" th:text="${form.totalCosts}"></span></p>
 </th:block>
 
-<th:block  th:fragment="milestones-row(id, milestone)">
+<th:block  th:fragment="milestones-row(id, milestone, totalCosts)">
+    <!--/*@thymesVar id="id" type="java.lang.String"*/-->
     <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
-    <th:block th:with="path=|milestones[${entry.key}]|">
+    <th:block th:with="path=|milestones[${id}]|">
+        <!--/*@thymesVar id="path" type="java.lang.String"*/-->
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" th:id="|accordion-finances-heading-${iterStat.index}|"
+                    <span class="govuk-accordion__section-button" th:id="|accordion-finances-heading-${id}|"
                           th:text="${milestone.description}">
                     </span>
-                <span class="finance-total" data-mirror="#section-total-labour"></span>
-                <!--/*<span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                      data-calculation-operations="/,*"
-                      data-calculation-fields="100, #total-cost, #section-total-labour"
-                      th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
-                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
-                     class="section-status section-incomplete icon-only error-marker"></div>*/-->
+                <span class="finance-total" th:attr="data-mirror=|[id='${path}.payment']|"></span>
+                <span class="finance-total"
+                      th:text="${milestone.getPercentageOfCost(totalCosts)}"></span>
+                <!--/*<div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
+                     class="section-status section-incomplete icon-
+                     only error-marker"></div>*/-->
             </h3>
 
         </div>
-        <div  th:id="|accordion-finances-content-${iterStat.index}|" class="govuk-accordion__section-content"
-              th:attr="aria-labelledby=|accordion-finances-heading-${iterStat.index}|">
+        <div  th:id="|accordion-finances-content-${id}|" class="govuk-accordion__section-content"
+              th:attr="aria-labelledby=|accordion-finances-heading-${id}|">
 
             <div class="width-15-percent">
                 <p class="govuk-body" th:text="${milestone.month}"></p>
@@ -60,7 +63,6 @@
                            required="required"
                     />
                 </div>
-                </p>
             </div>
         </div>
     </th:block>
