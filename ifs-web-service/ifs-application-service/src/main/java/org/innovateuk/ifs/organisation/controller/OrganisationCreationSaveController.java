@@ -40,7 +40,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                  Model model,
                                  HttpServletRequest request,
                                  UserResource user) {
-        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -59,7 +59,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
 
             BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
             validator.validate(organisationForm, bindingResult);

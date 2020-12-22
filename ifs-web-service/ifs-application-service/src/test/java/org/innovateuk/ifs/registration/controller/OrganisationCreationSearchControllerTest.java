@@ -23,7 +23,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.context.MessageSource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -100,7 +99,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         when(companiesHouseRestService.getOrganisationById(COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(restSuccess(organisationSearchResult));
-        when(organisationSearchRestService.searchOrganisation(anyLong(), anyString(), 0)).thenReturn(restSuccess(new ArrayList<>()));
+        when(organisationSearchRestService.searchOrganisation(anyLong(), anyString(), anyInt())).thenReturn(restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(restSuccess(true));
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource()));
 
@@ -118,7 +117,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationForm.setOrganisationName("NOMENSA LTD");
 
 
-
         organisationFormUseSearchResult = new OrganisationCreationForm();
         organisationFormUseSearchResult.setOrganisationSearchName("searchname");
         organisationFormUseSearchResult.setOrganisationName("actualname");
@@ -126,7 +124,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
-        ReflectionTestUtils.setField(controller, "newOrganisationSearchEnabled", true);
+        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
     }
 
     @Test
@@ -201,7 +199,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/find-organisation"))
                 .andExpect(model().attributeExists("organisationForm"))
-                .andExpect(model().attribute("improvedSearchEnabled", equalTo(true)))
+                .andExpect(model().attribute("isImprovedSearchEnabled", equalTo(true)))
                 .andExpect(model().attribute("searchLabel", equalTo(improvedSearchLabel)))
                 .andExpect(model().attribute("searchHint", equalTo("")));
     }

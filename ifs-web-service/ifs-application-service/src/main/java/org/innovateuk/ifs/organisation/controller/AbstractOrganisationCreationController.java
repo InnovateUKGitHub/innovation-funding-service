@@ -93,24 +93,19 @@ public abstract class AbstractOrganisationCreationController {
     @Value("${ifs.new.organisation.search.enabled:false}")
     protected Boolean isNewOrganisationSearchEnabled;
 
-    protected OrganisationCreationForm getOrganisationCreationForm(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, int pageNumber, boolean isOrganisationSearching) {
-        if(isNewOrganisationSearchEnabled) {
-            organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, pageNumber, isOrganisationSearching);
-        }
-        else {
-            organisationForm = getFormDataFromCookie(organisationForm, model, request);
-        }
-        return organisationForm;
-    }
-
     protected OrganisationCreationForm getFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
           return processedOrganisationCreationFormFromCookie(model, request).
                 orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
     }
 
     protected OrganisationCreationForm getImprovedSearchFormDataFromCookie(OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, int pageNumber, boolean isOrganisationSearching) {
-        return processedImprovedOrganisationCreationFormFromCookie(model, request, pageNumber, isOrganisationSearching).
-                orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
+       if (isNewOrganisationSearchEnabled) {
+           return processedImprovedOrganisationCreationFormFromCookie(model, request, pageNumber, isOrganisationSearching).
+                   orElseGet(() -> processedOrganisationCreationFormFromRequest(organisationForm, request));
+       }
+       else {
+          return getFormDataFromCookie(organisationForm, model, request);
+       }
     }
 
     private OrganisationCreationForm processedOrganisationCreationFormFromRequest(OrganisationCreationForm organisationForm, HttpServletRequest request){
@@ -228,7 +223,7 @@ public abstract class AbstractOrganisationCreationController {
         if (!organisationForm.isManualEntry() && isNotBlank(organisationForm.getSearchOrganisationId())) {
             OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationTypeId(), organisationForm.getSearchOrganisationId()).getSuccess();
             organisationForm.setOrganisationName(organisationSearchResult.getName());
-            if(isNewOrganisationSearchEnabled) {
+            if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
                 String localDateString = (String) organisationSearchResult.getExtraAttributes().get("date_of_creation");
                 organisationForm.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
                 organisationForm.setOrganisationAddress(organisationSearchResult.getOrganisationAddress());

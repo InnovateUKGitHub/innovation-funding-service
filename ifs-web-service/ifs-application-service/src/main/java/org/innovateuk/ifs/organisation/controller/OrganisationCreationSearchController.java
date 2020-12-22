@@ -60,7 +60,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.deleteOrganisationIdCookie(response);
 
         organisationForm.setOrganisationSearching(false);
-        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false );
+        organisationForm = getFormDataFromCookie(organisationForm, model, request);
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -81,7 +81,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        if (isNewOrganisationSearchEnabled) {
+        if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
             return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
         }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
@@ -111,7 +111,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                      @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber) {
 
         registrationCookieService.deleteOrganisationIdCookie(response);
-        organisationForm = getOrganisationCreationForm(organisationForm, model, request, pageNumber, true);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, pageNumber, true);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -134,7 +134,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
                                            HttpServletResponse response,
                                            UserResource user) {
 
-        organisationForm = getOrganisationCreationForm(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
         organisationForm.setSearchOrganisationId(searchOrganisationId);
 
         addSelectedOrganisation(organisationForm, model);

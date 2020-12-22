@@ -16,6 +16,10 @@ public class OrganisationExecutiveOfficerResource {
         this.name = name;
     }
 
+    public OrganisationExecutiveOfficerResource(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

@@ -8,7 +8,11 @@ public class OrganisationSicCodeResource {
     private String sicCode;
 
     public OrganisationSicCodeResource() {
+    }
 
+
+    public OrganisationSicCodeResource(String sicCode) {
+        this.sicCode = sicCode;
     }
 
     public OrganisationSicCodeResource(Long organisation, String sicCode) {
@@ -35,6 +39,7 @@ public class OrganisationSicCodeResource {
     public String getSicCode() {
         return sicCode;
     }
+
 
     public void setSicCode(String sicCode) {
         this.sicCode = sicCode;

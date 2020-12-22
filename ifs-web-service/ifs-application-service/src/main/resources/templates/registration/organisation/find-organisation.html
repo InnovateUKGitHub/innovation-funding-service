@@ -80,7 +80,7 @@
                        value="" />
             <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
         </div>
-        <th:block th:unless="${isImprovedSearchEnabled}">
+        <th:block th:if="${!isImprovedSearchEnabled || (isImprovedSearchEnabled && organisationForm.research)}">
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
                     <p class="govuk-body govuk-hint">Choose your organisation:</p>

@@ -153,7 +153,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
             org.setExtraAttributes(mapper.convertValue(companyItemsNode, Map.class));
             org.setOrganisationAddress(registeredOfficeAddress);
 
-            List<OrganisationSicCodeResource> sicCodeResources = getSicCode(companyDetails.get(), "sic_codes");
+            List<OrganisationSicCodeResource> sicCodeResources = getSicCode(companyItemsNode, "sic_codes");
             org.setOrganisationSicCodes(sicCodeResources);
 
             if (directorDetails.isPresent()) {
