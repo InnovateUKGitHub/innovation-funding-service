@@ -45,7 +45,7 @@ ${assessor2_email}                    alexis.colon@gmail.com
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396  IFS-8779
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
@@ -266,6 +266,7 @@ the user completes the application
     the user clicks the button/link                                                          link = Your project finances
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
+    the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
 the partner selects new answer choice

@@ -135,7 +135,7 @@ the user fills in the CS funding eligibility
     the user clicks the button/link       link = Funding eligibility
     the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
     Run Keyword If   '${researchCategory}' == 'true' and "${compType}" == "Expression of interest"    the user selects the checkbox     research-categories-33  #Feasibility
-    ...   ELSE IF    '${researchCategory}' == 'true'    run keywords     the user selects the checkbox     research-categories-33  #Feasibility
+    ...   ELSE IF    '${researchCategory}' == 'true'       run keywords     the user selects the checkbox     research-categories-33  #Feasibility
     ...                                   AND              the user selects the checkbox     research-categories-34  #Industrial
     ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
     the user clicks the button/link       jQuery = button:contains("Done")
@@ -144,28 +144,39 @@ the user fills in the CS funding eligibility
     ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                   AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
     ...                                   AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
-    ...  ELSE                                              run keywords                        the user fills funding level percentages
+    ...  ELSE                                              run keywords                        the user fills funding level percentages     ${compType}
     ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                   AND              the user should see the element     jQuery = button:contains("Edit")
     the user clicks the button/link       link = Return to setup overview
     the user should see the element       jQuery = div:contains("Funding eligibility") ~ .task-status-complete
 
 the user fills funding level percentages
+    [Arguments]   ${compType}
     the user should see the element          jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
     the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
     the user should see the element          jQuery = td:contains("Micro entity or small company")
     the user should see the element          jQuery = td:contains("Medium-sized company")
     the user should see the element          jQuery = td:contains("Large-sized company")
     # if the organisation funding values are different, while completing the application user can see research category validation in your funding page
-    the user enters text to a text field     maximums[0][0].maximum  75
-    the user enters text to a text field     maximums[0][1].maximum  75
-    the user enters text to a text field     maximums[0][2].maximum  75
-    the user enters text to a text field     maximums[1][0].maximum  65
-    the user enters text to a text field     maximums[1][1].maximum  65
-    the user enters text to a text field     maximums[1][2].maximum  65
-    the user enters text to a text field     maximums[2][0].maximum  35
-    the user enters text to a text field     maximums[2][1].maximum  35
-    the user enters text to a text field     maximums[2][2].maximum  35
+    # if funding level are same , user can see competition rules link in your funding
+    Run Keyword If  "${compType}" == "${compType_ATI}"     run keywords     the user enters text to a text field     maximums[0][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  75
+    ...  ELSE                                              run keywords     the user enters text to a text field     maximums[0][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][0].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[1][1].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[1][2].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[2][0].maximum  35
+    ...                                                    AND              the user enters text to a text field     maximums[2][1].maximum  35
+    ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  35
 
 the user fills in maximum funding level percentage
     the user enters text to a text field     id = maximum  10
@@ -240,6 +251,7 @@ the user marks the Assessed questions as complete
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
+    Run Keyword If  '${comp_type}' == '${compType_ATI}'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run keyword If  '${comp_type}' == '${compType_HEUKAR}'  the assessed questions are marked complete(HEUKAR type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}' or '${comp_type}' == '${compType_HEUKAR}'  the user opts no finances for EOI comp
