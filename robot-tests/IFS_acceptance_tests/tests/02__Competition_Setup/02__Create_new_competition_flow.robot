@@ -343,7 +343,7 @@ Funding eligibility: Mark as Done
     And the user enters text to a text field      maximums[2][0].maximum  75
     And the user enters text to a text field      maximums[2][1].maximum  75
     And the user clicks the button/link           jQuery = button:contains("Done")
-    When The user clicks the button/link          link = Return to setup overview
+    Then The user clicks the button/link          link = Return to setup overview
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
