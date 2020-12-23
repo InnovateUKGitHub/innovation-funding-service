@@ -61,12 +61,10 @@ public class TeamStatusController {
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
-        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
-
-        setLeadPartnerProjectDetailsTeamStatus(consortiumStatus, partnerProjectLocationRequired);
-        setOtherPartnersProjectDetailsTeamStatus(consortiumStatus, partnerProjectLocationRequired);
+        setLeadPartnerProjectDetailsTeamStatus(consortiumStatus);
+        setOtherPartnersProjectDetailsTeamStatus(consortiumStatus);
         setLeadPartnerProjectTeamStatus(consortiumStatus);
-        setLeadPartnerMonitoringOfficerStatus(consortiumStatus, partnerProjectLocationRequired);
+        setLeadPartnerMonitoringOfficerStatus(consortiumStatus);
         return competition;
     }
 
@@ -81,12 +79,12 @@ public class TeamStatusController {
         }
     }
 
-    private void setLeadPartnerProjectDetailsTeamStatus(ProjectTeamStatusResource consortiumStatus, boolean partnerProjectLocationRequired) {
+    private void setLeadPartnerProjectDetailsTeamStatus(ProjectTeamStatusResource consortiumStatus) {
 
         boolean allPartnerProjectLocationsSubmitted = consortiumStatus
                 .checkForAllPartners(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getPartnerProjectLocationStatus()));
 
-        boolean requiredDetailsComplete = (!partnerProjectLocationRequired || allPartnerProjectLocationsSubmitted);
+        boolean requiredDetailsComplete = (allPartnerProjectLocationsSubmitted);
 
         ProjectPartnerStatusResource leadProjectPartnerStatusResource = consortiumStatus.getLeadPartnerStatus();
         if (!(COMPLETE.equals(leadProjectPartnerStatusResource.getProjectDetailsStatus()) && requiredDetailsComplete)) {
@@ -94,17 +92,17 @@ public class TeamStatusController {
         }
     }
 
-    private void setOtherPartnersProjectDetailsTeamStatus(ProjectTeamStatusResource consortiumStatus, boolean partnerProjectLocationRequired) {
+    private void setOtherPartnersProjectDetailsTeamStatus(ProjectTeamStatusResource consortiumStatus) {
 
         CollectionFunctions.simpleMap(consortiumStatus.getOtherPartnersStatuses(),
-                projectPartnerStatusResource -> setOtherPartnerProjectDetailsTeamStatus(projectPartnerStatusResource, partnerProjectLocationRequired));
+                projectPartnerStatusResource -> setOtherPartnerProjectDetailsTeamStatus(projectPartnerStatusResource));
     }
 
-    private ProjectPartnerStatusResource setOtherPartnerProjectDetailsTeamStatus(ProjectPartnerStatusResource otherPartnerStatusResource, boolean partnerProjectLocationRequired) {
+    private ProjectPartnerStatusResource setOtherPartnerProjectDetailsTeamStatus(ProjectPartnerStatusResource otherPartnerStatusResource) {
 
         ProjectActivityStates partnerProjectLocationStatus = otherPartnerStatusResource.getPartnerProjectLocationStatus();
 
-        if (partnerProjectLocationRequired && !COMPLETE.equals(partnerProjectLocationStatus)) {
+        if (!COMPLETE.equals(partnerProjectLocationStatus)) {
                 otherPartnerStatusResource.setProjectDetailsStatus(ACTION_REQUIRED);
             } else {
                 otherPartnerStatusResource.setProjectDetailsStatus(COMPLETE);
@@ -113,14 +111,14 @@ public class TeamStatusController {
         return otherPartnerStatusResource;
     }
 
-    private void setLeadPartnerMonitoringOfficerStatus(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
+    private void setLeadPartnerMonitoringOfficerStatus(ProjectTeamStatusResource teamStatus) {
 
         boolean allPartnerProjectLocationsSubmitted = teamStatus
                 .checkForAllPartners(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getPartnerProjectLocationStatus()));
 
         ProjectPartnerStatusResource leadPartnerStatusResource = teamStatus.getLeadPartnerStatus();
 
-        if (partnerProjectLocationRequired && PENDING.equals(leadPartnerStatusResource.getMonitoringOfficerStatus()) && !allPartnerProjectLocationsSubmitted) {
+        if (PENDING.equals(leadPartnerStatusResource.getMonitoringOfficerStatus()) && !allPartnerProjectLocationsSubmitted) {
             leadPartnerStatusResource.setMonitoringOfficerStatus(NOT_STARTED);
         }
     }

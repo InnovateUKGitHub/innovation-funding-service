@@ -121,9 +121,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
-        boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
-        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired, partnerProjectLocationStatus);
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, partnerProjectLocationStatus);
         ProjectActivityStates projectTeamStatus = getProjectTeamStatus(project);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
         ProjectActivityStates bankDetailsStatus = getBankDetailsStatus(project);
@@ -144,7 +143,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 bankDetailsStatus,
                 financeChecksStatus,
                 spendProfileStatus,
-                getMonitoringOfficerStatus(project, projectDetailsStatus, locationPerPartnerRequired, partnerProjectLocationStatus),
+                getMonitoringOfficerStatus(project, projectDetailsStatus, partnerProjectLocationStatus),
                 documentsStatus,
                 getGrantOfferLetterState(project, bankDetailsStatus, spendProfileStatus, documentsStatus),
                 getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
@@ -153,8 +152,8 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 project.getApplication().getApplicationProcess().getProcessState(),
                 sentToIfsPa);
     }
-    private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired, ProjectActivityStates partnerProjectLocationStatus) {
-        if (locationPerPartnerRequired && PENDING.equals(partnerProjectLocationStatus)) {
+    private ProjectActivityStates getProjectDetailsStatus(Project project, ProjectActivityStates partnerProjectLocationStatus) {
+        if (PENDING.equals(partnerProjectLocationStatus)) {
             return PENDING;
         }
         return projectDetailsWorkflowHandler.isSubmitted(project) ?
@@ -268,30 +267,21 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
 
     private ProjectActivityStates getMonitoringOfficerStatus(Project project,
                                                              ProjectActivityStates projectDetailsStatus,
-                                                             final boolean locationPerPartnerRequired,
                                                              final ProjectActivityStates partnerProjectLocationStatus) {
 
         boolean monitoringOfficerExists = monitoringOfficerService.findMonitoringOfficerForProject(project.getId()).isSuccess();
 
         return createMonitoringOfficerCompetitionStatus(monitoringOfficerExists,
                                                         projectDetailsStatus,
-                                                        locationPerPartnerRequired,
                                                         partnerProjectLocationStatus,
                                                         project.getProjectState());
     }
 
     private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final boolean monitoringOfficerExists,
                                                                            final ProjectActivityStates leadProjectDetailsSubmitted,
-                                                                           final boolean locationPerPartnerRequired,
                                                                            final ProjectActivityStates partnerProjectLocationStatus,
                                                                            final ProjectState projectState) {
-
-        boolean allRequiredDetailsComplete;
-        if (locationPerPartnerRequired) {
-            allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE) && partnerProjectLocationStatus.equals(COMPLETE);
-        } else {
-            allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE);
-        }
+        boolean allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE) && partnerProjectLocationStatus.equals(COMPLETE);
 
         return getMonitoringOfficerStatus(monitoringOfficerExists, allRequiredDetailsComplete, projectState);
     }
@@ -439,10 +429,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private boolean projectLocationsCompletedIfNecessary(final Project project) {
-        boolean locationsRequired = project.getApplication().getCompetition().isLocationPerPartner();
-        if(!locationsRequired) {
-            return true;
-        }
         return project.getPartnerOrganisations()
                 .stream()
                 .noneMatch(org -> org.getPostcode() == null);

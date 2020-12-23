@@ -291,10 +291,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean projectLocationsCompletedIfNecessary(final Project project) {
-        boolean locationsRequired = project.getApplication().getCompetition().isLocationPerPartner();
-        if(!locationsRequired) {
-            return true;
-        }
         return project.getPartnerOrganisations()
                 .stream()
                 .noneMatch(org -> {

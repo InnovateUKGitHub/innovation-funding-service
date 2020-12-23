@@ -78,7 +78,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             when(inviteOrganisationRepository.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, application.getId(), organisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, application.getId(), organisation.getId())).thenReturn(true);
             when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
         }
 
@@ -89,7 +89,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherApplication.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherCollaborator.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), Role.COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), Role.COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(true);
         }
     }
 

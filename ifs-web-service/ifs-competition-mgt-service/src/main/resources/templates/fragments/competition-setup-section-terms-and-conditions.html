@@ -10,8 +10,9 @@
 
     <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 
-    <p class="govuk-body"><a th:text="${model.currentTermsAndConditions.name}"
+    <p class="govuk-body"><a th:text="|${model.currentTermsAndConditions.name} (opens in a new window)|"
                              th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}"
+                             target="_blank"
                              class="govuk-link">
         Terms and conditions</a>
     </p>
