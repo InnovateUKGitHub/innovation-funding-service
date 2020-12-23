@@ -17,6 +17,7 @@ public class CompetitionApplicationConfig {
     @Column
     private BigDecimal maximumFundingSought;
 
+    @Column
     private Boolean alwaysOpen;
 
     public CompetitionApplicationConfig() {

@@ -16,7 +16,6 @@ public class MilestoneResource {
         this.type = type;
         this.date = date;
         this.competitionId = competitionId;
-        this.assessmentPeriod = null;
     }
 
     public Long getId() {
