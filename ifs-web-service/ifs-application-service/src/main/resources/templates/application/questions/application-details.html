@@ -83,9 +83,9 @@
                            th:errorclass="govuk-input--error"
                            type="number"
                            required="required"
-                           th:attr="data-range-min=${model.minProjectDuration},
-                                    data-range-max=${model.maxProjectDuration},
-                                    data-range-errormessage=#{validation.project.duration.input.invalid(${model.minProjectDuration}, ${model.maxProjectDuration})}" />
+                           th:attr="data-range-min=${model.minProjectDurationDictatedByCompetition}?@{${model.minProjectDuration}},
+                                    data-range-max=${model.minProjectDurationDictatedByCompetition}?@{${model.maxProjectDuration}},
+                                    data-range-errormessage=${model.minProjectDurationDictatedByCompetition}?@{#{validation.project.duration.input.invalid(${model.minProjectDuration}, ${model.maxProjectDuration})}}" />
                 </div>
 
                 <div class="govuk-form-group"

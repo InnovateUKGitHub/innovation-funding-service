@@ -18,6 +18,7 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     private int minProjectDuration;
     private int maxProjectDuration;
+    private boolean minProjectDurationDictatedByCompetition;
 
     private Set<Long> competitionInnovationAreas;
     private String selectedInnovationAreaName;
@@ -30,11 +31,12 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
     private boolean ktpCompetition;
     private boolean canResubmit;
 
-    public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete) {
+    public ApplicationDetailsViewModel(ApplicationResource application, CompetitionResource competition, boolean open, boolean complete, int maxMilestoneMonth) {
         this.application = application;
         this.competitionIsClosingSoon = competition.isClosingSoon();
         this.competitionInnovationAreas = competition.getInnovationAreas();
-        this.minProjectDuration = competition.getMinProjectDuration();
+        this.minProjectDuration = Math.max(maxMilestoneMonth, competition.getMinProjectDuration());
+        this.minProjectDurationDictatedByCompetition = minProjectDuration == competition.getMinProjectDuration();
         this.maxProjectDuration = competition.getMaxProjectDuration();
         this.selectedInnovationAreaName = application.getInnovationArea().getName();
         this.procurementCompetition = competition.isProcurement();
@@ -68,6 +70,10 @@ public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     public int getMaxProjectDuration() {
         return maxProjectDuration;
+    }
+
+    public boolean isMinProjectDurationDictatedByCompetition() {
+        return minProjectDurationDictatedByCompetition;
     }
 
     public Set<Long> getCompetitionInnovationAreas() {

@@ -4,11 +4,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
+import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
@@ -46,20 +54,7 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
         }
 
         Competition competition = application.getCompetition();
-        if (isEmpty(application.getDurationInMonths())) {
-            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
-            rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
-        } else if (application.getDurationInMonths() < competition.getMinProjectDuration()
-                || application.getDurationInMonths() > competition.getMaxProjectDuration()) {
-            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
-            rejectValue(
-                    errors,
-                    "durationInMonths",
-                    "validation.project.duration.input.invalid",
-                    competition.getMinProjectDuration(),
-                    competition.getMaxProjectDuration()
-            );
-        }
+        validateProjectDuration(application, errors);
 
         if (competition.getFundingType() == PROCUREMENT) {
             if (isEmpty(application.getCompetitionReferralSource())) {
@@ -98,6 +93,32 @@ public class ApplicationDetailsMarkAsCompleteValidator implements Validator {
                     LOG.debug("MarkAsComplete application details validation message for previous application title: " + application.getPreviousApplicationTitle());
                     rejectValue(errors, "previousApplicationTitle", "validation.application.previous.application.title.required");
                 }
+            }
+        }
+    }
+
+
+    private void validateProjectDuration(Application application, Errors errors) {
+        if (isEmpty(application.getDurationInMonths())) {
+            rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
+        } else {
+            Competition competition = application.getCompetition();
+            int maxMonths = competition.getMaxProjectDuration();
+            int minMonths = Math.max(application.getMaxMilestoneMonth().orElse(0), competition.getMinProjectDuration());
+            boolean minDictatedByCompetition = minMonths == competition.getMinProjectDuration();
+            if (application.getDurationInMonths() > maxMonths ||
+                    (minDictatedByCompetition && application.getDurationInMonths() < minMonths)) {
+                rejectValue(
+                        errors,
+                        "durationInMonths",
+                        "validation.project.duration.input.invalid",
+                        minMonths,
+                        maxMonths);
+            } else if (application.getDurationInMonths() < minMonths) {
+                rejectValue(
+                        errors,
+                        "durationInMonths",
+                        "validation.project.duration.must.be.greater.than.milestones");
             }
         }
     }
