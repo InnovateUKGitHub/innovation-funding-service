@@ -371,8 +371,6 @@ The user fills in the Competition Setup Project eligibility section
     [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link                      link = Project eligibility
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
-    #the user selects the radio button                    researchCategoriesApplicable    false
-    #the user selects the option from the drop-down menu  100%  fundingLevelPercentage
     the user clicks the button twice                     css = label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  None     researchParticipation
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]

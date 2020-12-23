@@ -237,7 +237,6 @@ Organisation server side validation when yes
     And the user should see the element    jQuery = .govuk-error-message:contains("${enter_a_valid_date}")
     And The user should see a field error  ${empty_field_warning_message}
     And The user should see a field error  ${enter_a_valid_date}
-    #TODO Enable the above checks when IFS-535 is ready
 
 Organisation client side validation when yes
     [Documentation]    INFUND-6395

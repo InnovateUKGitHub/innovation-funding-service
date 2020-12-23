@@ -17,7 +17,6 @@ Resource        ../../../resources/common/Competition_Commons.robot
 *** Variables ***
 ${comp_name}         The Prince Trust competition
 ${application_name}  The Prince Trust Application
-#${comp_type}         The Prince's Trust
 
 *** Test Cases ***
 Comp Admin creates The Prince's Trust type competition
