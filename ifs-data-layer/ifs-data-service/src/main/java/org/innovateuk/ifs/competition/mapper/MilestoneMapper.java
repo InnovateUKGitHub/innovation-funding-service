@@ -11,7 +11,8 @@ import org.mapstruct.Mappings;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        CompetitionMapper.class
+        CompetitionMapper.class,
+        AssessmentPeriodMapper.class
     }
 )
 public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneResource, Long> {
