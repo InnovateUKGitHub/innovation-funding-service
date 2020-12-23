@@ -6,12 +6,14 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 
+import java.util.List;
+
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
 
     private final long applicationId;
     private final boolean fullyFunded;
     private final long financeSectionId;
-    private final ApplicationProcurementMilestoneResource applicationProcurementMilestoneResource;
+    private final List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResource;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
@@ -20,7 +22,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final boolean ktpCompetition;
 
     public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
-                                    ApplicationProcurementMilestoneResource applicationProcurementMilestoneResource,
+                                    List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResource,
                                     ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                     ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                                     ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
@@ -55,7 +57,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         return financeSectionId;
     }
 
-    public ApplicationProcurementMilestoneResource getApplicationProcurementMilestoneResource() {
+    public List<ApplicationProcurementMilestoneResource> getApplicationProcurementMilestoneResource() {
         return applicationProcurementMilestoneResource;
     }
 
