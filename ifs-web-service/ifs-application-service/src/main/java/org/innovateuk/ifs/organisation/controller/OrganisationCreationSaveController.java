@@ -61,13 +61,13 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    HttpServletResponse response) {
         organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
 
-            BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
-            validator.validate(organisationForm, bindingResult);
+        BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
+        validator.validate(organisationForm, bindingResult);
 
-            //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
-            if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
-                return "redirect:/";
-            }
+        //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
+        if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
+            return "redirect:/";
+        }
         OrganisationResource organisationResource = getOrganisationResourceToPersist(organisationForm);
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
         return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
