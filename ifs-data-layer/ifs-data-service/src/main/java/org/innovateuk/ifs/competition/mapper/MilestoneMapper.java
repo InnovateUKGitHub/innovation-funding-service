@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.List;
+
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
@@ -17,15 +19,23 @@ import org.mapstruct.Mappings;
 )
 public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneResource, Long> {
 
-    @Mappings(
-            @Mapping(source = "competition.id", target = "competitionId")
-    )
+    @Mappings({
+            @Mapping(source = "competition.id", target = "competitionId"),
+            @Mapping(source = "assessmentPeriod.id", target = "assessmentPeriod"),
+    })
+    @Override
     public abstract MilestoneResource mapToResource(Milestone domain);
 
-    @Mappings(
-            @Mapping(source = "competitionId", target = "competition")
-    )
+    @Mappings({
+            @Mapping(source = "competitionId", target = "competition"),
+            @Mapping(source = "assessmentPeriod", target = "assessmentPeriod"),
+    })
+    @Override
     public abstract Milestone mapToDomain(MilestoneResource resource);
+
+    public abstract List<Milestone> mapToDomain(List<MilestoneResource> milestoneResources);
+
+    public abstract List<MilestoneResource> mapToResource(List<Milestone> milestones);
 
     public Long mapMilestoneToId(Milestone object) {
         if (object == null) {

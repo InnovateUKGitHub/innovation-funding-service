@@ -24,6 +24,7 @@ public class AssessmentPeriod extends ParentMilestoneBase<Milestone> {
         super(type, competition);
     }
 
+    @Override
     public List<Milestone> getChildren() {
         return children;
     }

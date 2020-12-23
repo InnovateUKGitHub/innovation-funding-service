@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 /**
  * Abstract Milestone.
  */
-@Entity
 @DiscriminatorFormula(
         "CASE WHEN type IN ('ASSESSMENT_PERIOD') THEN 'ASSESSMENT_PERIOD' " +
         " ELSE 'MILESTONE' end"
