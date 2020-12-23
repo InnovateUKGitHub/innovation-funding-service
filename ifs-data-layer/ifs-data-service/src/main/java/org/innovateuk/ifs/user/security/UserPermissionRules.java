@@ -258,13 +258,18 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "The user, as well as internal users can read the user's process role")
     public boolean usersAndInternalUsersCanViewProcessRole(ProcessRoleResource processRole, UserResource user) {
-        return processRole.getUser().equals(user.getId()) || isInternal(user);
+        return isInternal(user);
     }
 
     @PermissionRule(value = "READ", description = "Assessors can view the process roles of members of individual Consortiums on the various Applications that they are assessing")
     public boolean assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing(ProcessRoleResource processRole, UserResource user) {
         List<Application> applicationsThatThisUserIsAssessing = getApplicationsRelatedToUserByProcessRoles(user, assessorProcessRoleFilter);
         return simpleMap(applicationsThatThisUserIsAssessing, Application::getId).contains(processRole.getApplicationId());
+    }
+
+    @PermissionRule(value = "READ", description = "External finance users can read.")
+    public boolean readExternalFinance(ProcessRoleResource processRole, UserResource user) {
+        return isExternalFinanceUser(user);
     }
 
     @PermissionRule(value = "CHECK_USER_APPLICATION", description = "The user can check if they have an application for the competition")

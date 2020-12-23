@@ -132,7 +132,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
      */
     private void assertAddMandatoryValueAndNowSubmitted(ProjectDetailsState originalState, BiFunction<Project, ProjectUser, Boolean> handlerFn, ProjectDetailsEvent expectedEvent) {
         Project project = newProject().
-                withApplication(newApplication().withCompetition(newCompetition().withLocationPerPartner(true).build()).build()).
+                withApplication(newApplication().withCompetition(newCompetition().build()).build()).
                 withTargetStartDate(LocalDate.of(2016, 11, 01)).
                 withPartnerOrganisations(newPartnerOrganisation().withOrganisation(newOrganisation().build()).withPostcode("POSTCODE").build(1)).
                 withAddress(newAddress().build()).

@@ -26,7 +26,6 @@ import static org.innovateuk.ifs.competition.resource.CollaborationLevel.*;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
@@ -64,8 +63,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
                 .thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationResource.getId(), COLLABORATOR))
                 .thenReturn(true);
-        when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(),
-                COLLABORATOR, applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
+        when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(),
+                COLLABORATOR, applicationResource.getId(), organisationResource.getId())).thenReturn(true);
     }
 
     @Test

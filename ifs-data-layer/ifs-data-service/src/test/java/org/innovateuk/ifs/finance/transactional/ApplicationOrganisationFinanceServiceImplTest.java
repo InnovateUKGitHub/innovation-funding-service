@@ -15,10 +15,7 @@ import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.AuthenticationHelper;
@@ -44,7 +41,8 @@ import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -227,82 +225,6 @@ public class ApplicationOrganisationFinanceServiceImplTest extends BaseServiceUn
 
         assertEquals(organisationFinancesWithoutGrowthTableResource.getHeadCount(), employeesAndTurnover.getEmployees());
         assertEquals(organisationFinancesWithoutGrowthTableResource.getTurnover(), employeesAndTurnover.getTurnover());
-    }
-
-    @Test
-    public void isShowAidAgreementForStateAid() {
-
-        CompetitionResource competition = newCompetitionResource().withFundingRules(FundingRules.STATE_AID).build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
-                .withId(organisation.getId()).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competition));
-        when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisationResource));
-
-        Boolean result = service.isShowAidAgreement(application.getId(), organisation.getId()).getSuccess();
-
-        assertTrue(result);
-    }
-
-    @Test
-    public void isShowAidAgreementForSubsidyControl() {
-
-        CompetitionResource competition = newCompetitionResource().withFundingRules(FundingRules.SUBSIDY_CONTROL).build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
-                .withId(organisation.getId()).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competition));
-        when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisationResource));
-
-        Boolean result = service.isShowAidAgreement(application.getId(), organisation.getId()).getSuccess();
-
-        assertTrue(result);
-    }
-
-    @Test
-    public void isNotShowAidAgreementForNotAid() {
-
-        CompetitionResource competition = newCompetitionResource().withFundingRules(FundingRules.NOT_AID).build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
-                .withId(organisation.getId()).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competition));
-        when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisationResource));
-
-        Boolean result = service.isShowAidAgreement(application.getId(), organisation.getId()).getSuccess();
-
-        assertFalse(result);
-    }
-
-    @Test
-    public void isNotShowAidAgreementForNull() {
-
-        CompetitionResource competition = newCompetitionResource().withFundingRules(null).build();
-        Application application = newApplication().build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
-        Organisation organisation = newOrganisation().build();
-        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
-                .withId(organisation.getId()).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
-
-        when(applicationService.getApplicationById(application.getId())).thenReturn(serviceSuccess(applicationResource));
-        when(applicationService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competition));
-        when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisationResource));
-
-        Boolean result = service.isShowAidAgreement(application.getId(), organisation.getId()).getSuccess();
-
-        assertFalse(result);
     }
 
     @Override
