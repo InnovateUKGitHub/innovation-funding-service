@@ -4,7 +4,6 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 /**

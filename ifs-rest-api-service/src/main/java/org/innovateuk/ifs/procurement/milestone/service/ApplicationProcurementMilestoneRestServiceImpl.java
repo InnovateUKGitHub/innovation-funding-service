@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.procurement.milestone.service;
 
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.springframework.core.ParameterizedTypeReference;

@@ -4,19 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
-import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;

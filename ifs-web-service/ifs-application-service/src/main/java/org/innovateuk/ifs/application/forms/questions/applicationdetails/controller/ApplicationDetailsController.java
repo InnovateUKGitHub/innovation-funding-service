@@ -15,7 +15,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;

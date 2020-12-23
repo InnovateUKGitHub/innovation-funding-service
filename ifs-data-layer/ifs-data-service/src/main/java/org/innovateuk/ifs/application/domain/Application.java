@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.commons.error.ValidationMessages.rejectValue;
 
 /**
  * Application defines database relations and a model to use client side and server side.
