@@ -20,19 +20,19 @@
                 organisation name or company registration number and search again.</p>
            <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
                <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
+                <div class="govuk-grid-column-one-third">
                     <div style="margin-top: 0">&nbsp;</div>
                 </div>
-                <div class="govuk-grid-column-one-half alignright">
-                    <div class="form-search" style="margin-top: 0">
-
-                         <input class="govuk-input search-query"
+                <div class="govuk-grid-column-two-thirds alignright">
+                     <div class="form-search" style="margin-top: 0">
+                          <input class="govuk-input search-query"
                                        th:field="*{organisationSearchName}"
                                        th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
                                        type="text"
                                        th:attr="data-required-errormessage=#{validation.standard.organisationsearchname.required}"
                                        required="required"
-                                       value="${organisationForm.organisationSearchName}" />
+                                       value="${organisationForm.organisationSearchName}"
+                                       placeholder="Search for organisation name or company registration number"/>
                         <input type="submit" class="btn" id="org-search" name="search-organisation">
 
                      </div>
