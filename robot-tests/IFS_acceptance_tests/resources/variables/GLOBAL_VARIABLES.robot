@@ -288,8 +288,8 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
-${existingAcademicPartnerOrgName}     WORTH IT LTD
-${newPartnerOrgName}                  INNOVATE LTD
+${existingAcademicPartnerOrgName}     Aviva Plc
+${newPartnerOrgName}                  ROYAL MAIL PLC
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
@@ -335,7 +335,8 @@ ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}      60
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}      53532322
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    100000
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}   60
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
+#${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     ROYAL MAIL PLC
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}

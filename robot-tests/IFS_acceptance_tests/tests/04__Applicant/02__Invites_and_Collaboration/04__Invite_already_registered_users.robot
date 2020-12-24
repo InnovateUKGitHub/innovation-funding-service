@@ -25,7 +25,7 @@ The user clicks the login link
     When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the element                jQuery = dt:contains("INNOVATE LTD")
+    Then the user should see the element                jQuery = dt:contains("ROYAL MAIL PLC")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     Then the user should see the element                jQuery = h1:contains("Application overview")
 
@@ -66,7 +66,7 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link       jQuery = .govuk-button:contains("Continue")
     the user clicks the button/link       css = .govuk-button[type="submit"]    #Save and continue
     the user clicks the button/link       link = Application team
-    the user clicks the button/link       jQuery = button:contains("Add person to INNOVATE LTD")
+    the user clicks the button/link       jQuery = button:contains("Add person to ROYAL MAIL PLC")
     The user enters text to a text field  css = [name=name]    Olivier Giroud
     The user enters text to a text field  css = [name=email]     ${test_mailbox_one}+invite2@gmail.com
     the user clicks the button/link       jQuery = button:contains("Invite to application")

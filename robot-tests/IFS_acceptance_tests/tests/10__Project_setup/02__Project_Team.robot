@@ -204,7 +204,7 @@ Ifs Admin is able to add a new partner organisation
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
-    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  innovate  INNOVATE LTD
+    Then a new organisation is able to accept project invite   Name  Surname  ${ifsAdminAddOrgEmail}  ROYAL  ROYAL MAIL PLC
 
 IFS admin checks for staus update after new org added
     [Documentation]  IFS-6783
@@ -216,7 +216,7 @@ Two organisations with the same name are not able to join
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
-    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  innovate  INNOVATE LTD
+    Then the same organisation isnt able to join the project   Name  Surname  tesTwoOrgs@test.nom  ROYAL  ROYAL MAIL PLC
     [Teardown]  the user navigates to the page                 ${LOGIN_URL}
 
 Ifs Admin is able to remove a partner organisation
@@ -240,7 +240,7 @@ Project finance is able to add a new partner organisation
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
-    Then a new organisation is able to accept project invite   FName  Surname  ${intFinanceAddOrgEmail}  Nomensa  NOMENSA LTD
+    Then a new organisation is able to accept project invite   FName  Surname  ${intFinanceAddOrgEmail}  FIRSTGROUP  FIRSTGROUP PLC
     And log in as a different user                             &{internal_finance_credentials}
     And the internal user checks for status after new org added/removed
 
@@ -289,7 +289,7 @@ New partner can join project
 
 New partner can provide bank details
     [Documentation]  IFS-6871
-    ${organisationId} =  get organisation id by name  NOMENSA LTD
+    ${organisationId} =  get organisation id by name  FIRSTGROUP PLC
     Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
     When the applicant fills in bank details
     Then internal and external users see correct status
@@ -509,7 +509,7 @@ the internal user checks for status after new org added/removed
 
 internal user should see entries in activity log after partner org added/removed
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/project/${addNewPartnerOrgProjID}/activity-log
-    the user should see the element       jQuery = li div span:contains("NOMENSA LTD") strong:contains("Organisation added:")
+    the user should see the element       jQuery = li div span:contains("FIRSTGROUP PLC") strong:contains("Organisation added:")
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId6}/project/${addNewPartnerOrgProjID6}/activity-log
     the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View bank details")
     the user should not see the element   jQuery = li div:contains("for SmithZone") ~ div a:contains("View finance viability")
@@ -538,7 +538,7 @@ Custom suite teardown
 the internal partner does not see link for added partner
     the user navigates to the page        ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status/all
     the user clicks the button/link       css = .action ~ .action a
-    the user clicks the button/link       jQuery = tr:contains("NOMENSA LTD") td:nth-child(4)
+    the user clicks the button/link       jQuery = tr:contains("FIRSTGROUP PLC") td:nth-child(4)
     the user should not see the element   link = Review all changes to project finances
 
 the internal patner does see link for existing partner

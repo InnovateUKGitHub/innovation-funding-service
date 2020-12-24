@@ -178,7 +178,7 @@ the user successfully completes application
     user selects where is organisation based                        isNotInternational
     the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House            innovate  INNOVATE LTD
+    the user selects his organisation in Companies House            ROYAL  ROYAL MAIL PLC
     the user should be redirected to the correct page               ${SERVER}/registration/register
     the user enters the details and clicks the create account       ${firstName}  ${lastName}  ${email}  ${short_password}
     the user reads his email and clicks the link                    ${email}  Please verify your email address  Once verified you can sign into your account.
