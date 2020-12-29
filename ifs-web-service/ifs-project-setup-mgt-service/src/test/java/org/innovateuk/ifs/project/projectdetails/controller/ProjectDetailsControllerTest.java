@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneBuilder;
+import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
@@ -29,10 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -43,6 +42,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -52,8 +52,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
 
@@ -77,6 +76,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private ApplicationRestService applicationRestService;
+
+    @Mock
+    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
     @Spy
     @SuppressWarnings("unused")
@@ -462,6 +464,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(new ArrayList<>()));
 
         performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
 
@@ -491,6 +494,35 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void updateProjectDurationWhenDurationIsLessThanMaxMilestone() throws Exception {
+
+        long competitionId = 1L;
+        long projectId = 11L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT).build();
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId()).build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(Arrays.asList(
+                newProjectProcurementMilestoneResource().withMonth(1).build(),
+                newProjectProcurementMilestoneResource().withMonth(5).build())));
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("durationInMonths", "4"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/edit-duration"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "durationInMonths", "PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_MAX_EXISTING_MILESTONE"))
+                .andReturn();
+
+        verify(projectDetailsService, never()).updateProjectDuration(anyLong(), anyLong());
+    }
+
+    @Test
     public void updateProjectDurationFailure() throws Exception {
 
         long competitionId = 1L;
@@ -508,6 +540,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(new ArrayList<>()));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -529,6 +562,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String durationInMonths = "18";
 
         when(projectDetailsService.updateProjectDuration(projectId, 18L)).thenReturn(serviceSuccess());
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(new ArrayList<>()));
+
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
