@@ -81,20 +81,20 @@
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
                                     th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
-                                    th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option
+                                    th:text="${section_type.displayName}">option
                             </option>
                         </th:block>
                         <th:block th:unless="*{section}">
                             <th:block th:if="${model.querySection}">
                                 <option th:value="${section_type.name()}"
                                         th:selected="${#strings.toLowerCase(section_type.name()) == #strings.toLowerCase(model.querySection)}"
-                                        th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">
+                                        th:text="${section_type.displayName}">
                                     option
                                 </option>
                             </th:block>
                             <th:block th:unless="${model.querySection}">
                                 <option th:value="${section_type.name()}"
-                                        th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">
+                                        th:text="${section_type.displayName}">
                                     option
                                 </option>
                             </th:block>
