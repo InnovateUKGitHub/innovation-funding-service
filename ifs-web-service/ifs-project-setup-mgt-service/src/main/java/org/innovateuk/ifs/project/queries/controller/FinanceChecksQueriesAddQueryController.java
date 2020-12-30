@@ -115,7 +115,7 @@ public class FinanceChecksQueriesAddQueryController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             FinanceChecksSectionType section = null;
             for (FinanceChecksSectionType value : FinanceChecksSectionType.values()) {
-                if (value.name().toUpperCase().equals(form.getSection().toUpperCase())) {
+                if (value.name().equals(form.getSection().toUpperCase())) {
                     section = value;
                 }
             }
