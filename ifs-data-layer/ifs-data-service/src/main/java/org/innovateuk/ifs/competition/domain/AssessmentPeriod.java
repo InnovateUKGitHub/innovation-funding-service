@@ -4,19 +4,20 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An Assessment Period. {@link AssessmentPeriod}s contain a List of {@link Milestone}s.
  */
 @Entity
 @DiscriminatorValue("ASSESSMENT_PERIOD")
-public class AssessmentPeriod extends ParentMilestoneBase<Milestone> {
+public class AssessmentPeriod extends Milestone {
 
     @OneToMany(mappedBy = "assessmentPeriod", cascade = CascadeType.ALL)
     @OrderBy("priority ASC")
     private List<Milestone> children;
 
-    AssessmentPeriod() {
+    public AssessmentPeriod() {
         // default constructor
     }
 
@@ -24,7 +25,6 @@ public class AssessmentPeriod extends ParentMilestoneBase<Milestone> {
         super(type, competition);
     }
 
-    @Override
     public List<Milestone> getChildren() {
         return children;
     }

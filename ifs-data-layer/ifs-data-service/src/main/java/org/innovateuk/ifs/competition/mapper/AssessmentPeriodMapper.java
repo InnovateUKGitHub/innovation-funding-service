@@ -5,28 +5,20 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.resource.AssessmentPeriodResource;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import java.util.List;
 
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                CompetitionMapper.class
+                MilestoneMapper.class
         }
 )
 public abstract class AssessmentPeriodMapper extends BaseMapper<AssessmentPeriod, AssessmentPeriodResource, Long> {
 
-    @Mappings({
-            @Mapping(source = "competition.id", target = "competitionId")
-    })
     @Override
     public abstract AssessmentPeriodResource mapToResource(AssessmentPeriod domain);
 
-    @Mappings({
-            @Mapping(source = "competitionId", target = "competition")
-    })
     @Override
     public abstract AssessmentPeriod mapToDomain(AssessmentPeriodResource resource);
 
@@ -39,9 +31,5 @@ public abstract class AssessmentPeriodMapper extends BaseMapper<AssessmentPeriod
             return null;
         }
         return object.getId();
-    }
-
-    public AssessmentPeriod build() {
-        return createDefault(AssessmentPeriod.class);
     }
 }

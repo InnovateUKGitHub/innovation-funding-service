@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.resource;
 
 import java.util.List;
 
-public class AssessmentPeriodResource extends MilestoneBaseResource {
+public class AssessmentPeriodResource extends MilestoneResource {
 
     private List<MilestoneResource> children;
 

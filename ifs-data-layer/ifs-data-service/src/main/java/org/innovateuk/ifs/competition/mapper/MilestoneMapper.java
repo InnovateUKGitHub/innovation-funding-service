@@ -21,14 +21,14 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
 
     @Mappings({
             @Mapping(source = "competition.id", target = "competitionId"),
-            @Mapping(source = "assessmentPeriod.id", target = "assessmentPeriod"),
+            @Mapping(source = "assessmentPeriod.id", target = "assessmentPeriodId"),
     })
     @Override
     public abstract MilestoneResource mapToResource(Milestone domain);
 
     @Mappings({
             @Mapping(source = "competitionId", target = "competition"),
-            @Mapping(source = "assessmentPeriod", target = "assessmentPeriod"),
+            @Mapping(source = "assessmentPeriodId", target = "assessmentPeriod"),
     })
     @Override
     public abstract Milestone mapToDomain(MilestoneResource resource);
@@ -43,9 +43,4 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
         }
         return object.getId();
     }
-
-    public Milestone build() {
-        return createDefault(Milestone.class);
-    }
-
 }
