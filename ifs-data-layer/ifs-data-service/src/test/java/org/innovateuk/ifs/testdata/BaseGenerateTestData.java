@@ -192,7 +192,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${ifs.generate.test.data.competition.filter.name:KTP cofunding single application}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+        //BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+        BaseGenerateTestData.competitionNameForFilter = "KTP cofunding single application";
     }
 
     @Before

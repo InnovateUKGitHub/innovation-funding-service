@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.domain;
 
+import org.hibernate.annotations.DiscriminatorFormula;
+import org.hibernate.annotations.DiscriminatorOptions;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
@@ -10,8 +12,13 @@ import java.util.function.Consumer;
  * Represents a {@link Competition} Milestone, with or without a preset date.
  * {@link Milestone}s may have an assessment period {@link AssessmentPeriod} attached to them.
  */
+@DiscriminatorFormula(
+        "CASE WHEN type IN ('ASSESSMENT_PERIOD') THEN 'ASSESSMENT_PERIOD' ELSE 'MILESTONE' end"
+)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorOptions(force = true)
 @Entity
-@DiscriminatorColumn(name = "type")
+@Table(name = "milestone")
 public class Milestone {
 
     @Id
