@@ -112,7 +112,7 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
     the user enters text to a text field  id = activityCode  133t
-    textfield should contain              css = input[name="competitionCode"]  21
+    textfield should contain              css = input[name="competitionCode"]  22
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
