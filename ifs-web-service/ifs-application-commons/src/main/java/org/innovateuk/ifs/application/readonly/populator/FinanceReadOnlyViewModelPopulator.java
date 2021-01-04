@@ -49,8 +49,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         CompetitionResource competition = data.getCompetition();
         ApplicationResource application = data.getApplication();
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
-        //TODO Get organisation id
-        Future<List<ApplicationProcurementMilestoneResource>> applicationProcurementMilestoneResource = async(() -> applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(application.getId(), 117).getSuccess());
+        Future<List<ApplicationProcurementMilestoneResource>> applicationProcurementMilestoneResource = async(() -> applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(application.getId(), application.getLeadOrganisationId()).getSuccess());
         Future<ApplicationFinanceSummaryViewModel> applicationFinanceSummaryViewModel = async(() -> applicationFinanceSummaryViewModelPopulator.populate(application.getId(), data.getUser()));
         Future<ApplicationResearchParticipationViewModel> applicationResearchParticipationViewModel = async(() -> applicationResearchParticipationViewModelPopulator.populate(application.getId()));
         Future<ApplicationFundingBreakdownViewModel> applicationFundingBreakdownViewModel = async(() -> applicationFundingBreakdownViewModelPopulator.populate(application.getId(), data.getUser()));
