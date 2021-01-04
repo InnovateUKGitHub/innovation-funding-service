@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
+import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HEUKAR;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -43,6 +45,8 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private CompetitionRestService competitionRestService;
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
     @Mock
     private UserService userService;
 
@@ -148,6 +152,25 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("h2020-grant-transfer-track"));
+    }
+
+    @Test
+    public void heukarTrack() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
+                .withCompetitionTypeEnum(HEUKAR)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withApplicationState(SUBMITTED)
+                .withCompetition(competition.getId())
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+
+        mockMvc.perform(get("/application/" + application.getId() + "/track"))
+                .andExpect(view().name("heukar-application-track"));
     }
 
     @Test

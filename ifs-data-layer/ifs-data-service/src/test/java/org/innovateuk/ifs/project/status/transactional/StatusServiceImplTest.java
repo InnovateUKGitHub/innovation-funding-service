@@ -477,7 +477,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         // test MO status is pending and not action required when project details submitted
         project.setTargetStartDate(LocalDate.now());
         project.setAddress(newAddress().build());
-        competition.setLocationPerPartner(false);
+        partnerOrganisations.get(0).setPostcode("S103HR");
         when(projectDetailsWorkflowHandler.isSubmitted(any(Project.class))).thenReturn(true);
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(serviceFailure(CommonErrors.notFoundError(MonitoringOfficer.class)));
 
@@ -489,7 +489,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 .withProjectDetailsStatus(COMPLETE)
                 .withProjectTeamStatus(ACTION_REQUIRED)
                 .withFinanceContactStatus(ACTION_REQUIRED)
-                .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                .withPartnerProjectLocationStatus(COMPLETE)
                 .withMonitoringOfficerStatus(PENDING)
                 .withBankDetailsStatus(PENDING)
                 .withFinanceChecksStatus(PENDING)

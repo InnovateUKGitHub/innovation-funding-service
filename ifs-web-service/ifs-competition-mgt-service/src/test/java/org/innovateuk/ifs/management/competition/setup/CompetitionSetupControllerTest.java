@@ -278,7 +278,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds",
                         "competitionTypeId",
-                        "stateAid"))
+                        "fundingRule"))
+
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
 
@@ -327,10 +328,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Enter a valid funding type.",
                 bindingResult.getFieldError("fundingType").getDefaultMessage()
         );
-        assertTrue(bindingResult.hasFieldErrors("stateAid"));
+
         assertEquals(
-                "Please select a state aid option.",
-                bindingResult.getFieldError("stateAid").getDefaultMessage()
+                "validation.initialdetailsform.stateaid.required",
+                bindingResult.getFieldError("fundingRule").getCode()
         );
 
         verify(competitionSetupRestService, never()).update(competition);
@@ -352,8 +353,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "innovationLeadUserId",
                         "openingDate",
                         "innovationSectorCategoryId",
-                        "innovationAreaCategoryIds",
-                        "stateAid"
+                        "innovationAreaCategoryIds"
                 ))
                 .andExpect(view().name("competition/setup"))
                 .andReturn();
@@ -365,7 +365,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(7, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals(
                 "Please select a Portfolio Manager.",
@@ -396,11 +396,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 "Please select an innovation area.",
                 bindingResult.getFieldError("innovationAreaCategoryIds").getDefaultMessage()
         );
-        assertTrue(bindingResult.hasFieldErrors("stateAid"));
-        assertEquals(
-                "Please select a state aid option.",
-                bindingResult.getFieldError("stateAid").getDefaultMessage()
-        );
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -427,7 +422,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
-                .param("stateAid", "true"))
+                .param("fundingRule", FundingRules.STATE_AID.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
@@ -473,7 +468,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationLeadUserId", "1")
                 .param("title", "My competition")
                 .param("unrestricted", "1")
-                .param("stateAid", "true"))
+                .param("fundingRule", FundingRules.STATE_AID.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY, "openingDate"))

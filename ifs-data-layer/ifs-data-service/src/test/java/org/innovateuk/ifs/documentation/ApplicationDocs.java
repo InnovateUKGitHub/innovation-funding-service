@@ -43,7 +43,8 @@ public class ApplicationDocs {
             fieldWithPath("companyAge").description("Enum indicating age of company applying").optional(),
             fieldWithPath("companyPrimaryFocus").description("Enum indicating the sector of business of the company applying").optional(),
             fieldWithPath("event").description("Event indicating the current status of the application").optional(),
-            fieldWithPath("lastStateChangeDate").description("Date when the application state was last modified").optional()
+            fieldWithPath("lastStateChangeDate").description("Date when the application state was last modified").optional(),
+            fieldWithPath("fundingDecision").description("The funding decision of the application").optional()
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {

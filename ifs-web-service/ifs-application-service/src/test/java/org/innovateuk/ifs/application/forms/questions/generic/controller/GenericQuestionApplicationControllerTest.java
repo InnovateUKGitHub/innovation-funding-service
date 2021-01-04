@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.questions.generic.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.validator.GenericQuestionApplicationFormValidator;
@@ -16,12 +15,10 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,7 +57,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     @Mock
     private QuestionStatusRestService questionStatusRestService;
@@ -132,8 +129,8 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .withRole(LEADAPPLICANT)
                 .build();
 
-        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(leadProcessRole, userProcessRole)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(leadProcessRole, userProcessRole)));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
         when(questionStatusRestService.assign(questionId, applicationId, leadProcessRole.getId(), userProcessRole.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
@@ -157,7 +154,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
         when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", null, false)).thenReturn(restSuccess(noErrors()));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
 
@@ -186,7 +183,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
         when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", 1L, false)).thenReturn(restSuccess(noErrors()));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
 
@@ -212,7 +209,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .withUser(loggedInUser)
                 .build();
 
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
         when(questionStatusRestService.markAsInComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
@@ -241,7 +238,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         MockMultipartFile file = new MockMultipartFile("templateDocument", "testFile.pdf", "application/pdf", "My content!".getBytes());
 
@@ -282,7 +279,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
@@ -318,7 +315,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         MockMultipartFile file = new MockMultipartFile("appendix", "testFile.pdf", "application/pdf", "My content!".getBytes());
 
@@ -359,7 +356,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
-        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,

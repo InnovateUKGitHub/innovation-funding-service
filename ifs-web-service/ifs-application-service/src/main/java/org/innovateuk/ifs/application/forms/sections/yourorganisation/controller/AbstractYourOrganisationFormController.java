@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.populator.ApplicationYourOrganisationViewModelPopulator;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.YourOrganisationViewModel;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel.ApplicationYourOrganisationViewModel;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
@@ -36,7 +36,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
     @Autowired
     private SectionService sectionService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
 
     protected abstract String redirectToViewPage(long applicationId, long competitionId, long organisationId, long sectionId);
     protected abstract F populateForm(long applicationId, long organisationId);
@@ -59,7 +59,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
             getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser));
 
-        Future<YourOrganisationViewModel> viewModelRequest = async(() ->
+        Future<ApplicationYourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
 
         Future<F> formRequest = async(() ->
@@ -115,7 +115,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
 
         Supplier<String> failureHandler = () -> {
             CommonYourProjectFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser);
-            YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
+            ApplicationYourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -127,7 +127,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
 
             update(applicationId, organisationId, form);
 
-            ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+            ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
             validationHandler.addAnyErrors(validationMessages);
 
@@ -147,12 +147,12 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
             @PathVariable long sectionId,
             UserResource loggedInUser) {
 
-        ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
         return redirectToViewPage(applicationId, competitionId, organisationId, sectionId);
     }
 
-    private YourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
+    private ApplicationYourOrganisationViewModel getViewModel(long applicationId, long competitionId, long organisationId) {
         return viewModelPopulator.populate(applicationId, competitionId, organisationId);
     }
 

@@ -14,8 +14,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 
@@ -44,12 +42,6 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         return isCollaborator(cost, user);
     }
 
-    @PermissionRule(value = "READ", description = "Monitoring officers can read the cost for an application they are assigned to")
-    public boolean monitoringOfficerCanReadACostForTheApplication(final ApplicationFinanceRow cost, final UserResource user) {
-        final ApplicationFinance applicationFinance = cost.getTarget();
-        return monitoringOfficerCanViewApplication(applicationFinance.getApplication().getId(), user.getId());
-    }
-
     @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
     public boolean consortiumCanReadACostItemForTheirApplicationAndOrganisation(final FinanceRowItem costItem, final UserResource user) {
         return isCollaborator(financeRowRepository.findById(costItem.getId()).get(), user);
@@ -75,8 +67,6 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         final ApplicationFinance applicationFinance = (ApplicationFinance) cost.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
         final Long organisationId = applicationFinance.getOrganisation().getId();
-        final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, processRoleRepository);
-        return isLead || isCollaborator;
+        return isMemberOfProjectTeamForOrganisation(applicationId, organisationId, user);
     }
 }
