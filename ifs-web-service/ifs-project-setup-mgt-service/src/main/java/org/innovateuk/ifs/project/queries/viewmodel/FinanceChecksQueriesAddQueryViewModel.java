@@ -24,7 +24,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
     private Long organisationId;
     private String baseUrl;
     private Long applicationId;
-    private boolean procurement;
+    private boolean procurementMilestones;
 
 
     public FinanceChecksQueriesAddQueryViewModel(String organisationName,
@@ -42,7 +42,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
                                          Long organisationId,
                                          String baseUrl,
                                          Long applicationId,
-                                         boolean procurement) {
+                                         boolean procurementMilestones) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;
@@ -58,7 +58,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
         this.organisationId = organisationId;
         this.baseUrl = baseUrl;
         this.applicationId = applicationId;
-        this.procurement = procurement;
+        this.procurementMilestones = procurementMilestones;
     }
 
     public String getOrganisationName() {
@@ -179,7 +179,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
     }
 
     public List<FinanceChecksSectionType> getSectionTypes() {
-        if (procurement) {
+        if (procurementMilestones) {
             return Arrays.asList(FinanceChecksSectionType.values());
         }
 

@@ -266,7 +266,7 @@ public class FinanceChecksQueriesAddQueryController {
                 organisationId,
                 FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL,
                 project.getApplication(),
-                competition.isProcurement()
+                competition.isProcurementMilestones()
         );
     }
 

@@ -338,7 +338,7 @@ public class FinanceChecksQueriesController {
                 queryId,
                 project.getApplication(),
                 project.getProjectState().isActive(),
-                competition.isProcurement()
+                competition.isProcurementMilestones()
         );
     }
 

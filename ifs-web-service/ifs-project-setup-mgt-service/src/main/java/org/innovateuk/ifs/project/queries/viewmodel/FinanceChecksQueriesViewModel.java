@@ -26,7 +26,7 @@ public class FinanceChecksQueriesViewModel {
     private Long queryId;
     private Long applicationId;
     private final boolean projectIsActive;
-    private final boolean procurementCompetition;
+    private final boolean procurementMilestonesCompetition;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -43,7 +43,7 @@ public class FinanceChecksQueriesViewModel {
                                          Long queryId,
                                          Long applicationId,
                                          boolean projectIsActive,
-                                         boolean procurementCompetition) {
+                                         boolean procurementMilestonesCompetition) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContact= financeContact;
@@ -59,7 +59,7 @@ public class FinanceChecksQueriesViewModel {
         this.queryId = queryId;
         this.applicationId = applicationId;
         this.projectIsActive = projectIsActive;
-        this.procurementCompetition = procurementCompetition;
+        this.procurementMilestonesCompetition = procurementMilestonesCompetition;
     }
 
     public String getOrganisationName() {
@@ -182,7 +182,7 @@ public class FinanceChecksQueriesViewModel {
         return projectIsActive;
     }
 
-    public boolean isProcurementCompetition() {
-        return procurementCompetition;
+    public boolean isProcurementMilestonesCompetition() {
+        return procurementMilestonesCompetition;
     }
 }
