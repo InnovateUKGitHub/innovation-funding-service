@@ -232,19 +232,16 @@ public class ApplicationDetailsController {
             }
         }
 
-        if (isEmpty(application.getDurationInMonths())) {
-            bindingResult.rejectValue("durationInMonths", "validation.field.must.not.be.blank");
-        }
-        else {
+        if (!isEmpty(form.getDurationInMonths())) {
             Optional<Integer> maxMilestoneMonth = applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId).getSuccess();
             int maxMonths = competition.getMaxProjectDuration();
             int minMonths = Math.max(maxMilestoneMonth.orElse(0), competition.getMinProjectDuration());
             boolean minDictatedByCompetition = minMonths == competition.getMinProjectDuration();
-            if (application.getDurationInMonths() > maxMonths ||
-                    (minDictatedByCompetition && application.getDurationInMonths() < minMonths)) {
+            if (form.getDurationInMonths() > maxMonths ||
+                    (minDictatedByCompetition && form.getDurationInMonths() < minMonths)) {
                 bindingResult.rejectValue("durationInMonths", "validation.project.duration.input.invalid", new Object[]{minMonths, maxMonths}, "validation.project.duration.input.invalid");
             }
-            else if (application.getDurationInMonths() < minMonths) {
+            else if (form.getDurationInMonths() < minMonths) {
                 bindingResult.rejectValue("durationInMonths", "validation.project.duration.must.be.greater.than.milestones");
             }
         }
