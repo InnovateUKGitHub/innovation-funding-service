@@ -22,7 +22,6 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    //TODO IFS-5889 missing types RESEARCH_CATEGORY.
     public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId) {
         if (questionType != null) {
             switch (questionType) {
