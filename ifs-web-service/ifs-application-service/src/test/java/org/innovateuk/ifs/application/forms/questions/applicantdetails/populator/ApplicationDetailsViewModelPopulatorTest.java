@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;

@@ -7,15 +7,16 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneResourceBuilder.newApplicationProcurementMilestoneResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationProcurementMilestoneControllerTest extends BaseControllerMockMVCTest<ApplicationProcurementMilestoneController> {
 
@@ -38,6 +39,19 @@ public class ApplicationProcurementMilestoneControllerTest extends BaseControlle
                 .andExpect(jsonPath("$.[0].deliverable", is("Deliverable")));
 
         verify(applicationProcurementMilestoneService).getByApplicationIdAndOrganisationId(applicationId, organisationId);
+    }
+
+    @Test
+    public void findMaxMilestoneMonth() throws Exception {
+
+        long applicationId = 1L;
+        when(applicationProcurementMilestoneService.findMaxMilestoneMonth(applicationId)).thenReturn(serviceSuccess(Optional.of(12)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/application-procurement-milestone/application/{applicationId}/max-milestone-month", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("12"));
+
+        verify(applicationProcurementMilestoneService).findMaxMilestoneMonth(applicationId);
     }
 
     @Override
