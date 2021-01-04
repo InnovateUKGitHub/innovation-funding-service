@@ -95,6 +95,10 @@ public final class SectionBuilder {
         return assessorGuidanceDescription;
     }
 
+    public List<SectionBuilder> getChildSections() {
+        return childSections;
+    }
+
     public Section build() {
         Section section = new Section();
         section.setName(name);
