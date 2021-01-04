@@ -17,6 +17,9 @@ IFS.application.repeatableOrgApplicantRows = (function () {
         IFS.application.repeatableOrgApplicantRows.removeRow(this)
         IFS.application.repeatableOrgApplicantRows.showHideAddRowButton(true)
       })
+      jQuery(document).on('click', '[data-add-row]', function () {
+        IFS.application.repeatableOrgApplicantRows.handleAddRow(this)
+      })
     },
     addRow: function (el) {
       var newRow
@@ -120,6 +123,33 @@ IFS.application.repeatableOrgApplicantRows = (function () {
     showHideAddRowButton: function (state) {
       var addRowButton = jQuery('[name="addStagedInvite"]')
       addRowButton.attr('aria-hidden', !state)
+    },
+    handleAddRow: function (el) {
+      var type = jQuery(el).attr('data-add-row')
+      console.log('Add row')
+      switch (type) {
+        case 'sicCode':
+          IFS.application.repeatableOrgApplicantRows.addSicCodeRow(el)
+          break
+      }
+      jQuery('body').trigger('updateSerializedFormState')
+      return false
+    },
+    addSicCode: function () {
+      var idCount = 0
+      if (jQuery('.sic-code-row').length) {
+        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
+      }
+      var html = '<div class="govuk-grid-row sic-code-row" id="sic-code-row-' + idCount + '">' +
+                         '<div class="govuk-grid-column-one-half">' +
+                           '<div class="govuk-form-group">' +
+                             '<input>ello</input>' +
+                           '</div>' +
+                         '</div>' +
+                       '</div>'
+      jQuery('.sic-code-row').last().after(html)
+      jQuery('.sic-code-' + idCount).val('')
     }
   }
 })()

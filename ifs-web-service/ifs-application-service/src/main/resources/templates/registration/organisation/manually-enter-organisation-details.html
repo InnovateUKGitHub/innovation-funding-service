@@ -97,17 +97,18 @@
                     </div>
                 </div>
 
-            <div class="govuk-grid-row" id="dynamic-row-pointer">
-                <div class="govuk-grid-column-one-half">
-                    <div class="alignright">
-                        <input type="hidden" name="removeFunder" />
-                        <button class="button-clear" name="add-sic-code" data-add-row="sicCode" type="button">+Sic code</button>
-                    </div>
-                </div>
+            <div class="alignright govuk-!-margin-top-6">
+                <button class="button-clear" name="add-sic-code" data-add-row="sicCode" type="button">+Sic code</button>
             </div>
 
 
+
         </form>
+
+        <div class="alignright govuk-!-margin-top-6">
+            <button class="button-clear" data-add-row="guidance" type="button">+Add guidance row
+            </button>
+        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

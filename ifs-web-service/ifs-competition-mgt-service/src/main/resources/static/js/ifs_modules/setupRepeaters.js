@@ -20,8 +20,7 @@ IFS.competitionManagement.repeater = (function () {
     // Add row
     handleAddRow: function (el) {
       var type = jQuery(el).attr('data-add-row')
-      var alert
-      alert('2')
+      console.log('Add row')
       switch (type) {
         case 'cofunder':
           IFS.competitionManagement.repeater.addCoFunder()
@@ -325,7 +324,6 @@ IFS.competitionManagement.repeater = (function () {
                    '</div>'
       jQuery('.sic-code-row').last().after(html)
       jQuery('.sic-code-' + idCount).val('')
-      IFS.core.autoComplete.initAutoCompletePlugin(jQuery('.sic-code-' + idCount))
     },
     reindexRows: function (rowSelector) {
       jQuery(rowSelector + ' [name]').each(function () {
