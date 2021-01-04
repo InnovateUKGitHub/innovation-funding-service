@@ -97,8 +97,8 @@ Check if target start date can be changed until SP approval
     [Tags]  HappyPath
     Given log in as a different user         &{ifs_admin_user_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_SP_Project_Id}/details
-    And the user changes the start date      ${nextyear}
-    Then the user should see the element     jQuery = #start-date:contains("1 Jan ${nextyear}")
+    And the user changes the start date      ${nextYear}
+    Then the user should see the element     jQuery = #start-date:contains("1 Jan ${nextYear}")
     [Teardown]  the user changes the start date   2020
 
 Project Finance user generates the Spend Profile
@@ -206,7 +206,7 @@ Non-lead partner can view spend profile page
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
-    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextyear}")
+    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
     And the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 Industrial partner can choose cancel on the dialogue
@@ -247,7 +247,7 @@ Academic partner can view spend profile page
 Academic partner can see correct project start date and duration
     [Documentation]    INFUND-3970
     [Tags]
-    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextyear}")
+    Then the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
     And the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 Academic partner can see the alternative academic view of the spend profile
@@ -515,8 +515,8 @@ Project finance user cannot access external users' spend profile page
 
 *** Keywords ***
 Custom suite setup
-    ${nextyear} =  get next year
-    Set suite variable  ${nextyear}
+    ${nextYear} =  get next year
+    Set suite variable  ${nextYear}
 
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
@@ -652,7 +652,7 @@ the lead partner can view the generated spend profile
     the user should see the element              jQUery = p:contains("This overview shows the spend profile status of each organisation in your project.")
 
 the lead partner can see correct project start date and duration
-    the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextyear}")
+    the user should see the element         jQuery = dt:contains("Project start date") ~ dd:contains("1 January ${nextYear}")
     the user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("${project_duration} months")
 
 the lead partner can see calculations in the spend profile table
