@@ -37,7 +37,7 @@ public class ProcurementTemplate implements FundingTypeTemplate {
             return competitionTypeSections;
         }
 
-        competitionTypeSections.stream().filter(section -> section.getName().equals("Finances"))
+        competitionTypeSections.stream().filter(section -> section.getType() == SectionType.FINANCE)
                 .findAny()
                 .ifPresent(this::addProcurementMilestoneSection);
 
