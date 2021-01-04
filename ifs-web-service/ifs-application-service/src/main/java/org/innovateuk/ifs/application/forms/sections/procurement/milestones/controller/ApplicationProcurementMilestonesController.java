@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/procurement-milestones/organisation/{organisationId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/procurement-milestones/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationProcurementMilestonesController {
     private static final String VIEW = "application/sections/procurement-milestones/procurement-milestones";
@@ -33,6 +33,7 @@ public class ApplicationProcurementMilestonesController {
     @GetMapping
     public String viewMilestones(@PathVariable long applicationId,
                                  @PathVariable long organisationId,
+                                 @PathVariable long sectionId,
                                  Model model) {
         model.addAttribute("form", formPopulator.populate(restService.getByApplicationIdAndOrganisationId(applicationId, organisationId).getSuccess()));
         model.addAttribute("model", new ApplicationProcurementMilestonesViewModel(applicationRestService.getApplicationById(applicationId).getSuccess(),
