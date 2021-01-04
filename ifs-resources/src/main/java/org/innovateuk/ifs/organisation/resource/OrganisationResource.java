@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +22,13 @@ public class OrganisationResource {
     private String internationalRegistrationNumber;
     private String registrationNumber;
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
+    private LocalDate dateOfIncorporation;
+    private List<OrganisationSicCodeResource> sicCodes = new ArrayList<>();
+    private String organisationNumber;
+    private List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
+    private String businessType;
+
+
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
@@ -102,6 +110,46 @@ public class OrganisationResource {
 
     public void setAddresses(List<OrganisationAddressResource> addresses) {
         this.addresses = addresses;
+    }
+
+    public LocalDate getDateOfIncorporation() {
+        return dateOfIncorporation;
+    }
+
+    public void setDateOfIncorporation(LocalDate dateOfIncorporation) {
+        this.dateOfIncorporation = dateOfIncorporation;
+    }
+
+    public List<OrganisationSicCodeResource> getSicCodes() {
+        return sicCodes;
+    }
+
+    public void setSicCodes(List<OrganisationSicCodeResource> sicCodes) {
+        this.sicCodes = sicCodes;
+    }
+
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public void setOrganisationNumber(String organistionNumber) {
+        this.organisationNumber = organistionNumber;
+    }
+
+    public List<OrganisationExecutiveOfficerResource> getExecutiveOfficers() {
+        return executiveOfficers;
+    }
+
+    public void setExecutiveOfficers(List<OrganisationExecutiveOfficerResource> executiveOfficers) {
+        this.executiveOfficers = executiveOfficers;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     @JsonIgnore

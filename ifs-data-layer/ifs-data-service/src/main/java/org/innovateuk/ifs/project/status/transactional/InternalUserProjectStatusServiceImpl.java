@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -85,8 +84,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private GrantProcessService grantProcessService;
 
     @Override
-    @Transactional //Write transaction for first time creation of project finances.
-    @ZeroDowntime(description = "remove transaction annotation", reference = "IFS-8610")
     public ServiceResult<ProjectStatusPageResource> getCompetitionStatus(long competitionId,
                                                                          String applicationSearchString,
                                                                          int page,
