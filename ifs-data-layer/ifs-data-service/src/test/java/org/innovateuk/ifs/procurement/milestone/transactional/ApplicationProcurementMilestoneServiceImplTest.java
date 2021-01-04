@@ -20,7 +20,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
-import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneBuilder.newApplicationProcurementMilestoneResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneResourceBuilder.newApplicationProcurementMilestoneResource;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
