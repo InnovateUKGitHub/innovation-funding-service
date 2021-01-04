@@ -66,8 +66,8 @@ public class ApplicationUrlHelper {
                 return Optional.of(String.format("/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId, competitionId, organisationId, sectionId));
             case PAYMENT_MILESTONES:
-                return Optional.of(String.format("/application/%d/form/procurement-milestones/competition/%d/organisation/%d/section/%d",
-                        applicationId, competitionId, organisationId, sectionId));
+                return Optional.of(String.format("/application/%d/form/procurement-milestones/organisation/%d/section/%d",
+                        applicationId, organisationId, sectionId));
             case OVERVIEW_FINANCES:
                 return Optional.of(String.format("/application/%d/form/finances-overview/section/%d",
                         applicationId, sectionId));
