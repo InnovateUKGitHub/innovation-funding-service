@@ -25,11 +25,9 @@
                 </div>
                 <div class="govuk-grid-column-two-thirds alignright">
                      <div class="form-search" style="margin-top: 0">
-                          <input class="govuk-input search-query"
+                        <input class="govuk-input search-query"
                                        th:field="*{organisationSearchName}"
-                                       th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
                                        type="text"
-                                       th:attr="data-required-errormessage=#{validation.standard.organisationsearchname.required}"
                                        required="required"
                                        value="${organisationForm.organisationSearchName}"
                                        placeholder="Search for organisation name or company registration number"/>
@@ -43,7 +41,7 @@
                         <span class="govuk-!-font-weight-bold">Companies</span> matching the search
                         <span class="govuk-!-font-weight-bold" th:text="${organisationForm.organisationSearchName}"></span></p>
 
-               <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-bottom-3">
+               <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-1 govuk-!-margin-bottom-3">
                <ul id="org-results" class="govuk-list govuk-!-margin-0">
                     <li class="type-company" th:each="(organisation, iteration : ${organisationForm.organisationSearchResults})">
                        <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">

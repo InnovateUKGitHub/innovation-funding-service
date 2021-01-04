@@ -90,6 +90,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     private OrganisationSearchResult getImprovedResultById(String id) {
         switch(id) {
             case "02276684" : return getAmadeus();
+            case "04006623" : return getASOS();
             case "02468686" : return getAVIVA();
             case "07520089" : return getBBC();
             case "04081830" : return getCineWorld();
@@ -97,6 +98,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
             case "04967001" : return getITV();
             case "08680755" : return getRoyalMail();
             case "08804263" : return getSAGA();
+            case "00445790" : return getTesco();
             case "09595911" : return getVirginMoney();
             default : return getRoyalMail();
         }
@@ -419,14 +421,14 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
         return org;
     }
 
-   public List<OrganisationSicCodeResource> getSicCodes(List<String> sicCodes) {
+   private List<OrganisationSicCodeResource> getSicCodes(List<String> sicCodes) {
         List<OrganisationSicCodeResource> sicCodeResources = new ArrayList<>();
          sicCodes.forEach(sicCode -> {
             sicCodeResources.add(new OrganisationSicCodeResource(null,sicCode));
         });
         return sicCodeResources;
     }
-    public List<OrganisationExecutiveOfficerResource> getDirectors(List<String> directors) {
+    private List<OrganisationExecutiveOfficerResource> getDirectors(List<String> directors) {
         List<OrganisationExecutiveOfficerResource> directorResources = new ArrayList<>();
         directors.forEach(director -> {
             directorResources.add(new OrganisationExecutiveOfficerResource(null,director));

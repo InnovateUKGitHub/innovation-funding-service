@@ -206,7 +206,7 @@ public abstract class AbstractOrganisationCreationController {
         }
     }
 
-    public int setTotalSearchResults(List<OrganisationSearchResult> searchResults) {
+    private int setTotalSearchResults(List<OrganisationSearchResult> searchResults) {
        Optional<OrganisationSearchResult> searchResult = searchResults.stream().findFirst();
         if(searchResult.isPresent()) {
             String totalSearch = "";
@@ -225,7 +225,9 @@ public abstract class AbstractOrganisationCreationController {
             organisationForm.setOrganisationName(organisationSearchResult.getName());
             if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
                 String localDateString = (String) organisationSearchResult.getExtraAttributes().get("date_of_creation");
-                organisationForm.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
+                if (localDateString != null) {
+                    organisationForm.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
+                }
                 organisationForm.setOrganisationAddress(organisationSearchResult.getOrganisationAddress());
                 organisationForm.setSicCodes(organisationSearchResult.getOrganisationSicCodes());
                 organisationForm.setExecutiveOfficers(organisationSearchResult.getOrganisationExecutiveOfficers());
