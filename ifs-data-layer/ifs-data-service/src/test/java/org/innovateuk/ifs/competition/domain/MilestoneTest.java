@@ -31,7 +31,7 @@ public class MilestoneTest {
 
     @Test
     public void milestoneTypeSize() {
-        assertEquals(17, MilestoneType.values().length);
+        assertEquals(18, MilestoneType.values().length);
         assertEquals(14, MilestoneType.presetValues().length);
     }
 
