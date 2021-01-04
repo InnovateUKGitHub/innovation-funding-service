@@ -49,7 +49,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         CompetitionResource competition = data.getCompetition();
         ApplicationResource application = data.getApplication();
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
-        Future<List<ApplicationProcurementMilestoneResource>> applicationProcurementMilestoneResource = async(() -> applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(application.getId(), application.getLeadOrganisationId()).getSuccess());
+        Future<List<ApplicationProcurementMilestoneResource>> applicationProcurementMilestoneResources = async(() -> applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(application.getId(), application.getLeadOrganisationId()).getSuccess());
         Future<ApplicationFinanceSummaryViewModel> applicationFinanceSummaryViewModel = async(() -> applicationFinanceSummaryViewModelPopulator.populate(application.getId(), data.getUser()));
         Future<ApplicationResearchParticipationViewModel> applicationResearchParticipationViewModel = async(() -> applicationResearchParticipationViewModelPopulator.populate(application.getId()));
         Future<ApplicationFundingBreakdownViewModel> applicationFundingBreakdownViewModel = async(() -> applicationFundingBreakdownViewModelPopulator.populate(application.getId(), data.getUser()));
@@ -58,7 +58,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
                 application.getId(),
                 competition.isFullyFunded(),
                 resolve(financeSection).getId(),
-                resolve(applicationProcurementMilestoneResource),
+                resolve(applicationProcurementMilestoneResources),
                 resolve(applicationFinanceSummaryViewModel),
                 resolve(applicationResearchParticipationViewModel),
                 resolve(applicationFundingBreakdownViewModel),
