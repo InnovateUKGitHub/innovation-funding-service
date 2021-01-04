@@ -59,7 +59,7 @@ import static org.junit.Assert.assertThat;
     @Test
     public void findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById() {
         List<Question> questions = newQuestion()
-                .withId(98L, 108L)
+                .withId(28L, 33L)
                 .build(2);
         Application application = newApplication()
                 .withId(applicationId)
