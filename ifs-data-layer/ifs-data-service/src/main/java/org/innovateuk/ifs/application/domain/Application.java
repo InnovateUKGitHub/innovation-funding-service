@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -84,6 +85,10 @@ public class Application implements ProcessActivity {
 
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="milestone", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
 
     private boolean noInnovationAreaApplicable;
 
