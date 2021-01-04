@@ -77,7 +77,7 @@
                         id="section"
                         class="govuk-select">
                     <th:block
-                        th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
+                        th:each="section_type : ${model.sectionTypes}">
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
                                     th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"

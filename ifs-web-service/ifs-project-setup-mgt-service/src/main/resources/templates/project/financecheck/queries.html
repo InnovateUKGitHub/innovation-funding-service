@@ -84,7 +84,7 @@
                             data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">
                         Eligibility only
                     </option>
-                    <option data-elements-to-hide=".queries-filter-list .query"
+                    <option th:if="${model.procurementCompetition}" data-elements-to-hide=".queries-filter-list .query"
                             data-elements-to-show=".queries-filter-list .payment_milestones-section" value="payment-milestones">
                         Payment milestones
                     </option>

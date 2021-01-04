@@ -1,6 +1,12 @@
 package org.innovateuk.ifs.project.queries.viewmodel;
 
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FinanceChecksQueriesAddQueryViewModel {
     private String organisationName;
@@ -18,6 +24,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
     private Long organisationId;
     private String baseUrl;
     private Long applicationId;
+    private boolean procurement;
 
 
     public FinanceChecksQueriesAddQueryViewModel(String organisationName,
@@ -34,7 +41,8 @@ public class FinanceChecksQueriesAddQueryViewModel {
                                          int maxTitleCharacters,
                                          Long organisationId,
                                          String baseUrl,
-                                         Long applicationId) {
+                                         Long applicationId,
+                                         boolean procurement) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;
@@ -50,7 +58,7 @@ public class FinanceChecksQueriesAddQueryViewModel {
         this.organisationId = organisationId;
         this.baseUrl = baseUrl;
         this.applicationId = applicationId;
-
+        this.procurement = procurement;
     }
 
     public String getOrganisationName() {
@@ -169,4 +177,15 @@ public class FinanceChecksQueriesAddQueryViewModel {
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
     }
+
+    public List<FinanceChecksSectionType> getSectionTypes() {
+        if (procurement) {
+            return Arrays.asList(FinanceChecksSectionType.values());
+        }
+
+        return Stream.of(FinanceChecksSectionType.values())
+                .filter(it -> it != FinanceChecksSectionType.PAYMENT_MILESTONES)
+                .collect(Collectors.toList());
+    }
+
 }
