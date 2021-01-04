@@ -26,6 +26,7 @@ import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -37,6 +38,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -464,7 +466,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(new ArrayList<>()));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restFailure(HttpStatus.NOT_FOUND));
 
         performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
 
@@ -540,7 +542,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(new ArrayList<>()));
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restFailure(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -562,8 +564,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String durationInMonths = "18";
 
         when(projectDetailsService.updateProjectDuration(projectId, 18L)).thenReturn(serviceSuccess());
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(new ArrayList<>()));
-
+        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restFailure(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

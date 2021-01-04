@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -232,12 +233,22 @@ public class ProjectDetailsController {
             validationHandler.addAnyErrors(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), toField("durationInMonths"));
         }
 
-        List<ProjectProcurementMilestoneResource> milestones = projectProcurementMilestoneRestService.getByProjectId(projectId).getSuccess();
+        RestResult<List<ProjectProcurementMilestoneResource>> milestonesResult = projectProcurementMilestoneRestService.getByProjectId(projectId);
+
+        if (noMilestonesFound(milestonesResult)) {
+            return;
+        }
+
+        List<ProjectProcurementMilestoneResource> milestones = milestonesResult.getSuccess();
         Optional<Integer> maxMilestoneMonth = milestones.stream().map(ProjectProcurementMilestoneResource::getMonth).max(Comparator.naturalOrder());
 
         if (maxMilestoneMonth.isPresent() && (Integer.parseInt(durationInMonths) < maxMilestoneMonth.get())) {
             validationHandler.addAnyErrors(serviceFailure(new Error(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_MAX_EXISTING_MILESTONE, HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
         }
+    }
+
+    private boolean noMilestonesFound(RestResult<List<ProjectProcurementMilestoneResource>> milestonesResult) {
+        return milestonesResult.isFailure() && milestonesResult.getStatusCode() == HttpStatus.NOT_FOUND;
     }
 
     private String redirectToProjectDetails(long projectId, long competitionId) {
