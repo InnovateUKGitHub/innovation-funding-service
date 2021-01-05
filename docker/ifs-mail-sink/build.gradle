@@ -1,0 +1,25 @@
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+buildDocker.enabled = false
+tagDocker.enabled = false
+osStageRemote.enabled = false
+
+tagDocker.tag = mailSinkVersion
+tagDockerLocal.tag = mailSinkVersion
+
+createContainer.hostName = "mail"
+createContainer.containerName = "mail"
+createContainer.containerId = "mail"
+createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/mail-sink:" + mailsinkVersion
+createContainer.portBindings = ['8765:8080', "9876:8143"]
+
+buildscript {
+    repositories { jcenter() }
+}
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+if (enabled) {
+    buildDocker.outputs.upToDateWhen { false }
+}
