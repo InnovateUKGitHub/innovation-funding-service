@@ -39,7 +39,6 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 public class ApplicationProcurementMilestonesController {
     private static final String VIEW = "application/sections/procurement-milestones/procurement-milestones";
 
-
     @Autowired
     private ProcurementMilestoneFormPopulator formPopulator;
 
@@ -78,9 +77,7 @@ public class ApplicationProcurementMilestonesController {
     public String saveMilestones(@PathVariable long applicationId,
                                  @PathVariable long organisationId,
                                  @PathVariable long sectionId,
-                                 @ModelAttribute("form") ProcurementMilestonesForm form,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler) {
+                                 @ModelAttribute("form") ProcurementMilestonesForm form) {
         saver.save(form, applicationId, organisationId).getSuccess();
         return redirectToYourFinances(applicationId);
     }

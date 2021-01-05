@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.for
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public class ProcurementMilestonesForm {
         return UNSAVED_ROW_PREFIX + UUID.randomUUID().toString();
     }
 
-    private Map<String, ProcurementMilestoneForm> milestones;
+    private Map<String, ProcurementMilestoneForm> milestones = new LinkedHashMap<>();
 
     public ProcurementMilestonesForm() {}
 
