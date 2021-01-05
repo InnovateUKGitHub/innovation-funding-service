@@ -48,9 +48,15 @@
             </th:block>
             <label class="govuk-label"
                    th:for="organisationSearchName"
-                   th:utext="${searchLabel}">
+                   th:text="${searchLabel}">
                 Find your ? organisation
             </label>
+            <th:block th:if="${improvedSearchEnabled}">
+                <label class="govuk-label govuk-!-margin-top-1"
+                       th:text="${additionalLabel}">
+                    We will help you
+                </label>
+            </th:block>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
             <th:block th:if="${improvedSearchEnabled}">
                 <details class="govuk-details" role="group">
