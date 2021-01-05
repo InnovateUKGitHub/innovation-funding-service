@@ -305,9 +305,17 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator
                 .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
+
+        if (competition.isKtp()) {
+            return "project/financecheck/eligibility-changes-ktp";
+        }
+        if (competition.isProcurement()) {
+            return "project/financecheck/eligibility-changes-procurement";
+        }
         return "project/financecheck/eligibility-changes";
     }
 }
