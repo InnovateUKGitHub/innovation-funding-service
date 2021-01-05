@@ -108,7 +108,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).collect(toList())
+                competitionRepository.findAll()
         ));
     }
 
