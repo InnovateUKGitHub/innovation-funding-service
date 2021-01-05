@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
@@ -34,6 +35,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_U
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -110,7 +113,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                         ServiceResult<Long> result = service.create(query);
                         if (result.isSuccess()) {
                             Project project = projectFinance.getProject();
-                            List<ProjectUser> projectUsers = project.getProjectUsers(u -> u.getRole().isFinanceContact() || u.getRole().isProjectManager());
+                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT, PROJECT_MANAGER);
                             List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> Objects.equals(pu.getOrganisation().getId(), projectFinance.getOrganisation().getId()));
                             Set<User> usersToNotify = financeContacts.stream().map(ProjectUser::getUser).collect(Collectors.toSet());
                             for (User user: usersToNotify) {
