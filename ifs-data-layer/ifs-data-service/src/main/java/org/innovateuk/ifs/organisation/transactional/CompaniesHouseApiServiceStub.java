@@ -190,7 +190,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "AMADEUS IT SERVICES UK LIMITED",
                 "Business",
                 "1988-07-13",
-                "Incorporated on 13 July 1988",
+                "02276684 - Incorporated on 13 July 1988",
                 asList("62020","63990","79909"),
                 asList("BOUSQUET, Christophe","KRAFT ANTELYES, Diana","MAGESH, Champa Hariharan","SANCHEZ QUINONES, Arturo"));
     }
@@ -205,7 +205,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "ASOS PLC",
                 "plc",
                 "2000-06-02",
-                "Incorporated on 2 June 2000",
+                "04006623 - Incorporated on 2 June 2000",
                  asList("70100"),
                  asList("BEIGHTON, Nicholas Timothy", "CROZIER, Adam Alexander", "DUNN, Mathew James", "DYSON, Ian","FYFIELD, Rowenna Mai",
                         "GEARY, Karen Mary", "JENSEN, Luke Giles William", "ROBERTSON, Nicholas John", "ULASEWICZ, Eugenia Marie"));
@@ -221,7 +221,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "Aviva Plc",
                 "plc",
                 "1990-02-09",
-                "Incorporated on 9 February 1990",
+                "02468686 - Incorporated on 9 February 1990",
                 asList("70100"), asList("BLANC, Amanda Jayne", "CROSS, Patricia Anne","CULMER, Mark George","FLYNN, Patrick Gerard","JOSHI, Mohit",
                                         "MCCONVILLE, James","Michael Philip","ROMANA GARCIA, Belen","WINDSOR, Jason Michael"));
 
@@ -237,7 +237,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "BBC AND CO LIMITED",
                 "ltd",
                 "2011-02-07",
-                "Incorporated on 7 February 2011",
+                "07520089 - Incorporated on 7 February 2011",
                 asList("69201","69202","69203"),
                 asList("BATE, Philip Henry"));
     }
@@ -253,7 +253,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "CINEWORLD LIMITED",
                 "ltd",
                 "1995-03-16",
-                "Incorporated on 16 March 1995",
+                "04081830 - Incorporated on 16 March 1995",
                 asList("74909"),
                 asList("LANGEMANN, Cordula"));
     }
@@ -265,10 +265,10 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 " ",
                 "AB24 5RP",
                 "SC157176",
-                " FIRSTGROUP PLC",
+                "FIRSTGROUP PLC",
                 "plc",
                 "1995-03-31",
-                "Incorporated on 31 March 1995",
+                "SC157176 - Incorporated on 31 March 1995",
                 asList("49100", "49100"),
                 asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
                         "MARTIN, David Robert","ROBBIE, David Andrew"));
@@ -285,7 +285,8 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "ITV PLC",
                 "plc",
                 "2003-11-18",
-                "Incorporated on 18 November 2003",  asList("82990"),
+                "04967001 - Incorporated on 18 November 2003",
+                asList("82990"),
                 asList("AMIN, Salman","BAZALGETTE, Sir Peter Lytton","BONHAM CARTER, Edward Henry","COOKE, " +
                         "Graham Christopher","EWING, Margaret","HARRIS, Mary Elaine","KENNEDY, Christopher John",
                         "MANZ, Anna Olive Magdelene","MCCALL, Carolyn Julia, Dame"));
@@ -297,12 +298,12 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "",
                 "London",
                 "",
-                " EC4Y 0HQ",
+                "EC4Y 0HQ",
                 "08680755",
                 "ROYAL MAIL PLC",
                 "plc",
                 "2013-09-06",
-                "ncorporated on 6 September 2013",
+                "08680755 - Incorporated on 6 September 2013",
                  asList("64209"),
                  asList("HOGG, Sarah Elizabeth Mary, Baroness","PEACOCK, Lynne","SILVA, Maria Juana Da Cunha Da",
                          "SIMPSON, Stuart Campbell","THOMPSON, Simon","WILLIAMS, Keith"));
@@ -318,7 +319,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "SAGA PLC",
                 "plc",
                 "2013-12-05",
-                "Incorporated on 5 December 2013",
+                "08804263 - Incorporated on 5 December 2013",
                  asList("70100"),
                 asList("EISENSCHIMMEL, Eva Kristina","HOPES, Julie","HOSKIN, Gareth John","NI-CHIONNA, Orna Gabrielle",
                         "QUIN, James","SUTHERLAND, Euan Angus","WILLIAMS, Gareth"));

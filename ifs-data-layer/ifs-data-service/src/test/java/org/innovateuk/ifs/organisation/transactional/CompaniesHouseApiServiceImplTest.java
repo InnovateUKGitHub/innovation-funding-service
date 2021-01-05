@@ -82,7 +82,7 @@ public class CompaniesHouseApiServiceImplTest {
 		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
 		when(adapter.restGetEntity(searchUrlPath, JsonNode.class, searchVariables)).thenReturn(response);
 		
-		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations(defaultSearchString);
+		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations(defaultSearchString, 0);
 		
 		verify(adapter).restGetEntity(searchUrlPath, JsonNode.class, searchVariables);
 		assertTrue(result.isSuccess());
@@ -131,7 +131,7 @@ public class CompaniesHouseApiServiceImplTest {
 		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
 		when(adapter.restGetEntity(searchUrlPath, JsonNode.class, searchVariables)).thenReturn(response);
 		
-		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations("searchtext");
+		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations("searchtext", 0);
 		
 		verify(adapter).restGetEntity(searchUrlPath, JsonNode.class, searchVariables);
 		assertTrue(result.isSuccess());
@@ -155,7 +155,7 @@ public class CompaniesHouseApiServiceImplTest {
 		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
 		when(adapter.restGetEntity(searchUrlPath, JsonNode.class, searchVariables)).thenReturn(response);
 		
-		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations(defaultSearchString);
+		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations(defaultSearchString, 0);
 		
 		verify(adapter).restGetEntity(searchUrlPath, JsonNode.class, searchVariables);
 		assertTrue(result.isSuccess());

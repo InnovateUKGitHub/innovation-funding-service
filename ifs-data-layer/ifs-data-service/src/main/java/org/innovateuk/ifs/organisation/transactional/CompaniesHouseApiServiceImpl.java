@@ -69,7 +69,7 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
-    public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
+    private ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
             // encoded in the web-services.
             JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
