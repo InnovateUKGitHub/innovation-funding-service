@@ -79,7 +79,7 @@
                                     th:with="catIndex=${competitionSetupForm.indexForCategory(category)},
                                              path=|${path}[${catIndex}]|">
                                     <td th:if="${model.general.editable}"
-                                        class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top"
+                                            class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top"
                                         th:with="message=#{validation.competitionsetup.fundinglevelpercentage.table.numberbetween(${size.description}, ${category.name}, 0 ,100)}">
                                         <input type="hidden"
                                                th:field="*{__${path}__.grantClaimMaximumId}"/>
