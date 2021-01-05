@@ -4,21 +4,21 @@ import com.bmuschko.gradle.docker.DockerRegistryCredentials
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
-def registryBase = "docker-ifs.devops.innovateuk.org/releases/"
+def nexusRegistryBase = "docker-ifs.devops.innovateuk.org/releases/"
 
 task tagDockerDB(type: DockerTagImage) {
-    imageId = registryBase+"ifs-mysql:"+sqlVersion
+    imageId = nexusRegistryBase+"ifs-mysql:"+sqlVersion
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "ifs-mysql"
     tag = sqlVersion
 }
 
 task tagDockerCP(type: DockerTagImage) {
-    imageId = registryBase+"cache-provider:"+cacheProviderVersion
+    imageId = nexusRegistryBase+"cache-provider:"+cacheProviderVersion
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "cache-provider"
     tag = cacheProviderVersion
 }
 task tagDockerMS(type: DockerTagImage) {
-    imageId = registryBase+"mail-sink:"+mailsinkVersion
+    imageId = nexusRegistryBase+"mail-sink:"+mailsinkVersion
     repository = project.dockerRegistry + "/" + openshiftEnv + "/" + "mail-sink"
     tag = project.version
 }
