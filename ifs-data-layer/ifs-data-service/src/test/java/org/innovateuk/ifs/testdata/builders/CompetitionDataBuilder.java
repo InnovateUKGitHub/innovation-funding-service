@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -378,7 +378,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage) {
+    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
+
+        if (BooleanUtils.isNotTrue(alwaysOpen)) {
+            return this;
+        }
+
         return asCompAdmin(data ->
             Stream.of(MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
