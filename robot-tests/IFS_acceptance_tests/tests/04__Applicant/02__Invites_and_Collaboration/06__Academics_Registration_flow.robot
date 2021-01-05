@@ -17,7 +17,7 @@ Academic organisations search
     When the user selects the radio button                organisationTypeId    2
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Save and continue")
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
-    Then the user should see a field error                Please enter an organisation name to search.
+    Then the user should see a field error                You must enter an organisation name or company registration number.
     When the user enters text to a text field             id = organisationSearchName    abcd
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Search")
     Then the user should see the element                  jQuery = li p:contains("No results found.")

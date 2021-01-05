@@ -172,7 +172,8 @@ Non registered UK based users confirm their organisation details and create an a
     [Documentation]    IFS-7199
     [Tags]  HappyPath
     Given the user provides uk based organisation details             FIRSTGROUP  ${ukBasedOrganisationName}
-    And the user verifies uk based organisation details
+    #And the user verifies uk based organisation details
+    And the user verifies their organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
     Then the user should not see an error in the page
@@ -219,7 +220,7 @@ Registered UK based user applies for International Competition
 #   Then the user verifies uk based organisation details
 # TODO Should be removed on completing ifs-7224
     Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
-    And the user clicks the button/link                                           name = save-organisation
+    #And the user clicks the button/link                                           name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
@@ -975,7 +976,7 @@ the user should see project location details in project finances
 No action required should display for non uk based and zero funding organisations
     the user should see the element     css = li.read-only:nth-child(1) div.task-status > span:nth-child(1)
     the user should see the element     css = li.read-only:nth-child(2) div.task-status > span:nth-child(1)
-    the user should see the element     css = li:nth-child(2) strong
+    the user should see the element     css = li:nth-child(3) strong
     the user should see the element     css = li.read-only:nth-child(4) div.task-status > span:nth-child(1)
 
 lead and partner applicants completes the project and bank details

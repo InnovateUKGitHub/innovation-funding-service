@@ -35,8 +35,8 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link    link = Your project costs
-    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'org2'")
-    And the user should see the element     jQuery = label:contains("'org2' Total project costs")
+    Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'ITV PLC'")
+    And the user should see the element     jQuery = label:contains("'ITV PLC' Total project costs")
 
 Guidance in the your project costs
     [Documentation]    INFUND-192

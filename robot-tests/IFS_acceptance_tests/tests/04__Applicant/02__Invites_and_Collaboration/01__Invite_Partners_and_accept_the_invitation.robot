@@ -199,7 +199,7 @@ Partner can see the Application team
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
-    Given the user clicks the button/link      jQuery = button:contains("Add person to FIRSTGROUP PLC")
+    Given the user clicks the button/link      jQuery = button:contains("Add person to")button:contains("FIRSTGROUP PLC")
     When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
     Then The user should see the element       jQuery = td:contains("Mark (pending for")
 
