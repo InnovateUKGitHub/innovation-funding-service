@@ -568,7 +568,7 @@ internal and external users see correct status
     the user clicks the button/link                     link = View the status of partners
     the user navigates to the page                      ${server}/project-setup/project/${addNewPartnerOrgProjID}/team-status
     the user should see the element                     jQuery = h1:contains("Project team status")
-    the user should see the element                     css = #table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+    the user should see the element                     css = #table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
     log in as a different user                          &{internal_finance_credentials}
     the user navigates to the page                      ${server}/project-setup-management/competition/${addPartnerOrgCompId}/status
     the user should see the element                     css = #table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.action
