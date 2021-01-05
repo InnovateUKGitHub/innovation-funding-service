@@ -46,7 +46,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     }
 
 
-    public ServiceResult<List<OrganisationSearchResult>> improvedSearchOrganisations(String encodedSearchText, int indexPos) {
+    private ServiceResult<List<OrganisationSearchResult>> improvedSearchOrganisations(String encodedSearchText, int indexPos) {
         if (indexPos == 0) {
             return encodedSearchText.equals("innoavte") ?
                     serviceSuccess(emptyList()) :
