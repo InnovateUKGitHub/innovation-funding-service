@@ -43,7 +43,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_MAX_EXISTING_MILESTONE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -243,7 +243,7 @@ public class ProjectDetailsController {
         Optional<Integer> maxMilestoneMonth = milestones.stream().map(ProjectProcurementMilestoneResource::getMonth).max(Comparator.naturalOrder());
 
         if (maxMilestoneMonth.isPresent() && (Integer.parseInt(durationInMonths) < maxMilestoneMonth.get())) {
-            validationHandler.addAnyErrors(serviceFailure(new Error(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_MAX_EXISTING_MILESTONE, HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
+            validationHandler.addAnyErrors(serviceFailure(new Error(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE, HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
         }
     }
 

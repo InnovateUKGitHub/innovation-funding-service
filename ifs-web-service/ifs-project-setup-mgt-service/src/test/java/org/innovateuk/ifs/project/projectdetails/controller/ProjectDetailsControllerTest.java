@@ -518,7 +518,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("durationInMonths", "4"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/edit-duration"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "durationInMonths", "PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_MAX_EXISTING_MILESTONE"))
+                .andExpect(model().attributeHasFieldErrorCode("form", "durationInMonths", "PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE"))
                 .andReturn();
 
         verify(projectDetailsService, never()).updateProjectDuration(anyLong(), anyLong());
