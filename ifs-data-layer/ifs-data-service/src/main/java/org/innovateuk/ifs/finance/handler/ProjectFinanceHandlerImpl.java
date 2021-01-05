@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,9 +100,8 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
 
     private ServiceResult<ProjectFinance> getProjectFinanceForOrganisation(Long projectId, long organisationId) {
         Optional<ProjectFinance> maybeProjectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        return maybeProjectFinance
-                .map(ServiceResult::serviceSuccess)
-                .orElseGet(() -> generateFinanceCheckEntitiesForProjectOrganisation(projectId, organisationId));
+        return maybeProjectFinance.map(ServiceResult::serviceSuccess)
+                .orElseGet(() -> ServiceResult.serviceFailure(new Error("No project finance for organisation", HttpStatus.NOT_FOUND)));
     }
 
     @Override
@@ -136,13 +136,4 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         projectFinanceResource.setCostChanges(costChanges);
     }
 
-    @ZeroDowntime(description = "remove this method", reference = "IFS-8610")
-    private ServiceResult<ProjectFinance> generateFinanceCheckEntitiesForProjectOrganisation(long projectId, long organisationId) {
-        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project ->
-            find(organisationRepository.findById(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccess(organisation ->
-                financeChecksGenerator.createFinanceChecksFigures(project, organisation).andOnSuccess((projectFinance) ->
-                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
-                                financeChecksGenerator.createMvpFinanceChecksFigures(project, organisation, costCategoryType)
-                                        .andOnSuccessReturn(() -> projectFinance)))));
-    }
 }
