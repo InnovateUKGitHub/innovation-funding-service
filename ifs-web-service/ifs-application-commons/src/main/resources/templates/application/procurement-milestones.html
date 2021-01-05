@@ -1,31 +1,45 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm"*/-->
+<!--/*@thymesVar id="fundingAmount" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="durations" type="java.util.List"*/-->
+<!--/*@thymesVar id="readonly" type="java.lang.Boolean"*/-->
 
-<th:block th:fragment="milestones-form(form)">
-    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
-        <div class="govuk-accordion__section"
-            th:each="entry : ${form.milestones}">
-            <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${form.getTotalCosts()})"></th:block>
+<th:block th:fragment="milestones-form(form, readonly, durations, fundingAmount)">
+
+    <div class="procurement-milestones">
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
+            <h4 class="width-10-percent govuk-heading-s">Month completed</h4>
+            <h4 class="width-60-percent govuk-heading-s govuk-!-margin-left-1   ">Milestone</h4>
+            <h4 class="width-10-percent govuk-heading-s">% of project costs</h4>
+            <h4 class="width-10-percent govuk-heading-s">Payment request</h4>
+            <div class="govuk-accordion__section"
+                th:each="entry : ${form.milestones}">
+                <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${readonly}, ${fundingAmount}, ${durations})"></th:block>
+            </div>
         </div>
-    </div>
 
-    <p class="govuk-body">Total payment requested <span class="govuk-!-margin-left-3" th:text="${form.totalPercentages}"></span><span class="govuk-!-margin-left-3" th:text="${form.totalCosts}"></span></p>
+        <h3 class="govuk-heading-m width-80-percent">Total payment requested</h3>
+        <h3 class="govuk-heading-m width-10-percent" th:text="${#numbers.formatInteger(form.getTotalPercentages(fundingAmount), 0,'DEFAULT')} + '%'"></h3>
+        <h3 class="govuk-heading-m width-10-percent" th:text="'£' + ${#numbers.formatInteger(form.totalPayments, 0,'DEFAULT')}"></h3>
+    </div>
 </th:block>
 
-<th:block  th:fragment="milestones-row(id, milestone, totalCosts)">
+<th:block  th:fragment="milestones-row(id, milestone, readonly, fundingAmount, durations)">
     <!--/*@thymesVar id="id" type="java.lang.String"*/-->
     <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
     <th:block th:with="path=|milestones[${id}]|">
         <!--/*@thymesVar id="path" type="java.lang.String"*/-->
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" th:id="|accordion-finances-heading-${id}|"
-                          th:text="${milestone.description}">
-                    </span>
-                <span class="finance-total" th:attr="data-mirror=|[id='${path}.payment']|"></span>
-                <span class="finance-total"
-                      th:text="${milestone.getPercentageOfCost(totalCosts)}"></span>
+                <span class="width-10-percent accordion-header-text govuk-!-margin-right-1" th:text="${milestone.month}"></span>
+                <span class="width-50-percent govuk-accordion__section-button" th:id="|accordion-finances-heading-${id}|"
+                      th:text="${milestone.description}">
+                </span>
+                <span class="width-10-percent finance-total margin-right-60"
+                      th:text="'£' + ${#numbers.formatInteger(milestone.payment, 0,'DEFAULT')}"></span>
+                <span class="width-10-percent finance-total"
+                      th:text="${#numbers.formatInteger(milestone.getPercentageOfFundingAmount(fundingAmount), 0,'DEFAULT') + '%'}"></span>
                 <!--/*<div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
                      class="section-status section-incomplete icon-
                      only error-marker"></div>*/-->
@@ -34,18 +48,85 @@
         </div>
         <div  th:id="|accordion-finances-content-${id}|" class="govuk-accordion__section-content"
               th:attr="aria-labelledby=|accordion-finances-heading-${id}|">
+            <input type="hidden" th:field="*{__${path}__.id}" />
+            <div class="left-col">
+                <div th:unless="${readonly}" class="govuk-form-group">
+                    <label class="govuk-label govuk-label--s" th:for="__${path}__.month">
+                        Month completed
+                    </label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.month)"/>
+                    <select class="govuk-select"
+                          th:errorclass="govuk-select--error"
+                          required="required"
+                          th:field="*{__${path}__.month}">
+                    <option th:each="duration : ${durations}"
+                            th:value="${duration}"
+                            th:text="${duration}">1</option>
+                    </select>
+                </div>
+            </div>
+            <div class="central-col">
+                <div th:unless="${readonly}" class="govuk-form-group">
+                    <label th:for="__${path}__.description" class="govuk-label govuk-label--s">
+                        Milestone
+                    </label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
+                    <input th:id="__${path}__.description"
+                           th:field="*{__${path}__.description}"
+                           th:errorclass="govuk-input--error"
+                           type="text"
+                           class="govuk-input"
+                           required="required"
+                    />
+                </div>
 
-            <div class="width-15-percent">
-                <p class="govuk-body" th:text="${milestone.month}"></p>
+                <div th:unless="${readonly}" class="govuk-form-group">
+                    <label class="govuk-label govuk-label--s"
+                           th:for="__${path}__.taskOrActivity">Task or activity</label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.taskOrActivity)"/>
+                    <textarea
+                        th:id="__${path}__.taskOrActivity"
+                        rows="8"
+                        class="govuk-textarea"
+                        th:field="*{__${path}__.taskOrActivity}">
+                    </textarea>
+                </div>
+                <p th:if="${readonly}" class="govuk-body" th:text="${milestone.taskOrActivity}"></p>
+
+                <div th:unless="${readonly}" class="govuk-form-group">
+                    <label class="govuk-label govuk-label--s"
+                           th:for="__${path}__.deliverable">Deliverable</label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.deliverable)"/>
+                    <textarea
+                        th:id="__${path}__.deliverable"
+                        rows="8"
+                        class="govuk-textarea"
+                        th:field="*{__${path}__.deliverable}">
+                    </textarea>
+                </div>
+                <p th:if="${readonly}" class="govuk-body" th:text="${milestone.deliverable}"></p>
+
+                <div th:unless="${readonly}" class="govuk-form-group">
+                    <label class="govuk-label govuk-label--s"
+                           th:for="__${path}__.successCriteria">Success criteria</label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.successCriteria)"/>
+                    <textarea
+                        th:id="__${path}__.successCriteria"
+                        rows="8"
+                        class="govuk-textarea"
+                        th:field="*{__${path}__.successCriteria}">
+                    </textarea>
+                </div>
+                <p th:if="${readonly}" class="govuk-body" th:text="${milestone.successCriteria}"></p>
+
             </div>
-            <div class="width-70-percent">
-                <p class="govuk-body" th:text="${milestone.description}"></p>
-                <p class="govuk-body" th:text="${milestone.deliverable}"></p>
-                <p class="govuk-body" th:text="${milestone.successCriteria}"></p>
-                <p class="govuk-body" th:text="${milestone.taskOrActivity}"></p>
-            </div>
-            <div class="width-15-percent">
-                <div class="govuk-form-group">
+            <div class="right-col">
+                <div th:unless="${readonly}" class="govuk-form-group">
                     <label th:for="__${path}__.payment" class="govuk-label govuk-label--s">
                         Payment requested (£)
                     </label>

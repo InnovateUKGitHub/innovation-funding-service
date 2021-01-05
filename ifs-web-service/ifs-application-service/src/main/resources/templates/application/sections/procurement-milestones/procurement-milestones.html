@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm"*/-->
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.ApplicationProcurementMilestonesViewModel"*/-->
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Payment milestones - ${applicationName}|" />
@@ -40,7 +42,7 @@
             <input type="hidden" id="cacheTest" value=""/>
 
 
-            <th:block th:insert="application/procurement-milestones :: milestones-form(${form})"/>
+            <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model.readOnly}, ${model.durations}, ${model.fundingAmount})"/>
 
 
             <div class="form-footer" th:if="${model.open}">

@@ -3,19 +3,22 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.for
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.UUID;
 
 public class ProcurementMilestonesForm {
+    public static final String UNSAVED_ROW_PREFIX = "unsaved-";
+
+    public static String generateUnsavedRowId() {
+        return UNSAVED_ROW_PREFIX + UUID.randomUUID().toString();
+    }
 
     private Map<String, ProcurementMilestoneForm> milestones;
-    private BigInteger totalCosts;
 
     public ProcurementMilestonesForm() {}
 
     public ProcurementMilestonesForm(Map<String, ProcurementMilestoneForm> milestones) {
         this.milestones = milestones;
-        calculateTotalCosts();
     }
-
 
     public Map<String, ProcurementMilestoneForm> getMilestones() {
         return milestones;
@@ -23,24 +26,19 @@ public class ProcurementMilestonesForm {
 
     public void setMilestones(Map<String, ProcurementMilestoneForm> milestones) {
         this.milestones = milestones;
-        calculateTotalCosts();
     }
 
-    public BigInteger getTotalCosts() {
-        return totalCosts;
-    }
-
-    public BigInteger getTotalPercentages() {
+    public BigInteger getTotalPayments() {
         return milestones.values().stream()
-                .map(milestone -> milestone.getPercentageOfCost(totalCosts))
+                .map(ProcurementMilestoneForm::getPayment)
+                .reduce(BigInteger.ZERO, BigInteger::add);
+    }
+
+    public BigInteger getTotalPercentages(BigInteger fundingAmount) {
+        return milestones.values().stream()
+                .map(milestone -> milestone.getPercentageOfFundingAmount(fundingAmount))
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(0, BigDecimal.ROUND_HALF_UP)
                 .toBigInteger();
-    }
-
-    private void calculateTotalCosts() {
-        totalCosts = milestones.values().stream()
-                .map(ProcurementMilestoneForm::getPayment)
-                .reduce(BigInteger.ZERO, BigInteger::add);
     }
 }
