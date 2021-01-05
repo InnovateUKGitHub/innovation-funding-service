@@ -27,7 +27,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
     private static final Long COMPETITION_ID_VALID = 1L;
     private static final Long COMPETITION_ID_UPDATE = 7L;
-    private static final Long COMPETITION_ID_INVALID = 8L;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -53,13 +52,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     }
 
     @Test
-    public void testEmptyGetAllMilestonesByCompetitionId() throws Exception {
-        List<MilestoneResource> milestone = getMilestonesForCompetition(COMPETITION_ID_INVALID);
-        assertTrue(milestone.isEmpty());
-        assertNotNull(milestone);
-    }
-
-    @Test
     public void testGetAllPublicMilestonesByCompetitionId() throws Exception {
         loginSystemRegistrationUser();
         RestResult<List<MilestoneResource>> milestoneResult = controller.getAllPublicMilestonesByCompetitionId(COMPETITION_ID_VALID);
@@ -67,15 +59,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         List<MilestoneResource> milestone = milestoneResult.getSuccess();
         assertNotNull(milestone);
         assertEquals(3, milestone.size());
-    }
-
-    @Test
-    public void testEmptyGetAllPublicMilestonesByCompetitionId() throws Exception {
-        loginSystemRegistrationUser();
-        RestResult<List<MilestoneResource>> result = controller.getAllPublicMilestonesByCompetitionId(COMPETITION_ID_INVALID);
-        List<MilestoneResource> milestones = result.getSuccess();
-        assertTrue(milestones.isEmpty());
-        assertNotNull(milestones);
     }
 
     @Test
@@ -93,14 +76,6 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccess();
         assertNull(milestone.getDate());
-    }
-
-    @Test
-    public void testGetMilestoneByTypeAndCompetitionIdReturns404WhenNotPresent() throws Exception {
-        RestResult<MilestoneResource> milestoneResult = controller.getMilestoneByTypeAndCompetitionId(MilestoneType.NOTIFICATIONS, COMPETITION_ID_INVALID);
-        assertTrue(milestoneResult.isFailure());
-        assertEquals(milestoneResult.getErrors().size(), 1);
-        assertEquals(milestoneResult.getErrors().get(0).getStatusCode(), NOT_FOUND);
     }
 
     @Test
