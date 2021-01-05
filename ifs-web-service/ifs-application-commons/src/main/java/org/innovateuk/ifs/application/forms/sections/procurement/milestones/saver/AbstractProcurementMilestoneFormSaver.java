@@ -7,10 +7,13 @@ import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneRes
 import org.innovateuk.ifs.procurement.milestone.service.ProcurementMilestoneRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 public abstract class AbstractProcurementMilestoneFormSaver<R extends ProcurementMilestoneResource> {
 
@@ -31,4 +34,22 @@ public abstract class AbstractProcurementMilestoneFormSaver<R extends Procuremen
             return service.update(mapper.apply(form)).toServiceResult();
         }
     }
+
+    public ServiceResult<Void> removeRowFromForm(ProcurementMilestonesForm form, String removeId) {
+        ServiceResult<Void> removeResult;
+        if (removeId.startsWith(ProcurementMilestonesForm.UNSAVED_ROW_PREFIX)) {
+            removeResult = serviceSuccess();
+        } else {
+            removeResult = service.delete(Long.parseLong(removeId)).toServiceResult();
+        }
+        return removeResult
+                .andOnSuccessReturnVoid(() ->  form.getMilestones().remove(removeId));
+    }
+
+    public void addRowForm(ProcurementMilestonesForm form) {
+        ProcurementMilestoneForm row = new ProcurementMilestoneForm();
+        row.setPayment(BigInteger.ZERO);
+        form.getMilestones().put(generateUnsavedRowId(), row);
+    }
+
 }

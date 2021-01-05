@@ -10,7 +10,7 @@
     <div class="procurement-milestones">
         <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
             <h4 class="width-10-percent govuk-heading-s">Month completed</h4>
-            <h4 class="width-60-percent govuk-heading-s govuk-!-margin-left-1   ">Milestone</h4>
+            <h4 class="width-60-percent govuk-heading-s govuk-!-margin-left-1">Milestone</h4>
             <h4 class="width-10-percent govuk-heading-s">% of project costs</h4>
             <h4 class="width-10-percent govuk-heading-s">Payment request</h4>
             <div class="govuk-accordion__section"
@@ -18,6 +18,12 @@
                 <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${readonly}, ${fundingAmount}, ${durations})"></th:block>
             </div>
         </div>
+        <p class="alignright" th:unless="${readonly}">
+            <button type="submit"
+                    name="add_row"
+                    class="button-clear">Add another project milestone
+            </button>
+        </p>
 
         <h3 class="govuk-heading-m width-80-percent">Total payment requested</h3>
         <h3 class="govuk-heading-m width-10-percent" th:text="${#numbers.formatInteger(form.getTotalPercentages(fundingAmount), 0,'DEFAULT')} + '%'"></h3>
@@ -145,6 +151,13 @@
                     />
                 </div>
             </div>
+            <p class="alignright" th:unless="${readonly}">
+                <button type="submit"
+                        th:name="remove_row"
+                        th:value="${id}"
+                        class="button-clear">Remove <span class="govuk-visually-hidden">milestone</span>
+                </button>
+            </p>
         </div>
     </th:block>
 </th:block>

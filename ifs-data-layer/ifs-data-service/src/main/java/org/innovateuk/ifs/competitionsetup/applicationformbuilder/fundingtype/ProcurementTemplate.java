@@ -50,7 +50,7 @@ public class ProcurementTemplate implements FundingTypeTemplate {
     private void addProcurementMilestoneSection(SectionBuilder financeSection) {
         financeSection.addChildSection(
                 aSubSection()
-                        .withName("Payment milestones")
+                        .withName("Your payment milestones")
                         .withType(SectionType.PAYMENT_MILESTONES)
                         .withQuestions(newArrayList(
                                 aQuestionWithMultipleStatuses()
