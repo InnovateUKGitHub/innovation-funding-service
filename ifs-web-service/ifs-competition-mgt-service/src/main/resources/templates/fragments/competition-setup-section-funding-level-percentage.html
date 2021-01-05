@@ -29,12 +29,12 @@
                 <div th:class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('maximums[0][0].maximum')} ? 'govuk-form-group--error'"
                      th:with="message=#{validation.competitionsetup.fundinglevelpercentage.single.numberbetween(0 ,100)}">
-                    <label class="govuk-label govuk-visually-hidden" for="maximum">
+                    <label class="govuk-label govuk-visually-hidden" for="maximums[0][0].maximum">
                         Funding level percentage
                     </label>
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('maximums[0][0].maximum')}"
                           th:text="${err}"/>
-                    <input id="maximum"
+                    <input id="maximums[0][0].maximum"
                            type="number"
                            class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
                            min="0"

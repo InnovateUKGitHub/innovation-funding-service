@@ -70,6 +70,7 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             long count = competition.getGrantClaimMaximums().stream()
                     .map(GrantClaimMaximum::getMaximum)
                     .filter(Objects::nonNull)
+                    .filter(max -> !Integer.valueOf(0).equals(max))
                     .distinct()
                     .count();
             return count == 1;
