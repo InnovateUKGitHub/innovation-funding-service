@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -113,7 +114,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 Boolean includeJesForm,
                                                 ApplicationFinanceType applicationFinanceType,
                                                 Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation) {
+                                                Boolean includeYourOrganisation,
+                                                Boolean alwaysOpen) {
 
         return asCompAdmin(data -> {
 
@@ -139,6 +141,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
 
                 List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
+
+                if (alwaysOpen != null) {
+                    CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
+                    competitionApplicationConfigResource.setAlwaysOpen(alwaysOpen);
+                    competition.setCompetitionApplicationConfig(competitionApplicationConfigResource);
+                }
 
                 competition.setName(name);
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
