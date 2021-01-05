@@ -34,10 +34,6 @@ ${heukarApplicationSubmissionEmailSubject}       confirmation of your Horizon Eu
 ${heukarApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe UK Application Registration for government-backed funding
 ${huekarApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
 ${huekarApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
-${businessOrgType}                               radio-1
-${researchOrgType}                               radio-2
-${researchAndTechOrgType}                        radio-3
-${publicSectorCharityNonJesOrgType}              radio-4
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
@@ -196,7 +192,7 @@ the user successfully completes application
     the user clicks the button/link                                 link = Continue and create an account
     user selects where is organisation based                        isNotInternational
     the user can see multiple options when selecting org type
-    the user selects the radio button                               organisationTypeId    ${businessOrgType}
+    the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            innovate  INNOVATE LTD
     the user should be redirected to the correct page               ${SERVER}/registration/register
@@ -213,10 +209,10 @@ the user successfully completes application
     the user accept the competition terms and conditions            Back to application overview
 
 the user can see multiple options when selecting org type
-    the user should see the element     css=[name^="organisationTypeId"][value="${businessOrgType}"] ~ label, [id="${businessOrgType}"] ~ label
-    the user should see the element     css=[name^="organisationTypeId"][value="${researchOrgType}"] ~ label, [id="${researchOrgType}"] ~ label
-    the user should see the element     css=[name^="organisationTypeId"][value="${researchAndTechOrgType}"] ~ label, [id="${researchAndTechOrgType}"] ~ label
-    the user should see the element     css=[name^="organisationTypeId"][value="${publicSectorCharityNonJesOrgType}"] ~ label, [id="${publicSectorCharityNonJesOrgType}"] ~ label
+    the user should see the element     css=[name^="organisationTypeId"][value="radio-${BUSINESS_TYPE_ID}"] ~ label, [id="radio-${BUSINESS_TYPE_ID}"] ~ label
+    the user should see the element     css=[name^="organisationTypeId"][value="radio-${ACADEMIC_TYPE_ID}"] ~ label, [id="radio-${ACADEMIC_TYPE_ID}"] ~ label
+    the user should see the element     css=[name^="organisationTypeId"][value="radio-${RTO_TYPE_ID}"] ~ label, [id="radio-${RTO_TYPE_ID}"] ~ label
+    the user should see the element     css=[name^="organisationTypeId"][value="radio-${PUBLIC_SECTOR_TYPE_ID}"] ~ label, [id="radio-${PUBLIC_SECTOR_TYPE_ID}"] ~ label
 
 the applicant views more information about Je-S
     the user should not see the element     jQuery = button:contains("Add person to")
@@ -229,22 +225,22 @@ the applicant views more information about Je-S
     Select Window                           title = Add a partner organisation - ${partnerOrgHeukarApplicationName} - Innovation Funding Service
 
 the applicant adds a partner for each organisation type
-    the user selects the radio button       organisationTypeId    ${businessOrgType}
+    the user selects the radio button       organisationTypeId    radio-${BUSINESS_TYPE_ID}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
     the user should see the element         jQuery = h3:contains("Partner") span:contains("1")
     the user should see the element         jQuery = td:contains("Business") ~ td:contains("Edit") button:contains("Remove organisation")
     the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    ${researchOrgType}
+    the user selects the radio button       organisationTypeId    radio-${ACADEMIC_TYPE_ID}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
     the user should see the element         jQuery = h3:contains("Partner") span:contains("2")
     the user should see the element         jQuery = td:contains("Research") ~ td:contains("Edit") button:contains("Remove organisation")
     the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    ${researchAndTechOrgType}
+    the user selects the radio button       organisationTypeId    radio-${RTO_TYPE_ID}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
     the user should see the element         jQuery = h3:contains("Partner") span:contains("3")
     the user should see the element         jQuery = td:contains("Research and technology organisation (RTO)") ~ td:contains("Edit") button:contains("Remove organisation")
     the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    ${publicSectorCharityNonJesOrgType}
+    the user selects the radio button       organisationTypeId    radio-${PUBLIC_SECTOR_TYPE_ID}
     the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
     the user should see the element         jQuery = h3:contains("Partner") span:contains("4")
     the user should see the element         jQuery = td:contains("Public sector, charity or non Je-S registered research organisation") ~ td:contains("Edit") button:contains("Remove organisation")
