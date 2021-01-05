@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -26,10 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -47,6 +45,8 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -57,17 +57,18 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ApplicationNotificationServiceImplTest {
-    @Mock
-    private ApplicationRepository applicationRepositoryMock;
 
     @Mock
-    private NotificationService notificationServiceMock;
+    private ApplicationRepository applicationRepository;
 
     @Mock
-    private SystemNotificationSource systemNotificationSourceMock;
+    private NotificationService notificationService;
 
     @Mock
-    private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
+    private SystemNotificationSource systemNotificationSource;
+
+    @Mock
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
 
     @InjectMocks
     private ApplicationNotificationService service = new ApplicationNotificationServiceImpl();
@@ -88,16 +89,29 @@ public class ApplicationNotificationServiceImplTest {
 
     @Test
     public void sendNotificationApplicationSubmitted() {
-        User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
-        Competition competition = newCompetition().build();
-        Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+        User leadUser = newUser()
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        Competition competition = newCompetition()
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
 
-        verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+        verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
             assertEquals(WEB_BASE_URL, notification.getGlobalArguments().get("webBaseUrl"));
@@ -111,16 +125,30 @@ public class ApplicationNotificationServiceImplTest {
 
     @Test
     public void sendNotificationApplicationSubmittedLoans() {
-        User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
-        Competition competition = newCompetition().withFundingType(FundingType.LOAN).build();
-        Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+        User leadUser = newUser()
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.LOAN)
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
 
-        verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+        verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
             assertEquals(competition.submissionDateDisplay(), notification.getGlobalArguments().get("compCloseDate"));
@@ -135,21 +163,76 @@ public class ApplicationNotificationServiceImplTest {
 
     @Test
     public void sendNotificationApplicationSubmitted_horizon2020() {
-        User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
-        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(CompetitionResource.H2020_TYPE_NAME).build()).build();
-        Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
-        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
-        when(notificationServiceMock.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+        User leadUser = newUser()
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        Competition competition = newCompetition()
+                .withCompetitionType(newCompetitionType()
+                        .withName(CompetitionResource.H2020_TYPE_NAME)
+                        .build())
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
 
-        verify(notificationServiceMock).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+        verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
             assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
             assertEquals(1, notification.getTo().size());
             assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
             assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
             assertEquals(HORIZON_2020_APPLICATION_SUBMITTED, notification.getMessageKey());
+        }), eq(EMAIL));
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void sendNotificationApplicationSubmitted_heukar() {
+        User leadUser = newUser()
+                .withEmailAddress("leadapplicant@example.com")
+                .build();
+
+        ProcessRole leadProcessRole = newProcessRole()
+                .withUser(leadUser)
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        Competition competition = newCompetition()
+                .withCompetitionType(newCompetitionType()
+                        .withName(CompetitionTypeEnum.HEUKAR.getText())
+                        .build())
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadProcessRole)
+                .withCompetition(competition)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(notificationService.sendNotificationWithFlush(any(), eq(EMAIL))).thenReturn(ServiceResult.serviceSuccess());
+
+        ServiceResult<Void> result = service.sendNotificationApplicationSubmitted(application.getId());
+
+        verify(notificationService).sendNotificationWithFlush(createLambdaMatcher(notification -> {
+            assertEquals(application.getName(), notification.getGlobalArguments().get("applicationName"));
+            assertEquals(application.getId(), notification.getGlobalArguments().get("applicationId"));
+            assertEquals(competition.getName(), notification.getGlobalArguments().get("competitionName"));
+            assertEquals(1, notification.getTo().size());
+            assertEquals(leadUser.getEmail(), notification.getTo().get(0).getTo().getEmailAddress());
+            assertEquals(leadUser.getName(), notification.getTo().get(0).getTo().getName());
+            assertEquals(HEUKAR_APPLICATION_SUBMITTED, notification.getMessageKey());
         }), eq(EMAIL));
         assertTrue(result.isSuccess());
     }
@@ -162,6 +245,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -180,7 +264,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(LEADAPPLICANT)
                 .withApplication(applications.toArray(new Application[0]))
                 .build(3);
 
@@ -196,7 +280,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<Notification> notifications = asList(
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(0),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
@@ -206,7 +290,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(1),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
@@ -216,7 +300,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(2),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
@@ -227,29 +311,29 @@ public class ApplicationNotificationServiceImplTest {
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
-        when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
-        when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
+        when(applicationRepository.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepository.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
+        when(applicationRepository.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
         notifications.forEach(notification ->
-                when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess())
+                when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess())
         );
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationOneId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationTwoId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationTwoId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationThreeId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(2), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationThreeId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(2), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
 
@@ -264,6 +348,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -282,7 +367,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(LEADAPPLICANT)
                 .withApplication(applications.toArray(new Application[0]))
                 .build(3);
 
@@ -301,7 +386,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<Notification> notifications = asList(
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(0),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
@@ -311,7 +396,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(1),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
@@ -321,7 +406,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(2),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
@@ -332,29 +417,29 @@ public class ApplicationNotificationServiceImplTest {
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
-        when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
-        when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
+        when(applicationRepository.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepository.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
+        when(applicationRepository.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
-        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(2), EMAIL)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(notificationService.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationService.sendNotificationWithFlush(notifications.get(2), EMAIL)).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationOneId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationTwoId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationTwoId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationThreeId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(2), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationThreeId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(2), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
 
@@ -371,6 +456,7 @@ public class ApplicationNotificationServiceImplTest {
         Long applicationThreeId = 4L;
 
         Competition competition = newCompetition()
+                .withFundingType(FundingType.GRANT)
                 .withName("Competition")
                 .build();
 
@@ -388,7 +474,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(LEADAPPLICANT)
                 .withApplication(applications.toArray(new Application[0]))
                 .build(3);
 
@@ -407,7 +493,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<Notification> notifications = asList(
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(0),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(0).getName(),
@@ -417,7 +503,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(1),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(1).getName(),
@@ -427,7 +513,7 @@ public class ApplicationNotificationServiceImplTest {
                                 "dashboardUrl", WEB_BASE_URL)
                 ),
                 new Notification(
-                        systemNotificationSourceMock,
+                        systemNotificationSource,
                         notificationTargets.get(2),
                         ApplicationNotificationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
                         asMap("name", users.get(2).getName(),
@@ -438,28 +524,109 @@ public class ApplicationNotificationServiceImplTest {
                 )
         );
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+        when(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
 
-        when(applicationRepositoryMock.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
-        when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
-        when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
+        when(applicationRepository.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+        when(applicationRepository.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
+        when(applicationRepository.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
         notifications.forEach(notification ->
-                when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(internalServerErrorError()))
+                when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(internalServerErrorError()))
         );
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
-        inOrder.verify(applicationRepositoryMock).findById(applicationOneId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
+        inOrder.verify(applicationRepository).findById(applicationOneId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
+    }
+
+    @Test
+    public void notifyKtpApplicantsByCompetition() {
+        Long competitionId = 1L;
+        Long applicationOneId = 2L;
+        Long applicationTwoId = 3L;
+        Long applicationThreeId = 4L;
+
+        Competition competition = newCompetition()
+                .withFundingType(FundingType.KTP)
+                .withName("Competition")
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("John", "Jane", "Bob", "innactive")
+                .withLastName("Smith", "Jones", "Davies", "gone")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com", "nolongeron@ifs.com")
+                .withStatus(UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.ACTIVE, UserStatus.INACTIVE)
+                .build(4);
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(applicationOneId, applicationTwoId, applicationThreeId)
+                .withName("App1", "App2", "App3")
+                .build(3);
+
+        ProcessRole ktaRole = newProcessRole()
+                .withUser(users.get(0))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        ProcessRole applicantRole = newProcessRole()
+                .withUser(users.get(1))
+                .withRole(Role.LEADAPPLICANT)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        ProcessRole collaboratorRole = newProcessRole()
+                .withUser(users.get(2))
+                .withRole(Role.COLLABORATOR)
+                .withApplication(applications.toArray(new Application[0]))
+                .build();
+
+        applications.get(0).setProcessRoles(asList(ktaRole, applicantRole));
+        applications.get(1).setProcessRoles(singletonList(applicantRole));
+        applications.get(2).setProcessRoles(Arrays.asList(applicantRole, collaboratorRole));
+
+        NotificationTarget notificationTarget = new UserNotificationTarget(
+                users.get(0).getName(), users.get(0).getEmail()
+        );
+
+        Notification notification = new Notification(
+                systemNotificationSource,
+                notificationTarget,
+                KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
+                asMap("name", users.get(0).getName(),
+                        "applicationName", applications.get(0).getName(),
+                        "applicationId", applications.get(0).getId(),
+                        "competitionName", competition.getName(),
+                        "dashboardUrl", WEB_BASE_URL)
+        );
+
+        when(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES)).thenReturn(applications);
+
+        when(applicationRepository.findById(applicationOneId)).thenReturn(Optional.of(applications.get(0)));
+
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(applicationRepository, notificationService);
+        inOrder.verify(applicationRepository).findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
+
+        inOrder.verify(applicationRepository).findById(applicationOneId);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isSuccess());
     }
 
     @Test
@@ -485,7 +652,7 @@ public class ApplicationNotificationServiceImplTest {
 
         ProcessRole[] processRoles = newProcessRole()
                 .withUser(users)
-                .withRole(Role.LEADAPPLICANT, Role.COLLABORATOR)
+                .withRole(LEADAPPLICANT, COLLABORATOR)
                 .buildArray(2, ProcessRole.class);
 
         Competition competition = newCompetition()
@@ -507,7 +674,7 @@ public class ApplicationNotificationServiceImplTest {
                 "applicationName", application.getName()
         );
 
-        SystemNotificationSource from = systemNotificationSourceMock;
+        SystemNotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(fullName, email);
         Notification notification = new Notification(
                 from,
@@ -517,17 +684,17 @@ public class ApplicationNotificationServiceImplTest {
                 expectedNotificationArguments
         );
 
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-        when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(true);
-        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationWorkflowHandler.informIneligible(application)).thenReturn(true);
+        when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findById(applicationId);
-        inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+        InOrder inOrder = inOrder(applicationRepository, applicationWorkflowHandler, notificationService);
+        inOrder.verify(applicationRepository).findById(applicationId);
+        inOrder.verify(applicationWorkflowHandler).informIneligible(application);
+        inOrder.verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -546,16 +713,16 @@ public class ApplicationNotificationServiceImplTest {
                 .withId(applicationId)
                 .build();
 
-        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
-        when(applicationWorkflowHandlerMock.informIneligible(application)).thenReturn(false);
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+        when(applicationWorkflowHandler.informIneligible(application)).thenReturn(false);
 
         ServiceResult<Void> serviceResult = service.informIneligible(applicationId, resource);
         assertTrue(serviceResult.isFailure());
         assertEquals(APPLICATION_MUST_BE_INELIGIBLE.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, applicationWorkflowHandlerMock, notificationServiceMock);
-        inOrder.verify(applicationRepositoryMock).findById(applicationId);
-        inOrder.verify(applicationWorkflowHandlerMock).informIneligible(application);
+        InOrder inOrder = inOrder(applicationRepository, applicationWorkflowHandler, notificationService);
+        inOrder.verify(applicationRepository).findById(applicationId);
+        inOrder.verify(applicationWorkflowHandler).informIneligible(application);
         inOrder.verifyNoMoreInteractions();
     }
 }

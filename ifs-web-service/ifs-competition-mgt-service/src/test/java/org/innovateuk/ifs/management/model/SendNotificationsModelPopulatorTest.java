@@ -80,5 +80,6 @@ public class SendNotificationsModelPopulatorTest {
         assertThat(viewModel.getUnsuccessfulRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getOnHoldRecipientsCount(), is(equalTo(1L)));
         assertThat(viewModel.getFundingDecisions(), is(equalTo(expectedDecisions)));
+        assertThat(viewModel.isHeukar(), is(equalTo(false)));
     }
 }

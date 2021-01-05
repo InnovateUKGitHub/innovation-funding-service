@@ -91,8 +91,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
     private GolTemplateResource golTemplate;
-    private boolean locationPerPartner = true;
-    private Boolean stateAid;
+    private FundingRules fundingRules;
     private Boolean includeYourOrganisationSection;
     private Set<Long> grantClaimMaximums;
     private ApplicationFinanceType applicationFinanceType;
@@ -664,14 +663,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.termsAndConditions = termsAndConditions;
     }
 
-    public boolean isLocationPerPartner() {
-        return locationPerPartner;
-    }
-
-    public void setLocationPerPartner(boolean locationPerPartner) {
-        this.locationPerPartner = locationPerPartner;
-    }
-
     public Integer getMinProjectDuration() {
         return minProjectDuration;
     }
@@ -688,12 +679,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public Boolean getStateAid() {
-        return stateAid;
+    public FundingRules getFundingRules() {
+        return fundingRules;
     }
 
-    public void setStateAid(final Boolean stateAid) {
-        this.stateAid = stateAid;
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Boolean getIncludeYourOrganisationSection() {
@@ -820,7 +811,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return new EqualsBuilder()
                 .append(setupComplete, that.setupComplete)
                 .append(nonIfs, that.nonIfs)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -865,7 +855,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(stateAid, that.stateAid)
+                .append(fundingRules, that.fundingRules)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
@@ -928,8 +918,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
-                .append(locationPerPartner)
-                .append(stateAid)
+                .append(fundingRules)
                 .append(includeYourOrganisationSection)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)

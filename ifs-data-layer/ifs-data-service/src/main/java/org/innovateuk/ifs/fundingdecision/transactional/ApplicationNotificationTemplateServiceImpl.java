@@ -57,8 +57,14 @@ public class ApplicationNotificationTemplateServiceImpl extends BaseTransactiona
     public ServiceResult<ApplicationNotificationTemplateResource> getUnsuccessfulNotificationTemplate(long competitionId) {
 
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            String unsuccessfulTemplate = competition.isKtp() ?
-                    "unsuccessful_funding_decision_ktp.html" : "unsuccessful_funding_decision.html";
+            String unsuccessfulTemplate;
+            if (competition.isKtp()) {
+                unsuccessfulTemplate = "unsuccessful_funding_decision_ktp.html";
+            } else if (competition.isHeukar()) {
+                unsuccessfulTemplate = "unsuccessful_funding_decision_heukar.html";
+            } else {
+                unsuccessfulTemplate = "unsuccessful_funding_decision.html";
+            }
 
             return renderTemplate(competitionId, unsuccessfulTemplate, (c) -> {
                 Map<String, Object> arguments = new HashMap<>();

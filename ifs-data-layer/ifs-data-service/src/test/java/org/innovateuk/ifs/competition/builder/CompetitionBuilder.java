@@ -59,10 +59,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("setupComplete", setupComplete);
     }
 
-    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
-        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
-    }
-
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
@@ -205,8 +201,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
     }
 
-    public CompetitionBuilder withStateAid(Boolean... stateAid) {
-        return withArraySetFieldByReflection("stateAid", stateAid);
+    public CompetitionBuilder withFundingRules(FundingRules... fundingRules) {
+        return withArraySetFieldByReflection("fundingRules", fundingRules);
     }
 
     public CompetitionBuilder withCompetitionDocuments(List<CompetitionDocument>... projectDocuments) {
