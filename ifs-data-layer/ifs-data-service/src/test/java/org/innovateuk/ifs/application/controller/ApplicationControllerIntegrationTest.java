@@ -50,6 +50,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
         processRoles.get(0).setUser(user);
+        user.addRole(Role.APPLICANT);
         swapOutForUser(userMapper.mapToResource(user));
     }
 

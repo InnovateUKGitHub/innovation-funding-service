@@ -261,7 +261,7 @@ the user should should see lead and partners details
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Pete Tom")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("81877706440")
-    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")
+    the user should see the element    jQuery = #accordion-questions-content-1-1 h2:contains("${EXISTING_PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Type")+td:contains("Business")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("Ewan Cormack")
     the user should see the element    jQuery = #accordion-questions-content-1-1 td:contains("${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}")

@@ -15,6 +15,8 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...
 ...               IFS-8826 Applicants with assessor roles cannot add a funding level in an application
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -32,9 +34,10 @@ Non registered users non companies house route
     And the user clicks the button/link                          link = Continue and create an account
     And the user selects the radio button                        organisationTypeId    radio-1
     And the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
-    When the user clicks the Not on companies house link         org2
-    Then the user clicks the button/link                         jQuery = .govuk-button:contains("Save and continue")
-    And The user should see the element                          jQuery = h1:contains("Your details")
+#  TODO should uncomment on completing ifs-7724
+#    When the user clicks the Not on companies house link         org2
+#    Then the user clicks the button/link                         jQuery = .govuk-button:contains("Save and continue")
+#    And The user should see the element                          jQuery = h1:contains("Your details")
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
@@ -60,12 +63,12 @@ Applicant can still access the application from dashboard on saving the apllicat
 Verify the name of the new application
     [Documentation]    INFUND-669 INFUND-1163
     [Tags]  HappyPath
-    When the user edits the application title                      ${test_title}
-    Then the user should see the element                          jQuery = h1 span:contains("${test_title}")
+    When the user edits the application title                        ${test_title}
+    Then the user should see the element                             jQuery = h1 span:contains("${test_title}")
     And the progress indicator should show 0
-    And the user clicks the button/link                           link = Application team
-    And the user should see the element                           jQuery = h1:contains("Application team")
-    And the user can see this new application on their dashboard  ${test_title}
+    And the user clicks the button/link                              link = Application team
+    And the user should see the element                              jQuery = h1:contains("Application team")
+    And the user can see this new application on their dashboard     ${test_title}
 
 Marketing emails information should have updated on the profile
     [Documentation]    INFUND-9243

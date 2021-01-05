@@ -98,6 +98,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8522 Loans - Change of EDI survey link
 ...
+...               IFS-8496 Unable to delete competitions in the upcoming tab
+...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
 Suite Setup       Custom suite setup
@@ -106,6 +108,7 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Applicant_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${peter_freeman}            Peter Freeman
@@ -197,7 +200,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086  IFS-6205
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user should see the element     link = Loans
+    When the user should see the element     link = Loans (opens in a new window)
     And the user clicks the button/link      jQuery = button:contains("Done")
     And the user clicks the button/link      link = Back to competition details
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -432,7 +435,7 @@ External user edits the EDI question.
     [Documentation]  IFS-7700  IFS-8522
     Given the user marks each question as complete     Equality, diversity and inclusion
     And the user clicks the button/link                link = Equality, diversity and inclusion
-    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']   
+    And the user should see the element                css=a[href*='https://bit.ly/EDIForm']
     When the user clicks the button/link               jQuery = a:contains("Edit this question")
     And the user clicks the button/link                jQuery = button:contains("Done")
     Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
@@ -733,14 +736,22 @@ User deletes the competition
     And the user navigates to the page          ${CA_UpcomingComp}
     Then The user should not see the element    link = No competition title defined
 
+User deletes the competition on completing all competition details
+    [Documentation]  IFS-8496
+    Given the comp admin creates competition with all sections details    ${business_type_id}  Competition to Delete  EOI  ${compType_Programme}  NOT_AID  GRANT  PROJECT_SETUP  no  1  true  collaborative
+    When the user clicks the button/link                                  link = Delete competition
+    And the user clicks the button/link                                   css = .delete-modal button[type="submit"]
+    And the user navigates to the page                                    ${CA_UpcomingComp}
+    Then The user should not see the element                              link = Competition to Delete
+
 User cannot delete competition with assessors
-   [Documentation]  IFS-1084
-   [Tags]  HappyPath
-   Given the user clicks the button/link       link = Photonics for health
-   And The user clicks the button/link         link = View and update competition details
-   When the user clicks the button/link        link = Delete competition
-   And the user clicks the button/link         css = .delete-modal button[type="submit"]
-   Then The user should see a summary error    You cannot delete this competition as assessors have been invited.
+    [Documentation]  IFS-1084
+    [Tags]  HappyPath
+    Given the user clicks the button/link       link = Photonics for health
+    And The user clicks the button/link         link = View and update competition details
+    When the user clicks the button/link        link = Delete competition
+    And the user clicks the button/link         css = .delete-modal button[type="submit"]
+    Then The user should see a summary error    You cannot delete this competition as assessors have been invited.
 
 The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
@@ -755,7 +766,7 @@ The Applicant should see the selected research cartegories
     Then the user should see the element       css = label[for="researchCategory1"]
     And the user should see the element        css = label[for="researchCategory2"]
     When the user clicks the button twice      jQuery = label:contains("Feasibility studies")
-    And the user clicks the button/link        id = application-question-save
+    Then the user clicks the button/link        id = application-question-save
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
@@ -967,3 +978,31 @@ Custom suite teardown
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
 
+the comp admin creates competition with all sections details
+    [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingRule}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
+    ...  ELSE  the user selects the Terms and Conditions
+    the user fills in the CS Funding Information
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user selects the organisational eligibility to no   false
+    the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
+    ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
+    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
+    the user fills in the CS Assessors                      ${fundingType}
+    Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
+    ...  ELSE  the user fills in the CS Documents in other projects
+    the user clicks the button/link                         link = Public content
+    the user fills in the Public content and publishes      ${extraKeyword}
+    the user clicks the button/link                         link = Return to setup overview
+    the user clicks the button/link                         link = Innovation leads
+    the user clicks the button/link                         jQuery = td:contains("Peter Freeman") button:contains("Add")
+    the user clicks the button/link                         link = Competition details
+    the user clicks the button/link                         link = Stakeholders
+    the user select stakeholder and add to competition
+    the user clicks the button/link                         link = Competition setup
+    the user clicks the button/link                         link = Documents
+    the user clicks the button/link                         id = doneButton

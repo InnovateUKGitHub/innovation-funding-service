@@ -17,10 +17,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
-import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -47,6 +44,7 @@ import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static org.innovateuk.ifs.testdata.builders.ProcurementMilestoneDataBuilder.newProcurementMilestoneDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -67,6 +65,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private ApplicationDataBuilder applicationDataBuilder;
     private CompetitionDataBuilder competitionDataBuilder;
     private ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
+    private ProcurementMilestoneDataBuilder procurementMilestoneDataBuilder;
     private QuestionResponseDataBuilder questionResponseDataBuilder;
 
     @PostConstruct
@@ -78,6 +77,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         competitionDataBuilder = newCompetitionData(serviceLocator);
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
+        procurementMilestoneDataBuilder = newProcurementMilestoneDataBuilder(serviceLocator);
     }
 
     public List<ApplicationQuestionResponseData> createApplicationQuestionResponses(
@@ -243,6 +243,46 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         return simpleMap(builders, BaseBuilder::build);
     }
+
+    public List<ProcurementMilestoneData> createProcurementMilestones(
+            ApplicationData applicationData,
+            ApplicationLine applicationLine,
+            List<ExternalUserLine> externalUsers) {
+
+        if (applicationData.getCompetition().isProcurement() && applicationLine.createFinanceResponses) {
+            Map<String, String> usersOrganisations = simpleToMap(externalUsers, user -> user.emailAddress, user -> user.organisationName);
+
+            List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
+
+            List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+
+                UserResource user = retrieveUserByEmail(email);
+                OrganisationResource organisation = organisationByName(usersOrganisations.get(email));
+
+                return Triple.of(user.getEmail(), organisation.getName(),
+                        OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+            });
+
+            List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = simpleFilter(organisations, triple ->
+                    isUniqueOrFirstDuplicateOrganisation(triple, organisations));
+
+            List<ProcurementMilestoneDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
+                String user = orgDetails.getLeft();
+                String organisationName = orgDetails.getMiddle();
+
+                return procurementMilestoneDataBuilder
+                        .withApplication(applicationData.getApplication())
+                        .withCompetition(applicationData.getCompetition())
+                        .withOrganisation(organisationName)
+                        .withUser(user)
+                        .withMilestones();
+            });
+            return simpleMap(builders, BaseBuilder::build);
+        } else {
+            return emptyList();
+        }
+    }
+
 
     public void completeApplication(
             ApplicationData applicationData,

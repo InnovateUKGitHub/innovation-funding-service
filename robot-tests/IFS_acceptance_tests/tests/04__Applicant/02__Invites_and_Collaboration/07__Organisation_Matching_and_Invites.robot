@@ -43,7 +43,7 @@ the user invites collaborator by email address
     [Arguments]    ${COLLAB_USER_EMAIL}
     the user clicks the button/link       link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link       link = Application team
-    the user clicks the button/link       jQuery=button:contains("Add person to INNOVATE LTD")
+    the user clicks the button/link       jQuery=button:contains("Add person to ROYAL MAIL PLC")
     The user enters text to a text field  css = [name=name]  research collab
     The user enters text to a text field  css = [name=email]  ${COLLAB_USER_EMAIL}
     the user clicks the button/link       jQuery = button:contains("Invite to application")

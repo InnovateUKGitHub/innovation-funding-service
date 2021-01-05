@@ -42,7 +42,8 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 ${application_name}    Invite robot test application
 ${newLeadApplicant}    kevin@worth.systems
 ${newCollaborator}     jerry@worth.systems
-${organisation}        org2
+#${organisation}        org2
+${organisation}        ITV PLC
 
 *** Test Cases ***
 Application team page
@@ -198,7 +199,7 @@ Partner can see the Application team
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
-    Given the user clicks the button/link      jQuery = button:contains("Add person to NOMENSA LTD")
+    Given the user clicks the button/link      jQuery = button:contains("Add person to")button:contains("FIRSTGROUP PLC")
     When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
     Then The user should see the element       jQuery = td:contains("Mark (pending for")
 
@@ -249,7 +250,7 @@ The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   ${organisation}
     Then the user creates an account and signs in
 
 New Lead Applicant invites new user as collaborator on his application
@@ -262,7 +263,7 @@ New Lead Applicant invites new user as collaborator on his application
 
 *** Keywords ***
 The lead applicant should have the correct org status
-    the user should see the element  jQuery = h2:contains("org2")
+    the user should see the element  jQuery = h2:contains("${organisation}")
     the user should see the element  jQuery = td:contains("Type")+td:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
@@ -280,7 +281,7 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     When the user clicks the button/link  link = Application team
-    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")
+    Then the user should see the element  jQuery = h2:contains("FIRSTGROUP PLC")
     And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
@@ -317,7 +318,7 @@ the user accepts invitation
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
     the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
+    the user selects his organisation in Companies House  FIRSTGROUP  FIRSTGROUP PLC
 
 the user still sees pending user
     the user clicks the application tile if displayed

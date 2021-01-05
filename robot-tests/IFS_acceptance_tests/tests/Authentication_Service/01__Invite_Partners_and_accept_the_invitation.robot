@@ -90,7 +90,7 @@ Partner can invite others to his own organisation
     [Documentation]    INFUND-2335  INFUND-7977
     Given the user clicks the button/link                      link = Invite robot test application
     And the user clicks the button/link                        link = Application team
-    When the user clicks the button/link                       jQuery = button:contains("Add person to NOMENSA LTD")
+    When the user clicks the button/link                       jQuery = button:contains("Add person to FIRSTGROUP PLC")
     And the user invites a person to the same organisation     Mark  mark21@innovateuk.com
     Then The user should see the element                       jQuery = td:contains("Mark (pending for")
 
@@ -162,7 +162,7 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link      link = ${application_name}
     When the user clicks the button/link     link = Application team
-    Then the user should see the element     jQuery = h2:contains("NOMENSA LTD")
+    Then the user should see the element     jQuery = h2:contains("FIRSTGROUP PLC")
     And the user should see the element      jQuery = td:contains("Type")+td:contains("Business")
 
 the user creates an account and signs in
@@ -196,7 +196,7 @@ the user accepts invitation
     the user clicks the button/link                          jQuery = .govuk-button:contains("Yes, accept invitation")
     the user selects the radio button                        organisationTypeId    1
     the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
-    the user selects his organisation in Companies House     Nomensa  NOMENSA LTD
+    the user selects his organisation in Companies House     FIRSTGROUP  FIRSTGROUP PLC
 
 the user still sees pending user
     the user clicks the button/link    link = Invite robot test application

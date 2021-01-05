@@ -49,7 +49,7 @@ the user enters organisation details
     [Arguments]    ${orgName}
     the user enters text to a text field     id = organisationSearchName    ${orgName}
     the user clicks the button/link          id = org-search
-    the user clicks the button/link          link = INNOVATE LTD
+    the user clicks the button/link          link = ROYAL MAIL PLC
     the user clicks the button/link          jQuery = .govuk-button:contains("Save and continue")
 
 Custom suite teardown

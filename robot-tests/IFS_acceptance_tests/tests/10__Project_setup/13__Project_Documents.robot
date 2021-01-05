@@ -286,7 +286,7 @@ IfsAdmin adds a partner organisation and all partners can see rejected documents
     Given compAdmin approves all documents
     And the user clicks the button/link                      jQuery = a:contains("Add a partner organisation")
     When the user adds a new partner organisation            Testing Errors Organisation  FName Surname  testErrMsg@gmail.com
-    And a new organisation is able to accept project invite  FName  Surname  testErrMsg@gmail.com  Nomensa  NOMENSA LTD  ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
+    And a new organisation is able to accept project invite  FName  Surname  testErrMsg@gmail.com  FIRSTGROUP  FIRSTGROUP PLC  ${Grade_Crossing_Applicaiton_No}  ${Grade_Crossing_Application_Title}
     Then partners can see rejected documents due to new organisation
     [Teardown]  the user removes and reuploads project files
 

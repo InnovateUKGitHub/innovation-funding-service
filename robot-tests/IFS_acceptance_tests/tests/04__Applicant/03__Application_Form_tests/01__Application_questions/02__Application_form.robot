@@ -202,7 +202,7 @@ Log in and create a new application for the Aerospace competition
     ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
             ...    AND    And the user clicks the button/link    jQuery = .govuk-button:contains("Continue")
-    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain   org2
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    Page Should Contain   ITV PLC
             Run Keyword If    '${status}' == 'PASS'    the user selects the radio button     selectedOrganisationId  21
     the user clicks the button/link    css = .govuk-button[type="submit"]   #Save and continue
 

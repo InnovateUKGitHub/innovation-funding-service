@@ -25,7 +25,7 @@ User can choose RTO when both RTO and Business are eligible
     [Documentation]    IFS-1014
     [Tags]  HappyPath
     When the user clicks the button/link    jQuery = button:contains("Save and continue")
-    Then the user should see the element    jQuery = h1:contains("Enter organisation details")
+    Then the user should see the element    jQuery = h1:contains("Enter your organisation's details")
 
 User can choose Business when both RTO and Business are eligible
     [Documentation]    IFS-1014
@@ -33,32 +33,32 @@ User can choose Business when both RTO and Business are eligible
     Given the user clicks the button/link         jQuery = a:contains("Back to choose your organisation type")
     When the user chooses an organisation type    ${BUSINESS_TYPE_ID}
     And the user clicks the button/link           jQuery = button:contains("Save and continue")
-    Then the user should see the element          jQuery = h1:contains("Enter organisation details")
+    Then the user should see the element          jQuery = h1:contains("Enter your organisation's details")
 
 User cannot choose Research when both Research and Public sector types are ineligible
     [Documentation]    IFS-1014
     [Tags]  HappyPath
-    Given the user clicks the button/link         jQuery = a:contains("Back to choose your organisation type")
-    When the user chooses an organisation type    ${ACADEMIC_TYPE_ID}
-    And the user clicks the button/link           jQuery = button:contains("Save and continue")
-    And the user should see the text in the element  css = #main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
+    Given the user clicks the button/link               jQuery = a:contains("Back to choose your organisation type")
+    When the user chooses an organisation type          ${ACADEMIC_TYPE_ID}
+    And the user clicks the button/link                 jQuery = button:contains("Save and continue")
+    And the user should see the text in the element     css = #main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
     [Teardown]    go back
 
 User cannot choose Public Sector when both Research and Public sector types are ineligible
     [Documentation]    IFS-1014
     [Tags]  HappyPath
-    When the user chooses an organisation type    ${PUBLIC_SECTOR_TYPE_ID}
-    And the user clicks the button/link           jQuery = button:contains("Save and continue")
-    And the user should see the text in the element  css = #main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
+    When the user chooses an organisation type          ${PUBLIC_SECTOR_TYPE_ID}
+    And the user clicks the button/link                 jQuery = button:contains("Save and continue")
+    And the user should see the text in the element     css = #main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
 
 Lead applicant can see a validation message in select your organisation page
     [Documentation]   IFS-7986
-    Given the user clicks the button/link                                  link = Sign in
-    And logging in and error checking                                      christine.ward@gmail.com    ${short_password}
+    Given the user clicks the button/link                                 link = Sign in
+    And logging in and error checking                                     christine.ward@gmail.com    ${short_password}
     And User starts an application with a second organisation type
     And the user start again a new application with two organisations
-    When the user clicks the button/link                                   id = save-organisation-button
-    Then the user should see a field and summary error                     Please select an organisation.
+    When the user clicks the button/link                                  id = save-organisation-button
+    Then the user should see a field and summary error                    Please select an organisation.
 
 *** Keywords ***
 the user chooses an organisation type

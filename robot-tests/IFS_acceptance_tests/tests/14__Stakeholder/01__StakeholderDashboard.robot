@@ -241,9 +241,9 @@ the user adds a stakeholder as partner organisation
 the user provides organisation details
     the user selects the radio button        organisationTypeId  radio-1
     the user clicks the button/link          jQuery = button:contains("Save and continue")
-    the user enters text to a text field     id = organisationSearchName  Nomensa
+    the user enters text to a text field     id = organisationSearchName  FIRSTGROUP
     the user clicks the button/link          id = org-search
-    the user clicks the button/link          link = NOMENSA LTD
+    the user clicks the button/link          link = FIRSTGROUP PLC
     the user clicks the button/link          name = save-organisation
 
 All of the calculations on the dashboard should be correct
@@ -315,9 +315,3 @@ the user enters the details and create account
     the user enters text to a text field     id = lastName  Holder
     the user enters text to a text field     id = password  ${short_password}
     the user clicks the button/link          jQuery = .govuk-button:contains("Create account")
-
-the user select stakeholder and add to competition
-    the user clicks the button/link           css = a[href="?tab=add"]
-    When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
-    And the user clicks the button/link       jQuery = a:contains("Added to competition")
-    Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
