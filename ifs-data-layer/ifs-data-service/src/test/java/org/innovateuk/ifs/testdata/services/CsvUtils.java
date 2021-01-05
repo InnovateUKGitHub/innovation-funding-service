@@ -821,6 +821,25 @@ public class CsvUtils {
         }
     }
 
+    public static class AssessmentPeriodLine {
+        public int lineNumber;
+        public String competition;
+        public int assessmentPeriod;
+        public ZonedDateTime assessorBriefing;
+        public ZonedDateTime assessorAccepts;
+        public ZonedDateTime assessorDeadline;
+
+        private AssessmentPeriodLine(List<String> line , int lineNumber) {
+            this.lineNumber = lineNumber;
+            int i = 0;
+            competition = nullable(line.get(i++));
+            assessmentPeriod = nullableInteger(line.get(i++));
+            assessorBriefing = nullableDateTime(line.get(i++));
+            assessorAccepts  = nullableDateTime(line.get(i++));
+            assessorDeadline = nullableDateTime(line.get(i++));
+        }
+    }
+
     public static List<List<String>> readCsvLines(String csvName) {
         try {
             File file = new File(CsvUtils.class.getResource("/testdata/" + csvName + ".csv").toURI());
