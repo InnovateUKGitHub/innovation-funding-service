@@ -8,19 +8,15 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	               KTP in panel application
-${ktpProjectID}                    ${project_ids["${KTPapplication}"]}
-${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                   KTP in panel
-${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
-${ktpLeadOrgName}                  A base of knowledge
-${ktpLeadOrgID}                    ${organisation_ids["${ktpLeadOrgName}"]}
-${ktpPartnerOrgName}               Ludlow
-${ktpPartnerOrgId}                 ${organisation_ids["${ktpPartnerOrgName}"]}
-&{FinanceUser}                     email=lee.bowman@innovateuk.test    password=${short_password}
-&{ifsAdmin}                        email=arden.pimenta@innovateuk.test     password=${short_password}
-&{ktpLead}                         email=bob@knowledge.base    password=${short_password}
-&{ktpPartner}                      email=jessica.doe@ludlow.co.uk    password=${short_password}
+${KTPapplication}  	     KTP in panel application
+${ktpProjectID}          ${project_ids["${KTPapplication}"]}
+${KTPcompetiton}         KTP in panel
+${KTPcompetitonId}       ${competition_ids["${KTPcompetiton}"]}
+${ktpLeadOrgName}        A base of knowledge
+${ktpLeadOrgID}          ${organisation_ids["${ktpLeadOrgName}"]}
+${ktpPartnerOrgName}     Ludlow
+${ktpPartnerOrgId}       ${organisation_ids["${ktpPartnerOrgName}"]}
+&{ktpLead}               email=bob@knowledge.base    password=${short_password}
 
 *** Test Cases ***
 Internal user can edit the duration of the project
@@ -60,7 +56,7 @@ Internal user checks the Finance overview page
 
 The lead checks the Finance overview page
     [Documentation]  IFS-8328
-    Given Log in as a different user                                                                  bob@knowledge.base    Passw0rd1357
+    Given Log in as a different user                                                                  &{ktpLead}
     And The user navigates to the page                                                                ${server}/project-setup/project/${ktpProjectID}/finance-checks
     When The user clicks the button/link                                                              link = your project finance overview
     Then the user verifies the values in the finance summary table after editing the project costs
@@ -74,7 +70,7 @@ The lead checks the Eligibility check page
 
 The partner checks the Finance overview page
     [Documentation]  IFS-8328
-    Given Log in as a different user                                                                  jessica.doe@ludlow.co.uk    Passw0rd1357
+    Given Log in as a different user                                                                  &{collaborator1_credentials}
     And The user navigates to the page                                                                ${server}/project-setup/project/${ktpProjectID}/finance-checks
     When The user clicks the button/link                                                              link = project finance overview
     Then the user verifies the values in the finance summary table after editing the project costs
@@ -131,7 +127,7 @@ the user approves viability
 
 the user confirms the values in the finance table
     the user should see the element     jQuery = th:contains("Project duration")
-#    the user should see the element     jQuery = td:nth-child(1):contains("30 months")
+    the user should see the element     jQuery = td:nth-child(1):contains("30 months")
     the user should see the element     jQuery = th:contains("Total costs")
     the user should see the element     jQuery = td:nth-child(2):contains("£720")
     the user should see the element     jQuery = th:contains("Funding level (%)")
