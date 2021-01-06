@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm"*/-->
-<!--/*@thymesVar id="fundingAmount" type="java.math.BigDecimal"*/-->
-<!--/*@thymesVar id="durations" type="java.util.List"*/-->
-<!--/*@thymesVar id="readonly" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.AbstractProcurementMilestoneViewModel"*/-->
 
-<th:block th:fragment="milestones-form(form, readonly, durations, fundingAmount)">
+<th:block th:fragment="milestones-form(form, model)">
 
     <div class="procurement-milestones">
         <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
@@ -15,10 +13,10 @@
             <h4 class="width-10-percent govuk-heading-s">Payment request</h4>
             <div class="govuk-accordion__section"
                 th:each="entry : ${form.milestones}">
-                <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${readonly}, ${fundingAmount}, ${durations})"></th:block>
+                <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${model})"></th:block>
             </div>
         </div>
-        <p class="alignright" th:unless="${readonly}">
+        <p class="alignright" th:unless="${model.readOnly}">
             <button type="submit"
                     name="add_row"
                     class="button-clear">Add another project milestone
@@ -26,12 +24,12 @@
         </p>
 
         <h3 class="govuk-heading-m width-80-percent">Total payment requested</h3>
-        <h3 class="govuk-heading-m width-10-percent" th:text="${#numbers.formatInteger(form.getTotalPercentages(fundingAmount), 0,'DEFAULT')} + '%'"></h3>
+        <h3 class="govuk-heading-m width-10-percent" th:text="${#numbers.formatInteger(form.getTotalPercentages(model.fundingAmount), 0,'DEFAULT')} + '%'"></h3>
         <h3 class="govuk-heading-m width-10-percent" th:text="'£' + ${#numbers.formatInteger(form.totalPayments, 0,'DEFAULT')}"></h3>
     </div>
 </th:block>
 
-<th:block  th:fragment="milestones-row(id, milestone, readonly, fundingAmount, durations)">
+<th:block  th:fragment="milestones-row(id, milestone, model)">
     <!--/*@thymesVar id="id" type="java.lang.String"*/-->
     <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
     <th:block th:with="path=|milestones[${id}]|">
@@ -45,7 +43,7 @@
                 <span class="width-10-percent finance-total margin-right-60"
                       th:text="'£' + ${#numbers.formatInteger(milestone.payment, 0,'DEFAULT')}"></span>
                 <span class="width-10-percent finance-total"
-                      th:text="${#numbers.formatInteger(milestone.getPercentageOfFundingAmount(fundingAmount), 0,'DEFAULT') + '%'}"></span>
+                      th:text="${#numbers.formatInteger(milestone.getPercentageOfFundingAmount(model.fundingAmount), 0,'DEFAULT') + '%'}"></span>
                 <!--/*<div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
                      class="section-status section-incomplete icon-
                      only error-marker"></div>*/-->
@@ -56,7 +54,7 @@
               th:attr="aria-labelledby=|accordion-finances-heading-${id}|">
             <input type="hidden" th:field="*{__${path}__.id}" />
             <div class="left-col">
-                <div th:unless="${readonly}" class="govuk-form-group">
+                <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label class="govuk-label govuk-label--s" th:for="__${path}__.month">
                         Month completed
                     </label>
@@ -66,14 +64,14 @@
                           th:errorclass="govuk-select--error"
                           required="required"
                           th:field="*{__${path}__.month}">
-                    <option th:each="duration : ${durations}"
+                    <option th:each="duration : ${model.durations}"
                             th:value="${duration}"
                             th:text="${duration}">1</option>
                     </select>
                 </div>
             </div>
             <div class="central-col">
-                <div th:unless="${readonly}" class="govuk-form-group">
+                <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label th:for="__${path}__.description" class="govuk-label govuk-label--s">
                         Milestone
                     </label>
@@ -88,7 +86,7 @@
                     />
                 </div>
 
-                <div th:unless="${readonly}" class="govuk-form-group">
+                <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label class="govuk-label govuk-label--s"
                            th:for="__${path}__.taskOrActivity">Task or activity</label>
                     <th:block
@@ -100,9 +98,9 @@
                         th:field="*{__${path}__.taskOrActivity}">
                     </textarea>
                 </div>
-                <p th:if="${readonly}" class="govuk-body" th:text="${milestone.taskOrActivity}"></p>
+                <p th:if="${model.readOnly}" class="govuk-body" th:text="${milestone.taskOrActivity}"></p>
 
-                <div th:unless="${readonly}" class="govuk-form-group">
+                <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label class="govuk-label govuk-label--s"
                            th:for="__${path}__.deliverable">Deliverable</label>
                     <th:block
@@ -114,9 +112,9 @@
                         th:field="*{__${path}__.deliverable}">
                     </textarea>
                 </div>
-                <p th:if="${readonly}" class="govuk-body" th:text="${milestone.deliverable}"></p>
+                <p th:if="${model.readOnly}" class="govuk-body" th:text="${milestone.deliverable}"></p>
 
-                <div th:unless="${readonly}" class="govuk-form-group">
+                <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label class="govuk-label govuk-label--s"
                            th:for="__${path}__.successCriteria">Success criteria</label>
                     <th:block
@@ -128,11 +126,11 @@
                         th:field="*{__${path}__.successCriteria}">
                     </textarea>
                 </div>
-                <p th:if="${readonly}" class="govuk-body" th:text="${milestone.successCriteria}"></p>
+                <p th:if="${model.readOnly}" class="govuk-body" th:text="${milestone.successCriteria}"></p>
 
             </div>
             <div class="right-col">
-                <div th:unless="${readonly}" class="govuk-form-group">
+                <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label th:for="__${path}__.payment" class="govuk-label govuk-label--s">
                         Payment requested (£)
                     </label>
@@ -151,7 +149,7 @@
                     />
                 </div>
             </div>
-            <p class="alignright" th:unless="${readonly}">
+            <p class="alignright" th:unless="${model.readOnly}">
                 <button type="submit"
                         th:name="remove_row"
                         th:value="${id}"

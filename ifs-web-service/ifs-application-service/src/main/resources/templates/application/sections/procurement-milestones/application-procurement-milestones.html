@@ -42,7 +42,7 @@
             <input type="hidden" id="cacheTest" value=""/>
 
 
-            <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model.readOnly}, ${model.durations}, ${model.fundingAmount})"/>
+            <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
 
 
             <div class="form-footer" th:if="${model.open}">
