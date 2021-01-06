@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.security.ApplicationSecurityHelper;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -62,6 +63,9 @@ public class UserPermissionRules {
     @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
+    @Autowired
+    private ApplicationSecurityHelper applicationSecurityHelper;
+
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
     private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole());
@@ -105,26 +109,6 @@ public class UserPermissionRules {
         return userToView.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Internal users can view everyone")
-    public boolean internalUsersCanViewEveryone(UserResource userToView, UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(value = "READ", description = "Stakeholders can view users in competitions they are assigned to")
-    public boolean stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
-        return userIsInCompetitionAssignedToStakeholder(userToView.getId(), user);
-    }
-
-    @PermissionRule(value = "READ", description = "Competition finance users can view users in competitions they are assigned to")
-    public boolean competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
-        return userIsInCompetitionAssignedToCompetitionFinance(userToView, user);
-    }
-
-    @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
-    public boolean monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
-        return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
-    }
-
     @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
     public boolean internalUsersCanViewUserOrganisation(UserOrganisationResource userToView, UserResource user) {
         return isInternal(user);
@@ -148,11 +132,6 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ_INTERNAL", description = "Administrators can view internal users")
     public boolean internalUsersCanViewEveryone(ManageUserPageResource userToView, UserResource user) {
         return user.hasAnyRoles(IFS_ADMINISTRATOR);
-    }
-
-    @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
-    public boolean supportUsersCanViewExternalUsers(ManageUserPageResource userToView, UserResource user) {
-        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
     }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
@@ -267,9 +246,9 @@ public class UserPermissionRules {
         return simpleMap(applicationsThatThisUserIsAssessing, Application::getId).contains(processRole.getApplicationId());
     }
 
-    @PermissionRule(value = "READ", description = "Stakeholders can view the process role of users on applications they are reviewing")
-    public boolean stakeholdersCanViewTheProcessRolesOfApplicantsOnApplicationsTheyAreReviewing(ProcessRoleResource processRole, UserResource user) {
-        return userIsInCompetitionAssignedToStakeholder(processRole.getUser(), user);
+    @PermissionRule(value = "READ", description = "user has permission to view the application")
+    public boolean canViewTheApplication(ProcessRoleResource processRole, UserResource user) {
+        return applicationSecurityHelper.canViewApplication(processRole.getApplicationId(), user);
     }
 
     @PermissionRule(value = "READ", description = "External finance users can read.")
