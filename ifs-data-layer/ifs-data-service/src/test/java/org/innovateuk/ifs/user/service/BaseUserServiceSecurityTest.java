@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -75,17 +76,11 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
                 .assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq
                         (getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
-                .internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
-                .stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
+                .canViewTheApplication(isA(ProcessRoleResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
-                .monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
-                .competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 

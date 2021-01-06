@@ -106,17 +106,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq
                         (getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
-                .internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
                 .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
-                .stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
-                .monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers))
-                .competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
+                .canViewTheApplication(isA(ProcessRoleResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
@@ -164,7 +158,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findActiveExternal("", new PageRequest(0, 5)), () -> {
-            verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
+            verify(userRules).canViewTheApplication(isA(ProcessRoleResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
@@ -175,7 +169,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .thenReturn(serviceSuccess(new ManageUserPageResource()));
 
         assertAccessDenied(() -> classUnderTest.findInactiveExternal("", new PageRequest(0, 5)), () -> {
-            verify(userRules).supportUsersCanViewExternalUsers(isA(ManageUserPageResource.class), eq(getLoggedInUser()));
+            verify(userRules).canViewTheApplication(isA(ProcessRoleResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
     }
