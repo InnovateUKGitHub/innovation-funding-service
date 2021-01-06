@@ -32,8 +32,8 @@ IFS.manuallyEnter = (function () {
                               '<div>' +
                                  '<button class="button-clear alignright" data-remove-row-man="sicCode"' +
                                            'type="button" name="remove-sic-code"' +
-                                               'th:value="'  + idCount +'"' +
-                                             'th:id="remove-sic-code-row"'  + idCount +'">Remove' +
+                                               'th:value="' + idCount + ' "' +
+                                             'th:id="remove-sic-code-row"' + idCount + ' ">Remove' +
                                   '</button>' +
                                 '</div>' +
                             '</div>' +
