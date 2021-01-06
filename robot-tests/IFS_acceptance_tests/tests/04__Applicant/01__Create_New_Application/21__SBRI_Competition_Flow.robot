@@ -210,7 +210,7 @@ The project finance user is shown a validation message when duration is less tha
 The project finance user sets the duration back to a valid value
    [Documentation]    IFS-8942
     Given the user enters text to a text field             id = durationInMonths  3
-    And the user clicks the button/link                    jQuery = button:contains("Save and return to project finances")
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
     Then the user should see the element                   jQuery = dd:contains("3 months")
 
 Internal user eligibility page
