@@ -121,13 +121,13 @@ the user fills in the CS Funding Information
 the user fills in the CS Project eligibility
     [Arguments]  ${compType}  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link       link = Project eligibility
-    Run Keyword If  '${compType}' == '${compType_HEUKAR}'  the user sees that the radio button is selected  singleOrCollaborative  single-or-collaborative-${collaborative}
+    Run Keyword If  "${compType}" == "${compType_HEUKAR}"   the user sees that the radio button is selected  singleOrCollaborative  single-or-collaborative-${collaborative}
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
     the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
     Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
-    ...   ELSE IF  '${compType}' == '${compType_HEUKAR}'   run keywords     the user sees all lead applicant types selected by default
+    ...   ELSE IF  "${compType}" == "${compType_HEUKAR}"   run keywords     the user sees all lead applicant types selected by default
     ...   ELSE   run keywords     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     ...   AND    the user selects Research Participation if required   ${researchParticipation}
     the user selects the radio button     resubmission  yes
