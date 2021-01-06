@@ -51,6 +51,12 @@
                    th:text="${searchLabel}">
                 Find your ? organisation
             </label>
+            <th:block th:if="${improvedSearchEnabled}">
+                <label class="govuk-label govuk-!-margin-top-1"
+                       th:text="${additionalLabel}">
+                    We will help you
+                </label>
+            </th:block>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
             <th:block th:if="${isImprovedSearchEnabled}">
                 <details class="govuk-details" role="group">
@@ -60,7 +66,7 @@
                     <div class="govuk-details__text">
                         <p class="govuk-body">A company registration number (CRN) is a unique number issued by Companies House when a company is incorporated in the UK.</p>
                         <p class="govuk-body">It usually consists of either 8 numbers, or 2 letters followed by 6 numbers.</p>
-                        <p class="govuk-body">You can find it on your:</p>
+                        <p class="govuk-body govuk-!-margin-bottom-0">You can find it on your:</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>certificate of incorporation</li>
                             <li>listing at <a class="govuk-link" target="_blank" href="https://www.gov.uk/government/organisations/companies-house">Companies House (opens in a new window)</a>.</li>
