@@ -12,6 +12,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
     @Autowired
     private CategoryRestService categoryRestService;
 
+    @Value("${ifs.subsidy.control.enabled:true}")
+    private boolean fundingRuleEnabled;
+
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
         return CompetitionSetupSection.INITIAL_DETAILS;
@@ -50,7 +54,8 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
                 userRestService.findByUserRoleAndUserStatus(INNOVATION_LEAD, ACTIVE).getSuccess(),
-                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
+                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()),
+                fundingRuleEnabled);
     }
 
     private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

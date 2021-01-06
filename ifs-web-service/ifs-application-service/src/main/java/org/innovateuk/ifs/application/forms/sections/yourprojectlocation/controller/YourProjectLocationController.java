@@ -20,7 +20,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private YourProjectLocationFormPopulator formPopulator;
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private OrganisationRestService organisationRestService;
 
     public YourProjectLocationController() {
@@ -67,14 +67,14 @@ public class YourProjectLocationController extends AsyncAdaptor {
             YourProjectLocationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
-            UserRestService userRestService,
+            ProcessRoleRestService processRoleRestService,
             OrganisationRestService organisationRestService) {
 
         this.commonViewModelPopulator = commonViewModelPopulator;
         this.formPopulator = formPopulator;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.organisationRestService = organisationRestService;
     }
 
@@ -151,7 +151,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
             updateLocation(applicationId, organisationId, form);
 
-            ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+            ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
             validationHandler.addAnyErrors(validationMessages);
 
@@ -172,7 +172,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             @PathVariable("sectionId") long sectionId,
             UserResource loggedInUser) {
 
-        ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoleRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
         sectionService.markAsInComplete(sectionId, applicationId, processRole.getId());
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }

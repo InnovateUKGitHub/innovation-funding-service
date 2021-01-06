@@ -6,6 +6,9 @@ Documentation     INFUND-43 As an applicant and I am on the application form on 
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 ...
 ...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
+...
+...               IFS-8751: Increase project duration in months
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -66,20 +69,21 @@ Year field client side
     Then the applicant should not see the validation error any more
 
 Duration field client side
-    [Documentation]  INFUND-43 INFUND-2843 IFS-2776
+    [Documentation]  INFUND-43 INFUND-2843 IFS-2776 IFS-8751
     [Tags]
     When the user enters text to a text field  id = durationInMonths  0
     And the user clicks the button/link        id = application-question-complete
-    Then the user should see a field and summary error  Your project should last between 1 and 36 months.
+    Then the user should see a field and summary error  Enter the total number of months between 1 and 84.
 
     When the user enters text to a text field  id = durationInMonths  -1
     And the user clicks the button/link        id = application-question-complete
-    Then the user should see a field and summary error  Your project should last between 1 and 36 months.
+    Then the user should see a field and summary error  Enter the total number of months between 1 and 84.
 
     When the user enters text to a text field  id = durationInMonths  ${EMPTY}
     Then the user should see a field error     ${empty_field_warning_message}
 
     And the user enters text to a text field   id = durationInMonths  25
+    And the user clicks the button/link        jQuery = button:contains("Mark as complete")
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
@@ -148,4 +152,4 @@ the applicant should not see the validation error of the duration any more
     Run Keyword And Ignore Error Without Screenshots    mouse out    css = .editor
     Set Focus To Element      jQuery = button:contains("Save and return to application overview")
     wait for autosave
-    The user should not see the element   jQuery = .govuk-error-message:contains("Your project should last between 1 and 36 months")
+    The user should not see the element   jQuery = .govuk-error-message:contains("Enter the total number of months between 1 and 84")

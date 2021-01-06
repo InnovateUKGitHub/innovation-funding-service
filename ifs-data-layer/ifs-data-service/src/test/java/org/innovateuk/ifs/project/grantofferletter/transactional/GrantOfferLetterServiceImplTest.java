@@ -256,6 +256,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
+    public void createSignedAdditionalContractFileEntry() {
+        assertCreateFile(
+                project::getSignedAdditionalContractFile,
+                (fileToCreate, inputStreamSupplier) ->
+                        service.createSignedAdditionalContractFileEntry(123L, fileToCreate, inputStreamSupplier));
+    }
+
+    @Test
     public void createGrantOfferLetterFileEntry() {
         assertCreateFile(
                 project::getGrantOfferLetter,
@@ -293,6 +301,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     }
 
     @Test
+    public void getSignedAdditionalContractFileEntryDetails() {
+        assertGetFileDetails(
+                project::setSignedAdditionalContractFile,
+                () -> service.getSignedAdditionalContractFileEntryDetails(123L));
+    }
+
+    @Test
     public void getAdditionalContractFileContents() {
         assertGetFileContents(
                 project::setAdditionalContractFile,
@@ -311,6 +326,13 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertGetFileContents(
                 project::setSignedGrantOfferLetter,
                 () -> service.getSignedGrantOfferLetterFileAndContents(123L));
+    }
+
+    @Test
+    public void getSignedAdditionalContractFileContents() {
+        assertGetFileContents(
+                project::setSignedAdditionalContractFile,
+                () -> service.getSignedAdditionalContractFileAndContents(123L));
     }
 
     @Test
@@ -473,6 +495,28 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         verify(golWorkflowHandler).removeSignedGrantOfferLetter(project, user);
         verify(fileServiceMock).deleteFileIgnoreNotFound(existingSignedGOLFile.getId());
+    }
+
+    @Test
+    public void removeSignedAdditionalContractFileEntry() {
+
+        UserResource externalUser = newUserResource().build();
+        setLoggedInUser(externalUser);
+
+        FileEntry existingAdditionalContractFile = newFileEntry().build();
+        project.setSignedAdditionalContractFile(existingAdditionalContractFile);
+
+        when(userRepository.findById(externalUser.getId())).thenReturn(Optional.of(user));
+        when(projectWorkflowHandler.getState(project)).thenReturn(SETUP);
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingAdditionalContractFile.getId())).thenReturn(serviceSuccess(existingAdditionalContractFile));
+        when(golWorkflowHandler.removeSignedAdditionalContract(project, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.removeSignedAdditionalContractFileEntry(123L);
+        assertTrue(result.isSuccess());
+        assertNull(project.getSignedAdditionalContractFile());
+
+        verify(golWorkflowHandler).removeSignedAdditionalContract(project, user);
+        verify(fileServiceMock).deleteFileIgnoreNotFound(existingAdditionalContractFile.getId());
     }
 
     @Test

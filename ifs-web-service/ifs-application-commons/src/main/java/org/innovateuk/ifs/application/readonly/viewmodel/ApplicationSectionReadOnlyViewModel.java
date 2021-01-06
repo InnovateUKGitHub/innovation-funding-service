@@ -27,4 +27,9 @@ public class ApplicationSectionReadOnlyViewModel {
     public Set<ApplicationQuestionReadOnlyViewModel> getQuestions() {
         return questions;
     }
+
+    public boolean isScored() {
+        return questions != null && questions.stream()
+                .anyMatch(ApplicationQuestionReadOnlyViewModel::hasScore);
+    }
 }

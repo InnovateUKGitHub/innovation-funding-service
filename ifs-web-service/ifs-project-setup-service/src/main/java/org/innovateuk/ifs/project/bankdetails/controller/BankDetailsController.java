@@ -66,7 +66,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
-    @GetMapping("readonly")
+    @GetMapping("/readonly")
     public String bankDetailsAsReadOnly(Model model,
                               @P("projectId")@PathVariable("projectId") final Long projectId,
                               UserResource loggedInUser,

@@ -17,7 +17,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,7 +51,8 @@ public class ApplicationDetailsController {
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
+
     @Autowired
     private ApplicationRestService applicationRestService;
     @Autowired
@@ -130,7 +131,7 @@ public class ApplicationDetailsController {
 
             return validationHandler.addAnyErrors(result, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> {
-                        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+                        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
                         questionStatusRestService.markAsComplete(questionId, applicationId, role.getId()).getSuccess().forEach(validationHandler::addAnyErrors);
                         return validationHandler.failNowOrSucceedWith(failureView, successView);
                     });
@@ -164,7 +165,7 @@ public class ApplicationDetailsController {
                        @PathVariable long applicationId,
                        @PathVariable long questionId,
                        UserResource user) {
-        ProcessRoleResource role = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
+        ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId()).getSuccess();
 
         return viewDetails(form, bindingResult, model, applicationId, questionId, user);

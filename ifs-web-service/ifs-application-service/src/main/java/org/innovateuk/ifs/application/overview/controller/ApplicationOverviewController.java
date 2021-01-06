@@ -8,9 +8,8 @@ import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -41,7 +40,7 @@ public class ApplicationOverviewController {
 
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
 
-    private UserRestService userRestService;
+    private ProcessRoleRestService processRoleRestService;
     private ApplicationRestService applicationRestService;
 
     public ApplicationOverviewController() {
@@ -50,10 +49,10 @@ public class ApplicationOverviewController {
 
     @Autowired
     public ApplicationOverviewController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
-                                 UserRestService userRestService,
+                                         ProcessRoleRestService processRoleRestService,
                                  ApplicationRestService applicationRestService) {
         this.applicationOverviewModelPopulator = applicationOverviewModelPopulator;
-        this.userRestService = userRestService;
+        this.processRoleRestService = processRoleRestService;
         this.applicationRestService = applicationRestService;
     }
 
@@ -81,7 +80,7 @@ public class ApplicationOverviewController {
     }
 
     private boolean userIsKta(long userId, long applicationId) {
-        List<ProcessRoleResource> processRoleResources = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(applicationId).getSuccess();
         return processRoleResources.stream()
                 .anyMatch(processRole -> processRole.getUser().equals(userId)
                         && processRole.getRole().equals(KNOWLEDGE_TRANSFER_ADVISER));
@@ -95,7 +94,7 @@ public class ApplicationOverviewController {
     }
 
     private boolean userIsLeadApplicant(long userId, long applicationId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccess()
+        return processRoleRestService.findProcessRole(userId, applicationId).getSuccess()
                 .getRole() == LEADAPPLICANT;
     }
 
