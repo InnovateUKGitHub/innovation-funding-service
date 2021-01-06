@@ -197,8 +197,8 @@ Internal user finance checks page
 The project finance user is shown a validation message when duration is blank
     [Documentation]    IFS-8942
     Given the user clicks the button/link                  link = Edit
-    Clear Element Text                                     durationInMonths
-    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    When Clear Element Text                                durationInMonths
+    And the user clicks the button/link                    jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error     This field cannot be left blank.
 
 The project finance user is shown a validation message when duration is less than allowed
@@ -206,6 +206,9 @@ The project finance user is shown a validation message when duration is less tha
     Given the user enters text to a text field             id = durationInMonths  1
     When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
+
+The project finance user sets the duration back to a valid value
+   [Documentation]    IFS-8942
     And the user enters text to a text field               id = durationInMonths  3
     And the user clicks the button/link                    jQuery = button:contains("Save and return to project finances")
     Then the user should see the element                   jQuery = dd:contains("3 months")
@@ -423,4 +426,4 @@ internal user generates the contract
     sleep  5s
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send contract to project team")
-    the user clicks the button/link    jQuery = button:contains("Send contract")  
+    the user clicks the button/link    jQuery = button:contains("Send contract")
