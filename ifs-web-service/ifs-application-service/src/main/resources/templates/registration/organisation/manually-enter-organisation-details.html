@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
-
+    <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Manually enter your organisation\'s details',subTitle='Create an account',size='govuk-heading-l'"/>
@@ -94,24 +94,27 @@
                                th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
                                type="text" required="required"/>
                     </div>
+                    <div>
+                    <button class="button-clear alignright" data-remove-row-man="sicCode"
+                            type="button" name="remove-sic-code"
+                            th:value="${iteration.index}"
+                            th:id="'remove-sic-code-row' + ${iteration.index}">Remove
+                    </button>
+                    </div>
                     </div>
                 </div>
-
             <div class="alignright govuk-!-margin-top-6">
-                <button class="button-clear" name="add-sic-code" data-add-row="sicCode" type="button">+Sic code</button>
+
+                <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+Sic code</button>
             </div>
 
 
 
-        </form>
-
-        <div class="alignright govuk-!-margin-top-6">
-            <button class="button-clear" data-add-row="guidance" type="button">+Add guidance row
-            </button>
-        </div>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
+        </form>
     </main>
+</div>
 </div>
 <th:block th:insert="fragments/layout :: footer"/>
 <th:block th:insert="fragments/layout :: body-end"/>

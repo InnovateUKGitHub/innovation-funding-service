@@ -45,5 +45,9 @@ IFS.application.loadOrder = {
   },
   'table-validation': {
     init: function () { IFS.application.tableValidation.init() }
+  },
+  'manually-enter-org':
+  {
+    init: function () { IFS.manuallyEnter.init() }
   }
 }
