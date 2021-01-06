@@ -240,6 +240,31 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ", description = "Support users and administrators can view external users")
+    public boolean supportUsersCanViewExternalUsers(ManageUserPageResource userToView, UserResource user) {
+        return user.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
+    }
+
+    @PermissionRule(value = "READ", description = "Internal users can view everyone")
+    public boolean internalUsersCanViewEveryone(UserResource userToView, UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Stakeholders can view users in competitions they are assigned to")
+    public boolean stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInCompetitionAssignedToStakeholder(userToView.getId(), user);
+    }
+
+    @PermissionRule(value = "READ", description = "Competition finance users can view users in competitions they are assigned to")
+    public boolean competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInCompetitionAssignedToCompetitionFinance(userToView, user);
+    }
+
+    @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
+    public boolean monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInProjectAssignedToMonitoringOfficer(userToView, user);
+    }
+
     @PermissionRule(value = "READ", description = "Assessors can view the process roles of members of individual Consortiums on the various Applications that they are assessing")
     public boolean assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing(ProcessRoleResource processRole, UserResource user) {
         List<Application> applicationsThatThisUserIsAssessing = getApplicationsRelatedToUserByProcessRoles(user.getId(), assessorProcessRoleFilter);

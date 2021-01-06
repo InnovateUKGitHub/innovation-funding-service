@@ -3,6 +3,10 @@ package org.innovateuk.ifs.user.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
+import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -22,6 +26,9 @@ import java.util.function.Function;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionFinanceBuilder.newCompetitionFinance;
+import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
@@ -39,6 +46,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isMonitoringOfficer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -61,6 +69,95 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                         assertFalse(rules.anyUserCanViewThemselves(otherUser, user));
                     }
                 }));
+    }
+
+    @Test
+    public void internalUsersCanViewEveryone() {
+        allGlobalRoleUsers.forEach(user ->
+                allGlobalRoleUsers.forEach(otherUser -> {
+                    if (allInternalUsers.contains(user)) {
+                        assertTrue(rules.internalUsersCanViewEveryone(otherUser, user));
+                    } else {
+                        assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
+                    }
+                }));
+    }
+
+    @Test
+    public void stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo() {
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        Stakeholder stakeholder = newStakeholder().withCompetition(competition).build();
+        UserResource stakeholderResource = newUserResource().withRoleGlobal(STAKEHOLDER).build();
+        UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
+        User user = newUser().withId(userResource.getId()).build();
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(user)
+                .build(2);
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(2);
+
+        when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
+        when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
+        when(stakeholderRepository.findByStakeholderId(stakeholderResource.getId())).thenReturn(singletonList(stakeholder));
+
+        assertTrue(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, stakeholderResource));
+
+        allInternalUsers.forEach(internalUser -> assertFalse(rules.stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
+    }
+
+    @Test
+    public void competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo() {
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ExternalFinance externalFinance = newCompetitionFinance().withCompetition(competition).build();
+        UserResource competitionFinanceResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
+        User user = newUser().withId(userResource.getId()).build();
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(user)
+                .build(2);
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(2);
+
+        when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
+        when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
+        when(externalFinanceRepository.findByCompetitionFinanceId(competitionFinanceResource.getId())).thenReturn(singletonList(externalFinance));
+
+        assertTrue(rules.competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, competitionFinanceResource));
+
+        allInternalUsers.forEach(internalUser -> assertFalse(rules.competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, internalUser)));
+    }
+
+    @Test
+    public void monitoringOfficersCanViewUsersInProjectsTheyAreAssignedTo() {
+        Project project = newProject().build();
+        UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withProject(project)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build(2);
+
+        List<MonitoringOfficer> projectMonitoringOfficers = newMonitoringOfficer()
+                .withProject(project)
+                .build(1);
+
+        when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
+        when(projectMonitoringOfficerRepository.findByUserId(monitoringOfficerUser().getId())).thenReturn(projectMonitoringOfficers);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isMonitoringOfficer(user)) {
+                assertTrue(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, monitoringOfficerUser()));
+            } else {
+                assertFalse(rules.monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, user));
+            }
+        });
     }
 
     @Test
