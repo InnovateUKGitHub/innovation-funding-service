@@ -203,9 +203,9 @@ The user tries to edit the duration shorter than the initial milestone
     Then the user enters text to a text field             id = durationInMonths  1
     And the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
     And the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
-    Then the user enters text to a text field             id = durationInMonths  21
+    Then the user enters text to a text field             id = durationInMonths  3
     And the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element                  jQuery = dd:contains("21 months")
+    Then the user should see the element                  jQuery = dd:contains("3 months")
 
 Internal user eligibility page
     [Documentation]    IFS-8127
