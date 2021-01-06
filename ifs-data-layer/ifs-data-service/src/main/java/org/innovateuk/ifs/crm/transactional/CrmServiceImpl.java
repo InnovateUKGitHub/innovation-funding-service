@@ -2,13 +2,17 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
@@ -19,11 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -97,6 +97,7 @@ public class CrmServiceImpl implements CrmService {
         silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
 
         if (newOrganisationSearchEnabled) {
+            silOrganisation.setRegisteredAddress(getRegisteredAddress(organisation.getAddresses()));
             silOrganisation.setDateOfIncorporation(organisation.getDateOfIncorporation());
             silOrganisation.setSicCodes(getSicCodes(organisation));
             silOrganisation.setExecutiveOfficers(getExecutiveOfficers(organisation));
@@ -105,6 +106,32 @@ public class CrmServiceImpl implements CrmService {
         silContact.setOrganisation(silOrganisation);
 
         return silContact;
+    }
+
+    private SilAddress getRegisteredAddress(List<OrganisationAddressResource> addresses) {
+        return addresses.stream()
+                .filter(address -> address.getAddressType().getId().equals(OrganisationAddressType.REGISTERED.getId()))
+                .findFirst()
+                .map(address -> organisationAddressToSilAddress(address))
+                .orElse(null);
+    }
+
+    private SilAddress organisationAddressToSilAddress(OrganisationAddressResource organisationAddress) {
+        AddressResource address = organisationAddress.getAddress();
+
+        String[] street = new String[2];
+        street[0] = address.getAddressLine2() == null ? "" : address.getAddressLine2();
+        street[1] = address.getAddressLine3() == null ? "" : address.getAddressLine3();
+
+        SilAddress silAddress = new SilAddress();
+        silAddress.setBuildingName(address.getAddressLine1());
+        silAddress.setStreet(String.join(",", street));
+        silAddress.setLocality(address.getCounty());
+        silAddress.setTown(address.getTown());
+        silAddress.setPostcode(address.getPostcode());
+        silAddress.setCountry(address.getCountry());
+
+        return silAddress;
     }
 
     private List<String> getExecutiveOfficers(OrganisationResource organisation) {

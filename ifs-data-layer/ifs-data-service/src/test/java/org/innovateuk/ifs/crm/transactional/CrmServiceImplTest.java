@@ -2,6 +2,7 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationSicCodeResourceBuilder.newOrganisationSicCodeResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationExecutiveOfficerResourceBuilder.newOrganisationExecutiveOfficerResource;
@@ -88,6 +92,20 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
                 .withDateOfIncorporation(LocalDate.now())
                 .withSicCodes(newOrganisationSicCodeResource().withSicCode("code-1", "code-2").build(2))
                 .withExecutiveOfficers(newOrganisationExecutiveOfficerResource().withName("director-1", "director-2").build(2))
+                .withAddresses(Collections.singletonList(
+                        newOrganisationAddressResource()
+                                .withAddress(newAddressResource()
+                                        .withAddressLine1("Line1")
+                                        .withAddressLine2("Line2")
+                                        .withAddressLine3("Line3")
+                                        .withCounty("County")
+                                        .withTown("Town")
+                                        .withCountry("Country")
+                                        .withPostcode("Postcode").build())
+                                .withAddressType(newAddressTypeResource()
+                                        .withId(OrganisationAddressType.REGISTERED.getId())
+                                        .withName(OrganisationAddressType.REGISTERED.name()).build())
+                                .build()))
                 .build();
 
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
@@ -143,12 +161,14 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
             assertNull(silContact.getOrganisation().getDateOfIncorporation());
             assertNull(silContact.getOrganisation().getSicCodes());
             assertNull(silContact.getOrganisation().getExecutiveOfficers());
+            assertNull(silContact.getOrganisation().getRegisteredAddress());
             return true;
         };
     }
 
     private Predicate<SilContact> matchExternalSilContactWithOrganisationUpdates(UserResource user, OrganisationResource organisation) {
         return silContact -> {
+            assertThat(silContact.getSrcSysContactId(), equalTo(String.valueOf(user.getId())));
             assertThat(silContact.getOrganisation().getDateOfIncorporation(), equalTo(organisation.getDateOfIncorporation()));
             assertThat(silContact.getOrganisation().getSicCodes(), equalTo(organisation.getSicCodes().stream()
                     .map(OrganisationSicCodeResource::getSicCode)
@@ -156,6 +176,12 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
             assertThat(silContact.getOrganisation().getExecutiveOfficers(), equalTo(organisation.getExecutiveOfficers().stream()
                     .map(OrganisationExecutiveOfficerResource::getName)
                     .collect(Collectors.toList())));
+            assertThat(silContact.getOrganisation().getRegisteredAddress().getBuildingName(), equalTo("Line1"));
+            assertThat(silContact.getOrganisation().getRegisteredAddress().getStreet(), equalTo("Line2,Line3"));
+            assertThat(silContact.getOrganisation().getRegisteredAddress().getLocality(), equalTo("County"));
+            assertThat(silContact.getOrganisation().getRegisteredAddress().getTown(), equalTo("Town"));
+            assertThat(silContact.getOrganisation().getRegisteredAddress().getPostcode(), equalTo("Postcode"));
+            assertThat(silContact.getOrganisation().getRegisteredAddress().getCountry(), equalTo("Country"));
             return true;
         };
     }
