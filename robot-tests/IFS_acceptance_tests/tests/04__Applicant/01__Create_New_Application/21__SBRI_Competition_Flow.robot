@@ -194,18 +194,21 @@ Internal user finance checks page
     When the user navigates to the page                                 ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     Then the user should see the correct data on finance check page
 
-The user tries to edit the duration shorter than the initial milestone
+The project finance user is shown a validation message when duration is blank
     [Documentation]    IFS-8942
-    Given the user clicks the button/link                 link = Edit
-    Clear Element Text                                    durationInMonths
-    Then the user clicks the button/link                  jQuery = button:contains("Save and return to project finances")
-    And the user should see a field and summary error     This field cannot be left blank.
-    Then the user enters text to a text field             id = durationInMonths  1
-    And the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
-    And the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
-    Then the user enters text to a text field             id = durationInMonths  3
-    And the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element                  jQuery = dd:contains("3 months")
+    Given the user clicks the button/link                  link = Edit
+    Clear Element Text                                     durationInMonths
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see a field and summary error     This field cannot be left blank.
+
+The project finance user is shown a validation message when duration is less than allowed
+    [Documentation]    IFS-8942
+    Given the user enters text to a text field             id = durationInMonths  1
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
+    And the user enters text to a text field               id = durationInMonths  3
+    And the user clicks the button/link                    jQuery = button:contains("Save and return to project finances")
+    Then the user should see the element                   jQuery = dd:contains("3 months")
 
 Internal user eligibility page
     [Documentation]    IFS-8127
@@ -239,7 +242,6 @@ Internal user can generate spend profile
     Given generate spend profile
     Then the user should see the element      css = .success-alert
 
-#This is failing, investigate once latest issues are addressed.
 Internal user should not see spend profile section
     [Documentation]  IFS-8048
     When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
@@ -421,8 +423,4 @@ internal user generates the contract
     sleep  5s
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send contract to project team")
-    the user clicks the button/link    jQuery = button:contains("Send contract")
-
-the user enters value to field
-    [Arguments]  ${field}  ${value}
-    the user enters text to a text field  jQuery = td:contains("${field}") + td input  ${value}    
+    the user clicks the button/link    jQuery = button:contains("Send contract")  
