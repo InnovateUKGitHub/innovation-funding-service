@@ -1191,10 +1191,9 @@
 
 <th:block th:fragment="capital_usage_row (id, row)">
     <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
-         th:id="${path}"
-         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
+         th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.item')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s"
                    th:for="__${path}__.item">
                 <span>Item description</span>
@@ -1211,9 +1210,9 @@
                 required="required">
                                 </textarea>
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.newItem')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <legend th:id="__${path}__.newItem" class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h3 class="govuk-fieldset__heading">New or existing item</h3>
                 </legend>
                 <th:block
@@ -1248,7 +1247,7 @@
                 </div>
             </fieldset>
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.deprecation')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.deprecation" class="govuk-label govuk-label--s">
                 Depreciation period (months)
             </label>
@@ -1267,7 +1266,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
             />
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.netValue')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.netValue" class="govuk-label govuk-label--s">
                 Net present value at the start of your project or the price you bought it for (&pound;)
             </label>
@@ -1286,7 +1285,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
 
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.residualValue')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.residualValue" class="govuk-label govuk-label--s">
                 Residual value at end of project (&pound;)
             </label>
@@ -1305,7 +1304,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.utilisation')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.utilisation" class="govuk-label govuk-label--s">
                 Utilisation (&percnt;)
             </label>
@@ -1517,7 +1516,7 @@
     <div class="form-row" th:with="path=${'subcontractingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
          th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.name')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.name">
                 Subcontractor name
             </label>
@@ -1531,7 +1530,7 @@
                    maxlength="255"
                    required="required"/>
         </div>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.country')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.country">
                 Country where the subcontractor will work
             </label>
@@ -1546,7 +1545,7 @@
                    required="required"/>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.role')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.role">
                 Role of the subcontractor in the project and description of the work they’ll do
             </label>
@@ -1563,7 +1562,7 @@
                                 </textarea>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path+'.cost')} ? 'govuk-form-group--error'">
             <label class="govuk-label govuk-label--s" th:for="__${path}__.cost">
                 Cost
             </label>
