@@ -21,6 +21,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.junit.Assert.assertEquals;
@@ -109,6 +110,8 @@ public class FundingEligibilitySectionUpdaterTest {
                 .withResearchCategories(new HashSet<>())
                 .build();
 
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+        when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(restSuccess(newGrantClaimMaximumResource().build(1)));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restFailure(GENERAL_NOT_FOUND));
 
@@ -130,6 +133,8 @@ public class FundingEligibilitySectionUpdaterTest {
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
 
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+        when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(restSuccess(newGrantClaimMaximumResource().build(1)));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
 
@@ -163,7 +168,7 @@ public class FundingEligibilitySectionUpdaterTest {
     }
 
     @Test
-    public void saveSection_wontResetFundingLevelOrSaveCompNoChange() {
+    public void saveSection_wontResetFundingLevel() {
         FundingEligibilityResearchCategoryForm competitionSetupForm = new FundingEligibilityResearchCategoryForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchCategoryId(newHashSet(1L, 2L, 3L));
@@ -175,12 +180,13 @@ public class FundingEligibilitySectionUpdaterTest {
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
 
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+        when(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId())).thenReturn(restSuccess(newGrantClaimMaximumResource().build(1)));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
 
         service.saveSection(competition, competitionSetupForm).getSuccess();
 
-        verify(competitionSetupRestService, never()).update(competition);
         verify(grantClaimMaximumRestService, never()).revertToDefaultForCompetitionType(competition.getId());
     }
 
