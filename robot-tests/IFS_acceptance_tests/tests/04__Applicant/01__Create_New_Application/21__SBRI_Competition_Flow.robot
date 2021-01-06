@@ -19,6 +19,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8198  SBRI Type 4: Contract section content changes for procurements (replacing GOL)
 ...
+...               IFS-8942  SBRI Milestones - Edit project duration in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -192,6 +194,19 @@ Internal user finance checks page
     When the user navigates to the page                                 ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     Then the user should see the correct data on finance check page
 
+The user tries to edit the duration shorter than the initial milestone
+    [Documentation]    IFS-8942
+    Given the user clicks the button/link                 link = Edit
+    Clear Element Text                                    durationInMonths
+    Then the user clicks the button/link                  jQuery = button:contains("Save and return to project finances")
+    And the user should see a field and summary error     This field cannot be left blank.
+    Then the user enters text to a text field             id = durationInMonths  1
+    And the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    And the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
+    Then the user enters text to a text field             id = durationInMonths  21
+    And the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see the element                  jQuery = dd:contains("21 months")
+
 Internal user eligibility page
     [Documentation]    IFS-8127
     When the user clicks the button/link         css = .eligibility-0
@@ -224,6 +239,7 @@ Internal user can generate spend profile
     Given generate spend profile
     Then the user should see the element      css = .success-alert
 
+#This is failing, investigate once latest issues are addressed.
 Internal user should not see spend profile section
     [Documentation]  IFS-8048
     When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
@@ -406,3 +422,7 @@ internal user generates the contract
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send contract to project team")
     the user clicks the button/link    jQuery = button:contains("Send contract")
+
+the user enters value to field
+    [Arguments]  ${field}  ${value}
+    the user enters text to a text field  jQuery = td:contains("${field}") + td input  ${value}    
