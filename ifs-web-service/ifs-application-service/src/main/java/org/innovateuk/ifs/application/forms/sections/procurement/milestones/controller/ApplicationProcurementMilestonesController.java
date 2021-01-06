@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.forms.sections.procurement.milestones.popu
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.ApplicationProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/procurement-milestones/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
+@SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "Applicants can update procurement milestones.")
 public class ApplicationProcurementMilestonesController {
     private static final String VIEW = "application/sections/procurement-milestones/application-procurement-milestones";
 
@@ -53,6 +55,8 @@ public class ApplicationProcurementMilestonesController {
     private ApplicationProcurementMilestoneViewModelPopulator viewModelPopulator;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
+    @SecuredBySpring(value = "VIEW_PROCUREMENT_MILESTONE", description = "Everyone view the milestone page, if they have permissions defined in data layer.")
     public String viewMilestones(@PathVariable long applicationId,
                                  @PathVariable long organisationId,
                                  @PathVariable long sectionId,

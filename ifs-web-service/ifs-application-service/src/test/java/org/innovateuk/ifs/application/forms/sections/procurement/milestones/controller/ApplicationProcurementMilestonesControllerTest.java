@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.ApplicationProcurementMilestoneFormSaver;
@@ -77,8 +78,13 @@ public class ApplicationProcurementMilestonesControllerTest extends BaseControll
 
     @Test
     public void viewMilestones() throws Exception {
-        List<ApplicationProcurementMilestoneResource> milestones = newApplicationProcurementMilestoneResource().build(1);
+        List<ApplicationProcurementMilestoneResource> milestones = newApplicationProcurementMilestoneResource()
+                .withDescription("description")
+                .build(1);
         ProcurementMilestonesForm form = new ProcurementMilestonesForm();
+        ProcurementMilestoneForm milestoneForm = new ProcurementMilestoneForm();
+        milestoneForm.setDescription(milestones.get(0).getDescription());
+        form.getMilestones().put(String.valueOf(milestones.get(0).getId()), milestoneForm);
         when(restService.getByApplicationIdAndOrganisationId(APPLICATION_ID, ORGANISATION_ID)).thenReturn(restSuccess(milestones));
         when(formPopulator.populate(milestones)).thenReturn(form);
         mockViewModel();
