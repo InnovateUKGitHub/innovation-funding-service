@@ -22,7 +22,7 @@ public class ProjectFinanceChangesViewModel {
     private FinanceCheckEligibilityResource financeCheckEligibility;
     private LabourCost applicationWorkingDaysPerYearCostItem;
     private LabourCost projectWorkingDaysPerYearCostItem;
-    private Map<FinanceRowType, BigDecimal> sectionDifferences;
+    private Map<FinanceRowType, CostChangeViewModel> sectionDifferences;
     private Map<FinanceRowType, List<ChangedFinanceRowPair>> changes;
     private BigDecimal totalApplicationCosts;
     private BigDecimal totalProjectCostsAfterChanges;
@@ -32,7 +32,7 @@ public class ProjectFinanceChangesViewModel {
                                           String projectName, Long applicationId, Long projectId,
                                           FinanceCheckEligibilityResource financeCheckEligibilityResource,
                                           LabourCost applicationWorkingDaysPerYearCostItem, LabourCost projectWorkingDaysPerYearCostItem,
-                                          Map<FinanceRowType, BigDecimal> sectionDifferences,
+                                          Map<FinanceRowType, CostChangeViewModel> sectionDifferences,
                                           Map<FinanceRowType, List<ChangedFinanceRowPair>> changes,
                                           BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges,
                                           boolean loanCompetition) {
@@ -52,11 +52,11 @@ public class ProjectFinanceChangesViewModel {
         this.loanCompetition = loanCompetition;
     }
 
-    public Map<FinanceRowType, BigDecimal> getSectionDifferences() {
+    public Map<FinanceRowType, CostChangeViewModel> getSectionDifferences() {
         return sectionDifferences;
     }
 
-    public void setSectionDifferences(Map<FinanceRowType, BigDecimal> sectionDifferences) {
+    public void setSectionDifferences(Map<FinanceRowType, CostChangeViewModel> sectionDifferences) {
         this.sectionDifferences = sectionDifferences;
     }
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.eligibility.populator;
 
+import org.innovateuk.ifs.application.finance.viewmodel.CostChangeViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -44,7 +45,7 @@ public class ProjectFinanceChangesViewModelPopulator {
     ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
     ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
     CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-    Map<FinanceRowType, BigDecimal> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
+    Map<FinanceRowType, CostChangeViewModel> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
     return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview,
             getWorkingDaysPerYearCostItemFrom(appFinanceResource.getFinanceOrganisationDetails()),
             getWorkingDaysPerYearCostItemFrom(projectFinanceResource.getFinanceOrganisationDetails()),
@@ -62,15 +63,18 @@ public class ProjectFinanceChangesViewModelPopulator {
         throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
     }
 
-    private Map<FinanceRowType, BigDecimal> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
+    private Map<FinanceRowType, CostChangeViewModel> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
                                                                        Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances) {
-        Map<FinanceRowType, BigDecimal> sectionDifferencesMap = new LinkedHashMap<>();
+        Map<FinanceRowType, CostChangeViewModel> sectionDifferencesMap = new LinkedHashMap<>();
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : organisationProjectFinances.entrySet()) {
             FinanceRowType rowType = entry.getKey();
             FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
             FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
-            sectionDifferencesMap.put(rowType, financeRowProjectCostCategory.getTotal().subtract(financeRowAppCostCategory.getTotal()));
+            CostChangeViewModel costChange = new CostChangeViewModel();
+            costChange.setProjectCost(financeRowProjectCostCategory.getTotal());
+            costChange.setApplicationCost(financeRowAppCostCategory.getTotal());
+            sectionDifferencesMap.put(rowType, costChange);
         }
         return sectionDifferencesMap;
     }
