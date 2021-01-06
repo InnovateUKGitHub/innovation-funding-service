@@ -67,6 +67,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute("isImprovedSearchEnabled", isNewOrganisationSearchEnabled);
