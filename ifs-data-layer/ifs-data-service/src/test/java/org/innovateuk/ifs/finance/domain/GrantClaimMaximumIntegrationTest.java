@@ -216,7 +216,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         "CCCC", "16014", false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
-                        true, STANDARD, true, true, null).
+                        true, STANDARD, true, true).
                 withApplicationFormFromTemplate().
                 withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP, null).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).

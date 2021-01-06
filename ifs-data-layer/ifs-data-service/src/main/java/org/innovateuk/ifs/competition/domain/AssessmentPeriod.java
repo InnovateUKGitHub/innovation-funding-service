@@ -12,7 +12,7 @@ import java.util.List;
 @DiscriminatorValue("ASSESSMENT_PERIOD")
 public class AssessmentPeriod extends ParentMilestoneBase<Milestone> {
 
-    @OneToMany(mappedBy = "assessmentPeriod", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assessmentPeriod")
     @OrderBy("date ASC")
     private List<Milestone> children;
 
@@ -26,10 +26,5 @@ public class AssessmentPeriod extends ParentMilestoneBase<Milestone> {
 
     public List<Milestone> getChildren() {
         return children;
-    }
-
-    public void setChildren(List<Milestone> children) {
-        this.children = children;
-        children.forEach(milestone -> milestone.setAssessmentPeriod(this));
     }
 }

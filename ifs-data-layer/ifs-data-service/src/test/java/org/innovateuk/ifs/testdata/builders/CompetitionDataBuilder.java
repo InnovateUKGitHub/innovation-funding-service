@@ -114,8 +114,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 Boolean includeJesForm,
                                                 ApplicationFinanceType applicationFinanceType,
                                                 Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation,
-                                                Boolean alwaysOpen) {
+                                                Boolean includeYourOrganisation) {
 
         return asCompAdmin(data -> {
 
@@ -141,12 +140,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
 
                 List<Long> leadApplicantTypeIds = simpleMap(leadApplicantTypes, OrganisationTypeEnum::getId);
-
-                if (alwaysOpen != null) {
-                    CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
-                    competitionApplicationConfigResource.setAlwaysOpen(alwaysOpen);
-                    competition.setCompetitionApplicationConfig(competitionApplicationConfigResource);
-                }
 
                 competition.setName(name);
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
@@ -380,7 +373,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
 
-        if (BooleanUtils.isNotTrue(alwaysOpen)) {
+        if (BooleanUtils.isTrue(alwaysOpen)) {
             return this;
         }
 
@@ -523,6 +516,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
             competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
+    }
+
+    public CompetitionDataBuilder withApplicationConfig(Boolean alwaysOpen) {
+        if (BooleanUtils.isNotTrue(alwaysOpen)) {
+            return this;
+        }
+
+        return asCompAdmin(data -> {
+            CompetitionApplicationConfigResource competitionApplicationConfigResource = new CompetitionApplicationConfigResource();
+            competitionApplicationConfigResource.setAlwaysOpen(alwaysOpen);
+            competitionApplicationConfigService.update(data.getCompetition().getId(), competitionApplicationConfigResource);
         });
     }
 

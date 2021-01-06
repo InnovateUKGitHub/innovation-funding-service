@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCom
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.AssessmentPeriodDataBuilder.newCompetitionAssessmentPeriods;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -64,6 +65,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
+        assessmentPeriodDataBuilder = newCompetitionAssessmentPeriods(serviceLocator);
 
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
@@ -161,7 +163,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                         line.innovationSector, null, null, null, null,
                         null, null, null, null, null,
                         null, emptyList(), null, null, line.nonIfsUrl, line.fundingType, line.competitionCompletionStage,
-                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation, line.alwaysOpen)
+                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
                 .withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
                 .withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView);
 
@@ -181,9 +183,10 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                         line.innovationSector, line.fundingRules, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.multiStream, line.collaborationLevel,
                         line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.fundingType, line.competitionCompletionStage,
-                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation, line.alwaysOpen).
+                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
                 withApplicationFormFromTemplate().
                 withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
+                withApplicationConfig(line.alwaysOpen).
                 withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView).
                 withNewMilestones(line.competitionCompletionStage, line.alwaysOpen);
 

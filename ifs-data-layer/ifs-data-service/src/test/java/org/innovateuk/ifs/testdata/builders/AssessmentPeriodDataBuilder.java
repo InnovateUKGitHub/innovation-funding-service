@@ -30,27 +30,29 @@ public class AssessmentPeriodDataBuilder extends BaseDataBuilder<Void, Assessmen
             testService.doWithinTransaction(() -> {
                 Competition competition = retrieveCompetitionByName(competitionName);
 
-                Milestone assessorBriefingMilestone = MilestoneBuilder.newMilestone()
+                AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition);
+                assessmentPeriodRepository.save(assessmentPeriod);
+
+                milestoneRepository.save(MilestoneBuilder.newMilestone()
                         .withType(MilestoneType.ASSESSOR_BRIEFING)
                         .withDate(assessorBriefing)
                         .withCompetition(competition)
-                        .build();
+                        .withAssessmentPeriod(assessmentPeriod)
+                        .build());
 
-                Milestone assessorAcceptsMilestone = MilestoneBuilder.newMilestone()
+                milestoneRepository.save(MilestoneBuilder.newMilestone()
                         .withType(MilestoneType.ASSESSOR_ACCEPTS)
                         .withDate(assessorAccepts)
                         .withCompetition(competition)
-                        .build();
+                        .withAssessmentPeriod(assessmentPeriod)
+                        .build());
 
-                Milestone assessorDeadlineMilestone = MilestoneBuilder.newMilestone()
+                milestoneRepository.save(MilestoneBuilder.newMilestone()
                         .withType(MilestoneType.ASSESSOR_DEADLINE)
                         .withDate(assessorDeadline)
                         .withCompetition(competition)
-                        .build();
-
-                AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition);
-                assessmentPeriod.setChildren(Arrays.asList(assessorBriefingMilestone, assessorAcceptsMilestone, assessorDeadlineMilestone));
-                assessmentPeriodRepository.save(assessmentPeriod);
+                        .withAssessmentPeriod(assessmentPeriod)
+                        .build());
             });
         });
     }

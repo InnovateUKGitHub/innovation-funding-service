@@ -24,6 +24,7 @@ import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.transactional.CompetitionApplicationConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -225,6 +226,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InviteUserService inviteUserService;
     protected SupporterAssignmentService supporterAssignmentService;
     protected ApplicationProcurementMilestoneService applicationProcurementMilestoneService;
+    protected CompetitionApplicationConfigService competitionApplicationConfigService;
+    protected MilestoneRepository milestoneRepository;
     protected AssessmentPeriodRepository assessmentPeriodRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
@@ -350,6 +353,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         inviteUserService = serviceLocator.getBean(InviteUserService.class);
         supporterAssignmentService = serviceLocator.getBean(SupporterAssignmentService.class);
         applicationProcurementMilestoneService = serviceLocator.getBean(ApplicationProcurementMilestoneService.class);
+        competitionApplicationConfigService = serviceLocator.getBean(CompetitionApplicationConfigService.class);
+        milestoneRepository = serviceLocator.getBean(MilestoneRepository.class);
+        assessmentPeriodRepository = serviceLocator.getBean(AssessmentPeriodRepository.class);
     }
 
     protected UserResource compAdmin() {
