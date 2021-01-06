@@ -78,6 +78,10 @@ public class CsvUtils {
         return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
     }
 
+    public static List<AssessmentPeriodLine> readCompetitionAssessmentPeriods() {
+        return simpleMapWithIndex(readCsvLines("assessment-periods"), AssessmentPeriodLine::new);
+    }
+
     public static List<CompetitionFunderLine> readCompetitionFunders() {
         return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }

@@ -49,11 +49,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
+    private AssessmentPeriodDataBuilder assessmentPeriodDataBuilder;
 
     private List<CsvUtils.CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
     private static List<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLines;
-
+    private static List<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriodLines;
 
     @PostConstruct
     public void readCsvs() {
@@ -67,7 +68,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
         competitionOrganisationConfigLines = readCompetitionOrganisationConfig();
-
+        competitionAssessmentPeriodLines = readCompetitionAssessmentPeriods();
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
@@ -119,6 +120,19 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
             competitionOrganisationConfigDataBuilder.
                     withCompetitionOrganisationConfigData(competition.getCompetition().getName(), false, false).
                     build();
+        }
+    }
+
+    public void createCompetitionAssessmentPeriods(CompetitionData competition) {
+
+        Optional<CsvUtils.AssessmentPeriodLine> competitionAssessmentPeriodLine = simpleFindFirst(competitionAssessmentPeriodLines, l ->
+                competition.getCompetition().getName().equals(l.competition));
+
+        if (competitionAssessmentPeriodLine.isPresent()) {
+            competitionAssessmentPeriodLine.ifPresent(line ->
+                    assessmentPeriodDataBuilder.
+                            withCompetitionAssessmentPeriods(line.competition, line.assessorBriefing, line.assessorAccepts, line.assessorDeadline).
+                            build());
         }
     }
 

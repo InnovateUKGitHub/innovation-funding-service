@@ -20,8 +20,8 @@ public class AssessmentPeriod extends ParentMilestoneBase<Milestone> {
         // default constructor
     }
 
-    public AssessmentPeriod(MilestoneType type, Competition competition) {
-        super(type, competition);
+    public AssessmentPeriod(Competition competition) {
+        super(MilestoneType.ASSESSMENT_PERIOD, competition);
     }
 
     public List<Milestone> getChildren() {

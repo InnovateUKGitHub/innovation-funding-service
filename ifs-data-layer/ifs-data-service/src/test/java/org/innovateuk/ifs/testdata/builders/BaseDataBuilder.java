@@ -23,10 +23,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionOrganisationConfigRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -228,6 +225,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InviteUserService inviteUserService;
     protected SupporterAssignmentService supporterAssignmentService;
     protected ApplicationProcurementMilestoneService applicationProcurementMilestoneService;
+    protected AssessmentPeriodRepository assessmentPeriodRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
