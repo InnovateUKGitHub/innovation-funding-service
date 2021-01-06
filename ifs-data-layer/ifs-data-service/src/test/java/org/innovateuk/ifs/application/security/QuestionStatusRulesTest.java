@@ -19,6 +19,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -27,8 +28,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -141,10 +141,10 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
         UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(leadApplicant.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), application.getId()))
                 .thenReturn(true);
-        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantProcessRoles(), application.getId()))
-                .thenReturn(null);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), application.getId()))
+                .thenReturn(false);
 
         assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));
         assertFalse(rules.onlyMemberOfProjectTeamCanMarkSection(application, nonProjectTeamMember));

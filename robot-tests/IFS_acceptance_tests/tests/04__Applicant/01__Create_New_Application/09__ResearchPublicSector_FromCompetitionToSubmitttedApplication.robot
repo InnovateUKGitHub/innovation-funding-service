@@ -11,6 +11,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...
 ...               IFS-7718 EDI question - application form
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -30,7 +32,7 @@ ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
-    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700
+    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700  IFS-8779
     [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
@@ -95,7 +97,7 @@ The competition admin creates a competition for
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2  GRANT
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  SUBSIDY_CONTROL  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%

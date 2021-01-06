@@ -92,14 +92,10 @@ public class ProjectDetailsController {
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
-
         Optional<SimpleUserResource> financeReviewer = Optional.ofNullable(projectResource.getFinanceReviewer())
                 .map(id -> financeReviewerRestService.findFinanceReviewerForProject(projectId).getSuccess());
 
-        List<PartnerOrganisationResource> partnerOrganisations = locationPerPartnerRequired?
-                partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess()
-                : Collections.emptyList();
+        List<PartnerOrganisationResource> partnerOrganisations =  partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         List<OrganisationResource> organisations = partnerOrganisations.stream()
                 .map(p -> organisationRestService.getOrganisationById(p.getOrganisation()).getSuccess())
                 .collect(Collectors.toList());
@@ -109,7 +105,6 @@ public class ProjectDetailsController {
                 competitionResource.getName(),
                 loggedInUser,
                 leadOrganisationResource,
-                locationPerPartnerRequired,
                 partnerOrganisations,
                 organisations,
                 financeReviewer.map(SimpleUserResource::getName).orElse(null),

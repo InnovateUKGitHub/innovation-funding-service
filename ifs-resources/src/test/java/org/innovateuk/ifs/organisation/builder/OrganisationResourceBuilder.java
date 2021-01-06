@@ -1,9 +1,14 @@
 package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 
+
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,5 +69,14 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
     }
     public OrganisationResourceBuilder withAddresses(List<OrganisationAddressResource>... addresses) {
         return  withArraySetFieldByReflection("addresses", addresses);
+    }
+    public OrganisationResourceBuilder withOrganisationNumber(String... organisationNumber) {
+        return  withArraySetFieldByReflection("organisationNumber", organisationNumber);
+    }
+    public OrganisationResourceBuilder withBusinessType(String... businessType) {
+        return  withArraySetFieldByReflection("businessType", businessType);
+    }
+    public OrganisationResourceBuilder withDateOfIncorporation(LocalDate... dateOfIncorporation) {
+        return  withArraySetFieldByReflection("dateOfIncorporation", dateOfIncorporation);
     }
 }

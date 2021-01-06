@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-8164  KTP AFRICA - T&Cs
 ...
+...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -23,18 +25,20 @@ ${ktpAfricaFeedbackLink}        ${server}/application/${ktpAfricaPSApplicationId
 
 *** Test Cases ***
 Creating a new KTP africa comp to confirm T&c's
-    [Documentation]  IFS-8164
+    [Documentation]  IFS-8164  IFS-8779
     Given the user fills in initial details
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  termsAndConditionsId9
+    And the user selects the radio button       termsAndConditionsId  33
     And the user clicks the button/link         jQuery = button:contains("Done")
-    Then the user should see the element        link = Knowledge Transfer Partnership (KTP) Africa
+    Then the user should see the element        link = Knowledge Transfer Partnership (KTP) Africa (opens in a new window)
 
 KTP africa t&c's are correct
     [Documentation]  IFS-8164
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) Africa
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) Africa (opens in a new window)
+    And select window                        title = Terms and conditions of an African Agriculture Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
-    [Teardown]   the user goes back to the previous page
+    And close window
+    And select window                        title = Competition terms and conditions - Innovation Funding Service
 
 T&c's section should be completed
     [Documentation]  IFS-8164
@@ -99,7 +103,7 @@ Custom Suite teardown
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     KTP Africa competition  ${month}  ${nextyear}  ${compType_Programme}  1  KTP
+    the user fills in the CS Initial details     KTP Africa competition  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
 
 Update the competition with KTP africa T&C's
     [Arguments]  ${competitionID}

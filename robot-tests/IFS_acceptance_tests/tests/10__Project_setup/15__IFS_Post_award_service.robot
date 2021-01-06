@@ -43,13 +43,13 @@ ${postAwardServiceUrl}                         ${server}/live-projects-landing-p
 Competition Setup - Post award service link should not display for any other funding type except grant funding
      [Documentation]   IFS-6454
      Given the user clicks create a competition button
-     When the user fills in the CS Initial details         ${nonPostAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  KTP
+     When the user fills in the CS Initial details         ${nonPostAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  KTP
      Then the user should not see the element              link = ${postAwardServiceLink}
 
 Competition Setup - Ifs admin can access post award service form details for grant funding type competition
      [Documentation]   IFS-6454   IFS-8108
      Given the user clicks create a competition button
-     When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  SUBSIDY_CONTROL  GRANT
      And the user clicks the button/link                     link = ${postAwardServiceLink}
      Then the user check for post award service fields
      And the user sees that the radio button is selected     postAwardService  IFS_POST_AWARD

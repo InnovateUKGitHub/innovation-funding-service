@@ -86,7 +86,7 @@ public class InitialDetailsFormPopulatorTest {
 		assertEquals(Integer.valueOf(1), form.getOpeningDateMonth());
 		assertEquals(Integer.valueOf(2000), form.getOpeningDateYear());
 		assertEquals("name", form.getTitle());
-		assertEquals(Boolean.TRUE, form.getStateAid());
+		assertEquals(FundingRules.STATE_AID, form.getFundingRule());
 		assertEquals(FundingType.GRANT, form.getFundingType());
 	}
 

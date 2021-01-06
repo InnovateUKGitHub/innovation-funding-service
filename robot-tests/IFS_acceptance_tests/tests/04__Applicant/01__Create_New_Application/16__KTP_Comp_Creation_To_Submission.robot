@@ -79,6 +79,10 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8770 Bring back bank details for KTP
 ...
+...            IFS-8779 Subsidy Control - Create a New Competition - Initial Details
+...
+...            IFS-8614 KTP Project setup: GOL template
+...
 ...            IFS-8619 Application status page for KTP comp - content incorrect
 ...
 Suite Setup       Custom Suite Setup
@@ -139,12 +143,13 @@ ${phone_number}                       01234567897
 ${financeBanerText}                   Only members from your organisation will be able to see a breakdown
 ${ktpTandC}                           Terms and conditions of a Knowledge Transfer Partnership award
 ${singleRoleKTAEmail}                 singlerolekta@ktn-uk.test
+${leadTeamMember}                     susan.brown@gmail.com
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869  IFS-8779
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  SUBSIDY_CONTROL  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -158,13 +163,16 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
-    And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
+    Then the user sees that the radio button is selected     termsAndConditionsId  27
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    And select window                        title = Terms and conditions of a Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+    And close window
+    And select window                        title = Competition terms and conditions - Innovation Funding Service
     [Teardown]   the user goes back to the previous page
 
 T&c's can be confirmed
@@ -735,16 +743,25 @@ Internal user should see the Project manager & Finance contact (lead details)
     Then the user should see the element            jQuery = td:contains("${lead_ktp_email}") ~ td:contains("Project manager, Finance contact")
     And the user should see the element             jQuery = td:contains("${new_partner_ktp_email}")
 
+Project manager assigns finance contact to another team member
+    [Documentation]  IFS-8070 IFS-8116  IFS-8737
+    Given log in as a different user                      &{ifs_admin_user_credentials}
+    And the user navigates to the page                    ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team
+    And the user clicks the button/link                   jQuery = h2:contains("${ktpOrgName}") ~ button:contains("Add team member")
+    When adds a new team member and accept invitation
+    And the user navigates to the page                    ${server}/project-setup/project/${ProjectID}/team
+    Then the user selects their finance contact           financeContact2
+
 Internal user is able to view the KTA as an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-8070
-    Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionId}/status/all
+    Given log in as a different user         &{internal_finance_credentials}
+    And the user navigates to the page       ${server}/project-setup-management/competition/${competitionId}/status/all
     When the user clicks the button/link     jQuery = tr:nth-of-type(1) td:nth-of-type(3)
     Then the user should see the element     css = input[name="emailAddress"][value = "${ktaEmail}"]
     And The user clicks the button/link      link = Back to project setup
 
 Finance user approves bank details
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-8770
-    [Setup]  log in as a different user                         &{internal_finance_credentials}
     When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
     Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
     And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
@@ -861,6 +878,100 @@ Monitoring officer sees correct label for T&C's
     [Documentation]  IFS-7894
     When the user navigates to the page      ${server}/application/${ApplicationID}/form/question/2175/terms-and-conditions
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+
+Internal user can see KTP GOL template
+    [Documentation]  IFS-8614
+    Given log in as a different user                    &{ifs_admin_user_credentials}
+    And the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link                jQuery = tr:nth-of-type(1) td:nth-of-type(6):contains("Review")
+    And the user clicks the button/link                 link = View the grant offer letter page (opens in a new window)
+    And Select Window                                   title = Print version with CSS
+    Then element should contain                         xpath = //p[4]     Knowledge transfer partnership (KTP) grant offer letter
+    [Teardown]  the user closes the last opened tab
+
+Internal user can generates the GOL and send it to project manager
+    [Documentation]   IFS-8737
+    Given internal user uploads the GOL                 ${ProjectID}
+    And internal user uploads the Annex                 ${ProjectID}
+    When internal user sends letter to project team
+    And log in as a different user                      &{ktpLeadApplicantCredentials}
+    And the user navigates to the page                  ${server}/project-setup/project/${ProjectID}/offer
+    Then the user should see the element                link = GOL_template.pdf (opens in a new window)
+    And the user should see the element                 link = testing.pdf (opens in a new window)
+
+Project manager uploads GOL for review
+    [Documentation]   IFS-8737
+    When the user uploads the file           signedGrantOfferLetter    ${gol_pdf}
+    Then the user should see the element     link = GOL_template.pdf (opens in a new window)
+    And the user should see the element      name = removeSignedGrantOfferLetterClicked
+
+Finance contact uploads Annex for review
+   [Documentation]   IFS-8737
+    Given log in as a different user         ${leadTeamMember}   ${correct_password}
+    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}/offer
+    When the user uploads the file           signedAdditionalContract    ${valid_pdf}
+    Then the user should see the element     link = testing.pdf (opens in a new window)
+    And the user should see the element      name = removeSignedAdditionalContractFileClicked
+
+Project manager can submit both GOL and Annex documents to review
+    [Documentation]   IFS-8737
+    Given log in as a different user         &{ktpLeadApplicantCredentials}
+    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}/offer
+    When the user clicks the button/link     css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    And the user clicks the button/link      id = submit-gol-for-review
+    And the user clicks the button/link      link = Grant offer letter
+    Then the user should see the element     jQuery = h2:contains("Signed grant offer letter") ~ p:contains("GOL_template.pdf (opens in a new window)")
+
+Project manager should see reject banner message on internal user rejects GOL and annex
+    [Documentation]   IFS-8737
+    When the internal user rejects the GOL     ${ProjectID}
+    And log in as a different user             &{ktpLeadApplicantCredentials}
+    And the user navigates to the page         ${server}/project-setup/project/${ProjectID}/offer
+    Then the user should see the element       jQuery = h2:contains("Your signed grant offer letter and annex have been reviewed and rejected")
+
+Finance contact should see reject banner message on internal user rejects GOL and annex
+    [Documentation]   IFS-8737
+    Given log in as a different user         ${leadTeamMember}   ${correct_password}
+    When the user navigates to the page      ${server}/project-setup/project/${ProjectID}/offer
+    Then the user should see the element     jQuery = h2:contains("Your signed grant offer letter and annex have been reviewed and rejected")
+
+Partner should not see reject banner message on internal user rejects GOL and annex
+    [Documentation]   IFS-8737
+    Given log in as a different user             &{ktpNewPartnerCredentials}
+    When the user navigates to the page          ${server}/project-setup/project/${ProjectID}/offer
+    Then the user should not see the element     jQuery = h2:contains("Your signed grant offer letter and annex have been reviewed and rejected")
+
+Project manager uploads new GOL for review
+    [Documentation]   IFS-8737
+    Given log in as a different user         &{ktpLeadApplicantCredentials}
+    When the user navigates to the page      ${server}/project-setup/project/${ProjectID}/offer
+    And the user removes uploaded file       removeSignedGrantOfferLetterClicked   No file currently uploaded.
+    And the user uploads the file            signedGrantOfferLetter    ${gol_pdf}
+    Then the user should see the element     link = GOL_template.pdf (opens in a new window)
+
+Finance contact uploads new Annex for review
+    [Documentation]   IFS-8737
+    Given log in as a different user         ${leadTeamMember}   ${correct_password}
+    When the user navigates to the page      ${server}/project-setup/project/${ProjectID}/offer
+    And the user removes uploaded file       removeSignedAdditionalContractFileClicked   No file currently uploaded.
+    And the user uploads the file            signedAdditionalContract    ${valid_pdf}
+    Then the user should see the element     link = testing.pdf (opens in a new window)
+
+Project manager can submit new GOL and Annex documents for review
+    [Documentation]   IFS-8737
+    Given log in as a different user         &{ktpLeadApplicantCredentials}
+    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}/offer
+    When the user clicks the button/link     css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    And the user clicks the button/link      id = submit-gol-for-review
+    And the user clicks the button/link      link = Grant offer letter
+    Then the user should see the element     jQuery = h2:contains("Signed grant offer letter") ~ p:contains("GOL_template.pdf (opens in a new window)")
+
+Internal user approves GOL and Annex documents
+    [Documentation]   IFS-8737
+    When the internal user approve the GOL     ${ProjectID}
+    Then the user should see the element       jQuery = h2:contains("These documents have been approved.")
+    And the user should see the element        jQuery = h2:contains("Signed grant offer letter") ~ div p:contains("GOL_template.pdf (opens in a new window)")
+    And the user should see the element        jQuery = h2:contains("Signed annex") ~ div p:contains("testing.pdf (opens in a new window)")
 
 The applicants should not see knowledge based organisations when creating a non-ktp applications
     [Documentation]  IFS-8035
@@ -1083,17 +1194,6 @@ the user should see knowledge based organisation fields
     the user should see the element     link = checking your organisation's alternative name (opens in a new window)
     the user should see the element     link = enter its details manually
 
-#the user selects a knowledge based organisation
-#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-#    input text                          id = knowledgeBase        ${knowledgeBase}
-#    the user clicks the button/link     jQuery = ul li:contains("${completeKBOrganisartionName}")
-#
-#the user apply with knowledge base organisation
-#    [Arguments]   ${knowledgeBase}  ${completeKBOrganisartionName}
-#    the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
-#    the user clicks the button/link                     jQuery = button:contains("Confirm")
-#    the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
-
 the user should only see KB partner organisations
     the user should see the element         jQuery = span:contains("${businessOrganisationName}") + span:contains("${bussinessOrgInfoText}")
     the user should see the element         jQuery = span:contains("${nonProfitOrganisationName}") + span:contains("${nonJe-s/Public/CharityOrgInfoText}")
@@ -1287,3 +1387,18 @@ the user clicks the approve finance check button
      the user clicks the button/link      link = Return to finance checks
      the user clicks the button/link      jQuery = button:contains("Approve finance checks")
      the user should see the element      jQuery = p:contains("The finance checks have been approved")
+
+adds a new team member and accept invitation
+    the user adds a new team member                    Susan   ${leadTeamMember}
+    Logout as user
+    the user reads his email and clicks the link       ${leadTeamMember}    ${ktpCompetitionName}: ${ktpApplicationTitle}: Invitation for project    You have been invited to join the project    1
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Create account")
+    the invited user fills the create account form     Susan  Brown
+    the user reads his email and clicks the link       ${leadTeamMember}    Please verify your email address    Once verified you can sign into your account
+    the user clicks the button/link                    link = Sign in
+    Logging in and Error Checking                      ${leadTeamMember}   ${correct_password}
+
+the user removes uploaded file
+    [Arguments]   ${selector}  ${message}
+    the user clicks the button/link                 name = ${selector}
+    Wait Until Page Contains Without Screenshots    ${message}
