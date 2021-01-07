@@ -180,7 +180,7 @@ the user fills funding level percentages
     ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  35
 
 the user fills in maximum funding level percentage
-    the user enters text to a text field     id = maximum  10
+    the user enters text to a text field     id = maximums[0][0].maximum  10
     the user should see the element          jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
     the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
 

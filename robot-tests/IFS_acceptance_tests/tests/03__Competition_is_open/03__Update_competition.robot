@@ -319,11 +319,12 @@ return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
 the user moves the competition back again
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
-    the user clicks the button/link    link = Back to competition details
-    the user clicks the button/link    jQuery = a:contains("Complete setup")
-    the user clicks the button/link    css = button[type="submit"]
+    the user navigates to the page                   ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    the user clicks the button/link                  jQuery = button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link                  link = Back to competition details
+    the user fills in the CS funding eligibility     false  ${compType_Programme}
+    the user clicks the button/link                  jQuery = a:contains("Complete setup")
+    the user clicks the button/link                  css = button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information
