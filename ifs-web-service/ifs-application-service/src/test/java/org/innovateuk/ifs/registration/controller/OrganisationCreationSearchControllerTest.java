@@ -161,18 +161,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void findBusinessImprovedSearchCompaniesHouseResultsInNewPage() throws Exception {
-        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-
-        mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("organisationSearchName", "")
-                .param("search-organisation", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/search-organisation-results?searchTerm="));
-    }
-
-    @Test
     public void saveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", false);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
@@ -219,12 +207,14 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     @Test
     public void createOrganisationUsingImprovedSearch() throws Exception {
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
-        String improvedSearchLabel = "Enter your organisation name or company registration number and click the 'Search' button. We'll look for your organisation's details and tell you what to do next.";
+        String improvedSearchLabel = "Enter your organisation name or company registration number and click the 'Search' button.";
+        String improvedAdditionalLabel = "We'll look for your organisation's details and tell you what to do next.";
 
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
         when(messageSource.getMessage("improved.registration.SearchLabel", null, Locale.ENGLISH)).thenReturn(improvedSearchLabel);
+        when(messageSource.getMessage("improved.registration.AdditionalLabel", null, Locale.ENGLISH)).thenReturn(improvedAdditionalLabel);
         when(messageSource.getMessage("improved.registration.SearchHint", null, Locale.ENGLISH)).thenReturn("");
 
         mockMvc.perform(get("/organisation/create/find-organisation"))
@@ -233,6 +223,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("organisationForm"))
                 .andExpect(model().attribute("isImprovedSearchEnabled", equalTo(true)))
                 .andExpect(model().attribute("searchLabel", equalTo(improvedSearchLabel)))
+                .andExpect(model().attribute("additionalLabel", equalTo(improvedAdditionalLabel)))
                 .andExpect(model().attribute("searchHint", equalTo("")));
     }
 

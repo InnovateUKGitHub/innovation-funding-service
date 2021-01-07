@@ -177,7 +177,8 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
         String description = "Description";
         Boolean includedInApplicationSummary = false;
         Integer priority = 1;
-        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
+        List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().withPriority(0).build(2);
+
         Boolean isActive = true;
         Set<FileTypeCategory> allowedFileTypes = asSet(PDF, SPREADSHEET);
 
@@ -196,6 +197,7 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
                 .withActive(isActive)
                 .withAllowedFileTypes(allowedFileTypes)
                 .build();
+        guidanceRows.stream().forEach(gr -> gr.setFormInput(formInput));
 
         repository.save(formInput);
 

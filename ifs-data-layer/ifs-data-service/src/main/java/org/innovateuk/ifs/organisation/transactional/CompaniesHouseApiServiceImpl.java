@@ -69,39 +69,53 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
-    private ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
-        return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
-            // encoded in the web-services.
-            JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
-            return getSearchOrganisationResults(companiesResources, "");
+    @Override
+    public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText, int indexPos) {
+        LOG.debug("searchOrganisations " + encodedSearchText);
+        return decodeString(encodedSearchText).andOnSuccess(decodedSearchText ->
+        {
+            if (isImprovedSearchEnabled) {
+                return searchOrganisationByIndex(indexPos, decodedSearchText);
+            } else {
+                return searchOrganisations(decodedSearchText);
+            }
         });
     }
 
-    @Override
-    public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText, int indexPos) {
-        if (isImprovedSearchEnabled) {
-            return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
-                // search organsiation with index
-                JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH, JsonNode.class, companySearchUrlVariablesWithIndex(decodedSearchText, indexPos));
-                String totalResults = companiesResources.path("total_results").asText();
-                return getSearchOrganisationResults(companiesResources, totalResults);
-            });
-        }
-        return searchOrganisations(encodedSearchText);
+    private ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String decodedSearchText) {
+        //seearch organisation
+        JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_PATH, JsonNode.class, companySearchUrlVariables(decodedSearchText));
+        return getSearchOrganisationResults(companiesResources, "");
+    }
+
+    private ServiceResult<List<OrganisationSearchResult>> searchOrganisationByIndex(int indexPos, String decodedSearchText) {
+        // search organsiation with index
+        JsonNode companiesResources = restGet(COMPANIES_HOUSE_SEARCH_BY_INDEX_PATH, JsonNode.class,
+                companySearchUrlVariablesWithIndex(decodedSearchText, indexPos));
+        String totalResults = companiesResources.path("total_results").asText();
+        return getSearchOrganisationResults(companiesResources, totalResults);
     }
 
     @Override
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
         if (isImprovedSearchEnabled) {
-            Optional<JsonNode> companyDetails = getCompanyDetails(id);
-            Optional<JsonNode> directorsDetails = getDirectorsDetails(id);
-            OrganisationSearchResult orgResult = companyProfileSicCodeDirectorsMapper(companyDetails, directorsDetails);
-            return serviceSuccess(orgResult);
+            return getCompanyDetailsWithSicCodesAndDirectors(id);
         }
-        return ofNullable(restGet("company/" + id, JsonNode.class)).
+        return getCompanyBasicProfile(id);
+    }
+
+    private ServiceResult<OrganisationSearchResult> getCompanyBasicProfile(String id) {
+        return  getCompanyDetails(id).
                 map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
                 orElse(serviceFailure(COMPANIES_HOUSE_NO_RESPONSE));
+    }
+
+    private ServiceResult<OrganisationSearchResult> getCompanyDetailsWithSicCodesAndDirectors(String id) {
+        Optional<JsonNode> companyDetails = getCompanyDetails(id);
+        Optional<JsonNode> directorsDetails = getDirectorsDetails(id);
+        OrganisationSearchResult orgResult = companyProfileSicCodeDirectorsMapper(companyDetails, directorsDetails);
+        return serviceSuccess(orgResult);
     }
 
     private ServiceResult<List<OrganisationSearchResult>> getSearchOrganisationResults(JsonNode companiesResources, String totalResults) {

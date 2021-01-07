@@ -67,6 +67,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute("isImprovedSearchEnabled", isNewOrganisationSearchEnabled);
@@ -81,7 +82,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
+        if (!organisationForm.getOrganisationSearchName().trim().isEmpty() && isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
             return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
         }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
@@ -214,7 +215,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         } catch (NoSuchMessageException e) {
             LOG.error("unable to get message for key: " + key + " and local: " + locale);
             return messageSource.getMessage(improvedSearchEnabled ? String.format("improved.registration.DEFAULT.%s", textKey)
-                            : String.format("registration.DEFAULT.%s", orgTypeEnum.toString(), textKey),
+                            : String.format("registration.DEFAULT.%s", textKey),
                     null, locale);
         }
     }
