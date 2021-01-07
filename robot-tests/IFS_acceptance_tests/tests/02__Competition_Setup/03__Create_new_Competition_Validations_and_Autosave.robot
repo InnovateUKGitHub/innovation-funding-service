@@ -31,6 +31,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...              IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -56,7 +58,7 @@ Initial details: server-side validations
     And the user should see a field and summary error     Please select a Portfolio Manager.
 
 Initial details: client-side validations
-    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982  IFS-8779
+    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982  IFS-8779  IFS-6775
     [Tags]
     When the user enters text to a text field                   id = title    Validations Test
     Then the user should not see the error any more             Please enter a title.
@@ -88,7 +90,7 @@ Initial details: should not allow dates in the past
     Then The user should not see the element      jQuery = .govuk-button:contains("Edit")
 
 Initial details: mark as done
-    [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888  IFS-4982
+    [Documentation]  INFUND-2982  INFUND-2983  INFUND-3888  IFS-4982  IFS-6775
     [Tags]
     Given The user enters valid data in the initial details
     When the user clicks the button/link    jQuery = button:contains("Done")

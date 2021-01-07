@@ -6,6 +6,9 @@ Documentation  IFS-5158 - Competition Template
 ...            IFS-5700 - Create new project team page to manage roles in project setup
 ...
 ...            IFS-7195  Organisational eligibility category in Competition setup
+...
+...            IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -21,7 +24,7 @@ ${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
-    [Documentation]  IFS-5158
+    [Documentation]  IFS-5158  IFS-6775
     Given a user starts a new competition
     When the user clicks the button/link                               link = Initial details
     Then the user selects the option from the drop-down menu           Horizon 2020   name = competitionTypeId

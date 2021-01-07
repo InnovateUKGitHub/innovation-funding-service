@@ -19,6 +19,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -122,7 +124,7 @@ Turnover and Staff count fields
     And the user should see the element           jQuery = div span:contains("Number of full time employees at your organisation.")
 
 Once the project growth table is selected
-    [Documentation]    INFUND-6393 IFS-40
+    [Documentation]    INFUND-6393  IFS-40  IFS-6775
     [Tags]  HappyPath
     [Setup]    log in as a different user                       &{Comp_admin1_credentials}
     Given the user navigates to the page                        ${CA_UpcomingComp}

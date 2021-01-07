@@ -25,6 +25,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               IFS-7958  KTP Your Project Finances - Funding Breakdown
 ...
+...               IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -218,7 +220,7 @@ Finances not editable (Open)
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Initial details editable before notify date (Open)
-    [Documentation]    INFUND-6661  IFS-4982
+    [Documentation]    INFUND-6661  IFS-4982  IFS-6775
     [Setup]    the user clicks the button/link              link = Back to competition details
     Given the user clicks the button/link                   link = Initial details
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")

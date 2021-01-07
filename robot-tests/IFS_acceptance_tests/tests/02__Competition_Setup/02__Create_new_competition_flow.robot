@@ -102,6 +102,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -138,7 +140,7 @@ User can create a new competition
     And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
-    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982  IFS-8779
+    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982  IFS-8779 IFS-6775
     [Tags]  HappyPath
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
@@ -163,7 +165,7 @@ Initial Details - User can remove an innovation area
     Then the user should not see the element    jQuery = dd:contains("Space technology")
 
 Initial Details - drop down menu is populated with comp admin users
-    [Documentation]    INFUND-6905
+    [Documentation]    INFUND-6905, IFS-6775
     [Tags]
     [Setup]    the user clicks the button/link     jQuery = .govuk-button:contains("Edit")
     When the user sees element in type ahead       executiveUserId  j  John Doe
