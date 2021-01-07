@@ -237,17 +237,17 @@ A user starts a new competition
     the user clicks the button/link       jQuery = .govuk-button:contains("Create competition")
 
 The user is able to complete Initial details section
-    the user enters text to a text field                            css = #title  ${competitionTitle}
-    the user selects the radio button                               fundingType  GRANT
-    And the user selects the radio button                           fundingRule  SUBSIDY_CONTROL
-    the user selects the option from the drop-down menu             None  id = innovationSectorCategoryId
-    the user selects the value from the drop-down menu              67  name = innovationAreaCategoryIds[0]
-    the user enters text to a text field                            id = openingDateDay    10
-    the user enters text to a text field                            id = openingDateMonth    1
-    the user enters text to a text field                            id = openingDateYear     ${nextyear}
-    the user selects the option from the drop-down menu             Ian Cooper    id = innovationLeadUserId
-    the user selects the option from the drop-down menu             John Doe   id = executiveUserId
-    the user clicks the button/link                                 jQuery = button:contains("Done")
+    the user enters text to a text field                              css = #title  ${competitionTitle}
+    the user selects the radio button                                 fundingType  GRANT
+    And the user selects the radio button                             fundingRule  SUBSIDY_CONTROL
+    the user selects the option from the drop-down menu               None  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu                67  name = innovationAreaCategoryIds[0]
+    the user enters text to a text field                              id = openingDateDay    10
+    the user enters text to a text field                              id = openingDateMonth    1
+    the user enters text to a text field                              id = openingDateYear     ${nextyear}
+    the user selects option from type ahead                           innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                           executiveUserId  j  John Doe
+    the user clicks the button/link                                   jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
 The user should see the read-only view of the initial details

@@ -514,8 +514,8 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css = #openingDateDay  1
     the user enters text to a text field                 css = #openingDateMonth  ${month}
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the value from the drop-down menu   24  id = innovationLeadUserId
-    the user selects the value from the drop-down menu   21  id = executiveUserId
+    the user selects option from type ahead              innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead              executiveUserId  r  Robert Johnson
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
