@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -44,6 +45,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private static final List<MilestoneType> HORIZON_PUBLIC_MILESTONES =
             asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE);
 
+    private static final List<MilestoneType> ALWAYS_OPEN_PUBLIC_MILESTONES =
+            asList(MilestoneType.OPEN_DATE);
+
     @Autowired
     private MilestoneRepository milestoneRepository;
 
@@ -77,10 +81,16 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                         .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
                         .collect(toList());
             } else {
-                milestonesRequired = PUBLIC_MILESTONES.stream()
-                        .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
-                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                        .collect(toList());
+                if(BooleanUtils.isTrue(competition.getCompetitionApplicationConfig().getAlwaysOpen())) {
+                    milestonesRequired = ALWAYS_OPEN_PUBLIC_MILESTONES.stream()
+                            .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                            .collect(toList());
+                } else {
+                    milestonesRequired = PUBLIC_MILESTONES.stream()
+                            .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                            .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                            .collect(toList());
+                }
             }
 
             List<Milestone> milestones = milestoneRepository

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -62,6 +63,12 @@ public enum MilestoneType {
 
     public static MilestoneType[] presetValues() {
         return Stream.of(values()).filter(MilestoneType::isPresetDate).toArray(length -> new MilestoneType[length]);
+    }
+
+    public static MilestoneType[] alwaysOpenValues() {
+        return Stream.of(values())
+                .filter(MilestoneType -> (MilestoneType == MilestoneType.OPEN_DATE || MilestoneType == MilestoneType.SUBMISSION_DATE))
+                .toArray(length -> new MilestoneType[length]);
     }
 }
 

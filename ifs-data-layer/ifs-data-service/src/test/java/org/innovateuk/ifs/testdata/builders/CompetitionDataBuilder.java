@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -372,13 +373,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
-
-        if (BooleanUtils.isTrue(alwaysOpen)) {
-            return this;
-        }
-
         return asCompAdmin(data ->
-            Stream.of(MilestoneType.presetValues())
+            Stream.of(BooleanUtils.isTrue(alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
                     .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                     .forEach(type ->

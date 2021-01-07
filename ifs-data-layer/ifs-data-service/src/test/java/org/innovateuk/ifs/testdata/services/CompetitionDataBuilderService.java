@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder;
@@ -190,7 +191,13 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView).
                 withNewMilestones(line.competitionCompletionStage, line.alwaysOpen);
 
-        CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
+        CompetitionDataBuilder competitionWithMilestones;
+        if (BooleanUtils.isTrue(line.alwaysOpen)) {
+            competitionWithMilestones = competitionBeforeMilestones.withSetupComplete();
+        } else {
+            competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
+        }
+
         return competitionWithMilestones.
                 withPublicContent(
                         line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
