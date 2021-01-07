@@ -45,6 +45,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final String SAVE_ORGANISATION_DETAILS = "save-organisation-details";
     private static final String REFERER = "referer";
     private static final String ORGANISATION_NAME = "organisationName";
+    private static final String ORGANISATION_SEARCH_NAME = "organisationSearchName";
     private static final String MODEL = "model";
     private static final String SEARCH_ORGANISATION = "search-organisation";
     private static final String DEFAULT_PAGE_NUMBER = "1";
@@ -70,22 +71,34 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
-        model.addAttribute("isImprovedSearchEnabled", isNewOrganisationSearchEnabled);
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION)
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                     HttpServletRequest request, HttpServletResponse response){
+                                     BindingResult bindingResult,
+                                     HttpServletRequest request, HttpServletResponse response) {
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        if (!organisationForm.getOrganisationSearchName().trim().isEmpty() && isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
-            return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
+           return displayImprovedSearchOrganisationResults(organisationForm, request, bindingResult);
         }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+    }
+
+    private String displayImprovedSearchOrganisationResults(OrganisationCreationForm organisationForm, HttpServletRequest request, BindingResult bindingResult) {
+        boolean isSearchResultRequestURI = request.getHeader("referer").contains(SEARCH_RESULT_ORGANISATION);
+        bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
+        validator.validate(organisationForm, bindingResult);
+
+        if (!isSearchResultRequestURI && bindingResult.hasFieldErrors(ORGANISATION_SEARCH_NAME)) {
+            return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
+        }
+        return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
 
     @GetMapping("/" + EXISTING_ORGANISATION + "/{selectedExistingOrganisationId}")
@@ -123,7 +136,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         addPageSubtitleToModel(request, user, model);
         addPageResourceToModel(organisationForm, model, pageNumber);
-
         return TEMPLATE_PATH + "/" + SEARCH_RESULT_ORGANISATION;
     }
 
@@ -148,7 +160,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
-        model.addAttribute("isImprovedSearchEnabled", isNewOrganisationSearchEnabled);
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
         addPageSubtitleToModel(request, user, model);
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
