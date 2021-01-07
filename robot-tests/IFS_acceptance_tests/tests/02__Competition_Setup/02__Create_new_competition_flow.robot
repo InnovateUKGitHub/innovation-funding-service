@@ -260,7 +260,7 @@ Funding information: can be saved
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
-    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("2101-1")
+    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("${nextyearintwodigits}01-1")
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
@@ -845,7 +845,7 @@ the weekdays should be correct
     element should contain    css = tr:nth-child(13) td:nth-child(3)    Mon
 
 the pre-field date should be correct
-    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Sun
+    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Mon
     ${YEAR} =    Get Value        css = #milestoneWeekdayEntry-OPEN_DATE ~ .year .govuk-input--width-4  # Get the value within the YEAR field
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value       css = #milestoneWeekdayEntry-OPEN_DATE ~ .month .govuk-input--width-4  # Get the value within the MONTH field
@@ -986,7 +986,7 @@ the comp admin creates competition with all sections details
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}

@@ -16,7 +16,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
@@ -112,19 +112,22 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = pafNumber  2424
     the user enters text to a text field  id = budgetCode  Ch0col@73
     the user enters text to a text field  id = activityCode  133t
-    textfield should contain              css = input[name="competitionCode"]  21
+    ${nextYearInTwoDigits}=               get next year in two digits
+    textfield should contain              css = input[name="competitionCode"]   ${nextYearInTwoDigits}
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
-    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${compType}  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link       link = Project eligibility
+    Run Keyword If  "${compType}" == "${compType_HEUKAR}"   the user sees that the radio button is selected  singleOrCollaborative  single-or-collaborative-${collaborative}
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
     the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
     Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
+    ...   ELSE IF  "${compType}" == "${compType_HEUKAR}"   run keywords     the user sees all lead applicant types selected by default
     ...   ELSE   run keywords     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     ...   AND    the user selects Research Participation if required   ${researchParticipation}
     the user selects the radio button     resubmission  yes
@@ -680,3 +683,9 @@ the user select stakeholder and add to competition
     When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
     And the user clicks the button/link       jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+
+the user sees all lead applicant types selected by default
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-1
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-2
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-3
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-4
