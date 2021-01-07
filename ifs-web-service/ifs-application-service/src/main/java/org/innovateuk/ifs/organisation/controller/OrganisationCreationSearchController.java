@@ -82,7 +82,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        if (isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
+        if (!organisationForm.getOrganisationSearchName().trim().isEmpty() && isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
             return "redirect:/organisation/create/" + SEARCH_RESULT_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
         }
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
