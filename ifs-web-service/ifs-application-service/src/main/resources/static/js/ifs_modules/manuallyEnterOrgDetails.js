@@ -14,7 +14,6 @@ IFS.manuallyEnter = (function () {
     },
     handleRemoveRowMan: function (e) {
       var inst = jQuery(e)
-      console.log(inst.closest('[id^="sic-code-row-"]'))
       inst.closest('[id^="sic-code-row-"]').remove()
       IFS.manuallyEnter.reindexRows('[id^="sic-code-row-"]')
     },
@@ -24,10 +23,11 @@ IFS.manuallyEnter = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
       }
-      var html = '<div class="govuk-grid-row sic-code-row" id="sic-code-row-' + idCount + '">' +
+      var html = '<div class="govuk-grid-row govuk-!-margin-top-6 sic-code-row" id="sic-code-row-' + idCount + '">' +
                          '<div class="govuk-grid-column-one-half">' +
-                           '<div class="govuk-form-group">' +
-                             '<input>ello</input>' +
+                             '<input class="govuk-input govuk-!-width-one-half"' +
+                             'id="sicCode"' +
+                              'type="text"/>' +
                               '</div>' +
                               '<div>' +
                                  '<button class="button-clear alignright" data-remove-row-man="sicCode"' +
@@ -35,7 +35,6 @@ IFS.manuallyEnter = (function () {
                                                'th:value="' + idCount + ' "' +
                                              'th:id="remove-sic-code-row"' + idCount + ' ">Remove' +
                                   '</button>' +
-                                '</div>' +
                             '</div>' +
                           '</div>'
       jQuery('.sic-code-row').last().after(html)
