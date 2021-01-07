@@ -504,7 +504,7 @@ public class ProjectFinanceChecksController {
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
 
         if (competition.isKtp()) {

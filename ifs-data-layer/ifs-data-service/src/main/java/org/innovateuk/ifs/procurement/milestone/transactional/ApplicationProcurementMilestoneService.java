@@ -12,4 +12,6 @@ public interface ApplicationProcurementMilestoneService extends ProcurementMiles
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     ServiceResult<List<ApplicationProcurementMilestoneResource>> getByApplicationIdAndOrganisationId(long applicationId, long organisationId);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
+    ServiceResult<List<ApplicationProcurementMilestoneResource>> getByApplicationId(long applicationId);
 }

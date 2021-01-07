@@ -44,8 +44,52 @@
             </tbody>
         </table>
 
-        <h2 class="govuk-heading-m">Payment milestones</h2>
+        <th:block th:unless="${model.milestoneDifferences.isEmpty()}">
 
+            <h2 class="govuk-heading-m">Payment milestones</h2>
+
+            <table class="govuk-table table-overview">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Milestone</th>
+                    <th class="govuk-table__header" scope="col">Section</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Submitted</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Updated</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Variance</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <th:block th:each="milestoneDiff : ${model.milestoneDifferences}">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__cell" scope="row" th:text="${milestoneDiff.description}" rowspan="2"/>
+                        <td class="govuk-table__cell">Month completed</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            0
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                          0
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            0
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Payment requested (&pound;)</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            0
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            0
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            0
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+
+        </th:block>
 
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 

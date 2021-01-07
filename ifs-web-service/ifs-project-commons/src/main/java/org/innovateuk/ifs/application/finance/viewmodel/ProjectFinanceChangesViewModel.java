@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ public class ProjectFinanceChangesViewModel {
     private BigDecimal totalApplicationCosts;
     private BigDecimal totalProjectCostsAfterChanges;
     private boolean loanCompetition;
+    private List<MilestoneChangeViewModel> milestoneDifferences;
 
     public ProjectFinanceChangesViewModel(boolean isInternal, String organisationName, Long organisationId,
                                           String projectName, Long applicationId, Long projectId,
@@ -35,7 +37,7 @@ public class ProjectFinanceChangesViewModel {
                                           Map<FinanceRowType, CostChangeViewModel> sectionDifferences,
                                           Map<FinanceRowType, List<ChangedFinanceRowPair>> changes,
                                           BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges,
-                                          boolean loanCompetition) {
+                                          boolean loanCompetition, List<MilestoneChangeViewModel> milestoneDifferences) {
         this.isInternal = isInternal;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -50,6 +52,7 @@ public class ProjectFinanceChangesViewModel {
         this.totalApplicationCosts = totalApplicationCosts;
         this.totalProjectCostsAfterChanges = totalProjectCostsAfterChanges;
         this.loanCompetition = loanCompetition;
+        this.milestoneDifferences = milestoneDifferences;
     }
 
     public Map<FinanceRowType, CostChangeViewModel> getSectionDifferences() {
@@ -166,5 +169,9 @@ public class ProjectFinanceChangesViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public List<MilestoneChangeViewModel> getMilestoneDifferences() {
+        return milestoneDifferences;
     }
 }

@@ -23,6 +23,12 @@ public class ApplicationProcurementMilestoneRestServiceImpl
     }
 
     @Override
+    public RestResult<List<ApplicationProcurementMilestoneResource>> getByApplicationId(long applicationId) {
+        return getWithRestResult(getMilestoneUrl() + String.format("/application/%d", applicationId),
+                new ParameterizedTypeReference<List<ApplicationProcurementMilestoneResource>>() {});
+    }
+
+    @Override
     protected Class<ApplicationProcurementMilestoneResource> getResourceClass() {
         return ApplicationProcurementMilestoneResource.class;
     }

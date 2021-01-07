@@ -52,4 +52,13 @@ public class ApplicationProcurementMilestoneServiceImpl
                                 .map(mapper::mapToResource)
                                 .collect(toList()));
     }
+
+    @Override
+    public ServiceResult<List<ApplicationProcurementMilestoneResource>> getByApplicationId(long applicationId) {
+        return find(repository.findByApplicationFinanceApplicationId(applicationId), notFoundError(ApplicationProcurementMilestone.class, applicationId))
+                .andOnSuccessReturn((milestones) ->
+                        milestones.stream()
+                                .map(mapper::mapToResource)
+                                .collect(toList()));
+    }
 }

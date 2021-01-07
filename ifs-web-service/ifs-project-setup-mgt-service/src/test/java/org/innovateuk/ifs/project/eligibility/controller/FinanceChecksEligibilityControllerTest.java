@@ -531,7 +531,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
-        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, industrialOrganisation, getLoggedInUser().getId())).thenReturn(viewModel);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, industrialOrganisation)).thenReturn(viewModel);
 
         mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes", projectId, organisationId)).
                 andExpect(status().isOk()).
