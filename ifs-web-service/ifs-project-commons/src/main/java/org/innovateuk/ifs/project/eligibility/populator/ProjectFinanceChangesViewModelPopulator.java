@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
@@ -19,7 +20,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,6 +38,9 @@ public class ProjectFinanceChangesViewModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
+
 
     public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project,
                                                                           OrganisationResource organisation, Long userId) {
@@ -46,6 +49,7 @@ public class ProjectFinanceChangesViewModelPopulator {
     ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
     CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
     Map<FinanceRowType, CostChangeViewModel> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
+
     return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview,
             getWorkingDaysPerYearCostItemFrom(appFinanceResource.getFinanceOrganisationDetails()),
             getWorkingDaysPerYearCostItemFrom(projectFinanceResource.getFinanceOrganisationDetails()),

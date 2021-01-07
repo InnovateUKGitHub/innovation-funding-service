@@ -30,10 +30,15 @@ public class CostChangeViewModel {
         return !projectCost.equals(applicationCost);
     }
 
-    public String getVariance() {
+    public String getVarianceDirection() {
         boolean increase = projectCost.compareTo(applicationCost) > 0;
-        String change = increase ? "+" : "-";
-        BigDecimal diff = getDifference().abs();
-        return change + " " + diff;
+        if (increase) {
+            return "+";
+        }
+        return "-";
+    }
+
+    public BigDecimal getVariance() {
+        return getDifference().abs();
     }
 }
