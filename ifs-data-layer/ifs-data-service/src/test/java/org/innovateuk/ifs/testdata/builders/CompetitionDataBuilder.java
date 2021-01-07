@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -491,6 +490,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 publicContent.setInviteOnly(inviteOnly);
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
+
+                boolean isAlwaysOpen = BooleanUtils.isTrue(data.getCompetition().getCompetitionApplicationConfig().getAlwaysOpen());
+                LOG.info(Boolean.toString(isAlwaysOpen));
 
                 publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccess();
             }

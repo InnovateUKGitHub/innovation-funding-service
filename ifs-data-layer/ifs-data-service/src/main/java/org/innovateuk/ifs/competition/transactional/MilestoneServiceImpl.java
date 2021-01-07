@@ -13,6 +13,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,14 +41,15 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class MilestoneServiceImpl extends BaseTransactionalService implements MilestoneService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MilestoneServiceImpl.class);
+
     private static final List<MilestoneType> PUBLIC_MILESTONES =
             asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS);
 
     private static final List<MilestoneType> HORIZON_PUBLIC_MILESTONES =
             asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE);
 
-    private static final List<MilestoneType> ALWAYS_OPEN_PUBLIC_MILESTONES =
-            asList(MilestoneType.OPEN_DATE);
+    private static final List<MilestoneType> ALWAYS_OPEN_PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE);
 
     @Autowired
     private MilestoneRepository milestoneRepository;
@@ -78,19 +81,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             if (isNonIfs) {
                 milestonesRequired= PUBLIC_MILESTONES.stream()
-                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, true))
                         .collect(toList());
             } else {
-                if(BooleanUtils.isTrue(competition.getCompetitionApplicationConfig().getAlwaysOpen())) {
-                    milestonesRequired = ALWAYS_OPEN_PUBLIC_MILESTONES.stream()
-                            .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
-                            .collect(toList());
-                } else {
-                    milestonesRequired = PUBLIC_MILESTONES.stream()
-                            .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
-                            .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                            .collect(toList());
-                }
+                milestonesRequired = ifsAllPublicDatesComplete(competition);
             }
 
             List<Milestone> milestones = milestoneRepository
@@ -98,6 +92,25 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             return hasRequiredMilestones(milestones, milestonesRequired);
         });
+    }
+
+    private List<MilestoneType> ifsAllPublicDatesComplete(Competition competition) {
+        List<MilestoneType> milestonesRequired;
+
+        boolean isAlwaysOpen = BooleanUtils.isTrue(competition.getCompetitionApplicationConfig().getAlwaysOpen());
+
+        if (isAlwaysOpen) {
+            milestonesRequired = ALWAYS_OPEN_PUBLIC_MILESTONES.stream()
+                    .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                    .collect(toList());
+        } else {
+            milestonesRequired = PUBLIC_MILESTONES.stream()
+                    .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                    .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, false))
+                    .collect(toList());
+        }
+
+        return milestonesRequired;
     }
 
     private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {
