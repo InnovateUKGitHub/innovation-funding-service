@@ -15,12 +15,16 @@ import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -35,6 +39,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -46,6 +51,9 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private UserRepository userRepositoryMock;
+
+    @Mock
+    private UserService userServiceMock;
 
     @Mock
     private ProjectUserInviteRepository projectUserInviteRepositoryMock;
@@ -204,6 +212,40 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<List<ProjectUserInviteResource>> invitesByProject = projectInviteService.getInvitesByProject(projectResource.getId());
         assertTrue(invitesByProject.isSuccess());
         assertEquals(singletonList(projectUserInviteResource), invitesByProject.getSuccess());
+    }
+
+
+    @Test
+    public void acceptProjectInviteGetsApplicantRoleIfTheyDoNotHaveIt() {
+
+        Project project = newProject().build();
+        Organisation organisation = newOrganisation().build();
+
+        User user = newUser()
+                .withUid(UUID.randomUUID().toString())
+                .withEmailAddress("email@example.com")
+                .withRoles(EnumSet.of(Role.LIVE_PROJECTS_USER))
+                .build();
+
+        ProjectUser projectUser = newProjectUser().build();
+
+        ProjectUserInvite projectInvite = newProjectUserInvite()
+                .withEmail(user.getEmail())
+                .withHash("hash")
+                .withProject(project).withOrganisation(organisation)
+                .build();
+
+        when(projectUserInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(projectUserInviteRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
+        when(projectServiceMock.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId())).thenReturn(serviceSuccess(projectUser));
+        when(projectUserRepositoryMock.save(projectUser)).thenReturn(projectUser);
+        when(userRepositoryMock.save(user)).thenReturn(user);
+        when(userServiceMock.evictUserCache(user.getUid())).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = projectInviteService.acceptProjectInvite(projectInvite.getHash(), user.getId());
+        assertTrue(result.isSuccess());
+        assertTrue(user.getRoles().contains(APPLICANT));
     }
 
 }
