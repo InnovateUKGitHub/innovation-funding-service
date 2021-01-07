@@ -1,20 +1,46 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationTypeEnum;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
+import static org.innovateuk.ifs.organisation.builder.HeukarPartnerOrganisationResourceBuilder.newHeukarPartnerOrganisationResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationTeamViewModelTest {
 
     private ApplicationTeamViewModel model;
+
+    @Test
+    public void heukarPartnerOrganisations() {
+        List<HeukarPartnerOrganisationResource> partnerOrganisationResourceList = new ArrayList<>();
+
+        HeukarPartnerOrganisationResource org1 = newHeukarPartnerOrganisationResource()
+                .withId(1L, 2L)
+                .withApplicationId(1L, 2L)
+                .withOrganisationTypeResource(HeukarPartnerOrganisationTypeEnum.BUSINESS)
+                .build();
+
+        partnerOrganisationResourceList.add(org1);
+
+        model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
+                false, false, false, false, true, null, null, false,
+                partnerOrganisationResourceList);
+
+        assertEquals(model.getHeukarPartnerOrganisationResources().size(), partnerOrganisationResourceList.size());
+    }
 
     @Test
     public void pendingDays() {
@@ -25,7 +51,7 @@ public class ApplicationTeamViewModelTest {
                 .withSentOn(fiveDaysAgo)
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, invite, null);
+                false, false, false, false, true, invite, null, false, Collections.emptyList());
 
         // when
         long pendingDays = model.getKtaInvitePendingDays();
@@ -42,7 +68,7 @@ public class ApplicationTeamViewModelTest {
                 .build();
         ProcessRoleResource processRole = newProcessRoleResource().withUserEmail("processrole@example.com").build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, invite, processRole);
+                false, false, false, false, true, invite, processRole, false, Collections.emptyList());
 
         // when
         String result = model.getKtaEmail();
@@ -58,7 +84,7 @@ public class ApplicationTeamViewModelTest {
                 .withEmail("inviteemail@example.com")
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, invite, null);
+                false, false, false, false, true, invite, null, false, Collections.emptyList());
 
         // when
         String result = model.getKtaEmail();
@@ -75,7 +101,7 @@ public class ApplicationTeamViewModelTest {
                 .build();
         ProcessRoleResource processRole = newProcessRoleResource().withUserName("ProcessRole").build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, invite, processRole);
+                false, false, false, false, true, invite, processRole, false, Collections.emptyList());
 
         // when
         String result = model.getKtaName();
@@ -91,7 +117,7 @@ public class ApplicationTeamViewModelTest {
                 .withName("Invited")
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, invite, null);
+                false, false, false, false, true, invite, null, false, Collections.emptyList());
 
         // when
         String result = model.getKtaName();
