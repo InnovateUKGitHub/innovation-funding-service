@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Lookup strategy for {@link ProcurementMilestoneResource}, used for permissioning.
+ * Lookup strategy for {@link ProcurementMilestoneResource}, used for permissions.
  */
 @Component
 @PermissionEntityLookupStrategies

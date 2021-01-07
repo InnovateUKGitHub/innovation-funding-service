@@ -63,10 +63,15 @@
 
         </th:block>
         <th:block th:unless="${model.isApproved()}">
-
             <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
                 <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                 class="govuk-link">project finance overview</a>.</p>
+
+
+
+            Innovate UK is reviewing:
+
+
             <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
                 <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                    class="govuk-link">your project finances</a>
@@ -75,6 +80,8 @@
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                     class="govuk-link">view the project finance overview</a>.
                 </th:block>
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                   class="govuk-link">payment milestones</a>
             </p>
         </th:block>
 
