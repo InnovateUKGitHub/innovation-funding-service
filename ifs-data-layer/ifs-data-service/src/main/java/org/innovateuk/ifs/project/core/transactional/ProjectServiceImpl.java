@@ -173,9 +173,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         if (projectUser.isPresent()) {
             return serviceSuccess(projectUser.get()); // Already a partner
         } else {
-            if (containsMultiDashboardRole(user.getRoles())) {
-                user.addRole(Role.APPLICANT); // Give them the applicant role in case they do not have it.
-            }
             ProjectUser pu = new ProjectUser(user, project, PROJECT_PARTNER, organisation);
             return serviceSuccess(pu);
         }
