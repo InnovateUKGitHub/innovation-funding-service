@@ -161,18 +161,6 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void findBusinessImprovedSearchCompaniesHouseResultsInNewPage() throws Exception {
-        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
-        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
-
-        mockMvc.perform(post("/organisation/create/find-organisation")
-                .param("organisationSearchName", "")
-                .param("search-organisation", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/search-organisation-results?searchTerm="));
-    }
-
-    @Test
     public void saveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", false);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
