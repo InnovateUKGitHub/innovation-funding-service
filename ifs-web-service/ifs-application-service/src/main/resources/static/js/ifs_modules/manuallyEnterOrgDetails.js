@@ -8,20 +8,35 @@ IFS.manuallyEnter = (function () {
         case 'sicCode':
           IFS.manuallyEnter.addSicCode()
           break
+        case 'execOfficer':
+          IFS.manuallyEnter.addExecOfficer()
+          break
       }
       jQuery('body').trigger('updateSerializedFormState')
       return false
     },
     handleRemoveRowMan: function (e) {
       var inst = jQuery(e)
-      inst.closest('[id^="sic-code-row-"]').remove()
-      IFS.manuallyEnter.reindexRows('[id^="sic-code-row-"]')
+      var type = jQuery(e).attr('data-remove-row-man')
+      switch (type) {
+        case 'sicCode':
+          inst.closest('[id^="sic-code-row-"]').remove()
+          IFS.manuallyEnter.reindexRows('[id^="sic-code-row-"]')
+          break
+        case 'execOfficer':
+          inst.closest('[id^="exec-officer-row-"]').remove()
+          IFS.manuallyEnter.reindexRows('[id^="exec-officer-row-"]')
+          break
+      }
+      jQuery('body').trigger('updateSerializedFormState')
     },
     addSicCode: function () {
       var idCount = 0
       if (jQuery('.sic-code-row').length) {
-        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.sic-code-row[id^=sic-code-row-]').last().attr('id').split('sic-code-row-')[1], 10) + 1
+        if (idCount >= 4) {
+          return
+        }
       }
       var html = '<div class="govuk-grid-row govuk-!-margin-top-6 sic-code-row" id="sic-code-row-' + idCount + '">' +
                          '<div class="govuk-grid-column-one-half">' +
@@ -56,6 +71,28 @@ IFS.manuallyEnter = (function () {
         var thisIndex = inst.closest(rowSelector).index(rowSelector)
         inst.val(thisIndex)
       })
+    },
+    addExecOfficer: function () {
+      var idCount = 0
+      if (jQuery('.exec-officer-row').length) {
+        idCount = parseInt(jQuery('.exec-officer-row[id^=exec-officer-row-]').last().attr('id').split('exec-officer-row-')[1], 10) + 1
+      }
+      var html = '<div class="govuk-grid-row govuk-!-margin-top-6 exec-officer-row" id="exec-officer-row-' + idCount + '">' +
+                               '<div class="govuk-grid-column-one-half">' +
+                                   '<input class="govuk-input govuk-!-width-one-half"' +
+                                   'id="execOfficer"' +
+                                    'type="text"/>' +
+                                    '</div>' +
+                                    '<div>' +
+                                       '<button class="button-clear alignright" data-remove-row-man="execOfficer"' +
+                                                 'type="button" name="remove-exec-officer"' +
+                                                     'th:value="' + idCount + ' "' +
+                                                   'th:id="remove-exec-officer-row"' + idCount + ' ">Remove' +
+                                        '</button>' +
+                                  '</div>' +
+                                '</div>'
+      jQuery('.exec-officer-row').last().after(html)
+      jQuery('.exec-officer-' + idCount).val('')
     }
   }
 })()

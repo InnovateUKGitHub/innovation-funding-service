@@ -77,9 +77,7 @@
                        th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
                        type="text" required="required"/>
             </div>
-            <div class="govuk-form-group">
-            <label class="govuk-label govuk-label--s"
-                   for="name">
+            <label class="govuk-label govuk-label--s" for="name">
                 SIC code
             </label>
             <div class="govuk-hint">Enter your 5 digit Standard Industrial Classification code.</div>
@@ -90,11 +88,24 @@
                                type="text"/>
                 </div>
             </div>
-            <div class="alignright govuk-!-margin-top-6">
-                <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+Sic code</button>
+            <div class="alignleft govuk-!-margin-top-6">
+                <button class="button-clear" name="add-sic-code" data-add-row-man="sicCode" type="button">+ Add SIC code</button>
             </div>
+            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
+                Executive officers
+            </label>
+            <div class="govuk-hint">Enter the first and last names of all company directors, if your organisation has any.</div>
+            <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row" th:id="'exec-officer-row-'+${iteration.index}">
+                <div class="govuk-grid-column-one-half">
+                    <input class="govuk-input govuk-!-width-one-half"
+                           id="execOfficer"
+                           type="text"/>
+                </div>
             </div>
-        <th:block th:insert="fragments/layout :: main-content-end"/>
+            <div class="alignleft govuk-!-margin-top-6">
+                <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>
+            </div>
+            <th:block th:insert="fragments/layout :: main-content-end"/>
         </form>
     </main>
 </div>

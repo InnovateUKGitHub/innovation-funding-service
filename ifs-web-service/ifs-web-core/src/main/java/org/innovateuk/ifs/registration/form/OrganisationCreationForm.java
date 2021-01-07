@@ -32,12 +32,15 @@ public class OrganisationCreationForm implements Serializable {
     private String organisationNumber;
     private String businessType;
     private List<String> sicCodes;
+    private List<String> executiveOfficers;
 
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
         this.sicCodes = new ArrayList<>();
         this.sicCodes.add("SIC1");
+        this.executiveOfficers = new ArrayList<>();
+        executiveOfficers.add("exec1");
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
@@ -143,6 +146,14 @@ public class OrganisationCreationForm implements Serializable {
         this.sicCodes = sicCodes;
     }
 
+    public List<String> getExecutiveOfficers() {
+        return executiveOfficers;
+    }
+
+    public void setExecutiveOfficers(List<String> executiveOfficers) {
+        this.executiveOfficers = executiveOfficers;
+    }
+
     @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
@@ -168,6 +179,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(organisationNumber, that.organisationNumber)
                 .append(businessType,that.businessType)
                 .append(sicCodes,that.sicCodes)
+                .append(executiveOfficers,that.executiveOfficers)
                 .isEquals();
     }
 
@@ -185,6 +197,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(organisationNumber)
                 .append(businessType)
                 .append(sicCodes)
+                .append(executiveOfficers)
                 .toHashCode();
     }
 }
