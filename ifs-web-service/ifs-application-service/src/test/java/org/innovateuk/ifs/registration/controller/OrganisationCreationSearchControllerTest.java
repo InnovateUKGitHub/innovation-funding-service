@@ -188,12 +188,14 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
 
     @Test
     public void createOrganisation() throws Exception {
-        String improvedSearchLabel = "Enter your organisation name or company registration number and click the 'Search' button. We'll look for your organisation's details and tell you what to do next.";
+        String improvedSearchLabel = "Enter your organisation name or company registration number and click the 'Search' button.";
+        String improvedAdditionalLabel = "We'll look for your organisation's details and tell you what to do next.";
 
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
         when(messageSource.getMessage("improved.registration.SearchLabel", null, Locale.ENGLISH)).thenReturn(improvedSearchLabel);
+        when(messageSource.getMessage("improved.registration.AdditionalLabel", null, Locale.ENGLISH)).thenReturn(improvedAdditionalLabel);
         when(messageSource.getMessage("improved.registration.SearchHint", null, Locale.ENGLISH)).thenReturn("");
 
         mockMvc.perform(get("/organisation/create/find-organisation"))
@@ -202,6 +204,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(model().attributeExists("organisationForm"))
                 .andExpect(model().attribute("improvedSearchEnabled", equalTo(true)))
                 .andExpect(model().attribute("searchLabel", equalTo(improvedSearchLabel)))
+                .andExpect(model().attribute("additionalLabel", equalTo(improvedAdditionalLabel)))
                 .andExpect(model().attribute("searchHint", equalTo("")));
     }
 

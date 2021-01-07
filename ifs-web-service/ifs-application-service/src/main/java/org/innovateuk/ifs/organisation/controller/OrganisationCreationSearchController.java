@@ -191,7 +191,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         } catch (NoSuchMessageException e) {
             LOG.error("unable to get message for key: " + key + " and local: " + locale);
             return messageSource.getMessage(improvedSearchEnabled ? String.format("improved.registration.DEFAULT.%s", textKey)
-                            : String.format("registration.DEFAULT.%s", orgTypeEnum.toString(), textKey),
+                            : String.format("registration.DEFAULT.%s", textKey),
                     null, locale);
         }
     }
