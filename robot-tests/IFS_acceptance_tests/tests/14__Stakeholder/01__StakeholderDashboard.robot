@@ -228,11 +228,11 @@ Innovation lead can see the application of a project
 
 Stakeholders can download appendices
     [Documentation]   IFS-9038
-    Given the user clicks the button/link     link = Back to project setup
-    When the user clicks the button/link      link = ${stakeHolderHighSpeedRailApplicationID}
-    And the user clicks the button/link       jQuery = a:contains("high-speed-rail-and-its-effects-on-soil-compaction-technical-approach.pdf, 7 KB (opens in a new window)")
-    And select window                         title = Page not found - Innovation Funding Service
-    Then The user should not see internal server and forbidden errors
+    Given the user clicks the button/link                                 link = Back to project setup
+    When the user clicks the button/link                                  link = ${stakeHolderHighSpeedRailApplicationID}
+    And the user clicks the button/link                                   jQuery = a:contains("high-speed-rail-and-its-effects-on-soil-compaction-technical-approach.pdf, 7 KB (opens in a new window)")
+    And select window                                                     title = Page not found - Innovation Funding Service
+    Then the user should not see internal server and forbidden errors
     [Teardown]  the user closes the last opened tab
 
 *** Keywords ***
