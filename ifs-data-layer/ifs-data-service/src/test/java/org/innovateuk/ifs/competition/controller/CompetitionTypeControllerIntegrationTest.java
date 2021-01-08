@@ -39,20 +39,20 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         // Test ordering.
         assertThat(competitionTypes)
                 .extracting(CompetitionTypeResource::getName)
-                .hasSize(12)
+                .hasSize(11)
                 .containsExactly(
+                        "Programme",
                         "Additive Manufacturing",
+                        "SBRI",
+                        "Special",
+                        "Sector",
+                        "Generic",
+                        "Expression of interest",
                         "Advanced Propulsion Centre",
                         "Aerospace Technology Institute",
-                        "Expression of interest",
-                        "Generic",
-                        "HEUKAR",
-                        "Horizon 2020",
-                        "Programme",
-                        "SBRI",
-                        "Sector",
-                        "Special",
-                        "The Prince's Trust"
+                        "The Prince's Trust",
+                        "Horizon 2020"
                 );
     }
+
 }

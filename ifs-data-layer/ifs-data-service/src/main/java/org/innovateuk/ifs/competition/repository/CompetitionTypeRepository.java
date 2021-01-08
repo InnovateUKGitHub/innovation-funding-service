@@ -2,8 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.springframework.data.repository.CrudRepository;
-
-import java.util.List;
+import org.springframework.data.repository.query.Param;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -14,5 +13,4 @@ public interface CompetitionTypeRepository extends CrudRepository<CompetitionTyp
 
     CompetitionType findByName(String name);
 
-    List<CompetitionType> findAllByOrderByNameAsc();
 }

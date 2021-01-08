@@ -50,8 +50,7 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
-${ktpCompetitionName}        KTP Competition
-${heukarCompetitionName}     HEUKAR competition
+${ktpCompetitionName}     KTP Competition
 
 
 ${ukLeadInternationalCompetition}                        UK based Lead International Competition
@@ -306,7 +305,6 @@ ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
-${compType_HEUKAR}     HEUKAR
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
