@@ -23,6 +23,7 @@ import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressReposito
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
@@ -43,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
@@ -102,6 +102,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
+
+    @Autowired
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -224,6 +227,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
 
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
                                     Competition competition = project.getApplication().getCompetition();
