@@ -2,6 +2,7 @@ package org.innovateuk.ifs.crm.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
@@ -39,6 +41,9 @@ public class CrmServiceImpl implements CrmService {
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private OrganisationAddressService organisationAddressService;
 
     @Autowired
     private SilCrmEndpoint silCrmEndpoint;
@@ -97,7 +102,7 @@ public class CrmServiceImpl implements CrmService {
         silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
 
         if (newOrganisationSearchEnabled) {
-            silOrganisation.setRegisteredAddress(getRegisteredAddress(organisation.getAddresses()));
+            silOrganisation.setRegisteredAddress(getRegisteredAddress(organisation));
             silOrganisation.setDateOfIncorporation(organisation.getDateOfIncorporation());
             silOrganisation.setSicCodes(getSicCodes(organisation));
             silOrganisation.setExecutiveOfficers(getExecutiveOfficers(organisation));
@@ -108,12 +113,17 @@ public class CrmServiceImpl implements CrmService {
         return silContact;
     }
 
-    private SilAddress getRegisteredAddress(List<OrganisationAddressResource> addresses) {
-        return addresses.stream()
-                .filter(address -> address.getAddressType().getId().equals(OrganisationAddressType.REGISTERED.getId()))
-                .findFirst()
-                .map(address -> organisationAddressToSilAddress(address))
-                .orElse(null);
+    private SilAddress getRegisteredAddress(OrganisationResource organisation) {
+        AddressType addressType = new AddressType();
+        addressType.setId(OrganisationAddressType.REGISTERED.getId());
+        addressType.setName(OrganisationAddressType.REGISTERED.name());
+
+        return organisationAddressService.findByOrganisationIdAndAddressType(organisation.getId(), addressType)
+                .andOnSuccessReturn(addresses -> addresses.stream()
+                        .findFirst()
+                        .map(address -> organisationAddressToSilAddress(address))
+                        .orElse(null))
+                .getSuccess();
     }
 
     private SilAddress organisationAddressToSilAddress(OrganisationAddressResource organisationAddress) {
@@ -121,15 +131,16 @@ public class CrmServiceImpl implements CrmService {
 
         String[] street = new String[2];
         street[0] = address.getAddressLine2() == null ? "" : address.getAddressLine2();
-        street[1] = address.getAddressLine3() == null ? "" : address.getAddressLine3();
+        street[1] = (address.getAddressLine3() != null
+                && address.getAddressLine3().trim().length() > 0) ? format(", %s", address.getAddressLine3()) : "";
 
         SilAddress silAddress = new SilAddress();
-        silAddress.setBuildingName(address.getAddressLine1());
-        silAddress.setStreet(String.join(",", street));
-        silAddress.setLocality(address.getCounty());
-        silAddress.setTown(address.getTown());
-        silAddress.setPostcode(address.getPostcode());
-        silAddress.setCountry(address.getCountry());
+        silAddress.setBuildingName(address.getAddressLine1() == null ? "" : address.getAddressLine1());
+        silAddress.setStreet(String.join("", street));
+        silAddress.setLocality(address.getCounty() == null ? "" : address.getCounty());
+        silAddress.setTown(address.getTown() == null ? "" : address.getTown());
+        silAddress.setPostcode(address.getPostcode() == null ? "" : address.getPostcode());
+        silAddress.setCountry(address.getCountry() == null ? "" : address.getCountry());
 
         return silAddress;
     }
