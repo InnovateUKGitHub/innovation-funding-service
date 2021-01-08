@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-8328 KTP Project Setup - finance checks (internal and external)
 ...
+...               IFS-8695 Amending the project duration date doesn't reflect the change in other screens
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
@@ -27,7 +29,7 @@ Internal user can edit the duration of the project
     Then The user should see the element          jQuery = dt:contains("Duration") ~ dd:contains("30 months")
 
 Internal user can edit KTP finances in project setup
-    [Documentation]  IFS-8328
+    [Documentation]  IFS-8328  IFS-8695
     Given the user navigates to the page                     ${server}/project-setup-management/project/${ktpProjectID}/finance-check/organisation/${ktpLeadOrgID}/eligibility
     When The user clicks the button/link                     jQuery = button:contains("Open all")
     Then The user edits the KTP costs section
@@ -64,7 +66,7 @@ The lead checks the Finance overview page
     And The user clicks the button/link                                                               link = Back to finance checks
 
 The lead checks the Eligibility check page
-    [Documentation]  IFS-8328
+    [Documentation]  IFS-8328  IFS-8695
     When The user clicks the button/link                      link = review your project finances
     Then the user confirms the values in the finance table
 
