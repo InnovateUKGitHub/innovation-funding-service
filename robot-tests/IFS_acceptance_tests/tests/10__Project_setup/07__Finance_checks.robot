@@ -490,7 +490,7 @@ Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months  # Project duration
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    4 months  # Project duration
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903  # Total costs
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%       # Grant %
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803   # Funding sought (£)
@@ -658,7 +658,7 @@ Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months   # Project duration
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    4 months   # Project duration
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%        # Grant %
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803     # Funding sought (£)
