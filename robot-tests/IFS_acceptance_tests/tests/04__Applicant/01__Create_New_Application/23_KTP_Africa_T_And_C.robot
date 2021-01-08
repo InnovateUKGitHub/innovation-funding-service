@@ -28,17 +28,15 @@ Creating a new KTP africa comp to confirm T&c's
     [Documentation]  IFS-8164  IFS-8779
     Given the user fills in initial details
     When the user clicks the button/link        link = Terms and conditions
-    And the user selects the radio button       termsAndConditionsId  33
+    And the user selects the radio button       termsAndConditionsId  termsAndConditionsId9
     And the user clicks the button/link         jQuery = button:contains("Done")
-    Then the user should see the element        link = Knowledge Transfer Partnership (KTP) Africa (opens in a new window)
+    Then the user should see the element        link = Knowledge Transfer Partnership (KTP) Africa
 
 KTP africa t&c's are correct
     [Documentation]  IFS-8164
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) Africa (opens in a new window)
-    And select window                        title = Terms and conditions of an African Agriculture Knowledge Transfer Partnership award - Innovation Funding Service
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) Africa
     Then the user should see the element     jQuery = h1:contains("Terms and conditions of an African Agriculture Knowledge Transfer Partnership award")
-    And close window
-    And select window                        title = Competition terms and conditions - Innovation Funding Service
+    [Teardown]   the user goes back to the previous page
 
 T&c's section should be completed
     [Documentation]  IFS-8164
