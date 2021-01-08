@@ -102,6 +102,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -284,55 +286,64 @@ Project eligibility: Contain the correct options
     And the user should see the element    jQuery = h2:contains("Please choose the project type.")
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
     When the user should see the element   jQuery = label:contains("Collaborative")
-    And the user should see the element    jQuery = h2:contains("Are research categories applicable?")
-    And the user selects the radio button  researchCategoriesApplicable    true
-    When the user should see the element   jQuery = label:contains("Yes")
-    When the user should see the element   jQuery = label:contains("No")
     And the user should see the element    jQuery = label:contains("Business")
     And the user should see the element    jQuery = label[for="lead-applicant-type-2"]:contains("Research")
     And the user should see the element    jQuery = label:contains("Research and technology organisation")
     And the user should see the element    jQuery = label:contains("Public sector")
     And the user should see the element    css = label[for="comp-resubmissions-yes"]
     And the user should see the element    css = label[for="comp-resubmissions-no"]
-    And the user selects the radio button  researchCategoriesApplicable  comp-researchCategoriesApplicable-yes
-    And the user should see the element    jQuery = label:contains("Feasibility studies")
-    And the user should see the element    jQuery = label:contains("Industrial research")
-    And the user should see the element    jQuery = label:contains("Experimental development")
-    And the user should see the element    css = label[for="comp-overrideFundingRules-yes"]
-    And the user should see the element    css = label[for="comp-overrideFundingRules-no"]
     And the resubmission should not have a default selection
 
 Project eligibility: Mark as Done then Edit again
     [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225  IFS-8044
     [Tags]  HappyPath
-    Given the user selects the checkbox      research-categories-33
-    And the user selects the checkbox        research-categories-34
-    And the user selects the radio button    singleOrCollaborative    single
-    And the user selects the checkbox        lead-applicant-type-1  # business
-    And the user selects the checkbox        lead-applicant-type-3  # RTOs
+    Given the user selects the radio button    singleOrCollaborative    single
+    And the user selects the checkbox          lead-applicant-type-1  # business
+    And the user selects the checkbox          lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user selects the radio button    resubmission    no
-    And the user clicks the button twice     css = label[for="comp-overrideFundingRules-no"]
-    When the user clicks the button/link     jQuery = button:contains("Done")
-    Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
-    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
-    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Industrial research")
-    And the user should see the element      jQuery = dt:contains("Lead applicant") ~ dd:contains("Business")
-    And the user should see the element      jQuery = dt:contains("Research participation") ~ dd:contains("50%")
-    And the user should see the element      jQuery = dt:contains("Are resubmissions allowed") ~ dd:contains("No")
-    And the user should see the element      jQuery = dt:contains("Override funding rules") ~ dd:contains("No")
-    And The user should not see the element  id = streamName
-    When the user clicks the button/link     link = Back to competition details
-    When the user clicks the button/link     link = Project eligibility
-    And the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
-    And the user clicks the button/link      jQuery = button:contains("Done")
+    And the user selects the radio button      resubmission    no
+    When the user clicks the button/link       jQuery = button:contains("Done")
+    Then the user should see the element       jQuery = dt:contains("Project type") ~ dd:contains("Single")
+    And the user should see the element        jQuery = dt:contains("Research participation") ~ dd:contains("50%")
+    And the user should see the element        jQuery = dt:contains("Are resubmissions allowed") ~ dd:contains("No")
+    And The user should not see the element    id = streamName
+    When the user clicks the button/link       link = Back to competition details
+    When the user clicks the button/link       link = Project eligibility
+    And the user clicks the button/link        jQuery = .govuk-button:contains("Edit")
+    And the user clicks the button/link        jQuery = button:contains("Done")
 
 Project eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
-    When The user clicks the button/link    link = Back to competition details
+    When the user clicks the button/link    link = Back to competition details
     Then the user should see the element    jQuery = li:contains("Project eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
+
+Funding eligibility: Mark as Done
+    [Documentation]  IFS-8791
+    Given the user clicks the button/link         link = Funding eligibility
+    And the user should see the element           jQuery = h2:contains("Are research categories applicable?")
+    And the user selects the radio button         researchCategoriesApplicable  true
+    And the user should see the element           jQuery = label:contains("Feasibility studies")
+    And the user should see the element           jQuery = label:contains("Industrial research")
+    And the user should see the element           jQuery = label:contains("Experimental development")
+    When the user selects the checkbox            research-categories-33  #Feasibility
+    And the user selects the checkbox             research-categories-34  #Industrial
+    And the user selects the checkbox             research-categories-34  #Experimental
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    And the user should see the element           jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
+    And the user should see the element           jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+    And the user should see the element           jQuery = td:contains("Micro entity or small company")
+    And the user should see the element           jQuery = td:contains("Medium-sized company")
+    And the user should see the element           jQuery = td:contains("Large-sized company")
+    And the user enters text to a text field      maximums[0][0].maximum  75
+    And the user enters text to a text field      maximums[0][1].maximum  75
+    And the user enters text to a text field      maximums[1][0].maximum  75
+    And the user enters text to a text field      maximums[1][1].maximum  75
+    And the user enters text to a text field      maximums[2][0].maximum  75
+    And the user enters text to a text field      maximums[2][1].maximum  75
+    And the user clicks the button/link           jQuery = button:contains("Done")
+    Then The user clicks the button/link          link = Return to setup overview
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -987,6 +998,7 @@ the comp admin creates competition with all sections details
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility            ${researchCategory}   ${compType}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}

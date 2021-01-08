@@ -319,11 +319,11 @@ return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
 the user moves the competition back again
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    the user clicks the button/link    jQuery = button:contains("Done")   # this action  is marking appication section complete
-    the user clicks the button/link    link = Back to competition details
-    the user clicks the button/link    jQuery = a:contains("Complete setup")
-    the user clicks the button/link    css = button[type="submit"]
+    the user navigates to the page                   ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    the user clicks the button/link                  jQuery = button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link                  link = Back to competition details
+    the user clicks the button/link                  jQuery = a:contains("Complete setup")
+    the user clicks the button/link                  css = button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information
@@ -377,10 +377,7 @@ the user resets the milestone data
 if textarea is empty user enters the text
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css = .editor  Funding rules for this competition are now entered.
     run keyword if  '${status}'=='FAIL'  Run keywords  Set Focus To Element     css = .editor
-     ...                                           AND  Set Focus To Element     css = .govuk-button[type="submit"]
-#    ...                                           AND  the user should not see a field error  ${empty_field_warning_message}
-#    ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
-#    ...                                           AND  the user should not see a field and summary error  ${empty_field_warning_message}
+     ...                                          AND  Set Focus To Element     css = .govuk-button[type="submit"]
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 the user resets the milestone data for milestone
