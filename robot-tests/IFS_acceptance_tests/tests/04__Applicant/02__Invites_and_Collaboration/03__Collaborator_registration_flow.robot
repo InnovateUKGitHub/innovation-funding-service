@@ -39,7 +39,7 @@ The type of organisation navigates to the correct page
     [Tags]
     When the user selects the radio button         organisationTypeId    1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    Then the user should see the element           jQuery = div label:contains("Enter your organisation name or company registration number and click the 'Search' button. We'll look for your organisation's details and tell you what to do next.")
+    Then the user should see the element           jQuery = label:contains("Enter your organisation name or company registration number and click the 'Search' button.")
     When the user clicks the button/link           link = Back to choose your organisation type
     And the user should see the element            jQuery = .govuk-hint:contains("Higher education and organisations registered with Je-S.")
     Given the user selects the radio button        organisationTypeId    2
@@ -55,12 +55,12 @@ The type of organisation navigates to the correct page
     Then the user should see the element           jQuery = .govuk-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationTypeId    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    And the user should see the element            jQuery = div label:contains("Enter your organisation name or company registration number and click the 'Search' button. We'll look for your organisation's details and tell you what to do next.")
+    And the user should see the element            jQuery = label:contains("Enter your organisation name or company registration number and click the 'Search' button.")
     When the user clicks the button/link           link = Back to choose your organisation type
     And the user should see the element            jQuery = .govuk-hint:contains("A not-for-profit organisation focusing on innovation.")
     Given the user selects the radio button        organisationTypeId    4
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
-    And the user should see the element            jQuery = div label:contains("Enter your organisation name or company registration number and click the 'Search' button. We'll look for your organisation's details and tell you what to do next.")
+    And the user should see the element            jQuery = label:contains("Enter your organisation name or company registration number and click the 'Search' button.")
     And the user goes back to the previous page
 
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
