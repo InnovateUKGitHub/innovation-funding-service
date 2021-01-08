@@ -19,7 +19,6 @@ public class SendNotificationsViewModel {
     private long onHoldRecipientsCount;
     private boolean h2020;
     private boolean includeAssessorsScore;
-    private boolean heukar;
 
     public SendNotificationsViewModel(List<FundingDecisionToSendApplicationResource> applications,
                                       long successfulRecipientsCount,
@@ -28,8 +27,7 @@ public class SendNotificationsViewModel {
                                       long competitionId,
                                       String competitionName,
                                       boolean h2020,
-                                      boolean includeAssessorsScore,
-                                      boolean heukar) {
+                                      boolean includeAssessorsScore) {
 
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
@@ -39,7 +37,6 @@ public class SendNotificationsViewModel {
         this.competitionName = competitionName;
         this.h2020 = h2020;
         this.includeAssessorsScore = includeAssessorsScore;
-        this.heukar = heukar;
     }
 
     public long getCompetitionId() {
@@ -81,9 +78,5 @@ public class SendNotificationsViewModel {
                         FundingDecisionToSendApplicationResource::getId,
                         FundingDecisionToSendApplicationResource::getFundingDecision
                 ));
-    }
-
-    public boolean isHeukar() {
-        return heukar;
     }
 }

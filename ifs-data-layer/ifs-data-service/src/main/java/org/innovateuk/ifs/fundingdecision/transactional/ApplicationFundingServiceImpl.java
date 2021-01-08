@@ -40,7 +40,8 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.*;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
+import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.HORIZON_2020_FUNDING;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -80,7 +81,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HEUKAR_FUNDING;
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING
     }
 
     @Override
@@ -248,14 +249,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         Competition competition = applications.get(0)
                 .getCompetition();
         boolean includeAsesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
-        Notifications notificationType;
-        if(isH2020Competition(applications)){
-            notificationType = HORIZON_2020_FUNDING;
-        } else if (competition.isHeukar()){
-            notificationType = HEUKAR_FUNDING;
-        } else {
-            notificationType = APPLICATION_FUNDING;
-        }
+        Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
         List<NotificationMessage> notificationMessages = simpleMap(
