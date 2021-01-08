@@ -218,6 +218,7 @@
 
     <!-- ===========================Form: payment milestones table =========================== -->
     <th:block th:fragment="payment-milestones-table(breakdown)">
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Payment milestones</h2>
         <div class="project-cost-breakdown">
             <div class="table-overflow">
                 <table class="govuk-table">
@@ -225,17 +226,17 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Month</th>
                         <th class="govuk-table__header" scope="col">Milestone</th>
-                        <th class="govuk-table__header" scope="col">% of project costs</th>
-                        <th class="govuk-table__header" scope="col">Payment request</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">% of project costs</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Payment request</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="row : ${breakdown}">
+                    <tr class="govuk-table__row" th:each="row : ${breakdown.getApplicationProcurementMilestoneResources()}">
                         <td class="govuk-table__cell" th:text="${row.month}">
                         </td>
                         <td class="govuk-table__cell" th:text="${row.description}">
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${breakdown.getPercentage(row.payment) + '%'}">
                             0%
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${row.payment}">
@@ -244,9 +245,9 @@
                     </tbody>
                     <tfoot class="govuk-table__foot">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Total payment requested</th>
-                        <th class="govuk-table__header" scope="col">100%</th>
-                        <th class="govuk-table__header" scope="col">£90,000</th>
+                        <th class="govuk-table__header" scope="col" colspan="2">Total payment requested</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">100%</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col" th:text="'£' + ${breakdown.getTotal()}"></th>
                     </tr>
                     </tfoot>
                 </table>
