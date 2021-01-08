@@ -25,11 +25,11 @@
         </div>
 
         <th:block th:with="orgTitle=${organisationType.name}">
-            <th:block th:unless="${isImprovedSearchEnabled}" th:insert="fragments/layout :: page-title" th:with="pageTitle=${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0 ? 'Select your organisation' : 'Enter organisation details'},subTitle=${subtitle},size='govuk-heading-xl'" />
-            <th:block th:if="${isImprovedSearchEnabled}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter your organisation\'s details',subTitle=${subtitle},size='govuk-heading-xl'" />
+            <th:block th:unless="${improvedSearchEnabled}" th:insert="fragments/layout :: page-title" th:with="pageTitle=${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0 ? 'Select your organisation' : 'Enter organisation details'},subTitle=${subtitle},size='govuk-heading-xl'" />
+            <th:block th:if="${improvedSearchEnabled}" th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter your organisation\'s details',subTitle=${subtitle},size='govuk-heading-xl'" />
         </th:block>
 
-        <th:block th:unless="${organisationForm.research || isImprovedSearchEnabled}">
+        <th:block th:unless="${organisationForm.research || improvedSearchEnabled}">
             <h2 class="govuk-heading-m">Search on Companies House</h2>
         </th:block>
         <th:block th:if="${organisationForm.research}">
@@ -39,10 +39,10 @@
         </th:block>
 
         <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
-        <input type="hidden" name="newOrganisationSearchEnabled" th:value="${isImprovedSearchEnabled}" />
+        <input type="hidden" name="newOrganisationSearchEnabled" th:value="${improvedSearchEnabled}" />
 
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
-            <th:block th:if="${isImprovedSearchEnabled && organisationForm.selectedExistingOrganisationId != null}">
+            <th:block th:if="${improvedSearchEnabled && organisationForm.selectedExistingOrganisationId != null}">
                 <p class="govuk-body govuk-!-margin-bottom-0">You applied for a different competition with this organisation: <b><th:block th:text="${organisationForm.selectedExistingOrganisationName}" /></b>.</p>
                 <p class="govuk-body govuk-!-margin-bottom-6">You need to complete all your organisation details for this application.</p>
             </th:block>
@@ -58,7 +58,7 @@
                 </label>
             </th:block>
             <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
-            <th:block th:if="${isImprovedSearchEnabled}">
+            <th:block th:if="${improvedSearchEnabled}">
                 <details class="govuk-details" role="group">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">Where to find your company registration number</span>
@@ -81,12 +81,12 @@
                        th:field="*{organisationSearchName}"
                        th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
                        type="text"
-                       th:attr="data-required-errormessage= ${isImprovedSearchEnabled} ? #{validation.improved.organisationsearchname.required} : #{validation.standard.organisationsearchname.required}"
+                       th:attr="data-required-errormessage= ${improvedSearchEnabled} ? #{validation.improved.organisationsearchname.required} : #{validation.standard.organisationsearchname.required}"
                        required="required"
                        value="" />
             <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
         </div>
-        <th:block th:if="${!isImprovedSearchEnabled || (isImprovedSearchEnabled && organisationForm.research)}">
+        <th:block th:if="${!improvedSearchEnabled || (improvedSearchEnabled && organisationForm.research)}">
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
                     <p class="govuk-body govuk-hint">Choose your organisation:</p>
