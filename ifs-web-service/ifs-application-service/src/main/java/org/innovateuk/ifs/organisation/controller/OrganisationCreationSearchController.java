@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
+import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -92,6 +93,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationTypeId(selectedOrganisation.getOrganisationType());
         organisationForm.setSelectedExistingOrganisationName(selectedOrganisation.getName());
         organisationForm.setManualEntry(false);
+        model.addAttribute("subtitle", "Your organisation");
         return createOrganisation(organisationForm, model, user, request, response);
     }
 
