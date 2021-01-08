@@ -24,8 +24,15 @@
         </p>
 
         <h3 class="govuk-heading-m width-80-percent">Total payment requested</h3>
-        <h3 class="govuk-heading-m width-10-percent" th:text="${#numbers.formatInteger(form.getTotalPercentages(model.fundingAmount), 0,'DEFAULT')} + '%'"></h3>
-        <h3 class="govuk-heading-m width-10-percent" th:text="'£' + ${#numbers.formatInteger(form.totalPayments, 0,'DEFAULT')}"></h3>
+        <h3 class="govuk-heading-m width-10-percent"
+            th:text="${#numbers.formatInteger(form.getTotalPercentages(model.fundingAmount), 0,'DEFAULT')} + '%'"
+            data-calculation-format="percentage"
+            data-calculation-operations="+"
+            data-calculation-fields=".payment-percentage"></h3>
+        <h3 class="govuk-heading-m width-10-percent" th:text="'£' + ${#numbers.formatInteger(form.totalPayments, 0,'DEFAULT')}"
+            data-calculation-format="currency"
+            data-calculation-operations="+"
+            data-calculation-fields=".payment-amount"></h3>
     </div>
 </th:block>
 
@@ -36,14 +43,20 @@
         <!--/*@thymesVar id="path" type="java.lang.String"*/-->
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
-                <span class="width-10-percent accordion-header-text govuk-!-margin-right-1" th:text="${milestone.month}"></span>
+                <span class="width-10-percent accordion-header-text govuk-!-margin-right-1"
+                      th:text="${milestone.month}"
+                      th:attr="data-mirror=|[id='__${path}__.month']|"></span>
                 <span class="width-50-percent govuk-accordion__section-button" th:id="|accordion-finances-heading-${id}|"
-                      th:text="${milestone.description}">
-                </span>
+                      th:text="${milestone.description}"
+                      th:attr="data-mirror=|[id='__${path}__.description']|"></span>
                 <span class="width-10-percent finance-total margin-right-60"
-                      th:text="'£' + ${#numbers.formatInteger(milestone.payment, 0,'DEFAULT')}"></span>
+                      th:text="'£' + ${#numbers.formatInteger(milestone.payment, 0,'DEFAULT')}"
+                      data-calculation-format="currency"
+                      data-calculation-operations="*"
+                      th:attr="data-calculation-fields=|1, [id='__${path}__.payment']|"></span>
                 <span class="width-10-percent finance-total"
-                      th:text="${#numbers.formatInteger(milestone.getPercentageOfFundingAmount(model.fundingAmount), 0,'DEFAULT') + '%'}"></span>
+                      th:text="${#numbers.formatInteger(milestone.getPercentageOfFundingAmount(model.fundingAmount), 0,'DEFAULT') + '%'}"
+                      th:attr="data-mirror=|[id='__${path}__.percentage']|"></span>
                 <!--/*<div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
                      class="section-status section-incomplete icon-
                      only error-marker"></div>*/-->
@@ -53,6 +66,12 @@
         <div  th:id="|accordion-finances-content-${id}|" class="govuk-accordion__section-content"
               th:attr="aria-labelledby=|accordion-finances-heading-${id}|">
             <input type="hidden" th:field="*{__${path}__.id}" />
+            <input type="hidden" class="payment-percentage" th:id="__${path}__.percentage"
+                   data-calculation-format="percentage"
+                   data-calculation-operations="/,*"
+                   th:attr="data-calculation-fields=|100, ${model.fundingAmount}, [id='__${path}__.payment']|"
+                   th:value="${#numbers.formatInteger(milestone.getPercentageOfFundingAmount(model.fundingAmount), 0,'DEFAULT') + '%'}" />
+
             <div class="left-col">
                 <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label class="govuk-label govuk-label--s" th:for="__${path}__.month">
@@ -60,15 +79,17 @@
                     </label>
                     <th:block
                         th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.month)"/>
-                    <select class="govuk-select"
-                          th:errorclass="govuk-select--error"
-                          required="required"
-                          th:field="*{__${path}__.month}">
+                    <select th:id="__${path}__.month"
+                            class="govuk-select"
+                            th:errorclass="govuk-select--error"
+                            required="required"
+                            th:field="*{__${path}__.month}">
                     <option th:each="duration : ${model.durations}"
                             th:value="${duration}"
                             th:text="${duration}">1</option>
                     </select>
                 </div>
+                <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.month" th:field="*{__${path}__.month}" />
             </div>
             <div class="central-col">
                 <div th:unless="${model.readOnly}" class="govuk-form-group">
@@ -85,6 +106,7 @@
                            required="required"
                     />
                 </div>
+                <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.description" th:field="*{__${path}__.description}" />
 
                 <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label class="govuk-label govuk-label--s"
@@ -140,7 +162,7 @@
                            th:field="*{__${path}__.payment}"
                            th:errorclass="govuk-input--error"
                            type="number"
-                           class="govuk-input"
+                           class="govuk-input payment-amount"
                            placeholder="0"
                            min="1"
                            max="999999999"
@@ -148,6 +170,7 @@
                            required="required"
                     />
                 </div>
+                <input type="hidden" class="payment-amount" th:if="${model.readOnly}" th:id="__${path}__.payment" th:field="*{__${path}__.payment}" />
             </div>
             <p class="alignright" th:unless="${model.readOnly}">
                 <button type="submit"
