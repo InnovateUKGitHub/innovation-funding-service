@@ -15,11 +15,7 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private BigDecimal completedQuestionsPercentage;
     private boolean reopenLinkVisible;
 
-    public TrackViewModel(CompetitionResource currentCompetition,
-                          ApplicationResource currentApplication,
-                          String earlyMetricsUrl,
-                          BigDecimal completedQuestionsPercentage,
-                          boolean reopenLinkVisible) {
+    public TrackViewModel(CompetitionResource currentCompetition, ApplicationResource currentApplication, String earlyMetricsUrl, BigDecimal completedQuestionsPercentage, boolean reopenLinkVisible) {
         this.currentCompetition = currentCompetition;
         this.currentApplication = currentApplication;
         this.earlyMetricsUrl = earlyMetricsUrl;

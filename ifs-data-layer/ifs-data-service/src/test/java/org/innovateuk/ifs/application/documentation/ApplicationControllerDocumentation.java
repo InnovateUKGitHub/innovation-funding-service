@@ -61,6 +61,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         return new ApplicationController();
     }
 
+
     @Test
     public void getApplicationById() throws Exception {
         Long application1Id = 1L;
