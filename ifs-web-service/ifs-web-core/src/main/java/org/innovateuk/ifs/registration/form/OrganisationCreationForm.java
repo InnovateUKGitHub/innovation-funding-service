@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -33,6 +34,7 @@ public class OrganisationCreationForm implements Serializable {
     private String businessType;
     private List<String> sicCodes;
     private List<String> executiveOfficers;
+    private AddressForm addressForm = new AddressForm();
 
 
     public OrganisationCreationForm() {
@@ -41,6 +43,7 @@ public class OrganisationCreationForm implements Serializable {
         this.sicCodes.add("SIC1");
         this.executiveOfficers = new ArrayList<>();
         executiveOfficers.add("exec1");
+       // addressForm.setAddressType(AddressForm.AddressType.POSTCODE_LOOKUP);
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
@@ -154,6 +157,14 @@ public class OrganisationCreationForm implements Serializable {
         this.executiveOfficers = executiveOfficers;
     }
 
+    public AddressForm getAddressForm() {
+        return addressForm;
+    }
+
+    public void setAddressForm(AddressForm addressForm) {
+        this.addressForm = addressForm;
+    }
+
     @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
@@ -180,6 +191,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(businessType,that.businessType)
                 .append(sicCodes,that.sicCodes)
                 .append(executiveOfficers,that.executiveOfficers)
+                .append(addressForm,that.addressForm)
                 .isEquals();
     }
 
@@ -198,6 +210,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(businessType)
                 .append(sicCodes)
                 .append(executiveOfficers)
+                .append(addressForm)
                 .toHashCode();
     }
 }

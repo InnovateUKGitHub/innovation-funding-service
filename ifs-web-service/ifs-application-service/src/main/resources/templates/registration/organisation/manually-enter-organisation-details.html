@@ -27,7 +27,7 @@
             slow down the application process, which could delay your funding payments.</p>
 
         <form th:object="${organisationForm}"
-              th:action="@{/organisation/create/international-organisation/details}" method="POST"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               novalidate="novalidate">
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
@@ -105,6 +105,15 @@
             <div class="alignleft govuk-!-margin-top-6">
                 <button class="button-clear" name="add-exec-officer" data-add-row-man="execOfficer" type="button">+ Add executive officer</button>
             </div>
+            <label class="govuk-label govuk-!-margin-top-6 govuk-label--s" for="name">
+                Registered address
+            </label>
+
+                <div id="custom-postcode" class="govuk-body">
+                    <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
+                </div>
+                <button class="govuk-button govuk-!-margin-top-6" id="save-project-address-button">Save address</button>
+
             <th:block th:insert="fragments/layout :: main-content-end"/>
         </form>
     </main>
