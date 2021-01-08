@@ -17,9 +17,7 @@ import org.innovateuk.ifs.management.application.view.populator.ManagementApplic
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -37,13 +35,11 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -54,8 +50,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationController> {
 
-    @Mock
-    private ProcessRoleService processRoleService;
     @Mock
     private ApplicationRestService applicationRestService;
     @Mock
@@ -209,8 +203,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
                 when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId)).thenReturn(RestResult.restSuccess(inputResponse));
 
-                ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-                when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
                 ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
                 when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
                 FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
