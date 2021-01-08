@@ -7,9 +7,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -167,12 +164,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "CHECK_FUNDING_SOUGHT_VALID", description = "The consortium can check funding sought is valid")
     public boolean consortiumCanCheckFundingSoughtIsValid(final ApplicationResource applicationResource,
-                                                          final UserResource user) {
+                                                                       final UserResource user) {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
+
 }
 

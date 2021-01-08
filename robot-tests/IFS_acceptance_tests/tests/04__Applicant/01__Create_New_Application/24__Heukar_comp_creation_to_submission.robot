@@ -11,8 +11,6 @@ Documentation     IFS-8638: Create new competition type
 ...
 ...               IFS-8662: HEUKAR stage 1 privacy notice
 ...
-...               IFS-8667: Hesta - Ability to add partner organisation
-...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -23,17 +21,15 @@ Resource          ../../../resources/keywords/MYSQL_AND_DATE_KEYWORDS.robot
 Resource          ../../../resources/keywords/05__Email_Keywords.robot
 
 *** Variables ***
-${heukarCompTypeSelector}                        dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
-${heukarApplicationName}                         Heukar application
-${newHeukarApplicationName}                      NEW Heukar application
-${partnerOrgHeukarApplicationName}               Add partner org Heukar application
-${leadApplicantEmail}                            tim.timmy@heukar.com
-${newLeadApplicantEmail}                         barry.barrington@heukar.com
-${partnerOrgLeadApplicantEmail}                  bizzy.bizness@heukar.com
-${heukarApplicationSubmissionEmailSubject}       confirmation of your Horizon Europe UK Application Registration
-${heukarApplicationUnsuccessfulEmailSubject}     update about your Horizon Europe UK Application Registration for government-backed funding
-${huekarApplicationSubmissionEmail}              We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
-${huekarApplicationUnsuccessfulEmail}            We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
+${heukarCompTypeSelector}                       dt:contains("Competition type") ~ dd:contains("${compType_HEUKAR}")
+${heukarApplicationName}                        Heukar application
+${newHeukarApplicationName}                     NEW Heukar application
+${leadApplicantEmail}                           tim.timmy@heukar.com
+${newLeadApplicantEmail}                        barry.barrington@heukar.com
+${heukarApplicationSubmissionEmailSubject}      confirmation of your Horizon Europe UK Application Registration
+${heukarApplicationUnsuccessfulEmailSubject}    update about your Horizon Europe UK Application Registration for government-backed funding
+${huekarApplicationSubmissionEmail}             We have received your stage 1 pre-registration to the Horizon Europe UK Application Registration programme
+${huekarApplicationUnsuccessfulEmail}           We have been advised you were unsuccessful in your grant application for Horizon Europe funding from The European Commission
 
 *** Test Cases ***
 Comp admin can select the competition type option Heukar in Initial details on competition setup
@@ -64,7 +60,6 @@ Lead applicant can submit application
     [Documentation]  IFS-8751
     Given the user logs out if they are logged in
     When the user successfully completes application     tim   timmy   ${leadApplicantEmail}   ${heukarApplicationName}
-    And the applicant completes Application Team
     Then the user can submit the application
 
 Lead applicant is presented with the Application Summary page when an application is submitted and should get a confirmation email
@@ -76,17 +71,16 @@ Lead applicant is presented with the Application Summary page when an applicatio
 
 The Application Summary page must not include the Reopen Application link when the internal team mark the application as successful / unsuccessful
     [Documentation]  IFS-8752
-    Given Log in as a different user                                                   &{Comp_admin1_credentials}
-    And Requesting IDs of this competition                                             ${heukarCompetitionName}
-    When the internal team mark the application as successful / unsuccessful           ${heukarApplicationName}   FUNDED
-    And Log in as a different user                                                     email=${leadApplicantEmail}    password=${short_password}
+    Given Log in as a different user                                               &{Comp_admin1_credentials}
+    And Requesting IDs of this competition                                         ${heukarCompetitionName}
+    When the internal team mark the application as successful / unsuccessful       ${heukarApplicationName}   FUNDED
+    And Log in as a different user                                                 email=${leadApplicantEmail}    password=${short_password}
     Then the application summary page must not include the reopen application link
 
 Lead applicant receives email notifiction when internal user marks application unsuccessful
     [Documentation]  IFS-8641
     Given the user logs out if they are logged in
     And the user successfully completes application                              barry   barrington   ${newLeadApplicantEmail}   ${newHeukarApplicationName}
-    And the applicant completes Application Team
     And the user can submit the application
     And log in as a different user                                               &{Comp_admin1_credentials}
     When the internal team mark the application as successful / unsuccessful     ${newHeukarApplicationName}   UNFUNDED
@@ -94,15 +88,6 @@ Lead applicant receives email notifiction when internal user marks application u
     And Requesting IDs of this application                                       ${newHeukarApplicationName}
     And the internal team notifies all applicants
     Then the user reads his email                                                ${newLeadApplicantEmail}  ${ApplicationID}: ${heukarApplicationUnsuccessfulEmailSubject}  ${huekarApplicationUnsuccessfulEmail}
-
-Lead applicant can select any organisation type for a partner organisation during the application form submission
-    [Documentation]  IFS-8667
-    Given the user logs out if they are logged in
-    When the user successfully completes application                bizzy  bizness  ${partnerOrgLeadApplicantEmail}  ${partnerOrgHeukarApplicationName}
-    And the user clicks the button/link                             link = Application team
-    And the applicant views more information about Je-S
-    Then the applicant adds a partner for each organisation type
-    And the user can submit the application
 
 *** Keywords ***
 the user can view Heukar competition type in Initial details read only view
@@ -115,7 +100,7 @@ the competition admin creates HEUKAR competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
 # REMOVE/ADD NEGATIVE CASE FUNDING INFORMATION IN NEXT SPRINT
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility         true    true
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     the user marks the application as done                  ${projectGrowth}  ${compType}  ${competition}
@@ -191,8 +176,7 @@ the user successfully completes application
     the user select the competition and starts application          ${heukarCompetitionName}
     the user clicks the button/link                                 link = Continue and create an account
     user selects where is organisation based                        isNotInternational
-    the user can see multiple options when selecting org type
-    the user selects the radio button                               organisationTypeId    radio-${BUSINESS_TYPE_ID}
+    the user selects the radio button                               organisationTypeId    radio-1
     the user clicks the button/link                                 jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House            innovate  INNOVATE LTD
     the user should be redirected to the correct page               ${SERVER}/registration/register
@@ -204,49 +188,10 @@ the user successfully completes application
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                                 link = Application details
     the user completes Heukar Application details                   ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}  84
+    the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(heukar)
     the user accept the competition terms and conditions            Back to application overview
-
-the user can see multiple options when selecting org type
-    the user should see the element     css=[name^="organisationTypeId"][value="radio-${BUSINESS_TYPE_ID}"] ~ label, [id="radio-${BUSINESS_TYPE_ID}"] ~ label
-    the user should see the element     css=[name^="organisationTypeId"][value="radio-${ACADEMIC_TYPE_ID}"] ~ label, [id="radio-${ACADEMIC_TYPE_ID}"] ~ label
-    the user should see the element     css=[name^="organisationTypeId"][value="radio-${RTO_TYPE_ID}"] ~ label, [id="radio-${RTO_TYPE_ID}"] ~ label
-    the user should see the element     css=[name^="organisationTypeId"][value="radio-${PUBLIC_SECTOR_TYPE_ID}"] ~ label, [id="radio-${PUBLIC_SECTOR_TYPE_ID}"] ~ label
-
-the applicant views more information about Je-S
-    the user should not see the element     jQuery = button:contains("Add person to")
-    the user should see the element         jQuery = th:contains("Lead organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user should see the element         jQuery = h1:contains("Partner organisation type")
-    the user clicks the button/link         link = Guidance for academics applying via the Je-S system (opens in a new tab)
-    Select Window                           title = Guidance for academics applying via the Je-S system - GOV.UK
-    Close Window
-    Select Window                           title = Add a partner organisation - ${partnerOrgHeukarApplicationName} - Innovation Funding Service
-
-the applicant adds a partner for each organisation type
-    the user selects the radio button       organisationTypeId    radio-${BUSINESS_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("1")
-    the user should see the element         jQuery = td:contains("Business") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    radio-${ACADEMIC_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("2")
-    the user should see the element         jQuery = td:contains("Research") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    radio-${RTO_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("3")
-    the user should see the element         jQuery = td:contains("Research and technology organisation (RTO)") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         link = Add a partner organisation
-    the user selects the radio button       organisationTypeId    radio-${PUBLIC_SECTOR_TYPE_ID}
-    the user clicks the button/link         jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element         jQuery = h3:contains("Partner") span:contains("4")
-    the user should see the element         jQuery = td:contains("Public sector, charity or non Je-S registered research organisation") ~ td:contains("Edit") button:contains("Remove organisation")
-    the user clicks the button/link         id = application-question-complete
-    the user clicks the button/link         link = Application overview
-    the user should see the element         jQuery = li:contains("Application team") > .task-status-complete
 
 the user is presented with the Application Summary page
     the user should see the element          jQuery = h2:contains("Application submitted")

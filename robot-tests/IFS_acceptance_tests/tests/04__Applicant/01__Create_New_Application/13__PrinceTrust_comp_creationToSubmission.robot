@@ -54,7 +54,7 @@ The competition admin creates The Prince's Trust Comp
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${comp_type}  SUBSIDY_CONTROL  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${comp_type}  ${orgType}  1  false  single-or-collaborative  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  1  false  single-or-collaborative  # 1 means 30%
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     RELEASE_FEEDBACK   ${month}   ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
