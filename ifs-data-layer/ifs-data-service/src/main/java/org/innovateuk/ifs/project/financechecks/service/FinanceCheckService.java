@@ -82,4 +82,13 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW_CREDIT_REPORT')")
     ServiceResult<Boolean> getCreditReport(long projectId, long organisationId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_MILESTONE_CHECK')")
+// need activity type
+//    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "eligibilityActivityType")
+    ServiceResult<Void> approvePaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
+    ServiceResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
 }

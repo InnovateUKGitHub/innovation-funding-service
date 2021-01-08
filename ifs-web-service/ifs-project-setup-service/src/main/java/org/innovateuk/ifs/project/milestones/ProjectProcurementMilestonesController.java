@@ -47,7 +47,7 @@ public class ProjectProcurementMilestonesController {
     }
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, long projectId, long organisationId, UserResource userResource) {
-        model.addAttribute("model", viewModelPopulator.populate(projectId, organisationId, userResource));
+        model.addAttribute("model", viewModelPopulator.populate(projectId, organisationId, userResource, false));
         form.setMilestones(reorderMilestones(form.getMilestones()));
         return VIEW;
     }

@@ -476,8 +476,6 @@
     </div>
 </th:block>
 
-
-
 <!-- Confirmation of eligibility-->
 <th:block th:fragment="modal-confirm-eligibility (model)">
     <div class="modal-confirm-eligibility" role="dialog" aria-hidden="true">
@@ -488,6 +486,20 @@
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button class="govuk-button" name="confirm-eligibility">Approve eligible costs</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Confirmation of payment milestone -->
+<th:block th:fragment="modal-confirm-payment-milestone (model)">
+    <div class="modal-confirm-payment-milestone" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="govuk-heading-m">Approve payment milestones</h2>
+        <p class="govuk-body">I confirm these pyment milestones are eligible and i have agreed any changes with the organisation.</p>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button" name="confirm-payment-milestones">Approve payment milestones</button>
             <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>

@@ -32,4 +32,9 @@ public interface ProjectFinanceRestService {
     RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId);
 
     RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId);
+
+    RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId);
+
+    RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId);
+
 }

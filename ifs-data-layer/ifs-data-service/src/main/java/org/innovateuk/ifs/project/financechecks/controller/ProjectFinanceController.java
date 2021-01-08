@@ -46,6 +46,7 @@ public class ProjectFinanceController {
         return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
     }
 
+
     @PostMapping("/{projectId}/viability/reset")
     public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId) {
         return financeCheckService.resetViability(projectId).toPostResponse();
@@ -96,5 +97,20 @@ public class ProjectFinanceController {
     @GetMapping("/{projectId}/finance/has-organisation-size-changed")
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(@PathVariable long projectId) {
         return projectFinanceService.hasAnyProjectOrganisationSizeChangedFromApplication(projectId).toGetResponse();
+    }
+
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/milestones/approve")
+    public RestResult<Void> approvePaymentMilestoneState(@PathVariable("projectId") final Long projectId,
+                                                         @PathVariable("organisationId") final Long organisationId) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.approvePaymentMilestoneState(projectOrganisationCompositeId).toPostResponse();
+    }
+
+    @GetMapping("/{projectId}/partner-organisation/{organisationId}/milestones/state")
+    public RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(@PathVariable("projectId") final Long projectId,
+                                                                                    @PathVariable("organisationId") final Long organisationId) {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.getPaymentMilestoneState(projectOrganisationCompositeId).toGetResponse();
     }
 }

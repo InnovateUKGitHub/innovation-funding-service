@@ -84,4 +84,17 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
         return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance/has-organisation-size-changed"), Boolean.class);
     }
+
+    @Override
+    public RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId) {
+        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/milestones/approve";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
+        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", ProjectProcurementMilestoneResource.class);
+    }
 }

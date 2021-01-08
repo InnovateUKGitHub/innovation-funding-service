@@ -7,13 +7,17 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMilestoneViewModel {
 
     private final long applicationId;
+    private final long organisationId;
+    private final long projectId;
     private final String applicationName;
     private final String financesUrl;
     private final boolean open;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl, boolean open) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean open) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
+        this.organisationId = organisationId;
+        this.projectId = project.getId();
         this.applicationName = project.getName();
         this.financesUrl = financesUrl;
         this.open = open;
@@ -31,6 +35,13 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         return financesUrl;
     }
 
+    public long getProjectId() {
+        return projectId;
+    }
+
+    public long getOrganisationId() {
+        return organisationId;
+    }
 
     public boolean isOpen() {
         return open;

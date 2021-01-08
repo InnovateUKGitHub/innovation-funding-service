@@ -3,20 +3,24 @@ package org.innovateuk.ifs.project.milestones.controller;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.milestones.controller.form.ProjectProcurementMilestoneApprovalForm;
 import org.innovateuk.ifs.project.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -35,19 +39,41 @@ public class ProjectProcurementMilestonesController {
     @Autowired
     private ProcurementMilestoneFormPopulator formPopulator;
 
+    @Autowired
+    private ProjectFinanceRestService projectFinanceService;
+
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     public String viewMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
+                                 @RequestParam(name = "editMilestones", defaultValue = "false") boolean editMilestones,
                                  UserResource userResource,
                                  Model model) {
         ProcurementMilestonesForm form = formPopulator.populate(restService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
         model.addAttribute("form", form);
-        return viewMilestones(model, form, projectId, organisationId, userResource);
+        model.addAttribute("projectProcurementMilestoneApprovalForm", new ProjectProcurementMilestoneApprovalForm());
+
+        return viewMilestones(model, form, projectId, organisationId, userResource, editMilestones);
     }
 
-    private String viewMilestones(Model model, ProcurementMilestonesForm form, long projectId, long organisationId, UserResource userResource) {
-        model.addAttribute("model", viewModelPopulator.populate(projectId, organisationId, userResource));
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping
+    public String approvePaymentMilestones(@PathVariable long projectId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("form") ProjectProcurementMilestoneApprovalForm form,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           Model model,
+                                           UserResource user) {
+        Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
+        RestResult<Void> approvePaymentMilestoneState = projectFinanceService.approvePaymentMilestoneState(projectId, organisationId);
+        return validationHandler
+                .addAnyErrors(approvePaymentMilestoneState)
+                .failNowOrSucceedWith(view, view);
+    }
+
+    private String viewMilestones(Model model, ProcurementMilestonesForm form, long projectId, long organisationId, UserResource userResource, boolean editMilestones) {
+        model.addAttribute("model", viewModelPopulator.populate(projectId, organisationId, userResource, editMilestones));
         form.setMilestones(reorderMilestones(form.getMilestones()));
         return VIEW;
     }
