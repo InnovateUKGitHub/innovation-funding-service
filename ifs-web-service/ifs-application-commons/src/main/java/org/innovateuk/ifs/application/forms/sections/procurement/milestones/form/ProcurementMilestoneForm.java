@@ -86,6 +86,9 @@ public class ProcurementMilestoneForm {
     }
 
     public BigDecimal getPercentageOfFundingAmount(BigInteger totalCosts) {
+        if (totalCosts == null || totalCosts.equals(BigInteger.ZERO)) {
+            return BigDecimal.ZERO;
+        }
         return new BigDecimal(payment)
                 .multiply(new BigDecimal("100"))
                 .divide(new BigDecimal(totalCosts), 2, RoundingMode.HALF_UP);
