@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestoneViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 
@@ -13,7 +14,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final long applicationId;
     private final boolean fullyFunded;
     private final long financeSectionId;
-    private final List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources;
+    private final ApplicationProcurementMilestoneViewModel applicationProcurementMilestoneResources;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
@@ -22,7 +23,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final boolean ktpCompetition;
 
     public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
-                                    List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources,
+                                    ApplicationProcurementMilestoneViewModel applicationProcurementMilestoneResources,
                                     ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                     ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                                     ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
@@ -57,7 +58,8 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         return financeSectionId;
     }
 
-    public List<ApplicationProcurementMilestoneResource> getApplicationProcurementMilestoneResources() {
+    //todo rename
+    public ApplicationProcurementMilestoneViewModel getApplicationProcurementMilestoneResources() {
         return applicationProcurementMilestoneResources;
     }
 
