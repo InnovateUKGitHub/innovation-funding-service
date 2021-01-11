@@ -2,7 +2,9 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -99,9 +101,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competition.setCompetitionType(competitionType.get());
         setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
-        setDefaultOrganisationConfig(competition);
-        setDefaultApplicationConfig(competition);
-
         setDefaultProjectDocuments(competition);
 
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
@@ -111,29 +110,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         sectionBuilders = fundingTypeTemplate.sections(sectionBuilders);
         competition = fundingTypeTemplate.initialiseFinanceTypes(competition);
         competition = fundingTypeTemplate.initialiseProjectSetupColumns(competition);
-        competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
+        template.initialiseOrganisationConfig(competition);
+        template.initialiseApplicationConfig(competition);
         template.copyTemplatePropertiesToCompetition(competition);
         competition = fundingTypeTemplate.overrideTermsAndConditions(competition);
         competition = fundingTypeTemplate.setGolTemplate(competition);
 
-        questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
+        questionPriorityOrderService.persistAndPrioritiseSections(competition, sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()), null);
         return serviceSuccess(competitionRepository.save(competition));
-    }
-
-    private void setDefaultOrganisationConfig(Competition competition) {
-        if (competition.getCompetitionOrganisationConfig() == null) {
-            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
-            competitionOrganisationConfig.setCompetition(competition);
-            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
-        }
-    }
-
-    private void setDefaultApplicationConfig(Competition competition) {
-        if (competition.getCompetitionApplicationConfig() == null) {
-            CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
-            competitionApplicationConfig.setCompetition(competition);
-            competition.setCompetitionApplicationConfig(competitionApplicationConfig);
-        }
     }
 
     private void setDefaultProjectDocuments(Competition competition) {
