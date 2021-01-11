@@ -29,6 +29,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...
 ...               IFS-8197  SBRI Type 4: General content changes for procurements
 ...
+...               IFS-8736  IFS Cookies screen shows LSep coding
+...
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -49,7 +51,7 @@ Project Finance should not be able to access bank details page
     Then the user is not able to access bank details
 
 Applicant user is unable to submit blank and invaild bank details
-    [Documentation]   INFUND-3010, INFUND-6018, INFUND-7173, IFS-2731, INFUND-6887, INFUND-6482, INFUND-3282  IFS-8197
+    [Documentation]   INFUND-3010  INFUND-6018  INFUND-7173  IFS-2731  INFUND-6887  INFUND-6482  INFUND-3282  IFS-8197  IFS-8736
     [Tags]  HappyPath
     [Setup]  log in as a different user   &{lead_applicant_credentials_bd}
     Given an applicant navigates to the Bank details page
