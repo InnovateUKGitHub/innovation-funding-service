@@ -116,7 +116,7 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
 
-        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(0);
+        assertThat(result.getMilestoneDifferences()).isNull();
     }
 
     @Test

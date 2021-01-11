@@ -6,9 +6,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
@@ -68,8 +66,6 @@ public class ProjectFinanceChangesViewModelPopulator {
     }
 
     private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(ApplicationFinanceResource appFinanceResource, ProjectFinanceResource projectFinanceResource) {
-
-
 
         List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
         CostChangeViewModel vat = null;
