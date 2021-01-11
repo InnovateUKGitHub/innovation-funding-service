@@ -315,7 +315,6 @@ ${compType_ATI}        Aerospace Technology Institute
 @{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
 @{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{HEUKAR_questions}                       A HEUKAR question
 @{project_details}                        Project summary  Public description  Scope
 
 #SBRI Type 1 competition milestones
