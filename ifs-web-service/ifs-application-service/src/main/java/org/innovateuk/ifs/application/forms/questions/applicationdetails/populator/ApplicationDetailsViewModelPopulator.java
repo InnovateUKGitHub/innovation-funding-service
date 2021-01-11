@@ -40,7 +40,10 @@ public class ApplicationDetailsViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), application.getId()).getSuccess();
         ProcessRoleResource role = processRoleRestService.findProcessRole(user.getId(), application.getId()).getSuccess();
-        int maxMilestoneMonth = applicationProcurementMilestoneRestService.findMaxByApplicationId(application.getId()).getSuccess().orElse(0);
+        int maxMilestoneMonth = 0;
+        if (competition.isProcurement()) {
+            maxMilestoneMonth = applicationProcurementMilestoneRestService.findMaxByApplicationId(application.getId()).getSuccess().orElse(0);
+        }
 
         boolean complete = isComplete(application, organisation, questionId);
         boolean open = application.isOpen() && competition.isOpen() && role.getRole().isLeadApplicant();
