@@ -165,17 +165,6 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         return serviceSuccess();
     }
 
-    @Override
-    public ServiceResult<Boolean> isShowAidAgreement(long targetId, long organisationId) {
-        return getAidEligibilityForCompetition(targetId).andOnSuccess(eligibility -> {
-            if (!eligibility) {
-                return serviceSuccess(false);
-            }
-            return isBusinessOrganisation(organisationId);
-        });
-    }
-
-
     private ServiceResult<Boolean> getAidEligibilityForCompetition(long targetId) {
         return getCompetitionFromTargetId(targetId).
                 andOnSuccessReturn(competition ->
@@ -203,7 +192,7 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
 
         if (!competition.isMaximumFundingLevelConstant(() -> organisationService.findById(finance.getOrganisation()).getSuccess().getOrganisationTypeEnum(),
-                () -> grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).getSuccess())) {
+                () -> grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId).getSuccess())) {
             resetYourFundingSection(finance, competitionId, userId);
             resetFundingLevel(finance);
         }

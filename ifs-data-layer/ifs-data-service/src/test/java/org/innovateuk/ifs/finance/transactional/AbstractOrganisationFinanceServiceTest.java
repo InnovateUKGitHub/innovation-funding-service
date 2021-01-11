@@ -130,32 +130,9 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void isShowAidAgreement_whenFundingRulesIsStateAid() {
-        competition.setFundingRules(FundingRules.STATE_AID);
-        when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
-
-        assertTrue((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
-    }
-
-    @Test
-    public void isShowAidAgreement_whenFundingRulesIsSubsidyControl() {
-        competition.setFundingRules(FundingRules.SUBSIDY_CONTROL);
-        when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
-
-        assertTrue((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
-    }
-
-    @Test
-    public void isShowAidAgreement_whenFundingRulesNotAid() {
-        competition.setFundingRules(FundingRules.NOT_AID);
-        when(organisationService.findById(organisationId)).thenReturn(serviceSuccess(organisation));
-        assertFalse((boolean) service.isShowAidAgreement(targetId, organisationId).getSuccess());
-    }
-
-    @Test
     public void updateOrganisationWithoutGrowthTable_whenStateAidIncludedAndAgreed() {
         when(finance.getFinancialYearAccounts()).thenReturn(employeesAndTurnoverResource);
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(false));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(false));
         when(finance.getGrantClaim()).thenReturn(grantClaim);
 
         assertEquals(serviceSuccess(), service.updateOrganisationWithoutGrowthTable(targetId, organisationId,
@@ -169,7 +146,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     @Test
     public void updateOrganisationWithGrowthTable_whenStateAidIncludedAndAgreed() {
         when(finance.getFinancialYearAccounts()).thenReturn(growthTableResource);
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(true));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(true));
 
         assertEquals(serviceSuccess(), service.updateOrganisationWithGrowthTable(targetId, organisationId,
             organisationFinancesWithGrowthTableResource));
@@ -207,7 +184,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
                 .build();
         KtpYearsResource yearsResource = new KtpYearsResource();
         when(finance.getFinancialYearAccounts()).thenReturn(yearsResource);
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(false));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(false));
         when(finance.getGrantClaim()).thenReturn(grantClaim);
 
         assertEquals(serviceSuccess(), service.updateOrganisationKtpYears(targetId, organisationId,

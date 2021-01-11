@@ -187,6 +187,6 @@ public class YourFundingViewModelPopulator {
     }
 
     private boolean isMaximumFundingLevelOverridden(ApplicantSectionResource section) {
-        return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId()).getSuccess();
+        return grantClaimMaximumRestService.isMaximumFundingLevelConstant(section.getCompetition().getId()).getSuccess();
     }
 }

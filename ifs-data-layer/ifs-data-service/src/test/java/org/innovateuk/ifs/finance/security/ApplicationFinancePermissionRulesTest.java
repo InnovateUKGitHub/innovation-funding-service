@@ -3,20 +3,20 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.security.ApplicationSecurityHelper;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -26,13 +26,11 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTest<ApplicationFinancePermissionRules> {
@@ -61,6 +59,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
     @Mock
     private CompetitionRepository competitionRepository;
+
+    @Mock
+    private ApplicationSecurityHelper applicationSecurityHelper;
 
     @Before
     public void setup() {
@@ -92,10 +93,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             kta = ktaUser();
             supporter = supporterUser();
 
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, applicationId, organisationId)).thenReturn(newProcessRole().build());
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(assessor.getId(), Role.ASSESSOR, applicationId, organisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(leadApplicant.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(collaborator.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(assessor.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), applicationId, organisationId)).thenReturn(false);
 
             ProcessRole compAdminProcessRole = newProcessRole().withRole(Role.COMP_ADMIN).build();
 
@@ -125,7 +125,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();
             otherKta = ktaUser();
-            when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherKta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
@@ -136,57 +136,15 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void consortiumCanSeeTheApplicationFinancesForTheirOrganisation() {
-        assertTrue(rules.consortiumCanSeeTheApplicationFinancesForTheirOrganisation(applicationFinance, leadApplicant));
-        assertTrue(rules.consortiumCanSeeTheApplicationFinancesForTheirOrganisation(applicationFinance, collaborator));
+    public void canFinancesIfCanViewApplication() {
+        UserResource canView = newUserResource().build();
+        UserResource cantView = newUserResource().build();
 
-        assertTrue(rules.consortiumCanSeeTheApplicationFinancesForTheirOrganisation(otherApplicationFinance, otherLeadApplicant));
-        assertFalse(rules.consortiumCanSeeTheApplicationFinancesForTheirOrganisation(applicationFinance, otherLeadApplicant));
-    }
+        when(applicationSecurityHelper.canViewApplication(applicationFinance.getApplication(), canView)).thenReturn(true);
+        when(applicationSecurityHelper.canViewApplication(applicationFinance.getApplication(), cantView)).thenReturn(false);
 
-    @Test
-    public void assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
-        assertTrue(rules.assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, assessor));
-        assertFalse(rules.assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, assessor));
-    }
-
-    @Test
-    public void ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
-        assertTrue(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, kta));
-        assertFalse(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, kta));
-    }
-
-    @Test
-    public void supporterCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
-        assertTrue(rules.supporterCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAreAssignedTo(applicationFinance, supporter));
-        assertFalse(rules.supporterCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAreAssignedTo(otherApplicationFinance, supporter));
-    }
-
-    @Test
-    public void internalUserCanSeeApplicationFinancesForOrganisations() {
-        allGlobalRoleUsers.forEach(user ->
-                allGlobalRoleUsers.forEach(otherUser -> {
-                    if (allInternalUsers.contains(user)) {
-                        assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
-                    } else {
-                        assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
-                    }
-                }));
-    }
-
-    @Test
-    public void stakeholdersCanSeeApplicationFinancesForOrganisations() {
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withApplication(application.getId())
-                .build();
-
-        when(applicationRepository.findById(applicationFinanceResource.getApplication())).thenReturn(Optional.of(application));
-        when(stakeholderRepository.existsByCompetitionIdAndUserId(application.getCompetition().getId(), stakeholderResource.getId())).thenReturn(true);
-
-        assertTrue(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, stakeholderResource));
-        allInternalUsers.forEach(user ->
-                assertFalse(rules.stakeholdersCanSeeApplicationFinancesForOrganisations(applicationFinanceResource, user)));
+        assertTrue(rules.canViewFinancesIfCanViewApplication(applicationFinance, canView));
+        assertFalse(rules.canViewFinancesIfCanViewApplication(applicationFinance, cantView));
     }
 
     @Test
@@ -203,49 +161,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
 
-        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, supportUser()));
-        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
-        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, ifsAdminUser()));
-        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, compAdminUser()));
-        assertTrue(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, projectFinanceUser()));
-
-        assertTrue(rules.assessorCanAddACostToApplicationFinance(applicationFinance, assessor));
-
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
 
-        assertFalse(rules.internalUserCanAddACostToApplicationFinance(applicationFinance, systemRegistrationUser()));
-    }
-
-    @Test
-    public void stakeholdersCanViewCostsToApplicationFinance() {
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
-                .withApplication(application.getId())
-                .build();
-
-        when(applicationRepository.findById(applicationFinanceResource.getApplication())).thenReturn(Optional.of(application));
-        when(stakeholderRepository.existsByCompetitionIdAndUserId(application.getCompetition().getId(), stakeholderResource.getId())).thenReturn(true);
-
-        assertTrue(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, stakeholderResource));
-        allInternalUsers.forEach(user -> assertFalse(rules.stakeholdersCanAddACostToApplicationFinance(applicationFinanceResource, user)));
-    }
-
-    @Test
-    public void leadCanGetFileResourceForPartner() {
-        assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
-        assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
-        assertTrue(rules.assessorUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, assessor));
-        assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, otherLeadApplicant));
-        assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, compAdmin));
-    }
-
-    @Test
-    public void internalUserCanGetFileResourceForPartner() {
-        assertTrue(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
-        assertTrue(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, projectFinanceUser()));
-        assertFalse(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
-        assertFalse(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
     }
 
     @Test
@@ -268,27 +186,15 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
         assertFalse(rules.consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
     }
-
     @Test
-    public void monitoringOfficersCanSeeApplicationFinancesForOrganisations() {
-        Project project = newProject().build();
-        when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
+    public void canViewApplication() {
+        UserResource canView = newUserResource().build();
+        UserResource cantView = newUserResource().build();
 
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(MONITORING_OFFICER)) {
-                assertTrue(rules.monitoringOfficersCanSeeApplicationFinancesForOrganisations(applicationFinance, monitoringOfficerUser()));
-            } else {
-                Assert.assertFalse(rules.monitoringOfficersCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
-            }
-        });
-    }
+        when(applicationSecurityHelper.canViewApplication(applicationFinance.getApplication(), canView)).thenReturn(true);
+        when(applicationSecurityHelper.canViewApplication(applicationFinance.getApplication(), cantView)).thenReturn(false);
 
-    @Test
-    public void internalUserCanGetApplicationFinance() {
-        assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, compAdmin));
-        assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, projectFinanceUser()));
-        assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
-        assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
+        assertTrue(rules.canViewApplication(applicationFinance, canView));
+        assertFalse(rules.canViewApplication(applicationFinance, cantView));
     }
 }

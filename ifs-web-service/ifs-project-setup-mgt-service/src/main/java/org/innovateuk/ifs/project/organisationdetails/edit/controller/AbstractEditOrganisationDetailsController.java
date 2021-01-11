@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.organisationdetails.edit.viewmodel.ProjectOrganisationSizeViewModel;
@@ -36,6 +37,9 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
@@ -80,14 +84,16 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+
+        boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
+                organisation::getOrganisationTypeEnum,
+                () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
         return new ProjectOrganisationSizeViewModel(project,
-                organisation.getName(),
-                organisationId,
+                competition,
+                organisation,
+                isMaximumFundingLevelConstant,
                 false,
-                false,
-                false,
-                false,
-                competition.isProcurement());
+                false);
     }
 
     protected abstract String redirectToOrganisationDetails(long projectId, long organisationId);

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -21,9 +21,6 @@ import org.springframework.stereotype.Component;
 public class YourOrganisationViewModelPopulator {
 
     @Autowired
-    private ProjectYourOrganisationRestService yourOrganisationRestService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     @Autowired
@@ -31,6 +28,7 @@ public class YourOrganisationViewModelPopulator {
 
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
+
     @Autowired
     private OrganisationRestService organisationRestService;
 
@@ -40,29 +38,24 @@ public class YourOrganisationViewModelPopulator {
     public ProjectYourOrganisationViewModel populate(long projectId, long organisationId, UserResource user) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-
-        boolean showStateAidAgreement =
-                yourOrganisationRestService.isShowAidAgreement(projectId, organisationId).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
-                () -> organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationTypeEnum(),
-                () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
+                organisation::getOrganisationTypeEnum,
+                () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
 
         boolean showOrganisationSizeAlert = !isMaximumFundingLevelConstant && pendingPartner.isYourFundingComplete();
         return new ProjectYourOrganisationViewModel(
                 project.getApplication(),
-                competition.getName(),
-                showStateAidAgreement,
+                competition,
+                organisation,
+                isMaximumFundingLevelConstant,
                 showOrganisationSizeAlert,
-                competition.isH2020(),
                 projectId,
                 project.getName(),
-                organisationId,
                 pendingPartner.isYourOrganisationComplete(),
-                true,
-                competition.isProcurement(),
                 user,
                 true);
     }

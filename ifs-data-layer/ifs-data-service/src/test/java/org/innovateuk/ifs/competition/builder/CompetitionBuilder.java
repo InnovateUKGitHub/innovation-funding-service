@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -18,6 +19,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
@@ -57,10 +59,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withSetupComplete(boolean... setupComplete) {
         return withArraySetFieldByReflection("setupComplete", setupComplete);
-    }
-
-    public CompetitionBuilder withLocationPerPartner(boolean... locationPerPartner) {
-        return withArraySetFieldByReflection("locationPerPartner", locationPerPartner);
     }
 
     public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
@@ -350,6 +348,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withFundingType(FundingType... fundingTypes) {
         return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
+    }
+
+    public CompetitionBuilder withResearchCategories(Set<ResearchCategory>... researchCategories) {
+        return withArray((researchCategory, competition) -> competition.setResearchCategories(researchCategory), researchCategories);
     }
 
     @SafeVarargs
