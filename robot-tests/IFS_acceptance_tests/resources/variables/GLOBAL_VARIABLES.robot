@@ -306,12 +306,6 @@ ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
-<<<<<<< HEAD
-=======
-${compType_HEUKAR}     HEUKAR
-${compType_PT}         The Prince's Trust
-${compType_H2020}      Horizon 2020
->>>>>>> 0dbcca9062895c3c52286b617679e978e374468b
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
