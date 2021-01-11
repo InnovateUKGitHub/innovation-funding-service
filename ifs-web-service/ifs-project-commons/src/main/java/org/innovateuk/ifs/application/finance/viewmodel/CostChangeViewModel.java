@@ -7,6 +7,12 @@ public class CostChangeViewModel {
     private BigDecimal applicationCost;
     private BigDecimal projectCost;
 
+    public CostChangeViewModel(String section, BigDecimal applicationCost, BigDecimal projectCost) {
+        this.section = section;
+        this.applicationCost = applicationCost;
+        this.projectCost = projectCost;
+    }
+
     public String getSection() {
         return section;
     }
@@ -19,16 +25,8 @@ public class CostChangeViewModel {
         return applicationCost;
     }
 
-    public void setApplicationCost(BigDecimal applicationCost) {
-        this.applicationCost = applicationCost;
-    }
-
     public BigDecimal getProjectCost() {
         return projectCost;
-    }
-
-    public void setProjectCost(BigDecimal projectCost) {
-        this.projectCost = projectCost;
     }
 
     public BigDecimal getDifference() {
@@ -36,7 +34,10 @@ public class CostChangeViewModel {
     }
 
     public boolean isProjectCostDifferent() {
-        return !projectCost.equals(applicationCost);
+        if (projectCost != null) {
+            return !projectCost.equals(applicationCost);
+        }
+        return false;
     }
 
     public String getVarianceDirection() {

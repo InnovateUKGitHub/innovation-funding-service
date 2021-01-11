@@ -32,10 +32,10 @@
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="entry : ${summaryModel.entries}">
                         <th class="govuk-table__header" scope="row" th:text="${entry.section}" />
-                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',2,'DEFAULT')}"/></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:if="${entry.projectCostDifferent}">
-                                <th:block th:text="${#numbers.formatDecimal(entry.projectCost,1,'DEFAULT',2,'DEFAULT')}"/>
+                                <th:block th:text="${#numbers.formatDecimal(entry.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
                             </th:block>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
@@ -63,10 +63,10 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="entry : ${model.projectFinances.entries}">
                 <th class="govuk-table__header" scope="row" th:text="${entry.section}" />
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',2,'DEFAULT')}"/></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(entry.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <th:block th:if="${entry.projectCostDifferent}">
-                        <th:block th:text="${#numbers.formatDecimal(entry.projectCost,1,'DEFAULT',2,'DEFAULT')}"/>
+                        <th:block th:text="${#numbers.formatDecimal(entry.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
                     </th:block>
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
@@ -76,11 +76,70 @@
                 </td>
             </tr>
             </tbody>
-            <tfoot>
+            <th:block th:if="${model.procurementCompetition}">
+                <tfoot>
+                <tr class="govuk-table__row" th:with="totalProjectCosts=${model.projectFinances.totalProjectCosts}">
+                    <th class="govuk-table__header" scope="row">'<th:block th:text="${model.organisationName}" />' Total project costs</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalProjectCosts.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${totalProjectCosts.projectCostDifferent}">
+                            <th:block th:text="${#numbers.formatDecimal(totalProjectCosts.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                        </th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${totalProjectCosts.projectCostDifferent}">
+                            <th:block th:text="${totalProjectCosts.varianceDirection}"/> <th:block th:text="${totalProjectCosts.variance}"/>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row standard-border">
+                    <th class="govuk-table__header" scope="row">Are you VAT registered?</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${model.projectFinances.vatRegistered}">Yes</th:block>
+                        <th:block th:unless="${model.projectFinances.vatRegistered}">No</th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                </tr>
+                <tr class="govuk-table__row standard-border" th:with="vat=${model.projectFinances.vat}">
+                    <th class="govuk-table__header" scope="row">Total VAT</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(vat.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${vat.projectCostDifferent}">
+                            <th:block th:text="${#numbers.formatDecimal(vat.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                        </th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${vat.projectCostDifferent}">
+                            <th:block th:text="${vat.varianceDirection}"/> <th:block th:text="${vat.variance}"/>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr class="govuk-table__row" th:with="totalPlusVat=${model.projectFinances.totalPlusVat}">
+                    <th class="govuk-table__header" scope="row">Total project costs inclusive of VAT</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalPlusVat.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${totalPlusVat.projectCostDifferent}">
+                            <th:block th:text="${#numbers.formatDecimal(totalPlusVat.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                        </th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block th:if="${totalPlusVat.projectCostDifferent}">
+                            <th:block th:text="${totalPlusVat.varianceDirection}"/> <th:block th:text="${totalPlusVat.variance}"/>
+                        </th:block>
+                    </td>
+                </tr>
+                </tfoot>
+            </th:block>
+            <tfoot th:unless="${model.procurementCompetition}">
             <tr class="govuk-table__row" th:with="totalProjectCosts=${model.projectFinances.totalProjectCosts}">
                 <th class="govuk-table__header" scope="row">Total project costs</th>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalProjectCosts.applicationCost,1,'DEFAULT',2,'DEFAULT')}"/></td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalProjectCosts.projectCost,1,'DEFAULT',2,'DEFAULT')}"/></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalProjectCosts.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <th:block th:if="${totalProjectCosts.projectCostDifferent}">
+                        <th:block th:text="${#numbers.formatDecimal(totalProjectCosts.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                    </th:block>
+                </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <th:block th:if="${totalProjectCosts.projectCostDifferent}">
                         <th:block th:text="${totalProjectCosts.varianceDirection}"/> <th:block th:text="${totalProjectCosts.variance}"/>
@@ -137,8 +196,8 @@
 
         </th:block>
 
-        <a th:if="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
-        <a th:unless="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
+        <a th:if="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+        <a th:unless="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-checks(projectId=${model.projectId})}">Return to finance checks</a>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

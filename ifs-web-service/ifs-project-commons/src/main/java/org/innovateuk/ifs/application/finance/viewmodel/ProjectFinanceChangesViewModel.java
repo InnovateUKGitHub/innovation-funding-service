@@ -10,6 +10,7 @@ public class ProjectFinanceChangesViewModel {
     private String projectName;
     private Long applicationId;
     private Long projectId;
+    private boolean procurementCompetition;
 
     private ProjectFinanceChangesFinanceSummaryViewModel financeSummary;
     private ProjectFinanceChangesProjectFinancesViewModel projectFinances;
@@ -17,6 +18,7 @@ public class ProjectFinanceChangesViewModel {
 
     public ProjectFinanceChangesViewModel(boolean isInternal, String organisationName, Long organisationId,
                                           String projectName, Long applicationId, Long projectId,
+                                          boolean procurementCompetition,
                                           ProjectFinanceChangesFinanceSummaryViewModel financeSummary,
                                           ProjectFinanceChangesProjectFinancesViewModel projectFinances,
                                           ProjectFinanceChangesMilestoneDifferencesViewModel milestoneDifferences) {
@@ -26,6 +28,7 @@ public class ProjectFinanceChangesViewModel {
         this.projectName = projectName;
         this.applicationId = applicationId;
         this.projectId = projectId;
+        this.procurementCompetition = procurementCompetition;
         this.financeSummary = financeSummary;
         this.projectFinances = projectFinances;
         this.milestoneDifferences = milestoneDifferences;
@@ -53,6 +56,10 @@ public class ProjectFinanceChangesViewModel {
 
     public boolean isInternal() {
         return isInternal;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 
     public ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummary() {

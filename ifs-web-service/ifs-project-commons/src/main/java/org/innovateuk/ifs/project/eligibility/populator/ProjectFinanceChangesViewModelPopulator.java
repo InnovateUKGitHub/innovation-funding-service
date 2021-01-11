@@ -51,64 +51,82 @@ public class ProjectFinanceChangesViewModelPopulator {
     public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project,
                                                                           OrganisationResource organisation) {
         FinanceCheckEligibilityResource eligibilityOverview = financeCheckRestService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId()).getSuccess();
-        ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
+        ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = new ProjectFinanceChangesFinanceSummaryViewModel(new ArrayList<>());
-
-        List<CostChangeViewModel> sectionDifferences = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
-        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences);
-
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(appFinanceResource, projectFinanceResource);
+        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, eligibilityOverview,
+                projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
         ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, competition);
 
         return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(),
+                competition.isProcurement(),
                 projectFinanceChangesFinanceSummaryViewModel,
                 projectFinanceChangesProjectFinancesViewModel,
                 projectFinanceChangesMilestoneDifferencesViewModel);
     }
 
-    private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, CompetitionResource competition) {
-        ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel;
+    private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(ApplicationFinanceResource appFinanceResource, ProjectFinanceResource projectFinanceResource) {
 
+
+
+        List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
+        CostChangeViewModel vat = null;
+
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : projectFinanceResource.getFinanceOrganisationDetails().entrySet()) {
+            FinanceRowType rowType = entry.getKey();
+            FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
+            FinanceRowCostCategory financeRowAppCostCategory = appFinanceResource.getFinanceOrganisationDetails().get(rowType);
+            CostChangeViewModel costChange = new CostChangeViewModel(rowType.getDisplayName(),
+                    financeRowAppCostCategory.getTotal(),
+                    financeRowProjectCostCategory.getTotal());
+
+            if (rowType == FinanceRowType.VAT) {
+                vat = costChange;
+            } else {
+                sectionDifferences.add(costChange);
+            }
+        }
+
+        boolean vatRegistered = appFinanceResource.isVatRegistered();
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, vatRegistered, vat);
+        return projectFinanceChangesProjectFinancesViewModel;
+    }
+
+    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, FinanceCheckEligibilityResource eligibilityOverview, CostChangeViewModel totalProjectCosts) {
+        if (competition.isProcurement()) {
+            return null;
+        }
+        List<CostChangeViewModel> entries = new ArrayList<>();
+        entries.add(totalProjectCosts);
+        entries.add(new CostChangeViewModel("Funding level (%)", eligibilityOverview.getPercentageGrant(), null));
+        entries.add(new CostChangeViewModel("Funding sought (£)", eligibilityOverview.getFundingSought(), null));
+        entries.add(new CostChangeViewModel("Other funding (£)", eligibilityOverview.getOtherPublicSectorFunding(), null));
+        if (competition.isKtp()) {
+            entries.add(new CostChangeViewModel("Company contribution (%)", eligibilityOverview.getContributionPercentage(), null));
+            entries.add(new CostChangeViewModel("Company contribution (£)", eligibilityOverview.getContributionToProject(), null));
+        } else {
+            entries.add(new CostChangeViewModel("Contribution to project (£)", eligibilityOverview.getContributionToProject(), null));
+        }
+        return new ProjectFinanceChangesFinanceSummaryViewModel(entries);
+    }
+
+    private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, CompetitionResource competition) {
         if (competition.isProcurement()) {
             List<ApplicationProcurementMilestoneResource> applicationMilestones = applicationProcurementMilestoneRestService.getByApplicationId(project.getApplication()).getSuccess();
             List<ProjectProcurementMilestoneResource> projectMilestones = projectProcurementMilestoneRestService.getByProjectId(project.getId()).getSuccess();
 
             List<MilestoneChangeViewModel> milestoneDifferences = buildMilestoneDifferences(applicationMilestones, projectMilestones);
 
-            projectFinanceChangesMilestoneDifferencesViewModel = new ProjectFinanceChangesMilestoneDifferencesViewModel(milestoneDifferences);
-        } else {
-            projectFinanceChangesMilestoneDifferencesViewModel = null;
-        }
-        return projectFinanceChangesMilestoneDifferencesViewModel;
-    }
-
-    private LabourCost getWorkingDaysPerYearCostItemFrom(Map<FinanceRowType, FinanceRowCostCategory> financeDetails) {
-        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : financeDetails.entrySet()) {
-            FinanceRowType rowType = entry.getKey();
-            if (rowType.getType().equals(FinanceRowType.LABOUR.getType())) {
-                return ((LabourCostCategory) entry.getValue()).getWorkingDaysPerYearCostItem();
+            if (milestoneDifferences.isEmpty()) {
+                return null;
             }
-        }
-        throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
-    }
 
-    private List<CostChangeViewModel> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
-                                                                       Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances) {
-        List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
-
-        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : organisationProjectFinances.entrySet()) {
-            FinanceRowType rowType = entry.getKey();
-            FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
-            FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
-            CostChangeViewModel costChange = new CostChangeViewModel();
-            costChange.setSection(rowType.getDisplayName());
-            costChange.setProjectCost(financeRowProjectCostCategory.getTotal());
-            costChange.setApplicationCost(financeRowAppCostCategory.getTotal());
-            sectionDifferences.add(costChange);
+            return new ProjectFinanceChangesMilestoneDifferencesViewModel(milestoneDifferences);
+        } else {
+            return null;
         }
-        return sectionDifferences;
     }
 
     private List<MilestoneChangeViewModel> buildMilestoneDifferences(List<ApplicationProcurementMilestoneResource> applicationMilestones, List<ProjectProcurementMilestoneResource> projectMilestones) {
