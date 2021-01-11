@@ -31,13 +31,13 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
-        <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
-                              data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               enctype="multipart/form-data"
               novalidate="novalidate"
-              method="POST">
+              method="POST"
+              th:attr="data-autosave=@{__${#ifsUtil.formPostUri(#httpServletRequest)}__/auto-save},
+                       data-row-operation-url=@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 

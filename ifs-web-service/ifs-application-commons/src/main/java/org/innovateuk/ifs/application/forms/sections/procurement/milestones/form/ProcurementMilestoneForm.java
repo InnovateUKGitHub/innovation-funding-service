@@ -78,7 +78,7 @@ public class ProcurementMilestoneForm {
     }
 
     public BigInteger getPayment() {
-        return payment;
+        return payment == null ? BigInteger.ZERO : payment;
     }
 
     public void setPayment(BigInteger payment) {
@@ -86,7 +86,7 @@ public class ProcurementMilestoneForm {
     }
 
     public BigDecimal getPercentageOfFundingAmount(BigInteger totalCosts) {
-        if (totalCosts == null || totalCosts.equals(BigInteger.ZERO)) {
+        if (totalCosts == null || payment == null || totalCosts.equals(BigInteger.ZERO)) {
             return BigDecimal.ZERO;
         }
         return new BigDecimal(payment)

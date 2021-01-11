@@ -132,26 +132,26 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
-    @PostMapping(params = "remove_cost")
+    @PostMapping(params = "remove_row")
     public String removeRowPost(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,
                                 @PathVariable long organisationId,
                                 @PathVariable long sectionId,
                                 @ModelAttribute("form") YourProjectCostsForm form,
-                                @RequestParam("remove_cost") String removeId) {
+                                @RequestParam("remove_row") String removeId) {
         saver.removeRowFromForm(form, removeId);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
     }
 
-    @PostMapping(params = "add_cost")
+    @PostMapping(params = "add_row")
     public String addRowPost(Model model,
                              UserResource user,
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
                              @PathVariable long sectionId,
                              @ModelAttribute("form") YourProjectCostsForm form,
-                             @RequestParam("add_cost") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
+                             @RequestParam("add_row") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
 
         saver.addRowForm(form, rowType);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);

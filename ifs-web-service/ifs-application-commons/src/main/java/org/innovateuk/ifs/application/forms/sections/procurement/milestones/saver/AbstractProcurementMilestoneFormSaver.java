@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public abstract class AbstractProcurementMilestoneFormSaver<R extends ProcurementMilestoneResource> {
 
     @Autowired
-    private ProcurementMilestoneRestService<R> service;
+    protected ProcurementMilestoneRestService<R> service;
 
     protected ServiceResult<Void> save(ProcurementMilestonesForm form, Function<ProcurementMilestoneForm, R> mapper) {
         return aggregate(form.getMilestones().entrySet().stream()
@@ -36,16 +36,17 @@ public abstract class AbstractProcurementMilestoneFormSaver<R extends Procuremen
     }
 
     public ServiceResult<Void> removeRowFromForm(ProcurementMilestonesForm form, String removeId) {
-        ServiceResult<Void> removeResult;
-        if (removeId.startsWith(ProcurementMilestonesForm.UNSAVED_ROW_PREFIX)) {
-            removeResult = serviceSuccess();
-        } else {
-            removeResult = service.delete(Long.parseLong(removeId)).toServiceResult();
-        }
-        return removeResult
+        return removeRow(removeId)
                 .andOnSuccessReturnVoid(() ->  form.getMilestones().remove(removeId));
     }
 
+    public ServiceResult<Void> removeRow(String removeId) {
+        if (removeId.startsWith(ProcurementMilestonesForm.UNSAVED_ROW_PREFIX)) {
+            return serviceSuccess();
+        } else {
+            return service.delete(Long.parseLong(removeId)).toServiceResult();
+        }
+    }
     public void addRowForm(ProcurementMilestonesForm form) {
         ProcurementMilestoneForm row = new ProcurementMilestoneForm();
         row.setPayment(BigInteger.ZERO);

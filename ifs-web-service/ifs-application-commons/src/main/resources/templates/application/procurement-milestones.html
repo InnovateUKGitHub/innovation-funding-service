@@ -11,13 +11,13 @@
             <h4 class="width-60-percent govuk-heading-s govuk-!-margin-left-1">Milestone</h4>
             <h4 class="width-10-percent govuk-heading-s">% of project costs</h4>
             <h4 class="width-10-percent govuk-heading-s">Payment request</h4>
-            <div class="govuk-accordion__section"
-                th:each="entry : ${form.milestones}">
+            <th:block th:each="entry : ${form.milestones}">
                 <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${model})"></th:block>
-            </div>
+            </th:block>
         </div>
         <p class="alignright" th:unless="${model.readOnly}">
             <button type="submit"
+                    data-repeatable-rowcontainer=".procurement-milestones .govuk-accordion"
                     name="add_row"
                     class="button-clear">Add another project milestone
             </button>
@@ -36,10 +36,18 @@
     </div>
 </th:block>
 
-<th:block  th:fragment="milestones-row(id, milestone, model)">
+<th:block th:fragment="ajax-milestone-row">
+    <th:block th:object="${form}">
+        <th:block th:insert="this :: milestones-row(${id}, ${row}, ${model})"></th:block>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="milestones-row(id, milestone, model)">
     <!--/*@thymesVar id="id" type="java.lang.String"*/-->
     <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
-    <th:block th:with="path=|milestones[${id}]|">
+    <div class="govuk-accordion__section"
+        th:with="path=|milestones[${id}]|"
+        th:attr="data-repeatable-row=${path}">
         <!--/*@thymesVar id="path" type="java.lang.String"*/-->
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
@@ -176,10 +184,11 @@
                 <button type="submit"
                         th:name="remove_row"
                         th:value="${id}"
-                        class="button-clear">Remove <span class="govuk-visually-hidden">milestone</span>
+                        data-repeatable-rowcontainer=".procurement-milestones .govuk-accordion"
+                        class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">milestone</span>
                 </button>
             </p>
         </div>
-    </th:block>
+    </div>
 </th:block>
 </html>

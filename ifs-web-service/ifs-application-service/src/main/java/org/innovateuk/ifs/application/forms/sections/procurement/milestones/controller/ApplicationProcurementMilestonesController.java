@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
@@ -24,6 +27,7 @@ import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toMap;
@@ -131,6 +135,46 @@ public class ApplicationProcurementMilestonesController {
 
         saver.addRowForm(form);
         return viewMilestones(model, form, user, applicationId, organisationId, sectionId);
+    }
+
+    @PostMapping("auto-save")
+    public @ResponseBody
+    JsonNode ajaxAutoSave(UserResource user,
+                          @PathVariable long applicationId,
+                          @PathVariable long organisationId,
+                          @RequestParam String field,
+                          @RequestParam String value) {
+        Optional<Long> fieldId = saver.autoSave(field, value, applicationId, organisationId);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        fieldId.ifPresent(id -> node.put("fieldId", id));
+        return node;
+    }
+
+    @PostMapping("remove-row/{rowId}")
+    public @ResponseBody
+    JsonNode ajaxRemoveRow(UserResource user,
+                           @PathVariable long applicationId,
+                           @PathVariable String rowId) {
+        saver.removeRow(rowId);
+        return new ObjectMapper().createObjectNode();
+    }
+
+    @PostMapping("add-row")
+    public String ajaxAddRow(Model model,
+                             UserResource user,
+                             @PathVariable long applicationId,
+                             @PathVariable long organisationId,
+                             @PathVariable long sectionId) {
+        ProcurementMilestonesForm form = new ProcurementMilestonesForm();
+        saver.addRowForm(form);
+        Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
+
+        model.addAttribute("form", form);
+        model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
+        model.addAttribute("id", entry.getKey());
+        model.addAttribute("row", entry.getValue());
+        return "application/procurement-milestones :: ajax-milestone-row";
     }
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {

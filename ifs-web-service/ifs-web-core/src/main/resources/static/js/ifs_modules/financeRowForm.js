@@ -5,12 +5,12 @@ IFS.core.financeRowForm = (function () {
   return {
     init: function () {
       IFS.core.financeRowForm.backForwardCacheReload()
-      jQuery('body').on('click', '[name="add_cost"]', function (e) {
+      jQuery('body').on('click', '[name="add_row"]', function (e) {
         e.preventDefault()
         IFS.core.financeRowForm.backForwardCacheInvalidate()
         IFS.core.financeRowForm.addRow(this, e)
       })
-      jQuery('body').on('click', '[name="remove_cost"]', function (e) {
+      jQuery('body').on('click', '[name="remove_row"]', function (e) {
         e.preventDefault()
         IFS.core.financeRowForm.backForwardCacheInvalidate()
         IFS.core.financeRowForm.removeRow(this, e)
@@ -48,16 +48,23 @@ IFS.core.financeRowForm = (function () {
         addRowButton.prevAll('.govuk-hint').remove()
         jQuery('body').trigger('updateSerializedFormState')
         IFS.core.financeRowForm.hideOrShowAddButton(addRowButton)
+        if (target.is('.govuk-accordion')) {
+          IFS.core.accordion.get(target.get(0)).sectionChange()
+        }
       })
     },
     removeRow: function (el, event) {
       var removeButton = jQuery(el)
       var id = removeButton.val()
-      var addRowButton = removeButton.closest('.govuk-accordion__section-content').find('[data-repeatable-rowcontainer]')
+      var addRowButton = removeButton.closest('.govuk-accordion__section-content').find('[name="add_row"]')
       var removeRow = function () {
         removeButton.closest('[data-repeatable-row]').remove()
         jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
         IFS.core.financeRowForm.hideOrShowAddButton(addRowButton)
+        var target = jQuery(removeButton.data('repeatable-rowcontainer'))
+        if (target.is('.govuk-accordion')) {
+          IFS.core.accordion.get(target.get(0)).sectionChange()
+        }
       }
       event.preventDefault()
       if (id === '' || id.indexOf('unsaved') !== -1) {
@@ -114,7 +121,7 @@ IFS.core.financeRowForm = (function () {
           }
         })
         // update remove button
-        row.find('[name="remove_cost"]').val(newFieldId)
+        row.find('[name="remove_row"]').val(newFieldId)
       }
     }
   }
