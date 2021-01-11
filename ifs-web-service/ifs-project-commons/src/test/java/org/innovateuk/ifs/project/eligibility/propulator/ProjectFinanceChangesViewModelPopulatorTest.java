@@ -145,9 +145,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         assertThat(result.getMilestoneDifferences()).hasSize(1);
         MilestoneChangeViewModel diff = result.getMilestoneDifferences().get(0);
         assertThat(diff.getDescription()).isEqualTo("desc3");
-        assertThat(diff.getPaymentSubmitted()).isNull();
+        assertThat(diff.getPaymentSubmitted()).isZero();
         assertThat(diff.getPaymentUpdated()).isEqualTo(new BigInteger("3000"));
-        assertThat(diff.getMonthSubmitted()).isNull();
+        assertThat(diff.getMonthSubmitted()).isZero();
         assertThat(diff.getMonthUpdated()).isEqualTo(3);
         assertThat(diff.isAdded()).isTrue();
     }
@@ -177,9 +177,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         MilestoneChangeViewModel diff = result.getMilestoneDifferences().get(0);
         assertThat(diff.getDescription()).isEqualTo("desc2");
         assertThat(diff.getPaymentSubmitted()).isEqualTo(new BigInteger("2000"));
-        assertThat(diff.getPaymentUpdated()).isNull();
+        assertThat(diff.getPaymentUpdated()).isZero();
         assertThat(diff.getMonthSubmitted()).isEqualTo(2);
-        assertThat(diff.getMonthUpdated()).isNull();
+        assertThat(diff.getMonthUpdated()).isZero();
         assertThat(diff.isRemoved()).isTrue();
     }
 

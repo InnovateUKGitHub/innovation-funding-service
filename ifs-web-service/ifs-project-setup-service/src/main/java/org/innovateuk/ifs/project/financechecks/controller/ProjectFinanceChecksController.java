@@ -507,12 +507,6 @@ public class ProjectFinanceChecksController {
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
 
-        if (competition.isKtp()) {
-            return "project/financecheck/eligibility-changes-ktp";
-        }
-        if (competition.isProcurement()) {
-            return "project/financecheck/eligibility-changes-procurement";
-        }
         return "project/financecheck/eligibility-changes";
     }
 

@@ -310,12 +310,6 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                 .getProjectFinanceChangesViewModel(true, project, organisation);
         model.addAttribute("model", projectFinanceChangesViewModel);
 
-        if (competition.isKtp()) {
-            return "project/financecheck/eligibility-changes-ktp";
-        }
-        if (competition.isProcurement()) {
-            return "project/financecheck/eligibility-changes-procurement";
-        }
         return "project/financecheck/eligibility-changes";
     }
 }

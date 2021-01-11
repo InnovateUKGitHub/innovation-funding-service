@@ -4,10 +4,10 @@ import java.math.BigInteger;
 
 public class MilestoneChangeViewModel {
     private String description;
-    private Integer monthSubmitted;
-    private Integer monthUpdated;
-    private BigInteger paymentSubmitted;
-    private BigInteger paymentUpdated;
+    private Integer monthSubmitted = 0;
+    private Integer monthUpdated = 0;
+    private BigInteger paymentSubmitted = BigInteger.ZERO;
+    private BigInteger paymentUpdated = BigInteger.ZERO;
     private MilestoneChangeType type;
 
     public void setDescription(String description) {
@@ -68,6 +68,29 @@ public class MilestoneChangeViewModel {
 
     public boolean isRemoved() {
         return MilestoneChangeType.REMOVED == type;
+    }
+
+    public String getMonthVariance() {
+        if (type == MilestoneChangeType.REMOVED) {
+            return "Deleted";
+        }
+        if (type == MilestoneChangeType.ADDED) {
+            return "Added";
+        }
+        int change = monthUpdated - monthSubmitted;
+        String direction = (change > 0) ? "+" : "-";
+
+        return direction + " " + change;
+    }
+
+    public String getPaymentVariance() {
+        if (type == MilestoneChangeType.UPDATED) {
+            BigInteger change = paymentUpdated.subtract(paymentSubmitted);
+            String direction = (change.compareTo(new BigInteger("0")) > 0) ? "+" : "-";
+
+            return direction + " " + change.abs();
+        }
+        return "0";
     }
 
 
