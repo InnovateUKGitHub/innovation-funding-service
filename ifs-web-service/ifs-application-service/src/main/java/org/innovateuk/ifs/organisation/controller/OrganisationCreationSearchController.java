@@ -113,6 +113,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setOrganisationTypeId(selectedOrganisation.getOrganisationType());
         organisationForm.setSelectedExistingOrganisationName(selectedOrganisation.getName());
         organisationForm.setManualEntry(false);
+        model.addAttribute("subtitle", "Your organisation");
         return createOrganisation(organisationForm, model, user, request, response);
     }
 

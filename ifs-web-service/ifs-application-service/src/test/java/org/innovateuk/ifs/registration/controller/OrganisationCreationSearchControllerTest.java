@@ -224,7 +224,8 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("improvedSearchEnabled", equalTo(true)))
                 .andExpect(model().attribute("searchLabel", equalTo(improvedSearchLabel)))
                 .andExpect(model().attribute("additionalLabel", equalTo(improvedAdditionalLabel)))
-                .andExpect(model().attribute("searchHint", equalTo("")));
+                .andExpect(model().attribute("searchHint", equalTo("")))
+                .andExpect(model().attribute("subtitle", equalTo("Create new application")));
     }
 
     @Test
@@ -306,6 +307,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("organisationForm", hasProperty("selectedExistingOrganisationName", equalTo("test"))))
                 .andExpect(model().attribute("organisationForm", hasProperty("organisationTypeId", equalTo(2L))))
                 .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))))
-                .andExpect(model().attribute("improvedSearchEnabled", equalTo(true)));
+                .andExpect(model().attribute("improvedSearchEnabled", equalTo(true)))
+                .andExpect(model().attribute("subtitle", equalTo("Your organisation")));
     }
 }

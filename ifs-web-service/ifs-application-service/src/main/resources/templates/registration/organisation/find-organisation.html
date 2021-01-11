@@ -10,9 +10,14 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/organisation/create/organisation-type'" />
-    <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkUrl='/organisation/create/organisation-type'" />
-
+    <th:block th:unless="${improvedSearchEnabled}">
+        <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/organisation/create/organisation-type'" />
+        <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkUrl='/organisation/create/organisation-type'" />
+    </th:block>
+    <th:block th:if="${improvedSearchEnabled}">
+        <th:block th:unless="${organisationForm.selectedExistingOrganisationId != null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/organisation/create/organisation-type'" />
+        <th:block th:if="${organisationForm.selectedExistingOrganisationId != null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to your organisation',linkUrl='/organisation/select'" />
+    </th:block>
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary"
@@ -40,7 +45,10 @@
 
         <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
         <input type="hidden" name="newOrganisationSearchEnabled" th:value="${improvedSearchEnabled}" />
-
+        <th:block th:if="${organisationForm.selectedExistingOrganisationId != null}">
+            <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
+            <input type="hidden" name="selectedExistingOrganisationId" th:value="${organisationForm.selectedExistingOrganisationId}" />
+        </th:block>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
             <th:block th:if="${improvedSearchEnabled && organisationForm.selectedExistingOrganisationId != null}">
                 <p class="govuk-body govuk-!-margin-bottom-0">You applied for a different competition with this organisation: <b><th:block th:text="${organisationForm.selectedExistingOrganisationName}" /></b>.</p>
@@ -84,7 +92,7 @@
                        th:attr="data-required-errormessage= ${improvedSearchEnabled} ? #{validation.improved.organisationsearchname.required} : #{validation.standard.organisationsearchname.required}"
                        required="required"
                        value="" />
-            <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
+            <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0 govuk-!-margin-left-2">Search</button>
         </div>
         <th:block th:if="${!improvedSearchEnabled || (improvedSearchEnabled && organisationForm.research)}">
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
