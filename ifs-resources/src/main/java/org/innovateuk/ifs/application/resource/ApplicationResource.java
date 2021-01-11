@@ -53,6 +53,7 @@ public class ApplicationResource {
     private CompanyPrimaryFocus companyPrimaryFocus;
     private String event;
     private ZonedDateTime lastStateChangeDate;
+    private FundingDecision fundingDecision;
 
     public Long getId() {
         return id;
@@ -138,7 +139,10 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean canBeReopened() {
-        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED || applicationState == ApplicationState.SUBMITTED;
+        return applicationState == ApplicationState.OPENED
+                || applicationState == ApplicationState.CREATED
+                || applicationState == ApplicationState.SUBMITTED
+                && fundingDecision == null;
     }
 
     @JsonIgnore

@@ -256,7 +256,13 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), canReopenApplication(application, user)));
+        model.addAttribute("model", new TrackViewModel(
+                competition,
+                application,
+                earlyMetricsUrl,
+                application.getCompletion(),
+                canReopenApplication(application, user)
+        ));
         return getTrackingPage(competition);
     }
 
