@@ -25,6 +25,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               IFS-7958  KTP Your Project Finances - Funding Breakdown
 ...
+...               IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -218,7 +220,7 @@ Finances not editable (Open)
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Initial details editable before notify date (Open)
-    [Documentation]    INFUND-6661  IFS-4982
+    [Documentation]    INFUND-6661  IFS-4982  IFS-6775
     [Setup]    the user clicks the button/link              link = Back to competition details
     Given the user clicks the button/link                   link = Initial details
     And the user clicks the button/link                     jQuery = .govuk-button:contains("Edit")
@@ -227,8 +229,8 @@ Initial details editable before notify date (Open)
     And the user should see the element                     jQuery = dt:contains("Opening date") ~ dd:contains("${openCompetitionBusinessRTOOpenDate}")
     And the user should see that the element is disabled    id = innovationSectorCategoryId
     And the user should see that the element is disabled    name = innovationAreaCategoryIds[0]
-    When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
-    And the user selects the option from the drop-down menu     John Doe    id = executiveUserId
+    When the user selects option from type ahead            innovationLeadUserId  i  Ian Cooper
+    And the user selects option from type ahead             executiveUserId  j  John Doe
     And the user clicks the button/link                     jQuery = button:contains("Done")
     Then the user should see the element                    jQuery = .govuk-button:contains("Edit")
     And The user should see the element                     jQuery = dt:contains("Competition Lead") ~ dd:contains("Ian Cooper")
