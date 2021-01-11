@@ -842,7 +842,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     private GeneralSetupViewModel getBasicGeneralViewModel(CompetitionSetupSection section, CompetitionResource competition, Boolean editable) {
-        return new GeneralSetupViewModel(editable, competition, section, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
+        return new GeneralSetupViewModel(editable, false, competition, section, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
     }
 
     @Test
