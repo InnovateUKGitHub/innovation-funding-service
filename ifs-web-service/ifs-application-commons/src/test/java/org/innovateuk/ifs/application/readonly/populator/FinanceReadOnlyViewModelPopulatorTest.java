@@ -2,9 +2,11 @@ package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestoneViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
@@ -51,6 +53,9 @@ public class FinanceReadOnlyViewModelPopulatorTest {
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
 
     @Mock
+    private ApplicationProcurementMilestoneViewModelPopulator applicationProcurementMilestoneViewModelPopulator;
+
+    @Mock
     private SectionRestService sectionRestService;
 
     @Mock
@@ -73,11 +78,15 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
         ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel = mock(ApplicationResearchParticipationViewModel.class);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
+        ApplicationProcurementMilestoneViewModel applicationProcurementMilestoneViewModel = mock(ApplicationProcurementMilestoneViewModel.class);
+
 
         when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(financeSection)));
         when(applicationFinanceSummaryViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFinanceSummaryViewModel);
         when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
         when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
+        when(applicationProcurementMilestoneViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestoneViewModel);
+
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),
                 emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
