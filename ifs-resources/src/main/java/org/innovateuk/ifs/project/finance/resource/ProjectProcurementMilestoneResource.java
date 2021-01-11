@@ -20,6 +20,11 @@ public class ProjectProcurementMilestoneResource {
         this.paymentMilestoneLastModifiedDate = paymentMilestoneLastModifiedDate;
     }
 
+    public ProjectProcurementMilestoneResource(PaymentMilestoneState processState, LocalDate toLocalDate) {
+        this.paymentMilestoneState = paymentMilestoneState;
+        this.paymentMilestoneLastModifiedDate = paymentMilestoneLastModifiedDate;
+    }
+
     public PaymentMilestoneState getPaymentMilestoneState() {
         return paymentMilestoneState;
     }
@@ -54,5 +59,9 @@ public class ProjectProcurementMilestoneResource {
 
     public boolean isMilestonePaymentApproved() {
         return this.getPaymentMilestoneState() == PaymentMilestoneState.APPROVED;
+    }
+
+    public String getName() {
+        return String.format("%s %s", this.paymentMilestoneInternalUserFirstName, paymentMilestoneInternalUserLastName);
     }
 }

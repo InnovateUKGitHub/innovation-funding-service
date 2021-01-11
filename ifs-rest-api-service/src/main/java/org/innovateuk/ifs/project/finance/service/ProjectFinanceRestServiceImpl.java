@@ -94,6 +94,14 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
+    public RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId) {
+        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/milestones/reset";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
     public RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
         return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", ProjectProcurementMilestoneResource.class);
     }

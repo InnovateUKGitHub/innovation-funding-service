@@ -14,7 +14,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public enum PaymentMilestoneState implements ProcessState, IdentifiableEnum {
 
     REVIEW(59, State.NOT_VERIFIED),
-    APPROVED(60, State.ACCEPTED);
+    NOT_APPLICABLE(60, State.NOT_APPLICABLE),
+    APPROVED(61, State.ACCEPTED);
 
     private final long id;
     private final State backingState;
@@ -35,11 +36,11 @@ public enum PaymentMilestoneState implements ProcessState, IdentifiableEnum {
     }
 
     public static List<State> getBackingStates() {
-        return simpleMap(EligibilityState.values(), ProcessState::getBackingState);
+        return simpleMap(PaymentMilestoneState.values(), ProcessState::getBackingState);
     }
 
-    public static EligibilityState fromState(State state) {
-        return ProcessState.fromState(EligibilityState.values(), state);
+    public static PaymentMilestoneState fromState(State state) {
+        return ProcessState.fromState(PaymentMilestoneState.values(), state);
     }
 
     @Override
@@ -52,6 +53,6 @@ public enum PaymentMilestoneState implements ProcessState, IdentifiableEnum {
     }
 
     public boolean isNotApplicable(){
-        return this == APPROVED;
+        return this == NOT_APPLICABLE;
     }
 }

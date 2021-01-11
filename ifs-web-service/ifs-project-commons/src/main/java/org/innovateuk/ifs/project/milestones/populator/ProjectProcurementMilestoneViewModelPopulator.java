@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.milestones.populator;
 
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.milestones.viewmodel.ProjectProcurementMilestoneViewModel;
@@ -30,20 +32,30 @@ public class ProjectProcurementMilestoneViewModelPopulator {
     @Autowired
     private ProjectFinanceRestService projectFinanceService;
 
+    @Autowired
+    private FinanceCheckService financeCheckService;
+
     public ProjectProcurementMilestoneViewModel populate(long projectId, long organisationId, UserResource userResource, boolean editMilestones) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         ProjectProcurementMilestoneResource projectProcurementMilestoneResource = projectFinanceService.getPaymentMilestoneState(projectId, organisationId).getSuccess();
 
         boolean userCanEdit = userResource.isInternalUser()
-                && editMilestones
-                && !projectProcurementMilestoneResource.isMilestonePaymentApproved();
+                && editMilestones;
 
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         return new ProjectProcurementMilestoneViewModel(project,
                 organisationId,
                 finance,
                 String.format("/project-setup-management/project/%d/finance-check", projectId),
-                userCanEdit);
+                userCanEdit,
+                projectProcurementMilestoneResource,
+                userResource.isInternalUser() ? isAllEligibilityAndViabilityApproved(projectId) : false,
+                userResource.isExternalUser());
+    }
+
+    private boolean isAllEligibilityAndViabilityApproved(long projectId) {
+        FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
+        return financeCheckSummaryResource.isAllEligibilityAndViabilityApproved();
     }
 }

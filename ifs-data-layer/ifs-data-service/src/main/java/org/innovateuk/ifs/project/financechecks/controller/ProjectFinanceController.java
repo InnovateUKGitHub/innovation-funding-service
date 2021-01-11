@@ -106,11 +106,18 @@ public class ProjectFinanceController {
         return financeCheckService.approvePaymentMilestoneState(projectOrganisationCompositeId).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/milestones/reset")
+    public RestResult<Void> resetPaymentMilestoneState(@PathVariable("projectId") final Long projectId,
+                                                         @PathVariable("organisationId") final Long organisationId) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId).toPostResponse();
+    }
+
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/milestones/state")
     public RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(@PathVariable("projectId") final Long projectId,
                                                                                     @PathVariable("organisationId") final Long organisationId) {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.getPaymentMilestoneState(projectOrganisationCompositeId).toGetResponse();
+        return financeCheckService.getPaymentMilestone(projectOrganisationCompositeId).toGetResponse();
     }
 }

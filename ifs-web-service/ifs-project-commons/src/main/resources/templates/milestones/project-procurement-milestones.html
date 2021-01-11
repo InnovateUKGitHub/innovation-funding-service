@@ -32,6 +32,15 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
+        <th:block th:if="${model.showBanner}">
+            <div class="success-alert">
+                <p class="govuk-body">Your payment milestones has been approved by <span
+                    th:text="${model.projectProcurementMilestoneResource.name}"/>, <span
+                    th:text="${#temporals.format(model.projectProcurementMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
+                </p>
+            </div>
+        </th:block>
+
         <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                               data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
         <form th:object="${form}"
@@ -45,68 +54,75 @@
 
             <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
 
+            <button type="submit" th:if="${model.open}"
+                    name="save"
+                    class="govuk-!-margin-top-6 govuk-button">
+                Save and return to finances
+            </button>
         </form>
 
         <div class="form-footer" th:if="${model.open}">
             <div class="form-footer__actions">
-                <button id="cancel" type="submit" name="cancel" class="button-clear" value="true">
-                    Cancel changes (not yet done)
-                </button>
-            </div>
-        </div>
-
-        <div class="form-footer" th:unless="${model.open}">
-            <div class="form-footer__actions">
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='true')}"
-                   id="edit" type="submit" name="edit" class="button-clear" value="true">
-                    Edit payment milestones
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='false')}"
+                   id="cancel" type="submit" name="cancel" class="button-clear" value="true">
+                    Cancel changes
                 </a>
             </div>
         </div>
-
-        <form class="govuk-!-margin-top-6" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
-              th:object="${projectProcurementMilestoneApprovalForm}">
-
-            <h2 class="govuk-heading-m">Approve Payment milestones</h2>
-            <div class="govuk-form-group">
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="approve-milestones"
-                               class="govuk-checkboxes__input"
-                               type="checkbox"
-                               th:field="*{confirmMilestoneChecked}"
-                               data-switches-button-status="#confirm-button"/>
-                        <label for="approve-milestones"
-                               class="govuk-label govuk-checkboxes__label"
-                               th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
-                        </label>
-                    </div>
+        <th:block th:unless="${model.externalUser}">
+            <div class="form-footer" th:unless="${model.open}">
+                <div class="form-footer__actions">
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='true')}"
+                       id="edit" type="submit" name="edit" class="button-clear" value="true">
+                        Edit payment milestones
+                    </a>
                 </div>
             </div>
 
-            <!--            <button th:if="${!summaryModel.eligibilityReadyToConfirm}"-->
-            <!--                    disabled="disabled"-->
-            <!--                    class="govuk-button">Approve eligible costs</button>-->
-            <button
-                type="button"
-                data-js-modal="modal-confirm-payment-milestone"
-                class="govuk-button"
-                id="confirm-button">Approve eligible costs
-            </button>
-            <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
-            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+            <form th:if="${model.canApprove && !model.open}" class="govuk-!-margin-top-6"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+                  th:object="${projectProcurementMilestoneApprovalForm}">
 
-            <a class="govuk-button govuk-button--secondary"
-               th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">
-                Return to finance checks</a>
-        </form>
-        <div class="govuk-!-margin-top-6">
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
-               class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}"
-               class="govuk-button govuk-button--secondary">Notes</a>
-        </div>
+                <h2 class="govuk-heading-m">Approve Payment milestones</h2>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="approve-milestones"
+                                   class="govuk-checkboxes__input"
+                                   type="checkbox"
+                                   th:field="*{confirmMilestoneChecked}"
+                                   data-switches-button-status="#confirm-button"/>
+                            <label for="approve-milestones"
+                                   class="govuk-label govuk-checkboxes__label"
+                                   th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
+                <button
+                    type="button"
+                    name="approve"
+                    data-js-modal="modal-confirm-payment-milestone"
+                    class="govuk-button"
+                    id="confirm-button">Approve payment milestones
+                </button>
+                <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
+            </form>
+            <th:block th:unless="${model.open}">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+                <a class="govuk-button govuk-button--secondary"
+                   th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">
+                    Return to finance checks</a>
+
+                <div class="govuk-!-margin-top-6">
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
+                       class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                       class="govuk-button govuk-button--secondary">Notes</a>
+                </div>
+            </th:block>
+        </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>

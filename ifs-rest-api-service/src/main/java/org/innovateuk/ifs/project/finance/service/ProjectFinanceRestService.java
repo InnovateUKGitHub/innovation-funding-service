@@ -35,6 +35,8 @@ public interface ProjectFinanceRestService {
 
     RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId);
 
+    RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId);
+
     RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId);
 
 }

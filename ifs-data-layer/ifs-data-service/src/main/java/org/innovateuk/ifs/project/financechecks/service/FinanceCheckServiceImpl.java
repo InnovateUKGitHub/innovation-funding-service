@@ -242,7 +242,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
-                    eligibility.getRight(), anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
+                    eligibility.getRight(), getPaymentMilestoneState(getCompositeId(org)), anyQueryAwaitingResponse, getFinanceContact(project, org.getOrganisation()).isPresent());
         });
     }
 
@@ -361,25 +361,48 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
                         .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation)
-                                .andOnSuccess(() -> triggerPaymentMilestoneWorkflowHandlerEvent(currentUser, partnerOrganisation))
+                                .andOnSuccess(() -> triggerPaymentMilestoneApprovalWorkflowHandlerEvent(currentUser, partnerOrganisation))
                         ));
     }
 
     @Override
-    public ServiceResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+    @Transactional
+    public ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation)
+                                .andOnSuccess(() -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, partnerOrganisation))
+                        ));
+    }
+
+    @Override
+    public ServiceResult<ProjectProcurementMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         long projectId = projectOrganisationCompositeId.getProjectId();
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getPaymentMilestoneProcess)
-                .andOnSuccess(paymentMilestoneProcess -> getProjectFinance(projectId, organisationId)
-                        .andOnSuccess(projectFinance -> buildProjectProcurementMilestoneResource(paymentMilestoneProcess, projectFinance))
-                );
+                .andOnSuccess(paymentMilestoneProcess -> buildProjectProcurementMilestoneResource(paymentMilestoneProcess));
     }
 
-    private ServiceResult<Void> triggerPaymentMilestoneWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
+    private ServiceResult<Void> triggerPaymentMilestoneApprovalWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
         paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisation, currentUser);
         return serviceSuccess();
+    }
+
+    private ServiceResult<Void> triggerPaymentMilestoneResetWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
+        paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisation, currentUser);
+        return serviceSuccess();
+    }
+
+    private PaymentMilestoneState getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        return getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation))
+                                .andOnSuccessReturn(process -> process.getProcessState()).getSuccess();
     }
 
     @Override
@@ -583,15 +606,20 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(eligibilityResource);
     }
 
-    private ServiceResult<ProjectProcurementMilestoneResource> buildProjectProcurementMilestoneResource(PaymentMilestoneProcess paymentMilestoneProcess, ProjectFinance projectFinance) {
-        ProjectProcurementMilestoneResource projectProcurementMilestoneResource
-                = new ProjectProcurementMilestoneResource(paymentMilestoneProcess.getProcessState(),
+    private ServiceResult<ProjectProcurementMilestoneResource> buildProjectProcurementMilestoneResource(PaymentMilestoneProcess paymentMilestoneProcess) {
+
+        if (paymentMilestoneProcess.getInternalParticipant() == null) {
+            return serviceSuccess(new ProjectProcurementMilestoneResource(
+                    paymentMilestoneProcess.getProcessState(),
+                    paymentMilestoneProcess.getLastModified().toLocalDate()
+            ));
+        }
+
+        return serviceSuccess(new ProjectProcurementMilestoneResource(paymentMilestoneProcess.getProcessState(),
                 paymentMilestoneProcess.getInternalParticipant().getFirstName(),
                 paymentMilestoneProcess.getInternalParticipant().getLastName(),
                 paymentMilestoneProcess.getLastModified().toLocalDate()
-        );
-
-        return serviceSuccess(projectProcurementMilestoneResource);
+        ));
     }
 
     private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {

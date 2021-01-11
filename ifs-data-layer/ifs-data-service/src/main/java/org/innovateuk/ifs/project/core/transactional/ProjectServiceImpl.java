@@ -351,7 +351,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         projectRepository.refresh(newProject);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess, spendProfileProcess);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, golProcess, projectProcess, spendProfileProcess);
     }
 
     private ServiceResult<Void> createMilestonePaymentProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {

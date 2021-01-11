@@ -237,6 +237,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     if(competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())){
                                         eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
                                     }
+                                    if(!competition.isProcurement()) {
+                                        paymentMilestoneWorkflowHandler.notApplicable(partnerOrganisation, null);
+                                    }
                                     invite.open();
 
                                     activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);

@@ -7,8 +7,9 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.milestones.controller.form.ProjectProcurementMilestoneApprovalForm;
+import org.innovateuk.ifs.project.milestones.form.ProjectProcurementMilestoneApprovalForm;
 import org.innovateuk.ifs.project.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
+import org.innovateuk.ifs.project.milestones.saver.ProjectProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +43,9 @@ public class ProjectProcurementMilestonesController {
     @Autowired
     private ProjectFinanceRestService projectFinanceService;
 
+    @Autowired
+    private ProjectProcurementMilestoneFormSaver saver;
+
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     public String viewMilestones(@PathVariable long projectId,
@@ -57,7 +61,7 @@ public class ProjectProcurementMilestonesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @PostMapping
+    @PostMapping(params = "approve")
     public String approvePaymentMilestones(@PathVariable long projectId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") ProjectProcurementMilestoneApprovalForm form,
@@ -70,6 +74,31 @@ public class ProjectProcurementMilestonesController {
         return validationHandler
                 .addAnyErrors(approvePaymentMilestoneState)
                 .failNowOrSucceedWith(view, view);
+    }
+
+    @PostMapping(params = "save")
+    public String saveMilestones(@PathVariable long projectId,
+                                 @PathVariable long organisationId,
+                                 @ModelAttribute("form") ProcurementMilestonesForm form,
+                                 @SuppressWarnings("unused") BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model,
+                                 UserResource user) {
+        Supplier<String> failureView = () -> viewMilestones(projectId, organisationId, true, user, model);
+        Supplier<String> successView = redirectToViewMilestones(projectId, organisationId);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            validationHandler.addAnyErrors(saver.save(form, projectId, organisationId));
+            return validationHandler.failNowOrSucceedWith(failureView, () -> {
+                validationHandler.addAnyErrors(
+                        projectFinanceService.resetPaymentMilestoneState(projectId, organisationId));
+                        return validationHandler.failNowOrSucceedWith(failureView, successView);
+            });
+        });
+    }
+
+    private Supplier<String> redirectToViewMilestones(long projectId, long organisationId) {
+        return () -> String.format("redirect:/project/%d/finance-check/organisation/%d/procurement-milestones", projectId, organisationId);
     }
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, long projectId, long organisationId, UserResource userResource, boolean editMilestones) {

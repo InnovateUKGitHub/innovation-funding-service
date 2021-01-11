@@ -43,6 +43,10 @@ public class PaymentMilestoneWorkflowHandler extends BaseWorkflowEventHandler<Pa
         return fireEvent(projectCreatedEvent(partnerOrganisation, originalLeadApplicantProjectUser), PaymentMilestoneState.REVIEW);
     }
 
+    public boolean notApplicable(PartnerOrganisation partnerOrganisation, User internalUser) {
+        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, PaymentMilestoneEvent.NOT_REQUESTING_FUNDING), partnerOrganisation);
+    }
+
     public boolean paymentMilestoneApproved(PartnerOrganisation partnerOrganisation, User internalUser) {
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, PaymentMilestoneEvent.PAYMENT_MILESTONE_APPROVED), partnerOrganisation);
     }

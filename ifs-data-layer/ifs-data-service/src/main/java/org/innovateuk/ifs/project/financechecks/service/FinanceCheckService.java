@@ -84,11 +84,14 @@ public interface FinanceCheckService {
     ServiceResult<Boolean> getCreditReport(long projectId, long organisationId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_MILESTONE_CHECK')")
-// need activity type
-//    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "eligibilityActivityType")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.PAYMENT_MILESTONES_APPROVED)
     ServiceResult<Void> approvePaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'RESET_MILESTONE_CHECK')")
+    @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", type = ActivityType.PAYMENT_MILESTONES_RESET)
+    ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
-    ServiceResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+    ServiceResult<ProjectProcurementMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
 }

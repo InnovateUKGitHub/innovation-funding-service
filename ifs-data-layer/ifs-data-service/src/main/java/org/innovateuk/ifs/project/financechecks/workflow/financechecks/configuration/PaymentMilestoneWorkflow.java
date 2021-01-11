@@ -14,8 +14,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.project.finance.resource.PaymentMilestoneEvent.*;
-import static org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState.APPROVED;
-import static org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState.REVIEW;
+import static org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState.*;
 
 @Configuration
 @EnableStateMachineFactory(name = "paymentMilestoneStateMachineFactory")
@@ -54,6 +53,11 @@ public class PaymentMilestoneWorkflow extends StateMachineConfigurerAdapter<Paym
                 .withExternal()
                 .source(APPROVED)
                 .event(PAYMENT_MILESTONE_RESET)
-                .target(REVIEW);
+                .target(REVIEW)
+                .and()
+                .withExternal()
+                .source(REVIEW)
+                .event(NOT_REQUESTING_FUNDING)
+                .target(NOT_APPLICABLE);
     }
 }
