@@ -3,8 +3,17 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 import java.math.BigDecimal;
 
 public class CostChangeViewModel {
+    private String section;
     private BigDecimal applicationCost;
     private BigDecimal projectCost;
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
 
     public BigDecimal getApplicationCost() {
         return applicationCost;

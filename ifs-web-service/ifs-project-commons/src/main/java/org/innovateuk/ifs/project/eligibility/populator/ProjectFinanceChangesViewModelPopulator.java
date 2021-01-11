@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.project.eligibility.populator;
 
-import org.innovateuk.ifs.application.finance.viewmodel.CostChangeViewModel;
-import org.innovateuk.ifs.application.finance.viewmodel.MilestoneChangeViewModel;
-import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -52,28 +50,39 @@ public class ProjectFinanceChangesViewModelPopulator {
 
     public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project,
                                                                           OrganisationResource organisation) {
-    FinanceCheckEligibilityResource eligibilityOverview = financeCheckRestService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId()).getSuccess();
-    ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
-    ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
-    CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-    Map<FinanceRowType, CostChangeViewModel> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
+        FinanceCheckEligibilityResource eligibilityOverview = financeCheckRestService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId()).getSuccess();
+        ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
+        ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-    List<MilestoneChangeViewModel> milestoneDifferences;
-    if (competition.isProcurement()) {
-        List<ApplicationProcurementMilestoneResource> applicationMilestones = applicationProcurementMilestoneRestService.getByApplicationId(project.getApplication()).getSuccess();
-        List<ProjectProcurementMilestoneResource> projectMilestones = projectProcurementMilestoneRestService.getByProjectId(project.getId()).getSuccess();
+        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = new ProjectFinanceChangesFinanceSummaryViewModel(new ArrayList<>());
 
-        milestoneDifferences = buildMilestoneDifferences(applicationMilestones, projectMilestones);
-    } else {
-        milestoneDifferences = Collections.emptyList();
+        List<CostChangeViewModel> sectionDifferences = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences);
+
+        ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, competition);
+
+        return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(),
+                projectFinanceChangesFinanceSummaryViewModel,
+                projectFinanceChangesProjectFinancesViewModel,
+                projectFinanceChangesMilestoneDifferencesViewModel);
     }
 
-    return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview,
-            getWorkingDaysPerYearCostItemFrom(appFinanceResource.getFinanceOrganisationDetails()),
-            getWorkingDaysPerYearCostItemFrom(projectFinanceResource.getFinanceOrganisationDetails()),
-            sectionDifferencesMap, projectFinanceResource.getCostChanges(), appFinanceResource.getTotal(),
-            projectFinanceResource.getTotal(), competition.isLoan(), milestoneDifferences);
-}
+    private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, CompetitionResource competition) {
+        ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel;
+
+        if (competition.isProcurement()) {
+            List<ApplicationProcurementMilestoneResource> applicationMilestones = applicationProcurementMilestoneRestService.getByApplicationId(project.getApplication()).getSuccess();
+            List<ProjectProcurementMilestoneResource> projectMilestones = projectProcurementMilestoneRestService.getByProjectId(project.getId()).getSuccess();
+
+            List<MilestoneChangeViewModel> milestoneDifferences = buildMilestoneDifferences(applicationMilestones, projectMilestones);
+
+            projectFinanceChangesMilestoneDifferencesViewModel = new ProjectFinanceChangesMilestoneDifferencesViewModel(milestoneDifferences);
+        } else {
+            projectFinanceChangesMilestoneDifferencesViewModel = null;
+        }
+        return projectFinanceChangesMilestoneDifferencesViewModel;
+    }
 
     private LabourCost getWorkingDaysPerYearCostItemFrom(Map<FinanceRowType, FinanceRowCostCategory> financeDetails) {
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : financeDetails.entrySet()) {
@@ -85,20 +94,21 @@ public class ProjectFinanceChangesViewModelPopulator {
         throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
     }
 
-    private Map<FinanceRowType, CostChangeViewModel> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
+    private List<CostChangeViewModel> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
                                                                        Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances) {
-        Map<FinanceRowType, CostChangeViewModel> sectionDifferencesMap = new LinkedHashMap<>();
+        List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : organisationProjectFinances.entrySet()) {
             FinanceRowType rowType = entry.getKey();
             FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
             FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
             CostChangeViewModel costChange = new CostChangeViewModel();
+            costChange.setSection(rowType.getDisplayName());
             costChange.setProjectCost(financeRowProjectCostCategory.getTotal());
             costChange.setApplicationCost(financeRowAppCostCategory.getTotal());
-            sectionDifferencesMap.put(rowType, costChange);
+            sectionDifferences.add(costChange);
         }
-        return sectionDifferencesMap;
+        return sectionDifferences;
     }
 
     private List<MilestoneChangeViewModel> buildMilestoneDifferences(List<ApplicationProcurementMilestoneResource> applicationMilestones, List<ProjectProcurementMilestoneResource> projectMilestones) {
