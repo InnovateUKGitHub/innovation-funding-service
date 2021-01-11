@@ -246,7 +246,12 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: docusign-config
-                      key: IFS_DOCUSIGN_AUTH_KEY
+                      key: IFS_PROCUREMENT_MILESTONES_ENABLED
+                - name: IFS_DOCUSIGN_AUTH_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_PROCUREMENT_MILESTONES_ENABLED
                 - name: JAVA_OPTS
                   value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
