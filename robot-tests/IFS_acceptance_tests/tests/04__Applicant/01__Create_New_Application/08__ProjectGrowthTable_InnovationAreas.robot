@@ -21,6 +21,8 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-6775 Initial details type ahead
 ...
+...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -42,7 +44,7 @@ ${fundingRule}               SUBSIDY_CONTROL
 
 *** Test Cases ***
 Comp Admin starts a new Competition
-    [Documentation]    INFUND-6393  IFS-8779
+    [Documentation]    INFUND-6393  IFS-8779  IFS-8791
     [Tags]  HappyPath
     [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
@@ -53,6 +55,7 @@ Comp Admin starts a new Competition
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${compType_Programme}  ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
@@ -134,6 +137,7 @@ Once the project growth table is selected
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${compType_Programme}  ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
@@ -235,8 +239,6 @@ Organisation server side validation when yes
     And the user should see the element    jQuery = .govuk-error-message:contains("${enter_a_valid_date}")
     And The user should see a field error  ${empty_field_warning_message}
     And The user should see a field error  ${enter_a_valid_date}
-    #And The user should see a field error    Enter your organisation size
-    #TODO Enable the above checks when IFS-535 is ready
 
 Organisation client side validation when yes
     [Documentation]    INFUND-6395

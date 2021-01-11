@@ -35,7 +35,6 @@ public class SectorTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
         competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Innovate UK"));
         competition.setAcademicGrantPercentage(100);
         competition.setMinProjectDuration(1);

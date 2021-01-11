@@ -87,7 +87,7 @@ public abstract class AbstractEditOrganisationDetailsController<F> {
 
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 organisation::getOrganisationTypeEnum,
-                () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
+                () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
         return new ProjectOrganisationSizeViewModel(project,
                 competition,
                 organisation,

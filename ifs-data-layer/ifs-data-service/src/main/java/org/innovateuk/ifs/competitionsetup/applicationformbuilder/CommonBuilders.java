@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
-import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.FormInputBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.QuestionBuilder;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.builder.SectionBuilder;
-import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -40,9 +39,6 @@ import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
 public class CommonBuilders {
 
     public static final String EDI_QUESTION_PATTERN = "<a href=\"%s\" target=\"_blank\" rel=\"external\">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>";
-
-    @Autowired
-    private ResearchCategoryRepository categoryRepository;
 
     @Autowired
     private CompetitionFinanceRowsTypesRepository competitionFinanceRowsTypesRepository;
@@ -350,23 +346,6 @@ public class CommonBuilders {
         return defaultAssessedQuestionFormInputs(applicationTextAreaModifier,
                 assessorTextAreaModifier,
                 Function.identity());
-    }
-
-    public List<GrantClaimMaximum> getDefaultGrantClaimMaximums() {
-        ResearchCategory feasibilityStudies = categoryRepository.findById(33L).get();
-        ResearchCategory industrialResearch = categoryRepository.findById(34L).get();
-        ResearchCategory experimentalDevelopment = categoryRepository.findById(35L).get();
-        return newArrayList(
-                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, 70),
-                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, 60),
-                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.LARGE, 50),
-                new GrantClaimMaximum(industrialResearch, OrganisationSize.SMALL, 70),
-                new GrantClaimMaximum(industrialResearch, OrganisationSize.MEDIUM, 60),
-                new GrantClaimMaximum(industrialResearch, OrganisationSize.LARGE, 50),
-                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, 45),
-                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, 35),
-                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, 25)
-        );
     }
 
     public static Competition addDefaultProjectSetupColumns(Competition competition) {
