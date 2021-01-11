@@ -244,6 +244,8 @@ public abstract class AbstractOrganisationCreationController {
                 model.addAttribute("subtitle", "Join project");
             } else if (registrationCookieService.isCollaboratorJourney(request)) {
                 model.addAttribute("subtitle", "Join application");
+            } else if (registrationCookieService.isSelectedExistingOrganisationJourney(request)) {
+                model.addAttribute("subtitle", "Your organisation");
             } else if (!model.containsAttribute("subtitle")) {
                 model.addAttribute("subtitle", "Create new application");
             }
