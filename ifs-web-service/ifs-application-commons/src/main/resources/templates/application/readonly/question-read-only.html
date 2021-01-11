@@ -120,7 +120,7 @@
 
         <p class="govuk-body" th:if="${model.open}">
             <a th:href="@{/application/{applicationId}/form/section/{financeSectionId}/(applicationId=${model.applicationId},financeSectionId=${model.financeSectionId})}"
-               class="govuk-link">Return to your project finances</a> to make changes to your organisation's financial information.
+               class="govuk-link">Return to your project finances</a> to complete or make changes to your organisation's financial information.
         </p>
 
         <th:block th:unless="${model.fullyFunded}">
