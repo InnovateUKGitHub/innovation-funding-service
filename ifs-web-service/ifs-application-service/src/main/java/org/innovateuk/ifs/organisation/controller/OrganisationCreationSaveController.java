@@ -85,6 +85,11 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
             organisationResource.setAddresses(asList(orgAddressResource));
             organisationResource.setSicCodes(organisationForm.getSicCodes());
             organisationResource.setExecutiveOfficers(organisationForm.getExecutiveOfficers());
+
+            // Check if it is for updating the existing organisation
+            if (organisationForm.getSelectedExistingOrganisationId() != null) {
+                organisationResource.setId(organisationForm.getSelectedExistingOrganisationId());
+            }
         }
 
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
