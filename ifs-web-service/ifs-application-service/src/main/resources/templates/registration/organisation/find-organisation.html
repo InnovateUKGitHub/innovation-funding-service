@@ -48,6 +48,7 @@
         <th:block th:if="${organisationForm.selectedExistingOrganisationId != null}">
             <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
             <input type="hidden" name="selectedExistingOrganisationId" th:value="${organisationForm.selectedExistingOrganisationId}" />
+            <input type="hidden" name="selectedExistingOrganisationName" th:value="${organisationForm.selectedExistingOrganisationName}" />
         </th:block>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
             <th:block th:if="${improvedSearchEnabled && organisationForm.selectedExistingOrganisationId != null}">
