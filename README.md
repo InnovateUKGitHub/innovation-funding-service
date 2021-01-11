@@ -41,7 +41,7 @@ Either you can pull released images
 
 or build those images locally 
 
-Clone this repo `https://devops.innovateuk.org/code-repository/scm/ifs/ifs-app-base-image.git`
+Clone this repo `https://github.com/InnovateUKGitHub/ifs-app-base-image.git`
 and run 
 
     ./gradlew buildBaseImages
