@@ -16,7 +16,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS funding eligibility            ${researchCategory}  ${compType}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
@@ -120,7 +120,7 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
-    [Arguments]  ${compType}  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link       link = Project eligibility
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
@@ -728,9 +728,3 @@ the user select stakeholder and add to competition
     When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
     And the user clicks the button/link       jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
-
-the user sees all lead applicant types selected by default
-    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-1
-    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-2
-    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-3
-    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-4
