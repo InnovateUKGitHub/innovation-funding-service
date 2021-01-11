@@ -323,6 +323,14 @@ public class ApplicationResource {
         this.lastStateChangeDate = lastStateChangeDate;
     }
 
+    public FundingDecision getFundingDecision() {
+        return fundingDecision;
+    }
+
+    public void setFundingDecision(FundingDecision fundingDecision) {
+        this.fundingDecision = fundingDecision;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
