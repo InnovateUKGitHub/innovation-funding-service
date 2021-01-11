@@ -132,7 +132,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     @Test
     public void updateOrganisationWithoutGrowthTable_whenStateAidIncludedAndAgreed() {
         when(finance.getFinancialYearAccounts()).thenReturn(employeesAndTurnoverResource);
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(false));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(false));
         when(finance.getGrantClaim()).thenReturn(grantClaim);
 
         assertEquals(serviceSuccess(), service.updateOrganisationWithoutGrowthTable(targetId, organisationId,
@@ -146,7 +146,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
     @Test
     public void updateOrganisationWithGrowthTable_whenStateAidIncludedAndAgreed() {
         when(finance.getFinancialYearAccounts()).thenReturn(growthTableResource);
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(true));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(true));
 
         assertEquals(serviceSuccess(), service.updateOrganisationWithGrowthTable(targetId, organisationId,
             organisationFinancesWithGrowthTableResource));
@@ -184,7 +184,7 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
                 .build();
         KtpYearsResource yearsResource = new KtpYearsResource();
         when(finance.getFinancialYearAccounts()).thenReturn(yearsResource);
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(false));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId)).thenReturn(serviceSuccess(false));
         when(finance.getGrantClaim()).thenReturn(grantClaim);
 
         assertEquals(serviceSuccess(), service.updateOrganisationKtpYears(targetId, organisationId,

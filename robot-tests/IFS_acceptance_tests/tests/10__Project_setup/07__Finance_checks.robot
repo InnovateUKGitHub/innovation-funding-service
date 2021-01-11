@@ -85,6 +85,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               IFS-6893 Academic users can't see their finances in PS
 ...
+...               IFS-8695 Amending the project duration date doesn't reflect the change in other screens
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -487,13 +489,13 @@ Project finance user can see the Eligibility check page for the lead partner
     Then the user should see the element    jQuery = h1:contains("${EMPIRE_LTD_NAME}")
 
 Project finance user can see the lead partner's information about eligibility
-    [Documentation]    INFUND-4832
+    [Documentation]    INFUND-4832  IFS-8695
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months  # Project duration
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    4 months  # Project duration
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903  # Total costs
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%       # Grant %
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803   # Funding sought (£)
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%    # Grant %
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803    # Funding sought (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(6)    140,632   # Contribution to project (£)
 
@@ -655,12 +657,12 @@ Project finance user can see the partner's zero funding request
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
 
 Project finance user can see the partner's information about eligibility
-    [Documentation]    INFUND-4832
+    [Documentation]    INFUND-4832  IFS-8695
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months   # Project duration
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(1)    4 months   # Project duration
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
-    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%        # Grant %
+    When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(3)    30.00%     # Grant %
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(4)    57,803     # Funding sought (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468      # Other public sector funding (£)
     When the user should see the text in the element    css = .table-overview tbody tr:nth-child(1) td:nth-child(6)    140,632    # Contribution to project (£)
@@ -683,7 +685,7 @@ Project Finance user can edit and save partner's 20% of labour costs option
     And the user clicks the button/link         css = [data-target = "overhead-default-percentage"] label
     Then verify percentage and total            Overhead costs  £11,886
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
-    And the user should see the element        jQuery = span:contains("£11,886") ~ #accordion-finances-heading-2
+    And the user should see the element         jQuery = span:contains("£11,886") ~ #accordion-finances-heading-2
     And the user should see the element         jQuery = #accordion-finances-content-2 a:contains("Edit")
     Then verify total costs of project          £187,717
 

@@ -373,8 +373,15 @@ hr,
 .hide-without-javascript {
   display:none;
 }
+
 .js-enabled {
   .hide-without-javascript {
     display:block;
+  }
+}
+
+table.hidden-error-labels {
+  .govuk-error-message {
+    display:none;
   }
 }

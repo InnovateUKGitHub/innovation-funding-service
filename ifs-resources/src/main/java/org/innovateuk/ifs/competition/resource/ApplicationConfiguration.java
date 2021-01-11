@@ -33,11 +33,11 @@ public interface ApplicationConfiguration {
 
     boolean isSbriPilot();
 
-    default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> maximumFundingLevelOverridden) {
+    default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> dbMaximumFundingLevelConstant) {
         return LOAN == getFundingType() ||
                 isFullyFunded() ||
                 BUSINESS != organisationType.get() ||
-                maximumFundingLevelOverridden.get();
+                dbMaximumFundingLevelConstant.get();
     }
 
     FundingType getFundingType();

@@ -166,7 +166,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return projectFinanceService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
                 new FinanceCheckEligibilityResource(project.getId(),
                         organisationId,
-                        application.getDurationInMonths(),
+                        project.getDurationInMonths(),
                         projectFinance.getTotal(),
                         projectFinance.getGrantClaimPercentage(),
                         projectFinance.getTotalFundingSought(),
