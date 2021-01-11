@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,12 +24,17 @@ public class GrantClaimMaximumController {
     }
 
     @GetMapping("/{id}")
-    public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(@PathVariable("id") final long id) {
+    public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(@PathVariable final long id) {
         return grantClaimMaximumService.getGrantClaimMaximumById(id).toGetResponse();
     }
 
+    @GetMapping("/competition/{competitionId}")
+    public RestResult<List<GrantClaimMaximumResource>> getGrantClaimMaximumByCompetitionId(@PathVariable final long competitionId) {
+        return grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competitionId).toGetResponse();
+    }
+
     @PostMapping("/revert-to-default/{competitionId}")
-    public RestResult<Set<Long>> revertToDefault(@PathVariable("competitionId") final long competitionId) {
+    public RestResult<Set<Long>> revertToDefault(@PathVariable final long competitionId) {
         return grantClaimMaximumService.revertToDefault(competitionId).toGetResponse();
     }
 
@@ -38,7 +44,7 @@ public class GrantClaimMaximumController {
     }
 
     @GetMapping("/maximum-funding-level-overridden/{competitionId}")
-    public RestResult<Boolean> isMaximumFundingLevelOverridden(@PathVariable("competitionId") final long competitionId) {
-        return grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).toGetResponse();
+    public RestResult<Boolean> isMaximumFundingLevelConstant(@PathVariable("competitionId") final long competitionId) {
+        return grantClaimMaximumService.isMaximumFundingLevelConstant(competitionId).toGetResponse();
     }
 }

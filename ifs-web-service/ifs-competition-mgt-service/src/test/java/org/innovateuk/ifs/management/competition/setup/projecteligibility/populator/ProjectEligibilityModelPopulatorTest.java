@@ -165,6 +165,7 @@ public class ProjectEligibilityModelPopulatorTest {
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
         return new GeneralSetupViewModel(
                 Boolean.FALSE,
+                false,
                 competition,
                 CompetitionSetupSection.PROJECT_ELIGIBILITY,
                 CompetitionSetupSection.values(),
