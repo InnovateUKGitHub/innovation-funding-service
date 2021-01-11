@@ -32,6 +32,9 @@ public class ApplicationProcurementMilestoneViewModel {
     public BigDecimal getPercentage(BigInteger cost) {
         BigDecimal total = new BigDecimal(getTotal());
         BigDecimal costAsDecimal = new BigDecimal(cost);
+        if (BigDecimal.ZERO.compareTo(total) == 0){
+            return BigDecimal.ZERO;
+        }
         return costAsDecimal.multiply(new BigDecimal(100)).divide(total, 2, BigDecimal.ROUND_HALF_EVEN);
     }
 }

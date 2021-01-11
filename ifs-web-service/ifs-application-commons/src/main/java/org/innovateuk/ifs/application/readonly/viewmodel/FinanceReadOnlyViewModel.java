@@ -57,8 +57,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     public long getFinanceSectionId() {
         return financeSectionId;
     }
-
-    //todo rename
+    
     public ApplicationProcurementMilestoneViewModel getApplicationProcurementMilestoneResources() {
         return applicationProcurementMilestoneResources;
     }
