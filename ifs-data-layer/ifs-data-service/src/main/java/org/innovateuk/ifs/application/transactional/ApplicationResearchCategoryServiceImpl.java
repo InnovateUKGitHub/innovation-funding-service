@@ -141,7 +141,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     private boolean canResetFundingLevels(Application application) {
         return !application.getCompetition()
                 .isMaximumFundingLevelConstant(() -> organisationService.findById(application.getLeadOrganisationId()).getSuccess().getOrganisationTypeEnum(),
-                        () -> grantClaimMaximumService.isMaximumFundingLevelOverridden(
+                        () -> grantClaimMaximumService.isMaximumFundingLevelConstant(
                                 application.getCompetition().getId()).getSuccess());
     }
 }

@@ -362,6 +362,12 @@ hr,
   max-width:50ex
 }
 
+.width-100-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 100%;
+  }
+
 /* make selector more specific than autocomplete library. */
 .autocomplete__input {
   &.govuk-input--error {
@@ -373,8 +379,15 @@ hr,
 .hide-without-javascript {
   display:none;
 }
+
 .js-enabled {
   .hide-without-javascript {
     display:block;
+  }
+}
+
+table.hidden-error-labels {
+  .govuk-error-message {
+    display:none;
   }
 }

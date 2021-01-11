@@ -282,7 +282,6 @@ The user is able to complete project details section
 The user completes the project team section
     the user selects their finance contact   financeContact1
     the user clicks the button/link          link = Project manager
-#    the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
     the user selects the radio button        projectManager   projectManager1
     the user clicks the button/link          jQuery = button:contains("Save and continue")
     the user clicks the button/link          link = Return to set up your project
@@ -328,7 +327,6 @@ The user is able to complete the Documents section
 The user selects their finance contact
     [Arguments]  ${financeContactName}
     the user clicks the button/link     link = Your finance contact
-#    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
     the user selects the radio button   financeContact   ${financeContactName}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
 
@@ -435,7 +433,6 @@ lead partner navigates to project and fills project details
     project lead submits project details and team  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
 project lead submits project address
-#Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
     the user navigates to the page                ${server}/project-setup/project/${project_id}/details/project-address
     the user enters text to a text field          id = addressForm.postcodeInput  BS1 4NT
@@ -666,7 +663,6 @@ the user completes the project team details
     the user selects the radio button   projectManager   projectManager1
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the button/link     link = Back to project setup
-    #the user should see the element     jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 PM uploads the project documents
     [Arguments]  ${compName}
