@@ -28,6 +28,7 @@
 
         <form th:object="${organisationForm}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="post"
               novalidate="novalidate">
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
@@ -112,7 +113,6 @@
                 <div id="custom-postcode" class="govuk-body">
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
                 </div>
-                <button class="govuk-button govuk-!-margin-top-6" id="save-project-address-button">Save address</button>
 
             <th:block th:insert="fragments/layout :: main-content-end"/>
         </form>

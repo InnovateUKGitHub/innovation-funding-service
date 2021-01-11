@@ -2,10 +2,13 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +20,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
@@ -76,12 +84,26 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
     }
 
-   // @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @GetMapping("/organisation/create/organisation-type/manually-enter-organisation-details/")
-    public String viewAddress(Model model,
-                              @ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm form) {
-        LOG.info("Here");
-        model.addAttribute("model", model);
-        return "organisation/details-address";
+    @PostMapping(value= "organisation-type/manually-enter-organisation-details", params = FORM_ACTION_PARAMETER)
+    public String addressFormAction(Model model,
+                                    @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                    BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    UserResource loggedInUser) {
+
+        organisationForm.getAddressForm().validateAction(bindingResult);
+
+
+        AddressForm addressForm = organisationForm.getAddressForm();
+        addressForm.handleAction(this::searchPostcode);
+
+        return "registration/organisation/manually-enter-organisation-details";
+    }
+
+    protected List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        return addressLookupRestResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(),
+                addresses -> addresses);
     }
 }

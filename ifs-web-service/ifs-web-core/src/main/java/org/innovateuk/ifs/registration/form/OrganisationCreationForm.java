@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class OrganisationCreationForm implements Serializable {
     private String businessType;
     private List<String> sicCodes;
     private List<String> executiveOfficers;
+    @Valid
     private AddressForm addressForm = new AddressForm();
 
 
