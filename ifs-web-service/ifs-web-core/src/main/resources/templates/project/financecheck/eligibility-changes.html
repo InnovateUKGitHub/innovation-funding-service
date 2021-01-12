@@ -117,15 +117,15 @@
                 </tr>
                 <tr class="govuk-table__row" th:with="totalPlusVat=${model.projectFinances.totalPlusVat}">
                     <th class="govuk-table__header" scope="row">Total project costs inclusive of VAT</th>
-                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalPlusVat.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatDecimal(totalPlusVat.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <th:block th:if="${totalPlusVat.projectCostDifferent}">
-                            <th:block th:text="${#numbers.formatDecimal(totalPlusVat.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                            &pound;<th:block th:text="${#numbers.formatDecimal(totalPlusVat.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
                         </th:block>
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <th:block th:if="${totalPlusVat.projectCostDifferent}">
-                            <th:block th:text="${totalPlusVat.varianceDirection}"/> <th:block th:text="${totalPlusVat.variance}"/>
+                            <th:block th:text="${totalPlusVat.varianceDirection}"/> &pound;<th:block th:text="${totalPlusVat.variance}"/>
                         </th:block>
                     </td>
                 </tr>
@@ -134,15 +134,15 @@
             <tfoot th:unless="${model.procurementCompetition}">
             <tr class="govuk-table__row" th:with="totalProjectCosts=${model.projectFinances.totalProjectCosts}">
                 <th class="govuk-table__header" scope="row">Total project costs</th>
-                <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatDecimal(totalProjectCosts.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatDecimal(totalProjectCosts.applicationCost,1,'DEFAULT',0,'DEFAULT')}"/></td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <th:block th:if="${totalProjectCosts.projectCostDifferent}">
-                        <th:block th:text="${#numbers.formatDecimal(totalProjectCosts.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
+                        &pound;<th:block th:text="${#numbers.formatDecimal(totalProjectCosts.projectCost,1,'DEFAULT',0,'DEFAULT')}"/>
                     </th:block>
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
                     <th:block th:if="${totalProjectCosts.projectCostDifferent}">
-                        <th:block th:text="${totalProjectCosts.varianceDirection}"/> <th:block th:text="${totalProjectCosts.variance}"/>
+                        <th:block th:text="${totalProjectCosts.varianceDirection}"/> &pound;<th:block th:text="${totalProjectCosts.variance}"/>
                     </th:block>
                 </td>
             </tr>
@@ -180,10 +180,10 @@
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">Payment requested (&pound;)</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.paymentSubmitted}">
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(milestoneDiff.paymentSubmitted,1,'DEFAULT',0,'DEFAULT')}">
                             0
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.paymentUpdated}">
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(milestoneDiff.paymentUpdated,1,'DEFAULT',0,'DEFAULT')}">
                             0
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.paymentVariance}">
@@ -192,6 +192,19 @@
                     </tr>
                 </th:block>
                 </tbody>
+                <tfoot>
+                <tr>
+                    <th class="govuk-table__cell" scope="row">Total payment requested</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        &pound;<th:block th:text="${#numbers.formatDecimal(milestonesModel.applicationTotal,1,'DEFAULT',0,'DEFAULT')}">0</th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        &pound;<th:block th:text="${#numbers.formatDecimal(milestonesModel.projectTotal,1,'DEFAULT',0,'DEFAULT')}">0</th:block>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestonesModel.totalVariance}" />
+                </tr>
+                </tfoot>
             </table>
 
         </th:block>

@@ -279,6 +279,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
 
         when(projectFinanceService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
         when(projectFinanceService.getEligibility(project.getId(), academicOrganisation.getId())).thenReturn(eligibility);
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
     }
 
     private FinanceChecksEligibilityViewModel assertViewEligibilityDetails(EligibilityResource eligibility, MvcResult result, boolean expectedIsLeadPartnerOrganisation, String organisationName, boolean expectedIsUsingJesFinances, boolean isH2020) {

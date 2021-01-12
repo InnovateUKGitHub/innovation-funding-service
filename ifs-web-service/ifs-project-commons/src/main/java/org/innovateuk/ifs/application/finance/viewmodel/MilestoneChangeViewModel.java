@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
 import java.math.BigInteger;
+import java.text.NumberFormat;
 
 public class MilestoneChangeViewModel {
     private String description;
@@ -88,7 +89,7 @@ public class MilestoneChangeViewModel {
             BigInteger change = paymentUpdated.subtract(paymentSubmitted);
             String direction = (change.compareTo(new BigInteger("0")) > 0) ? "+" : "-";
 
-            return direction + " " + change.abs();
+            return direction + " " + NumberFormat.getNumberInstance().format(change.abs());
         }
         return "0";
     }

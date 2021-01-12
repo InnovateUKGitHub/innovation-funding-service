@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -115,11 +116,10 @@ public class ProjectFinanceChangesViewModelPopulator {
 
             List<MilestoneChangeViewModel> milestoneDifferences = buildMilestoneDifferences(applicationMilestones, projectMilestones);
 
-            if (milestoneDifferences.isEmpty()) {
-                return null;
-            }
+            BigInteger applicationTotal = applicationMilestones.stream().map(res -> res.getPayment()).reduce(BigInteger::add).get();
+            BigInteger projectTotal = projectMilestones.stream().map(res -> res.getPayment()).reduce(BigInteger::add).get();
 
-            return new ProjectFinanceChangesMilestoneDifferencesViewModel(milestoneDifferences);
+            return new ProjectFinanceChangesMilestoneDifferencesViewModel(milestoneDifferences, applicationTotal, projectTotal);
         } else {
             return null;
         }

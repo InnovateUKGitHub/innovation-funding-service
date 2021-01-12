@@ -34,6 +34,8 @@ public class ProjectFinanceChangesViewModel {
         this.milestoneDifferences = milestoneDifferences;
     }
 
+    public ProjectFinanceChangesViewModel() {}
+
     public String getOrganisationName() {
         return organisationName;
     }
