@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.procurement.milestone.mapper.ProjectProcurementMilestoneMapper;
 import org.innovateuk.ifs.procurement.milestone.repository.ProjectProcurementMilestoneRepository;
+import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneId;
-import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class ProjectProcurementMilestoneLookupStrategy {
     private ProjectProcurementMilestoneMapper projectProcurementMilestoneMapper;
 
     @PermissionEntityLookupStrategy
-    public ProjectProcurementMilestoneResource get(final ProjectProcurementMilestoneId id) {
+    public ProcurementMilestoneResource get(final ProjectProcurementMilestoneId id) {
         return projectProcurementMilestoneMapper.mapToResource(projectProcurementMilestoneRepository.findById(id.getId()).orElse(null));
     }
 }
