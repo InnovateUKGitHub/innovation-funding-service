@@ -1140,9 +1140,12 @@ IFS.core.formValidation = (function () {
       var closedAccordion = target.closest('.govuk-accordion__section').not('.govuk-accordion__section--expanded')
       var closedDetails = target.closest('.govuk-details__text').not('[aria-hidden="false"]')
       var formGroupRow = target.closest('.form-group-row')
-      if (targetVisible && formGroupRow.length) {
+      var milestonesTable = target.closest('.milestones-table')
+      if (targetVisible && milestonesTable.length) {
         // it is part a date group so don't put focus on the time select
         IFS.core.formValidation.scrollToElement(formGroupRow.find('input[type!=hidden]').first())
+      } else if (targetVisible && formGroupRow.length) {
+        IFS.core.formValidation.scrollToElement(target.first())
       } else if (targetVisible) {
         IFS.core.formValidation.scrollToElement(target.first())
       } else if (closedAccordion.length) {
