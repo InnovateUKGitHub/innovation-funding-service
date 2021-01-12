@@ -88,7 +88,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
             // Check if it is for updating the existing organisation
             if (organisationForm.getSelectedExistingOrganisationId() != null) {
-                organisationResource.setId(organisationForm.getSelectedExistingOrganisationId());
+                OrganisationResource existingOrganisationResource = organisationRestService.getOrganisationById(organisationForm.getSelectedExistingOrganisationId()).getSuccess();
+                organisationResource.setId(existingOrganisationResource.getId());
             }
         }
 
