@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ApplicationProcurementMilestoneViewModelPopulator {
+public class ApplicationProcurementMilestoneSummaryViewModelPopulator {
 
     @Autowired
     private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;

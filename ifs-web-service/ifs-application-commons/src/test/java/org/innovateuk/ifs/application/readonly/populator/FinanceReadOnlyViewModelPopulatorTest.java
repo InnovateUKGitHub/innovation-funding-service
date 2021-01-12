@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
@@ -53,7 +53,7 @@ public class FinanceReadOnlyViewModelPopulatorTest {
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
 
     @Mock
-    private ApplicationProcurementMilestoneViewModelPopulator applicationProcurementMilestoneViewModelPopulator;
+    private ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
 
     @Mock
     private SectionRestService sectionRestService;
@@ -85,7 +85,7 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         when(applicationFinanceSummaryViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFinanceSummaryViewModel);
         when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
         when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
-        when(applicationProcurementMilestoneViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestoneViewModel);
+        when(applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestoneViewModel);
 
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),

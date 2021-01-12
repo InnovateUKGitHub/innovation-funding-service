@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMilestoneSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
@@ -17,8 +17,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
@@ -29,19 +27,19 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
     private final ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
     private final ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
     private final ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
-    private final ApplicationProcurementMilestoneViewModelPopulator applicationProcurementMilestoneViewModelPopulator;
+    private final ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
     private final SectionRestService sectionRestService;
 
     public FinanceReadOnlyViewModelPopulator(ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
                                              ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
                                              ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
-                                             ApplicationProcurementMilestoneViewModelPopulator applicationProcurementMilestoneViewModelPopulator,
+                                             ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator,
                                              SectionRestService sectionRestService
     ) {
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
         this.applicationResearchParticipationViewModelPopulator = applicationResearchParticipationViewModelPopulator;
-        this.applicationProcurementMilestoneViewModelPopulator = applicationProcurementMilestoneViewModelPopulator;
+        this.applicationProcurementMilestoneSummaryViewModelPopulator = applicationProcurementMilestoneSummaryViewModelPopulator;
         this.sectionRestService = sectionRestService;
     }
 
@@ -51,7 +49,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
         Future<ApplicationProcurementMilestoneViewModel> applicationProcurementMilestoneResources =
                 competition.isProcurementMilestones() ?
-                async(() -> applicationProcurementMilestoneViewModelPopulator.populate(application)) :
+                async(() -> applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)) :
                 completedFuture(null);
         Future<ApplicationFinanceSummaryViewModel> applicationFinanceSummaryViewModel = async(() -> applicationFinanceSummaryViewModelPopulator.populate(application.getId(), data.getUser()));
         Future<ApplicationResearchParticipationViewModel> applicationResearchParticipationViewModel = async(() -> applicationResearchParticipationViewModelPopulator.populate(application.getId()));
