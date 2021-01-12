@@ -51,6 +51,7 @@ IFS.core.financeRowForm = (function () {
         if (target.is('.govuk-accordion')) {
           IFS.core.accordion.get(target.get(0)).sectionChange()
         }
+        IFS.core.mirrorElements.init()
       })
     },
     removeRow: function (el, event) {
@@ -65,6 +66,7 @@ IFS.core.financeRowForm = (function () {
         if (target.is('.govuk-accordion')) {
           IFS.core.accordion.get(target.get(0)).sectionChange()
         }
+        IFS.core.mirrorElements.init()
       }
       event.preventDefault()
       if (id === '' || id.indexOf('unsaved') !== -1) {

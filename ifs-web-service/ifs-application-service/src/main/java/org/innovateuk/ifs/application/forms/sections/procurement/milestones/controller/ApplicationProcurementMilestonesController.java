@@ -8,9 +8,11 @@ import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.ApplicationProcurementMilestoneFormSaver;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -58,6 +60,12 @@ public class ApplicationProcurementMilestonesController {
     @Autowired
     private ApplicationProcurementMilestoneViewModelPopulator viewModelPopulator;
 
+    @Autowired
+    private ProcurementMilestoneFormValidator validator;
+
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROCUREMENT_MILESTONE", description = "Everyone view the milestone page, if they have permissions defined in data layer.")
@@ -89,6 +97,7 @@ public class ApplicationProcurementMilestonesController {
                            @Valid @ModelAttribute("form") ProcurementMilestonesForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
+        validator.validate(form, applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess(), validationHandler);
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewMilestones(model, form, user, applicationId, organisationId, sectionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {

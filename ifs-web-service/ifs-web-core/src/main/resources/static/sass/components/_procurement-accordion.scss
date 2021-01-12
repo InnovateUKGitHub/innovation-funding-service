@@ -7,15 +7,15 @@
     margin-bottom: 0;
   }
 
-  .width-50-percent {
-    width: 50%;
+  .width-20-percent {
+    width: 20%;
     display: inline-block;
     vertical-align: bottom;
     margin-bottom: 0;
   }
 
-  .width-60-percent {
-    width: 60%;
+  .width-48-percent {
+    width: 48%;
     display: inline-block;
     vertical-align: bottom;
     margin-bottom: 0;
@@ -36,7 +36,7 @@
 
   .govuk-accordion__section-content {
     .central-col {
-      width: 69%;
+      width: 59%;
       display: inline-block;
       vertical-align: top;
 
@@ -46,13 +46,17 @@
     }
 
     .left-col {
-      width: 10%;
+      width: 20%;
       display: inline-block;
       vertical-align: top;
+
+      label {
+        margin-top: 25px;
+      }
     }
 
     .right-col {
-      width: 15%;
+      width: 20%;
       display: inline-block;
       vertical-align: top;
     }

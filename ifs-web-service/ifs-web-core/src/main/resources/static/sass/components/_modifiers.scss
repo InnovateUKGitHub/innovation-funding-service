@@ -390,3 +390,16 @@ table.hidden-error-labels {
     display:none;
   }
 }
+
+.error-heading-icon {
+  &:before {
+    content: "";
+    background-image: url('../images/ifs-images/icons/icon-alert.png');
+    background-repeat: no-repeat;
+    background-position: left 100%;
+    background-size: 14px;
+    width: 20px;
+    height: 20px;
+    float: left;
+  }
+}

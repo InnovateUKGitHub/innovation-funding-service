@@ -41,8 +41,47 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.displayProjectCostsBanner}">
+                <p class="govuk-body">Your project costs of £<th:block th:text="${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></th:block> have not been marked as complete.</p>
+            </div>
 
-            <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
+            <th:block th:unless="${model.hasDurations}">
+                <p class="govuk-body">Before you can supply your payment milestones you must:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>provide a project duration on the <a class="govuk-link" th:href="@{${model.applicationDetailsUrl}}">application details</a> page</li>
+                </ul>
+            </th:block>
+            <th:block th:if="${model.hasDurations}">
+                <dl class="govuk-list">
+                    <dt>Total project costs</dt>
+                    <dd th:text="'£' + ${#numbers.formatInteger(model.fundingAmount, 0,'DEFAULT')}"></dd>
+                </dl>
+
+                <th:block th:unless="${model.readOnly}">
+                    <p class="govuk-body">Enter the milestone and deliverable information. Where appropriate, link with a payment request.</p>
+
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">What should I put as a payment milestone?</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">Information provided here will form your preferred payment schedule.</p>
+                            <p class="govuk-body">These milestones can mark the completion of a major phase of work, and you can choose to create a milestone
+                            to indicate a big task, deliverable or more.</p>
+                            <p class="govuk-body">The month at which you want to set your milestones might vary depending on your project, your organisation,
+                            and other factors.</p>
+                            <p class="govuk-body">Your milestones must be:</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>clear.</li>
+                                <li>defined using SMART (specific, measurable, achievable, realistic and time-bound) criteria.</li>
+                                <li>associated with the appropriate deliverables and payments.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </th:block>
+
+                <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
+            </th:block>
 
 
             <div class="form-footer" th:if="${model.open}">

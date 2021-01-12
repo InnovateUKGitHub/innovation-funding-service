@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.for
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -10,11 +12,14 @@ import java.math.RoundingMode;
 public class ProcurementMilestoneForm {
 
     private Long id;
+    @NotNull(message = "{validation.procurement.milestones.month}")
     private Integer month;
     private String description;
+    @NotBlank(message = "{validation.procurement.milestones.taskOrActivity}")
     private String taskOrActivity;
     private String deliverable;
     private String successCriteria;
+    @NotNull(message = "{validation.procurement.milestones.payment}")
     private BigInteger payment;
 
     public ProcurementMilestoneForm() {}
