@@ -1,0 +1,1 @@
+UPDATE terms_and_conditions SET version = 2, modified_on = NOW() WHERE template = "innovation-continuity-loan";
