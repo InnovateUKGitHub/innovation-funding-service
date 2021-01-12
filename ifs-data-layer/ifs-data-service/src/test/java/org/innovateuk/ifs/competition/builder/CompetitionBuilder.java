@@ -353,5 +353,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((projectStage, competition) -> competition.setProjectStages(projectStage), projectStages);
     }
 
-
+    public CompetitionBuilder withAlwaysOpen(boolean... alwaysOpen) {
+        return withArraySetFieldByReflection("alwaysOpen", alwaysOpen);
+    }
 }

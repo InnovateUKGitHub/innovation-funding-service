@@ -108,7 +108,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
     private CovidType covidType;
-    private CompetitionApplicationConfigResource competitionApplicationConfig;
+    private Boolean alwaysOpen;
 
     public CompetitionResource() {
     }
@@ -792,12 +792,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
-    public CompetitionApplicationConfigResource getCompetitionApplicationConfig() {
-        return competitionApplicationConfig;
+    public Boolean getAlwaysOpen() {
+        return alwaysOpen;
     }
 
-    public void setCompetitionApplicationConfig(CompetitionApplicationConfigResource competitionApplicationConfig) {
-        this.competitionApplicationConfig = competitionApplicationConfig;
+    public void setAlwaysOpen(Boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
     }
 
     @JsonIgnore
@@ -875,7 +875,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
-                .append(competitionApplicationConfig, that.competitionApplicationConfig)
+                .append(alwaysOpen, that.alwaysOpen)
                 .isEquals();
     }
 
@@ -939,7 +939,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn)
                 .append(modifiedBy)
                 .append(modifiedOn)
-                .append(competitionApplicationConfig)
+                .append(alwaysOpen)
                 .toHashCode();
     }
 
@@ -967,5 +967,4 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public boolean isSbriPilot() {
         return SBRI_PILOT.equals(name);
     }
-
 }

@@ -97,7 +97,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private List<MilestoneType> ifsAllPublicDatesComplete(Competition competition) {
         List<MilestoneType> milestonesRequired;
 
-        boolean isAlwaysOpen = BooleanUtils.isTrue(competition.getCompetitionApplicationConfig().getAlwaysOpen());
+        boolean isAlwaysOpen = BooleanUtils.isTrue(competition.getAlwaysOpen());
 
         if (isAlwaysOpen) {
             milestonesRequired = ALWAYS_OPEN_PUBLIC_MILESTONES.stream()

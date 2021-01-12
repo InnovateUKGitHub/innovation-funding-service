@@ -2,9 +2,7 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
@@ -49,13 +47,10 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
     public void setUp() throws Exception {
         loginCompAdmin();
 
-        CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
-        competitionApplicationConfig.setAlwaysOpen(false);
-
         competition = competitionRepository.save(newCompetition()
                 .with(id(null))
                 .withCompletionStage(CompetitionCompletionStage.RELEASE_FEEDBACK)
-                .withCompetitionApplicationConfig(competitionApplicationConfig)
+                .withAlwaysOpen(false)
                 .build());
 
         milestoneRepository.saveAll(newMilestone()

@@ -200,6 +200,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "golTemplateId", referencedColumnName = "id")
     private GolTemplate golTemplate;
 
+    private Boolean alwaysOpen;
+
     public Competition() {
         setupComplete = false;
     }
@@ -1020,5 +1022,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setGolTemplate(GolTemplate golTemplate) {
         this.golTemplate = golTemplate;
+    }
+
+    public Boolean getAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public void setAlwaysOpen(Boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
     }
 }

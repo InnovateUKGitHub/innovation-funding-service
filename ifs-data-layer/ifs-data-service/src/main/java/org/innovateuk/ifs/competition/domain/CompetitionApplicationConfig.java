@@ -17,18 +17,13 @@ public class CompetitionApplicationConfig {
     @Column
     private BigDecimal maximumFundingSought;
 
-    @Column
-    private Boolean alwaysOpen;
-
     public CompetitionApplicationConfig() {
     }
 
     public CompetitionApplicationConfig(Competition competition,
-                                        BigDecimal maximumFundingSought,
-                                        Boolean alwaysOpen) {
+                                        BigDecimal maximumFundingSought) {
         this.competition = competition;
         this.maximumFundingSought = maximumFundingSought;
-        this.alwaysOpen = alwaysOpen;
     }
 
     public Long getId() {
@@ -53,13 +48,5 @@ public class CompetitionApplicationConfig {
 
     public void setMaximumFundingSought(BigDecimal maximumFundingSought) {
         this.maximumFundingSought = maximumFundingSought;
-    }
-
-    public Boolean getAlwaysOpen() {
-        return alwaysOpen;
-    }
-
-    public void setAlwaysOpen(Boolean alwaysOpen) {
-        this.alwaysOpen = alwaysOpen;
     }
 }

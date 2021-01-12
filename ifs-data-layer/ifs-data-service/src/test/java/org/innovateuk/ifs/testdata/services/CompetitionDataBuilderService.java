@@ -163,7 +163,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                         line.innovationSector, null, null, null, null,
                         null, null, null, null, null,
                         null, emptyList(), null, null, line.nonIfsUrl, line.fundingType, line.competitionCompletionStage,
-                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
+                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation, line.alwaysOpen)
                 .withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation)
                 .withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView);
 
@@ -183,10 +183,9 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                         line.innovationSector, line.fundingRules, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.multiStream, line.collaborationLevel,
                         line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.fundingType, line.competitionCompletionStage,
-                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
+                        line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation, line.alwaysOpen).
                 withApplicationFormFromTemplate().
                 withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
-                withApplicationConfig(line.alwaysOpen).
                 withAssessmentConfig(line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView).
                 withNewMilestones(line.competitionCompletionStage, line.alwaysOpen);
 

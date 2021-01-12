@@ -189,7 +189,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${ifs.generate.test.data.competition.filter.name:SBRI competition}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
-       BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+       //BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+       BaseGenerateTestData.competitionNameForFilter = "Always open competition";
     }
 
     @Before

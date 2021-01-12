@@ -291,6 +291,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         }, golTemplates);
     }
 
+    public CompetitionResourceBuilder withAlwaysOpen(Boolean... alwaysOpens) {
+        return withArray((alwaysOpen, competitionResource) -> competitionResource.setAlwaysOpen(alwaysOpen), alwaysOpens);
+    }
+
     public CompetitionResourceBuilder withCompetitionApplicationConfig(CompetitionApplicationConfigResource... competitionApplicationConfigResources) {
         return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfigResources);
     }

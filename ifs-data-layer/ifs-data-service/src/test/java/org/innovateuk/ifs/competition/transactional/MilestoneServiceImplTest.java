@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -47,15 +46,12 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Before
     public void setUp() {
 
-        CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
-        competitionApplicationConfig.setAlwaysOpen(false);
-
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
                         .withId(1L)
                         .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                         .withNonIfs(false)
-                        .withCompetitionApplicationConfig(competitionApplicationConfig)
+                        .withAlwaysOpen(false)
                         .build()));
 
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {

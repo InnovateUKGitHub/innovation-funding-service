@@ -83,7 +83,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("hasAssessmentStage").description("Does the competition has assessors.").optional(),
             fieldWithPath("covidType").description("The type of covid comp if any").optional(),
             fieldWithPath("golTemplate").description("template").optional(),
-            fieldWithPath("competitionApplicationConfig").description("Competition application configuration").optional()
+            fieldWithPath("alwaysOpen").description("Competition always open").optional()
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -121,5 +121,5 @@ public class CompetitionResourceDocs {
             .withIncludeJesForm(true)
             .withFundingType(FundingType.PROCUREMENT)
             .withCompetitionTerms((FileEntryResource) null)
-            .withCompetitionApplicationConfig(null);
+            .withAlwaysOpen(false);
 }
