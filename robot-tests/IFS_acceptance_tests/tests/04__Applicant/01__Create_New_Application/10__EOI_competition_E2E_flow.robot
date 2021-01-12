@@ -179,8 +179,11 @@ logged in user applies to competition
     the user select the competition and starts application     ${competition}
     the user selects the radio button                          organisationTypeId  ${applicationType}
     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link            org2
-    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+# TODO should be implemented in ifs-7724
+#    the user clicks the Not on companies house link            org2
+#    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+# TODO should remove this step on completing ifs-7724
+    the user search for organisation name on Companies house   ROYAL  ROYAL MAIL PLC
     the user selects the checkbox                              agree
     the user clicks the button/link                            css = .govuk-button[type="submit"]    #Continue
 

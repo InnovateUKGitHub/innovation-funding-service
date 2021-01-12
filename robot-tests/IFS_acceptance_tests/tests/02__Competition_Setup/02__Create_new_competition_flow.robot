@@ -200,7 +200,7 @@ The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086  IFS-6205
     [Tags]  HappyPath
     Given the user clicks the button/link    link = Terms and conditions
-    When the user should see the element     link = Loans
+    When the user should see the element     link = Loans (opens in a new window)
     And the user clicks the button/link      jQuery = button:contains("Done")
     And the user clicks the button/link      link = Back to competition details
     And the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
@@ -260,7 +260,7 @@ Funding information: can be saved
     And the user should see the element     jQuery = dt:contains("PAF number") ~ dd:contains("2016")
     And the user should see the element     jQuery = dt:contains("Budget code") ~ dd:contains("2004")
     And the user should see the element     jQuery = dt:contains("Activity code") ~ dd:contains("4242")
-    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("2101-1")
+    And the user should see the element     jQuery = dt:contains("Competition code") ~ dd:contains("${nextyearintwodigits}01-1")
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
@@ -845,7 +845,7 @@ the weekdays should be correct
     element should contain    css = tr:nth-child(13) td:nth-child(3)    Mon
 
 the pre-field date should be correct
-    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Sun
+    Element Should Contain        id = milestoneWeekdayEntry-OPEN_DATE    Mon
     ${YEAR} =    Get Value        css = #milestoneWeekdayEntry-OPEN_DATE ~ .year .govuk-input--width-4  # Get the value within the YEAR field
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value       css = #milestoneWeekdayEntry-OPEN_DATE ~ .month .govuk-input--width-4  # Get the value within the MONTH field

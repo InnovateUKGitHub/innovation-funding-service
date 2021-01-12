@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.organisation.resource;
 
-
 import java.util.Objects;
 
 public class OrganisationExecutiveOfficerResource {
-
-
     private Long id;
     private Long organisation;
     private String name;
@@ -15,7 +12,6 @@ public class OrganisationExecutiveOfficerResource {
     }
 
     public OrganisationExecutiveOfficerResource(Long organisation, String name) {
-
         this.organisation = organisation;
         this.name = name;
     }
@@ -62,5 +58,4 @@ public class OrganisationExecutiveOfficerResource {
     public int hashCode() {
         return Objects.hash(id, organisation, name);
     }
-
 }

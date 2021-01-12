@@ -163,13 +163,16 @@ Creating a new KTP comp points to the correct T&C
     [Documentation]  IFS-7894
     When the user clicks the button/link                     link = Terms and conditions
     And the user clicks the button/link                      jQuery = button:contains("Edit")
-    Then the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId5
-    And the user should see the element                      link = Knowledge Transfer Partnership (KTP)
+    Then the user sees that the radio button is selected     termsAndConditionsId  27
+    And the user should see the element                      link = Knowledge Transfer Partnership (KTP) (opens in a new window)
 
 The knowledge transfer partnership t&c's are correct
     [Documentation]  IFS-7894
-    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP)
+    When the user clicks the button/link     link = Knowledge Transfer Partnership (KTP) (opens in a new window)
+    And select window                        title = Terms and conditions of a Knowledge Transfer Partnership award - Innovation Funding Service
     Then the user should see the element     jQuery = h1:contains("${ktpTandC}")
+    And close window
+    And select window                        title = Competition terms and conditions - Innovation Funding Service
     [Teardown]   the user goes back to the previous page
 
 T&c's can be confirmed
@@ -814,7 +817,7 @@ Internal user is able to access the finance overview page
 Internal user is able to see the partner funding level percentages is read-only
     [Documentation]  IFS-8328
     When The user clicks the button/link         link = Change funding level percentages
-    Then The user should not see the element     jQuery = td:contains("INNOVATE LTD") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
+    Then The user should not see the element     jQuery = td:contains("ROYAL MAIL PLC") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
     And The user clicks the button/link          link = Back to finance overview
 
 Internal user should not see the start date in the Edit Project screen
@@ -1200,7 +1203,7 @@ the user should only see KB partner organisations
 the user slectes non profitable organisation type
     the user selects the radio button                           organisationTypeId   4
     the user clicks the button/link                             jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}
+    the user search for organisation name on Companies house    Aviva   ${existingAcademicPartnerOrgName}
 
 the user should see knowledge base organisation details
     [Arguments]   ${orgType}  ${kbType}  ${orgName}  ${orgNumber}  ${orgAddress}  ${regOrUKPRNNumber}
@@ -1318,8 +1321,8 @@ the user should see the changes in the finance table in Overview screen
     the user should see the element     jQuery = th:contains("Company contribution (£)")
     the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") + td:contains("£246")
     the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:nth-child(6):contains("0.00%") + td:nth-child(7):contains("0")
-    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("90.00%")
-    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("90.00%")
+    the user should see the element     jQuery = th:contains("ROYAL MAIL PLC") ~ td:contains("221")
 
 the user sees the changes in the finance summary table in Eligibility screen
     the user should see the element     jQuery = th:contains("Other funding (£)")

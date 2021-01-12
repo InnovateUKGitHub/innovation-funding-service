@@ -13,8 +13,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -23,10 +21,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -35,9 +35,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -53,6 +50,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     protected ApplicationPermissionRules supplyPermissionRulesUnderTest() {
         return new ApplicationPermissionRules();
     }
+
 
     private Competition competition;
     private ApplicationResource applicationResource1;
@@ -85,6 +83,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
+    @Mock
+    private ApplicationSecurityHelper applicationSecurityHelper;
 
     @Before
     public void setup() {
@@ -126,6 +126,11 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(applicationRepository.existsById(applicationResource2.getId())).thenReturn(true);
         when(applicationRepository.existsById(null)).thenReturn(false);
 
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), applicationResource1.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user2.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), applicationResource1.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user2.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), applicationResource2.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user3.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), applicationResource2.getId())).thenReturn(true);
+
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadOnApplication1.getId(), applicationResource1.getId(), LEADAPPLICANT)).thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource1.getId(), COLLABORATOR)).thenReturn(true);
         when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantProcessRoles(), applicationResource2.getId())).thenReturn(null);
@@ -139,9 +144,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepository.existsByUserIdAndApplicationId(user2.getId(), applicationResource1.getId())).thenReturn(false);
         when(processRoleRepository.existsByUserIdAndApplicationId(user2.getId(), applicationResource2.getId())).thenReturn(true);
 
-        when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
-        when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(user2.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
-        when(processRoleRepository.findByUserIdAndRoleInAndApplicationId(user3.getId(), applicantRoles, applicationResource1.getId())).thenReturn(emptyList());
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantRoles, applicationResource1.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user2.getId(), applicantRoles, applicationResource1.getId())).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user3.getId(), applicantRoles, applicationResource1.getId())).thenReturn(false);
         when(processRoleRepository.existsByUserIdAndApplicationId(assessor.getId(), applicationResource2.getId())).thenReturn(false);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationResource1.getId(), ASSESSOR)).thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(panelAssessor.getId(), applicationResource1.getId(), PANEL_ASSESSOR)).thenReturn(true);
@@ -158,223 +163,17 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void usersConnectedToTheApplicationCanView() {
-        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
-        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource2, user2));
-        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource1, user2));
-        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, leadOnApplication1));
-    }
-
-    @Test
-    public void supporterAssignedToTheApplicationCanView() {
-        assertTrue(rules.supportersCanViewApplicationsAssigned(applicationResource1, supporter));
-        assertFalse(rules.supportersCanViewApplicationsAssigned(applicationResource2, supporter));
-        assertFalse(rules.supportersCanViewApplicationsAssigned(applicationResource1, compAdmin));
-    }
-
-    @Test
     public void usersConnectedToTheApplicationCanViewInnovationAreas() {
         assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, leadOnApplication1));
         assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource2, user2));
-        assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, user2));
+        assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, user3));
         assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource2, leadOnApplication1));
     }
 
     @Test
-    public void internalUsersOtherThanInnovationLeadAndStakeholderCanViewApplications() {
-        assertTrue(rules.internalUsersCanViewApplications(applicationResource1, compAdmin));
-        assertTrue(rules.internalUsersCanViewApplications(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.internalUsersCanViewApplications(applicationResource1, innovationLeadUser()));
-        assertFalse(rules.internalUsersCanViewApplications(applicationResource1, stakeholderUser()));
-        assertFalse(rules.internalUsersCanViewApplications(applicationResource1, leadOnApplication1));
-    }
-
-    @Test
-    public void onlyInnovationLeadAssignedCompetitionForApplicationCanAccessApplication() {
-        assertTrue(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadOnApplication1));
-        assertFalse(rules.innovationLeadAssignedToCompetitionCanViewApplications(applicationResource1, innovationLeadUser()));
-    }
-
-    @Test
-    public void onlyStakeholdersAssignedToCompetitionForApplicationCanAccessApplication() {
-        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
-
-        assertTrue(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, stakeholderUserResourceOnCompetition));
-        assertFalse(rules.stakeholderAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
-    }
-
-    @Test
-    public void onlyCompetitionFinanceUserAssignedToCompetitionForApplicationCanAccessApplication() {
-        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
-
-        assertTrue(rules.competitionFinanceUsersAssignedToCompetitionCanViewApplications(applicationResource1, competitionFinanceUserResourceOnCompetition));
-        assertFalse(rules.competitionFinanceUsersAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
-    }
-
-    @Test
-    public void monitoringOfficerAssignedToProjectCanViewApplications() {
-        assertTrue(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, monitoringOfficerOnProjectForApplication1));
-        assertFalse(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, stakeholderUser()));
-    }
-
-    @Test
-    public void assessorCanSeeTheApplicationFinancesTotals() {
-        assertTrue(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, assessor));
-        assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, user2));
-        assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, leadOnApplication1));
-        assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, assessor));
-    }
-
-    @Test
-    public void ktaCanSeeTheApplicationFinancesTotals() {
-        assertTrue(rules.ktaCanSeeTheApplicationFinanceTotals(applicationResource1, kta));
-        assertFalse(rules.ktaCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
-    }
-
-    @Test
-    public void supporterCanSeeTheApplicationFinancesTotals() {
-        assertTrue(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, supporter));
-        assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource2, supporter));
-        assertFalse(rules.supporterCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
-    }
-
-    @Test
-    public void internalUsersCanSeeApplicationFinanceTotals() {
-        ApplicationResource applicationResource = newApplicationResource().build();
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(COMP_ADMIN) ||
-                    user.hasRole(PROJECT_FINANCE) ||
-                    user.hasRole(SUPPORT) ||
-                    user.hasRole(INNOVATION_LEAD) ||
-                    user.hasRole(IFS_ADMINISTRATOR)) {
-                assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
-            } else {
-                assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
-            }
-        });
-    }
-
-    @Test
-    public void monitoringOfficerCanSeeApplicationFinanceTotals() {
-        Project project = newProject().build();
-        when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
-        ApplicationResource applicationResource = newApplicationResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(MONITORING_OFFICER)) {
-                assertTrue(rules.monitoringOfficersCanSeeApplicationFinancesTotals(applicationResource, monitoringOfficerUser()));
-            } else {
-                assertFalse(rules.monitoringOfficersCanSeeApplicationFinancesTotals(applicationResource, user));
-            }
-        });
-    }
-
-    @Test
-    public void stakeholdersCanSeeTheResearchParticipantPercentageInApplications() {
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competition.getId())
-                .build();
-
-        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
-
-        assertTrue(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, stakeholderUserResourceOnCompetition));
-        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
-        assertFalse(rules.stakeholdersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
-    }
-
-    @Test
-    public void competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications() {
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competition.getId())
-                .build();
-
-        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
-
-        assertTrue(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, competitionFinanceUserResourceOnCompetition));
-        assertFalse(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
-        assertFalse(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
-    }
-
-    @Test
-    public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
-        Project project = newProject().build();
-        when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
-        when(projectMonitoringOfficerRepository.existsByProjectIdAndUserId(project.getId(), monitoringOfficerUser().getId())).thenReturn(true);
-        ApplicationResource applicationResource = newApplicationResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(MONITORING_OFFICER)) {
-                assertTrue(rules.monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, monitoringOfficerUser()));
-            } else {
-                assertFalse(rules.monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user));
-            }
-        });
-    }
-
-    @Test
-    public void stakeholdersCanSeeApplicationFinancesTotals() {
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competition.getId())
-                .build();
-
-        when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResourceOnCompetition.getId())).thenReturn(true);
-
-        assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
-        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
-        assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
-    }
-
-    @Test
-    public void competitionFinanceUserCanSeeApplicationFinancesTotals() {
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competition.getId())
-                .build();
-
-        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
-
-        assertTrue(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, competitionFinanceUserResourceOnCompetition));
-        assertFalse(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user2));
-        assertFalse(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user3));
-    }
-
-    @Test
-    public void onlyUsersPartOfTheApplicationCanChangeApplicationResource() {
-        assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
-        assertTrue(rules.applicantCanUpdateApplicationResource(applicationResource1, user2));
-        assertFalse(rules.applicantCanUpdateApplicationResource(applicationResource1, user3));
-    }
-
-    @Test
-    public void userIsConnectedToApplicationResource() {
-        assertTrue(rules.usersConnectedToTheApplicationCanView(applicationResource1, leadOnApplication1));
-    }
-
-    @Test
-    public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess() {
-        assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, assessor));
-        assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, panelAssessor));
-        assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, interviewAssessor));
-        assertFalse(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, compAdmin));
-    }
-
-    @Test
     public void consortiumCanSeeTheResearchParticipantPercentage() {
-        assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, leadOnApplication1));
-        assertFalse(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
-    }
-
-    @Test
-    public void ktaCanSeeTheResearchParticipantPercentage() {
-        assertTrue(rules.ktaCanSeeTheResearchParticipantPercentage(applicationResource1, kta));
-        assertFalse(rules.ktaCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
-    }
-
-    @Test
-    public void supporterCanSeeTheResearchParticipantPercentage() {
-        assertTrue(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource1, supporter));
-        assertFalse(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource2, supporter));
-        assertFalse(rules.supporterCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
+        when(applicationSecurityHelper.canViewApplication(applicationResource1.getId(), leadOnApplication1)).thenReturn(true);
+        assertTrue(rules.canViewResearchParticipation(applicationResource1, leadOnApplication1));
     }
 
     @Test
@@ -385,21 +184,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Test
     public void leadApplicantCanSeeTheApplicationFinanceDetails() {
-        assertTrue(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, leadOnApplication1));
-        assertFalse(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, user2));
-    }
-
-    @Test
-    public void ktaCanSeeTheApplicationFinanceDetails() {
-        assertTrue(rules.ktaCanSeeTheApplicationFinanceDetails(applicationResource1, kta));
-        assertFalse(rules.ktaCanSeeTheApplicationFinanceDetails(applicationResource1, compAdmin));
-    }
-
-    @Test
-    public void internalUsersCanSeeTheResearchParticipantPercentageInApplications() {
-        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
-        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
+        when(applicationSecurityHelper.canViewApplication(applicationResource1.getId(), leadOnApplication1)).thenReturn(true);
+        assertTrue(rules.canReadFinanceTotals(applicationResource1, leadOnApplication1));
+        assertFalse(rules.canReadFinanceTotals(applicationResource1, user2));
     }
 
     @Test
@@ -519,24 +306,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                 reset(processRoleRepository);
 
-                when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicantUser.getId(), application.getId(), LEADAPPLICANT)).thenReturn(true);
-                when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(collaboratorUser.getId(), application.getId(), COLLABORATOR)).thenReturn(true);
-                when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(assessorUser.getId(), application.getId(), ASSESSOR)).thenReturn(true);
-
-
                 // if the user under test is the lead applicant or a collaboraator for the application, the rule will pass IF the Competition is in Project Setup
                 if (user == leadApplicantUser || user == collaboratorUser) {
+                    when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), application.getId())).thenReturn(true);
 
                     if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
                         assertTrue(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
-
-                        if (user == leadApplicantUser) {
-                            verify(processRoleRepository, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), LEADAPPLICANT);
-                        } else {
-                            verify(processRoleRepository, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), COLLABORATOR);
-                            verify(processRoleRepository, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), LEADAPPLICANT);
-                        }
-
+                        verify(processRoleRepository, times(1)).existsByUserIdAndRoleInAndApplicationId(user.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), application.getId());
                     } else {
                         assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
                         verify(processRoleRepository, never()).findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantProcessRoles(), application.getId());
@@ -550,8 +326,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
 
                     if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
-                        verify(processRoleRepository, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), COLLABORATOR);
-                        verify(processRoleRepository, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), LEADAPPLICANT);
+                        verify(processRoleRepository, times(1)).existsByUserIdAndRoleInAndApplicationId(user.getId(), EnumSet.of(LEADAPPLICANT, COLLABORATOR), application.getId());
                     } else {
                         verify(processRoleRepository, never()).findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantProcessRoles(), application.getId());
                     }
@@ -631,58 +406,5 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, leadOnApplication1));
         assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user2));
         assertFalse(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user3));
-    }
-
-    @Test
-    public void projectPartnerCanViewApplicationsLinkedToTheirProjects() {
-
-        UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();
-        ApplicationResource application = newApplicationResource().build();
-        Project linkedProject = newProject().build();
-        List<ProjectParticipantRole> roles = new ArrayList<>(PROJECT_USER_ROLES);
-
-
-        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
-        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles)).
-                thenReturn(newProjectUser().build(1));
-
-        assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
-
-        verify(projectRepository).findOneByApplicationId(application.getId());
-        verify(projectUserRepository).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles);
-    }
-
-    @Test
-    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
-
-        UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();
-        ApplicationResource application = newApplicationResource().build();
-        Project linkedProject = newProject().build();
-        List<ProjectParticipantRole> roles = new ArrayList<>(PROJECT_USER_ROLES);
-
-        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(null);
-
-        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
-
-        verify(projectRepository).findOneByApplicationId(application.getId());
-        verify(projectUserRepository, never()).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles);
-    }
-
-    @Test
-    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
-
-        UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();
-        ApplicationResource application = newApplicationResource().build();
-        Project linkedProject = newProject().build();
-        List<ProjectParticipantRole> roles = new ArrayList<>(PROJECT_USER_ROLES);
-
-        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
-        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles)).
-                thenReturn(emptyList());
-
-        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
-
-        verify(projectRepository).findOneByApplicationId(application.getId());
-        verify(projectUserRepository).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles);
     }
 }

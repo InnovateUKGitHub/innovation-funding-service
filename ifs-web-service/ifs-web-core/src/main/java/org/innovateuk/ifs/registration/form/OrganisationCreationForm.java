@@ -4,20 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSize;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.util.CollectionFunctions;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
@@ -40,10 +39,12 @@ public class OrganisationCreationForm implements Serializable {
     private Boolean newOrganisationSearchEnabled;
     private Long selectedExistingOrganisationId;
     private String selectedExistingOrganisationName;
-
     private int searchPageIndexPosition = 1;
-
     private int totalSearchResults = 0;
+    private LocalDate dateOfIncorporation;
+    private List<OrganisationSicCodeResource> sicCodes = new ArrayList<>();
+    private List<OrganisationExecutiveOfficerResource> executiveOfficers = new ArrayList<>();
+    private AddressResource organisationAddress;
     private String organisationNumber;
     private String businessType;
     private List<String> sicCodes;
@@ -241,6 +242,36 @@ public class OrganisationCreationForm implements Serializable {
         return isOrganisationSearching() && isNewOrganisationSearchEnabled();
     }
 
+    public LocalDate getDateOfIncorporation() {
+        return dateOfIncorporation;
+    }
+
+    public void setDateOfIncorporation(LocalDate dateOfIncorporation) {
+        this.dateOfIncorporation = dateOfIncorporation;
+    }
+    public List<OrganisationSicCodeResource> getSicCodes() {
+        return sicCodes;
+    }
+
+    public void setSicCodes(List<OrganisationSicCodeResource> sicCodes) {
+        this.sicCodes = sicCodes;
+    }
+
+    public List<OrganisationExecutiveOfficerResource> getExecutiveOfficers() {
+        return executiveOfficers;
+    }
+
+    public void setExecutiveOfficers(List<OrganisationExecutiveOfficerResource> executiveOfficers) {
+        this.executiveOfficers = executiveOfficers;
+    }
+    public AddressResource getOrganisationAddress() {
+        return organisationAddress;
+    }
+
+    public void setOrganisationAddress(AddressResource organisationAddress) {
+        this.organisationAddress = organisationAddress;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -264,6 +295,10 @@ public class OrganisationCreationForm implements Serializable {
                 .append(sicCodes,that.sicCodes)
                 .append(executiveOfficers,that.executiveOfficers)
                 .append(addressForm,that.addressForm)
+                .append(dateOfIncorporation, that.dateOfIncorporation)
+                .append(sicCodes, that.sicCodes)
+                .append(executiveOfficers, that.executiveOfficers)
+                .append(organisationAddress, that.organisationAddress)
                 .isEquals();
     }
 
@@ -284,6 +319,10 @@ public class OrganisationCreationForm implements Serializable {
                 .append(sicCodes)
                 .append(executiveOfficers)
                 .append(addressForm)
+                .append(dateOfIncorporation)
+                .append(sicCodes)
+                .append(executiveOfficers)
+                .append(organisationAddress)
                 .toHashCode();
     }
 }

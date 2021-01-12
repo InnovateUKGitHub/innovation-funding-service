@@ -208,7 +208,7 @@ Internal user add new partner orgnisation after moving competition to project se
     And moving competition to Project Setup                      ${competitionId}
     When the user navigates to the page                          ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
     And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
-    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  innovate  INNOVATE LTD  ${atiApplicationID}  ${ATIapplicationTitle}
+    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  ROYAL  ROYAL MAIL PLC  ${atiApplicationID}  ${ATIapplicationTitle}
 
 New partner orgination checks for funding level guidance
     [Documentation]  IFS-6725

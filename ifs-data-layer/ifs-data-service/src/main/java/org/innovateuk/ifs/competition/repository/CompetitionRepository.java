@@ -27,7 +27,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+            "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
 
     /*  Filters competitions to those with at least one in-flight project*/
@@ -39,7 +39,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     /* Filters competitions to those in upcoming state */
     String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
+            "c.setupComplete = FALSE AND c.nonIfs = FALSE";
 
     String PREVIOUS_PROJECT_CLAUSE = " EXISTS " +
             "(SELECT p.id FROM Project p " +
@@ -53,38 +53,38 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String PREVIOUS_WHERE_CLAUSE = "WHERE " +
             "( " + PREVIOUS_PROJECT_CLAUSE +  " OR " + COMPETITION_CLOSE_CLAUSE + " OR " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id)) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+            "c.setupComplete = TRUE AND c.nonIfs = FALSE";
 
     /* Filters by innovation lead id or stakeholder id and in project setup state */
     String INNOVATION_LEAD_STAKEHOLDER_EXTERNAL_FINANCE_PROJECT_SETUP_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
             "AND cp.role in ('INNOVATION_LEAD', 'STAKEHOLDER', 'EXTERNAL_FINANCE') " +
             "AND EXISTS (SELECT a.manageFundingEmailDate FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE " +
+            "AND cp.competition.setupComplete = TRUE AND cp.competition.nonIfs = FALSE " +
             "AND cp.competition.completionStage = 'PROJECT_SETUP'";
 
     /* Filters by innovation lead or stakeholder and in feedback released state */
     String INNOVATION_LEAD_STAKEHOLDER_EXTERNAL_FINANCE_PREVIOUS_WHERE_CLAUSE = "WHERE cp.user.id = :userId AND " +
             "(CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = cp.competition.id) OR " +
             "(CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' and m.competition.id = cp.competition.id and m.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE))) AND " +
-            "cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
+            "cp.competition.setupComplete = TRUE AND cp.competition.nonIfs = FALSE";
 
     /* Filters by innovation lead or stakeholder and in live state */
     String INNOVATION_LEAD_STAKEHOLDER_LIVE_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
             "AND cp.role in ('INNOVATION_LEAD', 'STAKEHOLDER') " +
             "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = cp.competition.id) " +
             "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = cp.competition.id) " +
-            "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
+            "AND cp.competition.setupComplete = TRUE AND cp.competition.nonIfs = FALSE";
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
     String SEARCH_QUERY_INNOVATION_LEAD_STAKEHOLDER = "SELECT cp.competition FROM CompetitionParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (cp.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE " +
+            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (cp.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND cp.competition.nonIfs = FALSE " +
             "AND (cp.competition.setupComplete IS NOT NULL AND cp.competition.setupComplete != FALSE) " +
             "AND cp.user.id = :userId " +
             "ORDER BY m.date";
 
     /* Support users should not be able to access competitions in preparation */
     String SEARCH_QUERY_SUPPORT_USER = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.nonIfs = FALSE " +
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
             "ORDER BY m.date";
 
@@ -122,7 +122,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
 
     String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
     String OPEN_QUERIES_WHERE_CLAUSE = "WHERE a.competition.id = :competitionId " +

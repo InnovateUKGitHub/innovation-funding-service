@@ -5,8 +5,11 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -26,6 +29,9 @@ import java.util.List;
 
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
  */
@@ -43,7 +49,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                  Model model,
                                  HttpServletRequest request,
                                  UserResource user) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -51,6 +57,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
     }
@@ -70,16 +77,36 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
             return "redirect:/";
         }
+        OrganisationResource organisationResource = getOrganisationResourceToPersist(organisationForm);
+        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
+        return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
+    }
 
+     private OrganisationResource getOrganisationResourceToPersist(OrganisationCreationForm organisationForm) {
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationTypeId());
 
+        if (isNewOrganisationSearchEnabled)  {
+            organisationResource.setDateOfIncorporation(organisationForm.getDateOfIncorporation());
+            AddressResource addressResource = organisationForm.getOrganisationAddress();
+            OrganisationAddressResource orgAddressResource = new OrganisationAddressResource(organisationResource, addressResource, new AddressTypeResource(REGISTERED.getId(), REGISTERED.name()));
+            organisationResource.setAddresses(asList(orgAddressResource));
+            organisationResource.setSicCodes(organisationForm.getSicCodes());
+            organisationResource.setExecutiveOfficers(organisationForm.getExecutiveOfficers());
+
+            // Check if it is for updating the existing organisation
+            if (organisationForm.getSelectedExistingOrganisationId() != null) {
+                OrganisationResource existingOrganisationResource = organisationRestService.getOrganisationById(organisationForm.getSelectedExistingOrganisationId()).getSuccess();
+                organisationResource.setId(existingOrganisationResource.getId());
+            }
+        }
+
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());
         }
-
-        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
+        return organisationResource;
+    }
 
         return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
     }

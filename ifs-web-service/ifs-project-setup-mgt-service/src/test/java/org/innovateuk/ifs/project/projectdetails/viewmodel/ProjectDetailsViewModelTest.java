@@ -10,7 +10,7 @@ public class ProjectDetailsViewModelTest {
     @Test
     public void testKtpCompetition() {
         ProjectDetailsViewModel viewModel = new ProjectDetailsViewModel(null, null, null,
-                null, null, false, null, null,
+                null, null, null, null,
                 null, null, false, true);
 
         assertTrue(viewModel.isKtpCompetition());
@@ -19,7 +19,7 @@ public class ProjectDetailsViewModelTest {
     @Test
     public void testNonKtpCompetition() {
         ProjectDetailsViewModel viewModel = new ProjectDetailsViewModel(null, null, null,
-                null, null, false, null, null,
+                null, null, null, null,
                 null, null, false, false);
 
         assertFalse(viewModel.isKtpCompetition());
