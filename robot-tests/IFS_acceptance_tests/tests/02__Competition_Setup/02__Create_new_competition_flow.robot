@@ -102,6 +102,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-6775 Initial details type ahead
+...
 ...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
 ...
 Suite Setup       Custom suite setup
@@ -140,7 +142,7 @@ User can create a new competition
     And The user should see the element        jQuery = p:contains("When complete, this competition will open on the date set in Milestones.")
 
 Initial details - User enters valid values and marks as done
-    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982  IFS-8779
+    [Documentation]  INFUND-2982  INFUND-3888  INFUND-2983  INFUND-6478  INFUND-6479  IFS-4982  IFS-8779 IFS-6775
     [Tags]  HappyPath
     Given the user clicks the button/link                       link = Initial details
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
@@ -165,11 +167,11 @@ Initial Details - User can remove an innovation area
     Then the user should not see the element    jQuery = dd:contains("Space technology")
 
 Initial Details - drop down menu is populated with comp admin users
-    [Documentation]    INFUND-6905
+    [Documentation]    INFUND-6905, IFS-6775
     [Tags]
-    [Setup]    the user clicks the button/link                   jQuery = .govuk-button:contains("Edit")
-    When the user should see the option in the drop-down menu    John Doe    name = executiveUserId
-    And the user should see the option in the drop-down menu     Robert Johnson    name = executiveUserId
+    [Setup]    the user clicks the button/link     jQuery = .govuk-button:contains("Edit")
+    When the user sees element in type ahead       executiveUserId  j  John Doe
+    And the user sees element in type ahead        executiveUserId  r  Robert Johnson
 
 Initial details - Comp Type, funding rule and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892,  IFS-8779
@@ -868,22 +870,22 @@ the resubmission should not have a default selection
     the user should see the element  css=[name="resubmission"]:not(:checked) ~ label
 
 The user enters valid data in the initial details
-    Given the user enters text to a text field                 css = #title  ${competitionTitle}
-    And the user selects the radio button                      fundingType  LOAN
-    When the user selects the option from the drop-down menu   Sector  id = competitionTypeId
-    And the user selects the radio button                      fundingRule  SUBSIDY_CONTROL
-    And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
-    And the user selects the value from the drop-down menu     32   name = innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu    Open  id = innovationSectorCategoryId
-    And the user selects the value from the drop-down menu     19     name = innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu    Emerging and enabling  id = innovationSectorCategoryId
-    And the user selects the value from the drop-down menu     6  name = innovationAreaCategoryIds[0]
-    And the user selects the value from the drop-down menu     15  name = innovationAreaCategoryIds[1]
-    And the user enters text to a text field                   id = openingDateDay    10
-    And the user enters text to a text field                   id = openingDateMonth    1
-    And the user enters text to a text field                   id = openingDateYear     ${nextyear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
-    And the user selects the option from the drop-down menu    John Doe   id = executiveUserId
+    the user enters text to a text field                    css = #title  ${competitionTitle}
+    the user selects the radio button                       fundingType  LOAN
+    the user selects the option from the drop-down menu     Sector  id = competitionTypeId
+    the user selects the radio button                       fundingRule  SUBSIDY_CONTROL
+    the user selects the option from the drop-down menu     Infrastructure systems  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu      32   name = innovationAreaCategoryIds[0]
+    the user selects the option from the drop-down menu     Open  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu      19     name = innovationAreaCategoryIds[0]
+    the user selects the option from the drop-down menu     Emerging and enabling  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu      6  name = innovationAreaCategoryIds[0]
+    the user selects the value from the drop-down menu      15  name = innovationAreaCategoryIds[1]
+    the user enters text to a text field                    id = openingDateDay    10
+    the user enters text to a text field                    id = openingDateMonth    1
+    the user enters text to a text field                    id = openingDateYear     ${nextyear}
+    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  j  John Doe
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}

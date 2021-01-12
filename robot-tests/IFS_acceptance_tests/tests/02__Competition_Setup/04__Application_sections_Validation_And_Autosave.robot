@@ -174,22 +174,22 @@ The user should see the correct inputs in assessment questions
     Should Be Equal    ${input_value}    This is a justification
 
 User creates a new competition for Application tests
-    Given the user navigates to the page                       ${CA_UpcomingComp}
-    When the user clicks the button/link                       jQuery = .govuk-button:contains("Create competition")
-    And the user clicks the button/link                        link = Initial details
-    And the user enters text to a text field                   id = title    Test competition
-    And the user selects the radio button                      fundingType  GRANT
-    And the user selects the option from the drop-down menu    Programme    id = competitionTypeId
-    And the user selects the radio button                      fundingRule  SUBSIDY_CONTROL
-    And the user selects the option from the drop-down menu    Health and life sciences    id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    name = innovationAreaCategoryIds[0]
-    And the user enters text to a text field                   id = openingDateDay    01
-    And the user enters text to a text field                   id = openingDateMonth    12
-    And the user enters text to a text field                   id = openingDateYear  ${nextYear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
-    And the user selects the option from the drop-down menu    John Doe    id = executiveUserId
-    And the user clicks the button/link                        jQuery = button:contains("Done")
-    And the user clicks the button/link                        link = Back to competition details
+    the user navigates to the page                          ${CA_UpcomingComp}
+    the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
+    the user clicks the button/link                         link = Initial details
+    the user enters text to a text field                    id = title    Test competition
+    the user selects the radio button                       fundingType  GRANT
+    the user selects the option from the drop-down menu     Programme    id = competitionTypeId
+    the user selects the radio button                       fundingRule  SUBSIDY_CONTROL
+    the user selects the option from the drop-down menu     Health and life sciences    id = innovationSectorCategoryId
+    the user selects the option from the drop-down menu     Advanced therapies    name = innovationAreaCategoryIds[0]
+    the user enters text to a text field                    id = openingDateDay    01
+    the user enters text to a text field                    id = openingDateMonth    12
+    the user enters text to a text field                    id = openingDateYear  ${nextYear}
+    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  j  John Doe
+    the user clicks the button/link                         jQuery = button:contains("Done")
+    the user clicks the button/link                         link = Back to competition details
 
 the user clears predefined text in EDI question
     The user enters text to a text field    id = question.shortTitle        ${EMPTY}

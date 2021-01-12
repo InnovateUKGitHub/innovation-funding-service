@@ -68,21 +68,21 @@ the user sees the correct read only view of the question
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
-    the user clicks the button/link                      link = Initial details
-    the user enters text to a text field                 css = #title  ${compTitle}
-    the user selects the radio button                    fundingType  ${fundingType}
-    the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
-    the user selects the radio button                    fundingRule  ${fundingRule}
-    the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
-    the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
-    the user enters text to a text field                 css = #openingDateDay  1
-    the user enters text to a text field                 css = #openingDateMonth  ${month}
-    the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
-    the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
-    the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Back to competition details
-    the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
+    the user clicks the button/link                         link = Initial details
+    the user enters text to a text field                    css = #title  ${compTitle}
+    the user selects the radio button                       fundingType  ${fundingType}
+    the user selects the option from the drop-down menu     ${compType}  id = competitionTypeId
+    the user selects the radio button                       fundingRule  ${fundingRule}
+    the user selects the option from the drop-down menu     Emerging and enabling  id = innovationSectorCategoryId
+    the user selects the option from the drop-down menu     Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
+    the user enters text to a text field                    css = #openingDateDay  1
+    the user enters text to a text field                    css = #openingDateMonth  ${month}
+    the user enters text to a text field                    css = #openingDateYear  ${nextyear}
+    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  r  Robert Johnson
+    the user clicks the button/link                         jQuery = button:contains("Done")
+    the user clicks the button/link                         link = Back to competition details
+    the user should see the element                         jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the user selects procurement Terms and Conditions
     the user clicks the button/link                                     link = Terms and conditions
