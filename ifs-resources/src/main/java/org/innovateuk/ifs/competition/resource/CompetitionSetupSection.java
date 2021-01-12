@@ -29,7 +29,9 @@ public enum CompetitionSetupSection {
     ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
     CONTENT(8L, "content", "Public content", emptyList(), true),
     PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
-    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false);
+    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false),
+    FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false),
+    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, Optional.of(FUNDING_ELIGIBILITY));
 
     private Long id;
     private String path;

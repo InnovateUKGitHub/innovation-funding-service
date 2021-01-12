@@ -120,7 +120,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
                 (researchCategory).build();
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
         when(organisationService.findById(application.getLeadOrganisationId())).thenReturn(serviceSuccess(organisation));
-        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competition.getId())).thenReturn(serviceSuccess(true));
+        when(grantClaimMaximumService.isMaximumFundingLevelConstant(competition.getId())).thenReturn(serviceSuccess(true));
 
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
         when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(Optional.of(researchCategory));
