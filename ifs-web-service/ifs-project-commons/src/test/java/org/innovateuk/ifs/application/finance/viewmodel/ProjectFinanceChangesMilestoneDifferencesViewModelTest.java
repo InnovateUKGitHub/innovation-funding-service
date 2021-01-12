@@ -18,4 +18,13 @@ public class ProjectFinanceChangesMilestoneDifferencesViewModelTest {
 
         assertThat(result).isEqualTo("+ £99,990");
     }
+
+    @Test
+    public void shouldFormatTotalVarianceZero() {
+        viewModel = new ProjectFinanceChangesMilestoneDifferencesViewModel(null, new BigInteger("10"), new BigInteger("10"));
+
+        String result = viewModel.getTotalVariance();
+
+        assertThat(result).isEqualTo("£0");
+    }
 }

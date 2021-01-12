@@ -30,9 +30,21 @@ public class ProjectFinanceChangesMilestoneDifferencesViewModel {
 
     public String getTotalVariance() {
         BigInteger change = projectTotal.subtract(applicationTotal);
-        String direction = (change.compareTo(BigInteger.ZERO) > 0) ? "+" : "-";
 
-        return direction + " £" + NumberFormat.getNumberInstance().format(change.abs());
+        String direction = direction(change);
+
+        return direction + "£" + NumberFormat.getNumberInstance().format(change.abs());
+    }
+
+    private String direction(BigInteger change) {
+        int comparison = change.compareTo(BigInteger.ZERO);
+        if (comparison == 0) {
+            return "";
+        }
+        if (comparison > 0) {
+            return "+ ";
+        }
+        return "- ";
     }
 
     public boolean hasChanges() {

@@ -87,11 +87,22 @@ public class MilestoneChangeViewModel {
     public String getPaymentVariance() {
         if (type == MilestoneChangeType.UPDATED) {
             BigInteger change = paymentUpdated.subtract(paymentSubmitted);
-            String direction = (change.compareTo(new BigInteger("0")) > 0) ? "+" : "-";
+            String direction = direction(change);
 
-            return direction + " " + NumberFormat.getNumberInstance().format(change.abs());
+            return direction + NumberFormat.getNumberInstance().format(change.abs());
         }
         return "0";
+    }
+
+    private String direction(BigInteger change) {
+        int comparison = change.compareTo(BigInteger.ZERO);
+        if (comparison == 0) {
+            return "";
+        }
+        if (comparison > 0) {
+            return "+ ";
+        }
+        return "- ";
     }
 
 

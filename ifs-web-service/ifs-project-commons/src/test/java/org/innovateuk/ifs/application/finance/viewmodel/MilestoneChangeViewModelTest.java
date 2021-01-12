@@ -20,4 +20,16 @@ public class MilestoneChangeViewModelTest {
 
         assertThat(result).isEqualTo("+ 9,990");
     }
+
+    @Test
+    public void shouldFormatZeroPaymentVarianceCorrectly() {
+        viewModel = new MilestoneChangeViewModel();
+        viewModel.setType(MilestoneChangeViewModel.MilestoneChangeType.UPDATED);
+        viewModel.setPaymentSubmitted(new BigInteger("10"));
+        viewModel.setPaymentUpdated(new BigInteger("10"));
+
+        String result = viewModel.getPaymentVariance();
+
+        assertThat(result).isEqualTo("0");
+    }
 }
