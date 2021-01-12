@@ -47,7 +47,7 @@ public class ProjectProcurementMilestoneServiceImplTest {
         List<ProjectProcurementMilestone> domains = newArrayList(new ProjectProcurementMilestone());
         List<ProjectProcurementMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
 
-        when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationId(projectId, organisationId))
+        when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(projectId, organisationId))
                 .thenReturn(domains);
         when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
 

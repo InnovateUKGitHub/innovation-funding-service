@@ -56,7 +56,7 @@ public class ApplicationProcurementMilestoneServiceImplTest {
         List<ApplicationProcurementMilestone> domains = newArrayList(new ApplicationProcurementMilestone());
         List<ApplicationProcurementMilestoneResource> resources = newApplicationProcurementMilestoneResource().build(1);
 
-        when(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationId(applicationId, organisationId))
+        when(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId))
                 .thenReturn(domains);
         when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
 
