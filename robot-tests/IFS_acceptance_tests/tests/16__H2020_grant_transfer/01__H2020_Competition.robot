@@ -6,6 +6,9 @@ Documentation  IFS-5158 - Competition Template
 ...            IFS-5700 - Create new project team page to manage roles in project setup
 ...
 ...            IFS-7195  Organisational eligibility category in Competition setup
+...
+...            IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -21,7 +24,7 @@ ${externalUsrProjectPage}    ${server}/project-setup/project/${HProjectID}
 
 *** Test Cases ***
 User can select H2020 Competition Template and complete Initial details
-    [Documentation]  IFS-5158
+    [Documentation]  IFS-5158  IFS-6775
     Given a user starts a new competition
     When the user clicks the button/link                               link = Initial details
     Then the user selects the option from the drop-down menu           ${compType_H2020}   name = competitionTypeId
@@ -238,17 +241,17 @@ A user starts a new competition
     the user clicks the button/link       jQuery = .govuk-button:contains("Create competition")
 
 The user is able to complete Initial details section
-    the user enters text to a text field                            css = #title  ${competitionTitle}
-    the user selects the radio button                               fundingType  GRANT
-    And the user selects the radio button                           fundingRule  SUBSIDY_CONTROL
-    the user selects the option from the drop-down menu             None  id = innovationSectorCategoryId
-    the user selects the value from the drop-down menu              67  name = innovationAreaCategoryIds[0]
-    the user enters text to a text field                            id = openingDateDay    10
-    the user enters text to a text field                            id = openingDateMonth    1
-    the user enters text to a text field                            id = openingDateYear     ${nextyear}
-    the user selects the option from the drop-down menu             Ian Cooper    id = innovationLeadUserId
-    the user selects the option from the drop-down menu             John Doe   id = executiveUserId
-    the user clicks the button/link                                 jQuery = button:contains("Done")
+    the user enters text to a text field                              css = #title  ${competitionTitle}
+    the user selects the radio button                                 fundingType  GRANT
+    And the user selects the radio button                             fundingRule  SUBSIDY_CONTROL
+    the user selects the option from the drop-down menu               None  id = innovationSectorCategoryId
+    the user selects the value from the drop-down menu                67  name = innovationAreaCategoryIds[0]
+    the user enters text to a text field                              id = openingDateDay    10
+    the user enters text to a text field                              id = openingDateMonth    1
+    the user enters text to a text field                              id = openingDateYear     ${nextyear}
+    the user selects option from type ahead                           innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                           executiveUserId  j  John Doe
+    the user clicks the button/link                                   jQuery = button:contains("Done")
     the user should see the read-only view of the initial details
 
 The user should see the read-only view of the initial details

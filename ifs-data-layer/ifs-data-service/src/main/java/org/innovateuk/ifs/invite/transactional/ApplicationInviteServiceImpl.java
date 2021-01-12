@@ -22,6 +22,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -44,7 +45,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -100,6 +102,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Autowired
     private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
+
+    @Autowired
+    private ApplicationProcurementMilestoneRepository applicationProcurementMilestoneRepository;
 
     @Override
     protected Class<ApplicationInvite> getInviteClass() {
@@ -249,6 +254,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
                 if (finance.get().getEmployeesAndTurnover() != null) {
                     employeesAndTurnoverRepository.delete(finance.get().getEmployeesAndTurnover());
                 }
+                applicationProcurementMilestoneRepository.deleteByApplicationFinanceId(finance.get().getId());
                 applicationFinanceRepository.delete(finance.get());
             }
         }

@@ -792,6 +792,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
+    @Override
     public boolean isProcurementMilestones() {
         return procurementMilestones;
     }

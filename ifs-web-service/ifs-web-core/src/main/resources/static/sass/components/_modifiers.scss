@@ -1,4 +1,3 @@
-
 table {
 
   .cell-align-top {
@@ -361,6 +360,12 @@ hr,
 .govuk-input--width-25 {
   max-width:50ex
 }
+
+.width-100-percent {
+    box-sizing: border-box;
+    padding-right: 1em;
+    width: 100%;
+  }
 
 /* make selector more specific than autocomplete library. */
 .autocomplete__input {
