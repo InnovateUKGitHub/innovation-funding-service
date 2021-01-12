@@ -53,7 +53,7 @@ public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTes
         when(competitionLookupStrategy.getCompetitionResource(competition.getId())).thenReturn(competition);
 
         assertAccessDenied(
-                () -> classUnderTest.isMaximumFundingLevelOverridden(competition.getId()),
+                () -> classUnderTest.isMaximumFundingLevelConstant(competition.getId()),
                 () -> verify(competitionPermissionRules)
                         .externalUsersCannotViewCompetitionsInSetup(
                                 isA(CompetitionResource.class), isA(UserResource.class))
