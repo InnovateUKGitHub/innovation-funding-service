@@ -8,7 +8,6 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 public enum PaymentMilestoneEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
-    NOT_REQUESTING_FUNDING("not-requesting-funding"), // is this one needed?
     PAYMENT_MILESTONE_APPROVED("payment-milestones-approved"),
     PAYMENT_MILESTONE_RESET("payment-milestones-reset");
 

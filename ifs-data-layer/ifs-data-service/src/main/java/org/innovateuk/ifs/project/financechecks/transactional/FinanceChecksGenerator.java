@@ -18,9 +18,9 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -65,9 +65,6 @@ public class FinanceChecksGenerator {
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Autowired
-    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
-
-    @Autowired
     private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
@@ -84,6 +81,9 @@ public class FinanceChecksGenerator {
 
     @Autowired
     private ProjectProcurementMilestoneRepository projectProcurementMilestoneRepository;
+
+    @Value("${ifs.procurement.milestones.enabled}")
+    private boolean procurementMilestones;
 
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
@@ -124,11 +124,6 @@ public class FinanceChecksGenerator {
         if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
-        }
-
-        if (!competition.isProcurement()) {
-            PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
-            paymentMilestoneWorkflowHandler.notApplicable(partnerOrganisation, null);
         }
 
         ProjectFinance projectFinanceForOrganisation =

@@ -109,6 +109,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    @Value("${ifs.procurement.milestones.enabled}")
+    private boolean procurementMilestones;
+
     enum Notifications {
         INVITE_PROJECT_PARTNER_ORGANISATION
     }
@@ -225,21 +228,22 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                             organisation.getId());
 
 
-
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
-                                    paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
                                     Competition competition = project.getApplication().getCompetition();
+
+                                    if (procurementMilestones && competition.isProcurement()) {
+                                        paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    }
+
                                     if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
                                     }
-                                    if(competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())){
+                                    if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
                                         eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
                                     }
-                                    if(!competition.isProcurement()) {
-                                        paymentMilestoneWorkflowHandler.notApplicable(partnerOrganisation, null);
-                                    }
+
                                     invite.open();
 
                                     activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);

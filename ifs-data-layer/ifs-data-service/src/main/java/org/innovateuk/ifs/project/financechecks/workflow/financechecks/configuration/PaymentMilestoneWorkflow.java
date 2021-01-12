@@ -53,11 +53,6 @@ public class PaymentMilestoneWorkflow extends StateMachineConfigurerAdapter<Paym
                 .withExternal()
                 .source(APPROVED)
                 .event(PAYMENT_MILESTONE_RESET)
-                .target(REVIEW)
-                .and()
-                .withExternal()
-                .source(REVIEW)
-                .event(NOT_REQUESTING_FUNDING)
-                .target(NOT_APPLICABLE);
+                .target(REVIEW);
     }
 }
