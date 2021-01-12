@@ -45,7 +45,6 @@ public class OrganisationCreationForm implements Serializable {
         this.sicCodes.add("SIC1");
         this.executiveOfficers = new ArrayList<>();
         executiveOfficers.add("exec1");
-       // addressForm.setAddressType(AddressForm.AddressType.POSTCODE_LOOKUP);
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
