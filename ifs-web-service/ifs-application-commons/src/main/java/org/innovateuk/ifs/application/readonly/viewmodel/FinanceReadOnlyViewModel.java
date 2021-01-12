@@ -5,9 +5,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummar
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestoneViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
-import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
-
-import java.util.List;
 
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
 

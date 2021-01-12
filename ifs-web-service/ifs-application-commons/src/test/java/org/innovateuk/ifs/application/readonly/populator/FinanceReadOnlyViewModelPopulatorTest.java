@@ -100,5 +100,6 @@ public class FinanceReadOnlyViewModelPopulatorTest {
 
         assertEquals("Finances summary", viewModel.getName());
         assertEquals(application.getId(), (Long) viewModel.getApplicationId());
+        assertEquals(false, viewModel.isProcurementMilestones());
     }
 }
