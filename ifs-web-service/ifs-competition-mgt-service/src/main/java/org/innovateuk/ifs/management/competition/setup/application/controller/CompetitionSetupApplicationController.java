@@ -35,7 +35,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -320,8 +319,7 @@ public class CompetitionSetupApplicationController {
                                              @PathVariable long competitionId,
                                              @PathVariable long questionId,
                                              UserResource loggedInUser,
-                                             Model model,
-                                             RedirectAttributes redirectAttributes) {
+                                             Model model) {
         Supplier<String> view = () -> getQuestionPage(model, competitionRestService.getCompetitionById(competitionId).getSuccess(),
                 loggedInUser, questionId, true, competitionSetupForm);
 

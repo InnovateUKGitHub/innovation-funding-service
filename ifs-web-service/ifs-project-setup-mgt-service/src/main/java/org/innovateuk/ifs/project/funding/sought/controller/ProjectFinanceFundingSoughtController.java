@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.innovateuk.ifs.project.funding.sought.form.*;
 import org.innovateuk.ifs.project.funding.sought.viewmodel.*;
 import javax.validation.Valid;
