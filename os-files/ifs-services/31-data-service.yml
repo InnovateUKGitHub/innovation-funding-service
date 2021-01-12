@@ -246,8 +246,8 @@ items:
                   valueFrom:
                     configMapKeyRef:
                       name: docusign-config
-                      key: IFS_PROCUREMENT_MILESTONES_ENABLED
-                - name: IFS_DOCUSIGN_AUTH_KEY
+                      key: IFS_DOCUSIGN_AUTH_KEY
+                - name: IFS_PROCUREMENT_MILESTONES_ENABLED
                   valueFrom:
                     configMapKeyRef:
                       name: feature-toggle-config
