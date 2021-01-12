@@ -87,4 +87,11 @@ public class ProjectFinanceCheckSummaryViewModel {
         return hasSpendProfileStage;
     }
 
+    public boolean displayMilestoneColumn() {
+        return this.financeCheckSummaryResource.getPartnerStatusResources().stream()
+                .filter(partner -> partner.getPaymentMilestoneState().isPresent())
+                .findAny()
+                .isPresent();
+    }
+
 }

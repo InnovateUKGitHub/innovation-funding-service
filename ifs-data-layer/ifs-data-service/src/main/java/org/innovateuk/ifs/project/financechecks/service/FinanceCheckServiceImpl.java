@@ -400,9 +400,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private Optional<PaymentMilestoneState> getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
-        return getPartnerOrganisation(projectId, organisationId)
-                        .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation))
-                                .andOnSuccessReturn(process -> process.getProcessState()).getOptionalSuccessObject();
+        Optional<PaymentMilestoneProcess> process = getPartnerOrganisation(projectId, organisationId)
+                        .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation)).getOptionalSuccessObject();
+        return process.isPresent() ? Optional.of(process.get().getProcessState()) : Optional.empty();
     }
 
     @Override
