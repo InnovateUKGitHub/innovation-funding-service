@@ -254,6 +254,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run Keyword If  '${comp_type}' == '${compType_ATI}'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Back to competition details
