@@ -110,7 +110,7 @@ public class ProjectFinanceChangesViewModelPopulator {
     }
 
     private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, CompetitionResource competition) {
-        if (competition.isProcurement()) {
+        if (competition.isProcurementMilestones()) {
             List<ApplicationProcurementMilestoneResource> applicationMilestones = applicationProcurementMilestoneRestService.getByApplicationId(project.getApplication()).getSuccess();
             List<ProjectProcurementMilestoneResource> projectMilestones = projectProcurementMilestoneRestService.getByProjectId(project.getId()).getSuccess();
 
