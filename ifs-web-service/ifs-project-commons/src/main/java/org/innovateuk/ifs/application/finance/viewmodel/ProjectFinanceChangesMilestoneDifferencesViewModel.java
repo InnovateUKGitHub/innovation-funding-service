@@ -12,4 +12,8 @@ public class ProjectFinanceChangesMilestoneDifferencesViewModel {
     public List<MilestoneChangeViewModel> getMilestoneDifferences() {
         return milestoneDifferences;
     }
+
+    public boolean hasChanges() {
+        return !milestoneDifferences.isEmpty();
+    }
 }

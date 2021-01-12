@@ -40,4 +40,11 @@ public class ProjectFinanceChangesProjectFinancesViewModel {
                     a.getProjectCost().add(b.getProjectCost()))
         ).get();
     }
+
+    public boolean hasChanges() {
+        if (vat != null && vat.isProjectCostDifferent()) {
+            return true;
+        }
+        return entries.stream().anyMatch(entry -> entry.isProjectCostDifferent());
+    }
 }

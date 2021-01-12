@@ -139,6 +139,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(projectId);
             boolean isLeadPartnerOrganisation = leadOrganisation.get().getId().equals(organisationId);
 
+            boolean showChangesLink = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, project, organisation.get()).hasChanges();
+
             model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition.get(), eligibilityOverview.get(),
                     organisation.get().getName(),
                     isLeadPartnerOrganisation,
@@ -151,7 +153,8 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     false,
                     isUsingJesFinances,
                     editAcademicFinances,
-                    projectFinances
+                    projectFinances,
+                    showChangesLink
             ));
 
             model.addAttribute("eligibilityForm", eligibilityForm);

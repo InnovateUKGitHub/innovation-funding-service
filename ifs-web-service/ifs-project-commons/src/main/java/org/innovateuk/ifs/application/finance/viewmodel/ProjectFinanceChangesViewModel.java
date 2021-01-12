@@ -73,4 +73,12 @@ public class ProjectFinanceChangesViewModel {
     public ProjectFinanceChangesProjectFinancesViewModel getProjectFinances() {
         return projectFinances;
     }
+
+    public boolean hasChanges() {
+        if (projectFinances != null && projectFinances.hasChanges()) {
+            return true;
+        }
+        return milestoneDifferences != null && milestoneDifferences.hasChanges();
+
+    }
 }

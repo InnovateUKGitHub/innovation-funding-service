@@ -476,6 +476,8 @@ public class ProjectFinanceChecksController {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));
         }
 
+        boolean showChangesLink = projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, organisation).hasChanges();
+
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(project, competition, eligibilityOverview,
                 organisation.getName(),
                 isLeadPartnerOrganisation,
@@ -488,7 +490,8 @@ public class ProjectFinanceChecksController {
                 true,
                 isUsingJesFinances,
                 false,
-                projectFinances));
+                projectFinances,
+                showChangesLink));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 
