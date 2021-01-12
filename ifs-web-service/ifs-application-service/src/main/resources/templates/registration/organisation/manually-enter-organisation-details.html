@@ -33,7 +33,7 @@
             slow down the application process, which could delay your funding payments.</p>
 
         <form th:object="${organisationForm}"
-              th:action="@{/organisation/create/save-organisation}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post"
               novalidate="novalidate">
             <div class="govuk-form-group"
@@ -120,7 +120,7 @@
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
                 </div>
             <div class="govuk-form-group">
-                <button class="govuk-button" type="submit" id="save-and-continue-button">Save and continue</button>
+                <button class="govuk-button" type="submit" id="save-and-continue-button" formaction="/organisation/create/save-organisation">Save and continue</button>
             </div>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end"/>

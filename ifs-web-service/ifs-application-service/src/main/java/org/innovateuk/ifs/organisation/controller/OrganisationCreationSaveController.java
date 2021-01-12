@@ -49,7 +49,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                  Model model,
                                  HttpServletRequest request,
                                  UserResource user) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -68,7 +68,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
+        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
 
         BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
@@ -105,10 +105,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());
         }
-
-        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
-
-        return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
+        return organisationResource;
     }
 
     @PostMapping(value= "organisation-type/manually-enter-organisation-details", params = FORM_ACTION_PARAMETER)

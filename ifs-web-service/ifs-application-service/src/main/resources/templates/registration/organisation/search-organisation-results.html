@@ -62,7 +62,7 @@
         <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})"/>
         <th:block>
            <h3 class="govuk-heading-m">My organisation is not registered on Companies House</h3>
-                <p class="govuk-body"><a th:href="'#'">Find out what to do </a> if your organisation has not yet been registered or does not need to be registered on
+                <p class="govuk-body"><a th:href="@{/organisation/create/organisation-type/not-registered-on-companies-house}">Find out what to do </a> if your organisation has not yet been registered or does not need to be registered on
                    Companies House.</p>
          </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>
