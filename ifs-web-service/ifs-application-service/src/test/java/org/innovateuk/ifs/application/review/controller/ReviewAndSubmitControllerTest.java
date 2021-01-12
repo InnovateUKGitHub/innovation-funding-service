@@ -59,11 +59,9 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     public void applicationConfirmSubmit() throws Exception {
         long applicationId = 2L;
 
-        mockMvc.perform(get("/application/" + applicationId + "/confirm-submit")
-                .flashAttr("termsAgreed", true))
+        mockMvc.perform(get("/application/" + applicationId + "/confirm-submit?termsAgreed=true"))
                 .andExpect(view().name("application-confirm-submit"))
                 .andExpect(model().attribute("applicationId", applicationId));
-
     }
 
     @Test

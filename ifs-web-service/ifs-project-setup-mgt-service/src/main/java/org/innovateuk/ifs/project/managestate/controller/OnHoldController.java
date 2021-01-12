@@ -48,7 +48,7 @@ public class OnHoldController {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
         if (project.getProjectState() != ON_HOLD) {
-            return redirectToManagePage(projectId, competitionId);
+            return redirectToManagePage(projectId, competitionId, false);
         }
         ProjectStateCommentsResource comments = projectStateRestService.findOpenComments(projectId).getSuccess();
         form.setCommentId(comments.id);
@@ -59,13 +59,11 @@ public class OnHoldController {
     @PostMapping
     public String resumeProject(@PathVariable long projectId,
                                 @PathVariable long competitionId,
-                                UserResource user,
-                                RedirectAttributes redirectAttributes) {
+                                UserResource user) {
         projectStateRestService.resumeProject(projectId).getSuccess();
-        redirectAttributes.addFlashAttribute("resumedFromOnHold", true);
         return user.hasRole(Role.IFS_ADMINISTRATOR)
-                ? redirectToManagePage(projectId, competitionId)
-                : redirectToProjectDetails(projectId, competitionId);
+                ? redirectToManagePage(projectId, competitionId, true)
+                : redirectToProjectDetails(projectId, competitionId, true);
     }
 
     @PostMapping(params = "add-comment")
@@ -93,12 +91,12 @@ public class OnHoldController {
     }
 
     private String redirectToManagePage(long projectId,
-                                        long competitionId) {
-        return format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
+                                        long competitionId, boolean resumedFromOnHold) {
+        return format("redirect:/competition/%d/project/%d/manage-status?resumedFromOnHold=%s", competitionId, projectId, resumedFromOnHold);
     }
 
     private String redirectToProjectDetails(long projectId,
-                                        long competitionId) {
-        return format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
+                                        long competitionId, boolean resumedFromOnHold) {
+        return format("redirect:/competition/%d/project/%d/details?resumedFromOnHold=%s", competitionId, projectId, resumedFromOnHold);
     }
 }

@@ -76,8 +76,7 @@ public class ProjectFinanceFundingLevelController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable long projectId,
-                                    Model model,
-                                    RedirectAttributes redirectAttributes) {
+                                    Model model) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
 
@@ -90,10 +89,9 @@ public class ProjectFinanceFundingLevelController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFundingLevels(finances, form));
-            return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                redirectAttributes.addFlashAttribute("showFundingLevelMessage", true);
-                return format("redirect:/project/%d/finance-check-overview", projectId);
-            });
+            return validationHandler.failNowOrSucceedWith(failureView, () ->
+                format("redirect:/project/%d/finance-check-overview?showFundingLevelMessage=true", projectId)
+            );
         });
     }
 
