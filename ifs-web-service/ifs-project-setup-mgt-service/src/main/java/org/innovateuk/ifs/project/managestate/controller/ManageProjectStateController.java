@@ -41,7 +41,7 @@ public class ManageProjectStateController {
     public String manageProjectState(@ModelAttribute(value = "form", binding = false) ManageProjectStateForm form,
                                      BindingResult result,
                                      @PathVariable long projectId,
-                                     @RequestParam boolean resumedFromOnHold,
+                                     @RequestParam(required = false, defaultValue = "false") boolean resumedFromOnHold,
                                      Model model,
                                      UserResource user) {
         model.addAttribute("resumedFromOnHold", resumedFromOnHold);

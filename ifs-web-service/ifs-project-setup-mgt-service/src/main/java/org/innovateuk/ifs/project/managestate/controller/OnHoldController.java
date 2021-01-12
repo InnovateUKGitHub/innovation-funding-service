@@ -91,11 +91,13 @@ public class OnHoldController {
 
     private String redirectToManagePage(long projectId,
                                         long competitionId, boolean resumedFromOnHold) {
-        return format("redirect:/competition/%d/project/%d/manage-status?resumedFromOnHold=%s", competitionId, projectId, resumedFromOnHold);
+        String resumedPart = resumedFromOnHold ? "?resumedFromOnHold=true" : "";
+        return format("redirect:/competition/%d/project/%d/manage-status%s", competitionId, projectId, resumedPart);
     }
 
     private String redirectToProjectDetails(long projectId,
                                         long competitionId, boolean resumedFromOnHold) {
-        return format("redirect:/competition/%d/project/%d/details?resumedFromOnHold=%s", competitionId, projectId, resumedFromOnHold);
+        String resumedPart = resumedFromOnHold ? "?resumedFromOnHold=true" : "";
+        return format("redirect:/competition/%d/project/%d/details%s", competitionId, projectId, resumedPart);
     }
 }

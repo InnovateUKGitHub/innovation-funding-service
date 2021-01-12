@@ -66,8 +66,8 @@ public class FinanceOverviewController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
     public String view(@PathVariable("projectId") Long projectId,
-                       @RequestParam boolean showFundingLevelMessage,
-                       @RequestParam boolean showFundingAmountMessage,
+                       @RequestParam(required = false, defaultValue = "false") boolean showFundingLevelMessage,
+                       @RequestParam(required = false, defaultValue = "false") boolean showFundingAmountMessage,
                        Model model, UserResource loggedInUser) {
         model.addAttribute("showFundingLevelMessage", showFundingLevelMessage);
         model.addAttribute("showFundingAmountMessage", showFundingAmountMessage);

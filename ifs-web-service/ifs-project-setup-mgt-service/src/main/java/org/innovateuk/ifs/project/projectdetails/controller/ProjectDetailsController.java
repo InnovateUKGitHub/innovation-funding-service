@@ -84,7 +84,7 @@ public class ProjectDetailsController {
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
-                                     @RequestParam boolean displayFinanceReviewerSuccess,
+                                     @RequestParam(required = false, defaultValue = "false") boolean displayFinanceReviewerSuccess,
                                      UserResource loggedInUser,
                                      boolean isSpendProfileGenerated) {
 

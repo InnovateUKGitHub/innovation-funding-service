@@ -109,7 +109,7 @@ public class OnHoldControllerTest extends BaseControllerMockMVCTest<OnHoldContro
 
         mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/on-hold-status", competitionId, projectId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status?resumedFromOnHold=false", competitionId, projectId)));
+                .andExpect(redirectedUrl(String.format("/competition/%d/project/%d/manage-status", competitionId, projectId)));
     }
 
     @Test
