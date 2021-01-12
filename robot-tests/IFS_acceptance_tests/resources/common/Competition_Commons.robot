@@ -140,7 +140,7 @@ the user fills in the CS funding eligibility
     ...                                   AND              the user selects the checkbox     research-categories-34  #Industrial
     ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
     the user clicks the button/link       jQuery = button:contains("Done")
-    Run Keyword If "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
+    Run Keyword If  "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
     ...  ELSE IF    '${researchCategory}' == 'false'       run keywords                        the user fills in maximum funding level percentage
     ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
     ...                                   AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
