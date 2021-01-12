@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ProjectProcurementMilestoneRepository extends ProcurementMilestoneRepository<ProjectProcurementMilestone> {
 
-    List<ProjectProcurementMilestone> findByProjectFinanceProjectIdAndProjectFinanceOrganisationId(long applicationId, long organisationId);
+    List<ProjectProcurementMilestone> findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(long applicationId, long organisationId);
 }

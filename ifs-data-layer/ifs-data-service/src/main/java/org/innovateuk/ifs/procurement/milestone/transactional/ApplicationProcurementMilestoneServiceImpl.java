@@ -47,10 +47,9 @@ public class ApplicationProcurementMilestoneServiceImpl
 
     @Override
     public ServiceResult<List<ApplicationProcurementMilestoneResource>> getByApplicationIdAndOrganisationId(long applicationId, long organisationId) {
-        return serviceSuccess(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationId(applicationId, organisationId))
-                .andOnSuccessReturn(milestones ->
-                        milestones.stream()
-                                .map(mapper::mapToResource)
-                                .collect(toList()));
+        return serviceSuccess(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId)
+                .stream()
+                .map(mapper::mapToResource)
+                .collect(toList()));
     }
 }
