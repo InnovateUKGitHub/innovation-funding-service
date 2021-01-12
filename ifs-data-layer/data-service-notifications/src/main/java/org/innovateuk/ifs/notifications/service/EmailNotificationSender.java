@@ -14,7 +14,6 @@ import org.innovateuk.ifs.notifications.resource.NotificationMessage;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,11 +49,8 @@ class EmailNotificationSender implements NotificationSender {
     @Autowired
     private TransactionalHelper transactionalHelper;
 
-    @Value("#{'${ifs.emailNotification.whitelist}'.split(',')}")
-    protected List<String> whitelist;
-
-    @Value("#{'${ifs.emailNotification.blacklist}'.split(',')}")
-    protected List<String> blacklist;
+    @Autowired
+    private WhiteBlackDomainFilter whiteBlackDomainFilter;
 
     @Override
     public NotificationMedium getNotificationMedium() {
@@ -65,10 +61,10 @@ class EmailNotificationSender implements NotificationSender {
     public ServiceResult<Notification> sendNotification(Notification notification) {
 
         for (NotificationMessage notificationMessage : notification.getTo()) {
-            if (!WhiteBlackDomainFilter.passesFilterCheck(whitelist, blacklist, notificationMessage.getTo().getEmailAddress())) {
+            if (!whiteBlackDomainFilter.passesFilterCheck(notificationMessage.getTo().getEmailAddress())) {
                 LOG.error("Discarded email notification due to whitelist/blacklist rules for one or more email recipients: "
                         + notificationMessage.getTo().getEmailAddress());
-                // I'm treating this as an error, not as code but a build/release process error that needs to get propagated
+                // I'm treating this as an error, not as code but a build/release process error that we need to propagate and signal
                 return serviceFailure(EMAILS_NOT_SENT_MULTIPLE);
             }
         }

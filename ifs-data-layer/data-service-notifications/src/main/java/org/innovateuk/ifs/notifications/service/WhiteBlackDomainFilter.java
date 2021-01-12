@@ -1,37 +1,43 @@
 package org.innovateuk.ifs.notifications.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
 public class WhiteBlackDomainFilter {
 
+    private static final String WILDCARD = "*";
+
+    @Value("#{'${ifs.emailNotification.whitelist}'.split(',')}")
+    protected List<String> whitelist;
+
+    @Value("#{'${ifs.emailNotification.blacklist}'.split(',')}")
+    protected List<String> blacklist;
+
     /**
-     * Given black and white email domains, determine if the email should be sent using the usual white/black logic.
+     * Determine if the email should be sent using the usual white/black logic.
      *
      * Blacklisting blocks by precedence
      * Case insensitive
-     * An empty whitelist allows all
-     * Match using string endsWith for partial domains. So foo@foo.ukri.org will match ukri.org
+     * A WILDCARD whitelist allows all
+     * Match using string endsWith for partial domains. So foo@subdomain.ukri.org will match ukri.org
      *
-     * @param whitelist white domains
-     * @param blacklist black domains
      * @param email the email to check
      * @return true if the email passes and should send, false otherwise
      */
-    public static boolean passesFilterCheck(List<String> whitelist, List<String> blacklist, String email) {
-        if (email == null || !email.contains("@")) {
+    public boolean passesFilterCheck(String email) {
+        if (!isValidEmail(email)) {
             return false;
         }
-        String[] split = email.split("@");
-        if (split == null || split.length != 2 || split[1].isEmpty()) {
-            return false;
-        }
-        String emailDomain = split[1].toLowerCase();
+        String emailDomain = email.split("@")[1].toLowerCase();
         for (String item : blacklist) {
             if (emailDomain.endsWith(item.toLowerCase())) {
                 return false;
             }
         }
-        if (whitelist.isEmpty()) {
+        if (isWilcardWhitelist()) {
             return true;
         }
         for (String item : whitelist) {
@@ -42,4 +48,29 @@ public class WhiteBlackDomainFilter {
         return false;
     }
 
+    private boolean isWilcardWhitelist() {
+        if (whitelist.size() == 1 && whitelist.get(0).equals(WILDCARD)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return false;
+        }
+        String[] split = email.split("@");
+        if (split == null || split.length != 2 || split[1].isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    protected void setWhitelist(List<String> whitelist) {
+        this.whitelist = whitelist;
+    }
+
+    protected void setBlacklist(List<String> blacklist) {
+        this.blacklist = blacklist;
+    }
 }
