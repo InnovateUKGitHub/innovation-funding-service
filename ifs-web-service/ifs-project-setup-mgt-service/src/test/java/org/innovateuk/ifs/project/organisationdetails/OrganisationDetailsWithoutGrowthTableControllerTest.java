@@ -117,7 +117,7 @@ public class OrganisationDetailsWithoutGrowthTableControllerTest extends BaseCon
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(Arrays.asList(new PartnerOrganisationResource()))));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(new RestResult(restSuccess(competition)));
         when(financeCheckService.getFinanceCheckSummary(projectId)).thenReturn(serviceSuccess(financeCheckSummaryResource));
-        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(restSuccess(false));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionId)).thenReturn(restSuccess(false));
     }
 
     private MvcResult callEndpoint() throws Exception {
