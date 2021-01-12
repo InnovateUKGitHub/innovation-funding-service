@@ -49,7 +49,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                  Model model,
                                  HttpServletRequest request,
                                  UserResource user) {
-        organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
+        organisationForm = getFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE);
         addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
@@ -105,8 +105,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         if (OrganisationTypeEnum.RESEARCH.getId() != organisationForm.getOrganisationTypeId()) {
             organisationResource.setCompaniesHouseNumber(organisationForm.getSearchOrganisationId());
         }
-        return organisationResource;
-    }
+
+        organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
 
         return organisationJourneyEnd.completeProcess(request, response, user, organisationResource.getId());
     }

@@ -47,8 +47,6 @@ public class OrganisationCreationForm implements Serializable {
     private AddressResource organisationAddress;
     private String organisationNumber;
     private String businessType;
-    private List<String> sicCodes;
-    private List<String> executiveOfficers;
     @Valid
     private AddressForm addressForm = new AddressForm();
 
@@ -56,9 +54,9 @@ public class OrganisationCreationForm implements Serializable {
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
         this.sicCodes = new ArrayList<>();
-        this.sicCodes.add("SIC1");
+        this.sicCodes.add(new OrganisationSicCodeResource());
         this.executiveOfficers = new ArrayList<>();
-        executiveOfficers.add("exec1");
+        executiveOfficers.add(new OrganisationExecutiveOfficerResource());
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
@@ -154,22 +152,6 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setBusinessType(String businessType) {
         this.businessType = businessType;
-    }
-
-    public List<String> getSicCodes() {
-        return sicCodes;
-    }
-
-    public void setSicCodes(List<String> sicCodes) {
-        this.sicCodes = sicCodes;
-    }
-
-    public List<String> getExecutiveOfficers() {
-        return executiveOfficers;
-    }
-
-    public void setExecutiveOfficers(List<String> executiveOfficers) {
-        this.executiveOfficers = executiveOfficers;
     }
 
     public AddressForm getAddressForm() {
