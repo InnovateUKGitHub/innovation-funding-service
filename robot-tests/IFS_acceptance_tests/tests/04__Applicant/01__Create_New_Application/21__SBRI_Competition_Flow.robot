@@ -19,6 +19,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8198  SBRI Type 4: Contract section content changes for procurements (replacing GOL)
 ...
+...               IFS-8942  SBRI Milestones - Edit project duration in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -186,6 +188,25 @@ Internal user finance checks page
     [Documentation]    IFS-8127
     When the user navigates to the page                                 ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     Then the user should see the correct data on finance check page
+
+The project finance user is shown a validation message when duration is blank
+    [Documentation]    IFS-8942
+    Given the user clicks the button/link                  link = Edit
+    When Clear Element Text                                durationInMonths
+    And the user clicks the button/link                    jQuery = button:contains("Save and return to project finances")
+    Then the user should see a field and summary error     This field cannot be left blank.
+
+The project finance user is shown a validation message when duration is less than allowed
+    [Documentation]    IFS-8942
+    Given the user enters text to a text field             id = durationInMonths  1
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
+
+The project finance user sets the duration back to a valid value
+   [Documentation]    IFS-8942
+    Given the user enters text to a text field             id = durationInMonths  3
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see the element                   jQuery = dd:contains("3 months")
 
 Internal user eligibility page
     [Documentation]    IFS-8127
