@@ -18,7 +18,10 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+
+import static java.util.concurrent.CompletableFuture.completedFuture;
 
 @Component
 public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
@@ -46,7 +49,10 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         CompetitionResource competition = data.getCompetition();
         ApplicationResource application = data.getApplication();
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
-        Future<ApplicationProcurementMilestoneViewModel> applicationProcurementMilestoneResources = async(() -> applicationProcurementMilestoneViewModelPopulator.populate(application));
+        Future<ApplicationProcurementMilestoneViewModel> applicationProcurementMilestoneResources =
+                competition.isProcurementMilestones() ?
+                async(() -> applicationProcurementMilestoneViewModelPopulator.populate(application)) :
+                completedFuture(null);
         Future<ApplicationFinanceSummaryViewModel> applicationFinanceSummaryViewModel = async(() -> applicationFinanceSummaryViewModelPopulator.populate(application.getId(), data.getUser()));
         Future<ApplicationResearchParticipationViewModel> applicationResearchParticipationViewModel = async(() -> applicationResearchParticipationViewModelPopulator.populate(application.getId()));
         Future<ApplicationFundingBreakdownViewModel> applicationFundingBreakdownViewModel = async(() -> applicationFundingBreakdownViewModelPopulator.populate(application.getId(), data.getUser()));
