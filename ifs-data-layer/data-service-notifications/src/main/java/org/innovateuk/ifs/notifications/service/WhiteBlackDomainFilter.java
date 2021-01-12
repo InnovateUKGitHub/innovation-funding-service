@@ -10,10 +10,10 @@ public class WhiteBlackDomainFilter {
 
     private static final String WILDCARD = "*";
 
-    @Value("#{'${ifs.emailNotification.whitelist}'.split(',')}")
+    @Value("#{'${ifs.email.whitelist}'.split(',')}")
     protected List<String> whitelist;
 
-    @Value("#{'${ifs.emailNotification.blacklist}'.split(',')}")
+    @Value("#{'${ifs.email.blacklist}'.split(',')}")
     protected List<String> blacklist;
 
     /**
