@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.notifications.service;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
@@ -12,6 +14,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationMessage;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -35,6 +39,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @SuppressWarnings("unused")
 class EmailNotificationSender implements NotificationSender {
 
+    private static final Log LOG = LogFactory.getLog(EmailNotificationSender.class);
+
     @Autowired
     private EmailService emailService;
 
@@ -44,6 +50,12 @@ class EmailNotificationSender implements NotificationSender {
     @Autowired
     private TransactionalHelper transactionalHelper;
 
+    @Value("#{'${ifs.emailNotification.whitelist}'.split(',')}")
+    protected List<String> whitelist;
+
+    @Value("#{'${ifs.emailNotification.blacklist}'.split(',')}")
+    protected List<String> blacklist;
+
     @Override
     public NotificationMedium getNotificationMedium() {
         return EMAIL;
@@ -51,6 +63,15 @@ class EmailNotificationSender implements NotificationSender {
 
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification) {
+
+        for (NotificationMessage notificationMessage : notification.getTo()) {
+            if (!WhiteBlackDomainFilter.passesFilterCheck(whitelist, blacklist, notificationMessage.getTo().getEmailAddress())) {
+                LOG.error("Discarded email notification due to whitelist/blacklist rules for one or more email recipients: "
+                        + notificationMessage.getTo().getEmailAddress());
+                // I'm treating this as an error, not as code but a build/release process error that needs to get propagated
+                return serviceFailure(EMAILS_NOT_SENT_MULTIPLE);
+            }
+        }
 
         return renderTemplates(notification).andOnSuccess(templates -> {
 
