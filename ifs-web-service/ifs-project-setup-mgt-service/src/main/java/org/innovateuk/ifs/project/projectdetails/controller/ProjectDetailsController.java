@@ -4,12 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
@@ -34,12 +37,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -59,6 +63,7 @@ public class ProjectDetailsController {
     private PartnerOrganisationRestService partnerOrganisationRestService;
     private OrganisationRestService organisationRestService;
     private FinanceReviewerRestService financeReviewerRestService;
+    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
     public ProjectDetailsController() {
     }
@@ -68,13 +73,15 @@ public class ProjectDetailsController {
                                     ProjectDetailsService projectDetailsService,
                                     PartnerOrganisationRestService partnerOrganisationRestService,
                                     OrganisationRestService organisationRestService,
-                                    FinanceReviewerRestService financeReviewerRestService) {
+                                    FinanceReviewerRestService financeReviewerRestService,
+                                    ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
         this.partnerOrganisationRestService = partnerOrganisationRestService;
         this.organisationRestService = organisationRestService;
         this.financeReviewerRestService = financeReviewerRestService;
+        this.projectProcurementMilestoneRestService = projectProcurementMilestoneRestService;
     }
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
@@ -200,7 +207,7 @@ public class ProjectDetailsController {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        validateDuration(form.getDurationInMonths(), validationHandler);
+        validateDuration(projectId, form.getDurationInMonths(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -210,7 +217,7 @@ public class ProjectDetailsController {
         });
     }
 
-    private void validateDuration(String durationInMonths, ValidationHandler validationHandler) {
+    private void validateDuration(long projectId, String durationInMonths, ValidationHandler validationHandler) {
 
         if (StringUtils.isBlank(durationInMonths)) {
             validationHandler.addAnyErrors(serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
@@ -225,6 +232,23 @@ public class ProjectDetailsController {
         if (Long.parseLong(durationInMonths) < 1) {
             validationHandler.addAnyErrors(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), toField("durationInMonths"));
         }
+
+        RestResult<List<ProjectProcurementMilestoneResource>> milestonesResult = projectProcurementMilestoneRestService.getByProjectId(projectId);
+
+        if (noMilestonesFound(milestonesResult)) {
+            return;
+        }
+
+        List<ProjectProcurementMilestoneResource> milestones = milestonesResult.getSuccess();
+        Optional<Integer> maxMilestoneMonth = milestones.stream().map(ProjectProcurementMilestoneResource::getMonth).max(Comparator.naturalOrder());
+
+        if (maxMilestoneMonth.isPresent() && (Integer.parseInt(durationInMonths) < maxMilestoneMonth.get())) {
+            validationHandler.addAnyErrors(serviceFailure(new Error(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE, HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
+        }
+    }
+
+    private boolean noMilestonesFound(RestResult<List<ProjectProcurementMilestoneResource>> milestonesResult) {
+        return milestonesResult.isFailure() && milestonesResult.getStatusCode() == HttpStatus.NOT_FOUND;
     }
 
     private String redirectToProjectDetails(long projectId, long competitionId) {
