@@ -350,7 +350,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         FinanceCheckEligibilityResource eligibility = result.getSuccess();
 
-        assertEquals((long) eligibility.getDurationInMonths(), 5L);
+        assertEquals((long) eligibility.getDurationInMonths(), 6L);
         assertEquals(projectFinanceResource.getTotal(), eligibility.getTotalCost());
         assertEquals(projectFinanceResource.getGrantClaimPercentage(), eligibility.getPercentageGrant());
         assertEquals(projectFinanceResource.getTotalFundingSought(), eligibility.getFundingSought());

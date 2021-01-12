@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons.exception;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,10 @@ public class ObjectNotFoundException extends IFSRuntimeException {
 
     public ObjectNotFoundException(List<Object> arguments) {
         super(arguments);
+    }
+
+    public ObjectNotFoundException(String message) {
+        super(message, new ArrayList<>());
     }
 
     public ObjectNotFoundException(String message, List<Object> arguments) {
