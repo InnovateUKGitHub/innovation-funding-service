@@ -5,20 +5,26 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.util.CollectionFunctions;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
  */
 
-@FieldRequiredIf(required = "organisationSearchName", argument = "organisationSearching", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchDisabled", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchEnabled", predicate = true, message = "{validation.improved.organisationsearchname.required}")
 @FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
@@ -31,6 +37,13 @@ public class OrganisationCreationForm implements Serializable {
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     private String organisationName;
+    private Boolean newOrganisationSearchEnabled;
+    private Long selectedExistingOrganisationId;
+    private String selectedExistingOrganisationName;
+
+    private int searchPageIndexPosition = 1;
+
+    private int totalSearchResults = 0;
     private String organisationNumber;
     private String businessType;
     private List<String> sicCodes;
@@ -171,6 +184,63 @@ public class OrganisationCreationForm implements Serializable {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
     }
 
+    public int getSearchPageIndexPosition() {
+        return searchPageIndexPosition;
+    }
+
+    public void setSearchPageIndexPosition(int searchPageIndexPosition) {
+        this.searchPageIndexPosition = searchPageIndexPosition;
+    }
+    public int  getTotalSearchResults() {
+        return  totalSearchResults;
+    }
+
+    public void setTotalSearchResults(int totalSearchResults) {
+        this.totalSearchResults = totalSearchResults;
+    }
+
+    public void setNewOrganisationSearchEnabled(boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
+    }
+
+    public boolean isNewOrganisationSearchEnabled() {
+        return newOrganisationSearchEnabled;
+    }
+
+    public Boolean getNewOrganisationSearchEnabled() {
+        return newOrganisationSearchEnabled;
+    }
+
+    public void setNewOrganisationSearchEnabled(Boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
+    }
+
+    public Long getSelectedExistingOrganisationId() {
+        return selectedExistingOrganisationId;
+    }
+
+    public void setSelectedExistingOrganisationId(Long selectedExistingOrganisationId) {
+        this.selectedExistingOrganisationId = selectedExistingOrganisationId;
+    }
+
+    public String getSelectedExistingOrganisationName() {
+        return selectedExistingOrganisationName;
+    }
+
+    public void setSelectedExistingOrganisationName(String selectedExistingOrganisationName) {
+        this.selectedExistingOrganisationName = selectedExistingOrganisationName;
+    }
+
+    @JsonIgnore
+    public boolean isImprovedSearchDisabled() {
+        return isOrganisationSearching() && !isNewOrganisationSearchEnabled();
+    }
+
+    @JsonIgnore
+    public boolean isImprovedSearchEnabled() {
+        return isOrganisationSearching() && isNewOrganisationSearchEnabled();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -188,6 +258,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(searchOrganisationId, that.searchOrganisationId)
                 .append(organisationSearchResults, that.organisationSearchResults)
                 .append(organisationName, that.organisationName)
+                .append(searchPageIndexPosition, that.searchPageIndexPosition)
                 .append(organisationNumber, that.organisationNumber)
                 .append(businessType,that.businessType)
                 .append(sicCodes,that.sicCodes)
@@ -207,6 +278,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(manualEntry)
                 .append(organisationSearchResults)
                 .append(organisationName)
+                .append(searchPageIndexPosition)
                 .append(organisationNumber)
                 .append(businessType)
                 .append(sicCodes)
