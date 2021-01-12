@@ -3,7 +3,9 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -35,6 +37,20 @@ public class GrantClaimMaximumRestServiceMocksTest extends BaseRestServiceUnitTe
 
         assertEquals(expected, result);
     }
+
+    @Test
+    public void getGrantClaimMaximumByCompetitionId() {
+        long competitionId = 1L;
+        List<GrantClaimMaximumResource> expected = newGrantClaimMaximumResource().build(2);
+
+        setupGetWithRestResultExpectations(format("%s/competition/%s", grantClaimMaximumRestURL, competitionId), new ParameterizedTypeReference<List<GrantClaimMaximumResource>>() {}, expected);
+
+        List<GrantClaimMaximumResource> result = service.getGrantClaimMaximumByCompetitionId(competitionId)
+                .getSuccess();
+
+        assertEquals(expected, result);
+    }
+
 
     @Test
     public void revertToDefaultForCompetitionType() {
@@ -72,6 +88,6 @@ public class GrantClaimMaximumRestServiceMocksTest extends BaseRestServiceUnitTe
         setupGetWithRestResultExpectations(format("%s/maximum-funding-level-overridden/%s", grantClaimMaximumRestURL,
                 competitionId), Boolean.class, true);
 
-        assertTrue(service.isMaximumFundingLevelOverridden(competitionId).getSuccess());
+        assertTrue(service.isMaximumFundingLevelConstant(competitionId).getSuccess());
     }
 }

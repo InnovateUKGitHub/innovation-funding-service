@@ -66,7 +66,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
         if (includeYourOrganisationSection) {
             boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                     organisation::getOrganisationTypeEnum,
-                    () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
+                    () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
             model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(
                     project.getApplication(),
                     competition,

@@ -417,7 +417,7 @@ the lead partner see the completed project details
 
 the non-lead partner cannot changes any project details
     the user clicks the button/link             link = Project details
-    the user should see the element             jQuery = td:contains("Target start date") ~ td:contains("1 Jan 2022")
+    the user should see the element             jQuery = td:contains("Target start date") ~ td:contains("1 Jan 2023")
     the user should not see the element         link = Target start date
     the user should see the element             jQuery = td:contains("Correspondence address") ~ td:contains("Montrose House 1, Neston, CH64 3RU")
     the user should not see the element         link = Correspondence address
