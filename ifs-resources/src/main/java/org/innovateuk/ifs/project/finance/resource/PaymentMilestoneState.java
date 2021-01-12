@@ -51,4 +51,8 @@ public enum PaymentMilestoneState implements ProcessState, IdentifiableEnum {
         return this == REVIEW;
     }
 
+    public boolean isApproved() {
+        return this == APPROVED;
+    }
+
 }

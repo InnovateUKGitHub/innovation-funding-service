@@ -163,7 +163,7 @@
                     </td>
                     <td th:if="${model.financeCheckSummaryResource.procurement}" class="govuk-table__cell aligncentre cell-border-right">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
-                           th:text="${orgDetails.paymentMilestoneState.isInReview() ? 'Review' : 'Approved'}"
+                           th:text="${orgDetails.paymentMilestoneApproved ? 'Approved' : 'Review'}"
                            class="govuk-link"/>
                     </td>
                     <td class="govuk-table__cell aligncentre">
