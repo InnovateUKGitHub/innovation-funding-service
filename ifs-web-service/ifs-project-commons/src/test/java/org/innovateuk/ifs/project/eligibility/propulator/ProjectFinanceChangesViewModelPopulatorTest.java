@@ -70,7 +70,6 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
     @Mock
     private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
 
-
     private long projectId = 2L;
     private long applicationId = 4L;
     private long organisationId = 3L;
@@ -90,7 +89,7 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withFinanceOrganisationDetails(financeOrganisationDetails).build();
         when(applicationFinanceRestService.getFinanceDetails(applicationId, organisationId)).thenReturn(restSuccess(applicationFinanceResource));
 
-        CompetitionResource competitionResource = newCompetitionResource().withFundingType(FundingType.PROCUREMENT).build();
+        CompetitionResource competitionResource = newCompetitionResource().withProcurementMilestones(true).build();
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
     }
 
@@ -116,7 +115,7 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
 
-        assertThat(result.getMilestoneDifferences()).isNull();
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).isEmpty();
     }
 
     @Test
