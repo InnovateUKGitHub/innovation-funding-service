@@ -47,7 +47,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         CompetitionResource competition = data.getCompetition();
         ApplicationResource application = data.getApplication();
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
-        Future<ApplicationProcurementMilestonesSummaryViewModel> applicationProcurementMilestoneResources =
+        Future<ApplicationProcurementMilestonesSummaryViewModel> applicationProcurementMilestonesSummaryViewModel =
                 competition.isProcurementMilestones() ?
                 async(() -> applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)) :
                 completedFuture(null);
@@ -59,7 +59,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
                 application.getId(),
                 competition.isFullyFunded(),
                 resolve(financeSection).getId(),
-                resolve(applicationProcurementMilestoneResources),
+                resolve(applicationProcurementMilestonesSummaryViewModel),
                 resolve(applicationFinanceSummaryViewModel),
                 resolve(applicationResearchParticipationViewModel),
                 resolve(applicationFundingBreakdownViewModel),

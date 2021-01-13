@@ -11,7 +11,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final long applicationId;
     private final boolean fullyFunded;
     private final long financeSectionId;
-    private final ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestoneResources;
+    private final ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel;
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
@@ -21,7 +21,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final boolean procurementMilestones;
 
     public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
-                                    ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestoneResources,
+                                    ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel,
                                     ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                                     ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                                     ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
@@ -29,7 +29,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
-        this.applicationProcurementMilestoneResources = applicationProcurementMilestoneResources;
+        this.applicationProcurementMilestonesSummaryViewModel = applicationProcurementMilestonesSummaryViewModel;
         this.applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModel;
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
@@ -58,7 +58,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     }
     
     public ApplicationProcurementMilestonesSummaryViewModel getApplicationProcurementMilestoneResources() {
-        return applicationProcurementMilestoneResources;
+        return applicationProcurementMilestonesSummaryViewModel;
     }
 
     public ApplicationFinanceSummaryViewModel getApplicationFinanceSummaryViewModel() {
