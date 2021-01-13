@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
@@ -46,6 +47,9 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @Override
     protected String getCookieName() {
         return SELECTION_FORM;
@@ -62,6 +66,8 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
+        Boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
+                .getAlwaysOpen();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToInviteListView(competitionId);
@@ -75,7 +81,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         ));
 
         if (!bindingResult.hasErrors()) {
-            populateGroupInviteFormWithExistingValues(form, invites);
+            setInviteSubjectContent(form, invites, alwaysOpen);
         }
 
         return "assessors/send-invites";
@@ -105,20 +111,22 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                      @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler) {
-        if(inviteform.getInviteIds() == null || inviteform.getInviteIds().isEmpty()){
+        if (inviteform.getInviteIds() == null || inviteform.getInviteIds().isEmpty()) {
             return redirectToOverview(competitionId, 0);
         }
 
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                 competitionId,
                 inviteform.getInviteIds()).getSuccess();
+        Boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
+                .getAlwaysOpen();
         model.addAttribute("model", new SendInvitesViewModel(
                 invites.getCompetitionId(),
                 invites.getCompetitionName(),
                 invites.getRecipients(),
                 invites.getContent()
         ));
-        populateResendInviteFormWithExistingValues(inviteform, invites);
+        setInviteSubjectContent(inviteform, invites, alwaysOpen);
         return "assessors/resend-invites";
     }
 
@@ -141,6 +149,8 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
             AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                     competitionId,
                     submittedSelectionForm.getSelectedInviteIds()).getSuccess();
+            Boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
+                    .getAlwaysOpen();
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
                     invites.getCompetitionName(),
@@ -148,7 +158,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                     invites.getContent()
             ));
             inviteform.setInviteIds(submittedSelectionForm.getSelectedInviteIds());
-            populateResendInviteFormWithExistingValues(inviteform, invites);
+            setInviteSubjectContent(inviteform, invites, alwaysOpen);
             return "assessors/resend-invites";
         });
     }
@@ -182,15 +192,16 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                 .toUriString();
     }
 
+    private void setInviteSubjectContent(SendInviteForm form, AssessorInvitesToSendResource invites, Boolean alwaysOpen) {
+        if (alwaysOpen) {
+            form.setSubject(format("Invitation to be an assessor for competition '%s'", invites.getCompetitionName()));
+        } else {
+            form.setSubject(format("Invitation to assess '%s'", invites.getCompetitionName()));
+        }
+    }
+
     private String redirectToInviteListView(long competitionId) {
         return format("redirect:/competition/%s/assessors/invite", competitionId);
     }
 
-    private void populateResendInviteFormWithExistingValues(ResendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
-    }
-
-    private void populateGroupInviteFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
-    }
 }
