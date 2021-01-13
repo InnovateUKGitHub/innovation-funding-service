@@ -107,6 +107,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
+    private boolean procurementMilestones;
     private CovidType covidType;
     private Boolean alwaysOpen;
 
@@ -798,6 +799,15 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    @Override
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
+    }
+
+    public void setProcurementMilestones(boolean procurementMilestones) {
+        this.procurementMilestones = procurementMilestones;
     }
 
     @JsonIgnore
