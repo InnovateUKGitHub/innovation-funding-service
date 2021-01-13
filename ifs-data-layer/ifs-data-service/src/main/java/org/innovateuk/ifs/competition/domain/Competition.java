@@ -998,6 +998,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isProcurementMilestones() {
+        return isProcurement() &&
+            sections.stream().anyMatch(section -> SectionType.PAYMENT_MILESTONES == section.getType());
+    }
+
+    @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }

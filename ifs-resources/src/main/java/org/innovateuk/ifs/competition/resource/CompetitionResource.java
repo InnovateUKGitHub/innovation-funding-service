@@ -107,6 +107,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
+    private boolean procurementMilestones;
     private CovidType covidType;
 
     public CompetitionResource() {
@@ -784,6 +785,15 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setCovidType(CovidType covidType) {
         this.covidType = covidType;
+    }
+
+    @Override
+    public boolean isProcurementMilestones() {
+        return procurementMilestones;
+    }
+
+    public void setProcurementMilestones(boolean procurementMilestones) {
+        this.procurementMilestones = procurementMilestones;
     }
 
     @JsonIgnore
