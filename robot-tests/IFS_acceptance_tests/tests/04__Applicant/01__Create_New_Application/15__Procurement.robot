@@ -19,6 +19,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...             IFS-8938 SBRI Milestones - Non JS Milestones Page - Application
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -65,6 +67,7 @@ Applicant fills in project costs with VAT
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
 
 Applicant fills in payment milestones
+    [Documentation]  IFS-8938
     When Lead applicant completes payment milestones          2  Milestone 1  10000  taskOrActivity 1  deliverable 1  successCriteria 1
     Then Lead applicant views readonly payment milestones
     And the user clicks the button/link                       link = Back to application overview

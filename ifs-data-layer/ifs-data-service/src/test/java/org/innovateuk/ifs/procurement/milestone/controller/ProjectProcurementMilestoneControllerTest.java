@@ -39,6 +39,22 @@ public class ProjectProcurementMilestoneControllerTest extends BaseControllerMoc
         verify(projectProcurementMilestoneService).getByProjectIdAndOrganisationId(projectId, organisationId);
     }
 
+    @Test
+    public void getByProjectId() throws Exception {
+        long projectId = 1L;
+        List<ProjectProcurementMilestoneResource> resource = newProjectProcurementMilestoneResource()
+                .withDeliverable("Deliverable")
+                .build(1);
+
+        when(projectProcurementMilestoneService.getByProjectId(projectId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/project-procurement-milestone/project/{projectId}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].deliverable", is("Deliverable")));
+
+        verify(projectProcurementMilestoneService).getByProjectId(projectId);
+    }
+
     @Override
     protected ProjectProcurementMilestoneController supplyControllerUnderTest() {
         return new ProjectProcurementMilestoneController();

@@ -53,4 +53,13 @@ public class ProjectProcurementMilestoneServiceImpl
                 .map(mapper::mapToResource)
                 .collect(toList()));
     }
+
+    @Override
+    public ServiceResult<List<ProjectProcurementMilestoneResource>> getByProjectId(long projectId) {
+        return find(repository.findByProjectFinanceProjectId(projectId), notFoundError(ProjectProcurementMilestone.class, projectId))
+                .andOnSuccessReturn((milestones) ->
+                        milestones.stream()
+                                .map(mapper::mapToResource)
+                                .collect(toList()));
+    }
 }
