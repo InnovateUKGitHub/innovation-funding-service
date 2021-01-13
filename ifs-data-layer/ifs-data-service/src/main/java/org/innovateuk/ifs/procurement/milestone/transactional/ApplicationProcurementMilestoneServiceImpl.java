@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -46,10 +47,9 @@ public class ApplicationProcurementMilestoneServiceImpl
 
     @Override
     public ServiceResult<List<ApplicationProcurementMilestoneResource>> getByApplicationIdAndOrganisationId(long applicationId, long organisationId) {
-        return find(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationId(applicationId, organisationId), notFoundError(ApplicationProcurementMilestone.class, applicationId, organisationId))
-                .andOnSuccessReturn((milestones) ->
-                        milestones.stream()
-                                .map(mapper::mapToResource)
-                                .collect(toList()));
+        return serviceSuccess(repository.findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(applicationId, organisationId)
+                .stream()
+                .map(mapper::mapToResource)
+                .collect(toList()));
     }
 }
