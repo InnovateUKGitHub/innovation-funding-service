@@ -23,19 +23,13 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
             @Mapping(source = "competition.id", target = "competitionId"),
             @Mapping(source = "assessmentPeriod.id", target = "assessmentPeriodId"),
     })
-    @Override
     public abstract MilestoneResource mapToResource(Milestone domain);
 
     @Mappings({
             @Mapping(source = "competitionId", target = "competition"),
             @Mapping(source = "assessmentPeriodId", target = "assessmentPeriod"),
     })
-    @Override
     public abstract Milestone mapToDomain(MilestoneResource resource);
-
-    public abstract List<Milestone> mapToDomain(List<MilestoneResource> milestoneResources);
-
-    public abstract List<MilestoneResource> mapToResource(List<Milestone> milestones);
 
     public Long mapMilestoneToId(Milestone object) {
         if (object == null) {
@@ -43,4 +37,9 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
         }
         return object.getId();
     }
+
+    public Milestone build() {
+        return createDefault(Milestone.class);
+    }
+
 }
