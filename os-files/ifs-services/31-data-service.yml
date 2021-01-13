@@ -218,10 +218,10 @@ items:
                       name: data-service-config
                       key: IFS_SLACK_AUTH_KEY
                 - name: IFS_EMAIL_WHITELIST
-                    valueFrom:
-                      configMapKeyRef:
-                        name: data-service-config
-                        key: IFS_EMAIL_WHITELIST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_EMAIL_WHITELIST
                 - name: IFS_EMAIL_BLACKLIST
                   valueFrom:
                     configMapKeyRef:
