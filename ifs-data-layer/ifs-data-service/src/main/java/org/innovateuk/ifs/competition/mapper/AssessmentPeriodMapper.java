@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                MilestoneMapper.class
+                CompetitionMapper.class
         }
 )
 public abstract class AssessmentPeriodMapper extends BaseMapper<AssessmentPeriod, AssessmentPeriodResource, Long> {

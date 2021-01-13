@@ -87,7 +87,7 @@ public class Application implements ProcessActivity {
     private ApplicationProcess applicationProcess;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="milestone", referencedColumnName="id")
+    @JoinColumn(name="assessment_period_id", referencedColumnName="id")
     private AssessmentPeriod assessmentPeriod;
 
     private boolean noInnovationAreaApplicable;

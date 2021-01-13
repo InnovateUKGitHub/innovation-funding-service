@@ -1,10 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
 
 /**
  * This enum defines the milestones type for the competition
@@ -26,8 +22,7 @@ public enum MilestoneType {
     FUNDERS_PANEL("11. Funders panel", false, 14),
     NOTIFICATIONS("12. Notifications", false, 15),
     RELEASE_FEEDBACK("13. Release feedback", false,  16),
-    FEEDBACK_RELEASED("Feedback released", false, false, 17),
-    ASSESSMENT_PERIOD("Assessment period", false, false, 18);
+    FEEDBACK_RELEASED("Feedback released", false, false, 17);
 
     private String milestoneDescription;
     private boolean presetDate;

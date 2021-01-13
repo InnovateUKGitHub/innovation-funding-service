@@ -54,7 +54,7 @@ public class ApplicationResource {
     private String event;
     private ZonedDateTime lastStateChangeDate;
     private FundingDecision fundingDecision;
-    private Long assessmentPeriod;
+    private Long assessmentPeriodId;
 
     public Long getId() {
         return id;
@@ -332,12 +332,12 @@ public class ApplicationResource {
         this.fundingDecision = fundingDecision;
     }
 
-    public Long getAssessmentPeriod() {
-        return assessmentPeriod;
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
     }
 
-    public void setAssessmentPeriod(Long assessmentPeriod) {
-        this.assessmentPeriod = assessmentPeriod;
+    public void setAssessmentPeriodId(Long assessmentPeriodId) {
+        this.assessmentPeriodId = assessmentPeriodId;
     }
 
     @Override
@@ -375,7 +375,7 @@ public class ApplicationResource {
                 .append(companyPrimaryFocus, that.companyPrimaryFocus)
                 .append(event, that.event)
                 .append(lastStateChangeDate, that.lastStateChangeDate)
-                .append(assessmentPeriod, that.assessmentPeriod)
+                .append(assessmentPeriodId, that.assessmentPeriodId)
                 .isEquals();
     }
 
@@ -408,7 +408,7 @@ public class ApplicationResource {
                 .append(companyPrimaryFocus)
                 .append(event)
                 .append(lastStateChangeDate)
-                .append(assessmentPeriod)
+                .append(assessmentPeriodId)
                 .toHashCode();
     }
 }

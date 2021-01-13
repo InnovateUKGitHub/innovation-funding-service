@@ -3,13 +3,11 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.competition.builder.MilestoneBuilder;
 import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,7 +28,7 @@ public class AssessmentPeriodDataBuilder extends BaseDataBuilder<Void, Assessmen
             testService.doWithinTransaction(() -> {
                 Competition competition = retrieveCompetitionByName(competitionName);
 
-                AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition);
+                AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition, null);
                 assessmentPeriodRepository.save(assessmentPeriod);
 
                 milestoneRepository.save(MilestoneBuilder.newMilestone()

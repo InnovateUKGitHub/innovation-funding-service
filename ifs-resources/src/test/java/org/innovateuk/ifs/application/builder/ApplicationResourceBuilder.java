@@ -130,7 +130,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withAssessmentPeriod(Long... assessmentPeriods) {
-        return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriod", assessmentPeriod, object), assessmentPeriods);
+        return withArray((assessmentPeriod, object) -> BaseBuilderAmendFunctions.setField("assessmentPeriodId", assessmentPeriod, object), assessmentPeriods);
     }
 
 }

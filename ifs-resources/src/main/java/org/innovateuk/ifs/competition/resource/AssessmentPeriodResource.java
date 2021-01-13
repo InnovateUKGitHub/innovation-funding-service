@@ -1,23 +1,40 @@
 package org.innovateuk.ifs.competition.resource;
 
-import java.util.List;
+public class AssessmentPeriodResource {
 
-public class AssessmentPeriodResource extends MilestoneBaseResource {
-
-    private List<MilestoneResource> children;
+    private Long id;
+    private String name;
+    private Long competitionId;
 
     public AssessmentPeriodResource() {
     }
 
-    public AssessmentPeriodResource(MilestoneType type, Long competitionId) {
-        super(type, competitionId);
+    public AssessmentPeriodResource(Long competitionId, String name) {
+        this.competitionId = competitionId;
+        this.name = name;
     }
 
-    public List<MilestoneResource> getChildren() {
-        return children;
+    public Long getId() {
+        return id;
     }
 
-    public void setChildren(List<MilestoneResource> children) {
-        this.children = children;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 }

@@ -45,7 +45,7 @@ public class ApplicationDocs {
             fieldWithPath("event").description("Event indicating the current status of the application").optional(),
             fieldWithPath("lastStateChangeDate").description("Date when the application state was last modified").optional(),
             fieldWithPath("fundingDecision").description("The funding decision of the application").optional(),
-            fieldWithPath("assessmentPeriod").description("Milestone Id").optional(),
+            fieldWithPath("assessmentPeriod").description("Assessment period associated").optional(),
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {
