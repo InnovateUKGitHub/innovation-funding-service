@@ -6,25 +6,26 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * View model for finance/finance-summary :: payment milestones table.
  */
 public class ApplicationProcurementMilestonesSummaryViewModel {
 
-    private final List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources;
+    private final List<ApplicationProcurementMilestoneSummaryViewModel> applicationProcurementMilestoneSummaryViewModels;
 
     public ApplicationProcurementMilestonesSummaryViewModel(List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources) {
-        this.applicationProcurementMilestoneResources = applicationProcurementMilestoneResources;
-    }
-
-    public List<ApplicationProcurementMilestoneResource> getApplicationProcurementMilestoneResources() {
-        return applicationProcurementMilestoneResources;
+        this.applicationProcurementMilestoneSummaryViewModels
+                = applicationProcurementMilestoneResources.stream()
+                .map(milestone -> new ApplicationProcurementMilestoneSummaryViewModel()).collect(toList());
     }
 
     public BigInteger getTotal() {
-        return applicationProcurementMilestoneResources.stream()
-                .map(ApplicationProcurementMilestoneResource::getPayment)
+        return applicationProcurementMilestoneSummaryViewModels .stream()
+                .map(ApplicationProcurementMilestoneSummaryViewModel::getPayment)
                 .filter(Objects::nonNull)
                 .reduce(BigInteger.ZERO, BigInteger::add);
     }
