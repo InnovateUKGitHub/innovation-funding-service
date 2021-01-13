@@ -37,7 +37,7 @@ Innovation continuity loan T&C's can be confirmed
 Innovation continuity loan T&C's can be edited
     [Documentation]  IFS-8002
     Given the user clicks the button/link       jQuery = button:contains("Edit")
-    When the user selects the radio button      termsAndConditionsId  32
+    When the user selects the radio button      termsAndConditionsId  43
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${continuityLoanT&CLink}
 
