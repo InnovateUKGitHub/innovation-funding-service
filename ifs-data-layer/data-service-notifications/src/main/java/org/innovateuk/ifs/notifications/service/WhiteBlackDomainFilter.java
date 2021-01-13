@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.notifications.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,7 @@ import java.util.List;
 public class WhiteBlackDomainFilter {
 
     private static final String WILDCARD = "*";
+    private static final Log LOG = LogFactory.getLog(WhiteBlackDomainFilter.class);
 
     @Value("#{'${ifs.email.whitelist}'.split(',')}")
     protected List<String> whitelist;
@@ -29,11 +32,13 @@ public class WhiteBlackDomainFilter {
      */
     public boolean passesFilterCheck(String email) {
         if (!isValidEmail(email)) {
+            LOG.trace("Failed check with invalid email: " + email);
             return false;
         }
         String emailDomain = email.split("@")[1].toLowerCase();
         for (String item : blacklist) {
             if (emailDomain.endsWith(item.toLowerCase())) {
+                LOG.trace("Failed check as it was blacklisted: " + emailDomain);
                 return false;
             }
         }
@@ -45,6 +50,7 @@ public class WhiteBlackDomainFilter {
                 return true;
             }
         }
+        LOG.trace("Failed check as it was not whitelisted: " + email);
         return false;
     }
 
