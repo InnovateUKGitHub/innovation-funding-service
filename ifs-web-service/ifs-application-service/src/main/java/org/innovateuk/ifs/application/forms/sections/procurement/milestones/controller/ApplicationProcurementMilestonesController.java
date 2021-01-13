@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller;
 
-import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
+import org.innovateuk.ifs.application.ProcurementMilestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
@@ -21,19 +21,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/procurement-milestones/organisation/{organisationId}/section/{sectionId}")
 @PreAuthorize("hasAuthority('applicant')")
 @SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "Applicants can update procurement milestones.")
-public class ApplicationProcurementMilestonesController {
+public class ApplicationProcurementMilestonesController extends AbstractProcurementMilestoneController {
     private static final String VIEW = "application/sections/procurement-milestones/application-procurement-milestones";
 
     @Autowired
@@ -135,14 +131,7 @@ public class ApplicationProcurementMilestonesController {
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
-        form.setMilestones(reorderMilestones(form.getMilestones()));
-        return VIEW;
-    }
-
-    private Map<String, ProcurementMilestoneForm> reorderMilestones(Map<String, ProcurementMilestoneForm> map) {
-        return map.entrySet().stream()
-                .sorted(Comparator.comparing(entry -> entry.getValue().getMonth(), Comparator.nullsLast(Integer::compareTo)))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return viewMilestonesPage(model, form, user);
     }
 
     private long getProcessRoleId(long applicationId, long userId) {
@@ -155,5 +144,10 @@ public class ApplicationProcurementMilestonesController {
 
     private String redirectToYourFinances(long applicationId) {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
+    }
+
+    @Override
+    protected String getView() {
+        return VIEW;
     }
 }

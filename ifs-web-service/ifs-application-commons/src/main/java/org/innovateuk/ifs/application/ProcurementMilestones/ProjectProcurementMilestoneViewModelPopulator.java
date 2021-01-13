@@ -1,12 +1,10 @@
-package org.innovateuk.ifs.project.milestones.populator;
+package org.innovateuk.ifs.application.ProcurementMilestones;
 
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.milestones.viewmodel.ProjectProcurementMilestoneViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -24,9 +22,6 @@ public class ProjectProcurementMilestoneViewModelPopulator {
 
     @Autowired
     private FinanceCheckRestService financeCheckRestService;
-
-    @Autowired
-    private FinanceCheckService financeCheckService;
 
     public ProjectProcurementMilestoneViewModel populate(long projectId, long organisationId, UserResource userResource, boolean editMilestones) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
@@ -48,7 +43,7 @@ public class ProjectProcurementMilestoneViewModelPopulator {
     }
 
     private boolean isAllEligibilityAndViabilityApproved(long projectId) {
-        FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
+        FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckRestService.getFinanceCheckSummary(projectId).getSuccess();
         return financeCheckSummaryResource.isAllEligibilityAndViabilityApproved();
     }
 }
