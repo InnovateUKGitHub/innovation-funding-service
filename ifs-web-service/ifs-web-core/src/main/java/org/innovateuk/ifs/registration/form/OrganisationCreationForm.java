@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Object to store the data that is used for the companies house form, while creating a new application.
@@ -47,8 +48,9 @@ public class OrganisationCreationForm implements Serializable {
     private AddressResource organisationAddress;
     private String organisationNumber;
     private String businessType;
+
     @Valid
-    private AddressForm addressForm = new AddressForm();
+    private AddressForm addressForm;
 
 
     public OrganisationCreationForm() {
@@ -57,6 +59,7 @@ public class OrganisationCreationForm implements Serializable {
         this.sicCodes.add(new OrganisationSicCodeResource());
         this.executiveOfficers = new ArrayList<>();
         executiveOfficers.add(new OrganisationExecutiveOfficerResource());
+
     }
 
     public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
@@ -153,6 +156,7 @@ public class OrganisationCreationForm implements Serializable {
     public void setBusinessType(String businessType) {
         this.businessType = businessType;
     }
+
 
     public AddressForm getAddressForm() {
         return addressForm;

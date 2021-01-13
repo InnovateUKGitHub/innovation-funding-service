@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     }
 
     @PostMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String saveOrganisation(@Valid @ModelAttribute(name = ORGANISATION_FORM,binding = false) OrganisationCreationForm organisationForm,
                                    Model model,
                                    UserResource user,
                                    HttpServletRequest request,
@@ -74,7 +75,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         validator.validate(organisationForm, bindingResult);
 
         //Ignore not null errors on organisationSearchName as its not relevant here. This is due to the same form being used.
-        if (bindingResult.hasErrors() && (bindingResult.getAllErrors().size() != 1 || !bindingResult.hasFieldErrors("organisationSearchName"))) {
+        if (bindingResult.hasErrors() &&  !bindingResult.hasFieldErrors("organisationSearchName") && !bindingResult.hasFieldErrors("addressForm.postcodeInput")) {
             return "redirect:/";
         }
         OrganisationResource organisationResource = getOrganisationResourceToPersist(organisationForm);
@@ -108,7 +109,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return organisationResource;
     }
 
-    @PostMapping(value= "organisation-type/manually-enter-organisation-details", params = FORM_ACTION_PARAMETER)
+    @PostMapping(value= "organisation-type/manually-enter-organisation-details")
     public String addressFormAction(Model model,
                                     @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                     BindingResult bindingResult,

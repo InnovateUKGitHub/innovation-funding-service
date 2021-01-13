@@ -48,7 +48,7 @@
                 <input class="govuk-input govuk-!-width-one-half"
                        id="name"
                        th:field="*{organisationName}"
-                       th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"
+                       th:attr="data-required-errormessage=#{validation.standard.organisationName.required}"
                        type="text" required="required"/>
             </div>
             <div class="govuk-form-group"
@@ -90,7 +90,9 @@
                 <div class="govuk-grid-column-one-half">
                         <input class="govuk-input govuk-!-width-one-half"
                                id="sicCode"
-                               type="text"/>
+                               type="text"
+                               th:field="${organisationForm.sicCodes[__${iteration.index}__].sicCode}"
+                               maxlength="5"/>
                 </div>
             </div>
             <div class="alignleft govuk-!-margin-top-6">
@@ -104,6 +106,8 @@
                 <div class="govuk-grid-column-one-half">
                     <input class="govuk-input govuk-!-width-one-half"
                            id="execOfficer"
+                           th:field="${organisationForm.executiveOfficers[__${iteration.index}__].name}"
+                           maxlength="255"
                            type="text"/>
                 </div>
             </div>
@@ -119,9 +123,8 @@
                 <div id="custom-postcode" class="govuk-body">
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
                 </div>
-            <div class="govuk-form-group">
-                <button class="govuk-button" type="submit" id="save-and-continue-button" formaction="/organisation/create/save-organisation">Save and continue</button>
-            </div>
+
+                <button name="save-organisation" formaction="/organisation/create/save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
