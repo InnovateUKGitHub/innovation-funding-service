@@ -36,6 +36,11 @@
             data-calculation-fields=".payment-amount"></h3>
         <th:block
             th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='totalErrorHolder')"/>
+        <input th:each="err : ${#fields.errors('totalErrorHolder')}"
+               type="hidden"
+               data-calculation-operations="*"
+               th:attr="data-calculation-fields=|1, #payment-total|,
+                        data-anychange-errormessage=${err}" />
     </div>
 </th:block>
 

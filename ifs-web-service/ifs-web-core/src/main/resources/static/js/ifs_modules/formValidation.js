@@ -918,6 +918,7 @@ IFS.core.formValidation = (function () {
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
       var accordion = field.closest('.govuk-accordion__section')
+      var errorIcon = field.siblings('.error-heading-icon')
       var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
@@ -948,6 +949,11 @@ IFS.core.formValidation = (function () {
       }
       if (formGroupRowValidated.length && formGroupRowValidated.find('.govuk-input--error').length === 0) {
         formGroupRowValidated.removeClass('govuk-form-group--error')
+      }
+
+      if (errorIcon.length) {
+        errorIcon.removeClass('error-heading-icon')
+        field.siblings('.govuk-error-message:contains("' + message + '")').remove()
       }
 
       // If the input is within a table cell check to see if there are validation messages within the column header. If there are: clear it and all the cells in the same column
