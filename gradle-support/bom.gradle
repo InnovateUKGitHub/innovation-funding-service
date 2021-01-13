@@ -9,11 +9,7 @@ dependencies {
     implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
 
-    implementation('org.jsoup:jsoup') {
-        version {
-            strictly '1.10.2'
-        }
-    }
+
 
     implementation('org.apache.commons:commons-text') {
         version {
@@ -21,9 +17,33 @@ dependencies {
         }
     }
 
+    implementation('commons-io:commons-io') {
+        version {
+            strictly '2.5'
+        }
+    }
+
     implementation('com.google.guava:guava') {
         version {
             strictly '27.1-jre'
+        }
+    }
+
+    implementation('javax.validation:validation-api') {
+        version {
+            strictly '2.0.1.Final'
+        }
+    }
+
+    implementation('com.google.guava:guava') {
+        version {
+            strictly '27.1-jre'
+        }
+    }
+
+    implementation('org.jsoup:jsoup') {
+        version {
+            strictly '1.10.2'
         }
     }
 
