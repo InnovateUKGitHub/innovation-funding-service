@@ -16,6 +16,7 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.Future;
 
@@ -24,24 +25,20 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 @Component
 public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
 
-    private final ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
-    private final ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
-    private final ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
-    private final ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
-    private final SectionRestService sectionRestService;
+    @Autowired
+    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
 
-    public FinanceReadOnlyViewModelPopulator(ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
-                                             ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
-                                             ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
-                                             ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator,
-                                             SectionRestService sectionRestService
-    ) {
-        this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
-        this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
-        this.applicationResearchParticipationViewModelPopulator = applicationResearchParticipationViewModelPopulator;
-        this.applicationProcurementMilestoneSummaryViewModelPopulator = applicationProcurementMilestoneSummaryViewModelPopulator;
-        this.sectionRestService = sectionRestService;
-    }
+    @Autowired
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
+    @Autowired
+    private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
+
+    @Autowired
+    private ApplicationProcurementMilestoneSummaryViewModelPopulator applicationProcurementMilestoneSummaryViewModelPopulator;
+
+    @Autowired
+    private SectionRestService sectionRestService;
 
     public FinanceReadOnlyViewModel populate(ApplicationReadOnlyData data) {
         CompetitionResource competition = data.getCompetition();
