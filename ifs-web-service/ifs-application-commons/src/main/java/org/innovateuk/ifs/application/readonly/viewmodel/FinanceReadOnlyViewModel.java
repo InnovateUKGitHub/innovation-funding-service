@@ -57,7 +57,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         return financeSectionId;
     }
     
-    public ApplicationProcurementMilestonesSummaryViewModel getApplicationProcurementMilestoneResources() {
+    public ApplicationProcurementMilestonesSummaryViewModel getApplicationProcurementMilestonesSummaryViewModel() {
         return applicationProcurementMilestonesSummaryViewModel;
     }
 

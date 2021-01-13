@@ -20,7 +20,11 @@ public class ApplicationProcurementMilestonesSummaryViewModel {
     public ApplicationProcurementMilestonesSummaryViewModel(List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources) {
         this.applicationProcurementMilestoneSummaryViewModels
                 = applicationProcurementMilestoneResources.stream()
-                .map(milestone -> new ApplicationProcurementMilestoneSummaryViewModel()).collect(toList());
+                .map(milestone -> new ApplicationProcurementMilestoneSummaryViewModel(milestone.getMonth(), milestone.getDescription(), milestone.getPayment())).collect(toList());
+    }
+
+    public List<ApplicationProcurementMilestoneSummaryViewModel> getApplicationProcurementMilestoneSummaryViewModels() {
+        return applicationProcurementMilestoneSummaryViewModels;
     }
 
     public BigInteger getTotal() {

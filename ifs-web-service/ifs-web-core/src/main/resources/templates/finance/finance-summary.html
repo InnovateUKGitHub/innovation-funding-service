@@ -232,7 +232,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="row : ${breakdown.applicationProcurementMilestoneSummaryViewModels()}">
+                    <tr class="govuk-table__row" th:each="row : ${breakdown.getApplicationProcurementMilestoneSummaryViewModels()}">
                         <td class="govuk-table__cell" th:text="${row.month}">
                         </td>
                         <td class="govuk-table__cell" th:text="${row.description}">
