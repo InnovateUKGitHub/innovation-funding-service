@@ -13,9 +13,11 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -240,12 +242,10 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(projectUserInviteRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
         when(projectServiceMock.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId())).thenReturn(serviceSuccess(projectUser));
         when(projectUserRepositoryMock.save(projectUser)).thenReturn(projectUser);
-        when(userRepositoryMock.save(user)).thenReturn(user);
-        when(userServiceMock.evictUserCache(user.getUid())).thenReturn(serviceSuccess());
+        when(userServiceMock.grantRole(new GrantRoleCommand(user.getId(), APPLICANT))).thenReturn(serviceSuccess(new UserResource()));
 
         ServiceResult<Void> result = projectInviteService.acceptProjectInvite(projectInvite.getHash(), user.getId());
         assertTrue(result.isSuccess());
-        assertTrue(user.getRoles().contains(APPLICANT));
     }
 
 }
