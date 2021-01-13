@@ -18,7 +18,6 @@ import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleAp
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,13 +139,10 @@ public class CompetitionManagementApplicationController {
             @PathVariable("formInputId") final Long formInputId,
             @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) throws ExecutionException, InterruptedException {
-        ProcessRoleResource processRole;
 
-        long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
-        processRole = processRoleService.getById(processRoleId).get();
-
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
+        long applicantProcessRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, applicantProcessRoleId, fileEntryId).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, applicantProcessRoleId, fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 

@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -34,6 +35,9 @@ public class ValidationHandler {
 
     public ValidationHandler addAnyErrors(List<Error> errors) {
         return addAnyErrors(errors, fieldErrorsToFieldErrors(), asGlobalErrors());
+    }
+    public ValidationHandler addError(Error error) {
+        return addAnyErrors(newArrayList(error));
     }
 
     public ValidationHandler addAnyErrors(ErrorHolder errors, ErrorToObjectErrorConverter converter, ErrorToObjectErrorConverter... otherConverters) {

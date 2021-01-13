@@ -37,6 +37,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
@@ -135,6 +136,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InnovationSectorRepository innovationSectorRepository;
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
+    protected GrantClaimMaximumService grantClaimMaximumService;
     protected QuestionSetupService questionSetupService;
     protected QuestionSetupCompetitionService questionSetupCompetitionService;
     protected QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
@@ -256,6 +258,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionTypeRepository = serviceLocator.getBean(CompetitionTypeRepository.class);
         categoryRepository = serviceLocator.getBean(CategoryRepository.class);
         competitionSetupService = serviceLocator.getBean(CompetitionSetupService.class);
+        grantClaimMaximumService = serviceLocator.getBean(GrantClaimMaximumService.class);
         organisationService = serviceLocator.getBean(OrganisationService.class);
         organisationInitialCreationService = serviceLocator.getBean(OrganisationInitialCreationService.class);
         organisationTypeService = serviceLocator.getBean(OrganisationTypeService.class);

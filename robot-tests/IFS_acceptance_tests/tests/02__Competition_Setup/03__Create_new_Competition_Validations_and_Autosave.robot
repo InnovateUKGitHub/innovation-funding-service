@@ -31,6 +31,8 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...              IFS-6775 Initial details type ahead
+...
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -56,7 +58,7 @@ Initial details: server-side validations
     And the user should see a field and summary error     Please select a Portfolio Manager.
 
 Initial details: client-side validations
-    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982  IFS-8779
+    [Documentation]  INFUND-2982  INFUND-3888  IFS-4982  IFS-8779  IFS-6775
     [Tags]
     When the user enters text to a text field                   id = title    Validations Test
     Then the user should not see the error any more             Please enter a title.
@@ -74,9 +76,9 @@ Initial details: client-side validations
     And the user enters text to a text field                    id = openingDateMonth    12
     And the user enters text to a text field                    id = openingDateYear  ${nextYear}
     Then the user should not see the error any more             ${enter_a_valid_date}
-    When the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
+    When the user selects option from type ahead                innovationLeadUserId  i  Ian Cooper
     Then the user should not see the error any more             Please select an Innovation Lead.
-    When the user selects the option from the drop-down menu    John Doe     id = executiveUserId
+    When the user selects option from type ahead                executiveUserId  j  John Doe
     Then The user should not see the element                    jQuery = .govuk-error-message:contains("Please select a Portfolio manager.")
 
 Initial details: should not allow dates in the past
@@ -88,7 +90,7 @@ Initial details: should not allow dates in the past
     Then The user should not see the element      jQuery = .govuk-button:contains("Edit")
 
 Initial details: mark as done
-    [Documentation]  INFUND-2982 INFUND-2983 INFUND-3888  IFS-4982
+    [Documentation]  INFUND-2982  INFUND-2983  INFUND-3888  IFS-4982  IFS-6775
     [Tags]
     Given The user enters valid data in the initial details
     When the user clicks the button/link    jQuery = button:contains("Done")
@@ -126,32 +128,20 @@ Project eligibility server-side validations
     [Setup]    The user navigates to the Validation competition
     Given The user clicks the button/link  link = Project eligibility
     When the user clicks the button/link   jQuery = button:contains("Done")
-    Then The user should see a field and summary error   Please select a research categories applicable option.
     And The user should see a field and summary error    Please select a collaboration level
     And The user should see a field and summary error    Please select a lead applicant type
     And The user should see a field and summary error    Please select a resubmission option
 
-Project eligibility funding level validation
-    [Documentation]  IFS-3622  IFS-7148
-    Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
-    When the user clicks the button/link                jQuery = button:contains("Done")
-    Then the user is able to see all validations
-    [Teardown]  the user clicks the button/link         jQuery = button:contains("Done")
-
 Project eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
     [Tags]
-    [Setup]  the user selects the radio button           researchCategoriesApplicable   true
-    When the user selects the checkbox                   research-categories-33
-    And the user selects the checkbox                    research-categories-34
-    And the user selects the checkbox                    research-categories-35
+    Given the user clicks the button/link                link = Return to setup overview
+    And the user clicks the button/link                  link = Project eligibility
     When the user selects the radio button               singleOrCollaborative    single
     And the user selects the checkbox                    lead-applicant-type-1  #business
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user clicks the button twice                 css = label[for="comp-overrideFundingRules-no"]
     Then the user should not see the element             jQuery = .govuk-error-message:contains("Please select a collaboration level")
     And the user should not see the element              jQuery = .govuk-error-message:contains("Please select a lead applicant type")
-    And the user should not see the element              jQuery = .govuk-error-message:contains("Please select at least one research category")
     And the user selects the radio button                resubmission    no
     And the user should not see the element             jQuery = .govuk-error-message:contains("Please select a resubmission option")
     And the user cannot see a validation error in the page
@@ -348,16 +338,16 @@ Validation summary should be visible
     the user should see a summary error  13. Release feedback: Please enter a future date that is after the previous milestone.
 
 the user should see the correct values in the initial details form
-    the user should see the element    css = #title[value="Validations Test"]
-    the user sees that the radio button is selected   fundingType  GRANT
-    the user should see the element    jQuery = #competitionTypeId option[selected]:contains("Programme")
-    the user should see the element    jQuery = #innovationSectorCategoryId option[selected]:contains("life sciences")
-    the user should see the element    jQuery = [name^="innovationAreaCategoryIds"]:contains("Advanced therapies")
-    the user should see the element    css = #openingDateDay[value="1"]
-    the user should see the element    css = #openingDateMonth[value="12"]
-    the user should see the element    css = #openingDateYear[value="${nextYear}"]
-    the user should see the element    jQuery = #innovationLeadUserId option[selected]:contains("Ian Cooper")
-    the user should see the element    jQuery = #executiveUserId option[selected]:contains("John Doe")
+    the user should see the element                     css = #title[value="Validations Test"]
+    the user sees that the radio button is selected     fundingType  GRANT
+    the user should see the element                     jQuery = #competitionTypeId option[selected]:contains("Programme")
+    the user should see the element                     jQuery = #innovationSectorCategoryId option[selected]:contains("life sciences")
+    the user should see the element                     jQuery = [name^="innovationAreaCategoryIds"]:contains("Advanced therapies")
+    the user should see the element                     css = #openingDateDay[value="1"]
+    the user should see the element                     css = #openingDateMonth[value="12"]
+    the user should see the element                     css = #openingDateYear[value="${nextYear}"]
+    the user sees element in type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user sees element in type ahead                 innovationLeadUserId  j  John Doe
 
 the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id = funders[0].funderBudget
@@ -397,16 +387,16 @@ the user should see the correct inputs in the Applications questions form
     Should Be Equal    ${input_value}    150
 
 The user enters valid data in the initial details
-    Given the user enters text to a text field                 id = title    Validations Test
-    And the user selects the radio button                      fundingType  GRANT
-    And the user selects the option from the drop-down menu    Programme    id = competitionTypeId
-    And the user selects the option from the drop-down menu    Health and life sciences    id = innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    name = innovationAreaCategoryIds[0]
-    And the user enters text to a text field                   id = openingDateDay    01
-    And the user enters text to a text field                   id = openingDateMonth    12
-    And the user enters text to a text field                   id = openingDateYear  ${nextYear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
-    And the user selects the option from the drop-down menu    John Doe    id = executiveUserId
+    the user enters text to a text field                    id = title    Validations Test
+    the user selects the radio button                       fundingType  GRANT
+    the user selects the option from the drop-down menu     Programme    id = competitionTypeId
+    the user selects the option from the drop-down menu     Health and life sciences    id = innovationSectorCategoryId
+    the user selects the option from the drop-down menu     Advanced therapies    name = innovationAreaCategoryIds[0]
+    the user enters text to a text field                    id = openingDateDay    01
+    the user enters text to a text field                    id = openingDateMonth    12
+    the user enters text to a text field                    id = openingDateYear  ${nextYear}
+    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  j  John Doe
 
 The user navigates to the Validation competition
     The user navigates to the page     ${CA_UpcomingComp}
