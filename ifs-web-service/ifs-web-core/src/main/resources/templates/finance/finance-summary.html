@@ -136,7 +136,6 @@
     </th:block>
     <!-- ===========================Form: finance breakdown table =========================== -->
     <th:block th:fragment="finance-breakdown-table(breakdown)">
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Project cost breakdown</h2>
         <th:block th:unless="${breakdown.ktpCompetition}" >
                 <div class="table-overflow">
                     <table class="govuk-table">
@@ -217,7 +216,6 @@
 
     <!-- ===========================Form: payment milestones table =========================== -->
     <th:block th:fragment="payment-milestones-table(breakdown)">
-        <h2 class="govuk-heading-m govuk-!-margin-top-6">Payment milestones</h2>
         <div class="project-cost-breakdown">
             <div class="table-overflow">
                 <table class="govuk-table">
