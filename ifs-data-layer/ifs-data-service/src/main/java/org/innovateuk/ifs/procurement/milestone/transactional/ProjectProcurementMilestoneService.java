@@ -12,4 +12,6 @@ public interface ProjectProcurementMilestoneService extends ProcurementMilestone
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     ServiceResult<List<ProjectProcurementMilestoneResource>> getByProjectIdAndOrganisationId(long projectId, long organisationId);
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
+    ServiceResult<List<ProjectProcurementMilestoneResource>> getByProjectId(long projectId);
 }
