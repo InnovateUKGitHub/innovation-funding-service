@@ -8,6 +8,7 @@ import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -20,6 +21,7 @@ public abstract class AbstractProcurementMilestoneServiceImpl<R extends Procurem
     @Autowired
     protected ProcurementMilestoneMapper<D, R> mapper;
 
+    @Transactional
     public ServiceResult<R> create(R resource) {
         return newDomain(resource).andOnSuccessReturn(domain -> {
             updateFromResource(domain, resource);
@@ -27,6 +29,7 @@ public abstract class AbstractProcurementMilestoneServiceImpl<R extends Procurem
         });
     }
 
+    @Transactional
     public ServiceResult<R> update(R resource) {
         return findById(resource.getId()).andOnSuccessReturn((domain) -> {
             updateFromResource(domain, resource);
@@ -34,6 +37,7 @@ public abstract class AbstractProcurementMilestoneServiceImpl<R extends Procurem
         });
     }
 
+    @Transactional
     public ServiceResult<Void> delete(ProcurementMilestoneId milestoneId) {
         getRepository().deleteById(milestoneId.getId());
         return serviceSuccess();

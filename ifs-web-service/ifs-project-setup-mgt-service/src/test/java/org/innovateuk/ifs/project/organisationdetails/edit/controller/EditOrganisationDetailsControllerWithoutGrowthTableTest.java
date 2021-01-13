@@ -109,7 +109,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId())).thenReturn(restSuccess(false));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))
                 .andExpect(status().isOk())
@@ -139,7 +139,7 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
         when(projectYourOrganisationRestService.getOrganisationFinancesWithoutGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithoutGrowthTableResource));
         when(viewModelPopulator.populate(organisationFinancesWithoutGrowthTableResource)).thenReturn(yourOrganisationWithoutGrowthTableForm);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId())).thenReturn(restSuccess(false));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(post(viewPageUrl()))
                 .andExpect(status().isOk())

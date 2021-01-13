@@ -16,7 +16,8 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${compType}  ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility            ${researchCategory}  ${compType}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
@@ -67,21 +68,21 @@ the user sees the correct read only view of the question
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}  ${fundingRule}  ${fundingType}
-    the user clicks the button/link                      link = Initial details
-    the user enters text to a text field                 css = #title  ${compTitle}
-    the user selects the radio button                    fundingType  ${fundingType}
-    the user selects the option from the drop-down menu  ${compType}  id = competitionTypeId
-    the user selects the radio button                    fundingRule  ${fundingRule}
-    the user selects the option from the drop-down menu  Emerging and enabling  id = innovationSectorCategoryId
-    the user selects the option from the drop-down menu  Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
-    the user enters text to a text field                 css = #openingDateDay  1
-    the user enters text to a text field                 css = #openingDateMonth  ${month}
-    the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the option from the drop-down menu  Ian Cooper  id = innovationLeadUserId
-    the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
-    the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Back to competition details
-    the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
+    the user clicks the button/link                         link = Initial details
+    the user enters text to a text field                    css = #title  ${compTitle}
+    the user selects the radio button                       fundingType  ${fundingType}
+    the user selects the option from the drop-down menu     ${compType}  id = competitionTypeId
+    the user selects the radio button                       fundingRule  ${fundingRule}
+    the user selects the option from the drop-down menu     Emerging and enabling  id = innovationSectorCategoryId
+    the user selects the option from the drop-down menu     Robotics and autonomous systems  css = select[id^=innovationAreaCategory]
+    the user enters text to a text field                    css = #openingDateDay  1
+    the user enters text to a text field                    css = #openingDateMonth  ${month}
+    the user enters text to a text field                    css = #openingDateYear  ${nextyear}
+    the user selects option from type ahead                 innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead                 executiveUserId  r  Robert Johnson
+    the user clicks the button/link                         jQuery = button:contains("Done")
+    the user clicks the button/link                         link = Back to competition details
+    the user should see the element                         jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the user selects procurement Terms and Conditions
     the user clicks the button/link                                     link = Terms and conditions
@@ -119,21 +120,75 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
-    [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
+    [Arguments]  ${compType}  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link       link = Project eligibility
+    Run Keyword If  "${compType}" == "${compType_HEUKAR}"   the user sees that the radio button is selected  singleOrCollaborative  single-or-collaborative-${collaborative}
     the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
-    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
-    Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
     Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
+    ...   ELSE IF  "${compType}" == "${compType_HEUKAR}"   run keywords     the user sees all lead applicant types selected by default
     ...   ELSE   run keywords     the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
     ...   AND    the user selects Research Participation if required   ${researchParticipation}
     the user selects the radio button     resubmission  yes
-    Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link       jQuery = button:contains("Done")
     the user clicks the button/link       link = Back to competition details
     the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
-    #Elements in this page need double clicking
+
+the user fills in the CS funding eligibility
+    [Arguments]   ${researchCategory}  ${compType}
+    the user clicks the button/link       link = Funding eligibility
+    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
+    Run Keyword If   '${researchCategory}' == 'true' and "${compType}" == "Expression of interest"    the user selects the checkbox     research-categories-33  #Feasibility
+    ...   ELSE IF    '${researchCategory}' == 'true'       run keywords     the user selects the checkbox     research-categories-33  #Feasibility
+    ...                                   AND              the user selects the checkbox     research-categories-34  #Industrial
+    ...                                   AND              the user selects the checkbox     research-categories-35  #Experimental
+    the user clicks the button/link       jQuery = button:contains("Done")
+    Run Keyword If  "${compType}" == "${compType_HEUKAR}" or "${compType}" == "${compType_EOI}" or "${compType}" == "The Prince's Trust"  the user should see read only funding level page
+    ...  ELSE IF    '${researchCategory}' == 'false'       run keywords                        the user fills in maximum funding level percentage
+    ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                   AND              the user should see the element     jQuery = p:contains("Maximum funding level percentage is set to 10%")
+    ...                                   AND              the user should see the element     jQuery = p:contains("Click edit to change the maximum funding level percentage.")
+    ...  ELSE                                              run keywords                        the user fills funding level percentages     ${compType}
+    ...                                   AND              the user clicks the button/link     jQuery = button:contains("Done")
+    ...                                   AND              the user should see the element     jQuery = button:contains("Edit")
+    the user clicks the button/link       link = Return to setup overview
+    the user should see the element       jQuery = div:contains("Funding eligibility") ~ .task-status-complete
+
+the user fills funding level percentages
+    [Arguments]   ${compType}
+    the user should see the element          jQuery = p:contains("Set the maximum funding level percentage for the business sizes for each research category.")
+    the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+    the user should see the element          jQuery = td:contains("Micro entity or small company")
+    the user should see the element          jQuery = td:contains("Medium-sized company")
+    the user should see the element          jQuery = td:contains("Large-sized company")
+    # if the organisation funding values are different, while completing the application user can see research category validation in your funding page
+    # if funding level are same , user can see competition rules link in your funding
+    Run Keyword If  "${compType}" == "${compType_ATI}"     run keywords     the user enters text to a text field     maximums[0][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  75
+    ...  ELSE                                              run keywords     the user enters text to a text field     maximums[0][0].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][1].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[0][2].maximum  75
+    ...                                                    AND              the user enters text to a text field     maximums[1][0].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[1][1].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[1][2].maximum  65
+    ...                                                    AND              the user enters text to a text field     maximums[2][0].maximum  35
+    ...                                                    AND              the user enters text to a text field     maximums[2][1].maximum  35
+    ...                                                    AND              the user enters text to a text field     maximums[2][2].maximum  35
+
+the user fills in maximum funding level percentage
+    the user enters text to a text field     id = maximums[0][0].maximum  10
+    the user should see the element          jQuery = p:contains("Set the maximum funding level percentage that applicants can apply for.")
+    the user should see the element          jQuery = p:contains("You can only use whole numbers from 0 to 100.")
+
+the user should see read only funding level page
+    the user should see the element         jQuery = p:contains("Competition does not request applicants finance details.")
+    the user should not see the element     jQuery = button:contains("Edit")
 
 the user selects Research Participation if required
     [Arguments]  ${percentage}
@@ -199,6 +254,7 @@ the user marks the Assessed questions as complete
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
+    Run Keyword If  '${comp_type}' == '${compType_ATI}'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run keyword If  '${comp_type}' == '${compType_HEUKAR}'  the assessed questions are marked complete(HEUKAR type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}' or '${comp_type}' == '${compType_HEUKAR}'  the user opts no finances for EOI comp
@@ -681,3 +737,9 @@ the user select stakeholder and add to competition
     When the user clicks the button/link      jQuery = td:contains("Rayon Kevin") button[type="submit"]
     And the user clicks the button/link       jQuery = a:contains("Added to competition")
     Then the user should see the element      jQuery = td:contains("Rayon Kevin") ~ td:contains("Added")
+
+the user sees all lead applicant types selected by default
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-1
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-2
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-3
+    the user sees that the radio button is selected     leadApplicantTypes  lead-applicant-type-4

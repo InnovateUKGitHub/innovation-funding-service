@@ -13,16 +13,19 @@ import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.heukar.service.HeukarPartnerOrganisationRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.heukar.resource.HeukarPartnerOrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,6 +37,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.collect.Multimaps.index;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
@@ -66,7 +70,13 @@ public class ApplicationTeamPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
+    private OrganisationTypeRestService organisationTypeRestService;
+
+    @Autowired
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
+
+    @Autowired
+    private HeukarPartnerOrganisationRestService heukarPartnerOrganisationRestService;
 
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
@@ -111,13 +121,20 @@ public class ApplicationTeamPopulator {
             ktaInvite = applicationKtaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         }
 
+        List<HeukarPartnerOrganisationResource> heukaOrgTypes = emptyList();
+        if (competition.isHeukar()) {
+            heukaOrgTypes = heukarPartnerOrganisationRestService.getHeukarPartnerOrganisationsForApplicationWithId(application.getId()).getSuccess();
+        }
+
         return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),
                 leadApplicant,
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(),
-                ktaInvite, ktaProcessRole);
+                ktaInvite, ktaProcessRole,
+                competition.isHeukar(),
+                heukaOrgTypes);
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {
