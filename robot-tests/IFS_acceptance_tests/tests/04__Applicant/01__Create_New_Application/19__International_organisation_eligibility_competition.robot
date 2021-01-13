@@ -15,6 +15,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -56,7 +58,6 @@ ${partnerOrganisationNameNonUKBased}                   Test Empire
 ${zeroFundingPartnerOrgnaisationName}                  CINEWORLD LIMITED
 ${partnerOrganisationNameUKBased}                      ROYAL MAIL PLC
 ${leadApplicantOrganisationName}                       New Empire 1
-#${ukLeadOrganisationName}                              Organisation2
 ${ukLeadOrganisationName}                              SAGA PLC
 ${internationalPartnerOrganisation}                    New Empire
 ${ukBasedOrganisationName}                             FIRSTGROUP PLC
@@ -248,7 +249,7 @@ Registered user(Partner organisation) logs in and select where their organisatio
     Then the user should see the element              jQuery = dt:contains("Golden Valley Research Ltd")
 
 Partner user provides UK based organisation details and verifies them
-    [Documentation]    IFS-7198 IFS-7199
+    [Documentation]    IFS-7198 IFS-7199  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                    link = Join with a different organisation
     When the user provides uk based organisation details     FIRSTGROUP  ${ukBasedOrganisationName}

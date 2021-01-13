@@ -30,7 +30,9 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               IFS-1841 Basic view of all 'external' IFS users
 ...
 ...               IFS-8095 Content improvement for KTA journey
-
+...
+...               IFS-7723 Improvement to company search results
+...
 #create new competition to test the new application team view.
 Suite Setup       Custom Suite Setup
 Suite Teardown
@@ -42,7 +44,6 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 ${application_name}    Invite robot test application
 ${newLeadApplicant}    kevin@worth.systems
 ${newCollaborator}     jerry@worth.systems
-#${organisation}        org2
 ${organisation}        ITV PLC
 
 *** Test Cases ***

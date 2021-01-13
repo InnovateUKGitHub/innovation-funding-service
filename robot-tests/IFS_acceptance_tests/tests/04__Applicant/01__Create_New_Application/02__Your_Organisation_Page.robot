@@ -25,7 +25,6 @@ Companies House: Valid company name
     When the user enters text to a text field    id = organisationSearchName    ROYAL
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    #[Teardown]    The user goes back to the previous page
 
 Companies House: User can choose the organisation address
     [Documentation]    INFUND-887  IFS-7723
@@ -36,7 +35,6 @@ Companies House: User can choose the organisation address
     And the user should see the element      jQuery = dt:contains("Address")
     And the user should see the element      jQuery = dt:contains("Registration number")
     And the user should see the element      jQuery = dt:contains("Registered Address")
-    #[Teardown]    the user goes back to the previous page
 
 Companies House: Invalid company name
     [Documentation]    INFUND-887  IFS-7723
@@ -52,7 +50,6 @@ Companies House: Valid registration number
     When the user enters text to a text field    id = organisationSearchName    00445790
     And the user clicks the button/link          id = org-search
     Then the user should see the element         Link = TESCO PLC
-    #[Teardown]    The user goes back to the previous page
 
 Companies House: Empty company name field
     [Documentation]    INFUND-887  IFS-7723

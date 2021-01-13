@@ -4,6 +4,9 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view and manage contributors and collaborators'
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Applicant  AuthServiceTests
@@ -20,7 +23,7 @@ The invited user should not follow the registration flow again
     Then the user should see the element                jQuery = h3:contains("We have found an account with the invited email address")
 
 The inited user logged in and see the application overview
-    [Documentation]    INFUND-1458
+    [Documentation]    INFUND-1458  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                  link = Continue
     And The guest user inserts user email and password     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
