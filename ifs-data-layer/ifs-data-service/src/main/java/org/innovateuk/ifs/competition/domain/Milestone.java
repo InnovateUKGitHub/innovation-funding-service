@@ -51,10 +51,10 @@ public class Milestone {
     }
 
     public Milestone(MilestoneType type, ZonedDateTime date, Competition competition, AssessmentPeriod assessmentPeriod) {
-        if (type == null) { throw new NullPointerException("type cannot be null"); }
-        if (competition == null) { throw new NullPointerException("competition cannot be null"); }
-        if (assessmentPeriod == null) { throw new NullPointerException("assessment period cannot be null"); }
-        if (date == null) { throw new NullPointerException("date cannot be null"); }
+        if (type == null) { throw new IllegalArgumentException("type cannot be null"); }
+        if (competition == null) { throw new IllegalArgumentException("competition cannot be null"); }
+        if (assessmentPeriod == null) { throw new IllegalArgumentException("assessment period cannot be null"); }
+        if (date == null) { throw new IllegalArgumentException("date cannot be null"); }
 
         this.type = type;
         this.date = date;
