@@ -20,6 +20,7 @@ public class AssessmentPeriodDataBuilder extends BaseDataBuilder<Void, Assessmen
     private static final Logger LOG = LoggerFactory.getLogger(AssessmentPeriodDataBuilder.class);
 
     public AssessmentPeriodDataBuilder withCompetitionAssessmentPeriods(String competitionName,
+                                                                        String name,
                                                                         ZonedDateTime assessorBriefing,
                                                                         ZonedDateTime assessorAccepts,
                                                                         ZonedDateTime assessorDeadline) {
@@ -28,7 +29,7 @@ public class AssessmentPeriodDataBuilder extends BaseDataBuilder<Void, Assessmen
             testService.doWithinTransaction(() -> {
                 Competition competition = retrieveCompetitionByName(competitionName);
 
-                AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition, null);
+                AssessmentPeriod assessmentPeriod = new AssessmentPeriod(competition, name);
                 assessmentPeriodRepository.save(assessmentPeriod);
 
                 milestoneRepository.save(MilestoneBuilder.newMilestone()

@@ -133,8 +133,8 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
         competitionAssessmentPeriods.forEach(assessmentPeriodLine ->
                 assessmentPeriodDataBuilder.
-                        withCompetitionAssessmentPeriods(assessmentPeriodLine.competition, assessmentPeriodLine.assessorBriefing,
-                                assessmentPeriodLine.assessorAccepts, assessmentPeriodLine.assessorDeadline).build()
+                        withCompetitionAssessmentPeriods(assessmentPeriodLine.competition, assessmentPeriodLine.assessmentPeriod,
+                                assessmentPeriodLine.assessorBriefing, assessmentPeriodLine.assessorAccepts, assessmentPeriodLine.assessorDeadline).build()
         );
     }
 
