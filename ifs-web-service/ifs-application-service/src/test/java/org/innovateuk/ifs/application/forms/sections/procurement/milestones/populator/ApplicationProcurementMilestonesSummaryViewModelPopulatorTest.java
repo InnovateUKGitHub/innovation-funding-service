@@ -33,7 +33,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationProcurementMilestoneViewModelPopulatorTest {
+public class ApplicationProcurementMilestonesSummaryViewModelPopulatorTest {
 
     @InjectMocks
     private ApplicationProcurementMilestoneViewModelPopulator populator;

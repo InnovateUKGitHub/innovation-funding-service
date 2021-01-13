@@ -10,11 +10,11 @@ import java.util.Objects;
 /**
  * View model for finance/finance-summary :: payment milestones table.
  */
-public class ApplicationProcurementMilestoneViewModel {
+public class ApplicationProcurementMilestonesSummaryViewModel {
 
     private final List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources;
 
-    public ApplicationProcurementMilestoneViewModel(List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources) {
+    public ApplicationProcurementMilestonesSummaryViewModel(List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources) {
         this.applicationProcurementMilestoneResources = applicationProcurementMilestoneResources;
     }
 

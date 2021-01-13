@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMi
 import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestoneViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
@@ -78,14 +78,14 @@ public class FinanceReadOnlyViewModelPopulatorTest {
         ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = mock(ApplicationFinanceSummaryViewModel.class);
         ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel = mock(ApplicationResearchParticipationViewModel.class);
         ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = mock(ApplicationFundingBreakdownViewModel.class);
-        ApplicationProcurementMilestoneViewModel applicationProcurementMilestoneViewModel = mock(ApplicationProcurementMilestoneViewModel.class);
+        ApplicationProcurementMilestonesSummaryViewModel applicationProcurementMilestonesSummaryViewModel = mock(ApplicationProcurementMilestonesSummaryViewModel.class);
 
 
         when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(financeSection)));
         when(applicationFinanceSummaryViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFinanceSummaryViewModel);
         when(applicationResearchParticipationViewModelPopulator.populate(application.getId())).thenReturn(applicationResearchParticipationViewModel);
         when(applicationFundingBreakdownViewModelPopulator.populate(application.getId(), user)).thenReturn(applicationFundingBreakdownViewModel);
-        when(applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestoneViewModel);
+        when(applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)).thenReturn(applicationProcurementMilestonesSummaryViewModel);
 
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, emptyList(), emptyList(),

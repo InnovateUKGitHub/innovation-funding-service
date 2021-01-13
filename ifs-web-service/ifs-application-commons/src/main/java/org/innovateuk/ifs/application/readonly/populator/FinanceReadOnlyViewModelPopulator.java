@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.finance.populator.ApplicationProcurementMi
 import org.innovateuk.ifs.application.finance.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestoneViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationProcurementMilestonesSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.FinanceReadOnlyViewModel;
@@ -47,7 +47,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
         CompetitionResource competition = data.getCompetition();
         ApplicationResource application = data.getApplication();
         Future<SectionResource> financeSection = async(() -> sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE).getSuccess().get(0));
-        Future<ApplicationProcurementMilestoneViewModel> applicationProcurementMilestoneResources =
+        Future<ApplicationProcurementMilestonesSummaryViewModel> applicationProcurementMilestoneResources =
                 competition.isProcurementMilestones() ?
                 async(() -> applicationProcurementMilestoneSummaryViewModelPopulator.populate(application)) :
                 completedFuture(null);
