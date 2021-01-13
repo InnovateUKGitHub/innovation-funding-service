@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <form th:if="${model.canApprove && model.readOnly}" class="govuk-!-margin-top-6"
+            <form th:if="${model.canApprove}" class="govuk-!-margin-top-6"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
                   th:object="${projectProcurementMilestoneApprovalForm}">
 

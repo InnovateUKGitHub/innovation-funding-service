@@ -69,7 +69,8 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     }
 
     public boolean getCanApprove() {
-        return this.eligibilityAndViabilityApproved && !this.projectProcurementMilestoneResource.isMilestonePaymentApproved();
+        return this.eligibilityAndViabilityApproved && !this.projectProcurementMilestoneResource.isMilestonePaymentApproved()
+                && this.isReadOnly();
     }
 
     public boolean isApproved() {
