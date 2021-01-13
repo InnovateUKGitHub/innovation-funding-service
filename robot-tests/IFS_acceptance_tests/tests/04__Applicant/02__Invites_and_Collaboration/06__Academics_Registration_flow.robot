@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -7,7 +10,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Academic organisations search
-    [Documentation]    INFUND-1231
+    [Documentation]    INFUND-1231  IFS-7723
     [Tags]  HappyPath
     Given we create a new user                            ${openCompetitionBusinessRTO}  Stuart  Downing  ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com  ${BUSINESS_TYPE_ID}
     And logout as user

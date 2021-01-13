@@ -2,6 +2,9 @@
 Documentation     IFS-1324  New organisation matching (Companies house)
 ...
 ...               IFS-1325  New organisation matching (Research)
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant

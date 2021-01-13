@@ -32,6 +32,9 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6486 - Activity Logs for Partner Changes
 ...
 ...             IFS-6492 - Accept Terms & Conditions for New Partners in Project Setup
+...
+...             IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/common/PS_Common.robot
@@ -200,7 +203,7 @@ Project finance is able to remove a partner organisation
     Then the relevant users recieve an email notification  Red Planet
 
 Ifs Admin is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  ${ifsAdminAddOrgEmail}
@@ -212,7 +215,7 @@ IFS admin checks for staus update after new org added
     Then the internal user checks for status after new org added/removed
 
 Two organisations with the same name are not able to join
-    [Documentation]  IFS-6485  IFS-6505  IFS-6724
+    [Documentation]  IFS-6485  IFS-6505  IFS-6724  IFS-7723
     [Setup]  log in as a different user                        &{ifs_admin_user_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing pOne Organisation  Name Surname  tesTwoOrgs@test.nom
@@ -236,7 +239,7 @@ Ifs Admin is able to remove a pending partner organisation
     Then the user is able to remove a pending partner organisation         Testing Pending Organisation
 
 Project finance is able to add a new partner organisation
-    [Documentation]  IFS-6485  IFS-6505
+    [Documentation]  IFS-6485  IFS-6505  IFS-7723
     [Setup]  log in as a different user                        &{internal_finance_credentials}
     Given the user navigates to the page                       ${addNewPartnerOrgProjPage}
     When the user adds a new partner organisation              Testing Finance Organisation  FName Surname  ${intFinanceAddOrgEmail}
@@ -288,7 +291,7 @@ New partner can join project
     Then the user can join the project
 
 New partner can provide bank details
-    [Documentation]  IFS-6871
+    [Documentation]  IFS-6871  IFS-7723
     ${organisationId} =  get organisation id by name  FIRSTGROUP PLC
     Given navigate to external finance contact page, choose finance contact and save  ${organisationId}  financeContact1  28
     When the applicant fills in bank details

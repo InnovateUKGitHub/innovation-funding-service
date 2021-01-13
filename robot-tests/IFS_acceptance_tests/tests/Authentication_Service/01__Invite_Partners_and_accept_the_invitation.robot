@@ -9,6 +9,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration...
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown
 Force Tags        Applicant  AuthServiceTests
@@ -87,7 +89,7 @@ Partner should be able to log-in and see the new company name
     [Teardown]    the user navigates to the page                                 ${APPLICANT_DASHBOARD_URL}
 
 Partner can invite others to his own organisation
-    [Documentation]    INFUND-2335  INFUND-7977
+    [Documentation]    INFUND-2335  INFUND-7977  IFS-7723
     Given the user clicks the button/link                      link = Invite robot test application
     And the user clicks the button/link                        link = Application team
     When the user clicks the button/link                       jQuery = button:contains("Add person to FIRSTGROUP PLC")
