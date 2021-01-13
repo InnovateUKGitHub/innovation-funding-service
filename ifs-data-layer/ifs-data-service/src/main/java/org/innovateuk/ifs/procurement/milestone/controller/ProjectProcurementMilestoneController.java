@@ -35,4 +35,9 @@ public class ProjectProcurementMilestoneController extends AbstractProcurementMi
                                                                                                  @PathVariable final long organisationId) {
         return projectProcurementMilestoneService.getByProjectIdAndOrganisationId(projectId, organisationId).toGetResponse();
     }
+
+    @GetMapping("project/{projectId}")
+    public RestResult<List<ProjectProcurementMilestoneResource>> getByProjectId(@PathVariable final long projectId) {
+        return projectProcurementMilestoneService.getByProjectId(projectId).toGetResponse();
+    }
 }

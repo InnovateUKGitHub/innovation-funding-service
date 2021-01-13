@@ -19,6 +19,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8198  SBRI Type 4: Contract section content changes for procurements (replacing GOL)
 ...
+...               IFS-8942  SBRI Milestones - Edit project duration in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -49,8 +51,8 @@ ${totalProjCosts}                Total project cost
 ${vatRegistered}                 Are you VAT registered
 ${totalWithVAT}                  £265,084
 ${totalWithoutVAT}               £220,903
-${initialFunding}                £77,057
-${revisedFunding}                £63,803
+${initialFunding}                £262,616
+${revisedFunding}                £218,435
 ${vatTotal}                      £44,181
 ${currentAmount}                 Current amount
 ${fundingAppliedFor}             Funding applied for
@@ -138,11 +140,6 @@ Lead applicant can see SBRI applications in previous section when the competitio
     When log in as a different user           &{sbriLeadCredentials}
     Then the user should see the element      jQuery = .previous li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Application submitted")
 
-Partner applicant can see SBRI applications in previous section when the competition is closed
-    [Documentation]  IFS-7314
-    When log in as a different user           &{sbriPartnerCredentials}
-    Then the user should see the element      jQuery = .previous li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Application submitted")
-
 Internal users can see SBRI competition in previous tab
     [Documentation]  IFS-7315
     Given log in as a different user         &{ifs_admin_user_credentials}
@@ -191,6 +188,25 @@ Internal user finance checks page
     [Documentation]    IFS-8127
     When the user navigates to the page                                 ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     Then the user should see the correct data on finance check page
+
+The project finance user is shown a validation message when duration is blank
+    [Documentation]    IFS-8942
+    Given the user clicks the button/link                  link = Edit
+    When Clear Element Text                                durationInMonths
+    And the user clicks the button/link                    jQuery = button:contains("Save and return to project finances")
+    Then the user should see a field and summary error     This field cannot be left blank.
+
+The project finance user is shown a validation message when duration is less than allowed
+    [Documentation]    IFS-8942
+    Given the user enters text to a text field             id = durationInMonths  1
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see a field and summary error     This cannot be less than the stated payment milestones. You will need to adjust these to change the duration.
+
+The project finance user sets the duration back to a valid value
+   [Documentation]    IFS-8942
+    Given the user enters text to a text field             id = durationInMonths  3
+    When the user clicks the button/link                   jQuery = button:contains("Save and return to project finances")
+    Then the user should see the element                   jQuery = dd:contains("3 months")
 
 Internal user eligibility page
     [Documentation]    IFS-8127
@@ -363,7 +379,7 @@ the user should see the correct data on finance check page
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
     the user clicks the button/link         link = Back to finance checks
-    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${revisedFunding}")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("£218,435")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
