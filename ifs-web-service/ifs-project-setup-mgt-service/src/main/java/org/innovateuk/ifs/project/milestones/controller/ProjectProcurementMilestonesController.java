@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.forms.sections.procurement.milestones.popu
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.milestones.form.ProjectProcurementMilestoneApprovalForm;
 import org.innovateuk.ifs.project.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.project.milestones.saver.ProjectProcurementMilestoneFormSaver;
@@ -41,7 +41,7 @@ public class ProjectProcurementMilestonesController {
     private ProcurementMilestoneFormPopulator formPopulator;
 
     @Autowired
-    private ProjectFinanceRestService projectFinanceService;
+    private FinanceCheckRestService financeCheckRestService;
 
     @Autowired
     private ProjectProcurementMilestoneFormSaver saver;
@@ -70,7 +70,7 @@ public class ProjectProcurementMilestonesController {
                                            Model model,
                                            UserResource user) {
         Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
-        RestResult<Void> approvePaymentMilestoneState = projectFinanceService.approvePaymentMilestoneState(projectId, organisationId);
+        RestResult<Void> approvePaymentMilestoneState = financeCheckRestService.approvePaymentMilestoneState(projectId, organisationId);
         return validationHandler
                 .addAnyErrors(approvePaymentMilestoneState)
                 .failNowOrSucceedWith(view, view);
@@ -91,7 +91,7 @@ public class ProjectProcurementMilestonesController {
             validationHandler.addAnyErrors(saver.save(form, projectId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        projectFinanceService.resetPaymentMilestoneState(projectId, organisationId));
+                        financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId));
                         return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });

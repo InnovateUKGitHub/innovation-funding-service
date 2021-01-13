@@ -20,7 +20,6 @@ import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepositor
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -81,9 +80,6 @@ public class FinanceChecksGenerator {
 
     @Autowired
     private ProjectProcurementMilestoneRepository projectProcurementMilestoneRepository;
-
-    @Value("${ifs.procurement.milestones.enabled}")
-    private boolean procurementMilestones;
 
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);

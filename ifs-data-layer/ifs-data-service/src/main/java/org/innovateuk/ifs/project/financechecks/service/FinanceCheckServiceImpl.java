@@ -36,6 +36,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,6 +110,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
+
+    @Value("${ifs.procurement.milestones.enabled}")
+    private boolean procurementMilestones;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -385,6 +389,20 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(this::getPaymentMilestoneProcess)
                 .andOnSuccess(paymentMilestoneProcess -> buildProjectProcurementMilestoneResource(paymentMilestoneProcess));
+    }
+
+    @Override
+    public ServiceResult<Boolean> viewPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+        long projectId = projectOrganisationCompositeId.getProjectId();
+        long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        Optional<PaymentMilestoneProcess> process = getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(this::getPaymentMilestoneProcess).getOptionalSuccessObject();
+
+        if (!procurementMilestones) {
+            return serviceSuccess(false);
+        }
+        return serviceSuccess(process.isPresent());
     }
 
     private ServiceResult<Void> triggerPaymentMilestoneApprovalWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {

@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.FinancialYearAccountsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -15,6 +14,8 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
@@ -55,7 +56,10 @@ public class FinanceChecksViabilityController {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private ProjectFinanceService financeService;
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Autowired
+    private FinanceCheckRestService financeCheckRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -99,7 +103,7 @@ public class FinanceChecksViabilityController {
 
         Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
 
-        ServiceResult<Void> saveCreditReportResult = financeService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
+        RestResult<Void> saveCreditReportResult = projectFinanceRestService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
 
         return validationHandler.
                 addAnyErrors(saveCreditReportResult).
@@ -107,7 +111,7 @@ public class FinanceChecksViabilityController {
 
                     ViabilityRagStatus statusToSend = getRagStatusDependantOnConfirmationCheckboxSelection(form);
 
-                    ServiceResult<Void> saveViabilityResult = financeService.saveViability(projectId, organisationId, viability, statusToSend);
+                    RestResult<Void> saveViabilityResult = financeCheckRestService.saveViability(projectId, organisationId, viability, statusToSend);
 
                     return validationHandler.
                             addAnyErrors(saveViabilityResult).
@@ -137,7 +141,7 @@ public class FinanceChecksViabilityController {
 
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
-        ViabilityResource viability = financeService.getViability(projectId, organisationId);
+        ViabilityResource viability = financeCheckRestService.getViability(projectId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         if (viability.getViability().isNotApplicable()) {
@@ -147,7 +151,7 @@ public class FinanceChecksViabilityController {
         boolean viabilityConfirmed = viability.getViability() == ViabilityState.APPROVED;
 
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
+        List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         ProjectFinanceResource financesForOrganisation = simpleFindFirst(projectFinances,
                 finance -> finance.getOrganisation().equals(organisationId)).get();
 
@@ -196,8 +200,8 @@ public class FinanceChecksViabilityController {
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
 
-        ViabilityResource viability = financeService.getViability(projectId, organisationId);
-        boolean creditReportConfirmed = financeService.isCreditReportConfirmed(projectId, organisationId);
+        ViabilityResource viability = financeCheckRestService.getViability(projectId, organisationId).getSuccess();
+        boolean creditReportConfirmed = projectFinanceRestService.isCreditReportConfirmed(projectId, organisationId).getSuccess();
         boolean confirmViabilityChecked = viability.getViabilityRagStatus() != ViabilityRagStatus.UNSET;
 
         return new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityRagStatus(), confirmViabilityChecked);

@@ -48,20 +48,20 @@
               enctype="multipart/form-data"
               novalidate="novalidate"
               method="POST">
-            <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <button class="hidden-save" name="save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
 
             <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
 
-            <button type="submit" th:if="${model.open}"
+            <button type="submit" th:unless="${model.readOnly}"
                     name="save"
                     class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
             </button>
         </form>
 
-        <div class="form-footer" th:if="${model.open}">
+        <div class="form-footer" th:unless="${model.readOnly}">
             <div class="form-footer__actions">
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='false')}"
                    id="cancel" type="submit" name="cancel" class="button-clear" value="true">
@@ -70,7 +70,7 @@
             </div>
         </div>
         <th:block th:unless="${model.externalUser}">
-            <div class="form-footer" th:unless="${model.open}">
+            <div class="form-footer" th:if="${model.readOnly}">
                 <div class="form-footer__actions">
                     <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='true')}"
                        id="edit" type="submit" name="edit" class="button-clear" value="true">
@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <form th:if="${model.canApprove && !model.open}" class="govuk-!-margin-top-6"
+            <form th:if="${model.canApprove && model.readOnly}" class="govuk-!-margin-top-6"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
                   th:object="${projectProcurementMilestoneApprovalForm}">
 
@@ -109,7 +109,7 @@
                 </button>
                 <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
             </form>
-            <th:block th:unless="${model.open}">
+            <th:block th:if="${model.readOnly}">
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
                 <a class="govuk-button govuk-button--secondary"
                    th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">

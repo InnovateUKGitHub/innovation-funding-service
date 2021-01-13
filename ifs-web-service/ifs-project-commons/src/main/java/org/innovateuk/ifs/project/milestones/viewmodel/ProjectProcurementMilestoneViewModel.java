@@ -12,19 +12,19 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final long projectId;
     private final String applicationName;
     private final String financesUrl;
-    private final boolean open;
+    private final boolean readOnly;
     private final ProjectProcurementMilestoneResource projectProcurementMilestoneResource;
     private final boolean eligibilityAndViabilityApproved;
     private final boolean externalUser;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean open, ProjectProcurementMilestoneResource projectProcurementMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean readOnly, ProjectProcurementMilestoneResource projectProcurementMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
         this.organisationId = organisationId;
         this.projectId = project.getId();
         this.applicationName = project.getName();
         this.financesUrl = financesUrl;
-        this.open = open;
+        this.readOnly = readOnly;
         this.eligibilityAndViabilityApproved = eligibilityAndViabilityApproved;
         this.projectProcurementMilestoneResource = projectProcurementMilestoneResource;
         this.externalUser = externalUser;
@@ -50,9 +50,6 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         return organisationId;
     }
 
-    public boolean isOpen() {
-        return open;
-    }
 
     public ProjectProcurementMilestoneResource getProjectProcurementMilestoneResource() {
         return projectProcurementMilestoneResource;
@@ -68,7 +65,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
 
     @Override
     public boolean isReadOnly() {
-        return !open;
+        return readOnly;
     }
 
     public boolean getCanApprove() {

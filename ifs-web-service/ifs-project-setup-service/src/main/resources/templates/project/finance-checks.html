@@ -48,9 +48,11 @@
                     th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                     class="govuk-link">review your project finances</a>
                     and <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
-                               class="govuk-link">your project finance overview</a> and
+                               class="govuk-link">your project finance overview</a>
+                    <th:block th:if="${model.paymentMilestonesLink}">
+                    and
                     <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-                       class="govuk-link">your payment milestones</a>.
+                       class="govuk-link">your payment milestones</a>.</th:block>
                 </p>
             </th:block>
             <th:block th:if="${model.loanCompetition}">
@@ -82,8 +84,11 @@
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                     class="govuk-link">view the project finance overview</a>.
                 </th:block>
+                <th:block th:if="${model.paymentMilestonesLink}">
+
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
                    class="govuk-link">payment milestones</a>
+                </th:block>
             </p>
         </th:block>
 

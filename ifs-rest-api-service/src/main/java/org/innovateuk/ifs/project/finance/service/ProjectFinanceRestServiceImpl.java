@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.project.finance.service;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.finance.resource.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -31,34 +28,6 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
-    }
-
-    @PostMapping("/{projectId}/partner-organisation/{organisationId}/viability/{viability}")
-    public RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
-
-        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
-
-        return postWithRestResult(postUrl, Void.class);
-    }
-
-    @Override
-    public RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/eligibility", EligibilityResource.class);
-    }
-
-    @Override
-    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
-
-        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
-
-        return postWithRestResult(postUrl, Void.class);
-    }
-
-    @Override
     public RestResult<Boolean> isCreditReportConfirmed(Long projectId, Long organisationId) {
         String url = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report";
         return getWithRestResult(url, Boolean.class);
@@ -76,33 +45,7 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
-        throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
-    }
-
-    @Override
     public RestResult<Boolean> hasAnyProjectOrganisationSizeChangedFromApplication(long projectId) {
         return getWithRestResult(format(PROJECT_FINANCE_REST_URL + "/" + projectId + "/finance/has-organisation-size-changed"), Boolean.class);
-    }
-
-    @Override
-    public RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId) {
-        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/milestones/approve";
-
-        return postWithRestResult(postUrl, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId) {
-        String postUrl = PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/milestones/reset";
-
-        return postWithRestResult(postUrl, Void.class);
-    }
-
-    @Override
-    public RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
-        return getWithRestResult(PROJECT_FINANCE_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", ProjectProcurementMilestoneResource.class);
     }
 }

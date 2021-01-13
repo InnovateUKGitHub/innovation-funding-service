@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -13,13 +12,14 @@ import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummariesViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.ProjectFinanceCostBreakdownViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +43,7 @@ public class ProjectFinanceChecksOverviewController {
 
     private FinanceCheckService financeCheckService;
 
-    private ProjectFinanceService financeService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     private ProjectService projectService;
 
@@ -54,10 +54,10 @@ public class ProjectFinanceChecksOverviewController {
     ProjectFinanceChecksOverviewController() {}
 
     @Autowired
-    public ProjectFinanceChecksOverviewController(PartnerOrganisationRestService partnerOrganisationRestService, FinanceCheckService financeCheckService, ProjectFinanceService financeService, ProjectService projectService, CompetitionRestService competitionRestService, ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator) {
+    public ProjectFinanceChecksOverviewController(PartnerOrganisationRestService partnerOrganisationRestService, FinanceCheckService financeCheckService, ProjectFinanceRestService projectFinanceRestService, ProjectService projectService, CompetitionRestService competitionRestService, ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator) {
         this.partnerOrganisationRestService = partnerOrganisationRestService;
         this.financeCheckService = financeCheckService;
-        this.financeService = financeService;
+        this.projectFinanceRestService = projectFinanceRestService;
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
@@ -92,7 +92,7 @@ public class ProjectFinanceChecksOverviewController {
     }
 
     private ProjectFinanceCostBreakdownViewModel getProjectFinanceCostBreakdown(Long projectId, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {
-        List<ProjectFinanceResource> finances = financeService.getProjectFinances(projectId);
+        List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         return new ProjectFinanceCostBreakdownViewModel(finances, partnerOrgs, competition);
     }
 }
