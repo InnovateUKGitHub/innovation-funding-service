@@ -138,7 +138,6 @@
     <th:block th:fragment="finance-breakdown-table(breakdown)">
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Project cost breakdown</h2>
         <th:block th:unless="${breakdown.ktpCompetition}" >
-            <div class="project-cost-breakdown">
                 <div class="table-overflow">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
@@ -180,7 +179,6 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
         </th:block>
         <th:block th:if="${breakdown.ktpCompetition}" >
             <div class="project-cost-breakdown">
