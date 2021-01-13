@@ -5,6 +5,8 @@ Documentation     INFUND-887 : As an applicant I want the option to look up my b
 ...
 ...               IFS-7723 Improvement to company search results
 ...
+...               IFS-7722 Improvement to company search journey
+...
 Suite Setup       Applicant goes to the organisation search page
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -58,14 +60,13 @@ Companies House: Empty company name field
     And the user clicks the button/link           id = org-search
     Then the user should see the element          jQuery = p:contains("matching the search") span:contains("0") + span:contains("Companies")
 
-# TODO uncomment on ifs-7722
-#Companies House: Empty company name field validation message
-#    [Documentation]    IFS-7723
-#    [Tags]
-#    Given the user clicks the button/link                  link = Back to enter your organisation's details
-#    When the user enters text to a text field              id = organisationSearchName    ${EMPTY}
-#    And the user clicks the button/link                    id = org-search
-#    Then the user should see a field and summary error     You must enter an organisation name or company registration number.
+Companies House: Empty company name field validation message
+    [Documentation]    IFS-7723  IFS-7722
+    [Tags]
+    Given the user clicks the button/link                  link = Back to enter your organisation's details
+    When the user enters text to a text field              id = organisationSearchName    ${EMPTY}
+    And the user clicks the button/link                    id = org-search
+    Then the user should see a field and summary error     You must enter an organisation name or company registration number.
 
 # TODO should be implemented on ifs-7724
 #Manually add the details and pass to the confirmation page
