@@ -233,7 +233,7 @@ Existing/new partner can not apply to KTP competition with academic/research org
     Then the user should not see the element           jQuery = dt:contains("Aberystwyth University") +dd:contains("Research")
 
 Existing/new partner can apply to KTP competition with non profit organisations
-    [Documentation]  IFS-7841  IFS-8035
+    [Documentation]  IFS-7841  IFS-8035  IFS-7723
     Given the user navigates to the page                       ${server}/organisation/select
     When the user slectes non profitable organisation type
     And the user clicks the button/link                        link = Application team
@@ -677,7 +677,7 @@ The lead should be able to access the eligibility checks page before approval
     And the user clicks the button/link                                                  link = Back to finance checks
 
 The lead should be able to access the finance overview page before approval
-    [Documentation]  IFS-8328
+    [Documentation]  IFS-8328  IFS-7723
     When the user clicks the button/link                                             link = view the project finance overview
     Then the user should see the changes in the finance table in Overview screen
     And The user should see the element                                              jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
@@ -722,7 +722,7 @@ The partner is able to access Finance checks before approval
     And the user should see the element          link = project finance overview
 
 The partner should be able to access the finance overview page before approval
-    [Documentation]  IFS-8328
+    [Documentation]  IFS-8328  IFS-7723
     When the user clicks the button/link                                             link = project finance overview
     Then the user should see the changes in the finance table in Overview screen
     And the user should see the element                                              jQuery = p:contains("This overview shows the financial information entered in the 'Your project finances' section by the knowledge base partner.")
@@ -807,7 +807,7 @@ Internal user can change the default KTA assigned as MO to another KTA user
     Then the user should see the element           jQuery = td:contains("${ApplicationID}")+td:contains("${ktpApplicationTitle}")+td:contains("${ktpOrgName}")
 
 Internal user is able to access the finance overview page
-    [Documentation]  IFS-8328
+    [Documentation]  IFS-8328  IFS-7723
     [Setup]  log in as a different user                                              &{ifs_admin_user_credentials}
     Given The user navigates to the page                                             ${server}/project-setup-management/project/${ProjectID}/finance-check
     When The user clicks the button/link                                             link = View finances
@@ -817,7 +817,7 @@ Internal user is able to access the finance overview page
     And The user should see the element                                              jQuery = h3:contains("Project cost summary")
 
 Internal user is able to see the partner funding level percentages is read-only
-    [Documentation]  IFS-8328
+    [Documentation]  IFS-8328  IFS-7723
     When The user clicks the button/link         link = Change funding level percentages
     Then The user should not see the element     jQuery = td:contains("ROYAL MAIL PLC") ~ td:nth-child(6):contains("0.00%") input[type='hidden']
     And The user clicks the button/link          link = Back to finance overview

@@ -16,7 +16,7 @@ ${terms_and_conditions_user_id}     ${user_ids['${terms_and_conditions_login_cre
 
 *** Test Cases ***
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
-    [Documentation]    INFUND-1230
+    [Documentation]    INFUND-1230  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page                                    ${INVITE_LINK}
     When the user accepts the invitation and search for an organisation

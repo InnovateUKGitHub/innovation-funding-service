@@ -13,7 +13,7 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-8431 Permission errors for users on application section of project
 ...
-...               IFS-7723 Improvement to company search results
+...             IFS-7723 Improvement to company search results
 ...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
@@ -188,7 +188,7 @@ The Stakeholder can no longer see the competition
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 The stakeholder can apply to a competition as an applicant
-    [Documentation]  IFS-7639
+    [Documentation]  IFS-7639  IFS-7723
     Given the user select the competition and starts application     ${openCompetitionPerformance_name}
     When the user provides organisation details
     Then the user should not see an error in the page
@@ -213,7 +213,7 @@ The stakeholder partner organisation accepts the invite
     Then logging in and error checking                    ${previousStakeholderEmail}  ${short_password}
 
 The stakeholder partner organisation provides organisation details and do not see any error
-    [Documentation]    IFS-7639
+    [Documentation]    IFS-7639  IFS-7723
     [Tags]  HappyPath
     Given the user provides organisation details
     Then the user should not see an error in the page

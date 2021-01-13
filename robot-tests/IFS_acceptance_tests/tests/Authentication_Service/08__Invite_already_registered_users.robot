@@ -33,7 +33,7 @@ The inited user logged in and see the application overview
     And the user should see the element                    jQuery = h1:contains("Application overview")
 
 Invite a user with the same organisation under the same organisation
-    [Documentation]    INFUND-3759
+    [Documentation]    INFUND-3759  IFS-7723
     [Setup]    Log in as a different user                                                         ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
     Then the invited user should get a message to contact the helpdesk                            ${test_mailbox_one}+invite2@gmail.com  Invitation to contribute in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation

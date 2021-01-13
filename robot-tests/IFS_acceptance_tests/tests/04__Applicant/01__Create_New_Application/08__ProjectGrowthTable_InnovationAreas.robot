@@ -392,7 +392,7 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 The lead applicant checks for terms and conditions partners status
-    [Documentation]  IFS-5920
+    [Documentation]  IFS-5920  IFS-7723
     [Tags]
     [Setup]  the user navigate to competition
     Given the user accept the temporary framework terms and conditions
@@ -404,7 +404,7 @@ The lead applicant checks for terms and conditions partners status
     [Teardown]  the user clicks the button/link     link = Terms and conditions of an Innovate UK grant award
 
 The lead applicant checks for terms and conditions validations
-    [Documentation]
+    [Documentation]   IFS-7723
     [Tags]
     Given the user clicks the button/link         link = Back to application overview
     And the user should see the element           jQuery = li:contains("Award terms and conditions") > .task-status-incomplete

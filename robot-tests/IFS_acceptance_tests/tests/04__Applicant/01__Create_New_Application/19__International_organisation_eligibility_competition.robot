@@ -170,10 +170,9 @@ Non registered UK based users apply for an international competition
     Then UK-based user sees these page elements
 
 Non registered UK based users confirm their organisation details and create an account
-    [Documentation]    IFS-7199
+    [Documentation]    IFS-7199  IFS-7723
     [Tags]  HappyPath
     Given the user provides uk based organisation details             FIRSTGROUP  ${ukBasedOrganisationName}
-    #And the user verifies uk based organisation details
     And the user verifies their organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
@@ -212,7 +211,7 @@ Registered users applying for an international competition see only UK based org
      And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
-    [Documentation]    IFS-7197
+    [Documentation]    IFS-7197  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business                            radio-1
@@ -221,6 +220,7 @@ Registered UK based user applies for International Competition
 #   Then the user verifies uk based organisation details
 # TODO Should be removed on completing ifs-7224
     Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
+# TODO should be implemented on ifs-7224
     #And the user clicks the button/link                                           name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)

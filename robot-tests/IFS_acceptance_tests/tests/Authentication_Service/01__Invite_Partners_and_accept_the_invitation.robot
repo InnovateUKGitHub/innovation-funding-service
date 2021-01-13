@@ -77,7 +77,7 @@ Complete account verification
     Then the user should be redirected to the correct page     ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
-    [Documentation]    INFUND-2083  IFS-951
+    [Documentation]    INFUND-2083  IFS-951  IFS-7723
     ...
     ...    INFUND-7976
     [Tags]  HappyPath

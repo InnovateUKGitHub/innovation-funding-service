@@ -67,7 +67,7 @@ The type of organisation navigates to the correct page
     And the user goes back to the previous page
 
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
-    [Documentation]    INFUND-1230
+    [Documentation]    INFUND-1230  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page           ${INVITE_LINK}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Yes, accept invitation")
