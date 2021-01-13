@@ -130,8 +130,12 @@ table {
   margin-bottom: 30px;
 }
 
-.finance-total {
+.accordion-header-text {
   @extend .govuk-accordion__section-button;
+}
+
+.finance-total {
+  @extend .accordion-header-text;
 }
 
 .govuk-accordion {

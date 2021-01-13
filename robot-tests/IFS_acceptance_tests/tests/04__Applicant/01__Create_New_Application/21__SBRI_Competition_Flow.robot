@@ -51,8 +51,8 @@ ${totalProjCosts}                Total project cost
 ${vatRegistered}                 Are you VAT registered
 ${totalWithVAT}                  £265,084
 ${totalWithoutVAT}               £220,903
-${initialFunding}                £77,057
-${revisedFunding}                £63,803
+${initialFunding}                £262,616
+${revisedFunding}                £218,435
 ${vatTotal}                      £44,181
 ${currentAmount}                 Current amount
 ${fundingAppliedFor}             Funding applied for
@@ -138,11 +138,6 @@ Lead applicant can see SBRI applications in previous section when the competitio
     [Documentation]  IFS-7314
     Given moving competition to Closed        ${openSBRICompetitionId}
     When log in as a different user           &{sbriLeadCredentials}
-    Then the user should see the element      jQuery = .previous li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Application submitted")
-
-Partner applicant can see SBRI applications in previous section when the competition is closed
-    [Documentation]  IFS-7314
-    When log in as a different user           &{sbriPartnerCredentials}
     Then the user should see the element      jQuery = .previous li:contains("${sbriType1ApplicationTitle}") .msg-progress:contains("Application submitted")
 
 Internal users can see SBRI competition in previous tab
@@ -384,7 +379,7 @@ the user should see the correct data on finance check page
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
     the user clicks the button/link         link = Back to finance checks
-    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${revisedFunding}")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("£218,435")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
