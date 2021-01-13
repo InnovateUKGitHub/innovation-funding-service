@@ -15,6 +15,8 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -56,7 +58,6 @@ ${partnerOrganisationNameNonUKBased}                   Test Empire
 ${zeroFundingPartnerOrgnaisationName}                  CINEWORLD LIMITED
 ${partnerOrganisationNameUKBased}                      ROYAL MAIL PLC
 ${leadApplicantOrganisationName}                       New Empire 1
-#${ukLeadOrganisationName}                              Organisation2
 ${ukLeadOrganisationName}                              SAGA PLC
 ${internationalPartnerOrganisation}                    New Empire
 ${ukBasedOrganisationName}                             FIRSTGROUP PLC
@@ -77,19 +78,19 @@ Eligibility is changed to project eligibility in project eligibility category
      [Documentation]  IFS-7195
      When the user clicks the button/link                 link = ${projectEligibilityLink}
      Then the user should see the text in the element     jQuery = h1:contains("${projectEligibilityLink}")        ${ProjectEligibilityLink}
-     And the user should see the element                  jQuery = span:contains("${organisationalEligibilityTitle}")
+     And the user should see the element                  jQuery = span:contains("${fundingEligibilityTitle}")
 
 Eligibility is changed to project eligibility in pagination
      [Documentation]  IFS-7195
      Given the user clicks the button/link                css = a[rel="Prev"]
      When the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
      And the user clicks the button/link                  jQuery = span:contains("${projectEligibilityLink}")
-     And the user clicks the button/link                  jQuery = span:contains("${organisationalEligibilityTitle}")
+     And the user clicks the button/link                  jQuery = span:contains("${fundingEligibilityTitle}")
      Then the user should see the text in the element     jQuery = span:contains("${projectEligibilityLink}")     ${ProjectEligibilityLink}
 
 Comp admin can not complete the competition setup without organisational eligibility category completetion
      [Documentation]  IFS-7195
-     Given the user clicks the button/link                                                 link = Return to setup overview
+     Given the user clicks the button/link          link = Return to setup overview
      When the user completes all categories except organisational eligibility category     ${business_type_id}  KTP  ${compType_Programme}  PROJECT_SETUP  yes  1  true  collaborative
      Then The user should see the element                                                  css = #compCTA[disabled]
 
@@ -169,10 +170,9 @@ Non registered UK based users apply for an international competition
     Then UK-based user sees these page elements
 
 Non registered UK based users confirm their organisation details and create an account
-    [Documentation]    IFS-7199
+    [Documentation]    IFS-7199  IFS-7723
     [Tags]  HappyPath
     Given the user provides uk based organisation details             FIRSTGROUP  ${ukBasedOrganisationName}
-    #And the user verifies uk based organisation details
     And the user verifies their organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
@@ -211,7 +211,7 @@ Registered users applying for an international competition see only UK based org
      And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
-    [Documentation]    IFS-7197
+    [Documentation]    IFS-7197  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business                            radio-1
@@ -220,6 +220,7 @@ Registered UK based user applies for International Competition
 #   Then the user verifies uk based organisation details
 # TODO Should be removed on completing ifs-7224
     Then the user search for organisation name on Companies house                   SAGA  ${ukLeadOrganisationName}
+# TODO should be implemented on ifs-7224
     #And the user clicks the button/link                                           name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
@@ -248,7 +249,7 @@ Registered user(Partner organisation) logs in and select where their organisatio
     Then the user should see the element              jQuery = dt:contains("Golden Valley Research Ltd")
 
 Partner user provides UK based organisation details and verifies them
-    [Documentation]    IFS-7198 IFS-7199
+    [Documentation]    IFS-7198 IFS-7199  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link                    link = Join with a different organisation
     When the user provides uk based organisation details     FIRSTGROUP  ${ukBasedOrganisationName}
@@ -630,7 +631,7 @@ the user checks for organisational eligibility fields
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-yes"]
     the user should see the element           css = [for="comp-internationalOrganisationsApplicable-no"]
     the user should see the element           jQuery = button:contains("Save and continue")
-    the user should see the element           jQuery = span:contains("${projectEligibilityLink}")
+    the user should see the element           jQuery = span:contains("Funding eligibility")
     the user should see the element           link = Back to competition details
     the user should see the element           link = Return to setup overview
 
@@ -648,7 +649,8 @@ the user completes all categories except organisational eligibility category
     [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Project eligibility            ${orgType}             ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility            ${compType}            ${orgType}                  ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS funding eligibility            ${researchCategory}    ${compType}
     the user fills in the CS Milestones                     ${completionStage}     ${month}                    ${nextyear}
     the user marks the Application as done                  ${projectGrowth}       ${compType}                 ${internationalLeadInternationalCompetition}
     the user fills in the CS Assessors                      GRANT

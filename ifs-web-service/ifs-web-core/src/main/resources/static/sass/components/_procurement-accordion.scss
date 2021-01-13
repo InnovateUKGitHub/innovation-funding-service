@@ -1,0 +1,64 @@
+
+.procurement-milestones {
+  .width-10-percent {
+    width: 10%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .width-50-percent {
+    width: 50%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .width-60-percent {
+    width: 60%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .width-80-percent {
+    width: 79%;
+    display: inline-block;
+    vertical-align: bottom;
+    margin-bottom: 0;
+  }
+
+  .govuk-accordion__controls {
+    display: inline-block;
+    float: right;
+    margin-top: 54px;
+  }
+
+  .govuk-accordion__section-content {
+    .central-col {
+      width: 69%;
+      display: inline-block;
+      vertical-align: top;
+
+      label {
+        margin-top: 25px;
+      }
+    }
+
+    .left-col {
+      width: 10%;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .right-col {
+      width: 15%;
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+
+  .margin-right-60 {
+    margin-right: 60px;
+  }
+}

@@ -64,15 +64,21 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
 
+        return addAttributesAndRedirect(organisationForm, model, user, request);
+    }
+
+    private String addAttributesAndRedirect(OrganisationCreationForm organisationForm, Model model, UserResource user, HttpServletRequest request) {
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
         model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
+
         addPageSubtitleToModel(request, user, model);
+
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -102,19 +108,25 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @GetMapping("/" + EXISTING_ORGANISATION + "/{selectedExistingOrganisationId}")
-    public String searchExistingOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                             Model model,
+    public String searchExistingOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                              @PathVariable("selectedExistingOrganisationId") final Long selectedOrganisationId,
+                                             Model model,
+                                             UserResource user,
                                              HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             UserResource user) {
+                                             HttpServletResponse response) {
         OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(selectedOrganisationId).getSuccess();
+
         organisationForm.setSelectedExistingOrganisationId(selectedOrganisation.getId());
         organisationForm.setOrganisationTypeId(selectedOrganisation.getOrganisationType());
         organisationForm.setSelectedExistingOrganisationName(selectedOrganisation.getName());
+        organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(false);
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
         model.addAttribute("subtitle", "Your organisation");
-        return createOrganisation(organisationForm, model, user, request, response);
+
+        return addAttributesAndRedirect(organisationForm, model, user, request);
     }
 
     @GetMapping(value = {"/" + SEARCH_RESULT_ORGANISATION + "/**" })

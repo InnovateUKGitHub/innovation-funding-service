@@ -139,15 +139,18 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
 
     @Test
     public void updateOrganisation_WithAdditionalDetails() throws Exception {
+        Long existingOrganisationId = 1L;
+
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
 
-        organisationForm.setSelectedExistingOrganisationId(1L);
+        organisationForm.setSelectedExistingOrganisationId(existingOrganisationId);
 
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
-        when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(1L))).thenReturn(VIEW);
+        when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(existingOrganisationId).build()));
+        when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(existingOrganisationId))).thenReturn(VIEW);
+        when(organisationRestService.getOrganisationById(existingOrganisationId)).thenReturn(restSuccess(newOrganisationResource().withId(existingOrganisationId).build()));
 
         mockMvc.perform(post("/organisation/create/save-organisation")
                 .param("searchOrganisationId", "123"))

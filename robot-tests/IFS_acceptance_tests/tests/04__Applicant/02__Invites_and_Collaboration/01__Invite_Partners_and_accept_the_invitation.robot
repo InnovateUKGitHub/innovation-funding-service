@@ -30,7 +30,9 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               IFS-1841 Basic view of all 'external' IFS users
 ...
 ...               IFS-8095 Content improvement for KTA journey
-
+...
+...               IFS-7723 Improvement to company search results
+...
 #create new competition to test the new application team view.
 Suite Setup       Custom Suite Setup
 Suite Teardown
@@ -42,7 +44,6 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 ${application_name}    Invite robot test application
 ${newLeadApplicant}    kevin@worth.systems
 ${newCollaborator}     jerry@worth.systems
-#${organisation}        org2
 ${organisation}        ITV PLC
 
 *** Test Cases ***
@@ -198,7 +199,7 @@ Partner can see the Application team
     And The user should not see the element  link = Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Partner can invite others to his own organisation
-    [Documentation]    INFUND-2335  INFUND-7977
+    [Documentation]    INFUND-2335  INFUND-7977  IFS-7723
     Given the user clicks the button/link      jQuery = button:contains("Add person to")button:contains("FIRSTGROUP PLC")
     When the user invites a person to the same organisation  Mark  mark21@innovateuk.com
     Then The user should see the element       jQuery = td:contains("Mark (pending for")
@@ -247,7 +248,7 @@ Lead should not see pending status or resend invite for accepted invite
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
-    [Documentation]  IFS-2440
+    [Documentation]  IFS-2440  IFS-7723
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
     Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   ${organisation}

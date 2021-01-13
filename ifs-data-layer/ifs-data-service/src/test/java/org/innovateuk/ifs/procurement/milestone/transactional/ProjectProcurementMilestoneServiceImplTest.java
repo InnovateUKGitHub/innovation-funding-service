@@ -47,11 +47,27 @@ public class ProjectProcurementMilestoneServiceImplTest {
         List<ProjectProcurementMilestone> domains = newArrayList(new ProjectProcurementMilestone());
         List<ProjectProcurementMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
 
-        when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationId(projectId, organisationId))
+        when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(projectId, organisationId))
                 .thenReturn(domains);
         when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
 
         ServiceResult<List<ProjectProcurementMilestoneResource>> result = service.getByProjectIdAndOrganisationId(projectId, organisationId);
+
+        assertThat(result.getSuccess(), is(equalTo(resources)));
+    }
+
+    @Test
+    public void getByProjectId() {
+        long projectId = 1L;
+
+        List<ProjectProcurementMilestone> domains = newArrayList(new ProjectProcurementMilestone());
+        List<ProjectProcurementMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
+
+        when(repository.findByProjectFinanceProjectId(projectId))
+                .thenReturn(domains);
+        when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
+
+        ServiceResult<List<ProjectProcurementMilestoneResource>> result = service.getByProjectId(projectId);
 
         assertThat(result.getSuccess(), is(equalTo(resources)));
     }

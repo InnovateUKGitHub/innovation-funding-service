@@ -59,6 +59,7 @@ ${internationalLeadInternationalCompetition}             International Lead Inte
 ${openCompetitionPerformance_name}                       Performance testing competition
 ${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
 ${projectEligibilityLink}                                Project eligibility
+${fundingEligibilityTitle}                               Funding eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
@@ -307,6 +308,8 @@ ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
 ${compType_HEUKAR}     HEUKAR
+${compType_PT}         The Prince's Trust
+${compType_H2020}      Horizon 2020
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type

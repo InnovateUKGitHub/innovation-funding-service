@@ -14,6 +14,9 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant

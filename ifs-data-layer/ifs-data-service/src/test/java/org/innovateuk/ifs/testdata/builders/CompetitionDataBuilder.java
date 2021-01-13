@@ -205,6 +205,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
+            grantClaimMaximumService.revertToDefault(data.getCompetition().getId());
+
             if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
                 List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");

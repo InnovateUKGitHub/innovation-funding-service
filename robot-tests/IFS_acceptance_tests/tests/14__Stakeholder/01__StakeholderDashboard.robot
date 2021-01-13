@@ -13,20 +13,26 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-8431 Permission errors for users on application section of project
 ...
+...             IFS-7723 Improvement to company search results
+...
+...             IFS-9038 Urgent: ATI Stakeholders having issues opening appendices
+...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/Competition_Commons.robot
 Resource        ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${openProgrammeCompetitionName}  Photonics for All
-${openProgrammeCompetitionId}    ${competition_ids['${openProgrammeCompetitionName}']}
-${stakeholderEmail}              stakeHolder@test.com
-${applicantEmail}                louis.morgan@example.com
-${previousStakeholderEmail}      blake.wood@gmail.com
-${uk_based_applicant_new}        aastha.walia@test.com
-${steakHolderCompId}             ${competition_ids["Rolling stock future developments"]}
-${stakeHolderApplicationId}      ${application_ids["New materials for lighter stock"]}
+${openProgrammeCompetitionName}             Photonics for All
+${openProgrammeCompetitionId}               ${competition_ids['${openProgrammeCompetitionName}']}
+${stakeholderEmail}                         stakeHolder@test.com
+${applicantEmail}                           louis.morgan@example.com
+${previousStakeholderEmail}                 blake.wood@gmail.com
+${uk_based_applicant_new}                   aastha.walia@test.com
+${steakHolderCompId}                        ${competition_ids["Rolling stock future developments"]}
+${stakeHolderApplicationId}                 ${application_ids["New materials for lighter stock"]}
+${stakeHolderHighSpeedRailApplicationID}    ${application_ids["High-speed rail and its effects on soil compaction"]}
+
 
 *** Test Cases ***
 The internal user cannot invite a Stakeholder when they have triggered the name validation
@@ -132,7 +138,6 @@ The Stakeholder can search for a competition
     Then the user should see the element          jQuery = h1:contains("${openProgrammeCompetitionId}: ${openProgrammeCompetitionName}")
     [Teardown]  The user clicks the button/link   link = Dashboard
 
-
 The Stakeholder is able to access Project details once a finance contact is assigned
     [Documentation]  IFS-7429
     Given finance reviewer is added to the project    ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_Point_Project_Id}/details
@@ -186,7 +191,7 @@ The Stakeholder can no longer see the competition
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 The stakeholder can apply to a competition as an applicant
-    [Documentation]  IFS-7639
+    [Documentation]  IFS-7639  IFS-7723
     Given the user select the competition and starts application     ${openCompetitionPerformance_name}
     When the user provides organisation details
     Then the user should not see an error in the page
@@ -211,7 +216,7 @@ The stakeholder partner organisation accepts the invite
     Then logging in and error checking                    ${previousStakeholderEmail}  ${short_password}
 
 The stakeholder partner organisation provides organisation details and do not see any error
-    [Documentation]    IFS-7639
+    [Documentation]    IFS-7639  IFS-7723
     [Tags]  HappyPath
     Given the user provides organisation details
     Then the user should not see an error in the page
@@ -222,6 +227,15 @@ Innovation lead can see the application of a project
     When the user navigates to the page     ${server}/project-setup-management/competition/${steakHolderCompId}/status/all
     And the user clicks the button/link     link = ${stakeHolderApplicationId}
     Then the user should see the element    id = accordion-questions-heading-1-1
+
+Stakeholders can download appendices
+    [Documentation]   IFS-9038
+    Given the user clicks the button/link                                 link = Back to project setup
+    When the user clicks the button/link                                  link = ${stakeHolderHighSpeedRailApplicationID}
+    And the user clicks the button/link                                   jQuery = a:contains("high-speed-rail-and-its-effects-on-soil-compaction-technical-approach.pdf, 7 KB (opens in a new window)")
+    And select window                                                     title = Page not found - Innovation Funding Service
+    Then the user should not see internal server and forbidden errors
+    [Teardown]  the user closes the last opened tab
 
 *** Keywords ***
 new user apply for competition and create account
