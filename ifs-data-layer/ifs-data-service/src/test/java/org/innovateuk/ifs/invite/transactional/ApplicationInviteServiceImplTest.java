@@ -18,6 +18,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.procurement.milestone.repository.ApplicationProcurementMilestoneRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -96,6 +97,9 @@ public class ApplicationInviteServiceImplTest {
 
     @Mock
     private ApplicationInviteNotificationService applicationInviteNotificationService;
+
+    @Mock
+    private ApplicationProcurementMilestoneRepository applicationProcurementMilestoneRepository;
 
     @InjectMocks
     private ApplicationInviteServiceImpl inviteService;
@@ -556,7 +560,8 @@ public class ApplicationInviteServiceImplTest {
         InOrder inOrder = inOrder(
                 questionReassignmentService,
                 processRoleRepository,
-                applicationFinanceRepository
+                applicationFinanceRepository,
+                applicationProcurementMilestoneRepository
         );
         inOrder.verify(questionReassignmentService).reassignCollaboratorResponsesAndQuestionStatuses(
                 applicationInviteToDelete.getTarget().getId(),
@@ -568,6 +573,7 @@ public class ApplicationInviteServiceImplTest {
                 application.getId(),
                 organisation.getId()
         );
+        inOrder.verify(applicationProcurementMilestoneRepository).deleteByApplicationFinanceId(applicationFinance.getId());
         inOrder.verify(applicationFinanceRepository).delete(applicationFinance);
         inOrder.verifyNoMoreInteractions();
 

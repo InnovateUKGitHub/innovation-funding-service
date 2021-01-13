@@ -22,7 +22,6 @@ public class ApplicationUrlHelper {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    //TODO IFS-5889 missing types RESEARCH_CATEGORY.
     public static Optional<String> getQuestionUrl(QuestionSetupType questionType, long questionId, long applicationId) {
         if (questionType != null) {
             switch (questionType) {
@@ -66,6 +65,9 @@ public class ApplicationUrlHelper {
             case ORGANISATION_FINANCES:
                 return Optional.of(String.format("/application/%d/form/your-organisation/competition/%d/organisation/%d/section/%d",
                         applicationId, competitionId, organisationId, sectionId));
+            case PAYMENT_MILESTONES:
+                return Optional.of(String.format("/application/%d/form/procurement-milestones/organisation/%d/section/%d",
+                        applicationId, organisationId, sectionId));
             case OVERVIEW_FINANCES:
                 return Optional.of(String.format("/application/%d/form/finances-overview/section/%d",
                         applicationId, sectionId));
