@@ -16,6 +16,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -112,9 +113,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectUserInvite> i
                     pu.setInvite(invite);
                     projectUserRepository.save(pu.accept());
                     if (containsMultiDashboardRole(user.getRoles()) && !user.getRoles().contains(APPLICANT)) {
-                        user.addRole(APPLICANT); // Give them the applicant role in case they do not have it.
-                        userRepository.save(user);
-                        userService.evictUserCache(user.getUid());
+                        userService.grantRole(new GrantRoleCommand(userId, APPLICANT)).andOnSuccessReturnVoid();
                     }
                     return serviceSuccess();
                 });
