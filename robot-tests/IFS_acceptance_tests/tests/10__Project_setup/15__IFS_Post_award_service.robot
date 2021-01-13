@@ -148,7 +148,9 @@ Applicant - User should be redirected to grant application service on click revi
      When the internal user edits the form with connect option     CONNECT
      And the internal user approve the GOL                         ${connectServiceProjectID}
      And applicant clicks review its progress link                 ${connectServiceProjectID}
-     Then the user should see the element                          link = _connect
+     And the user should see the element                           id = message
+     And the user should see the element                           link = Innovation Funding Service
+     Then the user should see the element                          link = support@innovateuk.ukri.org
 
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017
