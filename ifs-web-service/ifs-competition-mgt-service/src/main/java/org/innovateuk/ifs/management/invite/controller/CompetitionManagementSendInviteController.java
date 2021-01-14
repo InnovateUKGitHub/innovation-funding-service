@@ -66,7 +66,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
-        Boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
+        boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
                 .getAlwaysOpen();
 
         if (invites.getRecipients().isEmpty()) {
@@ -118,7 +118,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                 competitionId,
                 inviteform.getInviteIds()).getSuccess();
-        Boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
+        boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
                 .getAlwaysOpen();
         model.addAttribute("model", new SendInvitesViewModel(
                 invites.getCompetitionId(),
@@ -149,7 +149,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
             AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                     competitionId,
                     submittedSelectionForm.getSelectedInviteIds()).getSuccess();
-            Boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
+            boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
                     .getAlwaysOpen();
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
@@ -192,7 +192,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                 .toUriString();
     }
 
-    private void setInviteSubjectContent(SendInviteForm form, AssessorInvitesToSendResource invites, Boolean alwaysOpen) {
+    private void setInviteSubjectContent(SendInviteForm form, AssessorInvitesToSendResource invites, boolean alwaysOpen) {
         if (alwaysOpen) {
             form.setSubject(format("Invitation to be an assessor for competition '%s'", invites.getCompetitionName()));
         } else {

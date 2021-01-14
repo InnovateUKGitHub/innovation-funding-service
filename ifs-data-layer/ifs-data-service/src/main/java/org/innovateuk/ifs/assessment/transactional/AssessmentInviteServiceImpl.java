@@ -206,7 +206,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private String getInviteContent(AssessmentInvite invite) {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
         Competition competition = invite.getTarget();
-        Boolean alwaysOpen = competition.getAlwaysOpen();
+        boolean alwaysOpen = competition.getAlwaysOpen();
 
         return getInviteContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
@@ -220,7 +220,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private String getInvitePreviewContent(Competition competition) {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
-        Boolean alwaysOpen = competition.getAlwaysOpen();
+        boolean alwaysOpen = competition.getAlwaysOpen();
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
@@ -453,7 +453,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            Boolean alwaysOpen = competition.getAlwaysOpen();
+            boolean alwaysOpen = competition.getAlwaysOpen();
             Notifications notificationType = alwaysOpen ? Notifications.INVITE_ASSESSOR_ALWAYS_OPEN :
                     Notifications.INVITE_ASSESSOR_GROUP;
 
@@ -503,7 +503,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 invite -> {
                     updateParticipantStatus(invite);
 
-                    Boolean alwaysOpen = invite.getTarget().getAlwaysOpen();
+                    boolean alwaysOpen = invite.getTarget().getAlwaysOpen();
                     Notifications notificationType = alwaysOpen ? Notifications.INVITE_ASSESSOR_ALWAYS_OPEN :
                             Notifications.INVITE_ASSESSOR_GROUP;
 
@@ -589,14 +589,14 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         return find(assessmentParticipantRepository.getByInviteId(inviteId), notFoundError(AssessmentParticipant.class, inviteId));
     }
 
-    private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments, Boolean alwaysOpen) {
+    private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments, boolean alwaysOpen) {
         String templatePath = alwaysOpen ? PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_editable_text.txt" :
                 PREVIEW_TEMPLATES_PATH + "invite_assessor_editable_text.txt";
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, templatePath,
                 arguments).getSuccess();
     }
 
-    private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments, Boolean alwaysOpen) {
+    private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments, boolean alwaysOpen) {
         String templatePath = alwaysOpen ? PREVIEW_TEMPLATES_PATH + "invite_assessor_always_open_preview_text.txt" :
                 PREVIEW_TEMPLATES_PATH + "invite_assessor_preview_text.txt";
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, templatePath, arguments).getSuccess();
