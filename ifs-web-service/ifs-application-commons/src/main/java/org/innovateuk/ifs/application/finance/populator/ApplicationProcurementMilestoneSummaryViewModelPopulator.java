@@ -26,7 +26,7 @@ public class ApplicationProcurementMilestoneSummaryViewModelPopulator {
 
     private ApplicationProcurementMilestonesSummaryViewModel viewModel(ApplicationResource application) {
         List<ApplicationProcurementMilestoneResource> applicationProcurementMilestoneResources = applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(application.getId(), application.getLeadOrganisationId()).getSuccess();
-        List<ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceDetails(application.getId()).getSuccess();
+        List<ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(application.getId()).getSuccess();
         return new ApplicationProcurementMilestonesSummaryViewModel(applicationProcurementMilestoneResources, finances);
     }
 }
