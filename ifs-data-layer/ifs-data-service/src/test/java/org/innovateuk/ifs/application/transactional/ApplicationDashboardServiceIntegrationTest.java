@@ -20,6 +20,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource.DashboardPreviousApplicationResourceBuilder;
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 
 /**
  * Testing {@link ApplicationDashboardService}
@@ -58,6 +59,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
         Application application = applicationRepository.findById(4L).get();
         application.setManageFundingEmailDate(ZonedDateTime.now());
         application.setFundingDecision(FundingDecisionStatus.UNFUNDED);
+        application.setCompetition(newCompetition().withAlwaysOpen(false).build());
         applicationRepository.save(application);
 
         ServiceResult<ApplicantDashboardResource> result = applicationDashboardService.getApplicantDashboard(userId);

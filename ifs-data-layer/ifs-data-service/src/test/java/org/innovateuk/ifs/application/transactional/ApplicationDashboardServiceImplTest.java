@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -52,17 +53,19 @@ public class ApplicationDashboardServiceImplTest {
     @Mock
     private ApplicationRepository applicationRepository;
 
-    private Competition closedCompetition = newCompetition().withSetupComplete(true)
+    private final Competition closedCompetition = newCompetition().withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().minusDays(1))
+            .withAlwaysOpen(false)
             .build();
-    private Competition openCompetition = newCompetition().withSetupComplete(true)
+    private final Competition openCompetition = newCompetition().withSetupComplete(true)
             .withStartDate(ZonedDateTime.now().minusDays(2))
             .withEndDate(ZonedDateTime.now().plusDays(1))
+            .withAlwaysOpen(false)
             .build();
     private static final long USER_ID = 1L;
-    private User user = newUser().withId(USER_ID).build();
-    private ProcessRole processRole = newProcessRole().withRole(Role.LEADAPPLICANT).withUser(user).build();
+    private final User user = newUser().withId(USER_ID).build();
+    private final ProcessRole processRole = newProcessRole().withRole(Role.LEADAPPLICANT).withUser(user).build();
 
     @Test
     public void getApplicantDashboard() {
@@ -79,10 +82,17 @@ public class ApplicationDashboardServiceImplTest {
 
         when(interviewAssignmentService.isApplicationAssigned(anyLong())).thenReturn(serviceSuccess(true));
 
+        List<Application> applications = asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
+                inProgressOpenCompApplication, inProgressClosedCompApplication, onHoldNotifiedApplication,
+                unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication);
+        applications = applications.stream().peek(app -> {
+            Competition competition = app.getCompetition();
+            competition.setAlwaysOpen(false);
+            app.setCompetition(competition);
+        }).collect(Collectors.toList());
+
         when(applicationRepository.findApplicationsForDashboard(USER_ID))
-                .thenReturn(asList(h2020Application, projectInSetupApplication, pendingPartnerInSetupApplication, completedProjectApplication,
-                        inProgressOpenCompApplication, inProgressClosedCompApplication, onHoldNotifiedApplication,
-                        unsuccessfulNotifiedApplication, ineligibleApplication, submittedAwaitingDecisionApplication));
+                .thenReturn(applications);
 
         ApplicantDashboardResource dashboardResource = applicationDashboardService.getApplicantDashboard(USER_ID).getSuccess();
 
@@ -211,7 +221,7 @@ public class ApplicationDashboardServiceImplTest {
     private Application h2020Application() {
         return newApplication()
                 .withApplicationState(ApplicationState.SUBMITTED)
-                .withCompetition(newCompetition().withCompetitionType(newCompetitionType().withName(H2020_TYPE_NAME).build()).build())
+                .withCompetition(newCompetition().withCompetitionType(newCompetitionType().withName(H2020_TYPE_NAME).build()).withAlwaysOpen(false).build())
                 .build();
     }
 }
