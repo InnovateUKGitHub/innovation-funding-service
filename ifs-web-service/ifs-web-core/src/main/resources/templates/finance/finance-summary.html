@@ -137,6 +137,7 @@
     <!-- ===========================Form: finance breakdown table =========================== -->
     <th:block th:fragment="finance-breakdown-table(breakdown)">
         <th:block th:unless="${breakdown.ktpCompetition}" >
+            <div class="project-cost-breakdown">
                 <div class="table-overflow">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
@@ -178,6 +179,7 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
         </th:block>
         <th:block th:if="${breakdown.ktpCompetition}" >
             <div class="project-cost-breakdown">
