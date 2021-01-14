@@ -226,6 +226,13 @@ get table id by email
     ${id} =      get from list  ${result}  0
     [Return]  ${id}
 
+get table count by id
+    [Arguments]  ${table}  ${filterVal}  ${id}
+    ${result} =  query  SELECT COUNT(*) FROM `${database_name}`.`${table}` WHERE `${filterVal}` = '${id}';
+    ${result} =  get from list  ${result}  0
+    ${count} =   get from list  ${result}  0
+    [Return]  ${count}
+
 # The below keyword gets date from first selector and checks if it is greater than the date from second selector
 # For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.
 verify first date is greater than or equal to second
