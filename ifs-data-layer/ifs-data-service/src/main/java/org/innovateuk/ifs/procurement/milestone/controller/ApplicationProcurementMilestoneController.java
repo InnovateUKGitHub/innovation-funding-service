@@ -35,9 +35,4 @@ public class ApplicationProcurementMilestoneController extends AbstractProcureme
                                                                                                          @PathVariable final long organisationId) {
         return applicationProcurementMilestoneService.getByApplicationIdAndOrganisationId(applicationId, organisationId).toGetResponse();
     }
-
-    @GetMapping("application/{applicationId}")
-    public RestResult<List<ApplicationProcurementMilestoneResource>> getByApplicationId(@PathVariable final long applicationId) {
-        return applicationProcurementMilestoneService.getByApplicationId(applicationId).toGetResponse();
-    }
 }

@@ -57,7 +57,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(appFinanceResource, projectFinanceResource);
         ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, eligibilityOverview,
                 projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
-        ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, competition);
+        ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, organisation, competition);
 
         return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(),
                 competition.isProcurement(),
@@ -109,10 +109,10 @@ public class ProjectFinanceChangesViewModelPopulator {
         return new ProjectFinanceChangesFinanceSummaryViewModel(entries);
     }
 
-    private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, CompetitionResource competition) {
+    private ProjectFinanceChangesMilestoneDifferencesViewModel getMilestoneDifferencesViewModel(ProjectResource project, OrganisationResource organisationResource, CompetitionResource competition) {
         if (competition.isProcurementMilestones()) {
-            List<ApplicationProcurementMilestoneResource> applicationMilestones = applicationProcurementMilestoneRestService.getByApplicationId(project.getApplication()).getSuccess();
-            List<ProjectProcurementMilestoneResource> projectMilestones = projectProcurementMilestoneRestService.getByProjectId(project.getId()).getSuccess();
+            List<ApplicationProcurementMilestoneResource> applicationMilestones = applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(project.getApplication(), organisationResource.getId()).getSuccess();
+            List<ProjectProcurementMilestoneResource> projectMilestones = projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(project.getId(), organisationResource.getId()).getSuccess();
 
             List<MilestoneChangeViewModel> milestoneDifferences = buildMilestoneDifferences(applicationMilestones, projectMilestones);
 

@@ -106,8 +106,8 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
                 newProjectProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build()
         );
 
-        when(applicationProcurementMilestoneRestService.getByApplicationId(applicationId)).thenReturn(restSuccess(applicationMilestones));
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(projectMilestones));
+        when(applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(restSuccess(applicationMilestones));
+        when(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(restSuccess(projectMilestones));
 
         ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -132,8 +132,8 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
                 newProjectProcurementMilestoneResource().withMonth(3).withDescription("desc3").withPayment(new BigInteger("3000")).build()
         );
 
-        when(applicationProcurementMilestoneRestService.getByApplicationId(applicationId)).thenReturn(restSuccess(applicationMilestones));
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(projectMilestones));
+        when(applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(restSuccess(applicationMilestones));
+        when(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(restSuccess(projectMilestones));
 
         ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -163,8 +163,8 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
                 newProjectProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build()
         );
 
-        when(applicationProcurementMilestoneRestService.getByApplicationId(applicationId)).thenReturn(restSuccess(applicationMilestones));
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(projectMilestones));
+        when(applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(restSuccess(applicationMilestones));
+        when(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(restSuccess(projectMilestones));
 
         ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
@@ -196,8 +196,8 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         );
 
-        when(applicationProcurementMilestoneRestService.getByApplicationId(applicationId)).thenReturn(restSuccess(applicationMilestones));
-        when(projectProcurementMilestoneRestService.getByProjectId(projectId)).thenReturn(restSuccess(projectMilestones));
+        when(applicationProcurementMilestoneRestService.getByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(restSuccess(applicationMilestones));
+        when(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(restSuccess(projectMilestones));
 
         ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withCompetition(competitionId).build();
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
