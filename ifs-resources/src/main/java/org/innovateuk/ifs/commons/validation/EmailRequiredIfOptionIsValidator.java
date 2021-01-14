@@ -62,7 +62,7 @@ public class EmailRequiredIfOptionIsValidator implements ConstraintValidator<Ema
     private boolean isRequiredFieldValid(Object requiredFieldValue, String requiredFieldName, String regex) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         if (requiredFieldValue instanceof String) {
             if(Pattern.matches(regex, (String) requiredFieldValue)) {
-                org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator externalEmailValidator = new org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator();
+                EmailValidator externalEmailValidator = new EmailValidator();
                 return externalEmailValidator.isValid((String) requiredFieldValue, null);
             } else {
                 return false;

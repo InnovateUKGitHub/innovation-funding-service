@@ -17,6 +17,12 @@ dependencies {
         }
     }
 
+    implementation('commons-beanutils:commons-beanutils') {
+        version {
+            strictly '1.9.3'
+        }
+    }
+
     implementation('commons-io:commons-io') {
         version {
             strictly '2.5'
