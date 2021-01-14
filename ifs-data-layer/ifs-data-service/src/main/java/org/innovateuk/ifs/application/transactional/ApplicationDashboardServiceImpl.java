@@ -181,6 +181,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())
                 .withShowReopenLink(showReopenLinkVisible(application, userId))
+                .withAlwaysOpen(application.getCompetition().getAlwaysOpen())
                 .build();
     }
 
