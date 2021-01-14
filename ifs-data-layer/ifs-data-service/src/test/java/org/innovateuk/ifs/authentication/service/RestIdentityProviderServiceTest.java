@@ -143,7 +143,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
         UpdateUserResource updateRequest = new UpdateUserResource("newpassword");
         ResponseEntity<String> failureResponseEntity = new ResponseEntity<>(asJson(new IdentityProviderError("Error!", emptyList())), BAD_REQUEST);
 
-        lenient().when(mockRestTemplate.exchange("http://idprest/updateuser/existing-uid", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(failureResponseEntity);
+        when(mockRestTemplate.exchange("http://idprest/updateuser/existing-uid", PUT, adaptor.jsonEntity(updateRequest), String.class)).thenReturn(failureResponseEntity);
 
         ServiceResult<String> result = service.updateUserPassword("existing-uid", "newpassword");
         assertTrue(result.isFailure());

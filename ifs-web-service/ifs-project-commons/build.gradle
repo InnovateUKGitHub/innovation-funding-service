@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
@@ -49,7 +49,7 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile "com.opencsv:opencsv:4.3.2"
+    testCompile "com.opencsv:opencsv"
 
 }
 

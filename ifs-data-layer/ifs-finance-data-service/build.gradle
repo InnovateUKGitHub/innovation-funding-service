@@ -1,6 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
@@ -91,7 +91,7 @@ prepareDockerBaseInput {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.mariadb.jdbc:mariadb-java-client:2.4.4"
+    compile "org.mariadb.jdbc:mariadb-java-client"
 
     compile project(':ifs-commons')
     compile project(':ifs-resources')
@@ -106,7 +106,7 @@ dependencies {
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
 
-    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
+    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12'
 }
 
 test {

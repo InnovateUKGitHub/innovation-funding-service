@@ -11,6 +11,7 @@ ext {
 }
 
 dependencies {
+    compile "org.springframework:spring-web"
     compile "org.springframework.security:spring-security-core"
     compile project(':ifs-commons')
     compile project(':ifs-error-util')

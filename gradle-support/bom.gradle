@@ -23,13 +23,40 @@ dependencies {
 
     implementation('commons-io:commons-io') {
         version {
-            strictly '2.5'
+            strictly '2.6'
         }
     }
 
     implementation('com.google.guava:guava') {
         version {
-            strictly '27.1-jre'
+            // Tika wants this one
+            strictly '28.0-jre'
+        }
+    }
+
+    implementation('org.jsoup:jsoup') {
+        version {
+            strictly '1.12.1'
+        }
+    }
+
+    implementation('javax.mail:mail') {
+        version {
+            strictly '1.4.7'
+        }
+    }
+
+    implementation('org.mariadb.jdbc:mariadb-java-client') {
+        version {
+            // This is different to current mariadb in spring dependencies
+            // It should probably just track with spring as they will do a lot more compatibility testing!
+            '2.4.4'
+        }
+    }
+
+    implementation('com.opencsv:opencsv') {
+        version {
+            strictly '4.3.2'
         }
     }
 
@@ -39,15 +66,9 @@ dependencies {
         }
     }
 
-    implementation('com.google.guava:guava') {
-        version {
-            strictly '27.1-jre'
-        }
-    }
-
-    implementation('org.jsoup:jsoup') {
-        version {
-            strictly '1.10.2'
+    testImplementation('com.jayway.awaitility:awaitility') {
+        version() {
+            strictly '1.7.0'
         }
     }
 
