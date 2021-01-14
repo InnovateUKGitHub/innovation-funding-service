@@ -31,7 +31,6 @@
         </ul>
         <p class="govuk-body">Please make sure you enter your organisation's details correctly. Any errors you make will
             slow down the application process, which could delay your funding payments.</p>
-
         <form th:object="${organisationForm}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post"
@@ -124,7 +123,7 @@
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
                 </div>
 
-                <button name="save-organisation" formaction="/organisation/create/save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+                <button name="save-organisation" formaction="/organisation/create/confirm-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
