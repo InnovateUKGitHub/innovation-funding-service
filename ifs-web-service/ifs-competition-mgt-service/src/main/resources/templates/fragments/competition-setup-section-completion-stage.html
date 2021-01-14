@@ -68,9 +68,9 @@
             </a>
         </li>
         <li class="next" th:if="${!model.general.editable}">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application-submission')}">
                 <span class="pagination-label">Next</span>
-                <span class="pagination-part-title">Milestones</span>
+                <span class="pagination-part-title">Application submission</span>
             </a>
         </li>
     </ul>

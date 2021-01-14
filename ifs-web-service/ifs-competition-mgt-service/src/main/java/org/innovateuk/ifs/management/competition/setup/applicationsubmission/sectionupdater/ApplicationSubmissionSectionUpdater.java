@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
-import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,6 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-        return CompletionStageForm.class.equals(clazz);
+        return ApplicationSubmissionForm.class.equals(clazz);
     }
 }

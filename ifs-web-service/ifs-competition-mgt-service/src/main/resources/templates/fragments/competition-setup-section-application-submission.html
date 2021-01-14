@@ -1,40 +1,40 @@
 
-<!-- ================= Section: Completion stage (11) =========================== -->
+<!-- ================= Section: Application submission (15) =========================== -->
 <th:block th:fragment="section-content"  xmlns:th="http://www.w3.org/1999/html">
-    <div th:if="${#fields.hasErrors('${applicationSubmissionForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(applicationSubmissionForm)" />
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
     <th:block th:if="${model.general.editable}">
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post"
-              th:object="${applicationSubmissionForm}"
+              th:object="${competitionSetupForm}"
               novalidate="novalidate">
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedApplicationSubmission')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset" aria-describedby="completion-stage-hint">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('alwaysOpen')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset" aria-describedby="application-submission-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                         <h1 class="govuk-fieldset__heading">
-                            Completion stage
+                            Application submissions
                         </h1>
                     </legend>
                     <span id="completion-stage-hint" class="govuk-hint">
-                        Select the stage at which the competition is complete for Innovate UK.
+                        Will this be an open-ended competition?
                     </span>
-                    <span th:if="${#fields.hasErrors('selectedApplicationSubmission')}" class="govuk-error-message"
-                          th:each="err : ${#fields.errors('selectedApplicationSubmission')}" th:text="${err}"/>
+                    <span th:if="${#fields.hasErrors('alwaysOpen')}" class="govuk-error-message"
+                          th:each="err : ${#fields.errors('alwaysOpen')}" th:text="${err}"/>
                     <div class="govuk-radios">
-                        <div class="govuk-radios__item" th:each="stage, iteration : ${model.getAlwaysOpen()}">
+                        <div class="govuk-radios__item" th:each="value, iteration : ${ {true, false} }">
                                 <input type="radio"
                                        class="govuk-radios__input"
                                        required="required"
-                                       th:value="${stage}"
-                                       name="selectedApplicationSubmission"
-                                       th:checked="${applicationSubmissionForm.alwaysOpen == stage}"
-                                       th:id="|completion-stage-${iteration.count}|"/>
+                                       th:value="${value}"
+                                       name="alwaysOpen"
+                                       th:checked="${competitionSetupForm.alwaysOpen == value}"
+                                       th:id="|application-submission-${iteration.count}|"/>
                                 <label class="govuk-label govuk-radios__label selection-button-radio"
-                                       th:for="|completion-stage-${iteration.count}|"
-                                       th:text="${stage.displayName}"></label>
+                                       th:for="|application-submission-${iteration.count}|"
+                                       th:text="${value} ? 'Yes' : 'No'"></label>
                             </div>
                     </div>
 
@@ -42,7 +42,7 @@
             </div>
             <div class="govuk-form-group">
                 <button type="submit" class="govuk-button">
-                    Done
+                    Save and continue
                 </button>
             </div>
         </form>
@@ -51,8 +51,8 @@
     <th:block th:unless="${model.general.editable}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application submission',size='govuk-heading-xl'" />
         <p class="govuk-body">
-            The current stage for completion is
-            <strong th:text="${applicationSubmissionForm.alwaysOpen.toString()}"></strong>.
+            Will this be an open-ended competition?
+            <strong th:text="${competitionSetupForm.alwaysOpen.toString()}"></strong>.
         </p>
         <form th:action="@{('application-submission/edit')}" method="post">
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
@@ -64,7 +64,7 @@
             <a rel="prev" title="Navigate to previous part"
                th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='completion-stage')}">
                 <span class="pagination-label">Previous</span>
-                <span class="pagination-part-title">Initial details</span>
+                <span class="pagination-part-title">Completion stage</span>
             </a>
         </li>
         <li class="next" th:if="${!model.general.editable}">

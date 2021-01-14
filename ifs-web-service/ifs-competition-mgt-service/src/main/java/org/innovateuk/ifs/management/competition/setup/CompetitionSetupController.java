@@ -331,6 +331,20 @@ public class CompetitionSetupController {
                 CompetitionSetupSection.COMPLETION_STAGE, loggedInUser, model);
     }
 
+    @PostMapping("/{competitionId}/section/application-submission")
+    public String submitApplicationSubmissionSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
+                                                            BindingResult bindingResult,
+                                                            ValidationHandler validationHandler,
+                                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                            UserResource loggedInUser,
+                                                            Model model) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
+                CompetitionSetupSection.APPLICATION_SUBMISSION, loggedInUser, model);
+    }
+
     @PostMapping("/{competitionId}/section/milestones")
     public String submitMilestonesSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) MilestonesForm competitionSetupForm,
                                                  BindingResult bindingResult,
