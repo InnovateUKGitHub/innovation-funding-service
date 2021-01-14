@@ -12,7 +12,7 @@ public class AssessmentPeriod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private Integer index;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "competition_id", referencedColumnName = "id")
@@ -22,9 +22,9 @@ public class AssessmentPeriod {
         // default constructor
     }
 
-    public AssessmentPeriod(Competition competition, String name) {
+    public AssessmentPeriod(Competition competition, Integer index) {
         this.competition = competition;
-        this.name = name;
+        this.index = index;
     }
 
     public Long getId() {
@@ -35,12 +35,12 @@ public class AssessmentPeriod {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getIndex() {
+        return index;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public Competition getCompetition() {
