@@ -9,7 +9,4 @@ public interface ApplicationProcurementMilestoneRepository extends ProcurementMi
     List<ApplicationProcurementMilestone> findByApplicationFinanceApplicationIdAndApplicationFinanceOrganisationIdOrderByMonthAsc(long applicationId, long organisationId);
 
     void deleteByApplicationFinanceId(long applicationFinanceId);
-
-    List<ApplicationProcurementMilestone> findByApplicationFinanceApplicationId(long applicationId);
 }
-

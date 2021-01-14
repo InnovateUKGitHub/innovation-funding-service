@@ -9,5 +9,4 @@ public interface ProjectProcurementMilestoneRepository extends ProcurementMilest
     List<ProjectProcurementMilestone> findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(long projectId, long organisationId);
 
     List<ProjectProcurementMilestone> findByProjectFinanceProjectId(long projectId);
-
 }
