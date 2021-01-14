@@ -7,6 +7,7 @@ if (project.hasProperty("profile")) {
 }
 
 apply from: rootProject.file("gradle-support/java.gradle")
+apply from: rootProject.file("gradle-support/bom.gradle")
 
 group 'innovateuk'
 version project.version
@@ -32,12 +33,15 @@ artifacts {
 }
 
 dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix:1.4.4.RELEASE')
+
+    compile('org.apache.httpcomponents:httpclient')
+    compile('org.springframework:spring-web')
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
     compile project(':ifs-resources')
     compile project(':ifs-rest-util')
     compile project(':ifs-commons')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 
 }
