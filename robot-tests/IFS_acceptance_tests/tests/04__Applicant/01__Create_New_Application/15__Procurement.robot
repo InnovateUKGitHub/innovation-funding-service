@@ -73,6 +73,18 @@ Applicant fills in payment milestones
     And the user clicks the button/link                       link = Back to application overview
     And the user should see the element                       jQuery = li:contains("Your project finances") > .task-status-complete
 
+Applicant can edit the project duration before application submission
+    [Documentation]  IFS-8940
+    Given the user clicks the button/link                     link = Application details
+    And the user clicks the button/link                       id = edit-application-details-button
+    And Clear Element Text                                    id = durationInMonths
+    When the user enters text to a text field                 id = durationInMonths  1
+    And the user clicks the button/link                       id = application-question-complete
+    Then the user should see a field error                    This cannot be less than your stated payment milestones. You will need to adjust these to change the duration.
+    And the user enters text to a text field                  id = durationInMonths  2
+    And the user clicks the button/link                       id = application-question-complete
+    And the user clicks the button/link                       link = Back to application overview
+
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
     [Setup]  get application id by name and set as suite variable  ${appl_name}
