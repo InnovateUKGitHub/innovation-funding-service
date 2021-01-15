@@ -287,6 +287,9 @@
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
+            <th:block th:if="${summaryModel.isApproved()}">
+                <button class="govuk-button" name="reset-eligibility">Reset eligibility</button>
+            </th:block>
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <div class="govuk-form-group">

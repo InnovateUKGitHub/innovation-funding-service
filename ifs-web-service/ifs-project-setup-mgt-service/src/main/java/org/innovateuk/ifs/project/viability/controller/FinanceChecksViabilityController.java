@@ -98,6 +98,18 @@ public class FinanceChecksViabilityController {
         return doSaveViability(projectId, organisationId, ViabilityState.APPROVED, form, validationHandler, model, successView);
     }
 
+    @PostMapping(params = "reset-viability")
+    public String resetViability(@PathVariable("projectId") Long projectId,
+                                   @PathVariable("organisationId") Long organisationId,
+                                   ValidationHandler validationHandler,
+                                   Model model) {
+
+        Supplier<String> successView = () ->
+                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
+
+        return doSaveViability(projectId, organisationId, ViabilityState.REVIEW, null, validationHandler, model, successView);
+    }
+
     private String doSaveViability(Long projectId, Long organisationId, ViabilityState viability, FinanceChecksViabilityForm form,
                                    ValidationHandler validationHandler, Model model, Supplier<String> successView) {
 

@@ -263,6 +263,22 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(params = "reset-eligibility")
+    @AsyncMethod
+    public String resetEligibility(@PathVariable long projectId,
+                                     @PathVariable long organisationId,
+                                     @ModelAttribute(FORM_ATTR_NAME) YourProjectCostsForm form,
+                                     @SuppressWarnings("unused") BindingResult bindingResult,
+                                     ValidationHandler validationHandler,
+                                     Model model,
+                                     UserResource user) {
+        Supplier<String> successView = () ->
+                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
+
+        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, null, form, validationHandler, successView, model);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-and-continue")
     @AsyncMethod
     public String saveAndContinue(@PathVariable long projectId,

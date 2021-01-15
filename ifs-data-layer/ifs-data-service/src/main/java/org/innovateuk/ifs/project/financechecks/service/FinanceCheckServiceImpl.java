@@ -680,7 +680,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
-        if (EligibilityState.APPROVED == currentEligibilityState) {
+        if (EligibilityState.APPROVED == currentEligibilityState && EligibilityState.REVIEW != eligibility) {
             return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
@@ -695,6 +695,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         if (EligibilityState.APPROVED == eligibility) {
             eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
+        }
+        if (EligibilityState.REVIEW == eligibility) {
+            eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, currentUser);
         }
         return serviceSuccess();
     }
