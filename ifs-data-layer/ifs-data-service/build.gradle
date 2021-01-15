@@ -1,4 +1,4 @@
-def targetBuild = hasProperty('profile') ? profile : 'dev'
+def targetBuild = hasProperty('profile') ? profile : 'docker'
 
 apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
