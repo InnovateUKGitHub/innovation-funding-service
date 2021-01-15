@@ -80,7 +80,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private String webBaseUrl;
 
     public enum Notifications {
-        APPLICATION_FUNDING, HORIZON_2020_FUNDING, HEUKAR_FUNDING;
+        APPLICATION_FUNDING, HORIZON_2020_FUNDING
     }
 
     @Override
@@ -248,14 +248,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         Competition competition = applications.get(0)
                 .getCompetition();
         boolean includeAsesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
-        Notifications notificationType;
-        if(isH2020Competition(applications)){
-            notificationType = HORIZON_2020_FUNDING;
-        } else if (competition.isHeukar()){
-            notificationType = HEUKAR_FUNDING;
-        } else {
-            notificationType = APPLICATION_FUNDING;
-        }
+        Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
         List<NotificationMessage> notificationMessages = simpleMap(
