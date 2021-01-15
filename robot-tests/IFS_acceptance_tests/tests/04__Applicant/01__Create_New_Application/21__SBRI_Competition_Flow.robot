@@ -254,7 +254,7 @@ Project lead is able to view pending query on project dashboard
 
 Project lead responds to pending queries
     [Documentation]  IFS-8943
-    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-check
     When the user clicks the button/link         id = post-new-response-1
     Then the user responds to the query
 
