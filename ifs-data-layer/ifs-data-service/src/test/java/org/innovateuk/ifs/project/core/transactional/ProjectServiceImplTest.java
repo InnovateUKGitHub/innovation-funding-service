@@ -38,6 +38,7 @@ import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -129,6 +130,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+
+    @Mock
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Mock
     private GrantOfferLetterWorkflowHandler golWorkflowHandlerMock;
@@ -292,6 +296,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(spendProfileWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
@@ -310,6 +315,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
+        verify(paymentMilestoneWorkflowHandler).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
@@ -357,6 +363,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(eligibilityWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(projectWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.projectCreated(any(), any())).thenReturn(true);
         when(spendProfileWorkflowHandlerMock.projectCreated(any(), any())).thenReturn(true);
         when(projectMapperMock.mapToResource(project)).thenReturn(new ProjectResource());
         CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
@@ -549,6 +556,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(spendProfileWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
@@ -567,6 +575,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
+        verify(paymentMilestoneWorkflowHandler).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);

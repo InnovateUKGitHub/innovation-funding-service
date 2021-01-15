@@ -5,12 +5,17 @@ import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
+import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneEvent;
+import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financechecks.domain.PaymentMilestoneProcess;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityApprovedGuard;
+import org.innovateuk.ifs.project.financechecks.repository.PaymentMilestoneProcessRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneApprovedGuard;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -31,25 +36,33 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class EligibilityWorkflowHandlerIntegrationTest extends
-        BaseWorkflowHandlerIntegrationTest<EligibilityWorkflowHandler, EligibilityProcessRepository, TestableTransitionWorkflowAction> {
+public class PaymentMilestoneWorkflowHandlerIntegrationTest extends
+        BaseWorkflowHandlerIntegrationTest<PaymentMilestoneWorkflowHandler, PaymentMilestoneProcessRepository, TestableTransitionWorkflowAction> {
 
     @Autowired
-    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
-    @Autowired
-    private EligibilityApprovedGuard guard;
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
-    private EligibilityProcessRepository eligibilityProcessRepositoryMock;
+    @Autowired
+    private PaymentMilestoneApprovedGuard guard;
+
+    private PaymentMilestoneProcessRepository repository;
     private ProjectFinanceService projectFinanceService;
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
-        eligibilityProcessRepositoryMock = (EligibilityProcessRepository) mockSupplier.apply(EligibilityProcessRepository.class);
+        repository = (PaymentMilestoneProcessRepository) mockSupplier.apply(PaymentMilestoneProcessRepository.class);
         //BaseWorkflowHandlerIntegrationTest only supports repository mocks.
         projectFinanceService = mock(ProjectFinanceService.class);
+        eligibilityWorkflowHandler = mock(EligibilityWorkflowHandler.class);
+        viabilityWorkflowHandler = mock(ViabilityWorkflowHandler.class);
         ReflectionTestUtils.setField(guard, "projectFinanceService", projectFinanceService);
+        ReflectionTestUtils.setField(guard, "eligibilityWorkflowHandler", eligibilityWorkflowHandler);
+        ReflectionTestUtils.setField(guard, "viabilityWorkflowHandler", viabilityWorkflowHandler);
     }
 
     @Test
@@ -58,77 +71,71 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         ProjectUser projectUser = newProjectUser().build();
 
         // Call the workflow here
-        boolean result = eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+        boolean result = paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
         assertTrue(result);
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(projectUser, partnerOrganisation, EligibilityState.REVIEW);
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(projectUser, partnerOrganisation, PaymentMilestoneState.REVIEW);
 
         // Ensure the correct event was fired by the workflow
-        expectedEligibilityProcess.setProcessEvent(EligibilityEvent.PROJECT_CREATED.getType());
+        paymentMilestoneProcess.setProcessEvent(PaymentMilestoneEvent.PROJECT_CREATED.getType());
 
-        verify(eligibilityProcessRepositoryMock).save(expectedEligibilityProcess);
+        verify(repository).save(paymentMilestoneProcess);
     }
 
     @Test
-    public void testEligibilityApproved() {
+    public void testPaymentMilestoneApproved() {
         when(projectFinanceService.financeChecksTotals(anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource()
                 .withGrantClaimPercentage(BigDecimal.valueOf(30))
                 .withMaximumFundingLevel(50)
                 .build(1)));
 
-        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, internalUser)),
+        when(eligibilityWorkflowHandler.getState(any())).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandler.getState(any())).thenReturn(ViabilityState.APPROVED);
+
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityEvent.ELIGIBILITY_APPROVED, true);
+                PaymentMilestoneState.REVIEW, PaymentMilestoneState.APPROVED, PaymentMilestoneEvent.PAYMENT_MILESTONE_APPROVED, true);
     }
 
     @Test
-    public void testEligibilityApproved_guard() {
+    public void testPaymentMilestoneApproved_guard() {
         when(projectFinanceService.financeChecksTotals(anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource()
                 .withGrantClaimPercentage(BigDecimal.valueOf(50))
                 .withMaximumFundingLevel(30)
                 .build(1)));
 
-        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, internalUser)),
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisation, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                EligibilityState.REVIEW, EligibilityState.APPROVED, EligibilityEvent.ELIGIBILITY_APPROVED, false);
+                PaymentMilestoneState.REVIEW, PaymentMilestoneState.APPROVED, PaymentMilestoneEvent.PAYMENT_MILESTONE_APPROVED, false);
     }
 
     @Test
-    public void EligibilityReset() {
+    public void paymentMilestoneReset() {
 
-        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation,
-            internalUser)),
-
-            // current State, destination State and expected Event to be fired
-            EligibilityState.APPROVED, EligibilityState.REVIEW, EligibilityEvent.ELIGIBILITY_RESET, true);
-    }
-
-    @Test
-    public void testNotRequestingFunding() {
-
-        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, internalUser)),
+        callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisation,
+                internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                EligibilityState.REVIEW, EligibilityState.NOT_APPLICABLE, EligibilityEvent.NOT_REQUESTING_FUNDING, true);
+                PaymentMilestoneState.APPROVED, PaymentMilestoneState.REVIEW, PaymentMilestoneEvent.PAYMENT_MILESTONE_RESET, true);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<PartnerOrganisation, User, Boolean> workflowMethodToCall,
-                                                             EligibilityState currentEligibilityState,
-                                                             EligibilityState destinationEligibilityState,
-                                                             EligibilityEvent expectedEventToBeFired,
+                                                             PaymentMilestoneState currentState,
+                                                             PaymentMilestoneState destinationState,
+                                                             PaymentMilestoneEvent expectedEventToBeFired,
                                                              boolean fired) {
         Project project = newProject().build();
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().withProject(project).build();
         User internalUser = newUser().build();
 
         // Set the current state in the Eligibility Process
-        EligibilityProcess currentEligibilityProcess = new EligibilityProcess((User) null, partnerOrganisation, currentEligibilityState);
-        when(eligibilityProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentEligibilityProcess);
+        PaymentMilestoneProcess currentProcess = new PaymentMilestoneProcess((User) null, partnerOrganisation, currentState);
+        when(repository.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentProcess);
 
         // Set the destination state which we expect when the event is fired
 
@@ -139,15 +146,15 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(internalUser, partnerOrganisation, destinationEligibilityState);
+        PaymentMilestoneProcess expectedEligibilityProcess = new PaymentMilestoneProcess(internalUser, partnerOrganisation, destinationState);
 
         // Ensure the correct event was fired by the workflow
         expectedEligibilityProcess.setProcessEvent(expectedEventToBeFired.getType());
 
         if (fired) {
-            verify(eligibilityProcessRepositoryMock).save(expectedEligibilityProcess);
+            verify(repository).save(expectedEligibilityProcess);
         } else {
-            verify(eligibilityProcessRepositoryMock, never()).save(expectedEligibilityProcess);
+            verify(repository, never()).save(expectedEligibilityProcess);
         }
     }
 
@@ -157,13 +164,13 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Override
-    protected Class<EligibilityWorkflowHandler> getWorkflowHandlerType() {
-        return EligibilityWorkflowHandler.class;
+    protected Class<PaymentMilestoneWorkflowHandler> getWorkflowHandlerType() {
+        return PaymentMilestoneWorkflowHandler.class;
     }
 
     @Override
-    protected Class<EligibilityProcessRepository> getProcessRepositoryType() {
-        return EligibilityProcessRepository.class;
+    protected Class<PaymentMilestoneProcessRepository> getProcessRepositoryType() {
+        return PaymentMilestoneProcessRepository.class;
     }
 
     @Override

@@ -12,13 +12,14 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -141,10 +142,13 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     private StatusService statusService;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
+
+    @Mock
+    private FinanceCheckRestService financeCheckRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -197,10 +201,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess((projectFinanceResource)));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
@@ -224,9 +229,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, financeContactUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
@@ -305,8 +311,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
@@ -363,9 +370,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks/1/new-response"))
                 .andExpect(view().name("project/finance-checks"))
@@ -411,9 +419,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -442,9 +451,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -474,9 +484,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(post("/project/123/finance-checks/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -510,8 +521,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/123/finance-checks/1/new-response").
@@ -579,10 +591,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(fileEntryResource);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -614,10 +627,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -649,9 +663,10 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         FileEntryResource attachment = new FileEntryResource(1L, "name", "mediaType", 2L);
 
@@ -686,10 +701,12 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
+
         MvcResult result = mockMvc.perform(post("/project/123/finance-checks/5/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
