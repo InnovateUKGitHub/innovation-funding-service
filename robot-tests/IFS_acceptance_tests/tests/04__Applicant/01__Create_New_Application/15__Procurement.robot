@@ -86,7 +86,7 @@ Applicant is shown a validation message when the project duration is less than a
 Applicant can edit the project duration before application submission
     [Documentation]  IFS-8940
     Given the user enters text to a text field                id = durationInMonths  3
-    when the user clicks the button/link                      id = application-question-complete
+    When the user clicks the button/link                      id = application-question-complete
     Then the user should see the element                      jQuery = dd:contains("3 months")
     And the user clicks the button/link                       link = Back to application overview
 
