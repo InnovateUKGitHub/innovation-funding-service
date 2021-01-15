@@ -2,7 +2,7 @@
 
 CREATE TABLE `assessment_period` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `index` int(4) NOT NULL,
+  `rank` int(4) NOT NULL,
   `competition_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT fk_assessment_period_competition_id FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`)

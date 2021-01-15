@@ -12,6 +12,7 @@ public class AssessmentPeriod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "rank")
     private Integer index;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
