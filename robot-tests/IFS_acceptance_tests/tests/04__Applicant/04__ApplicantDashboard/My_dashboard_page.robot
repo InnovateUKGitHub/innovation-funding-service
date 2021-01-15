@@ -94,7 +94,6 @@ the lead applicant sends an invite to the application team
     the user clicks the button/link                            jQuery = button:contains("Invite to application")
     the user should see the element                            jQuery = td:contains("${inviteEmail}") + td:contains("Resend invitation")
 
-
 get application Id
     [Arguments]  ${appName}
     ${applicationID} =  get application id by name    ${appName}
