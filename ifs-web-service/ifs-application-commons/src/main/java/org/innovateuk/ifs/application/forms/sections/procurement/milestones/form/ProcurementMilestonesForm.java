@@ -53,7 +53,7 @@ public class ProcurementMilestonesForm {
 
     public BigDecimal getTotalPercentages(BigInteger fundingAmount) {
         BigInteger totalPayments = getTotalPayments();
-        if (totalPayments.equals(BigInteger.ZERO)) {
+        if (fundingAmount.equals(BigInteger.ZERO)) {
             return BigDecimal.ZERO;
         }
         return new BigDecimal(totalPayments)

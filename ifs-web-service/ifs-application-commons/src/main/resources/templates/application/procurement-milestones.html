@@ -11,19 +11,20 @@
             <h4 class="width-48-percent govuk-heading-s govuk-!-margin-left-1">Milestone</h4>
             <h4 class="width-10-percent govuk-heading-s">% of project costs</h4>
             <h4 class="width-10-percent govuk-heading-s">Payment request</h4>
-            <th:block th:each="entry : ${form.milestones}">
-                <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${model})"></th:block>
+            <th:block th:each="entry, iter : ${form.milestones}">
+                <th:block th:insert="this :: milestones-row(${entry.key}, ${entry.value}, ${model}, ${iter.index}, ${form.milestones.size() == 1})"></th:block>
             </th:block>
         </div>
         <p class="alignright" th:unless="${model.readOnly}">
             <button type="submit"
                     data-repeatable-rowcontainer=".procurement-milestones .govuk-accordion"
+                    data-value-index=""
                     name="add_row"
                     class="button-clear">Add another project milestone
             </button>
         </p>
 
-        <h3 id="totalErrorHolder" class="govuk-heading-m width-80-percent"
+        <h3 id="totalErrorHolder" class="govuk-heading-m width-80-percent govuk-!-margin-bottom-1"
             th:classappend="${#fields.hasErrors('*{totalErrorHolder}')} ? 'error-heading-icon' : ''">Total payment requested</h3>
         <h3 class="govuk-heading-m width-10-percent"
             th:text="|${#numbers.formatDecimal(form.getTotalPercentages(model.fundingAmount), 1, 'DEFAULT', 2, 'DEFAULT')}%|"
@@ -46,17 +47,58 @@
 
 <th:block th:fragment="ajax-milestone-row">
     <th:block th:object="${form}">
-        <th:block th:insert="this :: milestones-row(${id}, ${row}, ${model})"></th:block>
+        <th:block th:insert="this :: milestones-row(${id}, ${row}, ${model}, ${index}, ${false})"></th:block>
     </th:block>
 </th:block>
 
-<th:block th:fragment="milestones-row(id, milestone, model)">
+<th:block th:fragment="textarea(model, path, value, label)" th:with="requiredMessage=${requiredMessage} ?: null">
+    <!--/*@thymesVar id="milestone" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="value" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="label" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="requiredMessage" type="java.lang.String"*/-->
+
+    <div th:unless="${model.readOnly}" class="govuk-form-group">
+        <label class="govuk-label govuk-label--s"
+               th:for="${path}" th:text="${label}">Task or activity</label>
+        <th:block
+            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__)"/>
+        <div class="textarea-wrapped word-count">
+                                    <textarea
+                                        th:id="${path}"
+                                        rows="8"
+                                        class="govuk-textarea"
+                                        th:field="*{__${path}__}"
+                                        th:errorclass="govuk-textarea--error"
+                                        maxlength="5000"
+                                        data-max_words="200"
+                                        data-maxwordslength="200"
+                                        th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')},
+                                                 data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '200')},
+                                                 data-required-errormessage=${requiredMessage},
+                                                 required=${requiredMessage != null ? 'required' : null}"
+                                    ></textarea>
+
+            <div class="textarea-footer" aria-live="polite" aria-atomic="true" role="status">
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=200, currentWordsLeft=${#ifsUtil.wordsRemaining(200, value)})" />
+            </div>
+        </div>
+    </div>
+    <p th:if="${model.readOnly}" class="govuk-body" th:text="${value}"></p>
+
+</th:block>
+<th:block th:fragment="milestones-row(id, milestone, model, index, expandFirst)">
     <!--/*@thymesVar id="id" type="java.lang.String"*/-->
     <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
+    <!--/*@thymesVar id="index" type="java.lang.Integer"*/-->
+    <!--/*@thymesVar id="expandFirst" type="java.lang.Boolean"*/-->
+
     <div class="govuk-accordion__section"
-        th:with="path=|milestones[${id}]|"
-        th:attr="data-repeatable-row=${path}">
+        th:with="path=|milestones[${id}]|,
+                 first=${index == 0}"
+        th:attr="data-repeatable-row=${path}"
+        th:classappend="${expandFirst} ? 'govuk-accordion__section--expanded'">
         <!--/*@thymesVar id="path" type="java.lang.String"*/-->
+        <!--/*@thymesVar id="first" type="java.lang.Boolean"*/-->
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="width-20-percent accordion-header-text govuk-!-margin-right-1"
@@ -103,7 +145,7 @@
                             th:name="__${path}__.month">
                         <option value=""
                                 disabled="disabled"
-                                th:selected="${milestone.month == null}"></option>
+                                th:selected="${milestone.month == null || !model.durations.contains(milestone.month)}"></option>
                         <option th:each="duration : ${model.durations}"
                             th:value="${duration}"
                             th:text="${duration}"
@@ -128,49 +170,9 @@
                 </div>
                 <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.description" th:field="*{__${path}__.description}" />
 
-                <div th:unless="${model.readOnly}" class="govuk-form-group">
-                    <label class="govuk-label govuk-label--s"
-                           th:for="__${path}__.taskOrActivity">Task or activity</label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.taskOrActivity)"/>
-                    <textarea
-                        th:id="__${path}__.taskOrActivity"
-                        rows="8"
-                        class="govuk-textarea"
-                        th:attr="data-required-errormessage=#{validation.procurement.milestones.taskOrActivity}"
-                        required="required"
-                        th:field="*{__${path}__.taskOrActivity}">
-                    </textarea>
-                </div>
-                <p th:if="${model.readOnly}" class="govuk-body" th:text="${milestone.taskOrActivity}"></p>
-
-                <div th:unless="${model.readOnly}" class="govuk-form-group">
-                    <label class="govuk-label govuk-label--s"
-                           th:for="__${path}__.deliverable">Deliverable</label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.deliverable)"/>
-                    <textarea
-                        th:id="__${path}__.deliverable"
-                        rows="8"
-                        class="govuk-textarea"
-                        th:field="*{__${path}__.deliverable}">
-                    </textarea>
-                </div>
-                <p th:if="${model.readOnly}" class="govuk-body" th:text="${milestone.deliverable}"></p>
-
-                <div th:unless="${model.readOnly}" class="govuk-form-group">
-                    <label class="govuk-label govuk-label--s"
-                           th:for="__${path}__.successCriteria">Success criteria</label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.successCriteria)"/>
-                    <textarea
-                        th:id="__${path}__.successCriteria"
-                        rows="8"
-                        class="govuk-textarea"
-                        th:field="*{__${path}__.successCriteria}">
-                    </textarea>
-                </div>
-                <p th:if="${model.readOnly}" class="govuk-body" th:text="${milestone.successCriteria}"></p>
+                <th:block th:insert="this :: textarea(model=${model}, path=|${path}.taskOrActivity|, value=${milestone.taskOrActivity}, label=${'Task or activity'}, requiredMessage=#{validation.procurement.milestones.taskOrActivity})"></th:block>
+                <th:block th:insert="this :: textarea(${model}, |${path}.deliverable|, ${milestone.deliverable}, ${'Deliverable'})"></th:block>
+                <th:block th:insert="this :: textarea(${model}, |${path}.successCriteria|, ${milestone.successCriteria}, ${'Success criteria'})"></th:block>
 
             </div>
             <div class="right-col">
@@ -195,7 +197,7 @@
                 </div>
                 <input type="hidden" class="payment-amount" th:if="${model.readOnly}" th:id="__${path}__.payment" th:field="*{__${path}__.payment}" />
             </div>
-            <p class="alignright" th:unless="${model.readOnly}">
+            <p class="alignright" th:unless="${model.readOnly or first}">
                 <button type="submit"
                         th:name="remove_row"
                         th:value="${id}"
@@ -206,4 +208,6 @@
         </div>
     </div>
 </th:block>
+
+
 </html>

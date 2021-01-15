@@ -33,7 +33,11 @@ IFS.core.financeRowForm = (function () {
     },
     addRow: function (el, event) {
       var addRowButton = jQuery(el)
+      var target = jQuery(addRowButton.data('repeatable-rowcontainer'))
       var rowValue = addRowButton.val()
+      if (addRowButton.is('[data-value-index]')) {
+        rowValue = target.find('[data-repeatable-row]').length
+      }
       event.preventDefault()
       jQuery.ajaxProtected({
         url: IFS.core.financeRowForm.getUrl(el) + '/add-row/' + rowValue,
@@ -43,7 +47,6 @@ IFS.core.financeRowForm = (function () {
         },
         cache: false
       }).done(function (data) {
-        var target = jQuery(addRowButton.data('repeatable-rowcontainer'))
         target.append(data)
         addRowButton.prevAll('.govuk-hint').remove()
         jQuery('body').trigger('updateSerializedFormState')

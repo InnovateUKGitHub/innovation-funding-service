@@ -47,8 +47,8 @@ public abstract class AbstractProcurementMilestoneFormSaver<R extends Procuremen
             return service.delete(Long.parseLong(removeId)).toServiceResult();
         }
     }
-    public void addRowForm(ProcurementMilestonesForm form) {
-        ProcurementMilestoneForm row = new ProcurementMilestoneForm();
+    public void addRowForm(ProcurementMilestonesForm form, int index) {
+        ProcurementMilestoneForm row = new ProcurementMilestoneForm(index);
         row.setPayment(BigInteger.ZERO);
         form.getMilestones().put(generateUnsavedRowId(), row);
     }

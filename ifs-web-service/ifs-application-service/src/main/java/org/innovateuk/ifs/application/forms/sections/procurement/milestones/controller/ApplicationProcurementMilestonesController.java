@@ -142,7 +142,7 @@ public class ApplicationProcurementMilestonesController {
                              @PathVariable long sectionId,
                              @ModelAttribute("form") ProcurementMilestonesForm form) {
 
-        saver.addRowForm(form);
+        saver.addRowForm(form, form.getMilestones().size());
         return viewMilestones(model, form, user, applicationId, organisationId, sectionId);
     }
 
@@ -169,20 +169,22 @@ public class ApplicationProcurementMilestonesController {
         return new ObjectMapper().createObjectNode();
     }
 
-    @PostMapping("add-row")
+    @PostMapping("add-row/{index}")
     public String ajaxAddRow(Model model,
                              UserResource user,
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
-                             @PathVariable long sectionId) {
+                             @PathVariable long sectionId,
+                             @PathVariable int index) {
         ProcurementMilestonesForm form = new ProcurementMilestonesForm();
-        saver.addRowForm(form);
+        saver.addRowForm(form, index);
         Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
         model.addAttribute("id", entry.getKey());
         model.addAttribute("row", entry.getValue());
+        model.addAttribute("index", index);
         return "application/procurement-milestones :: ajax-milestone-row";
     }
 

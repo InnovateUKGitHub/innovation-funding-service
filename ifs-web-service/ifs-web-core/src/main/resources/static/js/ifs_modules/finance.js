@@ -153,7 +153,9 @@ IFS.core.finance = (function () {
       return total
     },
     formatDecimalPercentage: function (total) {
-      total = total.toFixed(2)
+      if (Math.round(total) !== total) {
+        total = total.toFixed(2)
+      }
       return total + '%'
     }
   }

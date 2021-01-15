@@ -28,41 +28,48 @@
     margin-bottom: 0;
   }
 
-  .govuk-accordion__controls {
+  .central-col {
+    width: 59%;
     display: inline-block;
-    float: right;
-    margin-top: 54px;
+    vertical-align: top;
+
+    label {
+      margin-top: 25px;
+    }
   }
 
-  .govuk-accordion__section-content {
-    .central-col {
-      width: 59%;
-      display: inline-block;
-      vertical-align: top;
+  .left-col {
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
 
-      label {
-        margin-top: 25px;
-      }
+    label {
+      margin-top: 25px;
     }
+  }
 
-    .left-col {
-      width: 20%;
-      display: inline-block;
-      vertical-align: top;
-
-      label {
-        margin-top: 25px;
-      }
-    }
-
-    .right-col {
-      width: 20%;
-      display: inline-block;
-      vertical-align: top;
-    }
+  .right-col {
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
   }
 
   .margin-right-60 {
     margin-right: 60px;
   }
 }
+
+.js-enabled {
+  .procurement-milestones {
+    .govuk-accordion {
+      border-bottom: 3px solid govuk-colour("black");
+
+      .govuk-accordion__controls {
+        display: inline-block;
+        float: right;
+        margin-top: 54px;
+      }
+    }
+  }
+}
+

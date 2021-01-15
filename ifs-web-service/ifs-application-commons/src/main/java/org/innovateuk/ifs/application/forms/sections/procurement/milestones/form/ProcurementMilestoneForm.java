@@ -1,37 +1,57 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+
+import static java.util.Optional.ofNullable;
 
 public class ProcurementMilestoneForm {
 
     private Long id;
     @NotNull(message = "{validation.procurement.milestones.month}")
     private Integer month;
+    @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String description;
     @NotBlank(message = "{validation.procurement.milestones.taskOrActivity}")
+    @WordCount(max = 200, message = "{validation.field.max.word.count}")
     private String taskOrActivity;
+    @WordCount(max = 200, message = "{validation.field.max.word.count}")
     private String deliverable;
+    @WordCount(max = 200, message = "{validation.field.max.word.count}")
     private String successCriteria;
     @NotNull(message = "{validation.procurement.milestones.payment}")
     private BigInteger payment;
 
     public ProcurementMilestoneForm() {}
 
-    public <R extends ProcurementMilestoneResource> ProcurementMilestoneForm(R resource) {
+    public ProcurementMilestoneForm(int index) {
+        this.description = descriptionIfNull(index);
+        this.month = monthIfNull(index);
+    }
+
+    public <R extends ProcurementMilestoneResource> ProcurementMilestoneForm(R resource, int index) {
         this.id = resource.getId();
-        this.month = resource.getMonth();
-        this.description = resource.getDescription();
+        this.month = ofNullable(resource.getMonth()).orElse(monthIfNull(index));
+        this.description = ofNullable(resource.getDescription()).orElse(descriptionIfNull(index));
         this.taskOrActivity = resource.getTaskOrActivity();
         this.deliverable = resource.getDeliverable();
         this.successCriteria = resource.getSuccessCriteria();
         this.payment = resource.getPayment();
+    }
+
+    private String descriptionIfNull(int index) {
+        return "Milestone " + (index + 1);
+    }
+    private int monthIfNull(int index) {
+        return index + 1;
     }
 
     public Long getId() {

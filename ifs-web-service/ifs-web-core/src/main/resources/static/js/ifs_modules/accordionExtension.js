@@ -46,7 +46,7 @@ window.GOVUKFrontend.Accordion.prototype.sectionChange = function () {
   })
 }
 
-//This code is copied from the GDS framework, in the initSectionHeaders method
+// This code is copied from the GDS framework, in the initSectionHeaders method
 window.GOVUKFrontend.Accordion.prototype.addSection = function ($section, index) {
   // Set header attributes
   var header = $section.querySelector('.' + this.sectionHeaderClass)
@@ -60,8 +60,9 @@ window.GOVUKFrontend.Accordion.prototype.addSection = function ($section, index)
   // See if there is any state stored in sessionStorage and set the sections to
   // open or closed.
   this.setInitialState($section)
+  jQuery('.govuk-accordion__icon').attr('aria-hidden', 'false')
 }
 
 window.GOVUKFrontend.Accordion.prototype.removeSection = function ($section) {
- // Nothing needed to remove section.
+  // Nothing needed to remove section.
 }
