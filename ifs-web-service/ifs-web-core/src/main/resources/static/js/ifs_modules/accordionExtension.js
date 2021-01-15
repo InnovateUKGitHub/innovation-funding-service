@@ -24,7 +24,6 @@ IFS.core.accordion.oldInit = window.GOVUKFrontend.Accordion.prototype.init
 window.GOVUKFrontend.Accordion.prototype.init = function () {
   IFS.core.accordion.oldInit.call(this)
   IFS.core.accordion.add(this)
-  delete IFS.core.accordion.oldInit
 }
 
 window.GOVUKFrontend.Accordion.prototype.sectionChange = function () {
