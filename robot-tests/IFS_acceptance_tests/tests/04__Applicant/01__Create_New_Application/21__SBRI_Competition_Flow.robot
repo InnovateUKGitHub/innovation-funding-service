@@ -39,7 +39,6 @@ ${openSBRICompetitionId}            ${competition_ids["${openSBRICompetitionName
 &{sbriLeadCredentials}              email=troy.ward@gmail.com     password=${short_password}
 &{sbriPartnerCredentials}           email=eve.smith@gmail.com     password=${short_password}
 &{sbriProjectFinanceCredentials}    email=becky.mason@gmail.com   password=${short_password}
-&{ifs_admin_user_credentials}       email=arden.pimenta@innovateuk.test    password=${short_password}
 ${sbriComp654Name}                  The Sustainable Innovation Fund: SBRI phase 1
 ${sbriComp654Id}                    ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}                  Procurement application 1
@@ -246,28 +245,24 @@ Project finance sends a payment milestone query to lead organisation
     Given Log in as a different user                                    &{ifs_admin_user_credentials}
     And the user navigates to the page                                  ${server}/project-setup-management/project/${sbriProjectId}/finance-check/organisation/116/query
     When the project finance user post a payment milestone query
-    Then The user should see the element                                jQuery = button:contains("${payment_query_title}")
-    And The user navigates to the page                                  ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    Then the user should see the element                                jQuery = button:contains("${payment_query_title}")
 
 Project lead is able to view pending query on project dashboard
     [Documentation]     IFS-8943
     Given Log in as a different user          &{sbriProjectFinanceCredentials}
-    When The user navigates to the page       ${server}/project-setup/project/${sbriProjectId}
-    Then The user should see the element      jQuery = span:contains("Pending query")
+    When the user navigates to the page       ${server}/project-setup/project/${sbriProjectId}
+    Then the user should see the element      jQuery = span:contains("Pending query")
 
 Project lead responds to pending queries
     [Documentation]  IFS-8943
-    When The user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
-    And The user clicks the button/link         id = post-new-response-1
-    When the user enters text to a text field   css = .editor  Responding to query
-    Then the user clicks the button/link        jQuery = .govuk-button:contains("Post response")
-    And The user should see the element         jQuery = p:contains("Your response has been sent and will be reviewed by Innovate UK.")
-
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    When the user clicks the button/link         id = post-new-response-1
+    Then the user responds to the query
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048
     Given Log in as a different user          &{internal_finance_credentials}
-    Given The user navigates to the page      ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    And the user navigates to the page      ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     When generate spend profile
     Then the user should see the element      css = .success-alert
 
@@ -425,6 +420,12 @@ the user should see calculations with VAT
     the user clicks the button/link     link = Back to finance checks
     the user should see the element     jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
     the user clicks the button/link     css = .eligibility-0
+
+the user responds to the query
+    When the user enters text to a text field   css = .editor  Responding to query
+    Then the user clicks the button/link        jQuery = .govuk-button:contains("Post response")
+    And the user should see the element         jQuery = p:contains("Your response has been sent and will be reviewed by Innovate UK.")
+
 
 the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
