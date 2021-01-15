@@ -1,23 +1,16 @@
 package org.innovateuk.ifs.project.queries.controller;
 
-import java.net.URLEncoder;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -41,6 +34,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
+
+import javax.servlet.http.Cookie;
+import java.net.URLEncoder;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -76,7 +77,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     private FinanceCheckService financeCheckServiceMock;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
 
     private Long projectId = 3L;
     private Long applicantOrganisationId = 22L;
@@ -156,7 +157,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     public void testSaveNewQuery() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.saveQuery(any(QueryResource.class))).thenReturn(ServiceResult.serviceSuccess(1L));
 
         FinanceChecksQueriesAddQueryForm formIn = new FinanceChecksQueriesAddQueryForm();

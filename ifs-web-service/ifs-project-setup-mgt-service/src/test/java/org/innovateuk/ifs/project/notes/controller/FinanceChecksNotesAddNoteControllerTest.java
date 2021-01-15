@@ -1,23 +1,16 @@
 package org.innovateuk.ifs.project.notes.controller;
 
-import java.net.URLEncoder;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -39,6 +32,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
+
+import javax.servlet.http.Cookie;
+import java.net.URLEncoder;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -86,7 +87,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
@@ -152,7 +153,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewNote() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.saveNote(any(NoteResource.class))).thenReturn(ServiceResult.serviceSuccess(1L));
 
         FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();
@@ -198,7 +199,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewNoteNoOriginCookie() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
-        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(restSuccess(projectFinanceResource));
         when(financeCheckServiceMock.saveNote(any(NoteResource.class))).thenReturn(ServiceResult.serviceSuccess(1L));
 
         FinanceChecksNotesAddNoteForm formIn = new FinanceChecksNotesAddNoteForm();

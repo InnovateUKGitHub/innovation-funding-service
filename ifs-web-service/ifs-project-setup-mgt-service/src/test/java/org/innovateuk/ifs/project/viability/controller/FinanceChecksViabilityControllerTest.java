@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -14,6 +13,8 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
@@ -30,7 +31,6 @@ import java.util.Map;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
@@ -67,7 +67,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     private ProjectService projectService;
 
     @Mock
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
+
+    @Mock
+    private FinanceCheckRestService financeCheckRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -175,9 +178,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
-        when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(viability);
-        when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(false);
+        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(restSuccess(projectFinances));
+        when(financeCheckRestService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(viability));
+        when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(restSuccess(false));
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(applicationService.getById(456L)).thenReturn(app);
@@ -224,9 +227,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(organisationRestService.getOrganisationById(academicOrganisation.getId())).thenReturn(restSuccess(academicOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
-        when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
-        when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
+        when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(restSuccess(projectFinances));
+        when(financeCheckRestService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(viability));
+        when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(restSuccess(true));
         when(projectService.getById(project.getId())).thenReturn(project);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
@@ -270,10 +273,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long organisationId = 456L;
 
         when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, true)).
-                thenReturn(serviceSuccess());
+                thenReturn(restSuccess());
 
-        when(projectFinanceService.saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED)).
-                thenReturn(serviceSuccess());
+        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED)).
+                thenReturn(restSuccess());
 
         mockMvc.perform(
             post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
@@ -285,7 +288,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
             andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
-        verify(projectFinanceService).saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED);
+        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED);
     }
 
     @Test
@@ -295,10 +298,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long organisationId = 456L;
 
         when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, false)).
-                thenReturn(serviceSuccess());
+                thenReturn(restSuccess());
 
-        when(projectFinanceService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
-                thenReturn(serviceSuccess());
+        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
+                thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
@@ -310,7 +313,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, false);
-        verify(projectFinanceService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
     }
 
     @Test
@@ -320,10 +323,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long organisationId = 456L;
 
         when(projectFinanceService.saveCreditReportConfirmed(projectId, organisationId, true)).
-                thenReturn(serviceSuccess());
+                thenReturn(restSuccess());
 
-        when(projectFinanceService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
-                thenReturn(serviceSuccess());
+        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
+                thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
@@ -335,7 +338,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
-        verify(projectFinanceService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
     }
 
     private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
