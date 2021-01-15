@@ -62,7 +62,6 @@ ${fundingAppliedFor}                Funding applied for
 ${totalVAT}                         Total VAT
 ${payment_query_title}              Payment Milestone Query
 
-
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
     [Documentation]  IFS-7313
@@ -262,7 +261,7 @@ Project lead responds to pending queries
 Internal user can generate spend profile
     [Documentation]   IFS-8048
     Given Log in as a different user          &{internal_finance_credentials}
-    And the user navigates to the page      ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     When generate spend profile
     Then the user should see the element      css = .success-alert
 
@@ -422,10 +421,9 @@ the user should see calculations with VAT
     the user clicks the button/link     css = .eligibility-0
 
 the user responds to the query
-    When the user enters text to a text field   css = .editor  Responding to query
-    Then the user clicks the button/link        jQuery = .govuk-button:contains("Post response")
-    And the user should see the element         jQuery = p:contains("Your response has been sent and will be reviewed by Innovate UK.")
-
+    the user enters text to a text field   css = .editor  Responding to query
+    the user clicks the button/link        jQuery = .govuk-button:contains("Post response")
+    the user should see the element        jQuery = p:contains("Your response has been sent and will be reviewed by Innovate UK.")
 
 the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
