@@ -55,11 +55,6 @@ the lead applicant fills all the questions and marks as complete(procurement)
     :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
      \     the lead applicant marks every question as complete procurement    ${ELEMENT}
 
-the lead applicant fills all the questions and marks as complete(heukar)
-    the user marks the project details as complete
-    :FOR  ${ELEMENT}    IN    @{HEUKAR_questions}
-     \     the lead applicant marks every question as complete    ${ELEMENT}
-
 the lead completes the questions with multiple answer choice and multiple appendices
     :FOR  ${ELEMENT}    IN    @{other_questions_procurement_ati}
          \     the lead applicant marks the questions as complete (multiple appendices and multiple answer choice)    ${ELEMENT}
