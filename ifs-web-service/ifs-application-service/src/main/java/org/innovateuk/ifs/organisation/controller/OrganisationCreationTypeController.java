@@ -167,8 +167,10 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     }
 
     @GetMapping(MANUALLY_ENTER_ORGANISATION_DETAILS)
-    public String showManuallyEnterRegistrationDetails(Model model, HttpServletRequest request) {
-        model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
+    public String showManuallyEnterRegistrationDetails(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+                                                       Model model, HttpServletRequest request) {
+        organisationForm = getFormDataFromCookie(organisationForm, model, request);
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
         return TEMPLATE_PATH + "/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 }

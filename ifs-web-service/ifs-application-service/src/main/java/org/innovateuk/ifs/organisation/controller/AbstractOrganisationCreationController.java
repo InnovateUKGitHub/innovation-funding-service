@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResultPageResource;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
@@ -236,6 +239,29 @@ public abstract class AbstractOrganisationCreationController {
             return organisationSearchResult;
         }
         return null;
+    }
+
+    /**
+     * Add manually entered data to the form and the model
+     * @param organisationForm the form
+     * @param model the model
+     * @return OrganisationSearchResult populated with manually inputted data.
+     */
+    protected OrganisationSearchResult addManualOrganisation(final OrganisationCreationForm organisationForm, final Model model) {
+
+            OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult();
+
+            if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
+
+                int selectedAddress = organisationForm.getAddressForm().getSelectedPostcodeIndex();
+                AddressResource addressResource = organisationForm.getAddressForm().getPostcodeResults().get(selectedAddress);
+                organisationSearchResult.setOrganisationAddress(addressResource);
+                organisationSearchResult.setOrganisationExecutiveOfficers(organisationForm.getExecutiveOfficers());
+                organisationSearchResult.setOrganisationSicCodes(organisationForm.getSicCodes());
+
+            }
+            model.addAttribute("selectedOrganisation", organisationSearchResult);
+            return organisationSearchResult;
     }
 
     protected void addPageSubtitleToModel(HttpServletRequest request, UserResource user, Model model) {

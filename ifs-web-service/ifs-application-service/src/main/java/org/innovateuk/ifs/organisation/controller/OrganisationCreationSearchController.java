@@ -49,6 +49,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final String MODEL = "model";
     private static final String SEARCH_ORGANISATION = "search-organisation";
     private static final String DEFAULT_PAGE_NUMBER = "1";
+    private static final String SELECTED_ORGANISATION_MANUAL = "selected-organisation-manual";
     @Autowired
     private MessageSource messageSource;
 
@@ -178,6 +179,32 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
 
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
+
+    @PostMapping("/" + SELECTED_ORGANISATION_MANUAL)
+    public String selectManualOrganisationForConfiramtion(@ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                    Model model,
+                                                    HttpServletRequest request,
+                                                    HttpServletResponse response,
+                                                    UserResource user) {
+
+        addManualOrganisation(organisationForm, model);
+
+        organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+        organisationForm.setManualEntry(true);
+
+        model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute("improvedSearchEnabled", isNewOrganisationSearchEnabled);
+        addPageSubtitleToModel(request, user, model);
+
+        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
+    }
+
 
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
     public String manualOrganisationSave(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,

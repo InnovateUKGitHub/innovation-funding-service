@@ -35,8 +35,10 @@
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="post"
               novalidate="novalidate">
+            <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
+                <!--input type="hidden" name="organisationName" th:value="${organisationForm.organisationName}" /-->
                 <label class="govuk-label govuk-label--s"
                        for="name">
                     Organisation name
@@ -49,6 +51,7 @@
                        th:field="*{organisationName}"
                        th:attr="data-required-errormessage=#{validation.standard.organisationName.required}"
                        type="text" required="required"/>
+
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationNumber}')} ? 'govuk-form-group--error'">
@@ -123,7 +126,7 @@
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
                 </div>
 
-                <button name="save-organisation" formaction="/organisation/create/confirm-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+                <button name="save-organisation" formaction="/organisation/create/selected-organisation-manual" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
