@@ -11,6 +11,7 @@ import org.thymeleaf.spring5.context.SpringContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -75,6 +76,13 @@ public class ThymeleafUtil {
                     .anyMatch(error -> error.getField().startsWith(startsWith));
         }
         return false;
+    }
+
+    public String formatDecimal(Object number) {
+        DecimalFormat format = new DecimalFormat("#0.##");
+        format.setGroupingUsed(true);
+        format.setGroupingSize(3);
+        return format.format(number);
     }
 
 }

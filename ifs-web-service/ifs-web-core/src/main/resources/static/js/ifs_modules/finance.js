@@ -155,8 +155,10 @@ IFS.core.finance = (function () {
     formatDecimalPercentage: function (total) {
       if (parseFloat(total.toFixed(2)) === parseFloat(total.toFixed(0))) {
         total = total.toFixed(0)
+      } else if (parseFloat(total.toFixed(2)) === parseFloat(total.toFixed(1))) {
+        total = total.toFixed(1)
       } else {
-        total = total.toFixed(2 )
+        total = total.toFixed(2)
       }
       return total + '%'
     }

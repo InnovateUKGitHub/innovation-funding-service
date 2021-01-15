@@ -27,7 +27,7 @@
         <h3 id="totalErrorHolder" class="govuk-heading-m width-80-percent govuk-!-margin-bottom-1"
             th:classappend="${#fields.hasErrors('*{totalErrorHolder}')} ? 'error-heading-icon' : ''">Total payment requested</h3>
         <h3 class="govuk-heading-m width-10-percent"
-            th:text="|${#numbers.formatDecimal(form.getTotalPercentages(model.fundingAmount), 1, 'DEFAULT', 2, 'DEFAULT')}%|"
+            th:text="|${#ifsUtil.formatDecimal(form.getTotalPercentages(model.fundingAmount))}%|"
             data-calculation-format="decimal-percentage"
             data-calculation-operations="/,*"
             th:attr="data-calculation-fields=|100, ${model.fundingAmount}, #payment-total|"></h3>
@@ -128,7 +128,7 @@
                    data-calculation-format="decimal-percentage"
                    data-calculation-operations="/,*"
                    th:attr="data-calculation-fields=|100, ${model.fundingAmount}, [id='__${path}__.payment']|"
-                   th:value="|${#numbers.formatDecimal(milestone.getPercentageOfFundingAmount(model.fundingAmount), 1, 'DEFAULT', 2, 'DEFAULT')}%|" />
+                   th:value="|${#ifsUtil.formatDecimal(milestone.getPercentageOfFundingAmount(model.fundingAmount))}%|" />
 
             <div class="left-col">
                 <div th:unless="${model.readOnly}" class="govuk-form-group">
