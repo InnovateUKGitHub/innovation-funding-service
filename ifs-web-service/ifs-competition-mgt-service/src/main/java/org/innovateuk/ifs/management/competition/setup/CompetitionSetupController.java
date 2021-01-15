@@ -21,6 +21,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.LandingPageForm;
+import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -332,7 +333,7 @@ public class CompetitionSetupController {
     }
 
     @PostMapping("/{competitionId}/section/application-submission")
-    public String submitApplicationSubmissionSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
+    public String submitApplicationSubmissionSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationSubmissionForm competitionSetupForm,
                                                             BindingResult bindingResult,
                                                             ValidationHandler validationHandler,
                                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
