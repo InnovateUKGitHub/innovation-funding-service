@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.competition.resource;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * An enum representing the stage at which a Competition is deemed complete.
  */
@@ -23,5 +27,11 @@ public enum CompetitionCompletionStage {
 
     public MilestoneType getLastMilestone() {
         return lastMilestone;
+    }
+
+    public static List<CompetitionCompletionStage> alwaysOpenValues() {
+        return Stream.of(values())
+                .filter(completionStage -> (completionStage == RELEASE_FEEDBACK || completionStage == PROJECT_SETUP))
+                .collect(Collectors.toList());
     }
 }

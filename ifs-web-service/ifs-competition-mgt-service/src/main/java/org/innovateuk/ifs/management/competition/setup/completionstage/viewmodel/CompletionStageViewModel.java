@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.completionstage.viewmode
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -14,10 +15,11 @@ import static java.util.Arrays.asList;
  */
 public class CompletionStageViewModel extends CompetitionSetupViewModel {
 
-    public CompletionStageViewModel(GeneralSetupViewModel generalSetupViewModel) {
+    private boolean alwaysOpenCompetitionEnabled;
 
+    public CompletionStageViewModel(GeneralSetupViewModel generalSetupViewModel, boolean alwaysOpenCompetitionEnabled) {
         this.generalSetupViewModel = generalSetupViewModel;
-
+        this.alwaysOpenCompetitionEnabled = alwaysOpenCompetitionEnabled;
     }
 
     public List<CompetitionCompletionStage> getCompetitionCompletionStages() {
@@ -34,5 +36,15 @@ public class CompletionStageViewModel extends CompetitionSetupViewModel {
 
     public CompetitionCompletionStage getCompetitionCloseCompletionStage() {
         return CompetitionCompletionStage.COMPETITION_CLOSE;
+    }
+
+    public boolean isAlwaysOpenCompetitionEnabled() {
+        return alwaysOpenCompetitionEnabled;
+    }
+
+    public boolean isApplicationSubmissionEnabled() {
+        return isAlwaysOpenCompetitionEnabled()
+                && CompetitionCompletionStage.alwaysOpenValues().stream()
+                .anyMatch(completionStage -> (completionStage == generalSetupViewModel.getCompetition().getCompletionStage()));
     }
 }
