@@ -814,7 +814,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         // assert that after a successful submission, the view moves on to the Milestones page
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage")
-                .param("selectedCompletionStage", CompetitionCompletionStage.PROJECT_SETUP.name()))
+                .param("selectedCompletionStage", CompetitionCompletionStage.COMPETITION_CLOSE.name()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/milestones"));
 
