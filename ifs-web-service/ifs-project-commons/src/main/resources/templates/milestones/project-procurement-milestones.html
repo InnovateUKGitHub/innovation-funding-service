@@ -32,9 +32,18 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
 
-        <th:block th:if="${model.showBanner}">
+        <th:block th:if="${model.showApprovalMessage}">
             <div class="success-alert">
                 <p class="govuk-body">Your payment milestones has been approved by <span
+                    th:text="${model.projectProcurementMilestoneResource.name}"/>, <span
+                    th:text="${#temporals.format(model.projectProcurementMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
+                </p>
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.showResetMessage}">
+            <div class="message-alert">
+                <p class="govuk-body">Your payment milestones has been reset by <span
                     th:text="${model.projectProcurementMilestoneResource.name}"/>, <span
                     th:text="${#temporals.format(model.projectProcurementMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
                 </p>
@@ -79,35 +88,40 @@
                 </div>
             </div>
 
-            <form th:if="${model.canApprove}" class="govuk-!-margin-top-6"
+            <form class="govuk-!-margin-top-6"
                   th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
                   th:object="${projectProcurementMilestoneApprovalForm}">
 
-                <h2 class="govuk-heading-m">Approve Payment milestones</h2>
-                <div class="govuk-form-group">
-                    <div class="govuk-checkboxes">
-                        <div class="govuk-checkboxes__item">
-                            <input id="approve-milestones"
-                                   class="govuk-checkboxes__input"
-                                   type="checkbox"
-                                   th:field="*{confirmMilestoneChecked}"
-                                   data-switches-button-status="#confirm-button"/>
-                            <label for="approve-milestones"
-                                   class="govuk-label govuk-checkboxes__label"
-                                   th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
-                            </label>
+                <th:block th:if="${model.canApprove}">
+                    <h2 class="govuk-heading-m">Approve Payment milestones</h2>
+                    <div class="govuk-form-group">
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input id="approve-milestones"
+                                       class="govuk-checkboxes__input"
+                                       type="checkbox"
+                                       th:field="*{confirmMilestoneChecked}"
+                                       data-switches-button-status="#confirm-button"/>
+                                <label for="approve-milestones"
+                                       class="govuk-label govuk-checkboxes__label"
+                                       th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <button
-                    type="button"
-                    name="approve"
-                    data-js-modal="modal-confirm-payment-milestone"
-                    class="govuk-button"
-                    id="confirm-button">Approve payment milestones
-                </button>
-                <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
+                    <button
+                        type="button"
+                        name="approve"
+                        data-js-modal="modal-confirm-payment-milestone"
+                        class="govuk-button"
+                        id="confirm-button">Approve payment milestones
+                    </button>
+                    <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
+                </th:block>
+                <th:block th:if="${model.canReset}">
+                    <button class="govuk-button" name="reset-milestones">Reset milestones</button>
+                </th:block>
             </form>
             <th:block th:if="${model.readOnly}">
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>

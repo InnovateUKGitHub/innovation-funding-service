@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.ProcurementMilestones;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.AbstractProcurementMilestoneViewModel;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState;
 import org.innovateuk.ifs.project.finance.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
@@ -68,16 +69,24 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         return readOnly;
     }
 
-    public boolean getCanApprove() {
+    public boolean isCanApprove() {
         return this.eligibilityAndViabilityApproved && !this.projectProcurementMilestoneResource.isMilestonePaymentApproved()
                 && this.isReadOnly();
+    }
+
+    public boolean isCanReset() {
+        return this.projectProcurementMilestoneResource.isMilestonePaymentApproved();
     }
 
     public boolean isApproved() {
         return this.projectProcurementMilestoneResource.isMilestonePaymentApproved();
     }
 
-    public boolean getShowBanner() {
+    public boolean isShowApprovalMessage() {
         return this.isApproved();
+    }
+
+    public boolean isShowResetMessage() {
+        return PaymentMilestoneState.REVIEW == this.projectProcurementMilestoneResource.getPaymentMilestoneState() && projectProcurementMilestoneResource.getPaymentMilestoneInternalUserLastName() != null;
     }
 }

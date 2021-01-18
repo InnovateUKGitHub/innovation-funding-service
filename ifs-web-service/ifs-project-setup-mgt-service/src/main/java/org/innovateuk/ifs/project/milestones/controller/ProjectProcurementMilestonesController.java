@@ -61,6 +61,22 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(params = "reset-milestones")
+    public String resetPaymentMilestones(@PathVariable long projectId,
+                                           @PathVariable long organisationId,
+                                           @ModelAttribute("form") ProjectProcurementMilestoneApprovalForm form,
+                                           @SuppressWarnings("unused") BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           Model model,
+                                           UserResource user) {
+        Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
+        RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId);
+        return validationHandler
+                .addAnyErrors(resetPaymentMilestoneState)
+                .failNowOrSucceedWith(view, view);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save")
     public String saveMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
