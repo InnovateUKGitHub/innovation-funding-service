@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HEUKAR;
 import static org.innovateuk.ifs.competition.resource.CompetitionTypeEnum.HORIZON_2020;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -152,25 +151,6 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         mockMvc.perform(get("/application/" + application.getId() + "/track"))
                 .andExpect(view().name("h2020-grant-transfer-track"));
-    }
-
-    @Test
-    public void heukarTrack() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withFundingType(FundingType.GRANT)
-                .withCompetitionTypeEnum(HEUKAR)
-                .build();
-
-        ApplicationResource application = newApplicationResource()
-                .withApplicationState(SUBMITTED)
-                .withCompetition(competition.getId())
-                .build();
-        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-
-
-        mockMvc.perform(get("/application/" + application.getId() + "/track"))
-                .andExpect(view().name("heukar-application-track"));
     }
 
     @Test

@@ -50,8 +50,7 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
-${ktpCompetitionName}        KTP Competition
-${heukarCompetitionName}     HEUKAR competition
+${ktpCompetitionName}     KTP Competition
 
 
 ${ukLeadInternationalCompetition}                        UK based Lead International Competition
@@ -307,7 +306,6 @@ ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
-${compType_HEUKAR}     HEUKAR
 ${compType_PT}         The Prince's Trust
 ${compType_H2020}      Horizon 2020
 
@@ -320,7 +318,6 @@ ${compType_H2020}      Horizon 2020
 @{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
 @{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{HEUKAR_questions}                       A HEUKAR question
 @{project_details}                        Project summary  Public description  Scope
 
 #SBRI Type 1 competition milestones
