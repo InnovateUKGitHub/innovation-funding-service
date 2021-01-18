@@ -25,20 +25,20 @@ public enum CompetitionSetupSection {
     PROJECT_ELIGIBILITY(4L, "project-eligibility", "Project eligibility", emptyList(), false),
     COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, Optional.empty()),
     APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, Optional.empty()),
-    MILESTONES(5L, "milestones", "Milestones", emptyList(), true, Optional.empty()),
+    MILESTONES(5L, "milestones", "Milestones", emptyList(), true, Optional.of(asList(COMPLETION_STAGE, APPLICATION_SUBMISSION))),
     APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), false),
     ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
     CONTENT(8L, "content", "Public content", emptyList(), true),
     PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
     ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false),
     FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false),
-    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, Optional.of(FUNDING_ELIGIBILITY));
+    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, Optional.of(asList(FUNDING_ELIGIBILITY)));
 
     private Long id;
     private String path;
     private String name;
     private List<CompetitionSetupSubsection> subsections;
-    private Optional<CompetitionSetupSection> previousSection;
+    private Optional<List<CompetitionSetupSection>> previousSection;
 
     private boolean editableAfterSetupAndLive;
 
@@ -58,7 +58,7 @@ public enum CompetitionSetupSection {
     CompetitionSetupSection(Long id, String sectionPath,
                             String sectionName, List<CompetitionSetupSubsection> subsections,
                             boolean editableAfterSetupAndLive,
-                            Optional<CompetitionSetupSection> previousSection) {
+                            Optional<List<CompetitionSetupSection>> previousSection) {
         this.id = id;
         this.path = sectionPath;
         this.name = sectionName;
@@ -125,14 +125,17 @@ public enum CompetitionSetupSection {
         return getPath();
     }
 
-    public Optional<CompetitionSetupSection> getPreviousSection() {
+    public Optional<List<CompetitionSetupSection>> getPreviousSection() {
         return previousSection;
     }
 
     public Optional<CompetitionSetupSection> getNextSection() {
 
         return simpleFindFirst(CompetitionSetupSection.values(), section ->
-                section.getPreviousSection().equals(Optional.of(this)));
+                section.getPreviousSection()
+                        .map(competitionSetupSections -> competitionSetupSections.stream()
+                                .anyMatch(competitionSetupSection -> competitionSetupSection.equals(this)))
+                        .orElse(false));
     }
 
     public List<CompetitionSetupSection> getAllNextSections() {
