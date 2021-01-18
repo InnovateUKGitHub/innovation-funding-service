@@ -41,6 +41,25 @@
                 </th:block>
             </th:block>
 
+            <th:block th:if="${organisationForm.sicCodes != null}">
+                <dt>Sic Code</dt>
+                <tbody class="govuk-table__head">
+                <tr class="govuk-table__row" th:each="sicCode : ${organisationForm.sicCodes}">
+                    <td class="govuk-table__cell" th:text="${sicCode.sicCode}"></td>
+                </tr>
+                </tbody>
+            </th:block>
+
+            <th:block th:if="${organisationForm.executiveOfficers != null}">
+                <dt>Executive Officers</dt>
+                <tbody class="govuk-table__head">
+                <tr class="govuk-table__row" th:each="execOfficer : ${organisationForm.executiveOfficers}">
+                    <td class="govuk-table__cell" th:text="${execOfficer.name}"></td>
+                </tr>
+                </tbody>
+            </th:block>
+
+
             <th:block th:if="${selectedOrganisation?.organisationAddress != null}">
                 <th:block th:if="${improvedSearchEnabled}" >
                     <dt>Registered Address</dt>
