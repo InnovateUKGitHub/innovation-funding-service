@@ -55,11 +55,13 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String EXISTING_ORGANISATION = "existing-organisation";
     protected static final String ORGANISATION_FORM = "organisationForm";
     protected static final String TEMPLATE_PATH = "registration/organisation";
+    protected static final String MANUALLY_ENTER_ORGANISATION_DETAILS = "manually-enter-organisation-details";
 
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
     protected static final int  SEARCH_ITEMS_MAX = 10;
     protected static final int DEFAULT_PAGE_NUMBER_VALUE = 1;
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     @Autowired
     protected RegistrationCookieService registrationCookieService;
@@ -258,7 +260,6 @@ public abstract class AbstractOrganisationCreationController {
                 organisationSearchResult.setOrganisationAddress(addressResource);
                 organisationSearchResult.setOrganisationExecutiveOfficers(organisationForm.getExecutiveOfficers());
                 organisationSearchResult.setOrganisationSicCodes(organisationForm.getSicCodes());
-
             }
             model.addAttribute("selectedOrganisation", organisationSearchResult);
             return organisationSearchResult;

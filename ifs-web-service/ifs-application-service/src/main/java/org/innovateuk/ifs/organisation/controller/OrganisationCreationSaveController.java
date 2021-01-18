@@ -108,7 +108,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return organisationResource;
     }
 
-    @PostMapping(value= "organisation-type/manually-enter-organisation-details")
+    @PostMapping(value= "organisation-type/" + MANUALLY_ENTER_ORGANISATION_DETAILS)
     public String addressFormAction(Model model,
                                     @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                     BindingResult bindingResult,
@@ -121,7 +121,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         AddressForm addressForm = organisationForm.getAddressForm();
         addressForm.handleAction(this::searchPostcode);
 
-        return "registration/organisation/manually-enter-organisation-details";
+        return "registration/organisation/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 
     protected List<AddressResource> searchPostcode(String postcodeInput) {
