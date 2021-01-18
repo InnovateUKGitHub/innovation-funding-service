@@ -26,6 +26,8 @@
             <dt>Organisation type</dt>
             <dd th:text="${organisationType.name}">Business</dd>
 
+            <dd th:text="${organisationType.id}"></dd>
+
             <th:block th:if="${includeInternationalQuestion}">
                 <dt>Is your organisation based in the UK?</dt>
                 <dd>Yes</dd>
@@ -78,6 +80,7 @@
         </dl>
 
         <form method="post" th:action="@{/organisation/create/save-organisation}">
+            <input type="hidden" name="organisationTypeId" th:value="${organisationType.id}" />
             <button name="save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
 

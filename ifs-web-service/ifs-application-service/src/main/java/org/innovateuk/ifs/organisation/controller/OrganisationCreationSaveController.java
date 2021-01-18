@@ -28,8 +28,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
-
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 
@@ -69,8 +67,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                    UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
+        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
         organisationForm = getImprovedSearchFormDataFromCookie(organisationForm, model, request, DEFAULT_PAGE_NUMBER_VALUE, false);
-
+        organisationForm.setOrganisationTypeId(registrationCookieService.getOrganisationCreationCookieValue(request).get().getOrganisationTypeId());
         BindingResult bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
         validator.validate(organisationForm, bindingResult);
 
