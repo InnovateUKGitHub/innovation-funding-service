@@ -84,6 +84,26 @@ public class FinanceChecksViabilityController {
         return doSaveViability(projectId, organisationId, ViabilityState.REVIEW, form, validationHandler, model, successView);
     }
 
+    @PostMapping(params = "reset-viability")
+    public String resetViability(@PathVariable("projectId") Long projectId,
+                                 @PathVariable("organisationId") Long organisationId,
+                                 @ModelAttribute("form") FinanceChecksViabilityForm form,
+                                 @SuppressWarnings("unused") BindingResult bindingResult,
+                                 ValidationHandler validationHandler,
+                                 Model model) {
+
+        Supplier<String> successView = () ->
+                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
+
+        RestResult<Void> saveViabilityResult = financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
+
+        return validationHandler.
+                addAnyErrors(saveViabilityResult).
+                failNowOrSucceedWith(failureView, successView);
+    }
+
     @PostMapping(params = "confirm-viability")
     public String confirmViability(@PathVariable("projectId") Long projectId,
                                    @PathVariable("organisationId") Long organisationId,
@@ -96,18 +116,6 @@ public class FinanceChecksViabilityController {
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
         return doSaveViability(projectId, organisationId, ViabilityState.APPROVED, form, validationHandler, model, successView);
-    }
-
-    @PostMapping(params = "reset-viability")
-    public String resetViability(@PathVariable("projectId") Long projectId,
-                                   @PathVariable("organisationId") Long organisationId,
-                                   ValidationHandler validationHandler,
-                                   Model model) {
-
-        Supplier<String> successView = () ->
-                "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
-
-        return doSaveViability(projectId, organisationId, ViabilityState.REVIEW, null, validationHandler, model, successView);
     }
 
     private String doSaveViability(Long projectId, Long organisationId, ViabilityState viability, FinanceChecksViabilityForm form,
@@ -160,7 +168,8 @@ public class FinanceChecksViabilityController {
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
         }
 
-        boolean viabilityConfirmed = viability.getViability() == ViabilityState.APPROVED;
+        ViabilityState viabilityState = viability.getViability();
+        boolean viabilityConfirmed = ViabilityState.APPROVED == viabilityState;
 
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
@@ -201,7 +210,7 @@ public class FinanceChecksViabilityController {
                         .map(FinancialYearAccountsResource::getEmployees)
                         .orElse(null),
                 projectId,
-                viabilityConfirmed,
+                viabilityState,
                 viabilityConfirmed,
                 approver,
                 approvalDate,

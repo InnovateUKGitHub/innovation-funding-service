@@ -469,7 +469,7 @@ public class ProjectFinanceChecksController {
 
         FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
 
-        boolean eligibilityApproved = eligibility.getEligibility() == EligibilityState.APPROVED;
+        EligibilityState eligibilityState = eligibility.getEligibility();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
@@ -487,7 +487,7 @@ public class ProjectFinanceChecksController {
                 organisation.getName(),
                 isLeadPartnerOrganisation,
                 organisation.getId(),
-                eligibilityApproved,
+                eligibilityState,
                 eligibility.getEligibilityRagStatus(),
                 eligibility.getEligibilityApprovalUserFirstName(),
                 eligibility.getEligibilityApprovalUserLastName(),

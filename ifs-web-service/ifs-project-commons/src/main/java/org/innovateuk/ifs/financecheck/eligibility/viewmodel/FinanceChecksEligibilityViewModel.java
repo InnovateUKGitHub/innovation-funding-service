@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
@@ -24,7 +25,7 @@ public class FinanceChecksEligibilityViewModel {
     private Long projectId;
     private Long organisationId;
 
-    private boolean eligibilityApproved;
+    private EligibilityState eligibilityState;
     private EligibilityRagStatus eligibilityRagStatus;
     private String approverFirstName;
     private String approverLastName;
@@ -47,7 +48,7 @@ public class FinanceChecksEligibilityViewModel {
                                              String organisationName,
                                              boolean leadPartnerOrganisation,
                                              Long organisationId,
-                                             boolean eligibilityApproved,
+                                             EligibilityState eligibilityState,
                                              EligibilityRagStatus eligibilityRagStatus,
                                              String approverFirstName,
                                              String approverLastName,
@@ -68,7 +69,7 @@ public class FinanceChecksEligibilityViewModel {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.organisationId = organisationId;
-        this.eligibilityApproved = eligibilityApproved;
+        this.eligibilityState = eligibilityState;
         this.eligibilityRagStatus = eligibilityRagStatus;
         this.approverFirstName = approverFirstName;
         this.approverLastName = approverLastName;
@@ -81,7 +82,7 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isApproved() {
-        return eligibilityApproved;
+        return EligibilityState.APPROVED == eligibilityState;
     }
 
     public boolean isCanEditAcademicFinances() {
@@ -90,6 +91,10 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isShowApprovalMessage() {
         return isApproved();
+    }
+
+    public boolean isShowResetMessage() {
+        return EligibilityState.REVIEW == eligibilityState && approvalDate != null && approverLastName != null;
     }
 
     public String getApproverName()
@@ -143,14 +148,6 @@ public class FinanceChecksEligibilityViewModel {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
-    }
-
-    public boolean isEligibilityApproved() {
-        return eligibilityApproved;
-    }
-
-    public void setEligibilityApproved(boolean eligibilityApproved) {
-        this.eligibilityApproved = eligibilityApproved;
     }
 
     public EligibilityRagStatus getEligibilityRagStatus() {

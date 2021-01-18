@@ -58,6 +58,16 @@
             </th:block>
         </th:block>
 
+        <th:block th:if="${summaryModel.isShowResetMessage()}">
+            <th:block th:unless="${summaryModel.externalView}">
+                <div class="message-alert">
+                    <p class="govuk-body">The <th:block th:if="${summaryModel.loanCompetition}">organisation's</th:block><th:block th:unless="${summaryModel.loanCompetition}">partner's</th:block> finance eligibility has been reset by <span
+                        th:text="${summaryModel.getApproverName()}"/>, <span
+                        th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+                </div>
+            </th:block>
+        </th:block>
+
         <th:block th:unless="${summaryModel.isShowApprovalMessage()}">
             <th:block th:if="${summaryModel.isExternalView()}">
                 <th:block th:if="${summaryModel.loanCompetition}">
@@ -287,7 +297,7 @@
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
-            <th:block th:if="${summaryModel.isApproved()}">
+            <th:block th:if="${summaryModel.isApproved() and summaryModel.projectIsActive}">
                 <button class="govuk-button" name="reset-eligibility">Reset eligibility</button>
             </th:block>
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">

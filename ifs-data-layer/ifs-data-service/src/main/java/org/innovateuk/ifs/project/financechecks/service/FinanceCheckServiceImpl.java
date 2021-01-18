@@ -650,7 +650,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
 
-        if (ViabilityState.APPROVED == currentViabilityState) {
+        if (ViabilityState.APPROVED == currentViabilityState && ViabilityState.REVIEW != viability) {
             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
@@ -665,6 +665,10 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         if (ViabilityState.APPROVED == viability) {
             viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
+        }
+
+        if (ViabilityState.REVIEW == viability) {
+            viabilityWorkflowHandler.viabilityReset(partnerOrganisation, currentUser);
         }
 
         return serviceSuccess();

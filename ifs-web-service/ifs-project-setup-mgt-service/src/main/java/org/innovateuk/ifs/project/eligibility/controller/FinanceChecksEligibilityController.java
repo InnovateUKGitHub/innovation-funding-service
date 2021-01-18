@@ -126,11 +126,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
             if (eligibilityForm == null) {
                 eligibilityForm = getEligibilityForm(eligibility.get());
             }
-            boolean eligibilityApproved = eligibility.get().getEligibility() == EligibilityState.APPROVED;
+            EligibilityState eligibilityState = eligibility.get().getEligibility();
 
             boolean isUsingJesFinances = competition.get().applicantShouldUseJesFinances(organisation.get().getOrganisationTypeEnum());
             if (!isUsingJesFinances) {
-                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), !eligibilityApproved && project.getProjectState().isActive(), rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
+                boolean open = EligibilityState.APPROVED != eligibilityState && project.getProjectState().isActive();
+                model.addAttribute("model", new FinanceChecksProjectCostsViewModel(project.getApplication(), competition.get().getName(), open, rowType, competition.get().getFinanceRowTypes(), competition.get().isOverheadsAlwaysTwenty(), competition.get().getFundingType() == FundingType.KTP));
                 if (form == null) {
                     future = async(() -> model.addAttribute("form", formPopulator.populateForm(projectId, organisation.get().getId())));
                 }
@@ -147,7 +148,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
                     organisation.get().getName(),
                     isLeadPartnerOrganisation,
                     organisation.get().getId(),
-                    eligibilityApproved,
+                    eligibilityState,
                     eligibility.get().getEligibilityRagStatus(),
                     eligibility.get().getEligibilityApprovalUserFirstName(),
                     eligibility.get().getEligibilityApprovalUserLastName(),

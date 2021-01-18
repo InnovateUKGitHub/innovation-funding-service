@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ public class FinanceChecksViabilityViewModel {
 
     private Long projectId;
     private Long organisationId;
-    private boolean viabilityConfirmed;
+    private ViabilityState viabilityState;
     private boolean approved;
     private String approverName;
     private LocalDate approvalDate;
@@ -57,7 +58,7 @@ public class FinanceChecksViabilityViewModel {
                                            Long turnover,
                                            Long headCount,
                                            Long projectId,
-                                           boolean viabilityConfirmed,
+                                           ViabilityState viabilityState,
                                            boolean approved,
                                            String approverName,
                                            LocalDate approvalDate,
@@ -76,7 +77,7 @@ public class FinanceChecksViabilityViewModel {
         this.turnover = turnover;
         this.headCount = headCount;
         this.projectId = projectId;
-        this.viabilityConfirmed = viabilityConfirmed;
+        this.viabilityState = viabilityState;
         this.approved = approved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
@@ -142,16 +143,24 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isReadOnly() {
-        return viabilityConfirmed || !projectIsActive;
+        return viabilityState == ViabilityState.APPROVED || !projectIsActive;
     }
 
     public boolean isShowApprovalMessage() {
         return isApproved();
     }
 
+    public boolean isShowResetMessage() {
+        return ViabilityState.REVIEW == viabilityState && approvalDate != null && approverName != null;
+    }
+
     public String getApproverName() {
 
         return StringUtils.trim(approverName);
+    }
+
+    public boolean isCanReset() {
+        return approved && projectIsActive;
     }
 
     public LocalDate getApprovalDate() {
