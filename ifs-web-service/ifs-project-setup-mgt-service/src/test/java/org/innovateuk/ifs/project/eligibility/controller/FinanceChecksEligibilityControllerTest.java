@@ -294,7 +294,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         assertTrue(viewModel.getOrganisationName().equals(organisationName));
         assertTrue(viewModel.getProjectName().equals(project.getName()));
 
-        assertTrue(viewModel.isEligibilityApproved());
+        assertTrue(viewModel.isApproved());
         assertEquals(eligibility.getEligibilityRagStatus(), viewModel.getEligibilityRagStatus());
         assertEquals(eligibility.getEligibilityApprovalDate(), viewModel.getApprovalDate());
         assertEquals(eligibility.getEligibilityApprovalUserFirstName(), viewModel.getApproverFirstName());
