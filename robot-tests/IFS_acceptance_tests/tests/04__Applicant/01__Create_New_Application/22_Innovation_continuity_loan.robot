@@ -3,6 +3,8 @@ Documentation     IFS-8002  New set of T&Cs for innovation continuity loan
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-9071 Subsidy Control - Update Innovation Continuity Loan T&Cs
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -18,7 +20,7 @@ ${continuityLoanPSCompId}            ${competition_ids["${continuityLoanPSCompNa
 ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplication}"]}
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
-${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
+${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity loan from
 ${continuityLoanT&C'sTitle}          Loans terms and conditions
 ${continuityLoanT&CLink}             Innovation Continuity Loan (opens in a new window)
 ${applicationT&CLink}                Award terms and conditions
