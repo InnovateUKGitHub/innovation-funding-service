@@ -60,22 +60,91 @@
         <h2 class="govuk-heading-m">Actions</h2>
 
         <ul class="govuk-list link-list">
-
+            <li>
+                <a th:if="${model.alwaysOpen}"
+                   th:href="@{/assessment/competition/{competitionId}/assessment-period(competitionId=${model.competitionId})}"
+                   class="govuk-link">
+                    Manage assessment period
+                </a>
+            </li>
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})}"
-                   th:text="${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'"
+                   th:text="${model.inAssessment or model.alwaysOpen} ? 'Manage assessors' : 'Allocate assessors'"
                    class="govuk-link">
                     Allocate/Manage assessors
                 </a>
             </li>
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-                   th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'"
+                   th:text="${model.inAssessment or model.alwaysOpen} ? 'Manage applications' : 'Allocate applications'"
                    class="govuk-link">
                     Allocate/Manage applications
                 </a>
             </li>
         </ul>
+
+
+        <th:block th:if="${model.alwaysOpen}">
+            <h2 class="govuk-heading-m">Assessment periods</h2>
+
+            <th:block th:if="${model.assessmentPeriods.isEmpty()}">
+                <p class="govuk-body">No assessment periods have been created.</p>
+                <p class="govuk-body">You can create and manage assessment periods via the 'Manage assessment period'
+                    link above.</p>
+            </th:block>
+
+            <th:block th:unless="${model.assessmentPeriods.isEmpty()}">
+                <th:block th:each="assessmentPeriod, iStat : ${model.assessmentPeriods}">
+                    <table class="govuk-table milestones-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" id="milestone"
+                                th:text="'Assessment Period ' + ${iStat.index + 1}">Assessment Period #
+                            </th>
+                            <th class="govuk-table__header" scope="col" id="time">Time</th>
+                            <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
+                            <th class="govuk-table__header" scope="col" id="date">Date</th>
+                            <th class="govuk-table__header" scope="col" id="isPast"></th>
+                            <th class="govuk-table__header" scope="col" id="action"></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr th:each="(milestoneEntry, rowIStat : ${assessmentPeriod.milestoneEntries})"
+                            th:if="${milestoneEntry.value.milestoneType.presetDate}"
+                            class="govuk-table__row date-group form-group-row"
+                            data-future-date="">
+                            <th class="govuk-table__header" scope="row">
+                                <legend th:id="${'milestone-' + (rowIStat.index + 1)}"
+                                        th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"/>
+                            </th>
+                            <td class="govuk-table__cell time">
+                                <th:block th:if="${milestoneEntry.value.middayTime}">
+                                    12:00 pm
+                                    <input type="hidden"
+                                           data-time="12"
+                                           th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                           th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                           th:value="${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).TWELVE_PM}">
+                                </th:block>
+                            </td>
+                            <td class="govuk-table__cell js-addWeekDay"
+                                th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}"
+                                th:text="${milestoneEntry.value.dayOfWeek}"></td>
+                            <td class="govuk-table__cell date"
+                                th:text="${#temporals.format(milestoneEntry.value.date, 'dd/MM/yyyy')}">
+                                01/01/2021
+                            </td>
+                            <td class="govuk-table__cell">
+                            </td>
+                            <td class="govuk-table__cell">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </th:block>
+            </th:block>
+        </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

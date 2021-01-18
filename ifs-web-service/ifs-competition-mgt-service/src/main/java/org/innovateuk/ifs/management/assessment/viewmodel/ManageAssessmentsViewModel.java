@@ -5,6 +5,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * View model for the 'Manage assessments' dashboard page.
@@ -22,8 +27,12 @@ public class ManageAssessmentsViewModel {
     private final int assessmentsAccepted;
     private final int assessmentsStarted;
     private final int assessmentsCompleted;
+    private final boolean alwaysOpen;
+    private final List<MilestonesForm> assessmentPeriods;
 
-    public ManageAssessmentsViewModel(CompetitionResource competition, CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics) {
+    public ManageAssessmentsViewModel(CompetitionResource competition,
+                                      CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics,
+                                      List<MilestonesForm> assessmentPeriods) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.inAssessment = competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
@@ -33,6 +42,8 @@ public class ManageAssessmentsViewModel {
         this.assessmentsAccepted = keyStatistics.getAssignmentsAccepted();
         this.assessmentsStarted = keyStatistics.getAssessmentsStarted();
         this.assessmentsCompleted = keyStatistics.getAssessmentsSubmitted();
+        this.alwaysOpen = competition.getAlwaysOpen();
+        this.assessmentPeriods = assessmentPeriods;
     }
 
     public long getCompetitionId() {
@@ -99,5 +110,13 @@ public class ManageAssessmentsViewModel {
                 .append(assessmentsCompleted)
                 .append(assessmentsStarted)
                 .toHashCode();
+    }
+
+    public boolean isAlwaysOpen() {
+        return alwaysOpen;
+    }
+
+    public List<MilestonesForm> getAssessmentPeriods() {
+        return assessmentPeriods;
     }
 }
