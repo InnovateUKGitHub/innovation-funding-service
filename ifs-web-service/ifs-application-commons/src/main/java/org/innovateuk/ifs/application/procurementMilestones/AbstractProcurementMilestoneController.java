@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.ProcurementMilestones;
+package org.innovateuk.ifs.application.procurementMilestones;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
@@ -22,9 +22,6 @@ public abstract class AbstractProcurementMilestoneController {
     @Autowired
     private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
-    @Autowired
-    private ProjectProcurementMilestoneViewModelPopulator viewModelPopulator;
-
     protected abstract String getView();
 
     protected Map<String, ProcurementMilestoneForm> reorderMilestones(Map<String, ProcurementMilestoneForm> map) {
@@ -38,10 +35,9 @@ public abstract class AbstractProcurementMilestoneController {
         return getView();
     }
 
-    protected String viewProjectSetupMilestones(Model model, long projectId, long organisationId, UserResource userResource, boolean editMilestones) {
+    protected String viewProjectSetupMilestones(Model model, long projectId, long organisationId, UserResource userResource) {
         ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
         model.addAttribute("form", form);
-        model.addAttribute("model", viewModelPopulator.populate(projectId, organisationId, userResource, editMilestones));
         return viewMilestonesPage(model, form, userResource);
     }
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProjectProcurementMilestoneService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,7 +26,7 @@ public class ProjectProcurementMilestoneControllerTest extends BaseControllerMoc
     public void getByProjectIdAndOrganisationId() throws Exception {
         long projectId = 1L;
         long organisationId = 2L;
-        List<ProjectProcurementMilestoneResource> resource = newProjectProcurementMilestoneResource()
+        List<PaymentMilestoneResource> resource = newProjectProcurementMilestoneResource()
                 .withDeliverable("Deliverable")
                 .build(1);
 
@@ -42,7 +42,7 @@ public class ProjectProcurementMilestoneControllerTest extends BaseControllerMoc
     @Test
     public void getByProjectId() throws Exception {
         long projectId = 1L;
-        List<ProjectProcurementMilestoneResource> resource = newProjectProcurementMilestoneResource()
+        List<PaymentMilestoneResource> resource = newProjectProcurementMilestoneResource()
                 .withDeliverable("Deliverable")
                 .build(1);
 

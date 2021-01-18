@@ -383,8 +383,6 @@ public class ProjectFinanceChecksController {
                     && projectUser.getOrganisation().equals(organisationId)
         );
 
-        boolean canViewPaymentMileStones = financeCheckRestService.viewPaymentMilestones(projectId, organisationId).getSuccess();
-
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
                 lastPostByInternalUserQueryThreads,
@@ -400,7 +398,7 @@ public class ProjectFinanceChecksController {
                 competition.isProcurement(),
                 competition.isKtp(),
                 leadOrganisation,
-                canViewPaymentMileStones);
+                competition.isProcurementMilestones());
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {

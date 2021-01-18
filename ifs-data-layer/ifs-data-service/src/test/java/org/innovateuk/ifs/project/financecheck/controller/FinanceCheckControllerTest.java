@@ -193,28 +193,14 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long projectId = 1L;
         Long organisationId = 2L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ProjectProcurementMilestoneResource projectProcurementMilestoneResource = new ProjectProcurementMilestoneResource();
+        PaymentMilestoneResource paymentMilestoneResource = new PaymentMilestoneResource();
 
-        when(financeCheckService.getPaymentMilestone(projectOrganisationCompositeId)).thenReturn(serviceSuccess(projectProcurementMilestoneResource));
+        when(financeCheckService.getPaymentMilestone(projectOrganisationCompositeId)).thenReturn(serviceSuccess(paymentMilestoneResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/milestones/state", projectId, organisationId))
                 .andExpect(status().isOk());
 
         verify(financeCheckService).getPaymentMilestone(projectOrganisationCompositeId);
-    }
-
-    @Test
-    public void viewPaymentMilestoneState() throws Exception {
-        Long projectId = 1L;
-        Long organisationId = 2L;
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-
-        when(financeCheckService.viewPaymentMilestone(projectOrganisationCompositeId)).thenReturn(serviceSuccess(true));
-
-        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/milestones/view", projectId, organisationId))
-                .andExpect(status().isOk());
-
-        verify(financeCheckService).viewPaymentMilestone(projectOrganisationCompositeId);
     }
 
     @Test

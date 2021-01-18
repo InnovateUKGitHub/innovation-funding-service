@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.procurement.milestone.resource;
 
-public class ProjectProcurementMilestoneResource extends ProcurementMilestoneResource {
+public class PaymentMilestoneResource extends ProcurementMilestoneResource {
 
     private long projectId;
 

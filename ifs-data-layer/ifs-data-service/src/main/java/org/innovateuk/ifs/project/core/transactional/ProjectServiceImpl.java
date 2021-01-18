@@ -38,6 +38,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,6 +108,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
+
+    @Value("${ifs.procurement.milestones.enabled}")
+    private boolean procurementMilestones;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -344,7 +348,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> eligibilityProcesses = createEligibilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
-        ServiceResult<Void> milestonePaymentProcesses = createMilestonePaymentProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+        ServiceResult<Void> milestonePaymentProcesses = createMilestonePaymentProcesses(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> spendProfileProcess = createSpendProfileProcess(newProject, originalLeadApplicantProjectUser);
@@ -354,14 +358,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, milestonePaymentProcesses, golProcess, projectProcess, spendProfileProcess);
     }
 
-    private ServiceResult<Void> createMilestonePaymentProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
+    private ServiceResult<Void> createMilestonePaymentProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
+        if (procurementMilestones && project.getApplication().getCompetition().isProcurementMilestones()) {
+            List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
+                    paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                            serviceSuccess() :
+                            serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
 
-        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
-                paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
-                        serviceSuccess() :
-                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
-
-        return aggregate(results).andOnSuccessReturnVoid();
+            return aggregate(results).andOnSuccessReturnVoid();
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> createProjectDetailsProcess(Project newProject, ProjectUser originalLeadApplicantProjectUser) {

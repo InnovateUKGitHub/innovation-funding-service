@@ -92,13 +92,7 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
-    public RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
-        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", ProjectProcurementMilestoneResource.class);
+    public RestResult<PaymentMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", PaymentMilestoneResource.class);
     }
-
-    @Override
-    public RestResult<Boolean> viewPaymentMilestones(Long projectId, Long organisationId) {
-        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/view", Boolean.class);
-    }
-
 }

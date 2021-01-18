@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.application.ProcurementMilestones;
+package org.innovateuk.ifs.project.procurementMilestones.populator;
 
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.resource.ProjectProcurementMilestoneResource;
+import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
+import org.innovateuk.ifs.project.procurementMilestones.viewmodel.ProjectProcurementMilestoneViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -26,7 +27,7 @@ public class ProjectProcurementMilestoneViewModelPopulator {
     public ProjectProcurementMilestoneViewModel populate(long projectId, long organisationId, UserResource userResource, boolean editMilestones) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        ProjectProcurementMilestoneResource projectProcurementMilestoneResource = financeCheckRestService.getPaymentMilestoneState(projectId, organisationId).getSuccess();
+        PaymentMilestoneResource paymentMilestoneResource = financeCheckRestService.getPaymentMilestoneState(projectId, organisationId).getSuccess();
 
         boolean readOnly = userResource.isInternalUser()
                 && !editMilestones;
@@ -37,7 +38,7 @@ public class ProjectProcurementMilestoneViewModelPopulator {
                 finance,
                 String.format("/project-setup-management/project/%d/finance-check", projectId),
                 readOnly,
-                projectProcurementMilestoneResource,
+                paymentMilestoneResource,
                 userResource.isInternalUser() ? isAllEligibilityAndViabilityApproved(projectId) : false,
                 userResource.isExternalUser());
     }

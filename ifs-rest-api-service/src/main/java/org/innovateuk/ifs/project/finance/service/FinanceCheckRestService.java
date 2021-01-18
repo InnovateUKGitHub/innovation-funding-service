@@ -32,7 +32,5 @@ public interface FinanceCheckRestService {
 
     RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId);
 
-    RestResult<ProjectProcurementMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId);
-
-    RestResult<Boolean> viewPaymentMilestones(Long projectId, Long organisationId);
+    RestResult<PaymentMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId);
 }

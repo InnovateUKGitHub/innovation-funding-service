@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.finance.resource;
 
 import java.time.LocalDate;
 
-public class ProjectProcurementMilestoneResource {
+public class PaymentMilestoneResource {
 
     private PaymentMilestoneState paymentMilestoneState;
 
@@ -10,17 +10,17 @@ public class ProjectProcurementMilestoneResource {
     private String paymentMilestoneInternalUserLastName;
     private LocalDate paymentMilestoneLastModifiedDate;
 
-    public ProjectProcurementMilestoneResource() {
+    public PaymentMilestoneResource() {
     }
 
-    public ProjectProcurementMilestoneResource(PaymentMilestoneState paymentMilestoneState, String paymentMilestoneInternalUserFirstName, String paymentMilestoneInternalUserLastName, LocalDate paymentMilestoneLastModifiedDate) {
+    public PaymentMilestoneResource(PaymentMilestoneState paymentMilestoneState, String paymentMilestoneInternalUserFirstName, String paymentMilestoneInternalUserLastName, LocalDate paymentMilestoneLastModifiedDate) {
         this.paymentMilestoneState = paymentMilestoneState;
         this.paymentMilestoneInternalUserFirstName = paymentMilestoneInternalUserFirstName;
         this.paymentMilestoneInternalUserLastName = paymentMilestoneInternalUserLastName;
         this.paymentMilestoneLastModifiedDate = paymentMilestoneLastModifiedDate;
     }
 
-    public ProjectProcurementMilestoneResource(PaymentMilestoneState processState, LocalDate toLocalDate) {
+    public PaymentMilestoneResource(PaymentMilestoneState processState, LocalDate toLocalDate) {
         this.paymentMilestoneState = paymentMilestoneState;
         this.paymentMilestoneLastModifiedDate = paymentMilestoneLastModifiedDate;
     }

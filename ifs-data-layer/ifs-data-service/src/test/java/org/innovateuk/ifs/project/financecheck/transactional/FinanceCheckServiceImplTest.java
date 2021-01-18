@@ -1372,7 +1372,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
-        ServiceResult<ProjectProcurementMilestoneResource> result = service.getPaymentMilestone(projectOrganisationCompositeId);
+        ServiceResult<PaymentMilestoneResource> result = service.getPaymentMilestone(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
     }
