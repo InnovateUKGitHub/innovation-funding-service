@@ -3,6 +3,8 @@ package org.innovateuk.ifs.management.competition.setup.applicationsubmission.vi
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 
+import static java.lang.String.format;
+
 /**
  * A view model to back the Application Submission selection page.
  */

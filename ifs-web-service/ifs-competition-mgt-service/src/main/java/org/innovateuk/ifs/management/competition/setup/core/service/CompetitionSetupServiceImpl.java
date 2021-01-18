@@ -174,6 +174,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     @Override
+    public ServiceResult<String> getNextSetupSection(CompetitionSetupForm competitionSetupForm,
+                                                     CompetitionResource competitionResource,
+                                                     CompetitionSetupSection section) {
+        CompetitionSetupSectionUpdater saver = sectionSavers.get(section);
+        return serviceSuccess(saver.getNextSection(competitionSetupForm, competitionResource, section));
+    }
+
+    @Override
     public ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
                                                               CompetitionResource competitionResource,
                                                               CompetitionSetupSection section,

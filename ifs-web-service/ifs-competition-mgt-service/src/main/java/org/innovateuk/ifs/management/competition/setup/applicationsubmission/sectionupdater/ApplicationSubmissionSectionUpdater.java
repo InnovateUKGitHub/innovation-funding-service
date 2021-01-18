@@ -16,6 +16,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;
 
+import static java.lang.String.format;
+
 /**
  * Service to update the Application Submission section of Competition Setup.
  */
@@ -50,5 +52,11 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
         return ApplicationSubmissionForm.class.equals(clazz);
+    }
+
+    @Override
+    public String getNextSection(CompetitionSetupForm competitionSetupForm, CompetitionResource competition, CompetitionSetupSection section) {
+        String sectionPath = CompetitionSetupSection.MILESTONES.getPath();
+        return format("redirect:/competition/setup/%d/section/%s", competition.getId(), sectionPath);
     }
 }

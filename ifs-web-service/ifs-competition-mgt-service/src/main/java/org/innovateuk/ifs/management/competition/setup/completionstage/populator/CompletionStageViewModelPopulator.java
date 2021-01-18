@@ -2,10 +2,11 @@ package org.innovateuk.ifs.management.competition.setup.completionstage.populato
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.management.competition.setup.completionstage.util.CompletionStageUtils;
 import org.innovateuk.ifs.management.competition.setup.completionstage.viewmodel.CompletionStageViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompletionStageViewModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-    @Value("${ifs.always.open.competition.enabled}")
-    private boolean alwaysOpenCompetitionEnabled;
+    @Autowired
+    private CompletionStageUtils completionStageUtils;
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
@@ -24,6 +25,6 @@ public class CompletionStageViewModelPopulator implements CompetitionSetupSectio
 
     @Override
     public CompletionStageViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-        return new CompletionStageViewModel(generalViewModel, alwaysOpenCompetitionEnabled);
+        return new CompletionStageViewModel(generalViewModel, completionStageUtils);
     }
 }

@@ -508,11 +508,9 @@ public class CompetitionSetupController {
             return format("redirect:/competition/setup/%d", competition.getId());
         }
 
-        CompetitionSetupViewModel competitionSetupViewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section);
-
-        Supplier<String> successView = () -> competitionSetupViewModel.getNextSection(competition, section);
+        Supplier<String> successView = () -> competitionSetupService.getNextSetupSection(competitionSetupForm, competition, section).getSuccess();
         Supplier<String> failureView = () -> {
-            model.addAttribute(MODEL, competitionSetupViewModel);
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
             return "competition/setup";
         };
 
