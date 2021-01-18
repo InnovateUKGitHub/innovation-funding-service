@@ -30,6 +30,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.fundingeligibility.form.FundingEligibilityResearchCategoryForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.form.FundingLevelPercentageForm;
@@ -507,9 +508,11 @@ public class CompetitionSetupController {
             return format("redirect:/competition/setup/%d", competition.getId());
         }
 
-        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
+        CompetitionSetupViewModel competitionSetupViewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section);
+
+        Supplier<String> successView = () -> competitionSetupViewModel.getNextSection(competition, section);
         Supplier<String> failureView = () -> {
-            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
+            model.addAttribute(MODEL, competitionSetupViewModel);
             return "competition/setup";
         };
 

@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.management.competition.setup.completionstage.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
@@ -46,5 +48,18 @@ public class CompletionStageViewModel extends CompetitionSetupViewModel {
         return isAlwaysOpenCompetitionEnabled()
                 && CompetitionCompletionStage.alwaysOpenValues().stream()
                 .anyMatch(completionStage -> (completionStage == generalSetupViewModel.getCompetition().getCompletionStage()));
+    }
+
+    @Override
+    public String getNextSection(CompetitionResource competition, CompetitionSetupSection section) {
+        String sectionPath;
+
+        if (isAlwaysOpenCompetitionEnabled()) {
+            sectionPath = CompetitionSetupSection.APPLICATION_SUBMISSION.getPath();
+        } else {
+            sectionPath = CompetitionSetupSection.MILESTONES.getPath();
+        }
+
+        return format("redirect:/competition/setup/%d/section/%s", competition.getId(), sectionPath));
     }
 }
