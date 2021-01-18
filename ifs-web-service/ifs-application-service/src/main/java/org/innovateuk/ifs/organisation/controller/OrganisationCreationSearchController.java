@@ -3,11 +3,14 @@ package org.innovateuk.ifs.organisation.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
+import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,10 +49,13 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     private static final String ORGANISATION_NAME = "organisationName";
     private static final String MODEL = "model";
 
+    private static final String SEARCH_ORGANISATION = "search-organisation";
+
     @Autowired
     private MessageSource messageSource;
 
-    private static final String SEARCH_ORGANISATION = "search-organisation";
+    @Value("${ifs.new.organisation.search.enabled:false}")
+    private Boolean newOrganisationSearchEnabled;
 
     @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
     public String createOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -63,14 +69,44 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
 
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
-        model.addAttribute(ORGANISATION_FORM, organisationForm);
 
+        return addAttributesAndRedirect(organisationForm, model, user, request);
+    }
+
+    private String addAttributesAndRedirect(OrganisationCreationForm organisationForm, Model model, UserResource user, HttpServletRequest request) {
+        model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel", request.getLocale()));
+        model.addAttribute("additionalLabel", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "AdditionalLabel", request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint", request.getLocale()));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("improvedSearchEnabled", newOrganisationSearchEnabled);
+
         addPageSubtitleToModel(request, user, model);
+
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
+    }
+
+    @GetMapping("/" + EXISTING_ORGANISATION + "/{selectedExistingOrganisationId}")
+    public String searchExistingOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+                                             @PathVariable("selectedExistingOrganisationId") final Long selectedOrganisationId,
+                                             Model model,
+                                             UserResource user,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) {
+        OrganisationResource selectedOrganisation = organisationRestService.getOrganisationById(selectedOrganisationId).getSuccess();
+
+        organisationForm.setSelectedExistingOrganisationId(selectedOrganisation.getId());
+        organisationForm.setOrganisationTypeId(selectedOrganisation.getOrganisationType());
+        organisationForm.setSelectedExistingOrganisationName(selectedOrganisation.getName());
+        organisationForm.setOrganisationSearching(false);
+        organisationForm.setManualEntry(false);
+
+        registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
+
+        model.addAttribute("subtitle", "Your organisation");
+
+        return addAttributesAndRedirect(organisationForm, model, user, request);
     }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION)
@@ -81,7 +117,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         organisationForm.setManualEntry(false);
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
         return "redirect:/organisation/create/" + FIND_ORGANISATION + "?searchTerm=" + escapePathVariable(organisationForm.getOrganisationSearchName());
-
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "/{searchOrganisationId}")
@@ -159,12 +194,19 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
-        String key = String.format("registration.%s.%s", orgTypeEnum.toString(), textKey);
+        boolean improvedSearchEnabled = orgTypeEnum != null
+                && orgTypeEnum != OrganisationTypeEnum.RESEARCH
+                && newOrganisationSearchEnabled;
+
+        String key = improvedSearchEnabled ? String.format("improved.registration.%s", textKey)
+                : String.format("registration.%s.%s", orgTypeEnum.toString(), textKey);
         try {
             return messageSource.getMessage(key, null, locale);
         } catch (NoSuchMessageException e) {
             LOG.error("unable to get message for key: " + key + " and local: " + locale);
-            return messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
+            return messageSource.getMessage(improvedSearchEnabled ? String.format("improved.registration.DEFAULT.%s", textKey)
+                            : String.format("registration.DEFAULT.%s", textKey),
+                    null, locale);
         }
     }
 
