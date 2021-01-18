@@ -150,7 +150,7 @@ Applicant adds another payment milestone
     And the user clicks the button/link                  link = Add another project milestone
     When applicant completes payment milestones          5  Milestone 2  10000   Task Or Activity 2   Deliverable 2   Success Criteria 2
     And the user clicks the button/link                  id = mark-all-as-complete
-    Then applicant views readonly payment milestones     5  £20,000  Milestone 2  24%  24%  £10,000  Task Or Activity 2   Deliverable 2   Success Criteria 2
+    Then applicant views readonly payment milestones     5  £20,000  Milestone 2  86%  100%  £10,000  Task Or Activity 2   Deliverable 2   Success Criteria 2
     And the user clicks the button/link                  link = Your project finances
     And the user should see the element                  jQuery = li:contains("Your payment milestones") > .task-status-complete
 
