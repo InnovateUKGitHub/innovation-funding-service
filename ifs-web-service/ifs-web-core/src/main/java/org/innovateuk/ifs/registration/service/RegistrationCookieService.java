@@ -183,4 +183,11 @@ public class RegistrationCookieService {
         return organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
     }
 
+    public boolean isSelectedExistingOrganisationJourney(HttpServletRequest request) {
+        Optional<OrganisationCreationForm> organisationCreationForm = Optional.ofNullable(
+                getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_FORM), OrganisationCreationForm.class));
+        return organisationCreationForm.isPresent()
+                && (organisationCreationForm.get().getSelectedExistingOrganisationId() != null);
+    }
+
 }
