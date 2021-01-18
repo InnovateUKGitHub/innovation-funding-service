@@ -42,9 +42,11 @@ IFS.manuallyEnter = (function () {
                          '<div class="govuk-grid-column-one-half">' +
                              '<input class="govuk-input govuk-!-width-one-half"' +
                              'id="sicCode"' +
-                              'type="text"/>' +
-                              '</div>' +
-                              '<div>' +
+                             'maxlength="5" ' +
+                             'name = "sicCodes[' + idCount + '].sicCode"' +
+                             'type="text"/>' +
+                             '</div>' +
+                             '<div>' +
                                  '<button class="button-clear alignright" data-remove-row-man="sicCode"' +
                                            'type="button" name="remove-sic-code"' +
                                                'th:value="' + idCount + ' "' +
@@ -81,7 +83,9 @@ IFS.manuallyEnter = (function () {
                                '<div class="govuk-grid-column-one-half">' +
                                    '<input class="govuk-input govuk-!-width-one-half"' +
                                    'id="execOfficer"' +
-                                    'type="text"/>' +
+                                    'type="text" ' +
+                                    'maxlength="255" ' +
+                                    'name = "executiveOfficers[' + idCount + '].name"/>' +
                                     '</div>' +
                                     '<div>' +
                                        '<button class="button-clear alignright" data-remove-row-man="execOfficer"' +

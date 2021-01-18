@@ -41,22 +41,20 @@
                 </th:block>
             </th:block>
 
+            <th:block th:if="${organisationForm.organisationNumber != null}">
+                <dt>Organisation number</dt>
+                <dd th:text="${organisationForm.organisationNumber}"></dd>
+            </th:block>
+
+
             <th:block th:if="${organisationForm.sicCodes != null}">
                 <dt>Sic Code</dt>
-                <tbody class="govuk-table__head">
-                <tr class="govuk-table__row" th:each="sicCode : ${organisationForm.sicCodes}">
-                    <td class="govuk-table__cell" th:text="${sicCode.sicCode}"></td>
-                </tr>
-                </tbody>
+                <dd th:each="sicCode : ${organisationForm.sicCodes}" th:text="${sicCode.sicCode}"></dd>
             </th:block>
 
             <th:block th:if="${organisationForm.executiveOfficers != null}">
                 <dt>Executive Officers</dt>
-                <tbody class="govuk-table__head">
-                <tr class="govuk-table__row" th:each="execOfficer : ${organisationForm.executiveOfficers}">
-                    <td class="govuk-table__cell" th:text="${execOfficer.name}"></td>
-                </tr>
-                </tbody>
+                <dd th:each="execOfficer : ${organisationForm.executiveOfficers}" th:text="${execOfficer.name}"></dd>
             </th:block>
 
 

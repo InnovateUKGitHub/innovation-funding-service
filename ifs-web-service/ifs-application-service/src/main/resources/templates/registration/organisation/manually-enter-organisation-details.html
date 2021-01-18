@@ -14,7 +14,7 @@
         <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+            <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)"/>
         </div>
 
         <th:block th:insert="fragments/layout :: page-title"
@@ -33,8 +33,7 @@
             slow down the application process, which could delay your funding payments.</p>
         <form th:object="${organisationForm}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
-              method="post"
-              novalidate="novalidate">
+              method="post">
             <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
@@ -49,36 +48,28 @@
                 <input class="govuk-input govuk-!-width-one-half"
                        id="name"
                        th:field="*{organisationName}"
-                       th:attr="data-required-errormessage=#{validation.standard.organisationName.required}"
+                       th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"
                        type="text" required="required"/>
 
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationNumber}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s"
-                       for="name">
+                <label class="govuk-label govuk-label--s" for="name">
                     Organisation number
                 </label>
                 <div class="govuk-hint"><small>Enter your organisation’s unique identification number, such as your HMRC
                     Unique Taxpayer Reference (UTR), UK charity number or other unique reference number.</small></div>
-                <span class="govuk-error-message"
-                      th:if="${#fields.hasErrors('*{organisationNumber}')}"
-                      th:errors="*{organisationNumber}"></span>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="number"
                        th:field="*{organisationNumber}"
                        type="text"/>
             </div>
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('*{businessType}')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group">
                 <label class="govuk-label govuk-label--s"
                        for="name">
                     Business type
                 </label>
                 <div class="govuk-hint"><small>For example: charity, partnership, sole trader.</small></div>
-                <span class="govuk-error-message"
-                      th:if="${#fields.hasErrors('*{businessType}')}"
-                      th:errors="*{businessType}"></span>
                 <input class="govuk-input govuk-!-width-one-half"
                        id="busType"
                        th:field="*{businessType}"
@@ -88,10 +79,9 @@
                 SIC code
             </label>
             <div class="govuk-hint">Enter your 5 digit Standard Industrial Classification code.</div>
-            <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row" th:id="'sic-code-row-'+${iteration.index}">
+            <div th:each="(sic-code, iteration : ${organisationForm.sicCodes})" class="govuk-grid-row sic-code-row govuk-!-margin-top-6" th:id="'sic-code-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
-                        <input class="govuk-input govuk-!-width-one-half"
-                               id="sicCode"
+                        <input id="sicCode" class="govuk-input govuk-!-width-one-half"
                                type="text"
                                th:field="${organisationForm.sicCodes[__${iteration.index}__].sicCode}"
                                maxlength="5"/>
@@ -104,10 +94,9 @@
                 Executive officers
             </label>
             <div class="govuk-hint">Enter the first and last names of all company directors, if your organisation has any.</div>
-            <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row" th:id="'exec-officer-row-'+${iteration.index}">
+            <div th:each="(exec-officer, iteration : ${organisationForm.executiveOfficers})" class="govuk-grid-row exec-officer-row govuk-!-margin-top-6" th:id="'exec-officer-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
-                    <input class="govuk-input govuk-!-width-one-half"
-                           id="execOfficer"
+                    <input id="execOfficer" class="govuk-input govuk-!-width-one-half"
                            th:field="${organisationForm.executiveOfficers[__${iteration.index}__].name}"
                            maxlength="255"
                            type="text"/>
@@ -120,7 +109,7 @@
                 Registered address
             </label>
             <th:block th:if="${#fields.hasErrors('addressForm.manualAddress.postcode')}">
-                <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.manualAddress.postcode')}" th:text="${err}"></span>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationForm.addressForm.manualAddress.postcode')}" th:text="${err}"></span>
             </th:block>
                 <div id="custom-postcode" class="govuk-body">
                     <th:block th:insert="fragments/addresses :: address-details" th:with="form=${organisationForm},addressType=${'organisation address'}" />
