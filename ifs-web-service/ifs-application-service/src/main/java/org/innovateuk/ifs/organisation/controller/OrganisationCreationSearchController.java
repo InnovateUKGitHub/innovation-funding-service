@@ -205,19 +205,6 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
     }
 
-    @GetMapping("/" + SELECTED_ORGANISATION_MANUAL)
-    public String getSelectedManual(@ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                          Model model,
-                                                          HttpServletRequest request,
-                                                          HttpServletResponse response,
-                                                          UserResource user) {
-
-        addOrganisationType(organisationForm, organisationTypeIdFromCookie(request));
-
-        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION; // here go to save
-    }
-
-
     @PostMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "/**"}, params = SAVE_ORGANISATION_DETAILS)
     public String manualOrganisationSave(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                          BindingResult bindingResult,

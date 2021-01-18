@@ -62,7 +62,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     }
 
     @PostMapping("/save-organisation")
-    public String saveOrganisation(@Valid @ModelAttribute(name = ORGANISATION_FORM,binding = false) OrganisationCreationForm organisationForm,
+    public String saveOrganisation(@Valid @ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                    Model model,
                                    UserResource user,
                                    HttpServletRequest request,
