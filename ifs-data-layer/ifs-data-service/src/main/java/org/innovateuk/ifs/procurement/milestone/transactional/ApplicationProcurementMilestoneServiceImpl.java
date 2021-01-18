@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.procurement.milestone.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -25,6 +28,9 @@ public class ApplicationProcurementMilestoneServiceImpl
 
     @Autowired
     private ApplicationProcurementMilestoneRepository repository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
@@ -51,5 +57,11 @@ public class ApplicationProcurementMilestoneServiceImpl
                 .stream()
                 .map(mapper::mapToResource)
                 .collect(toList()));
+    }
+
+    @Override
+    public ServiceResult<Optional<Integer>> findMaxMilestoneMonth(long applicationId) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturn(Application::getMaxMilestoneMonth);
     }
 }

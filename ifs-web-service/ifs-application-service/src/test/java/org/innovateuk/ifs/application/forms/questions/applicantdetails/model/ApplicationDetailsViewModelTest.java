@@ -29,7 +29,7 @@ public class ApplicationDetailsViewModelTest {
                 .withInnovationArea(innovationAreaResource).build();
 
         ApplicationDetailsViewModel viewModel = new ApplicationDetailsViewModel(applicationResource, competitionResource,
-                false, false);
+                false, false, 0);
 
         assertTrue(viewModel.isKtpCompetition());
     }
