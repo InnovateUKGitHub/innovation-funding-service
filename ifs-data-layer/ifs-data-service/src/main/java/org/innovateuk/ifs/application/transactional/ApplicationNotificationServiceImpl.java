@@ -172,8 +172,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         notification = horizon2020GrantTransferNotification(from, to, application);
                     } else if (LOAN.equals(competition.getFundingType())) {
                         notification = loanApplicationSubmitNotification(from, to, application, competition);
-                    } else if (competition.isHeukar()) {
-                        notification = heukarNotification(from, to, application, competition);
                     } else {
                         notification = applicationSubmitNotification(from, to, application, competition);
                     }
@@ -259,20 +257,6 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
-    private Notification heukarNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
-        Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("applicationName", application.getName());
-        notificationArguments.put("applicationId", application.getId());
-        notificationArguments.put("competitionName", competition.getName());
-
-        return new Notification(
-                from,
-                to,
-                Notifications.HEUKAR_APPLICATION_SUBMITTED,
-                notificationArguments
-        );
-    }
-
     private Notification applicationSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
@@ -287,12 +271,12 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         );
     }
 
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         KTP_APPLICATION_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_2020_APPLICATION_SUBMITTED,
-        HEUKAR_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
         LOANS_APPLICATION_SUBMITTED,
         REOPEN_APPLICATION_PARTNER,

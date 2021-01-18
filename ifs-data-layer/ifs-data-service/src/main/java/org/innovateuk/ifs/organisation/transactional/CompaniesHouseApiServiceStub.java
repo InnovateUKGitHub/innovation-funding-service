@@ -269,7 +269,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "plc",
                 "1995-03-31",
                 "SC157176 - Incorporated on 31 March 1995",
-                asList("49100", "49100"),
+                asList("49100", "49319"),
                 asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
                         "MARTIN, David Robert","ROBBIE, David Andrew"));
        }
