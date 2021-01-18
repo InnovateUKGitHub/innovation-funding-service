@@ -141,19 +141,28 @@ Payment milestones validations: payment milestone cost is more than project cost
 Applicant adds a first payment milestone
     [Documentation]  IFS-8938
     Given applicant fills in payment milestones          1  Milestone 1  10000   Task Or Activity 1   Deliverable 1   Success Criteria 1
-    #When the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
-    # TODO remove this after ise fixed
-    When the user clicks the button/link                 link = Your project finances
+    When the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
     Then applicant views readonly payment milestones     1  £10,000  Milestone 1  14%  14%  £10,000  Task Or Activity 1   Deliverable 1   Success Criteria 1
 
 Applicant adds another payment milestone
     [Documentation]  IFS-8938
-    Given
-    And applicant fills in payment milestones            1  Milestone 1  10000   Task Or Activity 1   Deliverable 1   Success Criteria 1
-    When the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
-    Then applicant views readonly payment milestones     1  £10,000  Milestone 1  14%  14%  £10,000  Task Or Activity 1   Deliverable 1   Success Criteria 1
+    Given the user clicks the button/link                link = Your payment milestones
+    And the user clicks the button/link                  link = Add another project milestone
+    When applicant completes payment milestones          5  Milestone 2  10000   Task Or Activity 2   Deliverable 2   Success Criteria 2
+    And the user clicks the button/link                  id = mark-all-as-complete
+    Then applicant views readonly payment milestones     5  £20,000  Milestone 2  24%  24%  £10,000  Task Or Activity 2   Deliverable 2   Success Criteria 2
     And the user clicks the button/link                  link = Your project finances
     And the user should see the element                  jQuery = li:contains("Your payment milestones") > .task-status-complete
+
+Applicant can edit and remove the payment milestone
+    [Documentation]  IFS-8938
+    Given the user clicks the button/link           link = Your payment milestones
+    When the user clicks the button/link            jQuery = button:contains("Edit your payment milestones")
+    And the user clicks the button/link             link = Add another project
+    And the user enters text to a text field        css = input[id^="milestones"][id$="description"]   Milestone to remove
+    And the user clicks the button/link             jQuery = div[id='accordion-finances'] div:nth-of-type(4) .js-remove-row:contains("Remove")
+    Then the user should not see the element        jQuery = div h4:contains("Milestone") ~ div button:contains("Milestone to remove")
+    [Teardown]  the user clicks the button/link     id = mark-all-as-complete
 
 Awaiting assessment status should not display for SBRI submitted applications
     [Documentation]  IFS-7314
