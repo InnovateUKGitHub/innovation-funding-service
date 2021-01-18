@@ -174,5 +174,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
+
 }
 
