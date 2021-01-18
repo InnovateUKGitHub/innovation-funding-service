@@ -21,9 +21,9 @@ public class CompaniesHouseController {
     @Autowired
     private CompaniesHouseApiService companiesHouseService;
 
-    @GetMapping("/search/{searchText}")
-    public RestResult<List<OrganisationSearchResult>> search(@PathVariable("searchText") final String searchText) {
-        return companiesHouseService.searchOrganisations(searchText).toGetResponse();
+    @GetMapping("/search/{searchText}/{indexPos}")
+    public RestResult<List<OrganisationSearchResult>> search(@PathVariable("searchText") final String searchText, @PathVariable("indexPos") final int indexPos) {
+        return companiesHouseService.searchOrganisations(searchText, indexPos).toGetResponse();
     }
 
     @GetMapping("/company/{id}")
