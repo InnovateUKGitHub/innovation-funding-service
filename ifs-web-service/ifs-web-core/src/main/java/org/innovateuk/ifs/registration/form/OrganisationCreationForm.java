@@ -16,7 +16,8 @@ import java.util.List;
  * Object to store the data that is used for the companies house form, while creating a new application.
  */
 
-@FieldRequiredIf(required = "organisationSearchName", argument = "organisationSearching", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchDisabled", predicate = true, message = "{validation.standard.organisationsearchname.required}")
+@FieldRequiredIf(required = "organisationSearchName", argument = "improvedSearchEnabled", predicate = true, message = "{validation.improved.organisationsearchname.required}")
 @FieldRequiredIf(required = "organisationName", argument = "manualEntry", predicate = true, message = "{validation.standard.organisationname.required}")
 public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
@@ -29,6 +30,9 @@ public class OrganisationCreationForm implements Serializable {
     private boolean manualEntry = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     private String organisationName;
+    private Boolean newOrganisationSearchEnabled;
+    private Long selectedExistingOrganisationId;
+    private String selectedExistingOrganisationName;
 
     public OrganisationCreationForm() {
         this.organisationSearchResults = new ArrayList<>();
@@ -116,6 +120,48 @@ public class OrganisationCreationForm implements Serializable {
     @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
         return OrganisationTypeEnum.getFromId(organisationTypeId);
+    }
+
+    public void setNewOrganisationSearchEnabled(boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
+    }
+
+    public boolean isNewOrganisationSearchEnabled() {
+        return newOrganisationSearchEnabled;
+    }
+
+    public Boolean getNewOrganisationSearchEnabled() {
+        return newOrganisationSearchEnabled;
+    }
+
+    public void setNewOrganisationSearchEnabled(Boolean newOrganisationSearchEnabled) {
+        this.newOrganisationSearchEnabled = newOrganisationSearchEnabled;
+    }
+
+    public Long getSelectedExistingOrganisationId() {
+        return selectedExistingOrganisationId;
+    }
+
+    public void setSelectedExistingOrganisationId(Long selectedExistingOrganisationId) {
+        this.selectedExistingOrganisationId = selectedExistingOrganisationId;
+    }
+
+    public String getSelectedExistingOrganisationName() {
+        return selectedExistingOrganisationName;
+    }
+
+    public void setSelectedExistingOrganisationName(String selectedExistingOrganisationName) {
+        this.selectedExistingOrganisationName = selectedExistingOrganisationName;
+    }
+
+    @JsonIgnore
+    public boolean isImprovedSearchDisabled() {
+        return isOrganisationSearching() && !isNewOrganisationSearchEnabled();
+    }
+
+    @JsonIgnore
+    public boolean isImprovedSearchEnabled() {
+        return isOrganisationSearching() && isNewOrganisationSearchEnabled();
     }
 
     @Override
