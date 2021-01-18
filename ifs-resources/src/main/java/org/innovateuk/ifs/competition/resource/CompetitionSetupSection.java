@@ -23,22 +23,22 @@ public enum CompetitionSetupSection {
     TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Terms and conditions", emptyList(), false),
     ADDITIONAL_INFO(3L, "additional", "Funding information", emptyList(), true),
     PROJECT_ELIGIBILITY(4L, "project-eligibility", "Project eligibility", emptyList(), false),
-    COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, Optional.empty()),
-    APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, Optional.empty()),
-    MILESTONES(5L, "milestones", "Milestones", emptyList(), true, Optional.of(asList(COMPLETION_STAGE, APPLICATION_SUBMISSION))),
+    COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, emptyList()),
+    APPLICATION_SUBMISSION(15L, "application-submission", "Milestones", emptyList(), false, emptyList()),
+    MILESTONES(5L, "milestones", "Milestones", emptyList(), true, asList(COMPLETION_STAGE, APPLICATION_SUBMISSION)),
     APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS, KTP_ASSESSMENT), false),
     ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
     CONTENT(8L, "content", "Public content", emptyList(), true),
     PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
     ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false),
     FUNDING_ELIGIBILITY(13L, "funding-eligibility", "Funding eligibility", emptyList(), false),
-    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false, Optional.of(asList(FUNDING_ELIGIBILITY)));
+    FUNDING_LEVEL_PERCENTAGE(14L, "funding-level-percentage", "Funding level percentage", emptyList(), false,asList(FUNDING_ELIGIBILITY));
 
     private Long id;
     private String path;
     private String name;
     private List<CompetitionSetupSubsection> subsections;
-    private Optional<List<CompetitionSetupSection>> previousSection;
+    private List<CompetitionSetupSection> previousSection;
 
     private boolean editableAfterSetupAndLive;
 
@@ -52,13 +52,13 @@ public enum CompetitionSetupSection {
     }
 
     CompetitionSetupSection(Long id, String sectionPath, String sectionName, List<CompetitionSetupSubsection> subsections, boolean editableAfterSetupAndLive) {
-        this(id, sectionPath, sectionName, subsections, editableAfterSetupAndLive, Optional.empty());
+        this(id, sectionPath, sectionName, subsections, editableAfterSetupAndLive, emptyList());
     }
 
     CompetitionSetupSection(Long id, String sectionPath,
                             String sectionName, List<CompetitionSetupSubsection> subsections,
                             boolean editableAfterSetupAndLive,
-                            Optional<List<CompetitionSetupSection>> previousSection) {
+                            List<CompetitionSetupSection> previousSection) {
         this.id = id;
         this.path = sectionPath;
         this.name = sectionName;
@@ -125,17 +125,15 @@ public enum CompetitionSetupSection {
         return getPath();
     }
 
-    public Optional<List<CompetitionSetupSection>> getPreviousSection() {
+    public List<CompetitionSetupSection> getPreviousSection() {
         return previousSection;
     }
 
     public Optional<CompetitionSetupSection> getNextSection() {
 
         return simpleFindFirst(CompetitionSetupSection.values(), section ->
-                section.getPreviousSection()
-                        .map(competitionSetupSections -> competitionSetupSections.stream()
-                                .anyMatch(competitionSetupSection -> competitionSetupSection.equals(this)))
-                        .orElse(false));
+                section.getPreviousSection().stream()
+                        .anyMatch(competitionSetupSection -> competitionSetupSection.equals(this)));
     }
 
     public List<CompetitionSetupSection> getAllNextSections() {
