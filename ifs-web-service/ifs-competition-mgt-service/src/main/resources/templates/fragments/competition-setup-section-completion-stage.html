@@ -19,7 +19,8 @@
                         </h1>
                     </legend>
                     <span id="completion-stage-hint" class="govuk-hint">
-                        Select the stage at which the competition is complete for Innovate UK.
+                        <th:block th:unless="${model.alwaysOpenCompetitionEnabled}">Select the stage at which the competition is complete for Innovate UK.</th:block>
+                        <th:block th:if="${model.alwaysOpenCompetitionEnabled}">Select the stage at which applications are complete.</th:block>
                     </span>
                     <span th:if="${#fields.hasErrors('selectedCompletionStage')}" class="govuk-error-message"
                           th:each="err : ${#fields.errors('selectedCompletionStage')}" th:text="${err}"/>
@@ -51,7 +52,8 @@
     <th:block th:unless="${model.general.editable}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Completion stage',size='govuk-heading-xl'" />
         <p class="govuk-body">
-            The current stage for completion is
+            <th:block th:unless="${model.alwaysOpenCompetitionEnabled}">The current stage for completion is </th:block>
+            <th:block th:if="${model.alwaysOpenCompetitionEnabled}">The completion stage for applications is </th:block>
             <strong th:text="${competitionSetupForm.selectedCompletionStage.displayName}"></strong>.
         </p>
         <form th:action="@{('completion-stage/edit')}" method="post">

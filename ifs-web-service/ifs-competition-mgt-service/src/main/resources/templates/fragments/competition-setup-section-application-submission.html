@@ -52,7 +52,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application submission',size='govuk-heading-xl'" />
         <p class="govuk-body">
             Will this be an open-ended competition?
-            <strong th:text="${competitionSetupForm.alwaysOpen.toString()}"></strong>.
+            <strong th:text="${competitionSetupForm.alwaysOpen} ? 'Yes' : 'No'"></strong>.
         </p>
         <form th:action="@{('application-submission/edit')}" method="post">
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
