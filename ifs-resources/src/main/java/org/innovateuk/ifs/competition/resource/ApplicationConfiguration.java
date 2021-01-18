@@ -23,8 +23,6 @@ public interface ApplicationConfiguration {
 
     boolean isKtp();
 
-    boolean isHeukar();
-
     boolean isExpressionOfInterest();
 
     Boolean getIncludeJesForm();
@@ -33,11 +31,13 @@ public interface ApplicationConfiguration {
 
     boolean isSbriPilot();
 
-    default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> dbMaximumFundingLevelConstant) {
+    boolean isProcurementMilestones();
+
+    default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> maximumFundingLevelOverridden) {
         return LOAN == getFundingType() ||
                 isFullyFunded() ||
                 BUSINESS != organisationType.get() ||
-                dbMaximumFundingLevelConstant.get();
+                maximumFundingLevelOverridden.get();
     }
 
     FundingType getFundingType();

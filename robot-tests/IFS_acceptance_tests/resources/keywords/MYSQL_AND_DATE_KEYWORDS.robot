@@ -8,7 +8,7 @@ Resource          ../defaultResources.robot
 the assessment start period changes in the db in the past
     [Arguments]   ${competition_id}
     ${yesterday} =    get yesterday
-    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}'), ('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
+    execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     reload page
 
@@ -225,6 +225,13 @@ get table id by email
     ${result} =  get from list  ${result}  0
     ${id} =      get from list  ${result}  0
     [Return]  ${id}
+
+get table count by id
+    [Arguments]  ${table}  ${filterVal}  ${id}
+    ${result} =  query  SELECT COUNT(*) FROM `${database_name}`.`${table}` WHERE `${filterVal}` = '${id}';
+    ${result} =  get from list  ${result}  0
+    ${count} =   get from list  ${result}  0
+    [Return]  ${count}
 
 # The below keyword gets date from first selector and checks if it is greater than the date from second selector
 # For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.

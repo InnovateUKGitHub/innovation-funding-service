@@ -20,7 +20,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
-import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneBuilder.newProjectProcurementMilestoneResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +47,7 @@ public class ProjectProcurementMilestoneServiceImplTest {
         List<ProjectProcurementMilestone> domains = newArrayList(new ProjectProcurementMilestone());
         List<ProjectProcurementMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
 
-        when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationId(projectId, organisationId))
+        when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(projectId, organisationId))
                 .thenReturn(domains);
         when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
 

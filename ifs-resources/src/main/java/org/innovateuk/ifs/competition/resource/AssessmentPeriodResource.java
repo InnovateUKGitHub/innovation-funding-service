@@ -3,15 +3,15 @@ package org.innovateuk.ifs.competition.resource;
 public class AssessmentPeriodResource {
 
     private Long id;
-    private String name;
+    private Integer index;
     private Long competitionId;
 
     public AssessmentPeriodResource() {
     }
 
-    public AssessmentPeriodResource(Long competitionId, String name) {
+    public AssessmentPeriodResource(Long competitionId, Integer index) {
         this.competitionId = competitionId;
-        this.name = name;
+        this.index = index;
     }
 
     public Long getId() {
@@ -22,12 +22,12 @@ public class AssessmentPeriodResource {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getIndex() {
+        return index;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public Long getCompetitionId() {
