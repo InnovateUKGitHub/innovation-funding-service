@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -17,23 +18,21 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import static java.util.Collections.singleton;
+import static java.util.Optional.empty;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +53,8 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
     @Mock
     private ProcessRoleRestService processRoleRestService;
 
+    @Mock
+    private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
 
     @Test
     public void populate() {
@@ -86,6 +87,7 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
         when(questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId())).thenReturn(completedFuture(singleton(questionId)));
+        when(applicationProcurementMilestoneRestService.findMaxByApplicationId(application.getId())).thenReturn(restSuccess(empty()));
 
         ApplicationDetailsViewModel viewModel = populator.populate(application, questionId, user);
 

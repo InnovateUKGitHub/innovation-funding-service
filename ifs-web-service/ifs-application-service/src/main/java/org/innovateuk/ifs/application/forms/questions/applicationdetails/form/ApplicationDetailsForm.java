@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.util.DateUtil;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -34,7 +33,6 @@ public class ApplicationDetailsForm {
     private LocalDate startDate;
 
     @NotNull
-    @Min(value = 1, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
     private Boolean resubmission;
