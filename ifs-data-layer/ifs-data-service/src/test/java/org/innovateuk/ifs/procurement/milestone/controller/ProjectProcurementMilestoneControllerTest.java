@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneBuilder.newProjectProcurementMilestoneResource;
+import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,6 +37,22 @@ public class ProjectProcurementMilestoneControllerTest extends BaseControllerMoc
                 .andExpect(jsonPath("$.[0].deliverable", is("Deliverable")));
 
         verify(projectProcurementMilestoneService).getByProjectIdAndOrganisationId(projectId, organisationId);
+    }
+
+    @Test
+    public void getByProjectId() throws Exception {
+        long projectId = 1L;
+        List<ProjectProcurementMilestoneResource> resource = newProjectProcurementMilestoneResource()
+                .withDeliverable("Deliverable")
+                .build(1);
+
+        when(projectProcurementMilestoneService.getByProjectId(projectId)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/project-procurement-milestone/project/{projectId}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].deliverable", is("Deliverable")));
+
+        verify(projectProcurementMilestoneService).getByProjectId(projectId);
     }
 
     @Override

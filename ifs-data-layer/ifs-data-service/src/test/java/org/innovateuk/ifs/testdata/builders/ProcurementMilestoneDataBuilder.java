@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.testdata.builders.data.ProcurementMilestoneData;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -98,38 +97,8 @@ public class ProcurementMilestoneDataBuilder extends BaseDataBuilder<Procurement
                 }
                 runningTotal[0] = runningTotal[0].add(milestone.getPayment());
 
-                ApplicationProcurementMilestoneResource resource = applicationProcurementMilestoneService.create(milestone).getSuccess();
-
-                applicationProcurementMilestoneService.delete(ApplicationProcurementMilestoneId.of(resource.getId())).getSuccess();
+                applicationProcurementMilestoneService.create(milestone).getSuccess();
             });
-        });
-    }
-
-
-    public ProcurementMilestoneDataBuilder markAsComplete(boolean markAsComplete, boolean updateApplicationCompleteStatus) {
-        return doAsUser(data -> {
-            //TODO fill out once we have a milestone question
-//            if (markAsComplete) {
-//                List<QuestionResource> questions = questionService
-//                        .findByCompetition(data.getCompetition().getId())
-//                        .getSuccess();
-//
-//                List<QuestionResource> questionsToComplete = simpleFilter(questions, QuestionResource::hasMultipleStatuses);
-//
-//                forEachWithIndex(questionsToComplete, (i, q) -> {
-//                    QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId());
-//                    Long processRoleId = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(data.getUser().getId(), applicantProcessRoles(),
-//                            data.getApplication().getId()).getId();
-//
-//                    boolean lastElement = i == questions.size() - 1;
-//
-//                    if (lastElement && updateApplicationCompleteStatus) {
-//                        questionStatusService.markAsComplete(questionKey, processRoleId).getSuccess();
-//                    } else {
-//                        testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
-//                    }
-//                });
-//            }
         });
     }
 
