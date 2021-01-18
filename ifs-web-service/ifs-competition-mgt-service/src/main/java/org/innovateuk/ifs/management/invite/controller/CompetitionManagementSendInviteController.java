@@ -194,7 +194,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
 
     private void setInviteSubjectContent(SendInviteForm form, AssessorInvitesToSendResource invites, boolean alwaysOpen) {
         if (alwaysOpen) {
-            form.setSubject(format("Invitation to be an assessor for competition '%s'", invites.getCompetitionName()));
+            form.setSubject(format("Invitation to be an assessor for competition: '%s'", invites.getCompetitionName()));
         } else {
             form.setSubject(format("Invitation to assess '%s'", invites.getCompetitionName()));
         }

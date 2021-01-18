@@ -100,7 +100,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(alwaysOpenCompetition));
 
         SendInviteForm expectedForm = new SendInviteForm();
-        expectedForm.setSubject("Invitation to be an assessor for competition 'Photonics for health'");
+        expectedForm.setSubject("Invitation to be an assessor for competition: 'Photonics for health'");
 
         SendInvitesViewModel expectedViewModel = new SendInvitesViewModel(competitionId, "Photonics for health", singletonList( "Jessica Doe"), "Readonly content");
 

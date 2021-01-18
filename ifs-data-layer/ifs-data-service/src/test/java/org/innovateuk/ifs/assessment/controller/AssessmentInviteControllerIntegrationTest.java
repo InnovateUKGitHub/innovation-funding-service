@@ -124,6 +124,8 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         loginSystemRegistrationUser();
 
         competition = competitionRepository.findById(1L).orElse(null);
+        competition.setAlwaysOpen(false);
+        competitionRepository.save(competition);
 
         List<Profile> profiles = newProfile()
                 .withId()
@@ -142,6 +144,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         ktpCompetition = competitionRepository.save(newCompetition()
                 .withId(null)
                 .withFundingType(FundingType.KTP)
+                .withAlwaysOpen(false)
                 .build());
     }
 
