@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -25,7 +26,6 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -95,7 +95,7 @@ public class InitialDetailsFormPopulatorTest {
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionType(4L)
 				.withExecutive(5L)
-				.withInnovationAreas(asSet(6L, 7L))
+				.withInnovationAreas(ImmutableSet.of(6L, 7L))
 				.withLeadTechnologist(7L)
 				.withStartDate(ZonedDateTime.of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault()))
 				.withCompetitionCode("code")

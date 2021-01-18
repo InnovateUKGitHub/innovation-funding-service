@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.stream.Collectors.toList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -70,8 +71,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
                 .flatMap(x -> x.getCompetition().isKtp()
-                        ? x.getProcessRolesByRoles(asSet(Role.KNOWLEDGE_TRANSFER_ADVISER)).stream()
-                        : x.getProcessRolesByRoles(asSet(Role.LEADAPPLICANT, Role.COLLABORATOR)).stream())
+                        ? x.getProcessRolesByRoles(ImmutableSet.of(Role.KNOWLEDGE_TRANSFER_ADVISER)).stream()
+                        : x.getProcessRolesByRoles(ImmutableSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR)).stream())
                 .collect(Collectors.toList());
 
         for (ProcessRole applicant : applicants) {

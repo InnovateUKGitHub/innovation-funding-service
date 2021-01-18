@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationQuestionReadOnlyViewModel;
@@ -43,7 +44,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toCollection;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 @Component
@@ -169,7 +169,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
     //Currently only theA finance section has child sections.
     private ApplicationSectionReadOnlyViewModel sectionWithChildren(SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
         ApplicationQuestionReadOnlyViewModel finance = financeSummaryViewModelPopulator.populate(data);
-        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, asSet(finance));
+        return new ApplicationSectionReadOnlyViewModel(section.getName(), true, ImmutableSet.of(finance));
     }
 
     private ApplicationQuestionReadOnlyViewModel populateQuestionViewModel(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {

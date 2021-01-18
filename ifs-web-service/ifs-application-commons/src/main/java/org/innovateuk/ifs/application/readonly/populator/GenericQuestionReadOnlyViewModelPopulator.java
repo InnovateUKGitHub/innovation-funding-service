@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
+import com.google.common.collect.ImmutableSet;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionFileViewModel;
@@ -19,7 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -180,6 +180,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT);
+        return ImmutableSet.of(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION, KTP_ASSESSMENT);
     }
 }
