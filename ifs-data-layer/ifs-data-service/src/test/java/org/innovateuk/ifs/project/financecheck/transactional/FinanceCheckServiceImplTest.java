@@ -274,19 +274,19 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
         assertEquals(ViabilityState.NOT_APPLICABLE, organisation1Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation1Results.getViabilityRagStatus());
-        assertEquals(PaymentMilestoneState.REVIEW, organisation1Results.getPaymentMilestoneState().get());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation1Results.getPaymentMilestoneState());
         assertFalse(organisation1Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
         assertEquals(ViabilityState.APPROVED, organisation2Results.getViability());
         assertEquals(ViabilityRagStatus.AMBER, organisation2Results.getViabilityRagStatus());
-        assertEquals(PaymentMilestoneState.REVIEW, organisation2Results.getPaymentMilestoneState().get());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation2Results.getPaymentMilestoneState());
         assertTrue(organisation2Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(ViabilityState.REVIEW, organisation3Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation3Results.getViabilityRagStatus());
-        assertEquals(PaymentMilestoneState.REVIEW, organisation3Results.getPaymentMilestoneState().get());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation3Results.getPaymentMilestoneState());
         assertFalse(organisation3Results.isAwaitingResponse());
     }
 
@@ -1373,33 +1373,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         ServiceResult<PaymentMilestoneResource> result = service.getPaymentMilestone(projectOrganisationCompositeId);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void viewPaymentMilestone() {
-        Competition competition = newCompetition().build();
-        Application application = newApplication().withCompetition(competition).build();
-        Project project = newProject().withApplication(application).build();
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
-                .withProject(project)
-                .withOrganisation(newOrganisation()
-                        .withOrganisationType(BUSINESS)
-                        .build())
-                .build();
-
-        User user = newUser().withId(1l).build();
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
-
-        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-
-        ServiceResult<Boolean> result = service.viewPaymentMilestone(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
     }
