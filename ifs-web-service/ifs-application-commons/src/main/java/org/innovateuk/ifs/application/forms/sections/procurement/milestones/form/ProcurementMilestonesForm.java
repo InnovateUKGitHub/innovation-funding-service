@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class ProcurementMilestonesForm {
@@ -25,7 +26,7 @@ public class ProcurementMilestonesForm {
     public ProcurementMilestonesForm(Map<String, ProcurementMilestoneForm> milestones) {
         this.milestones = milestones;
         if (this.milestones.isEmpty()) {
-            this.milestones.put(generateUnsavedRowId(), new ProcurementMilestoneForm());
+            this.milestones.put(generateUnsavedRowId(), new ProcurementMilestoneForm("Milestone 1"));
         }
     }
 
@@ -48,6 +49,7 @@ public class ProcurementMilestonesForm {
     public BigInteger getTotalPayments() {
         return milestones.values().stream()
                 .map(ProcurementMilestoneForm::getPayment)
+                .filter(Objects::nonNull)
                 .reduce(BigInteger.ZERO, BigInteger::add);
     }
 

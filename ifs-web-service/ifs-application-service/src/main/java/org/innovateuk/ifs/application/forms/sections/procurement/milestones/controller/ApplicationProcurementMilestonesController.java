@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.sections.procurement.milestones.con
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
@@ -41,6 +43,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "Applicants can update procurement milestones.")
 public class ApplicationProcurementMilestonesController {
     private static final String VIEW = "application/sections/procurement-milestones/application-procurement-milestones";
+    private static final Log LOG = LogFactory.getLog(ApplicationProcurementMilestonesController.class);
 
     @Autowired
     private ProcurementMilestoneFormPopulator formPopulator;
@@ -84,7 +87,11 @@ public class ApplicationProcurementMilestonesController {
                                  @PathVariable long organisationId,
                                  @PathVariable long sectionId,
                                  @ModelAttribute("form") ProcurementMilestonesForm form) {
-        saver.save(form, applicationId, organisationId).getSuccess();
+        try {
+            saver.save(form, applicationId, organisationId).getSuccess();
+        } catch (Exception e) {
+            LOG.error(e);
+        }
         return redirectToYourFinances(applicationId);
     }
 
@@ -141,8 +148,7 @@ public class ApplicationProcurementMilestonesController {
                              @PathVariable long organisationId,
                              @PathVariable long sectionId,
                              @ModelAttribute("form") ProcurementMilestonesForm form) {
-
-        saver.addRowForm(form, form.getMilestones().size());
+        saver.addRowForm(form);
         return viewMilestones(model, form, user, applicationId, organisationId, sectionId);
     }
 
@@ -169,22 +175,20 @@ public class ApplicationProcurementMilestonesController {
         return new ObjectMapper().createObjectNode();
     }
 
-    @PostMapping("add-row/{index}")
+    @PostMapping("add-row")
     public String ajaxAddRow(Model model,
                              UserResource user,
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
-                             @PathVariable long sectionId,
-                             @PathVariable int index) {
+                             @PathVariable long sectionId) {
         ProcurementMilestonesForm form = new ProcurementMilestonesForm();
-        saver.addRowForm(form, index);
+        saver.addRowForm(form);
         Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
 
         model.addAttribute("form", form);
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
         model.addAttribute("id", entry.getKey());
         model.addAttribute("row", entry.getValue());
-        model.addAttribute("index", index);
         return "application/procurement-milestones :: ajax-milestone-row";
     }
 

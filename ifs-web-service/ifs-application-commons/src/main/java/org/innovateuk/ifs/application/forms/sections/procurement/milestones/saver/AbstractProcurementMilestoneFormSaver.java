@@ -7,7 +7,6 @@ import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneRes
 import org.innovateuk.ifs.procurement.milestone.service.ProcurementMilestoneRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,9 +46,8 @@ public abstract class AbstractProcurementMilestoneFormSaver<R extends Procuremen
             return service.delete(Long.parseLong(removeId)).toServiceResult();
         }
     }
-    public void addRowForm(ProcurementMilestonesForm form, int index) {
-        ProcurementMilestoneForm row = new ProcurementMilestoneForm(index);
-        row.setPayment(BigInteger.ZERO);
+    public void addRowForm(ProcurementMilestonesForm form) {
+        ProcurementMilestoneForm row = new ProcurementMilestoneForm();
         form.getMilestones().put(generateUnsavedRowId(), row);
     }
 

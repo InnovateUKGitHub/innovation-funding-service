@@ -200,13 +200,14 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
     private CompletableFuture<ValidationMessages> saveVat(VatForm vatForm, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
-            VatCostCategory vatCategory = (VatCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
-            Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
+            if (vatForm.getRegistered() != null) {
+                VatCostCategory vatCategory = (VatCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.VAT);
+                Vat vatCost = (Vat) vatCategory.getCosts().stream().findFirst().get();
 
-            vatCost.setRegistered(vatForm.getRegistered());
+                vatCost.setRegistered(vatForm.getRegistered());
 
-            messages.addAll(getFinanceRowService().update(vatCost).getSuccess());
-
+                messages.addAll(getFinanceRowService().update(vatCost).getSuccess());
+            }
             return messages;
         });
     }

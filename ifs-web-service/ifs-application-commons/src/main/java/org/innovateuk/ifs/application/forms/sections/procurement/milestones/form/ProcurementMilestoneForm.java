@@ -11,8 +11,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-import static java.util.Optional.ofNullable;
-
 public class ProcurementMilestoneForm {
 
     private Long id;
@@ -32,27 +30,20 @@ public class ProcurementMilestoneForm {
 
     public ProcurementMilestoneForm() {}
 
-    public ProcurementMilestoneForm(int index) {
-        this.description = descriptionIfNull(index);
-        this.month = monthIfNull(index);
+    ProcurementMilestoneForm(String description) {
+        this.description = description;
     }
 
     public <R extends ProcurementMilestoneResource> ProcurementMilestoneForm(R resource, int index) {
         this.id = resource.getId();
-        this.month = ofNullable(resource.getMonth()).orElse(monthIfNull(index));
-        this.description = ofNullable(resource.getDescription()).orElse(descriptionIfNull(index));
+        this.month = resource.getMonth();
+        this.description = resource.getDescription();
         this.taskOrActivity = resource.getTaskOrActivity();
         this.deliverable = resource.getDeliverable();
         this.successCriteria = resource.getSuccessCriteria();
         this.payment = resource.getPayment();
     }
 
-    private String descriptionIfNull(int index) {
-        return "Milestone " + (index + 1);
-    }
-    private int monthIfNull(int index) {
-        return index + 1;
-    }
 
     public Long getId() {
         return id;
@@ -103,7 +94,7 @@ public class ProcurementMilestoneForm {
     }
 
     public BigInteger getPayment() {
-        return payment == null ? BigInteger.ZERO : payment;
+        return payment;
     }
 
     public void setPayment(BigInteger payment) {
