@@ -7,13 +7,6 @@ bootJar.enabled=false
 jar.enabled=true
 
 buildscript {
-
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-
     repositories {
         jcenter()
     }
@@ -34,9 +27,8 @@ artifacts {
 }
 
 dependencies {
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
-    compile "org.thymeleaf:thymeleaf-spring5:${thymeleafVersion}"
-    compile "org.thymeleaf.extras:thymeleaf-extras-java8time"
+
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"

@@ -8,14 +8,6 @@ buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
-buildscript {
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-}
-
 afterEvaluate {
     ext {
         dockerDir = file("$project.parent.projectDir/docker/")

@@ -6,5 +6,3 @@ ext.nexusVersion = project.hasProperty('nexusVersion') ? project.property('nexus
 ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
 ext.mysqlClientVersion = project.properties['mysql-client.version'] ?: project.version
 
-ext['thymeleaf-extras-springsecurity4.version'] = '3.0.2.RELEASE'
-ext['thymeleaf-extras-java8time.version'] = '3.0.0.RELEASE'

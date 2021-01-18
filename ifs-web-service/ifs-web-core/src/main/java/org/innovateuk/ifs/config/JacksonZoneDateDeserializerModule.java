@@ -11,6 +11,9 @@ import org.innovateuk.ifs.util.TimeZoneUtil;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
+@Deprecated
+// Don't think this is needed see jsr310 addon
+// see also httpconfig
 public class JacksonZoneDateDeserializerModule extends SimpleModule {
 
     public JacksonZoneDateDeserializerModule() {
