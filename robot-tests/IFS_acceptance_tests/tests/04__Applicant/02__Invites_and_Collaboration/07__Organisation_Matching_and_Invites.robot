@@ -2,6 +2,9 @@
 Documentation     IFS-1324  New organisation matching (Companies house)
 ...
 ...               IFS-1325  New organisation matching (Research)
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -18,7 +21,7 @@ ${bLead}          businesslead@gmail.com
 
 *** Test Cases ***
 Business invites other business from same organisation in his application and the latter is able to accept
-    [Documentation]  IFS-1324
+    [Documentation]  IFS-1324  IFS-7723
     # TODO would be nice to try with custom address insertion instead of clicking checkbox same-address IFS-1550
     Given we create a new user                             ${openCompetitionBusinessRTO}  Business  collab  ${bCollaborator}  ${BUSINESS_TYPE_ID}
     And the user logs out if they are logged in

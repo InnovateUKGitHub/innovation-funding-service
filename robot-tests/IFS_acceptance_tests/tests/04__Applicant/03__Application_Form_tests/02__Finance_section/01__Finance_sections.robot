@@ -15,6 +15,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -32,7 +34,7 @@ Finance sub-sections
     Then the user should see all the Your-Finances Sections
 
 Organisation name visible in the Finance section
-    [Documentation]    INFUND-1815
+    [Documentation]    INFUND-1815  IFS-7723
     [Tags]
     When the user clicks the button/link    link = Your project costs
     Then the user should see the element    jQuery = h2:contains("Provide the project costs for 'ITV PLC'")

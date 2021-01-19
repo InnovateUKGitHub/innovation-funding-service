@@ -43,12 +43,10 @@
                     these people accept or are removed.</p>
             </div>
 
-            <p th:unless="${model.heukar}" class="govuk-body">These are the organisations that will work together on the project. You can invite
+            <p class="govuk-body">These are the organisations that will work together on the project. You can invite
                 people
                 from these organisations to help you with the application. They can invite other people from their own
                 organisation.</p>
-
-            <p th:if="${model.heukar}" class="govuk-body">These are the organisations that will work on your project. This includes project partners. We will ask for more details and information about these when you submit a full application.</p>
 
             <p class="govuk-body" th:unless="${model.collaborationLevelSingle}">You must read the <a
                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service"
@@ -64,23 +62,21 @@
 
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
                         <th:block th:text="${organisation.name}"></th:block>
-                        <th:block th:unless="${model.heukar}" th:if="${organisation.lead}">(Lead)</th:block>
+                        <th:block th:if="${organisation.lead}">(Lead)</th:block>
                     </h2>
 
                     <th:block th:if="${organisation.type != null}">
                         <table class="govuk-table">
                             <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
-                                <th th:unless="${model.heukar}" scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
-                                <th th:if="${model.heukar}" scope="col" class="govuk-table__header govuk-!-width-one-third">Lead organisation</th>
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
                                 <th scope="col" class="govuk-table__header"></th>
                                 <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Edit</span></th>
                                 </tr>
                             </thead>
                             <tbody class="govuk-table__body">
                                 <tr class="govuk-table__row">
-                                    <td th:unless="${model.heukar}" class="govuk-table__cell">Type</td>
-                                    <td th:if="${model.heukar}" class="govuk-table__cell"><strong>Type</strong></td>
+                                    <td class="govuk-table__cell">Type</td>
                                     <td class="govuk-table__cell"th:text="${organisation.type}">Research and technology organisations</td>
                                     <td class="govuk-table__cell"></td>
                                 </tr>
@@ -154,67 +150,13 @@
                                                href="/"
                                                th:id="${'remove-organisation-' + organisation.id}"
                                                class="govuk-link">Remove organisation
-                                                <span class="govuk-visually-hidden"
-                                                      th:text="${organisation.name}"></span>
+                                               <span class="govuk-visually-hidden" th:text="${organisation.name}"></span>
                                             </a>
                                         </th:block>
                                     </th:block>
                                     <th:block th:if="${row.lead}">Lead applicant</th:block>
                                 </td>
                             </tr>
-                            <th:block th:if="${model.heukar}">
-                                <th:block
-                                    th:each="partnerOrganisation,partnerOrganisationStat: ${model.heukarPartnerOrganisationResources}">
-                                    <table class="govuk-table govuk-!-margin-bottom-2">
-                                        <thead class="govuk-table__head">
-                                        <tr class="govuk-table__row">
-                                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">
-                                                <h3 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-!-margin-top-4">
-                                                    Partner
-                                                    <span th:text="${partnerOrganisationStat.index + 1}"></span>
-                                                </h3>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">
-                                                <span class="govuk-visually-hidden"></span>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">
-                                                <span class="govuk-visually-hidden"></span>
-                                            </th>
-                                        </tr>
-
-                                        </thead>
-                                        <tbody class="govuk-table__body">
-                                        <tr class="govuk-table__row">
-                                            <td class="govuk-table__cell">
-                                                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Type</h3>
-                                            </td>
-                                            <td class="govuk-table__cell"
-                                                th:text="${partnerOrganisation.heukarPartnerOrganisationType.name}">
-                                            </td>
-
-                                            <td th:unless="${model.readOnly or model.collaborationLevelSingle}"
-                                                class="govuk-table__cell alignright buttoncolumn">
-                                                <a th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org/{existingId}(applicationId=${model.applicationId},questionId=${model.questionId},existingId=${partnerOrganisation.id})}"
-                                                   class="govuk-link govuk-!-margin-right-1">
-                                                    Edit
-                                                </a>
-                                                <span>|</span>
-                                                <button class="button-clear govuk-!-margin-left-1"
-                                                        type="submit"
-                                                        name="remove-heukar-partner"
-                                                        th:value="${partnerOrganisation.id}">
-                                                    Remove organisation
-                                                </button>
-                                            </td>
-                                            <td class="govuk-table__cell alignright buttoncolumn"
-                                                th:if="${model.readOnly or model.collaborationLevelSingle}">
-                                                <span class="govuk-visually-hidden"></span>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </th:block>
-                            </th:block>
                             </tbody>
                         </table>
                     </form>
@@ -295,8 +237,7 @@
                             </tbody>
                         </table>
                     </form>
-                    <th:block th:unless="${model.heukar}"
-                              th:if="${organisation.editable and !model.readOnly}">
+                    <th:block th:if="${organisation.editable and !model.readOnly}">
                         <p class="govuk-body">
                             <button name="add-team-member"
                                     th:value="${organisation.id}"
@@ -312,17 +253,9 @@
             </th:block>
 
             <th:block th:if="${model.leadApplicant}">
-                <p th:unless="${model.heukar}"
-                    class="govuk-body govuk-!-margin-top-5">
+                <p class="govuk-body govuk-!-margin-top-5">
                     <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
                        th:href="@{/application/{applicationId}/form/question/{questionId}/team/new-organisation(applicationId=${model.applicationId},questionId=${model.questionId})}"
-                       id="add-a-partner-organisation"
-                       class="govuk-link">Add a partner organisation</a>
-                </p>
-                <p th:if="${model.heukar}"
-                    class="govuk-body govuk-!-margin-top-5">
-                    <a th:unless="${model.readOnly or model.collaborationLevelSingle}"
-                       th:href="@{/application/{applicationId}/form/question/{questionId}/team/heukar-partner-org(applicationId=${model.applicationId},questionId=${model.questionId})}"
                        id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>

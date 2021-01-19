@@ -35,6 +35,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...
 ...               IFS-6728 - Mop up ticket for ifs 6502
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       the user logs-in in new browser     &{collaborator1_credentials_bd}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -281,7 +283,7 @@ CompAdmin can see uploaded files
     Then open pdf link                      jQuery = a:contains("${valid_pdf} (opens in a new window)")
 
 IfsAdmin adds a partner organisation and all partners can see rejected documents
-    [Documentation]  IFS-6728
+    [Documentation]  IFS-6728  IFS-7723
     [Setup]  Log in as a different user  &{ifs_admin_user_credentials}
     Given compAdmin approves all documents
     And the user clicks the button/link                      jQuery = a:contains("Add a partner organisation")

@@ -60,6 +60,8 @@ public abstract class AbstractOrganisationCreationController {
 
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
     protected static final int  SEARCH_ITEMS_MAX = 10;
+    protected static final int  SEARCH_MAX_DSIPLAY = 1000;
+    protected static final int  SEARCH_TOTAL_PAGES = 100;
     protected static final int DEFAULT_PAGE_NUMBER_VALUE = 1;
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -309,14 +311,26 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     protected void addPageResourceToModel(OrganisationCreationForm organisationForm, Model model, int pageNumber) {
-        long totalElements = organisationForm.getTotalSearchResults();
-        int reminder = (int) (totalElements % SEARCH_ITEMS_MAX);
-        int pages = (int) (totalElements / SEARCH_ITEMS_MAX);
-        int totalPages = reminder > 0 ? pages + 1  : pages;
+        long totalElements = getTotalElements(organisationForm);
+        int totalPages = getTotalPagesToDisplay(totalElements);
         List<OrganisationSearchResult> content = organisationForm.getOrganisationSearchResults();
         int number = pageNumber - 1;
-        int size = SEARCH_ITEMS_MAX;
-        model.addAttribute("pagination", new PaginationViewModel(new OrganisationSearchResultPageResource(totalElements, totalPages, content, number,size)));
+        model.addAttribute("pagination", new PaginationViewModel(new OrganisationSearchResultPageResource(totalElements, totalPages, content, number,SEARCH_ITEMS_MAX)));
+    }
+
+    private int getTotalElements(OrganisationCreationForm organisationForm) {
+        int totalElements = organisationForm.getTotalSearchResults();
+        if (totalElements > SEARCH_MAX_DSIPLAY) {
+            return SEARCH_MAX_DSIPLAY;
+        }
+        return totalElements;
+    }
+
+    private int getTotalPagesToDisplay(long totalElements) {
+            int reminder = (int) (totalElements % SEARCH_ITEMS_MAX);
+            int pages = (int) (totalElements / SEARCH_ITEMS_MAX);
+            int totalPages = reminder > 0 ? pages + 1 : pages;
+           return totalPages;
     }
 
     private void addOrganisationSearchIndex(OrganisationCreationForm organisationForm, int pageNumber) {

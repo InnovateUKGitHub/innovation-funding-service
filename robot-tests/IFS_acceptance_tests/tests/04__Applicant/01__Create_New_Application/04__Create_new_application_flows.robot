@@ -26,7 +26,7 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Non registered users non companies house route
-    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920
+    [Documentation]    INFUND-669 INFUND-1904 INFUND-1920  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page                         ${frontDoor}
     And the user clicks the button/link in the paginated list    link = ${createApplicationOpenCompetition}

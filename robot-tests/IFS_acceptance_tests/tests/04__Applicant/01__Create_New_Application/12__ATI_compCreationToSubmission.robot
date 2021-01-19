@@ -21,6 +21,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-8729 ATI Assessor 'doesn't have the right permissions' to access appendices
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -201,7 +203,7 @@ MO can see application summary page for the ATI application in project setup bef
     And the user should see the element                        jQuery = h1:contains("Application overview")
 
 Internal user add new partner orgnisation after moving competition to project setup
-    [Documentation]  IFS-6725
+    [Documentation]  IFS-6725  IFS-7723
     [Setup]  Requesting Project ID of this Project
     Given Log in as a different user                             &{internal_finance_credentials}
     And moving competition to Project Setup                      ${competitionId}

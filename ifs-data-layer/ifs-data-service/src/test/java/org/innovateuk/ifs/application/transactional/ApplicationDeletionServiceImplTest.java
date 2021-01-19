@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.ApplicationUserCompositeId;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -21,6 +22,7 @@ import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,6 +75,9 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
 
     @Mock
     private SystemNotificationSource systemNotificationSource;
+
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepository;
 
     @Override
     protected ApplicationDeletionServiceImpl supplyServiceUnderTest() {
@@ -130,8 +135,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         verify(processHistoryRepository).deleteByProcessId(application.getApplicationProcess().getId());
         verify(applicationRepository).delete(application);
         verify(notificationService, only()).sendNotificationWithFlush(notification, EMAIL);
-
-
+        verify(applicationInviteRepository).deleteAll(application.getInvites());
 
         verify(deletedApplicationRepository).save(any());
     }

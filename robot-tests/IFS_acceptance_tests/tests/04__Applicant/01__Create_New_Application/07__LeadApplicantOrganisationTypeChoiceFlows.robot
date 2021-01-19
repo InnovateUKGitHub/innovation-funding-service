@@ -9,6 +9,8 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...
 ...               IFS-7986 Error missing from Select your organisation page
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       the user starts a competition create account journey for both RTO and Business organisation types
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
@@ -22,13 +24,13 @@ User should see RTO guidance when choosing RTO as a business type
     Then the user should see the text in the element  css = #rto-guidance h2  You can only lead an application as an RTO if both the following rules are met:
 
 User can choose RTO when both RTO and Business are eligible
-    [Documentation]    IFS-1014
+    [Documentation]    IFS-1014  IFS-7723
     [Tags]  HappyPath
     When the user clicks the button/link    jQuery = button:contains("Save and continue")
     Then the user should see the element    jQuery = h1:contains("Enter your organisation's details")
 
 User can choose Business when both RTO and Business are eligible
-    [Documentation]    IFS-1014
+    [Documentation]    IFS-1014  IFS-7723
     [Tags]  HappyPath
     Given the user clicks the button/link         jQuery = a:contains("Back to choose your organisation type")
     When the user chooses an organisation type    ${BUSINESS_TYPE_ID}
@@ -52,7 +54,7 @@ User cannot choose Public Sector when both Research and Public sector types are 
     And the user should see the text in the element     css = #main-content p    Your organisation type does not match our eligibility criteria for lead applicants.
 
 Lead applicant can see a validation message in select your organisation page
-    [Documentation]   IFS-7986
+    [Documentation]   IFS-7986 IFS-7723
     Given the user clicks the button/link                                 link = Sign in
     And logging in and error checking                                     christine.ward@gmail.com    ${short_password}
     And User starts an application with a second organisation type

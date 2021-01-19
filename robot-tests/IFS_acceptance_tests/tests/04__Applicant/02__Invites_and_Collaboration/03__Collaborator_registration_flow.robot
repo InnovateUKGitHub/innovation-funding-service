@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
@@ -35,7 +38,7 @@ User is able to select only one type
     Then the radio button should have the new selection  1
 
 The type of organisation navigates to the correct page
-    [Documentation]    INFUND-1780, INFUND-1231, INFUND 8531
+    [Documentation]    INFUND-1780, INFUND-1231, INFUND 8531  IFS-7723
     [Tags]
     When the user selects the radio button         organisationTypeId    1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
@@ -64,7 +67,7 @@ The type of organisation navigates to the correct page
     And the user goes back to the previous page
 
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
-    [Documentation]    INFUND-1230
+    [Documentation]    INFUND-1230  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page           ${INVITE_LINK}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Yes, accept invitation")

@@ -14,11 +14,15 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneBuilder.newApplicationProcurementMilestone;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 
@@ -159,5 +163,31 @@ public class ApplicationTest {
     @Test
     public void applicationFundingDecisionIsChangeable() {
         assertTrue(new Application().applicationFundingDecisionIsChangeable());
+    }
+
+    @Test
+    public void applicationGetMaxMilestoneMonthEmptyWhenNoMilestones() {
+        Application application  = new Application();
+        assertFalse(application.getMaxMilestoneMonth().isPresent());
+    }
+
+    @Test
+    public void applicationGetMaxMilestoneMonth() {
+        Integer maxMilestoneMonth = 20;
+        Application application = newApplication()
+                .withApplicationFinancesList(asList(
+                        newApplicationFinance().withMilestones(asList(
+                                newApplicationProcurementMilestone().withMonth(1).build(),
+                                newApplicationProcurementMilestone().withMonth(10).build(),
+                                newApplicationProcurementMilestone().withMonth(null).build() // This should not happen but check it is handled
+                                )).build(),
+                        newApplicationFinance().withMilestones(asList(
+                                newApplicationProcurementMilestone().withMonth(maxMilestoneMonth).build(), // The maximum
+                                newApplicationProcurementMilestone().withMonth(-1).build(), // This should not happen but check it is handled
+                                newApplicationProcurementMilestone().withMonth(0).build()
+                        )).build()
+                )).build();
+        assertTrue(application.getMaxMilestoneMonth().isPresent());
+        assertEquals(application.getMaxMilestoneMonth().get(), maxMilestoneMonth);
     }
 }

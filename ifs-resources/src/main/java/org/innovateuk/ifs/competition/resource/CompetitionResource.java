@@ -141,11 +141,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isHeukar() {
-        return competitionTypeEnum == CompetitionTypeEnum.HEUKAR;
-    }
-
-    @JsonIgnore
     public boolean isExpressionOfInterest() {
         return competitionTypeEnum == CompetitionTypeEnum.EXPRESSION_OF_INTEREST;
     }
