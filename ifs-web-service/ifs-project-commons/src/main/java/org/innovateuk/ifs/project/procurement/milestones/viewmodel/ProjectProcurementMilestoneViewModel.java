@@ -10,6 +10,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
 
     private final long applicationId;
     private final long organisationId;
+    private final String organisationName;
     private final long projectId;
     private final String applicationName;
     private final String financesUrl;
@@ -18,10 +19,11 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final boolean eligibilityAndViabilityApproved;
     private final boolean externalUser;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
-        this.organisationId = organisationId;
+        this.organisationId = finance.getOrganisation();
+        this.organisationName = finance.getOrganisationName();
         this.projectId = project.getId();
         this.applicationName = project.getName();
         this.financesUrl = financesUrl;
@@ -51,6 +53,9 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         return organisationId;
     }
 
+    public String getOrganisationName() {
+        return organisationName;
+    }
 
     public PaymentMilestoneResource getPaymentMilestoneResource() {
         return paymentMilestoneResource;

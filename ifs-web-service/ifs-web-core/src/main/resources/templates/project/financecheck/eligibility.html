@@ -292,14 +292,24 @@
         <input type="hidden" id="cacheTest" value=""/>
         <input type="hidden" id="projectId" th:value="${summaryModel.projectId}"/>
         <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}"/>
+
+        <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
+               class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+               class="govuk-button govuk-button--secondary">Notes</a>
+        </div>
+
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               th:object="${eligibilityForm}"
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
-            <th:block th:if="${summaryModel.isApproved() and summaryModel.projectIsActive}">
-                <button class="govuk-button" name="reset-eligibility">Reset eligibility</button>
-            </th:block>
+            <div th:if="${summaryModel.isApproved() and summaryModel.projectIsActive}" class="reset-eligibility">
+                <p class="govuk-body">Reset eligibility check for <th:block th:text="${summaryModel.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                <button class="govuk-button" name="reset-eligibility">Reset eligibility check</button>
+            </div>
+
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>
                 <div class="govuk-form-group">
@@ -351,12 +361,6 @@
                th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}"
                th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>
-        <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
-               class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-               class="govuk-button govuk-button--secondary">Notes</a>
-        </div>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>

@@ -117,9 +117,10 @@
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="govuk-button govuk-button--secondary">Notes</a>
           </div>
-          <th:block th:if="${model.canReset}">
-              <button class="govuk-button" name="reset-viability">Reset viability</button>
-          </th:block>
+          <div th:if="${model.canReset}">
+              <p class="govuk-body">Reset viability check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+              <button class="govuk-button" name="reset-viability">Reset viability check</button>
+          </div>
           <th:block th:unless="${model.isReadOnly()}">
               <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
               <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>

@@ -34,7 +34,6 @@ public class ProjectProcurementMilestoneViewModelPopulator {
 
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         return new ProjectProcurementMilestoneViewModel(project,
-                organisationId,
                 finance,
                 String.format("/project-setup-management/project/%d/finance-check", projectId),
                 readOnly,
