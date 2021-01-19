@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
