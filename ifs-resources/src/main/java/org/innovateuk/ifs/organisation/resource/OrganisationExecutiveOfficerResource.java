@@ -49,9 +49,9 @@ public class OrganisationExecutiveOfficerResource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrganisationExecutiveOfficerResource that = (OrganisationExecutiveOfficerResource) o;
-        return id.equals(that.id) &&
-                organisation.equals(that.organisation) &&
-                name.equals(that.name);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(organisation, that.organisation) &&
+                Objects.equals(name, that.name);
     }
 
     @Override

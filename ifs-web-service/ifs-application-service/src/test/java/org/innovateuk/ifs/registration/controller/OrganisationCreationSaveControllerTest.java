@@ -111,7 +111,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(2L))).thenReturn(VIEW);
 
         mockMvc.perform(post("/organisation/create/save-organisation")
-                .param("searchOrganisationId", "123"))
+                .param("searchOrganisationId", "123").param("organisationTypeId", "123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW));
 
@@ -129,13 +129,16 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(2L))).thenReturn(VIEW);
 
         mockMvc.perform(post("/organisation/create/save-organisation")
-                .param("searchOrganisationId", "123"))
+                .param("searchOrganisationId", "123").param("organisationTypeId", "123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW));
 
         verify(organisationRestService).createOrMatch(any());
         verify(organisationJourneyEnd).completeProcess(any(), any(), any(), eq(2L));
     }
+
+
+
 
     @Test
     public void updateOrganisation_WithAdditionalDetails() throws Exception {
@@ -145,15 +148,16 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
 
         organisationForm.setSelectedExistingOrganisationId(existingOrganisationId);
 
+
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(existingOrganisationId).build()));
         when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(existingOrganisationId))).thenReturn(VIEW);
-        when(organisationRestService.getOrganisationById(existingOrganisationId)).thenReturn(restSuccess(newOrganisationResource().withId(existingOrganisationId).build()));
+        when(organisationRestService.getOrganisationById(existingOrganisationId)).thenReturn(restSuccess(newOrganisationResource().withId(existingOrganisationId).withOrganisationType(1L).build()));
 
         mockMvc.perform(post("/organisation/create/save-organisation")
-                .param("searchOrganisationId", "123"))
+                .param("searchOrganisationId", "123").param("organisationTypeId", "123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW));
 
@@ -172,7 +176,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(2L))).thenReturn(VIEW);
 
         mockMvc.perform(post("/organisation/create/save-organisation")
-                .param("searchOrganisationId", "123"))
+                .param("searchOrganisationId", "123").param("organisationTypeId", "123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(VIEW));
 

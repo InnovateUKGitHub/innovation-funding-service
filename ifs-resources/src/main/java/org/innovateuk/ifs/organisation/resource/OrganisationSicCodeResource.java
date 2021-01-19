@@ -45,14 +45,15 @@ public class OrganisationSicCodeResource {
         this.sicCode = sicCode;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrganisationSicCodeResource that = (OrganisationSicCodeResource) o;
-        return id.equals(that.id) &&
-                organisation.equals(that.organisation) &&
-                sicCode.equals(that.sicCode);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(organisation, that.organisation) &&
+                Objects.equals(sicCode, that.sicCode);
     }
 
     @Override
