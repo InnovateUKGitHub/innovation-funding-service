@@ -305,10 +305,17 @@
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
-            <div th:if="${summaryModel.isApproved() and summaryModel.projectIsActive}" class="reset-eligibility">
-                <p class="govuk-body">Reset eligibility check for <th:block th:text="${summaryModel.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
-                <button class="govuk-button" name="reset-eligibility">Reset eligibility check</button>
-            </div>
+            <details th:if="${summaryModel.isApproved() and summaryModel.projectIsActive}" class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                      Reset eligibility check
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p class="govuk-body">Reset eligibility check for <th:block th:text="${summaryModel.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                    <button class="govuk-button" name="reset-eligibility">Reset eligibility check</button>
+                </div>
+            </details>
 
             <th:block th:unless="${summaryModel.isApproved() or !summaryModel.projectIsActive or projectCostsInEdit}">
                 <h2 class="govuk-heading-m">Approve eligibility</h2>

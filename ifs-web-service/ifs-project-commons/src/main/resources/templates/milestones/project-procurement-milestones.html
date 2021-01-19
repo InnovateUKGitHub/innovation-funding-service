@@ -44,8 +44,8 @@
         <th:block th:if="${model.showResetMessage}">
             <div class="message-alert">
                 <p class="govuk-body">Your payment milestones has been reset by <span
-                    th:text="${model.projectProcurementMilestoneResource.name}"/>, <span
-                    th:text="${#temporals.format(model.projectProcurementMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
+                    th:text="${model.paymentMilestoneResource.name}"/>, <span
+                    th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
                 </p>
             </div>
         </th:block>
@@ -119,10 +119,17 @@
                     </button>
                     <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
                 </th:block>
-                <div th:if="${model.canReset}">
-                    <p class="govuk-body">Reset payment milestone check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
-                    <button class="govuk-button" name="reset-milestones">Reset payment milestone check</button>
-                </div>
+                <details th:if="${model.canReset}" class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                          Reset payment milestone check
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">Reset payment milestone check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                        <button class="govuk-button" name="reset-milestones">Reset payment milestone check</button>
+                    </div>
+                </details>
             </form>
             <th:block th:if="${model.readOnly}">
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
