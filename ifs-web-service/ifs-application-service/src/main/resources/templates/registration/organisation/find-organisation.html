@@ -43,7 +43,7 @@
             </div>
         </th:block>
 
-        <form th:action="@{${'/organisation/create/find-organisation'}}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
+        <form th:action="@{/organisation/create/find-organisation}" id="find-organisation-form" th:object="${organisationForm}" novalidate="novalidate" method="POST">
         <input type="hidden" name="newOrganisationSearchEnabled" th:value="${improvedSearchEnabled}" />
         <th:block th:if="${organisationForm.selectedExistingOrganisationId != null}">
             <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
@@ -98,7 +98,7 @@
                        value="" />
             <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0 govuk-!-margin-left-2">Search</button>
         </div>
-        <th:block th:if="${!improvedSearchEnabled || organisationForm.research}">
+        <th:block th:if="${!improvedSearchEnabled || (improvedSearchEnabled && organisationForm.research)}">
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
                     <p class="govuk-body govuk-hint">Choose your organisation:</p>

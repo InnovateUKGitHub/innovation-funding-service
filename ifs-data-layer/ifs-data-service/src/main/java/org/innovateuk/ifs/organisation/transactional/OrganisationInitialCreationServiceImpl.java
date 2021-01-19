@@ -33,17 +33,21 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
                 organisationMatchingService.findOrganisationMatch(organisationToCreate);
 
         Organisation resultingOrganisation =
-                matchedOrganisation.orElseGet(() -> createNewOrganisation(organisationToCreate));
+                matchedOrganisation
+                        .orElseGet(() -> createOrUpdateOrganisation(organisationToCreate));
 
-        return serviceSuccess(organisationMapper.mapToResource(resultingOrganisation));
+       return serviceSuccess(organisationMapper.mapToResource(resultingOrganisation));
     }
 
-    private Organisation createNewOrganisation(OrganisationResource organisationResource) {
+    private Organisation createOrUpdateOrganisation(OrganisationResource organisationResource) {
         Organisation mappedOrganisation = organisationMapper.mapToDomain(organisationResource);
-
-        //Add organisation to addresses to persist reference
-        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
-
+        setOrganisationIdForRelatedEntities(mappedOrganisation);
         return organisationRepository.save(mappedOrganisation);
+    }
+
+    private void setOrganisationIdForRelatedEntities(Organisation mappedOrganisation) {
+        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getSicCodes().forEach(sicCode -> sicCode.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getExecutiveOfficers().forEach(director -> director.setOrganisation(mappedOrganisation));
     }
 }
