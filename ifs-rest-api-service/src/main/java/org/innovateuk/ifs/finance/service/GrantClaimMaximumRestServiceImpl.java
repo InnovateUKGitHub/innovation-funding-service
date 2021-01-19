@@ -3,8 +3,10 @@ package org.innovateuk.ifs.finance.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
@@ -20,6 +22,11 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<List<GrantClaimMaximumResource>> getGrantClaimMaximumByCompetitionId(long competitionId) {
+        return getWithRestResult(grantClaimMaximumRestURL + "/competition/" + competitionId, new ParameterizedTypeReference<List<GrantClaimMaximumResource>>() {});
+    }
+
+    @Override
     public RestResult<Set<Long>> revertToDefaultForCompetitionType(long competitionId) {
         return postWithRestResult(grantClaimMaximumRestURL + "/revert-to-default/" + competitionId, longsSetType());
     }
@@ -30,7 +37,7 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Boolean> isMaximumFundingLevelOverridden(long competitionId) {
+    public RestResult<Boolean> isMaximumFundingLevelConstant(long competitionId) {
         return getWithRestResult(grantClaimMaximumRestURL + "/maximum-funding-level-overridden/" + competitionId, Boolean.class);
     }
 }

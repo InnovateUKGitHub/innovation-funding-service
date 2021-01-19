@@ -57,9 +57,14 @@
 
   .govuk-heading-m,
   .govuk-heading-s,
-  .govuk-heading-l,
-  .govuk-body:not(.standard-color) {
+  .govuk-heading-l {
     color: $govuk-error-colour;
+  }
+
+  .govuk-body {
+    &:not(.standard-color) {
+      color: $govuk-error-colour;
+    }
   }
 
   .govuk-list {

@@ -17,7 +17,6 @@ Resource        ../../../resources/common/Competition_Commons.robot
 *** Variables ***
 ${comp_name}         The Prince Trust competition
 ${application_name}  The Prince Trust Application
-${comp_type}         The Prince's Trust
 
 *** Test Cases ***
 Comp Admin creates The Prince's Trust type competition
@@ -51,10 +50,11 @@ The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page                          ${CA_UpcomingComp}
     the user clicks the button/link                         jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${comp_type}  SUBSIDY_CONTROL  GRANT
+    the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_PT}  SUBSIDY_CONTROL  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  false  single-or-collaborative  # 1 means 30%
+    the user fills in the CS funding eligibility            false   ${compType_PT}
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     RELEASE_FEEDBACK   ${month}   ${nextyear}
     the user marks the Application as done(Prince's Trust comp)

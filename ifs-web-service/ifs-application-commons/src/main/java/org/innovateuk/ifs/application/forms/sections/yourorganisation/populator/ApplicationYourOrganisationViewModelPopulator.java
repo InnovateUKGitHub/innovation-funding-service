@@ -45,7 +45,7 @@ public class ApplicationYourOrganisationViewModelPopulator {
 
         boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
                 organisation::getOrganisationTypeEnum,
-                () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
+                () -> grantClaimMaximumRestService.isMaximumFundingLevelConstant(competition.getId()).getSuccess());
 
         boolean showOrganisationSizeAlert = false;
         if (!isMaximumFundingLevelConstant) {

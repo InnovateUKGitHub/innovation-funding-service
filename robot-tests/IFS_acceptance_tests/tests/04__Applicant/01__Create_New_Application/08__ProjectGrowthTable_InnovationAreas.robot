@@ -19,6 +19,12 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-7723 Improvement to company search results
+...
+...               IFS-6775 Initial details type ahead
+...
+...               IFS-8791 Subsidy Control - Create a New Competition - Funding Eligibility and Funding Levels
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -40,7 +46,7 @@ ${fundingRule}               SUBSIDY_CONTROL
 
 *** Test Cases ***
 Comp Admin starts a new Competition
-    [Documentation]    INFUND-6393  IFS-8779
+    [Documentation]    INFUND-6393  IFS-8779  IFS-8791
     [Tags]  HappyPath
     [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
@@ -51,6 +57,7 @@ Comp Admin starts a new Competition
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
@@ -122,7 +129,7 @@ Turnover and Staff count fields
     And the user should see the element           jQuery = div span:contains("Number of full time employees at your organisation.")
 
 Once the project growth table is selected
-    [Documentation]    INFUND-6393 IFS-40
+    [Documentation]    INFUND-6393  IFS-40  IFS-6775
     [Tags]  HappyPath
     [Setup]    log in as a different user                       &{Comp_admin1_credentials}
     Given the user navigates to the page                        ${CA_UpcomingComp}
@@ -132,6 +139,7 @@ Once the project growth table is selected
     And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user fills in the CS funding eligibility            true   ${compType_Programme}
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
@@ -233,8 +241,6 @@ Organisation server side validation when yes
     And the user should see the element    jQuery = .govuk-error-message:contains("${enter_a_valid_date}")
     And The user should see a field error  ${empty_field_warning_message}
     And The user should see a field error  ${enter_a_valid_date}
-    #And The user should see a field error    Enter your organisation size
-    #TODO Enable the above checks when IFS-535 is ready
 
 Organisation client side validation when yes
     [Documentation]    INFUND-6395
@@ -313,9 +319,9 @@ The Lead Applicant fills in the Application Details for App with Growth
 Application details read only view shows correct details with innovation area
     [Documentation]  IFS-4722
     [Tags]
-    Given The user clicks the button/link    link = Application details
-    Then the user should see the element     jQuery = dt:contains("Application name") + dd:contains("All-Innov-Areas Application With GrowthTable")
-    And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
+    Given The user clicks the button/link        link = Application details
+    Then the user should see the element         jQuery = dt:contains("Application name") + dd:contains("${applicationWithGrowth}")
+    And The user should see the element          jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
     [Teardown]  the user clicks the button/link  link = Back to application overview
 
 EDI question read only view shows correct details
@@ -390,7 +396,7 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 The lead applicant checks for terms and conditions partners status
-    [Documentation]  IFS-5920
+    [Documentation]  IFS-5920  IFS-7723
     [Tags]
     [Setup]  the user navigate to competition
     Given the user accept the temporary framework terms and conditions
@@ -398,17 +404,17 @@ The lead applicant checks for terms and conditions partners status
     When the user clicks the button/link            link = View partners' acceptance
     Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")
     And the user should see the element             jQuery = td:contains("Empire Ltd (Lead)") ~ td:contains("Accepted")
-    And the user should see the element             jQuery = td:contains("INNOVATE LTD") ~ td:contains("Not yet accepted")
+    And the user should see the element             jQuery = td:contains("ROYAL MAIL PLC") ~ td:contains("Not yet accepted")
     [Teardown]  the user clicks the button/link     link = Terms and conditions of an Innovate UK grant award
 
 The lead applicant checks for terms and conditions validations
-    [Documentation]
+    [Documentation]   IFS-7723
     [Tags]
     Given the user clicks the button/link         link = Back to application overview
     And the user should see the element           jQuery = li:contains("Award terms and conditions") > .task-status-incomplete
     When the user clicks the button/link          link = Review and submit
     And the user clicks the button/link           jQuery = button:contains("Award terms and conditions")
-    Then the user should see the element          jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("INNOVATE LTD")
+    Then the user should see the element          jQuery = .warning-alert p:contains("The following organisations have not yet accepted:") ~ ul li:contains("ROYAL MAIL PLC")
     [Teardown]  the user clicks the button/link   link = Application overview
 
 *** Keywords ***
@@ -462,7 +468,7 @@ the applicant enters valid inputs
     The user enters text to a text field    name = organisations[1].organisationName  ${organisationLudlowName}
     The user enters text to a text field    name = organisations[1].invites[0].personName    Jessica Doe
     The user enters text to a text field    name = organisations[1].invites[0].email    ${collaborator1_credentials["email"]}
-    Set Focus To Element                                     jquery = button:contains("Save changes")
+    Set Focus To Element                    jquery = button:contains("Save changes")
     The user clicks the button/link         jquery = button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation
@@ -514,8 +520,8 @@ the user fills in the Open-All Initial details
     the user enters text to a text field                 css = #openingDateDay  1
     the user enters text to a text field                 css = #openingDateMonth  ${month}
     the user enters text to a text field                 css = #openingDateYear  ${nextyear}
-    the user selects the value from the drop-down menu   24  id = innovationLeadUserId
-    the user selects the value from the drop-down menu   21  id = executiveUserId
+    the user selects option from type ahead              innovationLeadUserId  i  Ian Cooper
+    the user selects option from type ahead              executiveUserId  r  Robert Johnson
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Back to competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
@@ -543,27 +549,27 @@ Custom suite setup
 
 the user navigate to competition
     log in as a different user             &{lead_applicant_credentials}
-    the user clicks the button/link        link = All-Innov-Areas Application With GrowthTable
+    the user clicks the button/link        link = ${applicationWithGrowth}
 
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
 
 the user selects temporary framework terms and conditions
-    the user clicks the button/link         link = Terms and conditions
-    the user selects the radio button       termsAndConditionsId  37
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user should see the element         link = New projects temporary framework (opens in a new window)
-    the user clicks the button/link         link = Back to competition details
-    the user should see the element         jQuery = li:contains("Terms and conditions") .task-status-complete
+    the user clicks the button/link       link = Terms and conditions
+    the user selects the radio button     termsAndConditionsId  37
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user should see the element       link = New projects temporary framework (opens in a new window)
+    the user clicks the button/link       link = Back to competition details
+    the user should see the element       jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user accept the temporary framework terms and conditions
-    the user clicks the button/link         link = Award terms and conditions
-    the user should see the element         jQuery = h1:contains("New projects temporary framework terms and conditions")
-    the user selects the checkbox           agreed
-    the user clicks the button/link         jQuery = button:contains("Agree and continue")
-    the user should see the element         jQuery = .form-footer:contains("Terms and conditions accepted")
-    the user clicks the button/link         link = Return to application overview
+    the user clicks the button/link     link = Award terms and conditions
+    the user should see the element     jQuery = h1:contains("New projects temporary framework terms and conditions")
+    the user selects the checkbox       agreed
+    the user clicks the button/link     jQuery = button:contains("Agree and continue")
+    the user should see the element     jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link     link = Return to application overview
 
 the user should see EDI question details
     the user should see the element    jQuery = h1:contains("Equality, diversity and inclusion")

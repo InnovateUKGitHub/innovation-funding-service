@@ -41,7 +41,6 @@ Mark application details as incomplete
     the user clicks the button/link                       link = Application details
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = button:contains("Edit")
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link   jQuery = button:contains("Edit")
-    #the user clicks the button/link                       jQuery = button:contains("Edit")
     the user clicks the button/link                       jQuery = button:contains("Save and return to application overview")
     the user should see the element                       jQuery = li:contains("Application details") > .task-status-incomplete
 
@@ -323,8 +322,6 @@ the user checks for funding level guidance at application level
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     jQuery = button:contains("Edit your funding")
     the user should see the element     jQuery = .govuk-hint:contains("The maximum you can enter is")
-    the user clicks the button/link     link = competition's rules (opens in a new window)
-    the user closes the last opened tab
     the user clicks the button/link     jQuery = button:contains("Mark as complete")
     the user clicks the button/link     link = Back to application overview
 
@@ -402,17 +399,17 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
-    the user selects the radio button           organisationTypeId    radio-${organisationType}
-    the user clicks the button/link             jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element             jQuery = h1:contains("Enter organisation details")
-    the user selects his organisation in Companies House  innovate  INNOVATE LTD
-    the user should be redirected to the correct page    ${SERVER}/registration/register
-    the invited user fills the create account form       liam  smithson
-    the user should see the element                      jQuery = h1:contains("Please verify your email address")
-    the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    the user clicks the button/link             link = Sign in
-    Logging in and Error Checking               ${email}  ${correct_password}
+    the user selects the radio button                        organisationTypeId    radio-${organisationType}
+    the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
+    the user should see the element                          jQuery = h1:contains("Enter your organisation's details")
+    the user selects his organisation in Companies House     ROYAL  ROYAL MAIL PLC
+    the user should be redirected to the correct page        ${SERVER}/registration/register
+    the invited user fills the create account form           liam  smithson
+    the user should see the element                          jQuery = h1:contains("Please verify your email address")
+    the user reads his email and clicks the link             ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page        ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                          link = Sign in
+    Logging in and Error Checking                            ${email}  ${correct_password}
 
 the applicant adds some content and marks this section as complete
     Set Focus To Element      css = .textarea-wrapped .editor
@@ -456,7 +453,7 @@ logged in user applies to competition public
     the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    Innovate  INNOVATE LTD
+    the user search for organisation name on Companies house    ROYAL  ROYAL MAIL PLC
 
 the user enters organisation details manually on companies house link
     [Arguments]  ${organisationName}
@@ -482,8 +479,12 @@ the user applies to competition and enters organisation type link
     The user clicks the button/link                     link = Continue and create an account
     the user selects the radio button                   organisationTypeId  ${organisationType}
     the user clicks the button/link                     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link     ${organisationName}
-    the user clicks the button/link                     jQuery = button:contains("Save and continue")
+#  TODO should uncommnet on ifs-7224
+#    the user clicks the Not on companies house link     ${organisationName}
+#    the user clicks the button/link                     jQuery = button:contains("Save and continue")
+#  TODO should remove on ifs-7224
+    the user search for organisation name on Companies house   ITV  ${organisationName}
+
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -641,7 +642,7 @@ the lead invites a non-registered user
     Logout as user
     the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user clicks the button/link                     jQuery = .govuk-button:contains("Yes, accept invitation")
-    ...                                             AND    the user provides uk based organisation details     Innovate   INNOVATE LTD
+    ...                                             AND    the user provides uk based organisation details     ROYAL   ROYAL MAIL PLC
     ...                                             AND    the user clicks the button/link                     name = save-organisation
     ...                                             AND    the invited user fills the create account form      ${fName}  ${lName}
     ...                                             AND    the user reads his email and clicks the link        ${partner_email}    Please verify your email address    Once verified you can sign into your account

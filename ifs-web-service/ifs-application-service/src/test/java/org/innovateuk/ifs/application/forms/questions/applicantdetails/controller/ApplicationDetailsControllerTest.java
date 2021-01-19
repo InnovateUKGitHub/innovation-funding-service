@@ -12,9 +12,9 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -31,6 +31,7 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.CompanyAge.ESTABLISHED_1_TO_5_YEARS;
 import static org.innovateuk.ifs.application.resource.CompanyPrimaryFocus.AEROSPACE_AND_DEFENCE;
@@ -51,6 +52,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
     private ApplicationDetailsViewModelPopulator applicationDetailsViewModelPopulator;
     @Mock
     private QuestionStatusRestService questionStatusRestService;
+    @Mock
+    private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
     @Mock
     private ProcessRoleRestService processRoleRestService;
     @Mock
@@ -200,6 +203,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                 .withId(competitionId)
                 .withFundingType(FundingType.GRANT)
                 .withInnovationAreas(singleton(1L))
+                .withMaxProjectDuration(36)
+                .withMinProjectDuration(0)
                 .build();
         ApplicationResource application = newApplicationResource()
                 .withCompetition(competition.getId())
@@ -210,6 +215,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
+        when(applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId)).thenReturn(restSuccess(empty()));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)
@@ -246,6 +252,8 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setKtpCompetition(true);
 
         CompetitionResource competition = newCompetitionResource()
+                .withMaxProjectDuration(36)
+                .withMinProjectDuration(0)
                 .withId(competitionId)
                 .withFundingType(FundingType.KTP)
                 .withEndDate(competitionEndDate)
@@ -260,6 +268,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(processRoleRestService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, processRoleResource.getId())).thenReturn(restSuccess(emptyList()));
+        when(applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId)).thenReturn(restSuccess(empty()));
 
         mockMvc.perform(
                 post("/application/{applicationId}/form/question/{questionId}/application-details", applicationId, questionId)

@@ -50,8 +50,7 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
-${ktpCompetitionName}        KTP Competition
-${heukarCompetitionName}     HEUKAR competition
+${ktpCompetitionName}     KTP Competition
 
 
 ${ukLeadInternationalCompetition}                        UK based Lead International Competition
@@ -59,6 +58,7 @@ ${internationalLeadInternationalCompetition}             International Lead Inte
 ${openCompetitionPerformance_name}                       Performance testing competition
 ${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
 ${projectEligibilityLink}                                Project eligibility
+${fundingEligibilityTitle}                               Funding eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
@@ -288,8 +288,8 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
-${existingAcademicPartnerOrgName}     WORTH IT LTD
-${newPartnerOrgName}                  INNOVATE LTD
+${existingAcademicPartnerOrgName}     Aviva Plc
+${newPartnerOrgName}                  ROYAL MAIL PLC
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
@@ -306,7 +306,8 @@ ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
-${compType_HEUKAR}     HEUKAR
+${compType_PT}         The Prince's Trust
+${compType_H2020}      Horizon 2020
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
@@ -317,7 +318,6 @@ ${compType_HEUKAR}     HEUKAR
 @{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
 @{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{HEUKAR_questions}                       A HEUKAR question
 @{project_details}                        Project summary  Public description  Scope
 
 #SBRI Type 1 competition milestones
@@ -327,18 +327,19 @@ ${compType_HEUKAR}     HEUKAR
 @{multiple_answer_choice}     answer2  answer3  answer4  answer5  answer6  answer7  answer8  answer9  answer10
 
 #Project Setup
-${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
-${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
-${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}       100000
-${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}      60
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}      53532322
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    100000
-${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}   60
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
-${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
-${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
-${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}
+${PROJECT_SETUP_COMPETITION_NAME}                                   New designs for a circular economy
+${PROJECT_SETUP_COMPETITION}                                        ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
+${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}     60674010
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}                100000
+${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}               60
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}               53532322
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}             100000
+${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}            60
+${EXISTING_PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}              ROYAL MAIL PLC
+${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}             ewan+1@hiveit.co.uk
+${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}                        ${collaborator1_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}               ${collaborator2_credentials["email"]}
 
 #OrganisationTypes and Info text
 ${businessOrganisationName}              Business
