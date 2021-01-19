@@ -7,7 +7,7 @@ import org.innovateuk.ifs.procurement.milestone.domain.ProjectProcurementMilesto
 import org.innovateuk.ifs.procurement.milestone.repository.ProcurementMilestoneRepository;
 import org.innovateuk.ifs.procurement.milestone.repository.ProjectProcurementMilestoneRepository;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneId;
-import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectProcurementMilestoneServiceImpl
-        extends AbstractProcurementMilestoneServiceImpl<PaymentMilestoneResource, ProjectProcurementMilestone, ProjectProcurementMilestoneId>
+        extends AbstractProcurementMilestoneServiceImpl<ProjectProcurementMilestoneResource, ProjectProcurementMilestone, ProjectProcurementMilestoneId>
         implements ProjectProcurementMilestoneService {
 
     @Autowired
@@ -30,7 +30,7 @@ public class ProjectProcurementMilestoneServiceImpl
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Override
-    protected ServiceResult<ProjectProcurementMilestone> newDomain(PaymentMilestoneResource resource) {
+    protected ServiceResult<ProjectProcurementMilestone> newDomain(ProjectProcurementMilestoneResource resource) {
         return find(projectFinanceRepository.findByProjectIdAndOrganisationId(resource.getProjectId(), resource.getOrganisationId()),
                 notFoundError(ProjectFinance.class, resource.getProjectId(), resource.getOrganisationId()))
                 .andOnSuccessReturn(applicationFinance -> {
@@ -47,7 +47,7 @@ public class ProjectProcurementMilestoneServiceImpl
     }
 
     @Override
-    public ServiceResult<List<PaymentMilestoneResource>> getByProjectIdAndOrganisationId(long projectId, long organisationId) {
+    public ServiceResult<List<ProjectProcurementMilestoneResource>> getByProjectIdAndOrganisationId(long projectId, long organisationId) {
         return serviceSuccess(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(projectId, organisationId)
                 .stream()
                 .map(mapper::mapToResource)
@@ -55,7 +55,7 @@ public class ProjectProcurementMilestoneServiceImpl
     }
 
     @Override
-    public ServiceResult<List<PaymentMilestoneResource>> getByProjectId(long projectId) {
+    public ServiceResult<List<ProjectProcurementMilestoneResource>> getByProjectId(long projectId) {
         return find(repository.findByProjectFinanceProjectId(projectId), notFoundError(ProjectProcurementMilestone.class, projectId))
                 .andOnSuccessReturn((milestones) ->
                         milestones.stream()

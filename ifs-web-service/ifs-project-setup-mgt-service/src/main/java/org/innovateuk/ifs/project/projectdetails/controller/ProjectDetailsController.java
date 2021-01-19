@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.financereviewer.service.FinanceReviewerRestService;
@@ -233,21 +233,21 @@ public class ProjectDetailsController {
             validationHandler.addAnyErrors(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), toField("durationInMonths"));
         }
 
-        RestResult<List<PaymentMilestoneResource>> milestonesResult = projectProcurementMilestoneRestService.getByProjectId(projectId);
+        RestResult<List<ProjectProcurementMilestoneResource>> milestonesResult = projectProcurementMilestoneRestService.getByProjectId(projectId);
 
         if (noMilestonesFound(milestonesResult)) {
             return;
         }
 
-        List<PaymentMilestoneResource> milestones = milestonesResult.getSuccess();
-        Optional<Integer> maxMilestoneMonth = milestones.stream().map(PaymentMilestoneResource::getMonth).max(Comparator.naturalOrder());
+        List<ProjectProcurementMilestoneResource> milestones = milestonesResult.getSuccess();
+        Optional<Integer> maxMilestoneMonth = milestones.stream().map(ProjectProcurementMilestoneResource::getMonth).max(Comparator.naturalOrder());
 
         if (maxMilestoneMonth.isPresent() && (Integer.parseInt(durationInMonths) < maxMilestoneMonth.get())) {
             validationHandler.addAnyErrors(serviceFailure(new Error(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_GREATER_THAN_OR_EQUAL_TO_MAX_EXISTING_MILESTONE, HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
         }
     }
 
-    private boolean noMilestonesFound(RestResult<List<PaymentMilestoneResource>> milestonesResult) {
+    private boolean noMilestonesFound(RestResult<List<ProjectProcurementMilestoneResource>> milestonesResult) {
         return milestonesResult.isFailure() && milestonesResult.getStatusCode() == HttpStatus.NOT_FOUND;
     }
 

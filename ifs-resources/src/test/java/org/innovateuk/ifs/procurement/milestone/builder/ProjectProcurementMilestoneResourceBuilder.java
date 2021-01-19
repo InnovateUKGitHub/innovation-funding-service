@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.procurement.milestone.builder;
 
-import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class ProjectProcurementMilestoneResourceBuilder extends AbstractProcurementMilestoneResourceBuilder<PaymentMilestoneResource, ProjectProcurementMilestoneResourceBuilder> {
+public class ProjectProcurementMilestoneResourceBuilder extends AbstractProcurementMilestoneResourceBuilder<ProjectProcurementMilestoneResource, ProjectProcurementMilestoneResourceBuilder> {
 
-    private ProjectProcurementMilestoneResourceBuilder(final List<BiConsumer<Integer, PaymentMilestoneResource>> newActions) {
+    private ProjectProcurementMilestoneResourceBuilder(final List<BiConsumer<Integer, ProjectProcurementMilestoneResource>> newActions) {
         super(newActions);
     }
 
     @Override
-    protected ProjectProcurementMilestoneResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, PaymentMilestoneResource>> actions) {
+    protected ProjectProcurementMilestoneResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ProjectProcurementMilestoneResource>> actions) {
         return new ProjectProcurementMilestoneResourceBuilder(actions);
     }
 
@@ -23,8 +23,8 @@ public class ProjectProcurementMilestoneResourceBuilder extends AbstractProcurem
     }
 
     @Override
-    protected PaymentMilestoneResource createInitial() {
-        return new PaymentMilestoneResource();
+    protected ProjectProcurementMilestoneResource createInitial() {
+        return new ProjectProcurementMilestoneResource();
     }
 
     public ProjectProcurementMilestoneResourceBuilder withProjectId(long... projectIds) {

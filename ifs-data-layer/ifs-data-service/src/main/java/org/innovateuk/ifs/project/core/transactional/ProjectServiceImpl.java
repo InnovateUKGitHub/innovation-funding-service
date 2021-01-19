@@ -38,7 +38,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,9 +107,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
-
-    @Value("${ifs.procurement.milestones.enabled}")
-    private boolean procurementMilestones;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -359,7 +355,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> createMilestonePaymentProcesses(Project project, ProjectUser originalLeadApplicantProjectUser) {
-        if (procurementMilestones && project.getApplication().getCompetition().isProcurementMilestones()) {
+        if (project.getApplication().getCompetition().isProcurementMilestones()) {
             List<ServiceResult<Void>> results = simpleMap(project.getPartnerOrganisations(), partnerOrganisation ->
                     paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
                             serviceSuccess() :

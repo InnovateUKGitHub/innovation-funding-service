@@ -35,8 +35,8 @@
         <th:block th:if="${model.showBanner}">
             <div class="success-alert">
                 <p class="govuk-body">Your payment milestones has been approved by <span
-                    th:text="${model.paymentMilestoneResource.name}"/>, <span
-                    th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
+                    th:text="${model.projectProcurementMilestoneResource.name}"/>, <span
+                    th:text="${#temporals.format(model.projectProcurementMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
                 </p>
             </div>
         </th:block>

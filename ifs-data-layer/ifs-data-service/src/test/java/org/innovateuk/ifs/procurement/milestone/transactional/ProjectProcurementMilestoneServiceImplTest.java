@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.procurement.milestone.domain.ProjectProcurementMilestone;
 import org.innovateuk.ifs.procurement.milestone.mapper.ProjectProcurementMilestoneMapper;
 import org.innovateuk.ifs.procurement.milestone.repository.ProjectProcurementMilestoneRepository;
-import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -45,13 +45,13 @@ public class ProjectProcurementMilestoneServiceImplTest {
         long organisationId = 2L;
 
         List<ProjectProcurementMilestone> domains = newArrayList(new ProjectProcurementMilestone());
-        List<PaymentMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
+        List<ProjectProcurementMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
 
         when(repository.findByProjectFinanceProjectIdAndProjectFinanceOrganisationIdOrderByMonthAsc(projectId, organisationId))
                 .thenReturn(domains);
         when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
 
-        ServiceResult<List<PaymentMilestoneResource>> result = service.getByProjectIdAndOrganisationId(projectId, organisationId);
+        ServiceResult<List<ProjectProcurementMilestoneResource>> result = service.getByProjectIdAndOrganisationId(projectId, organisationId);
 
         assertThat(result.getSuccess(), is(equalTo(resources)));
     }
@@ -61,13 +61,13 @@ public class ProjectProcurementMilestoneServiceImplTest {
         long projectId = 1L;
 
         List<ProjectProcurementMilestone> domains = newArrayList(new ProjectProcurementMilestone());
-        List<PaymentMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
+        List<ProjectProcurementMilestoneResource> resources = newProjectProcurementMilestoneResource().build(1);
 
         when(repository.findByProjectFinanceProjectId(projectId))
                 .thenReturn(domains);
         when(mapper.mapToResource(domains.get(0))).thenReturn(resources.get(0));
 
-        ServiceResult<List<PaymentMilestoneResource>> result = service.getByProjectId(projectId);
+        ServiceResult<List<ProjectProcurementMilestoneResource>> result = service.getByProjectId(projectId);
 
         assertThat(result.getSuccess(), is(equalTo(resources)));
     }
@@ -77,7 +77,7 @@ public class ProjectProcurementMilestoneServiceImplTest {
         long projectId = 1L;
         long organisationId = 2L;
 
-        PaymentMilestoneResource resource = newProjectProcurementMilestoneResource()
+        ProjectProcurementMilestoneResource resource = newProjectProcurementMilestoneResource()
                 .withProjectId(projectId)
                 .withOrganisationId(organisationId)
                 .build();
