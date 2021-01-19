@@ -79,4 +79,10 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
     public OrganisationResourceBuilder withDateOfIncorporation(LocalDate... dateOfIncorporation) {
         return  withArraySetFieldByReflection("dateOfIncorporation", dateOfIncorporation);
     }
+    public OrganisationResourceBuilder withSicCodes(List<OrganisationSicCodeResource>... sicCodes) {
+        return  withArraySetFieldByReflection("sicCodes", sicCodes);
+    }
+    public OrganisationResourceBuilder withExecutiveOfficers(List<OrganisationExecutiveOfficerResource>... executiveOfficers) {
+        return  withArraySetFieldByReflection("executiveOfficers", executiveOfficers);
+    }
 }
