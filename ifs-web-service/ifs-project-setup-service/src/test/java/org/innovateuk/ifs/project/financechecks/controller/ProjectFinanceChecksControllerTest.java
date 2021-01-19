@@ -185,7 +185,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(emptyList()));
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
-        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
@@ -224,7 +223,6 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
-        when(financeCheckRestService.viewPaymentMilestones(projectId, organisationId)).thenReturn(restSuccess(true));
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
