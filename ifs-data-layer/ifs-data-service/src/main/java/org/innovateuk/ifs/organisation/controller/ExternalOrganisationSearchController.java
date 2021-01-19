@@ -29,18 +29,20 @@ public class ExternalOrganisationSearchController {
 
     @GetMapping("/search-organisations/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final long organisationTypeId,
-                                                                          @RequestParam("organisationSearchText") final String organisationSearchText) {
-        return searchOrganisations(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchText);
+                                                                          @RequestParam("organisationSearchText") final String organisationSearchText,
+                                                                          @RequestParam("page") final int  indexPos) {
+        return searchOrganisations(OrganisationTypeEnum.getFromId(organisationTypeId), organisationSearchText, indexPos);
     }
 
     @GetMapping("/search-organisations/enum/{organisationType}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final OrganisationTypeEnum organisationType,
-                                                                          @RequestParam("organisationSearchText") final String organisationSearchText) {
+                                                                          @RequestParam("organisationSearchText") final String organisationSearchText,
+                                                                          @RequestParam("page") final int indexPos)  {
         switch (organisationType){
             case BUSINESS:
             case RTO:
             case PUBLIC_SECTOR_OR_CHARITY:
-                return companiesHouseService.searchOrganisations(organisationSearchText).toGetResponse();
+                return companiesHouseService.searchOrganisations(organisationSearchText, indexPos).toGetResponse();
             case RESEARCH:
                 return organisationService.searchAcademic(organisationSearchText, SEARCH_ITEMS_MAX).toGetResponse();
             default:
