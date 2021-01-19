@@ -591,7 +591,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         builder[0] = builder[0].withVat(true);
                         break;
                     case FINANCE:
-                        builder[0] = builder[0].withGrantClaim(BigDecimal.valueOf(30));
+                        if (!competition.isFullyFunded()) {
+                            builder[0] = builder[0].withGrantClaim(BigDecimal.valueOf(30));
+                        }
                         break;
                     case GRANT_CLAIM_AMOUNT:
                         builder[0] = builder[0].withGrantClaimAmount(12000);
