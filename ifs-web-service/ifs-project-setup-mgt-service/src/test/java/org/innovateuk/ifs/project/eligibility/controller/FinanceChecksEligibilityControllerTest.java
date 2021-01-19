@@ -395,6 +395,25 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
     }
 
     @Test
+    public void testResetEligibilitySuccess() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET)).
+                thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
+                        param("reset-eligibility", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
+
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
+
+    }
+
+    @Test
     public void testSaveAndContinueWhenConfirmEligibilityNotChecked() throws Exception {
 
         Long projectId = 1L;

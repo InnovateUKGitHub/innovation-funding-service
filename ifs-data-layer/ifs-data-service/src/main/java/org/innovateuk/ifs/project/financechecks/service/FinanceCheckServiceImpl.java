@@ -452,7 +452,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
                         .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
-                                .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getProcessState(), viability, viabilityRagStatus))
+                                .andOnSuccess(viabilityProcess -> validateViability(projectId, viabilityProcess.getProcessState(), viability, viabilityRagStatus))
                                 .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                                 .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
                                         .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
@@ -509,7 +509,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
-                        .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getProcessState(), eligibility, eligibilityRagStatus))
+                        .andOnSuccess(eligibilityProcess -> validateEligibility(projectId, eligibilityProcess.getProcessState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                         .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus)))));
@@ -637,10 +637,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
     }
 
-    private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
+    private ServiceResult<Void> validateViability(long projectId, ViabilityState currentViabilityState, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
 
-        if (ViabilityState.APPROVED == currentViabilityState && ViabilityState.REVIEW != viability) {
-            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+        if (ViabilityState.APPROVED == currentViabilityState) {
+            Optional<Project> project = projectRepository.findById(projectId);
+
+            if (!(ViabilityState.REVIEW == viability && project.isPresent() && !project.get().isSpendProfileGenerated())) {
+                return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+            }
         }
 
         if (ViabilityState.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
@@ -671,10 +675,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    private ServiceResult<Void> validateEligibility(long projectId, EligibilityState currentEligibilityState, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
-        if (EligibilityState.APPROVED == currentEligibilityState && EligibilityState.REVIEW != eligibility) {
-            return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+        if (EligibilityState.APPROVED == currentEligibilityState) {
+            Optional<Project> project = projectRepository.findById(projectId);
+
+            if (!(EligibilityState.REVIEW == eligibility && project.isPresent() && !project.get().isSpendProfileGenerated())) {
+                return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+            }
         }
 
         if (EligibilityState.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {

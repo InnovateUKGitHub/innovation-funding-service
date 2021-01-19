@@ -41,6 +41,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean canEditAcademicFinances;
     private final boolean eligibilityReadyToConfirm;
     private final boolean ktp;
+    private final boolean spendProfileGenerated;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -62,6 +63,7 @@ public class FinanceChecksEligibilityViewModel {
         this.projectId = project.getId();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
+        this.spendProfileGenerated = project.isSpendProfileGenerated();
         this.h2020 = competition.isH2020();
         this.procurement = competition.isProcurement();
         this.loanCompetition = competition.isLoan();
@@ -241,5 +243,9 @@ public class FinanceChecksEligibilityViewModel {
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
         return finances.stream().allMatch(finance ->
             BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
+    }
+
+    public boolean isCanReset() {
+        return isApproved() && projectIsActive && !spendProfileGenerated;
     }
 }

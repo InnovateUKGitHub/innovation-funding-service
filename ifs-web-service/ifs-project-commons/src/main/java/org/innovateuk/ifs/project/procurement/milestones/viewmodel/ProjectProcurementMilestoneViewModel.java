@@ -18,6 +18,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final PaymentMilestoneResource paymentMilestoneResource;
     private final boolean eligibilityAndViabilityApproved;
     private final boolean externalUser;
+    private final boolean spendProfileGenerated;
 
     public ProjectProcurementMilestoneViewModel(ProjectResource project, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
         super(project.getDurationInMonths(), finance);
@@ -31,6 +32,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
         this.eligibilityAndViabilityApproved = eligibilityAndViabilityApproved;
         this.paymentMilestoneResource = paymentMilestoneResource;
         this.externalUser = externalUser;
+        this.spendProfileGenerated = project.isSpendProfileGenerated();
     }
 
     public long getApplicationId() {
@@ -80,7 +82,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     }
 
     public boolean isCanReset() {
-        return this.paymentMilestoneResource.isMilestonePaymentApproved();
+        return this.paymentMilestoneResource.isMilestonePaymentApproved() && !spendProfileGenerated;
     }
 
     public boolean isApproved() {

@@ -43,6 +43,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean viabilityReadyToConfirm;
     private final boolean hasGrantClaimPercentage;
     private final boolean ktpCompetition;
+    private final boolean spendProfileGenerated;
 
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
@@ -87,6 +88,7 @@ public class FinanceChecksViabilityViewModel {
         this.projectName = project.getName();
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
+        this.spendProfileGenerated = project.isSpendProfileGenerated();
         this.loanCompetition = competition.isLoan();
         this.procurementCompetition  = competition.isProcurement();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
@@ -160,7 +162,7 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isCanReset() {
-        return approved && projectIsActive;
+        return approved && projectIsActive && !spendProfileGenerated;
     }
 
     public LocalDate getApprovalDate() {

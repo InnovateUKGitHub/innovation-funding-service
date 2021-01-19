@@ -12,8 +12,7 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
     private ViabilityRagStatus ragStatus;
     private boolean confirmViabilityChecked;
 
-    // for Spring MVC
-    FinanceChecksViabilityForm() {
+    public FinanceChecksViabilityForm() {
     }
 
     public FinanceChecksViabilityForm(boolean creditReportConfirmed, ViabilityRagStatus ragStatus, boolean confirmViabilityChecked) {

@@ -50,8 +50,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -289,6 +288,27 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         verify(projectFinanceService).saveCreditReportConfirmed(projectId, organisationId, true);
         verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.APPROVED, ViabilityRagStatus.RED);
+    }
+
+    @Test
+    public void resetViability() throws Exception {
+
+        Long projectId = 123L;
+        Long organisationId = 456L;
+
+        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
+                thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
+                        param("reset-viability", "").
+                        param("confirmViabilityChecked", "true").
+                        param("creditReportConfirmed", "true")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
+
+        verifyZeroInteractions(projectFinanceService);
+        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
     }
 
     @Test

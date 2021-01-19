@@ -305,7 +305,7 @@
               th:unless="${summaryModel.isExternalView()}"
               th:with="projectCostsInEdit=${summaryModel.canEditAcademicFinances || model?.editableRowType != null}">
 
-            <details th:if="${summaryModel.isApproved() and summaryModel.projectIsActive}" class="govuk-details" data-module="govuk-details">
+            <details th:if="${summaryModel.canReset}" class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
                       Reset eligibility check

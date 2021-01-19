@@ -97,7 +97,7 @@ public class FinanceChecksViabilityController {
 
         RestResult<Void> saveViabilityResult = financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, new FinanceChecksViabilityForm());
 
         return validationHandler.
                 addAnyErrors(saveViabilityResult).
