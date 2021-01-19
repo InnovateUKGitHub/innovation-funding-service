@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
@@ -24,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -66,8 +68,8 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
-        boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
-                .getAlwaysOpen();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToInviteListView(competitionId);
@@ -118,8 +120,9 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                 competitionId,
                 inviteform.getInviteIds()).getSuccess();
-        boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
-                .getAlwaysOpen();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        boolean alwaysOpen =  Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+
         model.addAttribute("model", new SendInvitesViewModel(
                 invites.getCompetitionId(),
                 invites.getCompetitionName(),
@@ -149,8 +152,9 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
             AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                     competitionId,
                     submittedSelectionForm.getSelectedInviteIds()).getSuccess();
-            boolean alwaysOpen = competitionRestService.getCompetitionById(competitionId).getSuccess()
-                    .getAlwaysOpen();
+            CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+            boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
                     invites.getCompetitionName(),
