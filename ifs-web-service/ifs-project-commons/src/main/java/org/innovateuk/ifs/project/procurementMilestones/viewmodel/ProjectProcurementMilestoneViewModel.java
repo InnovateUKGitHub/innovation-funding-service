@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.procurementMilestones.viewmodel;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.AbstractProcurementMilestoneViewModel;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneResource;
+import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMilestoneViewModel {
@@ -74,7 +75,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     }
 
     public boolean isCanReset() {
-        return this.projectProcurementMilestoneResource.isMilestonePaymentApproved();
+        return this.paymentMilestoneResource.isMilestonePaymentApproved();
     }
 
     public boolean isApproved() {
@@ -86,6 +87,6 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     }
 
     public boolean isShowResetMessage() {
-        return PaymentMilestoneState.REVIEW == this.projectProcurementMilestoneResource.getPaymentMilestoneState() && projectProcurementMilestoneResource.getPaymentMilestoneInternalUserLastName() != null;
+        return PaymentMilestoneState.REVIEW == this.paymentMilestoneResource.getPaymentMilestoneState() && paymentMilestoneResource.getPaymentMilestoneInternalUserLastName() != null;
     }
 }
