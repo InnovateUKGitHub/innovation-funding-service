@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.milestones.controller;
 
-import org.innovateuk.ifs.application.ProcurementMilestones.AbstractProcurementMilestoneController;
+import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -8,6 +8,7 @@ import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilest
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.milestones.form.ProjectProcurementMilestoneApprovalForm;
 import org.innovateuk.ifs.project.milestones.saver.ProjectProcurementMilestoneFormSaver;
+import org.innovateuk.ifs.project.procurementMilestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,9 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @Autowired
     private ProjectProcurementMilestoneFormSaver saver;
 
+    @Autowired
+    private ProjectProcurementMilestoneViewModelPopulator populator;
+
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     public String viewMilestones(@PathVariable long projectId,
@@ -41,7 +45,8 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  UserResource userResource,
                                  Model model) {
         model.addAttribute("projectProcurementMilestoneApprovalForm", new ProjectProcurementMilestoneApprovalForm());
-        return viewProjectSetupMilestones(model, projectId, organisationId, userResource, editMilestones);
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, editMilestones));
+        return viewProjectSetupMilestones(model, projectId, organisationId, userResource);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")

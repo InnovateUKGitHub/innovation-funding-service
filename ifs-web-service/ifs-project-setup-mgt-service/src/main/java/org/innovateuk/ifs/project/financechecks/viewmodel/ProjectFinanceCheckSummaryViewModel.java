@@ -89,7 +89,7 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public boolean displayMilestoneColumn() {
         return this.financeCheckSummaryResource.getPartnerStatusResources().stream()
-                .filter(partner -> partner.getPaymentMilestoneState().isPresent())
+                .filter(partner -> partner.getPaymentMilestoneState() != null)
                 .findAny()
                 .isPresent();
     }

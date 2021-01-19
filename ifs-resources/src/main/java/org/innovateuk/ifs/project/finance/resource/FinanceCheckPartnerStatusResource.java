@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.finance.resource;
 
-import java.util.Optional;
-
 /**
  * A resource object to return finance check status for a partner organisation
  */
@@ -14,7 +12,7 @@ public class FinanceCheckPartnerStatusResource {
     private ViabilityRagStatus viabilityRagStatus;
     private EligibilityState eligibility;
     private EligibilityRagStatus eligibilityRagStatus;
-    private Optional<PaymentMilestoneState> paymentMilestoneState;
+    private PaymentMilestoneState paymentMilestoneState;
     private boolean awaitingResponse;
     private boolean financeContactProvided;
 
@@ -24,7 +22,7 @@ public class FinanceCheckPartnerStatusResource {
     public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, ViabilityState viability,
                                              ViabilityRagStatus viabilityRagStatus, EligibilityState eligibility,
                                              EligibilityRagStatus eligibilityRagStatus,
-                                             Optional<PaymentMilestoneState> paymentMilestoneState,
+                                             PaymentMilestoneState paymentMilestoneState,
                                              boolean awaitingResponse,
                                              boolean financeContactProvided) {
         this.id = id;
@@ -111,17 +109,17 @@ public class FinanceCheckPartnerStatusResource {
         this.financeContactProvided = financeContactProvided;
     }
 
-    public Optional<PaymentMilestoneState> getPaymentMilestoneState() {
+    public PaymentMilestoneState getPaymentMilestoneState() {
         return paymentMilestoneState;
     }
 
-    public void setPaymentMilestoneState(Optional<PaymentMilestoneState> paymentMilestoneState) {
+    public void setPaymentMilestoneState(PaymentMilestoneState paymentMilestoneState) {
         this.paymentMilestoneState = paymentMilestoneState;
     }
 
     public boolean isPaymentMilestoneApproved() {
-        if (this.getPaymentMilestoneState().isPresent()) {
-            return this.getPaymentMilestoneState().get().isApproved();
+        if (this.getPaymentMilestoneState() != null) {
+            return this.getPaymentMilestoneState().isApproved();
         }
         return false;
     }

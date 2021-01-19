@@ -56,13 +56,11 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -175,6 +173,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Before
     public void setUp() {
 
+        ReflectionTestUtils.setField(service, "procurementMilestones", true);
+
         organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
@@ -203,8 +203,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
         List<ApplicationFinance> applicationFinances = singletonList(applicationFinance);
 
+        Section section1 = newSection().withSectionType(SectionType.FINANCE).build();
+        Section section2 = newSection().withSectionType(SectionType.PAYMENT_MILESTONES).build();
+
         competition = newCompetition()
-                .withSections(newSection().withSectionType(SectionType.FINANCE).build(1))
+                .withSections(Arrays.asList(section1, section2))
+                .withFundingType(FundingType.PROCUREMENT)
                 .build();
 
         application = newApplication().

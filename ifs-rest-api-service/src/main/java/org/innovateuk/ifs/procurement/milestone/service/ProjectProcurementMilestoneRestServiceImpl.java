@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.procurement.milestone.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class ProjectProcurementMilestoneRestServiceImpl
-        extends BaseProcurementMilestoneRestServiceImpl<ProjectProcurementMilestoneResource>
+        extends BaseProcurementMilestoneRestServiceImpl<PaymentMilestoneResource>
         implements ProjectProcurementMilestoneRestService {
 
     protected ProjectProcurementMilestoneRestServiceImpl() {
@@ -17,19 +17,19 @@ public class ProjectProcurementMilestoneRestServiceImpl
     }
 
     @Override
-    public RestResult<List<ProjectProcurementMilestoneResource>> getByProjectIdAndOrganisationId(long projectId, long organisationId) {
+    public RestResult<List<PaymentMilestoneResource>> getByProjectIdAndOrganisationId(long projectId, long organisationId) {
         return getWithRestResult(getMilestoneUrl() + String.format("/project/%d/organisation/%d", projectId, organisationId),
-                new ParameterizedTypeReference<List<ProjectProcurementMilestoneResource>>() {});
+                new ParameterizedTypeReference<List<PaymentMilestoneResource>>() {});
     }
 
     @Override
-    public RestResult<List<ProjectProcurementMilestoneResource>> getByProjectId(long projectId) {
+    public RestResult<List<PaymentMilestoneResource>> getByProjectId(long projectId) {
         return getWithRestResult(getMilestoneUrl() + String.format("/project/%d", projectId),
-                new ParameterizedTypeReference<List<ProjectProcurementMilestoneResource>>() {});
+                new ParameterizedTypeReference<List<PaymentMilestoneResource>>() {});
     }
 
     @Override
-    protected Class<ProjectProcurementMilestoneResource> getResourceClass() {
-        return ProjectProcurementMilestoneResource.class;
+    protected Class<PaymentMilestoneResource> getResourceClass() {
+        return PaymentMilestoneResource.class;
     }
 }

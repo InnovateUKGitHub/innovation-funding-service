@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.milestones;
 
-import org.innovateuk.ifs.application.ProcurementMilestones.AbstractProcurementMilestoneController;
+import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
+import org.innovateuk.ifs.project.procurementMilestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,13 +17,17 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
 
     private static final String VIEW = "milestones/project-procurement-milestones";
 
+    @Autowired
+    private ProjectProcurementMilestoneViewModelPopulator populator;
+
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     public String viewMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
                                  UserResource userResource,
                                  Model model) {
-        return viewProjectSetupMilestones(model, projectId, organisationId, userResource, false);
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, false));
+        return viewProjectSetupMilestones(model, projectId, organisationId, userResource);
     }
 
     @Override

@@ -212,8 +212,8 @@ public class FinanceCheckSummaryResource {
 
     private boolean isPaymentMilestoneAllApprovedOrNotRequired() {
         return partnerStatusResources.stream()
-                .filter(status -> status.getPaymentMilestoneState().isPresent())
-                .allMatch(org -> PaymentMilestoneState.APPROVED == org.getPaymentMilestoneState().get());
+                .filter(status -> status.getPaymentMilestoneState() != null)
+                .allMatch(org -> PaymentMilestoneState.APPROVED == org.getPaymentMilestoneState());
     }
 
     public boolean isAllEligibilityAndViabilityInReview() {

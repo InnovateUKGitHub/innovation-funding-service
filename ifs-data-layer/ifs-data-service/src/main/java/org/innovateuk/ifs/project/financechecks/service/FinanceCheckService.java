@@ -92,9 +92,6 @@ public interface FinanceCheckService {
     ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
-    ServiceResult<ProjectProcurementMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
-
-    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_MILESTONE_STATUS')")
-    ServiceResult<Boolean> viewPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+    ServiceResult<PaymentMilestoneResource> getPaymentMilestone(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 
 }
