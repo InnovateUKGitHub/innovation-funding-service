@@ -19,6 +19,6 @@ public class ApplicationSubmissionFormPopulator implements CompetitionSetupFormP
 
     @Override
     public ApplicationSubmissionForm populateForm(CompetitionResource competitionResource) {
-        return new ApplicationSubmissionForm(competitionResource.getAlwaysOpen());
+        return new ApplicationSubmissionForm(competitionResource.isAlwaysOpen());
     }
 }
