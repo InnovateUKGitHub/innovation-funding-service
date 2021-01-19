@@ -119,7 +119,7 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
         when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
         when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId())).thenReturn(restSuccess(false));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))
                 .andExpect(status().isOk())
@@ -150,7 +150,7 @@ public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends Base
         when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
         when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
-        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId())).thenReturn(restSuccess(false));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(competitionResource.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get(viewPageUrl()))
                 .andExpect(status().isOk())

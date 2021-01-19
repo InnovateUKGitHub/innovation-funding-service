@@ -148,7 +148,7 @@ Applicant - User should be redirected to grant application service on click revi
      When the internal user edits the form with connect option     CONNECT
      And the internal user approve the GOL                         ${connectServiceProjectID}
      And applicant clicks review its progress link                 ${connectServiceProjectID}
-     Then the user should see the element                          link = _connect
+#     Currently __connect system is being redirected to IFS and the work is in progress. Once redirected, please add 'then' statement to check the IFS redirection
 
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017

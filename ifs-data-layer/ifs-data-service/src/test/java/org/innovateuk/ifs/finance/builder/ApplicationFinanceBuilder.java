@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.procurement.milestone.domain.ApplicationProcurementMilestone;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -55,5 +56,9 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
     @Override
     protected ApplicationFinance createInitial() {
         return new ApplicationFinance();
+    }
+
+    public ApplicationFinanceBuilder withMilestones(List<ApplicationProcurementMilestone>... applicationProcurementMilestones) {
+        return withArraySetFieldByReflection("milestones", applicationProcurementMilestones);
     }
 }

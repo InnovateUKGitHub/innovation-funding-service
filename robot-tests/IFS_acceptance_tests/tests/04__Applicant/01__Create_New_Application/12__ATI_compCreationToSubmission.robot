@@ -21,6 +21,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-8729 ATI Assessor 'doesn't have the right permissions' to access appendices
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -45,8 +47,7 @@ ${assessor2_email}                    alexis.colon@gmail.com
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396  IFS-8779
     Given The user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
-    And user fills in funding overide
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_ATI}  SUBSIDY_CONTROL  GRANT  PROJECT_SETUP  yes  1  true  collaborative
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
@@ -202,13 +203,13 @@ MO can see application summary page for the ATI application in project setup bef
     And the user should see the element                        jQuery = h1:contains("Application overview")
 
 Internal user add new partner orgnisation after moving competition to project setup
-    [Documentation]  IFS-6725
+    [Documentation]  IFS-6725  IFS-7723
     [Setup]  Requesting Project ID of this Project
     Given Log in as a different user                             &{internal_finance_credentials}
     And moving competition to Project Setup                      ${competitionId}
     When the user navigates to the page                          ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
     And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
-    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  innovate  INNOVATE LTD  ${atiApplicationID}  ${ATIapplicationTitle}
+    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  ROYAL  ROYAL MAIL PLC  ${atiApplicationID}  ${ATIapplicationTitle}
 
 New partner orgination checks for funding level guidance
     [Documentation]  IFS-6725
@@ -267,7 +268,6 @@ the user completes the application
     the user clicks the button/link                                                          link = Your project finances
     the user checks for funding level guidance at application level
     the user accept the competition terms and conditions                                     Return to application overview
-    the user checks the override value is applied
     the user selects research category                                                       Feasibility studies
     the finance overview is marked as incomplete
 
@@ -278,27 +278,6 @@ the partner selects new answer choice
      the user clicks the button/link                    jQuery = ul li:contains("${answerToSelect}")
      the user clicks the button/link                    jQuery = button:contains("Assign to lead for review")
      the user should see the element                    jQuery = p:contains("This question is assigned to"):contains("Steve Smith")
-
-User fills in funding overide
-    the user clicks the button/link                      link = ${ATIcompetitionTitle}
-    the user clicks the button/link                      link = View and update competition details
-    the user clicks the button/link                      link = Project eligibility
-    the user clicks the button/link                      css = .govuk-button[type=submit]
-    the user clicks the button twice                     css = label[for="comp-overrideFundingRules-yes"]
-    the user enters text to a text field                 id = fundingLevelPercentageOverride  100
-    the user clicks the button/link                      jQuery = button:contains("Done")
-    the user should see the element                      jQuery = dt:contains("Funding level") ~ dd:contains("100%")
-    the user clicks the button/link                      link = Back to competition details
-    the user clicks the button/link                      jQuery = a:contains("Complete")
-    the user clicks the button/link                      css = button[type="submit"]
-
-the user checks the override value is applied
-    the user clicks the button/link     link = Your project finances
-    the user clicks the button/link     link = Your funding
-    the user clicks the button/link     jQuery = button:contains("Edit your funding")
-    the user should see the element     jQuery = span:contains("The maximum you can enter is 100%")
-    the user clicks the button/link     jQuery = button:contains("Mark as complete")
-    the user clicks the button/link     link = Back to application overview
 
 the finance overview is marked as incomplete
     the user clicks the button/link    link = Finances overview

@@ -141,7 +141,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         when(applicantRestService.getSection(user.getId(), APPLICATION_ID, SECTION_ID)).thenReturn(section);
         when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
         when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
-        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId())).thenReturn(restSuccess(true));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelConstant(section.getCompetition().getId())).thenReturn(restSuccess(true));
         when(processRoleRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withOrganisation(organisation.getId()).build()));
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
 

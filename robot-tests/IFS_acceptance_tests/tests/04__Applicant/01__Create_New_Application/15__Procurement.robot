@@ -19,6 +19,10 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...             IFS-8938 SBRI Milestones - Non JS Milestones Page - Application
+...
+...             IFS-8940 SBRI Milestones - Edit project duration in application
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -63,8 +67,28 @@ Applicant fills in project costs with VAT
     When the user checks the VAT calculations
     Then the user enters the project location
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
-    And the user clicks the button/link                 link = Back to application overview
-    And the user should see the element                 jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant fills in payment milestones
+    [Documentation]  IFS-8938
+    When Lead applicant completes payment milestones          2  Milestone 1  10000  taskOrActivity 1  deliverable 1  successCriteria 1
+    Then Lead applicant views readonly payment milestones
+    And the user clicks the button/link                       link = Back to application overview
+    And the user should see the element                       jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant is shown a validation message when the project duration is less than allowed
+    [Documentation]  IFS-8940
+    Given the user clicks the button/link                     link = Application details
+    And the user clicks the button/link                       id = edit-application-details-button
+    When the user enters text to a text field                 id = durationInMonths  1
+    And the user clicks the button/link                       id = application-question-complete
+    Then the user should see a field error                    This cannot be less than your stated payment milestones. You will need to adjust these to change the duration.
+
+Applicant can edit the project duration before application submission
+    [Documentation]  IFS-8940
+    Given the user enters text to a text field                id = durationInMonths  3
+    When the user clicks the button/link                      id = application-question-complete
+    Then the user should see the element                      jQuery = dd:contains("3 months")
+    And the user clicks the button/link                       link = Back to application overview
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
@@ -332,3 +356,29 @@ Lead applicant upload the contract
     Log in as a different user         &{RTO_lead_applicant_credentials}
     the user navigates to the page     ${server}/project-setup/project/${ProjectID}
     Applicant uploads the contract
+
+Lead applicant completes payment milestones
+    [Arguments]   ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
+    the user clicks the button/link                         link = Your payment milestones
+    the user clicks the button/link                         jQuery = button:contains("Add another project milestone")
+    the user clicks the button/link                         jQuery = button:contains("Open all")
+    the user selects the option from the drop-down menu     ${months}  css = select[id^="milestones"][id$="month"]
+    the user enters text to a text field                    css = input[id^="milestones"][id$="description"]         ${description}
+    the user enters text to a text field                    css = input[id^="milestones"][id$="payment"]             ${payment}
+    the user enters text to a text field                    css = textarea[id^="milestones"][id$="taskOrActivity"]   ${taskOrActivity}
+    the user enters text to a text field                    css = textarea[id^="milestones"][id$="deliverable"]      ${deliverable}
+    the user enters text to a text field                    css = textarea[id^="milestones"][id$="successCriteria"]  ${successCriteria}
+    the user clicks the button/link                         id = mark-all-as-complete
+
+Lead applicant views readonly payment milestones
+    the user clicks the button/link     link = Your payment milestones
+    the user should see the element     jQuery = span:contains("2")
+    the user should see the element     jQuery = span:contains("£10,000")
+    the user should see the element     jQuery = span:contains("14%")
+    the user should see the element     jQuery = button:contains("Milestone 1")
+    the user should see the element     jQuery = h3:contains("Total payment requested")
+    the user should see the element     jQuery = button:contains("Edit your project costs")
+    the user should see the element     jQuery = .govuk-heading-m:contains("14%")
+    the user should see the element     jQuery = .govuk-heading-m:contains("£10,000")
+    the user clicks the button/link     link = Your project finances
+    the user should see the element     jQuery = li:contains("Your payment milestones") > .task-status-complete
