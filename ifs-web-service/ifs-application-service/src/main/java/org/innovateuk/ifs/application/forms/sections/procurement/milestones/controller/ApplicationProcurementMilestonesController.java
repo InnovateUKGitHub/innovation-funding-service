@@ -104,7 +104,9 @@ public class ApplicationProcurementMilestonesController {
                            @Valid @ModelAttribute("form") ProcurementMilestonesForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
-        validator.validate(form, applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess(), validationHandler);
+        if (!validationHandler.hasErrors()) {
+            validator.validate(form, applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess(), validationHandler);
+        }
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewMilestones(model, form, user, applicationId, organisationId, sectionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -185,7 +187,6 @@ public class ApplicationProcurementMilestonesController {
         saver.addRowForm(form);
         Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
 
-        System.out.println("err");
         model.addAttribute("form", form);
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
         model.addAttribute("id", entry.getKey());

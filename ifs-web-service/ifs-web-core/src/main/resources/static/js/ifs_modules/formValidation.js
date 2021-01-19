@@ -938,6 +938,8 @@ IFS.core.formValidation = (function () {
         if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
+          field.removeClass('govuk-textarea--error')
+          field.removeClass('govuk-select--error')
           if (formInTable && formInTableErrors === 0) {
             field.closest('.form-in-table').removeClass('govuk-form-group--error')
           }

@@ -8,7 +8,7 @@
     <div class="procurement-milestones govuk-!-margin-bottom-2">
         <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
             <h4 class="width-20-percent govuk-heading-s">Month completed</h4>
-            <h4 class="width-48-percent govuk-heading-s govuk-!-margin-left-1">Milestone</h4>
+            <h4 class="width-48-percent govuk-heading-s">Milestone</h4>
             <h4 class="width-10-percent govuk-heading-s">% of project costs</h4>
             <h4 class="width-10-percent govuk-heading-s">Payment request</h4>
             <th:block th:each="entry, iter : ${form.milestones}">
@@ -128,52 +128,53 @@
                    th:attr="data-calculation-fields=|100, ${model.fundingAmount}, [id='__${path}__.payment']|"
                    th:value="|${#ifsUtil.formatDecimal(milestone.getPercentageOfFundingAmount(model.fundingAmount))}%|" />
 
-            <div class="left-col">
-                <div th:unless="${model.readOnly}" class="govuk-form-group">
-                    <label class="govuk-label govuk-label--s" th:for="__${path}__.month">
-                        Month completed
-                    </label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.month)"/>
-                    <select th:id="__${path}__.month"
-                            class="govuk-select"
-                            th:errorclass="govuk-select--error"
-                            required="required"
-                            th:attr="data-required-errormessage=#{validation.procurement.milestones.month}"
-                            th:name="__${path}__.month">
-                        <option value=""
-                                disabled="disabled"
-                                th:selected="${milestone.month == null || !model.durations.contains(milestone.month)}"></option>
-                        <option th:each="duration : ${model.durations}"
-                            th:value="${duration}"
-                            th:text="${duration}"
-                            th:selected="${milestone.month == duration}">1</option>
-                    </select>
+            <div class="col-wrapper">
+                <div class="left-col">
+                    <div th:unless="${model.readOnly}" class="govuk-form-group">
+                        <label class="govuk-label govuk-label--s" th:for="__${path}__.month">
+                            Month completed
+                        </label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.month)"/>
+                        <select th:id="__${path}__.month"
+                                class="govuk-select"
+                                th:errorclass="govuk-select--error"
+                                required="required"
+                                th:attr="data-required-errormessage=#{validation.procurement.milestones.month}"
+                                th:name="__${path}__.month">
+                            <option value=""
+                                    disabled="disabled"
+                                    th:selected="${milestone.month == null || !model.durations.contains(milestone.month)}"></option>
+                            <option th:each="duration : ${model.durations}"
+                                th:value="${duration}"
+                                th:text="${duration}"
+                                th:selected="${milestone.month == duration}">1</option>
+                        </select>
+                    </div>
+                    <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.month" th:field="*{__${path}__.month}" />
                 </div>
-                <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.month" th:field="*{__${path}__.month}" />
-            </div>
-            <div class="central-col">
-                <div th:unless="${model.readOnly}" class="govuk-form-group">
-                    <label th:for="__${path}__.description" class="govuk-label govuk-label--s">
-                        Milestone
-                    </label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
-                    <input th:id="__${path}__.description"
-                           th:field="*{__${path}__.description}"
-                           th:errorclass="govuk-input--error"
-                           type="text"
-                           class="govuk-input"
-                    />
+                <div class="central-col">
+                    <div th:unless="${model.readOnly}" class="govuk-form-group">
+                        <label th:for="__${path}__.description" class="govuk-label govuk-label--s">
+                            Milestone
+                        </label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
+                        <input th:id="__${path}__.description"
+                               th:field="*{__${path}__.description}"
+                               th:errorclass="govuk-input--error"
+                               type="text"
+                               class="govuk-input"
+                        />
+                    </div>
+                    <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.description" th:field="*{__${path}__.description}" />
+
+                    <th:block th:insert="this :: textarea(model=${model}, path=|${path}.taskOrActivity|, value=${milestone.taskOrActivity}, label=${'Task or activity'}, requiredMessage=#{validation.procurement.milestones.taskOrActivity})"></th:block>
+                    <th:block th:insert="this :: textarea(${model}, |${path}.deliverable|, ${milestone.deliverable}, ${'Deliverable'})"></th:block>
+                    <th:block th:insert="this :: textarea(${model}, |${path}.successCriteria|, ${milestone.successCriteria}, ${'Success criteria'})"></th:block>
+
                 </div>
-                <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.description" th:field="*{__${path}__.description}" />
-
-                <th:block th:insert="this :: textarea(model=${model}, path=|${path}.taskOrActivity|, value=${milestone.taskOrActivity}, label=${'Task or activity'}, requiredMessage=#{validation.procurement.milestones.taskOrActivity})"></th:block>
-                <th:block th:insert="this :: textarea(${model}, |${path}.deliverable|, ${milestone.deliverable}, ${'Deliverable'})"></th:block>
-                <th:block th:insert="this :: textarea(${model}, |${path}.successCriteria|, ${milestone.successCriteria}, ${'Success criteria'})"></th:block>
-
-            </div>
-            <div class="right-col">
+                <div class="right-col">
                 <div th:unless="${model.readOnly}" class="govuk-form-group">
                     <label th:for="__${path}__.payment" class="govuk-label govuk-label--s">
                         Payment requested (£)
@@ -193,6 +194,7 @@
                     />
                 </div>
                 <input type="hidden" class="payment-amount" th:if="${model.readOnly}" th:id="__${path}__.payment" th:field="*{__${path}__.payment}" />
+            </div>
             </div>
             <p class="alignright" th:unless="${model.readOnly or first}">
                 <button type="submit"

@@ -1,4 +1,3 @@
-
 .procurement-milestones {
   .govuk-accordion .section-status {
     float: left;
@@ -7,6 +6,13 @@
 
   .govuk-accordion .section-incomplete {
     background-position: left 100%;
+  }
+
+  .textarea-wrapped {
+    .govuk-textarea--error {
+      @include box-shadow(none);
+      border: 4px solid $govuk-error-colour;
+    }
   }
 
   .width-10-percent {
@@ -23,6 +29,12 @@
     }
   }
 
+  .section-status {
+    + .width-20-percent {
+      width: 17%;
+    }
+  }
+
   .width-20-percent {
     width: 20%;
     display: inline-block;
@@ -36,10 +48,10 @@
     vertical-align: bottom;
     margin-bottom: 0;
 
-      @include media-down(mobile) {
-        width:20%;
-      }
+    @include media-down(mobile) {
+      width:20%;
     }
+  }
 
   .width-80-percent {
     width: 79%;
@@ -48,41 +60,44 @@
     margin-bottom: 0;
   }
 
-  .central-col {
-    width: 59%;
-    display: inline-block;
-    vertical-align: top;
-
-    label {
-      margin-top: 25px;
-    }
-
-    @include media-down(mobile) {
-      display: block;
+  .govuk-form-group--error {
+    .left-col {
+      width: 19%;
     }
   }
 
-  .left-col {
-    width: 20%;
-    display: inline-block;
-    vertical-align: top;
+  .col-wrapper {
+    display: flex;
 
-    label {
-      margin-top: 25px;
+    .central-col {
+      width: 48%;
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 10px;
+
+      @include media-down(mobile) {
+        display: block;
+      }
     }
 
-    @include media-down(mobile) {
-      display: block;
+    .left-col {
+      width: 20%;
+      display: inline-block;
+      vertical-align: top;
+
+      @include media-down(mobile) {
+        display: block;
+      }
     }
-  }
 
-  .right-col {
-    width: 20%;
-    display: inline-block;
-    vertical-align: top;
+    .right-col {
+      width: 25%;
+      display: inline-block;
+      vertical-align: top;
 
-    @include media-down(mobile) {
-      display: block;
+      @include media-down(mobile) {
+        display: block;
+      }
     }
   }
 
