@@ -19,7 +19,7 @@
             <button type="submit"
                     data-repeatable-rowcontainer=".procurement-milestones .govuk-accordion"
                     name="add_row"
-                    class="button-clear">Add another project <milestone></milestone>
+                    class="button-clear">Add another project milestone
             </button>
         </p>
 
@@ -98,6 +98,9 @@
         <!--/*@thymesVar id="path" type="java.lang.String"*/-->
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', path)}"
+                     class="section-status section-incomplete icon-
+                     only error-marker"></div>
                 <span class="width-20-percent accordion-header-text govuk-!-margin-right-1"
                       th:text="${milestone.month}"
                       th:attr="data-mirror=|[id='__${path}__.month']|"></span>
@@ -112,14 +115,12 @@
                 <span class="width-10-percent finance-total"
                       th:text="${#ifsUtil.formatInteger(milestone.getPercentageOfFundingAmount(model.fundingAmount)) + '%'}"
                       th:attr="data-mirror=|[id='__${path}__.percentage']|"></span>
-                <!--/*<div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
-                     class="section-status section-incomplete icon-
-                     only error-marker"></div>*/-->
             </h3>
 
         </div>
-        <div  th:id="|accordion-finances-content-${id}|" class="govuk-accordion__section-content"
-              th:attr="aria-labelledby=|accordion-finances-heading-${id}|">
+        <div  th:id="|accordion-finances-content-${id}|" class="govuk-accordion__section-content form-group-row-validated"
+              th:attr="aria-labelledby=|accordion-finances-heading-${id}|"
+              th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
             <input type="hidden" th:field="*{__${path}__.id}" />
             <input type="hidden" th:id="__${path}__.percentage"
                    data-calculation-format="decimal-percentage"

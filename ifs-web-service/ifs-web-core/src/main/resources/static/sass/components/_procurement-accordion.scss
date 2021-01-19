@@ -1,5 +1,14 @@
 
 .procurement-milestones {
+  .govuk-accordion .section-status {
+    float: left;
+    padding: 20px 5px 0 20px;
+  }
+
+  .govuk-accordion .section-incomplete {
+    background-position: left 100%;
+  }
+
   .width-10-percent {
     width: 10%;
     display: inline-block;
@@ -79,6 +88,11 @@
 
   .margin-right-60 {
     margin-right: 60px;
+  }
+
+  .govuk-form-group--error {
+    padding-left: 0;
+    border-left: none;
   }
 }
 

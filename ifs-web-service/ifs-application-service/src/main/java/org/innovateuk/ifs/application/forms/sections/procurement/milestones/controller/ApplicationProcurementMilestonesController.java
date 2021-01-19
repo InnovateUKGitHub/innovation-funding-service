@@ -185,6 +185,7 @@ public class ApplicationProcurementMilestonesController {
         saver.addRowForm(form);
         Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
 
+        System.out.println("err");
         model.addAttribute("form", form);
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
         model.addAttribute("id", entry.getKey());
