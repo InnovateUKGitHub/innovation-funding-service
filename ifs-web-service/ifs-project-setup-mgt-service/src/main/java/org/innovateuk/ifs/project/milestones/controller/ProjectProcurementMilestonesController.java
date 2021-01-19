@@ -8,7 +8,7 @@ import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilest
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.milestones.form.ProjectProcurementMilestoneApprovalForm;
 import org.innovateuk.ifs.project.milestones.saver.ProjectProcurementMilestoneFormSaver;
-import org.innovateuk.ifs.project.procurementMilestones.populator.ProjectProcurementMilestoneViewModelPopulator;
+import org.innovateuk.ifs.project.procurement.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
