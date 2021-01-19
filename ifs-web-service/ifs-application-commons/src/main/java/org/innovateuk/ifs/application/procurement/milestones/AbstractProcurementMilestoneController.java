@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.procurementMilestones;
+package org.innovateuk.ifs.application.procurement.milestones;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;

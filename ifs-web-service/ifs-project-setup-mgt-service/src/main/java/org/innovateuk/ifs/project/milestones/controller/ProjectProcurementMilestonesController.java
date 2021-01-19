@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.milestones.controller;
 
-import org.innovateuk.ifs.application.procurementMilestones.AbstractProcurementMilestoneController;
+import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
