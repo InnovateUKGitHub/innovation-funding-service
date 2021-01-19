@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.procurementMilestones.viewmodel;
+package org.innovateuk.ifs.project.procurement.milestones.viewmodel;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.AbstractProcurementMilestoneViewModel;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;

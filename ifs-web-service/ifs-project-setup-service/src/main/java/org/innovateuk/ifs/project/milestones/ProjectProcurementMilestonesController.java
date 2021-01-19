@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.milestones;
 
 import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
-import org.innovateuk.ifs.project.procurementMilestones.populator.ProjectProcurementMilestoneViewModelPopulator;
+import org.innovateuk.ifs.project.procurement.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

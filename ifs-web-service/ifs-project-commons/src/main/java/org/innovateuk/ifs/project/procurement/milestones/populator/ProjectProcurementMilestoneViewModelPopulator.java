@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.project.procurementMilestones.populator;
+package org.innovateuk.ifs.project.procurement.milestones.populator;
 
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
-import org.innovateuk.ifs.project.procurementMilestones.viewmodel.ProjectProcurementMilestoneViewModel;
+import org.innovateuk.ifs.project.procurement.milestones.viewmodel.ProjectProcurementMilestoneViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
