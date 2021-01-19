@@ -2,7 +2,9 @@ package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
 
 import java.util.List;
 import java.util.Map;
@@ -45,5 +47,12 @@ public class OrganisationSearchResultBuilder extends BaseBuilder<OrganisationSea
 
     public OrganisationSearchResultBuilder withextraAttributes(Map<String, Object>... extraAttributes){
         return withArray((extraAttribute, orgExtraAttribute) -> setField("extraAttributes", extraAttribute, orgExtraAttribute), extraAttributes);
+    }
+
+    public OrganisationSearchResultBuilder withSicCodes(List<OrganisationSicCodeResource>... sicCodes) {
+        return  withArraySetFieldByReflection("organisationSicCodes", sicCodes);
+    }
+    public OrganisationSearchResultBuilder withExecutiveOfficers(List<OrganisationExecutiveOfficerResource>... executiveOfficers) {
+        return  withArraySetFieldByReflection("organisationExecutiveOfficers", executiveOfficers);
     }
 }

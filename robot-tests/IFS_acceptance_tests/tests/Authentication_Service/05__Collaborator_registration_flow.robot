@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list    #Invite flow without email. This test is using the old application
+...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  AuthServiceTests
@@ -13,7 +16,7 @@ ${terms_and_conditions_user_id}     ${user_ids['${terms_and_conditions_login_cre
 
 *** Test Cases ***
 Research and technology organisations (RTO) search (empty, invalid & valid inputs)
-    [Documentation]    INFUND-1230
+    [Documentation]    INFUND-1230  IFS-7723
     [Tags]  HappyPath
     Given the user navigates to the page                                    ${INVITE_LINK}
     When the user accepts the invitation and search for an organisation
@@ -49,7 +52,7 @@ the user enters organisation details
     [Arguments]    ${orgName}
     the user enters text to a text field     id = organisationSearchName    ${orgName}
     the user clicks the button/link          id = org-search
-    the user clicks the button/link          link = INNOVATE LTD
+    the user clicks the button/link          link = ROYAL MAIL PLC
     the user clicks the button/link          jQuery = .govuk-button:contains("Save and continue")
 
 Custom suite teardown
