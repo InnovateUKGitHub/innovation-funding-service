@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -27,10 +28,14 @@ public abstract class AbstractProcurementMilestoneFormSaver<R extends Procuremen
     }
 
     private ServiceResult<Void> saveRow(String id, ProcurementMilestoneForm form, Function<ProcurementMilestoneForm, R> mapper) {
+        R resource = mapper.apply(form);
+        if (isNullOrEmpty(resource.getDescription()) && resource.getMonth() != null) {
+            resource.setDescription("Milestone " + resource.getMonth());
+        }
         if (id.startsWith(ProcurementMilestonesForm.UNSAVED_ROW_PREFIX)) {
-            return service.create(mapper.apply(form)).toServiceResult().andOnSuccessReturnVoid();
+            return service.create(resource).toServiceResult().andOnSuccessReturnVoid();
         } else {
-            return service.update(mapper.apply(form)).toServiceResult();
+            return service.update(resource).toServiceResult();
         }
     }
 
