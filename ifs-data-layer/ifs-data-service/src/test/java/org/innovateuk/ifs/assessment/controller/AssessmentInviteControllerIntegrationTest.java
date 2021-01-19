@@ -124,8 +124,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         loginSystemRegistrationUser();
 
         competition = competitionRepository.findById(1L).orElse(null);
-        competition.setAlwaysOpen(false);
-        competitionRepository.save(competition);
 
         List<Profile> profiles = newProfile()
                 .withId()
