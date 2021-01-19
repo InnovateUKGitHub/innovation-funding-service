@@ -187,7 +187,12 @@ public class FinanceChecksViabilityController {
 
         String companyRegistrationNumber = organisation.getCompaniesHouseNumber();
 
-        String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
+        String approver;
+        if (viability.getViabilityApprovalUserLastName() == null) {
+            approver = null;
+        } else {
+            approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
+        }
         LocalDate approvalDate = viability.getViabilityApprovalDate();
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);

@@ -157,7 +157,6 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public String getApproverName() {
-
         return StringUtils.trim(approverName);
     }
 
