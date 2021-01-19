@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -109,7 +110,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean hasAssessmentStage;
     private boolean procurementMilestones;
     private CovidType covidType;
-    private Boolean alwaysOpen;
+    private boolean alwaysOpen;
 
     public CompetitionResource() {
     }
@@ -788,11 +789,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
-    public Boolean getAlwaysOpen() {
+    public boolean isAlwaysOpen() {
         return alwaysOpen;
     }
 
-    public void setAlwaysOpen(Boolean alwaysOpen) {
+    public void setAlwaysOpen(boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
     }
 

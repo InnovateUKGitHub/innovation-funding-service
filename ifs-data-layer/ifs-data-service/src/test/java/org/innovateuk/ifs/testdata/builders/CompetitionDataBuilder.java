@@ -495,9 +495,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
 
-                boolean isAlwaysOpen = BooleanUtils.isTrue(data.getCompetition().getAlwaysOpen());
-                LOG.info(Boolean.toString(isAlwaysOpen));
-
                 publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccess();
             }
 
