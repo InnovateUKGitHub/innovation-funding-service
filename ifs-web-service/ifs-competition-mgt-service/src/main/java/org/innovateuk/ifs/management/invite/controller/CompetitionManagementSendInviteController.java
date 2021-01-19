@@ -69,7 +69,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                    BindingResult bindingResult) {
         AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+        boolean alwaysOpen = competition.isAlwaysOpen();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToInviteListView(competitionId);
@@ -121,7 +121,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                 competitionId,
                 inviteform.getInviteIds()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        boolean alwaysOpen =  Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+        boolean alwaysOpen =  competition.isAlwaysOpen();
 
         model.addAttribute("model", new SendInvitesViewModel(
                 invites.getCompetitionId(),
@@ -153,7 +153,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                     competitionId,
                     submittedSelectionForm.getSelectedInviteIds()).getSuccess();
             CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-            boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+            boolean alwaysOpen = competition.isAlwaysOpen();
 
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),

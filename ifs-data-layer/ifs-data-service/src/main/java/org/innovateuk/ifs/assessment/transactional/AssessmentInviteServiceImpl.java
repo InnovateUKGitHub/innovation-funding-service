@@ -206,7 +206,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private String getInviteContent(AssessmentInvite invite) {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
         Competition competition = invite.getTarget();
-        boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+        boolean alwaysOpen = competition.isAlwaysOpen();
 
         return getInviteContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
@@ -220,7 +220,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private String getInvitePreviewContent(Competition competition) {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
-        boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
+        boolean alwaysOpen = competition.isAlwaysOpen();
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
@@ -453,8 +453,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            boolean alwaysOpen = Optional.ofNullable(competition.getAlwaysOpen()).orElse(false);
-            Notifications notificationType = alwaysOpen ? Notifications.INVITE_ASSESSOR_ALWAYS_OPEN :
+            Notifications notificationType = competition.isAlwaysOpen() ? Notifications.INVITE_ASSESSOR_ALWAYS_OPEN :
                     Notifications.INVITE_ASSESSOR_GROUP;
 
             String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
@@ -503,8 +502,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 invite -> {
                     updateParticipantStatus(invite);
 
-                    boolean alwaysOpen = Optional.ofNullable(invite.getTarget().getAlwaysOpen()).orElse(false);
-                    Notifications notificationType = alwaysOpen ? Notifications.INVITE_ASSESSOR_ALWAYS_OPEN :
+                    Notifications notificationType = invite.getTarget().isAlwaysOpen() ? Notifications.INVITE_ASSESSOR_ALWAYS_OPEN :
                             Notifications.INVITE_ASSESSOR_GROUP;
 
                     return sendInviteNotification(
