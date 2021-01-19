@@ -7,9 +7,9 @@ import javax.persistence.Converter;
 
 @Converter(autoApply = true)
 @SuppressWarnings(value = "unused")
-public class ProcurementMilestoneStateConverter extends IdentifiableEnumConverter<PaymentMilestoneState> {
+public class PaymentMilestoneStateConverter extends IdentifiableEnumConverter<PaymentMilestoneState> {
 
-    public ProcurementMilestoneStateConverter() {
+    public PaymentMilestoneStateConverter() {
         super(PaymentMilestoneState.class);
     }
 

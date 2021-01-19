@@ -109,9 +109,6 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    @Value("${ifs.procurement.milestones.enabled}")
-    private boolean procurementMilestones;
-
     enum Notifications {
         INVITE_PROJECT_PARTNER_ORGANISATION
     }
@@ -233,7 +230,7 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
                                     Competition competition = project.getApplication().getCompetition();
 
-                                    if (procurementMilestones && competition.isProcurement()) {
+                                    if (competition.isProcurement()) {
                                         paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     }
 

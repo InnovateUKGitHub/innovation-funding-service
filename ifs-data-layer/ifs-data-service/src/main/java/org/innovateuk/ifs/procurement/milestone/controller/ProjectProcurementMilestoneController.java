@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.procurement.milestone.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.procurement.milestone.resource.PaymentMilestoneResource;
+import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneId;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProcurementMilestoneService;
 import org.innovateuk.ifs.procurement.milestone.transactional.ProjectProcurementMilestoneService;
@@ -15,13 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/project-procurement-milestone")
-public class ProjectProcurementMilestoneController extends AbstractProcurementMilestoneController<PaymentMilestoneResource, ProjectProcurementMilestoneId> {
+public class ProjectProcurementMilestoneController extends AbstractProcurementMilestoneController<ProjectProcurementMilestoneResource, ProjectProcurementMilestoneId> {
 
     @Autowired
     private ProjectProcurementMilestoneService projectProcurementMilestoneService;
 
     @Override
-    protected ProcurementMilestoneService<PaymentMilestoneResource, ProjectProcurementMilestoneId> getProcurementMilestoneService() {
+    protected ProcurementMilestoneService<ProjectProcurementMilestoneResource, ProjectProcurementMilestoneId> getProcurementMilestoneService() {
         return projectProcurementMilestoneService;
     }
 
@@ -31,13 +31,13 @@ public class ProjectProcurementMilestoneController extends AbstractProcurementMi
     }
 
     @GetMapping("/project/{projectId}/organisation/{organisationId}")
-    public RestResult<List<PaymentMilestoneResource>> getByProjectIdAndOrganisationId(@PathVariable final long projectId,
-                                                                                      @PathVariable final long organisationId) {
+    public RestResult<List<ProjectProcurementMilestoneResource>> getByProjectIdAndOrganisationId(@PathVariable final long projectId,
+                                                                                                 @PathVariable final long organisationId) {
         return projectProcurementMilestoneService.getByProjectIdAndOrganisationId(projectId, organisationId).toGetResponse();
     }
 
     @GetMapping("project/{projectId}")
-    public RestResult<List<PaymentMilestoneResource>> getByProjectId(@PathVariable final long projectId) {
+    public RestResult<List<ProjectProcurementMilestoneResource>> getByProjectId(@PathVariable final long projectId) {
         return projectProcurementMilestoneService.getByProjectId(projectId).toGetResponse();
     }
 }
