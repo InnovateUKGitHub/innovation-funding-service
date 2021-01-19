@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +45,10 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
     private static final Log LOG = LogFactory.getLog(OrganisationCreationSaveController.class);
+
+
+
+
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
@@ -90,6 +96,14 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         if (isNewOrganisationSearchEnabled)  {
             organisationResource.setDateOfIncorporation(organisationForm.getDateOfIncorporation());
             AddressResource addressResource = organisationForm.getOrganisationAddress();
+
+            AddressForm addressForm = organisationForm.getAddressForm();
+            // Address form populated on address entry
+            if(addressForm != null ) {
+                addressResource = getAddressResourceFromForm(addressForm);
+                organisationResource.setBusinessType(organisationForm.getBusinessType());
+                organisationResource.setOrganisationNumber(organisationForm.getOrganisationNumber());
+            }
             OrganisationAddressResource orgAddressResource = new OrganisationAddressResource(organisationResource, addressResource, new AddressTypeResource(REGISTERED.getId(), REGISTERED.name()));
             organisationResource.setAddresses(asList(orgAddressResource));
             organisationResource.setSicCodes(organisationForm.getSicCodes());
@@ -124,10 +138,4 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return "registration/organisation/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
 
-    protected List<AddressResource> searchPostcode(String postcodeInput) {
-        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
-        return addressLookupRestResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(),
-                addresses -> addresses);
-    }
 }

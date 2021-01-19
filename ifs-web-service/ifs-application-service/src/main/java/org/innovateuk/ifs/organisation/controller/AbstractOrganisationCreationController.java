@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -254,15 +255,27 @@ public abstract class AbstractOrganisationCreationController {
             OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult();
 
             if(isNewOrganisationSearchEnabled && !organisationForm.isResearch()) {
-
-                int selectedAddress = organisationForm.getAddressForm().getSelectedPostcodeIndex();
-                AddressResource addressResource = organisationForm.getAddressForm().getPostcodeResults().get(selectedAddress);
-                organisationSearchResult.setOrganisationAddress(addressResource);
+                organisationSearchResult.setOrganisationAddress(getAddressResourceFromForm(organisationForm.getAddressForm()));
                 organisationSearchResult.setOrganisationExecutiveOfficers(organisationForm.getExecutiveOfficers());
                 organisationSearchResult.setOrganisationSicCodes(organisationForm.getSicCodes());
             }
             model.addAttribute("selectedOrganisation", organisationSearchResult);
             return organisationSearchResult;
+    }
+
+    /**
+     * Returns the address resource from the form , from the address search fragment.
+     * @param addressForm
+     * @return AddressResource either manual or from the postcode lookup.
+     */
+    protected AddressResource getAddressResourceFromForm (AddressForm addressForm) {
+        AddressResource addressResource = new AddressResource();
+        if(AddressForm.AddressType.MANUAL_ENTRY == addressForm.getAddressType()){
+            addressResource =  addressForm.getManualAddress();
+        } else if(AddressForm.AddressType.POSTCODE_LOOKUP == addressForm.getAddressType() ){
+            addressResource =  addressForm.getPostcodeResults().get(addressForm.getSelectedPostcodeIndex());
+        }
+        return addressResource;
     }
 
     protected void addPageSubtitleToModel(HttpServletRequest request, UserResource user, Model model) {
@@ -311,4 +324,10 @@ public abstract class AbstractOrganisationCreationController {
         organisationForm.setSearchPageIndexPosition(searchPageIndexPosition);
     }
 
+    protected List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>> addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        return addressLookupRestResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(),
+                addresses -> addresses);
+    }
 }

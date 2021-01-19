@@ -49,6 +49,7 @@
                        id="name"
                        th:field="*{organisationName}"
                        th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"
+                       maxlength="255"
                        type="text" required="required"/>
 
             </div>
@@ -73,6 +74,7 @@
                 <input class="govuk-input govuk-!-width-one-half"
                        id="busType"
                        th:field="*{businessType}"
+                       maxlength="255"
                        type="text"/>
             </div>
             <label class="govuk-label govuk-label--s" for="name">
