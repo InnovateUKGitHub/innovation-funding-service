@@ -27,6 +27,9 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
     @Autowired
     private EligibilityApprovedGuard eligibilityApprovedGuard;
 
+    @Autowired
+    private MarkEligibilityAsResetAction markEligibilityAsResetAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<EligibilityState, EligibilityEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -62,6 +65,7 @@ public class EligibilityWorkflow extends StateMachineConfigurerAdapter<Eligibili
                 .withExternal()
                     .source(APPROVED)
                     .event(ELIGIBILITY_RESET)
+                    .action(markEligibilityAsResetAction)
                     .target(REVIEW);
     }
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
+import org.innovateuk.ifs.project.financechecks.domain.EligibilityResetOutcome;
 import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -55,8 +56,13 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_APPROVED), partnerOrganisation);
     }
 
-    public boolean eligibilityReset(PartnerOrganisation partnerOrganisation, User internalUser) {
-        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_RESET), partnerOrganisation);
+    public boolean eligibilityReset(PartnerOrganisation partnerOrganisation, User internalUser, String reason) {
+        MessageBuilder<EligibilityEvent> event = internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_RESET);
+        event.setHeader("process", getProcess(partnerOrganisation));
+        EligibilityResetOutcome outcome = new EligibilityResetOutcome();
+        outcome.setReason(reason);
+        event.setHeader("reset", outcome);
+        return fireEvent(event, partnerOrganisation);
     }
 
     public EligibilityProcess getProcess(PartnerOrganisation partnerOrganisation) {

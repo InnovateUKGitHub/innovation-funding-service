@@ -9,6 +9,8 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The process of approving Payment milestones for an {@link org.innovateuk.ifs.organisation.domain.Organisation}
@@ -26,6 +28,11 @@ public class PaymentMilestoneProcess extends Process<ProjectUser, PartnerOrganis
 
     @Column(name="activity_state_id")
     private PaymentMilestoneState activityState;
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name="process_id")
+    @OrderBy("id ASC")
+    private List<PaymentMilestoneResetOutcome> paymentMilestoneResetOutcomes = new ArrayList<>();
 
     PaymentMilestoneProcess() {
     }
@@ -72,6 +79,10 @@ public class PaymentMilestoneProcess extends Process<ProjectUser, PartnerOrganis
         this.activityState = status;
     }
 
+    public List<PaymentMilestoneResetOutcome> getPaymentMilestoneResetOutcomes() {
+        return paymentMilestoneResetOutcomes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +96,7 @@ public class PaymentMilestoneProcess extends Process<ProjectUser, PartnerOrganis
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(activityState, that.activityState)
+                .append(paymentMilestoneResetOutcomes, that.paymentMilestoneResetOutcomes)
                 .isEquals();
     }
 
@@ -95,6 +107,7 @@ public class PaymentMilestoneProcess extends Process<ProjectUser, PartnerOrganis
                 .append(participant)
                 .append(target)
                 .append(activityState)
+                .append(paymentMilestoneResetOutcomes)
                 .toHashCode();
     }
 }

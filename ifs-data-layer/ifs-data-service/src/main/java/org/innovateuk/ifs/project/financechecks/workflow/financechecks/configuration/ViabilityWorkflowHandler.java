@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
+import org.innovateuk.ifs.project.financechecks.domain.ViabilityResetOutcome;
 import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -55,8 +56,13 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_NOT_APPLICABLE), partnerOrganisation);
     }
 
-    public boolean viabilityReset(PartnerOrganisation partnerOrganisation, User internalUser) {
-        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_RESET), partnerOrganisation);
+    public boolean viabilityReset(PartnerOrganisation partnerOrganisation, User internalUser, String reason) {
+        MessageBuilder<ViabilityEvent> event = internalUserEvent(partnerOrganisation, internalUser, VIABILITY_RESET);
+        event.setHeader("process", getProcess(partnerOrganisation));
+        ViabilityResetOutcome outcome = new ViabilityResetOutcome();
+        outcome.setReason(reason);
+        event.setHeader("reset", outcome);
+        return fireEvent(event, partnerOrganisation);
     }
 
     public ViabilityProcess getProcess(PartnerOrganisation partnerOrganisation) {

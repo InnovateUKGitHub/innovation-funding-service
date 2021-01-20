@@ -23,6 +23,9 @@ public class PaymentMilestoneWorkflow extends StateMachineConfigurerAdapter<Paym
     @Autowired
     private PaymentMilestoneApprovedGuard paymentMilestoneApprovedGuard;
 
+    @Autowired
+    private MarkPaymentMilestoneAsResetAction markPaymentMilestoneAsResetAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<PaymentMilestoneState, PaymentMilestoneEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -53,6 +56,7 @@ public class PaymentMilestoneWorkflow extends StateMachineConfigurerAdapter<Paym
                 .withExternal()
                 .source(APPROVED)
                 .event(PAYMENT_MILESTONE_RESET)
+                .action(markPaymentMilestoneAsResetAction)
                 .target(REVIEW);
     }
 }

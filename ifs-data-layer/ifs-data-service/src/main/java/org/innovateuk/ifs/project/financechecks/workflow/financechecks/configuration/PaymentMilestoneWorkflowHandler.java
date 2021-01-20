@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneEvent;
 import org.innovateuk.ifs.project.finance.resource.PaymentMilestoneState;
 import org.innovateuk.ifs.project.financechecks.domain.PaymentMilestoneProcess;
+import org.innovateuk.ifs.project.financechecks.domain.PaymentMilestoneResetOutcome;
 import org.innovateuk.ifs.project.financechecks.repository.PaymentMilestoneProcessRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -47,8 +48,15 @@ public class PaymentMilestoneWorkflowHandler extends BaseWorkflowEventHandler<Pa
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, PaymentMilestoneEvent.PAYMENT_MILESTONE_APPROVED), partnerOrganisation);
     }
 
-    public boolean paymentMilestoneReset(PartnerOrganisation partnerOrganisation, User internalUser) {
-        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, PaymentMilestoneEvent.PAYMENT_MILESTONE_RESET), partnerOrganisation);
+    public boolean paymentMilestoneReset(PartnerOrganisation partnerOrganisation, User internalUser, String reason) {
+        MessageBuilder<PaymentMilestoneEvent> event = internalUserEvent(partnerOrganisation, internalUser, PaymentMilestoneEvent.PAYMENT_MILESTONE_RESET);
+        event.setHeader("process", getProcess(partnerOrganisation));
+        if (reason != null) {
+            PaymentMilestoneResetOutcome outcome = new PaymentMilestoneResetOutcome();
+            outcome.setReason(reason);
+            event.setHeader("reset", outcome);
+        }
+        return fireEvent(event, partnerOrganisation);
     }
 
     public PaymentMilestoneProcess getProcess(PartnerOrganisation partnerOrganisation) {
