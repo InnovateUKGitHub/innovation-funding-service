@@ -15,6 +15,8 @@ public class MarkViabilityAsResetAction extends TestableTransitionWorkflowAction
     protected final void doExecute(final StateContext<ViabilityState, ViabilityEvent> context) {
         ViabilityProcess viability = (ViabilityProcess) context.getMessageHeader("process");
         ViabilityResetOutcome outcome = (ViabilityResetOutcome) context.getMessageHeader("reset");
-        viability.getViabilityResetOutcomes().add(outcome);
+        if (outcome != null) {
+            viability.getViabilityResetOutcomes().add(outcome);
+        }
     }
 }

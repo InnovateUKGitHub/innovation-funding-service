@@ -59,9 +59,11 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
     public boolean viabilityReset(PartnerOrganisation partnerOrganisation, User internalUser, String reason) {
         MessageBuilder<ViabilityEvent> event = internalUserEvent(partnerOrganisation, internalUser, VIABILITY_RESET);
         event.setHeader("process", getProcess(partnerOrganisation));
-        ViabilityResetOutcome outcome = new ViabilityResetOutcome();
-        outcome.setReason(reason);
-        event.setHeader("reset", outcome);
+        if (reason != null) {
+            ViabilityResetOutcome outcome = new ViabilityResetOutcome();
+            outcome.setReason(reason);
+            event.setHeader("reset", outcome);
+        }
         return fireEvent(event, partnerOrganisation);
     }
 

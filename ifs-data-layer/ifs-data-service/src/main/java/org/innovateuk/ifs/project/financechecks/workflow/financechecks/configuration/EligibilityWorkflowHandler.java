@@ -59,9 +59,11 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
     public boolean eligibilityReset(PartnerOrganisation partnerOrganisation, User internalUser, String reason) {
         MessageBuilder<EligibilityEvent> event = internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_RESET);
         event.setHeader("process", getProcess(partnerOrganisation));
-        EligibilityResetOutcome outcome = new EligibilityResetOutcome();
-        outcome.setReason(reason);
-        event.setHeader("reset", outcome);
+        if (reason != null) {
+            EligibilityResetOutcome outcome = new EligibilityResetOutcome();
+            outcome.setReason(reason);
+            event.setHeader("reset", outcome);
+        }
         return fireEvent(event, partnerOrganisation);
     }
 

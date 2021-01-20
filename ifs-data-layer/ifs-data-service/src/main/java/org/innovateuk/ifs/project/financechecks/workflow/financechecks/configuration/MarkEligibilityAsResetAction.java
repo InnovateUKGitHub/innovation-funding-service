@@ -15,6 +15,8 @@ public class MarkEligibilityAsResetAction extends TestableTransitionWorkflowActi
     protected final void doExecute(final StateContext<EligibilityState, EligibilityEvent> context) {
         EligibilityProcess eligibility = (EligibilityProcess) context.getMessageHeader("process");
         EligibilityResetOutcome outcome = (EligibilityResetOutcome) context.getMessageHeader("reset");
-        eligibility.getEligibilityResetOutcomes().add(outcome);
+        if (outcome != null) {
+            eligibility.getEligibilityResetOutcomes().add(outcome);
+        }
     }
 }
