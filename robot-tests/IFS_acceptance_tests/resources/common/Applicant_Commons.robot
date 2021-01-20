@@ -731,33 +731,33 @@ the user apply with knowledge base organisation
     the user clicks the button/link                     jQuery = button:contains("Confirm")
     the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
 
-applicant completes payment milestones
-    [Arguments]   ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
-    the user clicks the button/link           link = Your payment milestones
-    applicant fills in payment milestones     ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
-    the user clicks the button/link           id = mark-all-as-complete
+applicant fills in payment milestone
+    [Arguments]  ${milestone}  ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
+    the user selects the option from the drop-down menu     ${months}  css = [id^="${milestone}"] select[id^="milestones"][id$="month"]
+    the user enters text to a text field                    css = [id^="${milestone}"] input[id^="milestones"][id$="description"]         ${description}
+    the user enters text to a text field                    css = [id^="${milestone}"] input[id^="milestones"][id$="payment"]             ${payment}
+    the user enters text to a text field                    css = [id^="${milestone}"] textarea[id^="milestones"][id$="taskOrActivity"]   ${taskOrActivity}
+    the user enters text to a text field                    css = [id^="${milestone}"] textarea[id^="milestones"][id$="deliverable"]      ${deliverable}
+    the user enters text to a text field                    css = [id^="${milestone}"] textarea[id^="milestones"][id$="successCriteria"]  ${successCriteria}
 
-applicant fills in payment milestones
-    [Arguments]  ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
-    the user selects the option from the drop-down menu     ${months}  css = select[id^="milestones"][id$="month"]
-    the user enters text to a text field                    css = input[id^="milestones"][id$="description"]         ${description}
-    the user enters text to a text field                    css = input[id^="milestones"][id$="payment"]             ${payment}
-    the user enters text to a text field                    css = textarea[id^="milestones"][id$="taskOrActivity"]   ${taskOrActivity}
-    the user enters text to a text field                    css = textarea[id^="milestones"][id$="deliverable"]      ${deliverable}
-    the user enters text to a text field                    css = textarea[id^="milestones"][id$="successCriteria"]  ${successCriteria}
-
-applicant views readonly payment milestones
-    [Arguments]   ${month}  ${paymentRequested}  ${description}  ${percentageOfProjectCost}  ${totalPayment}  ${totalPercentage}  ${taskOrActivity}  ${deliverable}  ${sucessCriteria}
+applicant views saved payment milestones
+    [Arguments]   ${month}  ${paymentRequested}  ${description}  ${percentageOfProjectCost}  ${totalPayment}  ${totalPercentage}
     the user clicks the button/link     link = Your payment milestones
     the user should see the element     jQuery = div h4:contains("Month completed") ~ div .accordion-header-text:contains("${month}")
     the user should see the element     jQuery = div h4:contains("Milestone") ~ div button:contains("${description}")
     the user should see the element     jQuery = div h4:contains("% of project costs") ~ div .finance-total:contains("${percentageOfProjectCost}")
     the user should see the element     jQuery = div h4:contains("Payment request") ~ div .finance-total:contains("${paymentRequested}")
     the user should see the element     jQuery = div h3:contains("Total payment requested") ~ h3:contains("${totalPercentage}") ~ h3:contains("${totalPayment}")
-    the user should see the element     jQuery = label:contains("Milestone") ~ input[value="${description}"]
+
+applicant views saved payment milestones subsection
+    [Arguments]  ${taskOrActivity}  ${deliverable}  ${sucessCriteria}
     the user should see the element     jQuery = label:contains("Task or activity") ~ div .govuk-textarea:contains("${taskOrActivity}")
     the user should see the element     jQuery = label:contains("Deliverable") ~ div .govuk-textarea:contains("${deliverable}")
     the user should see the element     jQuery = label:contains("Success criteria") ~ div .govuk-textarea:contains("${sucessCriteria}")
-    the user should see the element     jQuery = button:contains("Edit your project costs")
-    the user clicks the button/link     link = Your project finances
 
+applicant views readonly payment milestones subsections
+    [Arguments]  ${taskOrActivity}  ${deliverable}  ${sucessCriteria}
+    the user should see the element     jQuery = p:contains("${taskOrActivity}")
+    the user should see the element     jQuery = p:contains("${deliverable}")
+    the user should see the element     jQuery = p:contains("${sucessCriteria}")
+    the user clicks the button/link     link = Your project finances

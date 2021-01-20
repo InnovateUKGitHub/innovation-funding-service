@@ -54,7 +54,8 @@ ${totalProjCosts}                     Total project cost
 ${vatRegistered}                      Are you VAT registered
 ${totalWithVAT}                       £265,084
 ${totalWithoutVAT}                    £220,903
-${initialFunding}                     £262,616
+#${initialFunding}                     £262,616
+${initialFunding}                     £265,084
 ${revisedFunding}                     £218,435
 ${vatTotal}                           £44,181
 ${currentAmount}                      Current amount
@@ -128,9 +129,11 @@ Payment milestones validations: empty fileds
 
 Payment milestones validations: payment milestone cost is less than project cost
     [Documentation]  IFS-8938
-    When the user enters text to a text field              css = input[id^="milestones"][id$="payment"]    1000
-    And the user clicks the button/link                    id = mark-all-as-complete
-    Then the user should see a field and summary error     Your payment milestones are lower than 100% of your project costs. You must increase your payment requests or adjust your project costs.
+    Given the user selects the option from the drop-down menu     1  css = select[id^="milestones"][id$="month"]
+    And the user enters text to a text field                      css = input[id^="milestones"][id$="payment"]    1000
+    And the user enters text to a text field                      css = textarea[id^="milestones"][id$="taskOrActivity"]   Task Or Activity 1
+    When the user clicks the button/link                          id = mark-all-as-complete
+    Then the user should see a field and summary error            Your payment milestones are lower than 100% of your project costs. You must increase your payment requests or adjust your project costs.
 
 Payment milestones validations: payment milestone cost is more than project cost
     [Documentation]  IFS-8938
@@ -140,26 +143,27 @@ Payment milestones validations: payment milestone cost is more than project cost
 
 Applicant adds a first payment milestone
     [Documentation]  IFS-8938
-    Given applicant fills in payment milestones          1  Milestone 1  10000   Task Or Activity 1   Deliverable 1   Success Criteria 1
-    When the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
-    Then applicant views readonly payment milestones     1  £10,000  Milestone 1  14%  14%  £10,000  Task Or Activity 1   Deliverable 1   Success Criteria 1
+    Given applicant fills in payment milestone                  accordion-finances-content  1  Milestone 1  10000   Task Or Activity 1   Deliverable 1   Success Criteria 1
+    When the user clicks the button/link                        jQuery = button:contains("Save and return to project finances")
+    Then applicant views saved payment milestones               1  £10,000  Milestone 1  13.73%  £10,000  13.73%
+    And applicant views saved payment milestones subsection     Task Or Activity 1   Deliverable 1   Success Criteria 1
 
 Applicant adds another payment milestone
     [Documentation]  IFS-8938
-    Given the user clicks the button/link                link = Your payment milestones
-    And the user clicks the button/link                  link = Add another project milestone
-    When applicant completes payment milestones          5  Milestone 2  10000   Task Or Activity 2   Deliverable 2   Success Criteria 2
-    And the user clicks the button/link                  id = mark-all-as-complete
-    Then applicant views readonly payment milestones     5  £20,000  Milestone 2  86%  100%  £10,000  Task Or Activity 2   Deliverable 2   Success Criteria 2
-    And the user clicks the button/link                  link = Your project finances
-    And the user should see the element                  jQuery = li:contains("Your payment milestones") > .task-status-complete
+    Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
+    And the user clicks the button/link                             jQuery = button:contains("Open all")
+    When applicant fills in payment milestone                       accordion-finances-content-unsaved  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
+    And the user clicks the button/link                             id = mark-all-as-complete
+    Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
+    And applicant views readonly payment milestones subsections     Task Or Activity 2   Deliverable 2   Success Criteria 2
+    And the user should see the element                             jQuery = li:contains("Your payment milestones") > .task-status-complete
 
 Applicant can edit and remove the payment milestone
     [Documentation]  IFS-8938
     Given the user clicks the button/link           link = Your payment milestones
     When the user clicks the button/link            jQuery = button:contains("Edit your payment milestones")
-    And the user clicks the button/link             link = Add another project
-    And the user enters text to a text field        css = input[id^="milestones"][id$="description"]   Milestone to remove
+    And the user clicks the button/link             jQuery = button:contains("Add another project milestone")
+    And the user enters text to a text field        css = [id^="accordion-finances-content-unsaved"] input[id^="milestones"][id$="description"]   Milestone to remove
     And the user clicks the button/link             jQuery = div[id='accordion-finances'] div:nth-of-type(4) .js-remove-row:contains("Remove")
     Then the user should not see the element        jQuery = div h4:contains("Milestone") ~ div button:contains("Milestone to remove")
     [Teardown]  the user clicks the button/link     id = mark-all-as-complete
@@ -464,7 +468,7 @@ the user should see the correct data on finance check page
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
     the user clicks the button/link         link = Back to finance checks
-    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("£218,435")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${totalWithoutVAT}")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
@@ -537,4 +541,4 @@ the user should see total project costs and banner info
 the user should see validation messages
     the user should see a field and summary error     Number of months completed must be selected.
     the user should see a field and summary error     You must state the milestone task or activity.
-   # the user should see a field and summary error     You must state the payment requested in pounds (£).
+    the user should see a field and summary error     You must state the payment requested in pounds (£).
