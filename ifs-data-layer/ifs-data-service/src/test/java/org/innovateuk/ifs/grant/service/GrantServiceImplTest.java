@@ -2,6 +2,7 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -16,10 +17,12 @@ import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -56,6 +59,9 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private CrmService crmService;
 
     @Override
     protected GrantServiceImpl supplyServiceUnderTest() {
@@ -128,6 +134,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
                                 .build()).build();
         GrantProcess process = new GrantProcess(APPLICATION_ID);
         Grant grant = new Grant().id(APPLICATION_ID);
+        grant.setParticipants(Collections.emptyList());
 
         when(projectRepository.findOneByApplicationId(APPLICATION_ID)).thenReturn(project);
         when(grantMapper.mapToGrant(project)).thenReturn(grant);

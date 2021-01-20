@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.grant.domain.GrantProcess;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -47,6 +48,9 @@ public class GrantServiceImpl implements GrantService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CrmService crmService;
+
     private static final List<ProjectParticipantRole> LIVE_PROJECT_ACCESS_ROLES =
             asList(
                     PROJECT_MANAGER,
@@ -69,6 +73,12 @@ public class GrantServiceImpl implements GrantService {
         Grant grant = grantMapper.mapToGrant(
                 projectRepository.findOneByApplicationId(applicationId)
         );
+
+        // Sync participants as there may be new participants added during project setup
+        grant.getParticipants().stream()
+                .forEach(participant -> crmService.syncCrmContact(participant.getContactId())
+                        .andOnFailure((ServiceFailure serviceFailure) ->
+                                LOG.error(serviceFailure.toDisplayString(), serviceFailure.getCause())));
 
         grantEndpoint.send(grant)
                 .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
