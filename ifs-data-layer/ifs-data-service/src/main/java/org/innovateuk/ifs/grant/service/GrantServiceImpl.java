@@ -3,6 +3,8 @@ package org.innovateuk.ifs.grant.service;
 import com.newrelic.api.agent.Trace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -13,10 +15,12 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.schedule.transactional.ScheduleResponse;
 import org.innovateuk.ifs.sil.grant.resource.Grant;
+import org.innovateuk.ifs.sil.grant.resource.Participant;
 import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,19 +78,35 @@ public class GrantServiceImpl implements GrantService {
                 projectRepository.findOneByApplicationId(applicationId)
         );
 
-        // Sync participants as there may be new participants added during project setup
-        grant.getParticipants().stream()
-                .forEach(participant -> crmService.syncCrmContact(participant.getContactId())
-                        .andOnFailure((ServiceFailure serviceFailure) ->
-                                LOG.error(serviceFailure.toDisplayString(), serviceFailure.getCause())));
-
-        grantEndpoint.send(grant)
-                .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
-                .andOnSuccess(() -> addLiveProjectsRoleToProjectTeamUsers(projectRepository.findOneByApplicationId(applicationId)))
-                .andOnFailure((ServiceFailure serviceFailure) ->
-                        grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
+        syncParticipants(grant)
+                .andOnSuccess(() -> {
+                    grantEndpoint.send(grant)
+                            .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
+                            .andOnSuccess(() -> addLiveProjectsRoleToProjectTeamUsers(projectRepository.findOneByApplicationId(applicationId)))
+                            .andOnFailure((ServiceFailure serviceFailure) ->
+                                    grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
+                })
+                .andOnFailure((ServiceFailure serviceFailure) -> {
+                    grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString());
+                });
 
         return serviceSuccess(new ScheduleResponse("Project sent: " + applicationId));
+    }
+
+    private ServiceResult<Void> syncParticipants(Grant grant) {
+        try {
+            for (Participant participant : grant.getParticipants()) {
+                crmService.syncCrmContact(participant.getContactId())
+                        .andOnFailure(() -> {
+                            throw new IFSRuntimeException(
+                                    String.format("Sync participants failed for participant id %s", participant.getContactId()));
+                        });
+            }
+            return serviceSuccess();
+        } catch (IFSRuntimeException exception) {
+            LOG.error(exception.getMessage(), exception);
+            return ServiceResult.serviceFailure(new Error(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {
