@@ -10,7 +10,7 @@ public class CompletionStageUtils {
     @Value("${ifs.always.open.competition.enabled}")
     private boolean alwaysOpenCompetitionEnabled;
 
-    private CompletionStageUtils() {}
+    public CompletionStageUtils() {}
 
     public boolean isAlwaysOpenCompetitionEnabled() {
         return alwaysOpenCompetitionEnabled;

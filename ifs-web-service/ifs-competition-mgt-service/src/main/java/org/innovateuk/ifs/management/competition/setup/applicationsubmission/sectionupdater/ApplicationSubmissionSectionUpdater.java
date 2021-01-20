@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.competition.setup.applicationsubmission.sectionupdater;
 
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -12,10 +11,6 @@ import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.Compe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import java.util.Set;
-
 import static java.lang.String.format;
 
 /**
@@ -23,9 +18,6 @@ import static java.lang.String.format;
  */
 @Service
 public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater  {
-
-    @Autowired
-    private Validator validator;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -38,15 +30,8 @@ public class ApplicationSubmissionSectionUpdater extends AbstractSectionUpdater 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         ApplicationSubmissionForm form = (ApplicationSubmissionForm) competitionSetupForm;
-        Set<ConstraintViolation<CompetitionSetupForm>> violations = validator.validate(competitionSetupForm);
-
-        if(!violations.isEmpty()) {
-            return ServiceResult.serviceFailure(new ValidationMessages(violations).getErrors());
-        }
-        else {
-            competition.setAlwaysOpen(form.getAlwaysOpen());
-            return competitionSetupRestService.update(competition).toServiceResult();
-        }
+        competition.setAlwaysOpen(form.getAlwaysOpen());
+        return competitionSetupRestService.update(competition).toServiceResult();
     }
 
     @Override
