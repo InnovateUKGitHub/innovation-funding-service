@@ -7,6 +7,7 @@ import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementM
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApplicationProcurementMilestoneService extends ProcurementMilestoneService<ApplicationProcurementMilestoneResource, ApplicationProcurementMilestoneId> {
 
@@ -15,4 +16,7 @@ public interface ApplicationProcurementMilestoneService extends ProcurementMiles
 
     @NotSecured(value = "Must be secured by other services.")
     ServiceResult<Boolean> arePaymentMilestonesEqualToFunding(long applicationId, long organisationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Optional<Integer>> findMaxMilestoneMonth(long applicationId);
 }

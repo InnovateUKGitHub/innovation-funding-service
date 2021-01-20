@@ -21,6 +21,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8938 SBRI Milestones - Non JS Milestones Page - Application
 ...
+...             IFS-8940 SBRI Milestones - Edit project duration in application
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -73,6 +75,21 @@ Applicant fills in payment milestones
     And the user should see the element                  jQuery = li:contains("Your payment milestones") > .task-status-complete
     And the user clicks the button/link                  link = Back to application overview
     And the user should see the element                  jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant is shown a validation message when the project duration is less than allowed
+    [Documentation]  IFS-8940
+    Given the user clicks the button/link                     link = Application details
+    And the user clicks the button/link                       id = edit-application-details-button
+    When the user enters text to a text field                 id = durationInMonths  1
+    And the user clicks the button/link                       id = application-question-complete
+    Then the user should see a field error                    This cannot be less than your stated payment milestones. You will need to adjust these to change the duration.
+
+Applicant can edit the project duration before application submission
+    [Documentation]  IFS-8940
+    Given the user enters text to a text field                id = durationInMonths  3
+    When the user clicks the button/link                      id = application-question-complete
+    Then the user should see the element                      jQuery = dd:contains("3 months")
+    And the user clicks the button/link                       link = Back to application overview
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596

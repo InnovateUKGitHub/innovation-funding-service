@@ -84,8 +84,7 @@ public class ApplicationTermsModelPopulator {
                         termsAcceptedByName,
                         termsAcceptedOn,
                         isAllOrganisationsTermsAccepted(applicationId, competition.getId()),
-                        additionalTerms,
-                        competition.isHeukar());
+                        additionalTerms);
             }
         }
 
@@ -96,7 +95,7 @@ public class ApplicationTermsModelPopulator {
                 termsQuestionId,
                 competition.getTermsAndConditions().getTemplate(),
                 application.isCollaborativeProject(),
-                isAllOrganisationsTermsAccepted(applicationId, competition.getId()), additionalTerms, competition.isHeukar());
+                isAllOrganisationsTermsAccepted(applicationId, competition.getId()), additionalTerms);
     }
 
     private boolean isAllOrganisationsTermsAccepted(long applicationId, long competitionId) {
