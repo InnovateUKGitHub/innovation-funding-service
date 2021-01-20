@@ -11,7 +11,10 @@ public class EligibilityDocs {
             fieldWithPath("eligibilityRagStatus").description("The Eligibility RAG Status for a given Project and Organisation"),
             fieldWithPath("eligibilityApprovalDate").description("The date on which eligibility was approved"),
             fieldWithPath("eligibilityApprovalUserFirstName").description("The first name of the user who approved the eligibility"),
-            fieldWithPath("eligibilityApprovalUserLastName").description("The last name of the user who approved the eligibility")
+            fieldWithPath("eligibilityApprovalUserLastName").description("The last name of the user who approved the eligibility"),
+            fieldWithPath("eligibilityResetDate").description("The date on which eligibility was reset"),
+            fieldWithPath("eligibilityResetUserFirstName").description("The first name of the user who reset the eligibility"),
+            fieldWithPath("eligibilityResetUserLastName").description("The last name of the user who reset the eligibility")
     };
 }
 

@@ -151,8 +151,8 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
 
     private void updateFinanceChecks(Long projectId, Long organisationId) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        financeCheckService.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.GREEN).getSuccess();
-        financeCheckService.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN).getSuccess();
+        financeCheckService.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.GREEN, null).getSuccess();
+        financeCheckService.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN, null).getSuccess();
     }
 
     public ProjectDataBuilder withMonitoringOfficer(String firstName, String lastName, String email, String phoneNumber) {

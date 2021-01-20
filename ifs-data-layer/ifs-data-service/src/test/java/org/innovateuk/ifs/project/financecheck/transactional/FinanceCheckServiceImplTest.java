@@ -763,7 +763,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.APPROVED);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.AMBER, "reason");
 
         assertTrue(result.isFailure());
 
@@ -784,7 +784,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.UNSET, "reason");
 
         assertTrue(result.isFailure());
 
@@ -805,7 +805,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, "reason");
 
         assertTrue(result.isSuccess());
 
@@ -823,7 +823,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.REVIEW, ViabilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.REVIEW, ViabilityRagStatus.AMBER, "reason");
 
         assertTrue(result.isSuccess());
 
@@ -842,7 +842,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.AMBER, "reason");
 
         assertTrue(result.isSuccess());
 
@@ -893,7 +893,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.AMBER, "reason");
 
         assertTrue(result.isFailure());
 
@@ -917,7 +917,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET, "reason");
 
         assertTrue(result.isFailure());
 
@@ -943,7 +943,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET, "reason");
 
         assertTrue(result.isSuccess());
 
@@ -966,7 +966,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.REVIEW, EligibilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.REVIEW, EligibilityRagStatus.AMBER, "reason");
 
         assertTrue(result.isSuccess());
 
@@ -991,7 +991,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN, "reason");
 
         assertTrue(result.isSuccess());
 
@@ -1367,7 +1367,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisationInDB, user)).thenReturn(true);
 
-        ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId);
+        ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId, "reason");
 
         assertTrue(result.isSuccess());
     }

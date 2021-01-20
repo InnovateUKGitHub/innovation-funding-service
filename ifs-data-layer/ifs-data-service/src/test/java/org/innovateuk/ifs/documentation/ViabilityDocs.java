@@ -11,7 +11,10 @@ public class ViabilityDocs {
             fieldWithPath("viabilityRagStatus").description("The Viability RAG Status for a given Project and Organisation"),
             fieldWithPath("viabilityApprovalDate").description("The date on which viability was approved"),
             fieldWithPath("viabilityApprovalUserFirstName").description("The first name of the user who approved the viability"),
-            fieldWithPath("viabilityApprovalUserLastName").description("The last name of the user who approved the viability")
+            fieldWithPath("viabilityApprovalUserLastName").description("The last name of the user who approved the viability"),
+            fieldWithPath("viabilityResetDate").description("The date on which viability was reset"),
+            fieldWithPath("viabilityResetUserFirstName").description("The first name of the user who reset the viability"),
+            fieldWithPath("viabilityResetUserLastName").description("The last name of the user who reset the viability")
     };
 }
 
