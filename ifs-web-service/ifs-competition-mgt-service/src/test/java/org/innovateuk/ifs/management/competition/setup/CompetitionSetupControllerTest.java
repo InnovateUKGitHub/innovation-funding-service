@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.management.competition.setup.applicationsubmission.form.ApplicationSubmissionForm;
 import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupSummaryForm;
@@ -926,6 +927,85 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/completion-stage"));
 
         verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.COMPLETION_STAGE);
+    }
+
+    @Test
+    public void submitApplicationSubmissionSectionDetails() throws Exception {
+
+        String redirectUrl = String.format( "%s/%s/section/milestones", URL_PREFIX, COMPETITION_ID);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupService.getNextSetupSection(
+                any(ApplicationSubmissionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION))).thenReturn(serviceSuccess(String.format("redirect:%s", redirectUrl)));
+
+        when(competitionSetupService.saveCompetitionSetupSection(
+                any(ApplicationSubmissionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION))).thenReturn(serviceSuccess());
+
+        // assert that after a successful submission, the view moves on to the Milestones page
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission")
+                .param("alwaysOpen", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(redirectUrl));
+
+        verify(competitionSetupService, times(1)).getNextSetupSection(
+                any(ApplicationSubmissionForm.class),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
+
+        verify(competitionSetupService, times(1)).saveCompetitionSetupSection(
+                createLambdaMatcher(form -> {
+                    assertThat(((ApplicationSubmissionForm) form).getAlwaysOpen()).isEqualTo(true);
+                }),
+                eq(competition),
+                eq(CompetitionSetupSection.APPLICATION_SUBMISSION));
+    }
+
+    @Test
+    public void submitApplicationSubmissionSectionDetailsWithValidationErrors() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm",
+                        "alwaysOpen", "NotNull"))
+                .andExpect(view().name("competition/setup"));
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(any(), any(), any());
+    }
+
+    @Test
+    public void markApplicationSubmissionSectionIncomplete() throws Exception {
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        when(competitionSetupRestService.markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_SUBMISSION)).
+                thenReturn(restSuccess());
+
+        // assert that after successful marking incomplete, the view remains on the editable view of the Completion Stage page
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission/edit"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/application-submission"));
+
+        verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_SUBMISSION);
     }
 
     @Test
