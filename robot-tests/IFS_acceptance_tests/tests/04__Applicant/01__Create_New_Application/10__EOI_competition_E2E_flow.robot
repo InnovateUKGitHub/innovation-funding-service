@@ -19,6 +19,8 @@ Documentation     Suite description
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -44,7 +46,7 @@ Comp Admin Creates EOI type competition
     Then the competition admin creates competition    ${business_type_id}  ${comp_name}  EOI  ${compType_EOI}  SUBSIDY_CONTROL  GRANT  RELEASE_FEEDBACK  no  1  true  collaborative
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080
+    [Documentation]  IFS-2192  IFS-2196  IFS-4046 IFS-4080  IFS-7723
     [Setup]  get competition id and set open date to yesterday  ${comp_name}
     Given Log in as a different user            &{assessor_bob_credentials}
     Then logged in user applies to competition  ${comp_name}  1
@@ -179,8 +181,11 @@ logged in user applies to competition
     the user select the competition and starts application     ${competition}
     the user selects the radio button                          organisationTypeId  ${applicationType}
     the user clicks the button/link                            jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link            org2
-    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+# TODO should be implemented in ifs-7724
+#    the user clicks the Not on companies house link            org2
+#    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+# TODO should remove this step on completing ifs-7724
+    the user search for organisation name on Companies house   ROYAL  ROYAL MAIL PLC
     the user selects the checkbox                              agree
     the user clicks the button/link                            css = .govuk-button[type="submit"]    #Continue
 

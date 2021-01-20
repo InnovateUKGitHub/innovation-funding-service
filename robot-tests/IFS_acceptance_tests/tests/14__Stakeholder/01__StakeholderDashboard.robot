@@ -13,6 +13,8 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-8431 Permission errors for users on application section of project
 ...
+...             IFS-7723 Improvement to company search results
+...
 ...             IFS-9038 Urgent: ATI Stakeholders having issues opening appendices
 ...
 Force Tags      HappyPath
@@ -189,7 +191,7 @@ The Stakeholder can no longer see the competition
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
 The stakeholder can apply to a competition as an applicant
-    [Documentation]  IFS-7639
+    [Documentation]  IFS-7639  IFS-7723
     Given the user select the competition and starts application     ${openCompetitionPerformance_name}
     When the user provides organisation details
     Then the user should not see an error in the page
@@ -214,7 +216,7 @@ The stakeholder partner organisation accepts the invite
     Then logging in and error checking                    ${previousStakeholderEmail}  ${short_password}
 
 The stakeholder partner organisation provides organisation details and do not see any error
-    [Documentation]    IFS-7639
+    [Documentation]    IFS-7639  IFS-7723
     [Tags]  HappyPath
     Given the user provides organisation details
     Then the user should not see an error in the page
@@ -253,9 +255,9 @@ the user adds a stakeholder as partner organisation
 the user provides organisation details
     the user selects the radio button        organisationTypeId  radio-1
     the user clicks the button/link          jQuery = button:contains("Save and continue")
-    the user enters text to a text field     id = organisationSearchName  Nomensa
+    the user enters text to a text field     id = organisationSearchName  FIRSTGROUP
     the user clicks the button/link          id = org-search
-    the user clicks the button/link          link = NOMENSA LTD
+    the user clicks the button/link          link = FIRSTGROUP PLC
     the user clicks the button/link          name = save-organisation
 
 All of the calculations on the dashboard should be correct

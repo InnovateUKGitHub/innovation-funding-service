@@ -41,8 +41,10 @@ public class ManageProjectStateController {
     public String manageProjectState(@ModelAttribute(value = "form", binding = false) ManageProjectStateForm form,
                                      BindingResult result,
                                      @PathVariable long projectId,
+                                     @RequestParam(required = false, defaultValue = "false") boolean resumedFromOnHold,
                                      Model model,
                                      UserResource user) {
+        model.addAttribute("resumedFromOnHold", resumedFromOnHold);
         model.addAttribute("model",
                 new ManageProjectStateViewModel(projectRestService.getProjectById(projectId).getSuccess(),
                         user.hasRole(Role.IFS_ADMINISTRATOR)));
@@ -58,7 +60,7 @@ public class ManageProjectStateController {
                                   Model model,
                                   UserResource user) {
         validate(form, result);
-        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, model, user);
+        Supplier<String> failureView = () -> manageProjectState(form, result, projectId, false, model, user);
         Supplier<String> successView = () -> format("redirect:/competition/%d/project/%d/manage-status", competitionId, projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
