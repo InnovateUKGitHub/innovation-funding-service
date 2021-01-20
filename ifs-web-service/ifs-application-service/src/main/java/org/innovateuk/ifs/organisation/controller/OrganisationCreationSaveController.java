@@ -44,11 +44,6 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
 @PreAuthorize("permitAll")
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
-    private static final Log LOG = LogFactory.getLog(OrganisationCreationSaveController.class);
-
-
-
-
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
@@ -137,5 +132,4 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         return "registration/organisation/" + MANUALLY_ENTER_ORGANISATION_DETAILS;
     }
-
 }

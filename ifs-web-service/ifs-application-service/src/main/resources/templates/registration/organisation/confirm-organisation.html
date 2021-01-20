@@ -46,7 +46,6 @@
                 <dd th:text="${organisationForm.organisationNumber}"></dd>
             </th:block>
 
-
             <th:block th:if="${organisationForm.sicCodes != null}">
                 <dt>Sic Code</dt>
                 <dd th:each="sicCode : ${organisationForm.sicCodes}" th:text="${sicCode.sicCode}"></dd>
@@ -56,7 +55,6 @@
                 <dt>Executive Officers</dt>
                 <dd th:each="execOfficer : ${organisationForm.executiveOfficers}" th:text="${execOfficer.name}"></dd>
             </th:block>
-
 
             <th:block th:if="${selectedOrganisation?.organisationAddress != null}">
                 <th:block th:if="${improvedSearchEnabled}" >

@@ -113,7 +113,6 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         addressResource.setPostcode("SW113QT");
         addressResource.setTown("London");
 
-
         addressFormManual = new AddressForm();
         addressFormManual.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
         addressFormManual.setManualAddress(addressResource);

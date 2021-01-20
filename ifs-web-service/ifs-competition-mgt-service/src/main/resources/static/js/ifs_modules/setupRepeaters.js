@@ -20,7 +20,6 @@ IFS.competitionManagement.repeater = (function () {
     // Add row
     handleAddRow: function (el) {
       var type = jQuery(el).attr('data-add-row')
-      console.log('Add row')
       switch (type) {
         case 'cofunder':
           IFS.competitionManagement.repeater.addCoFunder()
@@ -39,9 +38,6 @@ IFS.competitionManagement.repeater = (function () {
           break
         case 'multipleChoice':
           IFS.competitionManagement.repeater.addMultipleChoiceRow(el)
-          break
-        case 'sicCode':
-          IFS.competitionManagement.repeater.addSicCodeRow(el)
           break
       }
       jQuery('body').trigger('updateSerializedFormState')

@@ -65,7 +65,6 @@ public abstract class AbstractOrganisationCreationController {
     protected static final int DEFAULT_PAGE_NUMBER_VALUE = 1;
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-
     @Autowired
     protected RegistrationCookieService registrationCookieService;
 
