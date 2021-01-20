@@ -761,7 +761,7 @@ applicant views saved payment milestones subsection
 
 applicant views readonly payment milestones subsections
     [Arguments]  ${taskOrActivity}  ${deliverable}  ${sucessCriteria}
-    the user should see the element     jQuery = p:contains("${taskOrActivity}")
-    the user should see the element     jQuery = p:contains("${deliverable}")
-    the user should see the element     jQuery = p:contains("${sucessCriteria}")
+    the user should see the element     jQuery = dd:contains("${taskOrActivity}")
+    the user should see the element     jQuery = dd:contains("${deliverable}")
+    the user should see the element     jQuery = dd:contains("${sucessCriteria}")
     the user clicks the button/link     link = Your project finances
