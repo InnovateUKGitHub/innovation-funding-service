@@ -346,6 +346,5 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                         .andExpect(model().attribute("organisationForm", hasProperty("organisationName", equalTo("NOMENSA LTD"))))
                         .andExpect(model().attribute("organisationForm", hasProperty("organisationTypeId", equalTo(1L))))
                         .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(true))));
-
     }
 }

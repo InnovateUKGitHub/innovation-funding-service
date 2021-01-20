@@ -121,6 +121,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         List<AddressResource> postCodeResults = new ArrayList<AddressResource>();
         postCodeResults.add(addressResource);
 
+        addressFormPostCode = new AddressForm();
         addressFormPostCode.setAddressType(AddressForm.AddressType.POSTCODE_LOOKUP);
         addressFormPostCode.setSelectedPostcodeIndex(0);
         addressFormPostCode.setPostcodeResults(postCodeResults);
