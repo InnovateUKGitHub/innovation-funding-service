@@ -60,7 +60,7 @@ public class ApplicationProcurementMilestonesViewModel extends AbstractProcureme
     }
 
     public boolean isDisplayProjectCostsBanner() {
-        return !isReadOnly() && !projectCostsComplete;
+        return open && !projectCostsComplete;
     }
 
     @Override

@@ -28,13 +28,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
@@ -196,14 +193,8 @@ public class ApplicationProcurementMilestonesController {
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
-        form.setMilestones(reorderMilestones(form.getMilestones()));
+        form.reorderMilestones();
         return VIEW;
-    }
-
-    private Map<String, ProcurementMilestoneForm> reorderMilestones(Map<String, ProcurementMilestoneForm> map) {
-        return map.entrySet().stream()
-                .sorted(Comparator.comparing(entry -> entry.getValue().getMonth(), Comparator.nullsLast(Integer::compareTo)))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     private long getProcessRoleId(long applicationId, long userId) {

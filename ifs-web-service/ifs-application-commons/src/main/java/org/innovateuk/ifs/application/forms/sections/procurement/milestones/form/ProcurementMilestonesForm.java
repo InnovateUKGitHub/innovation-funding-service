@@ -4,10 +4,9 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import static java.util.stream.Collectors.toMap;
 
 public class ProcurementMilestonesForm {
     public static final String UNSAVED_ROW_PREFIX = "unsaved-";
@@ -61,5 +60,12 @@ public class ProcurementMilestonesForm {
         return new BigDecimal(totalPayments)
                 .multiply(new BigDecimal("100"))
                 .divide(new BigDecimal(fundingAmount), 2, RoundingMode.HALF_UP);
+    }
+
+    public ProcurementMilestonesForm reorderMilestones() {
+        milestones = milestones.entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getValue().getMonth(), Comparator.nullsLast(Integer::compareTo)))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return this;
     }
 }

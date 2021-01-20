@@ -82,9 +82,12 @@
             </div>
         </div>
     </div>
-    <p th:if="${model.readOnly}" class="govuk-body" th:text="${value}"></p>
-
+    <th:block th:if="${model.readOnly}">
+        <dt th:text="${label}"></dt>
+        <dd th:text="${value}"></dd>
+    </th:block>
 </th:block>
+
 <th:block th:fragment="milestones-row(id, milestone, model, first, expandFirst)">
     <!--/*@thymesVar id="id" type="java.lang.String"*/-->
     <!--/*@thymesVar id="milestone" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm"*/-->
@@ -169,9 +172,11 @@
                     </div>
                     <input type="hidden" th:if="${model.readOnly}" th:id="__${path}__.description" th:field="*{__${path}__.description}" />
 
-                    <th:block th:insert="this :: textarea(model=${model}, path=|${path}.taskOrActivity|, value=${milestone.taskOrActivity}, label=${'Task or activity'}, requiredMessage=#{validation.procurement.milestones.taskOrActivity})"></th:block>
-                    <th:block th:insert="this :: textarea(${model}, |${path}.deliverable|, ${milestone.deliverable}, ${'Deliverable'})"></th:block>
-                    <th:block th:insert="this :: textarea(${model}, |${path}.successCriteria|, ${milestone.successCriteria}, ${'Success criteria'})"></th:block>
+                    <dl class="govuk-list" th:remove="${model.readOnly} ? none : tag">
+                        <th:block th:insert="this :: textarea(model=${model}, path=|${path}.taskOrActivity|, value=${milestone.taskOrActivity}, label=${'Task or activity'}, requiredMessage=#{validation.procurement.milestones.taskOrActivity})"></th:block>
+                        <th:block th:insert="this :: textarea(${model}, |${path}.deliverable|, ${milestone.deliverable}, ${'Deliverable'})"></th:block>
+                        <th:block th:insert="this :: textarea(${model}, |${path}.successCriteria|, ${milestone.successCriteria}, ${'Success criteria'})"></th:block>
+                    </dl>
 
                 </div>
                 <div class="right-col">
