@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
@@ -88,6 +89,7 @@ public class GrantServiceImpl implements GrantService {
                 })
                 .andOnFailure((ServiceFailure serviceFailure) -> {
                     grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString());
+                    return serviceSuccess(new ScheduleResponse("Project sent failed: " + applicationId));
                 });
 
         return serviceSuccess(new ScheduleResponse("Project sent: " + applicationId));
@@ -96,12 +98,14 @@ public class GrantServiceImpl implements GrantService {
     private ServiceResult<Void> syncParticipants(Grant grant) {
         try {
             for (Participant participant : grant.getParticipants()) {
-                crmService.syncCrmContact(participant.getContactId())
-                        .andOnFailure(() -> {
-                            throw new IFSRuntimeException(
-                                    String.format("Sync participants failed for participant id %s", participant.getContactId()));
-                        });
+                 ServiceResult syncCrmContactResults =  crmService.syncCrmContact(participant.getContactId());
+
+                 if (syncCrmContactResults.isFailure()) {
+                     throw new IFSRuntimeException(
+                             String.format("Sync participants failed for participant id %s", participant.getContactId()));
+                 }
             }
+
             return serviceSuccess();
         } catch (IFSRuntimeException exception) {
             LOG.error(exception.getMessage(), exception);

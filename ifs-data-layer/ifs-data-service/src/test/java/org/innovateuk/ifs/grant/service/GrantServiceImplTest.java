@@ -261,9 +261,8 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
 
         ServiceResult<ScheduleResponse> result = service.sendReadyProjects();
 
-        assertThat(result.isFailure(), equalTo(true));
+        assertThat(result.isSuccess(), equalTo(true));
 
-        verify(grantEndpoint, only()).send(createLambdaMatcher(matchGrant(project)));
         verify(crmService, times(1)).syncCrmContact(anyLong());
     }
 
