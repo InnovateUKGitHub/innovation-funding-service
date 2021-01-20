@@ -45,6 +45,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Mock
     private RegistrationCookieService registrationCookieService;
+
     @Mock
     private OrganisationSelectionViewModelPopulator populator;
     @Mock

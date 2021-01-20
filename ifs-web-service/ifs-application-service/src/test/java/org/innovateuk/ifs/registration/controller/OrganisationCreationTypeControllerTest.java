@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -111,5 +113,13 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("registration/organisation/organisation-type"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
+    }
+
+    @Test
+    public void testShowManuallyEnterRegistrationDetails() throws Exception {
+
+        mockMvc.perform(get("/organisation/create/organisation-type/manually-enter-organisation-details"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration/organisation/manually-enter-organisation-details"));
     }
 }

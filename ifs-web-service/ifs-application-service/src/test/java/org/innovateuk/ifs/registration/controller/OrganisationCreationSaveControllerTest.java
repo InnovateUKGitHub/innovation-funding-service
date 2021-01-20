@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.controller.OrganisationCreationSaveController;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -72,6 +74,8 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
 
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationForm;
+    private AddressForm addressFormManual;
+    private AddressForm addressFormPostCode;
 
     @Before
     public void setupForms() {
@@ -99,6 +103,27 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         organisationForm.setDateOfIncorporation(DATE_OF_INCORPORATION);
         organisationForm.setSicCodes(SIC_CODES);
         organisationForm.setExecutiveOfficers(DIRECTORS);
+
+        AddressResource addressResource = new AddressResource();
+        addressResource.setAddressLine1("l1");
+        addressResource.setAddressLine2("l2");
+        addressResource.setAddressLine3("l3");
+        addressResource.setCountry("Antigua");
+        addressResource.setCounty("Hampshire");
+        addressResource.setPostcode("SW113QT");
+        addressResource.setTown("London");
+
+
+        addressFormManual = new AddressForm();
+        addressFormManual.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
+        addressFormManual.setManualAddress(addressResource);
+
+        List<AddressResource> postCodeResults = new ArrayList<AddressResource>();
+        postCodeResults.add(addressResource);
+
+        addressFormPostCode.setAddressType(AddressForm.AddressType.POSTCODE_LOOKUP);
+        addressFormPostCode.setSelectedPostcodeIndex(0);
+        addressFormPostCode.setPostcodeResults(postCodeResults);
     }
 
     @Test
@@ -121,6 +146,50 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
 
     @Test
     public void saveOrganisation_WithSicCodes() throws Exception {
+        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
+        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+        when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
+        when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(2L))).thenReturn(VIEW);
+
+        mockMvc.perform(post("/organisation/create/save-organisation")
+                .param("searchOrganisationId", "123").param("organisationTypeId", "123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEW));
+
+        verify(organisationRestService).createOrMatch(any());
+        verify(organisationJourneyEnd).completeProcess(any(), any(), any(), eq(2L));
+    }
+
+    @Test
+    public void saveOrganisation_manual_entry() throws Exception {
+
+        organisationForm.setAddressForm(addressFormManual);
+        organisationForm.setOrganisationAddress(null);
+
+        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
+        when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+        when(organisationRestService.createOrMatch(any())).thenReturn(restSuccess(newOrganisationResource().withId(2L).build()));
+        when(organisationJourneyEnd.completeProcess(any(), any(), any(), eq(2L))).thenReturn(VIEW);
+
+        mockMvc.perform(post("/organisation/create/save-organisation")
+                .param("searchOrganisationId", "123").param("organisationTypeId", "123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(VIEW));
+
+        verify(organisationRestService).createOrMatch(any());
+        verify(organisationJourneyEnd).completeProcess(any(), any(), any(), eq(2L));
+    }
+
+    @Test
+    public void saveOrganisation_postcode_entry() throws Exception {
+
+        organisationForm.setAddressForm(addressFormPostCode);
+        organisationForm.setOrganisationAddress(null);
+
         ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));

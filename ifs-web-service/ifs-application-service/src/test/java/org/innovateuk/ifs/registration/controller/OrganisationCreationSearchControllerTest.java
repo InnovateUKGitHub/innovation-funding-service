@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -84,6 +86,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
 
     private OrganisationCreationForm organisationForm;
     private OrganisationTypeForm organisationTypeForm;
+    private AddressForm addressFormManual;
 
     OrganisationTypeResource businessOrganisationTypeResource = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
 
@@ -123,6 +126,24 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
         organisationForm.setDateOfIncorporation(DATE_OF_INCORPORATION);
         organisationForm.setSicCodes(SIC_CODES);
         organisationForm.setExecutiveOfficers(DIRECTORS);
+
+        AddressResource addressResource = new AddressResource();
+        addressResource.setAddressLine1("l1");
+        addressResource.setAddressLine2("l2");
+        addressResource.setAddressLine3("l3");
+        addressResource.setCountry("Antigua");
+        addressResource.setCounty("Hampshire");
+        addressResource.setPostcode("SW113QT");
+        addressResource.setTown("London");
+
+
+        addressFormManual = new AddressForm();
+        addressFormManual.setAddressType(AddressForm.AddressType.MANUAL_ENTRY);
+        addressFormManual.setManualAddress(addressResource);
+
+        List<AddressResource> postCodeResults = new ArrayList<AddressResource>();
+        postCodeResults.add(addressResource);
+
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
@@ -309,5 +330,22 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
                 .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(false))))
                 .andExpect(model().attribute("improvedSearchEnabled", equalTo(true)))
                 .andExpect(model().attribute("subtitle", equalTo("Your organisation")));
+    }
+
+    @Test
+    public void testPostManualOrganisation() throws Exception {
+        ReflectionTestUtils.setField(controller, "isNewOrganisationSearchEnabled", true);
+        organisationForm.setAddressForm(addressFormManual);
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+                mockMvc.perform(post("/organisation/create/selected-organisation-manual/")
+                .header("referer", "/organisation/create/selected-organisation/")
+                        .flashAttr("organisationForm",organisationForm))
+                .andExpect(status().isOk())
+                .andExpect(view().name("registration/organisation/confirm-organisation"))
+                        .andExpect(model().attributeExists("organisationForm"))
+                        .andExpect(model().attribute("organisationForm", hasProperty("organisationName", equalTo("NOMENSA LTD"))))
+                        .andExpect(model().attribute("organisationForm", hasProperty("organisationTypeId", equalTo(1L))))
+                        .andExpect(model().attribute("organisationForm", hasProperty("manualEntry", equalTo(true))));
+
     }
 }

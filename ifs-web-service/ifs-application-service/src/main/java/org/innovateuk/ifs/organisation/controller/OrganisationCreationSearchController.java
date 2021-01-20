@@ -181,7 +181,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @PostMapping("/" + SELECTED_ORGANISATION_MANUAL)
-    public String selectManualOrganisationForConfiramtion(@ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+    public String selectManualOrganisationForConfirmation(@ModelAttribute(name = ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                                     Model model,
                                                     HttpServletRequest request,
                                                     HttpServletResponse response,
