@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.sil.grant.resource.json;
+package org.innovateuk.ifs.sil.common.json;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -7,11 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.sil.grant.resource.json.GrantConstants.DATE_FORMAT;
-import static org.innovateuk.ifs.sil.grant.resource.json.GrantConstants.GMT;
+import static org.innovateuk.ifs.sil.common.json.Constants.DATE_FORMAT;
 
 public class LocalDateDeserializer extends JsonDeserializer<LocalDate> {
     @Override

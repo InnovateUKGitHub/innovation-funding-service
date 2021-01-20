@@ -78,6 +78,10 @@ public class CsvUtils {
         return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
     }
 
+    public static List<AssessmentPeriodLine> readCompetitionAssessmentPeriods() {
+        return simpleMapWithIndex(readCsvLines("assessment-periods"), AssessmentPeriodLine::new);
+    }
+
     public static List<CompetitionFunderLine> readCompetitionFunders() {
         return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }
@@ -497,6 +501,7 @@ public class CsvUtils {
         public Boolean includeProjectGrowth;
         public Boolean includeYourOrganisation;
         public FundingRules fundingRules;
+        public Boolean alwaysOpen;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -542,6 +547,7 @@ public class CsvUtils {
             includeProjectGrowth = nullableBoolean(line.get(i++));
             includeYourOrganisation = nullableBoolean(line.get(i++));
             fundingRules = FundingRules.valueOf(line.get(i++));
+            alwaysOpen = nullableBoolean(line.get(i++));
         }
     }
 
@@ -816,6 +822,25 @@ public class CsvUtils {
             int i = 0;
             name = nullable(line.get(i++));
             organisationName = nullable(line.get(i++));
+        }
+    }
+
+    public static class AssessmentPeriodLine {
+        public int lineNumber;
+        public String competition;
+        public int index;
+        public ZonedDateTime assessorBriefing;
+        public ZonedDateTime assessorAccepts;
+        public ZonedDateTime assessorDeadline;
+
+        private AssessmentPeriodLine(List<String> line , int lineNumber) {
+            this.lineNumber = lineNumber;
+            int i = 0;
+            competition = nullable(line.get(i++));
+            index = nullableInteger(line.get(i++));
+            assessorBriefing = nullableDateTime(line.get(i++));
+            assessorAccepts  = nullableDateTime(line.get(i++));
+            assessorDeadline = nullableDateTime(line.get(i++));
         }
     }
 
