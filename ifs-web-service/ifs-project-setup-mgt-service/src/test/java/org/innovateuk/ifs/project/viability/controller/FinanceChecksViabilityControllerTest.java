@@ -296,19 +296,20 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long projectId = 123L;
         Long organisationId = 456L;
 
-        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET)).
+        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, "something")).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                         param("reset-viability", "").
                         param("confirmViabilityChecked", "true").
-                        param("creditReportConfirmed", "true")).
+                        param("creditReportConfirmed", "true").
+                        param("retractionReason", "something")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
         verifyZeroInteractions(projectFinanceService);
-        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, "something");
     }
 
     @Test
