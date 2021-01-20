@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.management.competition.setup.application.form.DetailsForm;
+import org.innovateuk.ifs.management.competition.setup.completionstage.form.CompletionStageForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupPopulator;
@@ -37,6 +38,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -432,6 +434,27 @@ public class CompetitionSetupServiceImplTest {
 
         verify(competitionInviteRestService, only()).getInviteStatistics(COMPETITION_ID);
         verify(competitionSetupRestService, never()).delete(isA(Long.class));
+    }
+
+    @Test
+    public void getNextSetupSection() {
+        CompetitionSetupForm competitionSetupForm = new CompletionStageForm();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompletionStage(CompetitionCompletionStage.COMPETITION_CLOSE)
+                .build();
+
+        CompetitionSetupSectionUpdater matchingSaver = mock(CompetitionSetupSectionUpdater.class);
+        when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.COMPLETION_STAGE);
+        when(matchingSaver.supportsForm(CompletionStageForm.class)).thenReturn(true);
+
+        when(matchingSaver.getNextSection(competitionSetupForm, competitionResource, CompetitionSetupSection.COMPLETION_STAGE)).thenReturn(CompetitionSetupSection.MILESTONES.getPath());
+
+        service.setCompetitionSetupSectionSavers(singleton(matchingSaver));
+
+        service.getNextSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.COMPLETION_STAGE);
+
+        verify(matchingSaver).getNextSection(competitionSetupForm, competitionResource, CompetitionSetupSection.COMPLETION_STAGE);
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
