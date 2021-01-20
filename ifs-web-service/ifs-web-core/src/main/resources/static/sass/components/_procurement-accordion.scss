@@ -1,11 +1,17 @@
 .procurement-milestones {
-  .govuk-accordion .section-status {
-    float: left;
-    padding: 20px 5px 0 20px;
-  }
+  .govuk-accordion {
+    .section-status {
+      float: left;
+      padding: 20px 5px 0 20px;
 
-  .govuk-accordion .section-incomplete {
-    background-position: left 100%;
+      + .width-20-percent {
+        width: 17%;
+      }
+    }
+
+    .section-incomplete {
+      background-position: left 100%;
+    }
   }
 
   .textarea-wrapped {
@@ -22,16 +28,12 @@
     margin-bottom: 0;
   }
 
-  // Heading above accordion need more space on mobile
-  h4.width-10-percent {
-    @include media-down(mobile) {
-      width: 15%;
-    }
-  }
-
-  .section-status {
-    + .width-20-percent {
-      width: 17%;
+  // Heading above accordion needs more space on mobile
+  h4 {
+    &.width-10-percent {
+      @include media-down(mobile) {
+        width: 15%;
+      }
     }
   }
 
@@ -43,14 +45,14 @@
   }
 
   .width-48-percent {
+    @include media-down(mobile) {
+      width:20%;
+    }
+
     width: 48%;
     display: inline-block;
     vertical-align: bottom;
     margin-bottom: 0;
-
-    @include media-down(mobile) {
-      width:20%;
-    }
   }
 
   .width-80-percent {
@@ -70,34 +72,34 @@
     display: flex;
 
     .central-col {
+      @include media-down(mobile) {
+        display: block;
+      }
+
       width: 48%;
       display: inline-block;
       vertical-align: top;
       margin-right: 10px;
-
-      @include media-down(mobile) {
-        display: block;
-      }
     }
 
     .left-col {
+      @include media-down(mobile) {
+        display: block;
+      }
+
       width: 20%;
       display: inline-block;
       vertical-align: top;
-
-      @include media-down(mobile) {
-        display: block;
-      }
     }
 
     .right-col {
-      width: 25%;
-      display: inline-block;
-      vertical-align: top;
-
       @include media-down(mobile) {
         display: block;
       }
+
+      width: 25%;
+      display: inline-block;
+      vertical-align: top;
     }
   }
 
@@ -117,13 +119,13 @@
       border-bottom: 3px solid govuk-colour("black");
 
       .govuk-accordion__controls {
-        display: inline-block;
-        float: right;
-        margin-top: 54px;
-
         @include media-down(mobile) {
           margin-top: 40px;
         }
+
+        display: inline-block;
+        float: right;
+        margin-top: 54px;
       }
     }
   }
