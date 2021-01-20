@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,9 +54,11 @@ public class FinanceCheckController {
     public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
                                           @PathVariable("organisationId") final Long organisationId,
                                           @PathVariable("viability") final ViabilityState viability,
-                                          @PathVariable("viabilityRagStatus") final ViabilityRagStatus viabilityRagStatus) {
+                                          @PathVariable("viabilityRagStatus") final ViabilityRagStatus viabilityRagStatus,
+                                          @RequestBody(required = false) final StringResource reason) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
+        String changeReason = reason == null ? null : reason.getContent();
+        return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus, changeReason).toPostResponse();
     }
 
 
@@ -86,9 +89,11 @@ public class FinanceCheckController {
     public RestResult<Void> saveEligibility(@PathVariable("projectId") final Long projectId,
                                             @PathVariable("organisationId") final Long organisationId,
                                             @PathVariable("eligibility") final EligibilityState eligibility,
-                                            @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus) {
+                                            @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus,
+                                            @RequestBody(required = false) final StringResource reason) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus).toPostResponse();
+        String changeReason = reason == null ? null : reason.getContent();
+        return financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus, changeReason).toPostResponse();
     }
 
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}")
@@ -110,9 +115,11 @@ public class FinanceCheckController {
 
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/milestones/reset")
     public RestResult<Void> resetPaymentMilestoneState(@PathVariable("projectId") final Long projectId,
-                                                       @PathVariable("organisationId") final Long organisationId) {
+                                                       @PathVariable("organisationId") final Long organisationId,
+                                                       @RequestBody(required = false) final StringResource reason) {
+        String changeReason = reason == null ? null : reason.getContent();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId).toPostResponse();
+        return financeCheckService.resetPaymentMilestoneState(projectOrganisationCompositeId, changeReason).toPostResponse();
     }
 
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/milestones/state")

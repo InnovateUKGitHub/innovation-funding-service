@@ -95,7 +95,7 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        RestResult<Void> saveViabilityResult = financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET);
+        RestResult<Void> saveViabilityResult = financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, form.getRetractionReason());
 
         Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, new FinanceChecksViabilityForm());
 
@@ -187,13 +187,10 @@ public class FinanceChecksViabilityController {
 
         String companyRegistrationNumber = organisation.getCompaniesHouseNumber();
 
-        String approver;
-        if (viability.getViabilityApprovalUserLastName() == null) {
-            approver = null;
-        } else {
-            approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
-        }
+        String approver = name(viability.getViabilityApprovalUserFirstName(), viability.getViabilityApprovalUserLastName());
+        String resetter = name(viability.getViabilityResetUserFirstName(), viability.getViabilityResetUserLastName());
         LocalDate approvalDate = viability.getViabilityApprovalDate();
+        LocalDate resetDate = viability.getViabilityResetDate();
         String organisationSizeDescription = Optional.ofNullable(financesForOrganisation.getOrganisationSize()).map
                 (OrganisationSize::getDescription).orElse(null);
 
@@ -219,9 +216,18 @@ public class FinanceChecksViabilityController {
                 viabilityConfirmed,
                 approver,
                 approvalDate,
+                resetter,
+                resetDate,
                 organisationId,
                 organisationSizeDescription,
                 projectFinances);
+    }
+
+    private String name(String firstName, String lastName) {
+        if (firstName == null) {
+            return null;
+        }
+        return firstName + " " + lastName;
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {

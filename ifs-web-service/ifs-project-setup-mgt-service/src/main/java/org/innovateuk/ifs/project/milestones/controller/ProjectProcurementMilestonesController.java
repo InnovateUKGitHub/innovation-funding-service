@@ -75,7 +75,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                            Model model,
                                            UserResource user) {
         Supplier<String> view = () -> viewMilestones(projectId, organisationId, false, user, model);
-        RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId);
+        RestResult<Void> resetPaymentMilestoneState = financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, form.getRetractionReason());
         return validationHandler
                 .addAnyErrors(resetPaymentMilestoneState)
                 .failNowOrSucceedWith(view, view);
@@ -97,7 +97,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
             validationHandler.addAnyErrors(saver.save(form, projectId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId));
+                        financeCheckRestService.resetPaymentMilestoneState(projectId, organisationId, null));
                         return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });

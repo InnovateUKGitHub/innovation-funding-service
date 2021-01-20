@@ -8,6 +8,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public class ProjectProcurementMilestoneApprovalForm extends BaseBindingResultTarget {
 
     private boolean confirmMilestoneChecked;
+    private String retractionReason;
 
     public ProjectProcurementMilestoneApprovalForm() {
     }
@@ -22,5 +23,13 @@ public class ProjectProcurementMilestoneApprovalForm extends BaseBindingResultTa
 
     public void setConfirmMilestoneChecked(boolean confirmMilestoneChecked) {
         this.confirmMilestoneChecked = confirmMilestoneChecked;
+    }
+
+    public String getRetractionReason() {
+        return retractionReason;
+    }
+
+    public void setRetractionReason(String retractionReason) {
+        this.retractionReason = retractionReason;
     }
 }

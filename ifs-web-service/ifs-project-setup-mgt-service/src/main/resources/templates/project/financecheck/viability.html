@@ -29,7 +29,7 @@
         </th:block>
         <th:block th:if="${model.isShowResetMessage()}">
             <div class="message-alert">
-                <p class="govuk-body">The partner's finance viability has been reset by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
+                <p class="govuk-body">The partner's finance viability has been reset by <span th:text="${model.getResetName()}"></span>, <span th:text="${#temporals.format(model.getResetDate(), 'd MMMM yyyy')}"></span></p>
             </div>
         </th:block>
 
@@ -125,6 +125,17 @@
               </summary>
               <div class="govuk-details__text">
                   <p class="govuk-body">Reset viability check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                  <div class="govuk-form-group govuk-!-margin-top-6">
+                      <label class="govuk-label govuk-!-font-weight-bold"
+                             for="reset-reason">Reason for retracting approval</label>
+                      <div class="textarea-wrapped">
+                          <textarea id="reset-reason"
+                                  rows="8"
+                                  class="govuk-textarea"
+                                  th:field="*{retractionReason}">
+                          </textarea>
+                      </div>
+                  </div>
                   <button class="govuk-button" name="reset-viability">Reset viability check</button>
               </div>
           </details>

@@ -366,7 +366,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+    public ServiceResult<Void> resetPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId, String reason) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
@@ -445,7 +445,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus, String reason) {
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
         long projectId = projectOrganisationCompositeId.getProjectId();
 
@@ -502,7 +502,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus, String reason) {
 
         long projectId = projectOrganisationCompositeId.getProjectId();
         long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -559,10 +559,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
-            viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
+            if (ViabilityState.APPROVED == viabilityProcess.getProcessState()) {
+                viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
+                setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
+            } else if (ViabilityState.REVIEW == viabilityProcess.getProcessState()) {
+                viabilityResource.setViabilityResetDate(viabilityProcess.getLastModified().toLocalDate());
+                setViabilityResetUser(viabilityResource, viabilityProcess.getInternalParticipant());
+            }
         }
-
-        setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
 
         return serviceSuccess(viabilityResource);
     }
@@ -590,10 +594,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
-
         if (viabilityApprovalUser != null) {
             viabilityResource.setViabilityApprovalUserFirstName(viabilityApprovalUser.getFirstName());
             viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
+        }
+    }
+
+    private void setViabilityResetUser(ViabilityResource viabilityResource, User viabilityResetUser) {
+        if (viabilityResetUser != null) {
+            viabilityResource.setViabilityResetUserFirstName(viabilityResetUser.getFirstName());
+            viabilityResource.setViabilityResetUserLastName(viabilityResetUser.getLastName());
         }
     }
 
@@ -605,10 +615,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         EligibilityResource eligibilityResource = new EligibilityResource(eligibilityProcess.getProcessState(), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
-            eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());
+            if (EligibilityState.APPROVED == eligibilityProcess.getProcessState()) {
+                eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());
+                setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
+            } else if (EligibilityState.REVIEW == eligibilityProcess.getProcessState()) {
+                eligibilityResource.setEligibilityResetDate(eligibilityProcess.getLastModified().toLocalDate());
+                setEligibilityResetUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
+            }
         }
-
-        setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
 
         return serviceSuccess(eligibilityResource);
     }
@@ -630,10 +644,16 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {
-
         if (eligibilityApprovalUser != null) {
             eligibilityResource.setEligibilityApprovalUserFirstName(eligibilityApprovalUser.getFirstName());
             eligibilityResource.setEligibilityApprovalUserLastName(eligibilityApprovalUser.getLastName());
+        }
+    }
+
+    private void setEligibilityResetUser(EligibilityResource eligibilityResource, User eligibilityResetUser) {
+        if (eligibilityResetUser != null) {
+            eligibilityResource.setEligibilityResetUserFirstName(eligibilityResetUser.getFirstName());
+            eligibilityResource.setEligibilityResetUserLastName(eligibilityResetUser.getLastName());
         }
     }
 

@@ -127,6 +127,17 @@
                     </summary>
                     <div class="govuk-details__text">
                         <p class="govuk-body">Reset payment milestone check for <th:block th:text="${model.organisationName}">org name</th:block>. You can only do this if finance checks haven't been approved.</p>
+                        <div class="govuk-form-group govuk-!-margin-top-6">
+                            <label class="govuk-label govuk-!-font-weight-bold"
+                                   for="reset-reason">Reason for retracting approval</label>
+                            <div class="textarea-wrapped">
+                          <textarea id="reset-reason"
+                                    rows="8"
+                                    class="govuk-textarea"
+                                    th:field="*{retractionReason}">
+                          </textarea>
+                            </div>
+                        </div>
                         <button class="govuk-button" name="reset-milestones">Reset payment milestone check</button>
                     </div>
                 </details>

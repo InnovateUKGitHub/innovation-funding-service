@@ -30,6 +30,9 @@ public class FinanceChecksEligibilityViewModel {
     private String approverFirstName;
     private String approverLastName;
     private LocalDate approvalDate;
+    private String resetFirstName;
+    private String resetLastName;
+    private LocalDate resetDate;
 
     private boolean externalView;
     private boolean isUsingJesFinances;
@@ -54,6 +57,9 @@ public class FinanceChecksEligibilityViewModel {
                                              String approverFirstName,
                                              String approverLastName,
                                              LocalDate approvalDate,
+                                             String resetFirstName,
+                                             String resetLastName,
+                                             LocalDate resetDate,
                                              boolean externalView,
                                              boolean isUsingJesFinances,
                                              boolean canEditAcademicFinances,
@@ -76,6 +82,9 @@ public class FinanceChecksEligibilityViewModel {
         this.approverFirstName = approverFirstName;
         this.approverLastName = approverLastName;
         this.approvalDate = approvalDate;
+        this.resetFirstName = resetFirstName;
+        this.resetLastName = resetLastName;
+        this.resetDate = resetDate;
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.canEditAcademicFinances = canEditAcademicFinances;
@@ -96,12 +105,17 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowResetMessage() {
-        return EligibilityState.REVIEW == eligibilityState && approvalDate != null && approverLastName != null;
+        return EligibilityState.REVIEW == eligibilityState && resetDate != null && resetLastName != null;
     }
 
     public String getApproverName()
     {
         return StringUtils.trim(getApproverFirstName() + " " + getApproverLastName());
+    }
+
+    public String getResetName()
+    {
+        return StringUtils.trim(resetFirstName + " " + resetLastName);
     }
 
     public FinanceCheckEligibilityResource getEligibilityOverview() {
@@ -247,5 +261,9 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isCanReset() {
         return isApproved() && projectIsActive && !spendProfileGenerated;
+    }
+
+    public LocalDate getResetDate() {
+        return resetDate;
     }
 }

@@ -33,6 +33,8 @@ public class FinanceChecksViabilityViewModel {
     private boolean approved;
     private String approverName;
     private LocalDate approvalDate;
+    private String resetName;
+    private LocalDate resetDate;
     private String organisationSizeDescription;
     private Long applicationId;
     private String projectName;
@@ -63,6 +65,8 @@ public class FinanceChecksViabilityViewModel {
                                            boolean approved,
                                            String approverName,
                                            LocalDate approvalDate,
+                                           String resetName,
+                                           LocalDate resetDate,
                                            Long organisationId,
                                            String organisationSizeDescription,
                                            List<ProjectFinanceResource> projectFinances) {
@@ -82,6 +86,8 @@ public class FinanceChecksViabilityViewModel {
         this.approved = approved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
+        this.resetName = resetName;
+        this.resetDate = resetDate;
         this.organisationId = organisationId;
         this.organisationSizeDescription = organisationSizeDescription;
         this.applicationId = project.getApplication();
@@ -153,11 +159,19 @@ public class FinanceChecksViabilityViewModel {
     }
 
     public boolean isShowResetMessage() {
-        return ViabilityState.REVIEW == viabilityState && approvalDate != null && approverName != null;
+        return ViabilityState.REVIEW == viabilityState && resetDate != null && resetName != null;
     }
 
     public String getApproverName() {
         return StringUtils.trim(approverName);
+    }
+
+    public String getResetName() {
+        return resetName;
+    }
+
+    public LocalDate getResetDate() {
+        return resetDate;
     }
 
     public boolean isCanReset() {

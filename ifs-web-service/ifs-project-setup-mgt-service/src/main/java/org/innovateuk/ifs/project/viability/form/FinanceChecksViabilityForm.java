@@ -11,6 +11,7 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
     private boolean creditReportConfirmed;
     private ViabilityRagStatus ragStatus;
     private boolean confirmViabilityChecked;
+    private String retractionReason;
 
     public FinanceChecksViabilityForm() {
     }
@@ -43,5 +44,13 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
 
     public void setConfirmViabilityChecked(boolean confirmViabilityChecked) {
         this.confirmViabilityChecked = confirmViabilityChecked;
+    }
+
+    public String getRetractionReason() {
+        return retractionReason;
+    }
+
+    public void setRetractionReason(String retractionReason) {
+        this.retractionReason = retractionReason;
     }
 }
