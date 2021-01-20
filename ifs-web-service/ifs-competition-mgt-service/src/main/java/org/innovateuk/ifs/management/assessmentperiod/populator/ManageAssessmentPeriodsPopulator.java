@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
+import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.assessmentperiod.model.ManageAssessmentPeriodsViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
@@ -28,6 +29,7 @@ public class ManageAssessmentPeriodsPopulator {
     private MilestoneRestService milestoneRestService;
 
     public ManageAssessmentPeriodsViewModel populateModel(long competitionId) {
+
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Map<Long, List<MilestoneResource>> assessmentPeriods = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
@@ -46,7 +48,9 @@ public class ManageAssessmentPeriodsPopulator {
             milestonesForms.add(milestonesForm);
         });
 
-        return new ManageAssessmentPeriodsViewModel(competitionResource, milestonesForms);
+        AssessmentPeriodForm assessmentPeriodForm = new AssessmentPeriodForm();
+
+        return new ManageAssessmentPeriodsViewModel(competitionResource, assessmentPeriodForm);
     }
     private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
         return new MilestoneRowForm(milestone.getType(), milestone.getDate(), isEditable(milestone, competitionResource));

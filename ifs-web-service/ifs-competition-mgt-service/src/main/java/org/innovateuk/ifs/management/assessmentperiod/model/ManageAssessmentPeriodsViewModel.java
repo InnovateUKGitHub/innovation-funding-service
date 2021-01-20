@@ -1,27 +1,24 @@
 package org.innovateuk.ifs.management.assessmentperiod.model;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
-
-import java.util.List;
+import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 
 public class ManageAssessmentPeriodsViewModel {
 
-    private final long competitionId;
-    List<MilestonesForm> assessmentPeriods;
-
+    private long competitionId;
+    AssessmentPeriodForm assessmentPeriodForm;
 
     public ManageAssessmentPeriodsViewModel(CompetitionResource competitionResource,
-                                            List<MilestonesForm> assessmentPeriods) {
+                                            AssessmentPeriodForm assessmentPeriodForm) {
         this.competitionId = competitionResource.getId();
-        this.assessmentPeriods = assessmentPeriods;
+        this.assessmentPeriodForm = assessmentPeriodForm;
     }
 
     public long getCompetitionId() {
         return competitionId;
     }
 
-    public List<MilestonesForm> getAssessmentPeriods() {
-        return assessmentPeriods;
+    public AssessmentPeriodForm getAssessmentPeriodForm() {
+        return assessmentPeriodForm;
     }
 }
