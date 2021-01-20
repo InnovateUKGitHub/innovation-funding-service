@@ -24,7 +24,7 @@ import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;

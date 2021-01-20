@@ -166,7 +166,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
-                .filter(r -> "leadapplicant".equals(r.getRole().getName()) || "collaborator".equals(r.getRole().getName()))
+                .filter(r -> ProcessRoleType.LEADAPPLICANT == r.getRole() || ProcessRoleType.COLLABORATOR == r.getRole())
                 .map(ProcessRole::getUser)
                 .map(userMapper::mapToResource)
                 .collect(toSet());
@@ -287,18 +287,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 && tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId()).isPresent();
     }
 
-    private boolean userIsExternalNotOnlyAssessor(UserResource user) {
-        return user
-                .getRoles()
-                .stream()
-                .anyMatch(r -> COLLABORATOR == r ||
-                             APPLICANT == r ||
-                             FINANCE_CONTACT == r ||
-                             LEADAPPLICANT == r ||
-                             PARTNER == r ||
-                             PROJECT_MANAGER == r);
-    }
-
     @Override
     public ServiceResult<ManageUserPageResource> findActive(String filter, Pageable pageable) {
         Page<User> pagedResult = userRepository.findByEmailContainingAndStatus(filter, UserStatus.ACTIVE, pageable);
@@ -368,7 +356,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory) {
+    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<ProcessRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";

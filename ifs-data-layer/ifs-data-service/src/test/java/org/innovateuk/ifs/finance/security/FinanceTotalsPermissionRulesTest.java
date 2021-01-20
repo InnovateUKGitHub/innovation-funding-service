@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
 
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(userResource.getId(),
                 application.getId(),
-                LEADAPPLICANT)).thenReturn(true);
+                ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application, userResource);
 
@@ -59,7 +60,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application,
-                newUserResource().withRolesGlobal(singletonList(COLLABORATOR)
+                newUserResource().withRolesGlobal(singletonList(APPLICANT)
                 ).build());
 
         assertFalse(result);

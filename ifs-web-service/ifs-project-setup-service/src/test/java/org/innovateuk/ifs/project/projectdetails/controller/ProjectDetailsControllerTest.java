@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -102,7 +102,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -161,7 +161,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -218,7 +218,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -274,7 +274,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -394,7 +394,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(PROJECT_PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().

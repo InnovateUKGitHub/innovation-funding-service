@@ -11,7 +11,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +29,8 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -77,8 +77,8 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             leadApplicant = newUserResource().build();
             collaborator = newUserResource().build();
             when(applicationFinanceRowRepositoryMock.findById(cost.getId())).thenReturn(Optional.of(cost));
-            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(leadApplicant.getId(), EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(collaborator.getId(), EnumSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(leadApplicant.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(collaborator.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), applicationId, organisationId)).thenReturn(true);
         }
 
         {
@@ -86,7 +86,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final long otherApplicationId = 3L;
             final long otherOrganisationId = 4L;
             otherLeadApplicant = newUserResource().build();
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), ProcessRoleType.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
         }
 
         // Create project with users for testing getting of partner funding status

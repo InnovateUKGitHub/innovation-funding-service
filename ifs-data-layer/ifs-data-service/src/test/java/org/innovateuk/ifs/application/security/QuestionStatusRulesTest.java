@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -79,13 +81,13 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource allowedAndConnectedUser = newUserResource().build();
         UserResource connectedUserAndNotAllowedUser = newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), questionStatusResource.getApplication(), Role.LEADAPPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), questionStatusResource.getApplication(), ProcessRoleType.LEADAPPLICANT))
                 .thenReturn(true);
 
-        ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
+        ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(ProcessRoleType.COLLABORATOR).build();
         when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(allowedAndConnectedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), ProcessRoleType.COLLABORATOR))
                 .thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
                 .thenReturn(true);
@@ -95,7 +97,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         when(questionRepository.findById(questionStatusResource.getQuestion()))
                 .thenReturn(Optional.of(QuestionBuilder.newQuestion().withMultipleStatuses(false).build()));
 
-        ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
+        ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(ProcessRoleType.COLLABORATOR).build();
         when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(connectedUserAndNotAllowedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(connectedProcessRole);
 
@@ -141,9 +143,9 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
         UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(leadApplicant.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), application.getId()))
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(leadApplicant.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), application.getId()))
                 .thenReturn(true);
-        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), EnumSet.of(Role.LEADAPPLICANT, COLLABORATOR), application.getId()))
+        when(processRoleRepository.existsByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), EnumSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR), application.getId()))
                 .thenReturn(false);
 
         assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));

@@ -339,13 +339,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userServiceMock.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(ProcessRoleType.externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
-        verify(userServiceMock).findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory);
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(ProcessRoleType.externalApplicantRoles(), searchString, searchCategory);
     }
 
     @Test

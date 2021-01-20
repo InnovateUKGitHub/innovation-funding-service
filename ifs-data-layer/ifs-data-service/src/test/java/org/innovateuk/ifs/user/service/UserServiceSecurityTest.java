@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.application.transactional.ApplicationServiceSec
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.externalApplicantRoles;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;

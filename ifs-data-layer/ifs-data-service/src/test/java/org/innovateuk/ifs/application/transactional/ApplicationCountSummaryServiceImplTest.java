@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.builder.UserBuilder;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,7 +26,8 @@ import static org.innovateuk.ifs.application.transactional.ApplicationSummarySer
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -37,8 +38,8 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<ApplicationCountSummaryService> {
 
     private long competitionId = 1L;
-    private Role leadApplicationRole;
-    private Role applicantRole;
+    private ProcessRoleType leadApplicationRole;
+    private ProcessRoleType applicantRole;
     private List<ApplicationStatistics> applicationStatistics;
     private Page<ApplicationStatistics> page;
     private ApplicationCountSummaryPageResource resource;

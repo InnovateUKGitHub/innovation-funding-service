@@ -155,7 +155,7 @@ public class UserController {
     @GetMapping("/find-external-users")
     public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam String searchString,
                                                                         @RequestParam SearchCategory searchCategory) {
-        return userService.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
+        return userService.findByProcessRolesAndSearchCriteria(ProcessRoleType.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
     }
 
     @GetMapping("/find-by-email/{email}/")

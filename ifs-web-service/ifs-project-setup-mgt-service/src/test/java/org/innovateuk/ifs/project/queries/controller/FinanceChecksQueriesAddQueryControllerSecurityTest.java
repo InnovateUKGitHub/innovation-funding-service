@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.queries.controller;
 
-import java.util.List;
-import java.util.function.Consumer;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
@@ -10,6 +8,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -137,7 +138,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
 
     @Test
     public void testRemoveAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.FINANCE_CONTACT)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.removeAttachment(1L, 2L, "", 3L, null, null, null, null, null, null, null));
 
         List<Role> nonFinanceTeamRoles = asList(Role.values()).stream().filter(type ->type != PROJECT_FINANCE)

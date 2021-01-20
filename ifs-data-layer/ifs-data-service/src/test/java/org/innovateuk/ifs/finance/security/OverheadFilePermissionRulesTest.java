@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
@@ -87,9 +88,9 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             collaborator = newUserResource().build();
             when(applicationFinanceRowRepository.findById(overheads.getId())).thenReturn(Optional.of(overheads));
             when(applicationFinanceRowRepository.findById(submittedOverheads.getId())).thenReturn(Optional.of(submittedOverheads));
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), LEADAPPLICANT, applicationId, organisationId)).
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), ProcessRoleType.LEADAPPLICANT, applicationId, organisationId)).
                     thenReturn(true);
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), COLLABORATOR, applicationId, organisationId)).
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), ProcessRoleType.COLLABORATOR, applicationId, organisationId)).
                     thenReturn(true);
 
             when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
@@ -102,7 +103,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             final long otherOrganisationId = 4L;
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(),
-                    LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
+                    ProcessRoleType.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(true);
         }
 
         // Create project with users for testing getting of partner funding status

@@ -79,6 +79,7 @@ import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -366,7 +367,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(Role.COMP_EXEC))
+                        singletonList(COMP_ADMIN))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -399,7 +400,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveLeadApplicantNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        singletonList(Role.LEADAPPLICANT))
+                        singletonList(APPLICANT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -418,7 +419,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactivePartnerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        singletonList(Role.PARTNER))
+                        singletonList(COMP_ADMIN))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -437,7 +438,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveProjectManagerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        singletonList(Role.PROJECT_MANAGER))
+                        singletonList(APPLICANT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -457,7 +458,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(Role.COLLABORATOR))
+                        singletonList(APPLICANT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -477,7 +478,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(Role.FINANCE_CONTACT))
+                        singletonList(APPLICANT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")

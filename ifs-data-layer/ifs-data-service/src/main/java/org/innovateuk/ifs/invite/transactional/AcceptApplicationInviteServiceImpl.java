@@ -15,7 +15,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +142,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
                     .filter(pr -> pr.getOrganisationId() != null)
                     .noneMatch(pr -> pr.getOrganisationId().equals(organisation.getId()));
 
-        ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
+        ProcessRole processRole = new ProcessRole(user, application.getId(), ProcessRoleType.LEADAPPLICANT, organisation.getId());
         processRole = processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
 

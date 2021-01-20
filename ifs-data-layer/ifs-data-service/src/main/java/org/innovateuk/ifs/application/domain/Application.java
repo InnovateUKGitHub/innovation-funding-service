@@ -18,7 +18,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -245,7 +245,7 @@ public class Application implements ProcessActivity {
                 .collect(toList());
     }
 
-    public List<ProcessRole> getProcessRolesByRoles(Set<Role> roles) {
+    public List<ProcessRole> getProcessRolesByRoles(Set<ProcessRoleType> roles) {
         return this.processRoles.stream()
                 .filter(processRole -> roles.contains(processRole.getRole()))
                 .collect(Collectors.toList());

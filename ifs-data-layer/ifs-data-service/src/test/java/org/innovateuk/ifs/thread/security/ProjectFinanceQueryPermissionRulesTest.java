@@ -30,7 +30,6 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -60,13 +59,13 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     @Before
     public void setUp() throws Exception {
         projectFinanceUser = projectFinanceUser();
-        partner = getUserWithRole(PARTNER);
+        partner = getUserWithRole(Role.APPLICANT);
         competitionFinanceUser = competitionFinanceUser();
 
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
 
-        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
+        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.APPLICANT)).build();
         incorrectPartner.setId(1993L);
 
         competition = newCompetition().build();

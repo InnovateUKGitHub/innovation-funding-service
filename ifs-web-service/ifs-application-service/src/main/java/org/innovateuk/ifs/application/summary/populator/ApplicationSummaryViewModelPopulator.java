@@ -12,6 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -61,7 +62,7 @@ public class ApplicationSummaryViewModelPopulator {
         OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
         List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         List<OrganisationResource> collaboratorOrganisations = processRoleResources.stream()
-                .filter(pr -> Role.COLLABORATOR == pr.getRole())
+                .filter(pr -> ProcessRoleType.LEADAPPLICANT == pr.getRole())
                 .map(pr -> pr.getOrganisationId())
                 .distinct()
                 .map(orgId -> organisationRestService.getOrganisationById(orgId).getSuccess())

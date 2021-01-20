@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +40,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
         List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
-        return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
-                .equals(Role.LEADAPPLICANT.getName()) && uar.getUser().equals(userId));
+        return userApplicationRoles.stream().anyMatch(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT && uar.getUser().equals(userId));
 
     }
 
     @Override
     public ProcessRoleResource getLeadApplicantProcessRole(Long applicationId) {
         List<ProcessRoleResource> userApplicationRoles = processRoleRestService.findProcessRole(applicationId).getSuccess();
-        return userApplicationRoles.stream().filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName())).findFirst().orElseThrow(() -> new ObjectNotFoundException("Lead applicant not found for application " + applicationId, emptyList()));
+        return userApplicationRoles.stream().filter(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT).findFirst().orElseThrow(() -> new ObjectNotFoundException("Lead applicant not found for application " + applicationId, emptyList()));
     }
 
     @Override
