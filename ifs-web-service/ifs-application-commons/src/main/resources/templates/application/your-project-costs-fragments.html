@@ -2114,7 +2114,7 @@
                                 <label id="vat-total" class="govuk-heading-m"
                                        data-calculation-fields="#total-cost,0.2"
                                        data-calculation-operations="*"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
+                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getVatTotal())}">£120</label>
                             </div>
                             <div class="govuk-grid-column-one-half alignleft">
                                 <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
@@ -2123,7 +2123,7 @@
                                 <label for="total-cost" class="govuk-heading-m"
                                        data-calculation-fields="#vat-total,#total-cost"
                                        data-calculation-operations="+"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
+                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getProjectVatTotal())}">£120</label>
                             </div>
                         </div>
                     </div>
