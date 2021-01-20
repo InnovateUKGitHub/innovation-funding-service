@@ -83,7 +83,8 @@ public class ApplicationProcurementMilestonesController {
     public String saveMilestones(@PathVariable long applicationId,
                                  @PathVariable long organisationId,
                                  @PathVariable long sectionId,
-                                 @ModelAttribute("form") ProcurementMilestonesForm form) {
+                                 @ModelAttribute("form") ProcurementMilestonesForm form,
+                                 BindingResult bindingResult) {
         try {
             saver.save(form, applicationId, organisationId).getSuccess();
         } catch (Exception e) {
