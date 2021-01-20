@@ -56,7 +56,6 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -172,8 +171,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Before
     public void setUp() {
-
-        ReflectionTestUtils.setField(service, "procurementMilestones", true);
 
         organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
