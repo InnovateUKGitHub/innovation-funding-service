@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.junit.Assert.assertEquals;
 
 public class ApplicationSubmissionViewModelPopulatorTest {
 
@@ -28,10 +29,11 @@ public class ApplicationSubmissionViewModelPopulatorTest {
                 build();
 
         GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(false, false, competition,
-                null, null, false, false);
+                CompetitionSetupSection.APPLICATION_SUBMISSION, null, false, false);
 
         ApplicationSubmissionViewModel viewModel = applicationSubmissionViewModelPopulator.populateModel(generalSetupViewModel, competition);
 
+        assertEquals(CompetitionSetupSection.APPLICATION_SUBMISSION, viewModel.getGeneral().getCurrentSection());
         assertThat(viewModel.getGeneral()).isEqualTo(generalSetupViewModel);
     }
 
