@@ -362,10 +362,10 @@ hr,
 }
 
 .width-100-percent {
-    box-sizing: border-box;
-    padding-right: 1em;
-    width: 100%;
-  }
+  box-sizing: border-box;
+  padding-right: 1em;
+  width: 100%;
+}
 
 /* make selector more specific than autocomplete library. */
 .autocomplete__input {
@@ -385,9 +385,11 @@ hr,
   }
 }
 
-table.hidden-error-labels {
-  .govuk-error-message {
-    display:none;
+table {
+  .hidden-error-labels {
+    .govuk-error-message {
+      display: none;
+    }
   }
 }
 

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -39,6 +41,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.LocalDatePropertyEditor.convertMinLocalDateToNull;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/application-details")
@@ -57,6 +60,10 @@ public class ApplicationDetailsController {
     private ApplicationRestService applicationRestService;
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
+
     @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
@@ -222,6 +229,20 @@ public class ApplicationDetailsController {
         if (competition.getInnovationAreas().size() > 1 && !application.getNoInnovationAreaApplicable()) {
             if (application.getInnovationArea() == null) {
                 bindingResult.rejectValue("innovationAreaErrorHolder", "validation.application.innovationarea.category.required");
+            }
+        }
+
+        if (!isEmpty(form.getDurationInMonths())) {
+            Optional<Integer> maxMilestoneMonth = applicationProcurementMilestoneRestService.findMaxByApplicationId(applicationId).getSuccess();
+            int maxMonths = competition.getMaxProjectDuration();
+            int minMonths = Math.max(maxMilestoneMonth.orElse(0), competition.getMinProjectDuration());
+            boolean minDictatedByCompetition = minMonths == competition.getMinProjectDuration();
+            if (form.getDurationInMonths() > maxMonths ||
+                    (minDictatedByCompetition && form.getDurationInMonths() < minMonths)) {
+                bindingResult.rejectValue("durationInMonths", "validation.project.duration.input.invalid", new Object[]{minMonths, maxMonths}, "validation.project.duration.input.invalid");
+            }
+            else if (form.getDurationInMonths() < minMonths) {
+                bindingResult.rejectValue("durationInMonths", "validation.project.duration.must.be.greater.than.milestones");
             }
         }
     }
