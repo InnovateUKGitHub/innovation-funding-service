@@ -70,11 +70,15 @@ Applicant fills in project costs with VAT
 
 Applicant fills in payment milestones
     [Documentation]  IFS-8938
-    When applicant completes payment milestones          2  Milestone 1  £72,839  taskOrActivity 1  deliverable 1  successCriteria 1
-    Then applicant views readonly payment milestones     2  £72,839  Milestone 1  14%  14%  £72,839  taskOrActivity 1  deliverable 1  successCriteria 1
-    And the user should see the element                  jQuery = li:contains("Your payment milestones") > .task-status-complete
-    And the user clicks the button/link                  link = Back to application overview
-    And the user should see the element                  jQuery = li:contains("Your project finances") > .task-status-complete
+    Given the user clicks the button/link                           link = Your payment milestones
+    And the user clicks the button/link                             jQuery = button:contains("Open all")
+    When applicant fills in payment milestone                       accordion-finances-content  2  Milestone 1  £72,839  taskOrActivity 1  deliverable 1  successCriteria 1
+    And the user clicks the button/link                             id = mark-all-as-complete
+    Then applicant views saved payment milestones                   2  £72,839  Milestone 1  100%  £72,839  100%
+    And applicant views readonly payment milestones subsections     taskOrActivity 1  deliverable 1  successCriteria 1
+    And the user should see the element                             jQuery = li:contains("Your payment milestones") > .task-status-complete
+    And the user clicks the button/link                             link = Back to application overview
+    And the user should see the element                             jQuery = li:contains("Your project finances") > .task-status-complete
 
 Applicant is shown a validation message when the project duration is less than allowed
     [Documentation]  IFS-8940
