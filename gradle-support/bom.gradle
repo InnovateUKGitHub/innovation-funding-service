@@ -72,4 +72,22 @@ dependencies {
         }
     }
 
+    testImplementation('junit:junit') {
+
+    }
+
+    testImplementation('org.mockito:mockito-core') {
+
+    }
+
 }
+
+
+//dependencies {
+//    compile "commons-logging:commons-logging"
+//    compile "org.bouncycastle:bcprov-jdk15on"
+//
+//    testCompile "net.bytebuddy:byte-buddy"
+//    testCompile 'org.assertj:assertj-core'
+//    testCompile 'org.hamcrest:hamcrest-library'
+//}

@@ -33,7 +33,6 @@ dependencies {
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
-    compile "com.google.guava:guava"
 
     compile "org.apache.httpcomponents:httpclient"
     compile "org.apache.httpcomponents:httpasyncclient"
