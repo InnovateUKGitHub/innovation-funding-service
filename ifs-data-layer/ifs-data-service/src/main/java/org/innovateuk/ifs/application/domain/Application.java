@@ -6,12 +6,14 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.procurement.milestone.domain.ProcurementMilestone;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
@@ -25,11 +27,9 @@ import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -84,6 +84,10 @@ public class Application implements ProcessActivity {
 
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="assessment_period_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
 
     private boolean noInnovationAreaApplicable;
 
@@ -463,5 +467,17 @@ public class Application implements ProcessActivity {
 
     public void setProjectToBeCreated(ProjectToBeCreated projectToBeCreated) {
         this.projectToBeCreated = projectToBeCreated;
+    }
+
+    public Optional<Integer> getMaxMilestoneMonth(){
+        Optional<Integer> max = Optional.of(getApplicationFinances())
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .map(ApplicationFinance::getMilestones)
+                .flatMap(Collection::stream)
+                .map(ProcurementMilestone::getMonth)
+                .filter(Objects::nonNull)
+                .max(Integer::compareTo);
+        return max;
     }
 }

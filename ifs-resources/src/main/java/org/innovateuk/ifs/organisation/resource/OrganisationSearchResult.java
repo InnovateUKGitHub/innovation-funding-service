@@ -19,6 +19,8 @@ public class OrganisationSearchResult implements Serializable{
     private String organisationSearchId;
     private String name;
     private AddressResource organisationAddress;
+    private List<OrganisationSicCodeResource> organisationSicCodes;
+    private List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficers;
     private Map<String, Object> extraAttributes;
 
     public OrganisationSearchResult(String id, String name) {
@@ -61,14 +63,28 @@ public class OrganisationSearchResult implements Serializable{
     public void setOrganisationAddress(AddressResource organisationAddress) {
         this.organisationAddress = organisationAddress;
     }
-
-
     public String getOrganisationSearchId() {
         return organisationSearchId;
     }
 
     public void setOrganisationSearchId(String organisationSearchId) {
         this.organisationSearchId = organisationSearchId;
+    }
+
+    public List<OrganisationSicCodeResource> getOrganisationSicCodes() {
+        return organisationSicCodes;
+    }
+
+    public void setOrganisationSicCodes(List<OrganisationSicCodeResource> organisationSicCodes) {
+        this.organisationSicCodes = organisationSicCodes;
+    }
+
+    public List<OrganisationExecutiveOfficerResource> getOrganisationExecutiveOfficers() {
+        return organisationExecutiveOfficers;
+    }
+
+    public void setOrganisationExecutiveOfficers(List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficers) {
+        this.organisationExecutiveOfficers = organisationExecutiveOfficers;
     }
 
     public Map<String, Object> getExtraAttributes() {

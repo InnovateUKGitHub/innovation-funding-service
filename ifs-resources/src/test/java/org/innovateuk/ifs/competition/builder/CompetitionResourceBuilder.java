@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -290,6 +289,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((golTemplate, competitionResource) -> {
             competitionResource.setGolTemplate(golTemplate);
         }, golTemplates);
+    }
+
+    public CompetitionResourceBuilder withAlwaysOpen(Boolean... alwaysOpens) {
+        return withArray((alwaysOpen, competitionResource) -> competitionResource.setAlwaysOpen(alwaysOpen), alwaysOpens);
+    }
+
+    public CompetitionResourceBuilder withCompetitionApplicationConfig(CompetitionApplicationConfigResource... competitionApplicationConfigResources) {
+        return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfigResources);
     }
 
     public CompetitionResourceBuilder withProcurementMilestones(boolean... procurementMilestones) {

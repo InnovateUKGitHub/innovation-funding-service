@@ -18,7 +18,13 @@ public class CompaniesHouseDocs {
                 fieldWithPath("organisationAddress.county").description("The county of Organisation's Address"),
                 fieldWithPath("organisationAddress.postcode").description("The postcode of the Organisation's Address"),
                 fieldWithPath("organisationAddress.country").description("The country of the Organisation's Address"),
-                fieldWithPath("extraAttributes").description("Extra attributes of the Organisation")
+                fieldWithPath("extraAttributes").description("Extra attributes of the Organisation"),
+                fieldWithPath("organisationSicCodes[].id").description("Generated Id of the organisation"),
+                fieldWithPath("organisationSicCodes[].organisation").description("Organisation"),
+                fieldWithPath("organisationSicCodes[].sicCode").description("Sic Codes of the organisation"),
+                fieldWithPath("organisationExecutiveOfficers[].id").description("Generated Id of the organisation"),
+                fieldWithPath("organisationExecutiveOfficers[].organisation").description("Organisation"),
+                fieldWithPath("organisationExecutiveOfficers[].name").description("Current Director's name of the organisation"),
         };
     }
 }
