@@ -21,6 +21,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8942  SBRI Milestones - Edit project duration in project setup
 ...
+...               IFS-8958  SBRI Milestones - Application overview / summary
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -36,6 +38,7 @@ ${openSBRICompetitionName}       SBRI type one competition
 ${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]}
 &{sbriLeadCredentials}           email=troy.ward@gmail.com     password=${short_password}
 &{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
+&{sbriMOCredentials}             email=orville.gibbs@gmail.com      password=${short_password}
 ${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
 ${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}               Procurement application 1

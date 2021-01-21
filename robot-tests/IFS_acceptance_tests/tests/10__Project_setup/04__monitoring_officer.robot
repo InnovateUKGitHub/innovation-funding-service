@@ -39,6 +39,8 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 ...
 ...               IFS-8753 515 - 73652 - Monitoring Officer unable to view application feedback
 ...
+...               IFS-8958  SBRI Milestones - Application overview / summary
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
@@ -49,6 +51,8 @@ ${Successful_Monitoring_Officer_Page}     ${server}/project-setup-management/pro
 ${Assign_Project}                         Climate control solution
 ${Assign_Project_ID}                      ${application_ids["${Assign_Project}"]}
 ${Assign_Project2}                        High Performance Gasoline Stratified
+${sbri_project_ID}                        54
+&{sbriMOCredentials}                      email=orville.gibbs@gmail.com      password=${short_password}
 ${Assign_Project2_ID}                     ${application_ids["${Assign_Project2}"]}
 ${New_Mo}                                 tom@poly.io
 ${PSCapplicationID}                       212
@@ -266,6 +270,16 @@ MO can now check the application feedback
     and the user clicks the button/link                        link = view application feedback
     Then The user should see the element                       jQuery = h1:contains("Application overview")
 
+MO can now view payment milestones in SBRI application
+    [Documentation]   IFS-8958
+    Given The MO user has been reassigned to a SBRI application
+    And Log in as a different user           &{sbri_MO_credentials}
+    When the user navigates to the page      ${server}/project-setup/project/${sbri_project_ID}
+    And the user clicks the button/link      link = view application feedback
+    And The user clicks the button/link      jQuery = button:contains("Funding breakdown")
+    Then the user should see the element     jQuery = h1:contains("Application overview")
+    And the user should see the element      jQuery = h3:contains("Payment milestones")
+
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
@@ -291,6 +305,12 @@ The user is able to see Monitoring officer section
 The user is able to see Spend profile section
     the user clicks the button/link   link = Spend profile
     the user clicks the button/link   jQuery = a:contains("Set up your project")
+
+The MO user has been reassigned to a SBRI application
+    log in as a different user         &{Comp_admin1_credentials}
+    the user navigates to the page     ${server}/project-setup-management/project/${sbri_project_ID}/monitoring-officer
+    the user clicks the button/link    link = Change monitoring officer
+    then internal user assigns mo to application  252  Procurement application 1  Orvill  Orville Gibbs
 
 Standard verification for email address follows
     the user enters text to a text field    id = emailAddress    ${invalid_email_plain}

@@ -21,6 +21,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8938 SBRI Milestones - Non JS Milestones Page - Application
 ...
+...             IFS-8958  SBRI Milestones - Application overview / summary
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -67,11 +69,17 @@ Applicant fills in project costs with VAT
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
 
 Applicant fills in payment milestones
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8958
     When Lead applicant completes payment milestones          2  Milestone 1  10000  taskOrActivity 1  deliverable 1  successCriteria 1
     Then Lead applicant views readonly payment milestones
     And the user clicks the button/link                       link = Back to application overview
     And the user should see the element                       jQuery = li:contains("Your project finances") > .task-status-complete
+
+Applicant can view payment milestones table when reviewing and submitting application
+    [Documentation]  IFS-8958
+    When the user clicks the button/link                       jQuery = a:contains("Review and submit")
+    And the user clicks the button/link                        jQuery = button:contains("Funding breakdown")
+    Then the user should see the element                       jQuery = .govuk-heading-s h3:contains("Payment milestones")
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
