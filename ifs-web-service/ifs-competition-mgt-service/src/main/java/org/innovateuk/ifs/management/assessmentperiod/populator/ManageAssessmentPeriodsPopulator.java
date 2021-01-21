@@ -32,32 +32,7 @@ public class ManageAssessmentPeriodsPopulator {
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        Map<Long, List<MilestoneResource>> assessmentPeriods = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
-                .stream()
-                .filter(milestone -> milestone.getAssessmentPeriodId() != null)
-                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
-
-        List<MilestonesForm> milestonesForms = new ArrayList<>();
-        assessmentPeriods.forEach((key, value) -> {
-            LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
-            value.stream().forEachOrdered(milestone ->
-                    milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone, competitionResource))
-            );
-            MilestonesForm milestonesForm = new MilestonesForm();
-            milestonesForm.setMilestoneEntries(milestoneFormEntries);
-            milestonesForms.add(milestonesForm);
-        });
-
-        AssessmentPeriodForm assessmentPeriodForm = new AssessmentPeriodForm();
-
-        return new ManageAssessmentPeriodsViewModel(competitionResource, assessmentPeriodForm);
-    }
-    private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), isEditable(milestone, competitionResource));
-    }
-
-    private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return !competitionResource.isSetupAndLive() || milestone.getDate().isAfter(ZonedDateTime.now());
+        return new ManageAssessmentPeriodsViewModel(competitionResource);
     }
 
 

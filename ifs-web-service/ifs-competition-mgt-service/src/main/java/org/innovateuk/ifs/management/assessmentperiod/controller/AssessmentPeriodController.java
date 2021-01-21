@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.assessmentperiod.controller;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -10,7 +11,11 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodMilestonesForm;
 import org.innovateuk.ifs.management.assessmentperiod.populator.ManageAssessmentPeriodsPopulator;
+import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,11 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -33,6 +35,8 @@ import static java.lang.String.format;
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSMENT')")
 public class AssessmentPeriodController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AssessmentPeriodController.class);
+
     @Autowired
     private ManageAssessmentPeriodsPopulator assessmentPeriodsPopulator;
 
@@ -42,29 +46,41 @@ public class AssessmentPeriodController {
     @Autowired
     private MilestoneRestService milestoneRestService;
 
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+
     @GetMapping
     public String manageAssessmentPeriods(@ModelAttribute(value = "form") AssessmentPeriodForm form,
                                           @PathVariable long competitionId, Model model) {
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-//        Map<Long, List<MilestoneResource>> assessmentPeriods = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
-//                .stream()
-//                .filter(milestone -> milestone.getAssessmentPeriodId() != null)
-//                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
-//
-//        List<AssessmentPeriodMilestonesForm> milestonesForms = new ArrayList<>();
-//        assessmentPeriods.forEach((key, value) -> {
-//            List<MilestoneRowForm> milestoneFormEntries = new ArrayList();
-//            value.stream().forEachOrdered(milestone ->
-//                    milestoneFormEntries.add(populateMilestoneFormEntries(milestone, competitionResource))
-//            );
-//            AssessmentPeriodMilestonesForm milestonesForm = new AssessmentPeriodMilestonesForm();
-//            milestonesForm.setMilestoneEntries(milestoneFormEntries);
-//            milestonesForms.add(milestonesForm);
-//        });
-//
-//        form.addExistingAssessmentPeriods(milestonesForms);
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
+        Map<Long, List<MilestoneResource>> existingAssessmentPeriods = milestones
+                .stream()
+                .filter(milestone -> milestone.getAssessmentPeriodId() != null)
+                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
+
+        List<AssessmentPeriodMilestonesForm> milestonesForms = new ArrayList<>();
+        existingAssessmentPeriods.forEach((key, value) -> {
+            Long assessmentPeriodId;
+            LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
+            value.stream().forEachOrdered(milestone ->
+                    milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone, competitionResource))
+            );
+            assessmentPeriodId = milestoneFormEntries.getValue(0).getAssessmentPeriodId();
+            AssessmentPeriodMilestonesForm milestonesForm = new AssessmentPeriodMilestonesForm();
+            milestonesForm.setAssessmentPeriodId(assessmentPeriodId);
+            milestonesForm.setMilestoneEntries(milestoneFormEntries);
+            milestonesForms.add(milestonesForm);
+        });
+        form.addExistingAssessmentPeriods(milestonesForms);
+//        List<AssessmentPeriodForm> newAssessmentPeriods = milestones.stream().filter(ap ->
+//                ap.getType().equals(MilestoneType.ASSESSOR_BRIEFING) ||
+//                        ap.getType().equals(MilestoneType.ASSESSOR_ACCEPTS) ||
+//                        ap.getType().equals(MilestoneType.ASSESSOR_DEADLINE)
+//        ).flatMap()
+//                .collect(Collectors.toList());
 
         model.addAttribute("model", assessmentPeriodsPopulator.populateModel(competitionId));
         return "competition/manage-assessment-periods";
@@ -75,11 +91,50 @@ public class AssessmentPeriodController {
                                           BindingResult bindingResult,
                                           ValidationHandler validationHandler,
                                           Model model,
-                                          @PathVariable long competitionId
+                                          @PathVariable long competitionId,
+                                          UserResource loggedInUser
     ) {
 
+        if (bindingResult.hasErrors()) {
+            LOG.error(bindingResult.getAllErrors().toString());
+        }
 
-        return " ";
+        List<MilestoneResource> existingMilestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
+                .stream().filter(existingMilestone -> {
+                            return existingMilestone.getType().equals(MilestoneType.ASSESSOR_BRIEFING) ||
+                                    existingMilestone.getType().equals(MilestoneType.ASSESSOR_ACCEPTS) ||
+                                    existingMilestone.getType().equals(MilestoneType.ASSESSOR_DEADLINE);
+                        }
+                ).collect(Collectors.toList());
+        Map<Long, Collection<MilestoneRowForm>> formMilestones = new HashMap<>();
+        form.getFormList().forEach(assessmentPeriodForm -> {
+            Long assessmentPeriodId = assessmentPeriodForm.getAssessmentPeriodId();
+            formMilestones.put(assessmentPeriodId, assessmentPeriodForm.getMilestoneEntries().values());
+        });
+
+        // group the existing by id and match? Or just push straight?
+        List<MilestoneResource> updatedMilestones = new ArrayList<>();
+        existingMilestones.forEach(existingMilestone -> {
+
+            MilestoneRowForm milestoneWithUpdate = formMilestones.get(existingMilestone.getAssessmentPeriodId())
+                    .stream().filter(e -> e.getMilestoneType().equals(existingMilestone.getType())).findFirst().orElse(null);
+
+            if (milestoneWithUpdate != null) {
+                ZonedDateTime temp = milestoneWithUpdate.getMilestoneAsZonedDateTime();
+                if (temp != null) {
+                    existingMilestone.setDate(temp);
+                    updatedMilestones.add(existingMilestone);
+                } else {
+                    milestoneRestService
+                            .resetMilestone(existingMilestone)
+                            .getSuccess();
+                }
+            }
+        });
+
+        milestoneRestService.updateMilestones(updatedMilestones);
+
+        return redirectToManageAssessment(competitionId);
     }
 
     @PostMapping(params = "add-assessment-period")
@@ -89,24 +144,12 @@ public class AssessmentPeriodController {
                                       Model model,
                                       @PathVariable long competitionId
     ) {
-        AssessmentPeriodMilestonesForm newAssessmentPeriod = new AssessmentPeriodMilestonesForm();
+        milestoneRestService.addNewAssessmentPeriod(competitionId);
+        return redirectToManageAssessmentPeriods(competitionId);
+    }
 
-        List<MilestoneRowForm> milestoneRowForms = new ArrayList<>();
-        MilestoneRowForm assessorBriefing = new MilestoneRowForm();
-        assessorBriefing.setMilestoneType(MilestoneType.ASSESSOR_BRIEFING);
-        milestoneRowForms.add(assessorBriefing);
-        MilestoneRowForm acceptanceDeadline = new MilestoneRowForm();
-        acceptanceDeadline.setMilestoneType(MilestoneType.ASSESSOR_ACCEPTS);
-        milestoneRowForms.add(acceptanceDeadline);
-        MilestoneRowForm assessmentDeadline = new MilestoneRowForm();
-        assessmentDeadline.setMilestoneType(MilestoneType.ASSESSOR_DEADLINE);
-        milestoneRowForms.add(assessmentDeadline);
-
-        newAssessmentPeriod.setMilestoneEntries(milestoneRowForms);
-        form.addNewAssessmentPeriod(newAssessmentPeriod);
-
-        model.addAttribute("form", form);
-        return manageAssessmentPeriods(form, competitionId, model);
+    private String redirectToManageAssessment(long competitionId) {
+        return format("redirect:/assessment/competition/%s", competitionId);
     }
 
     private String redirectToManageAssessmentPeriods(long competitionId) {
@@ -114,7 +157,7 @@ public class AssessmentPeriodController {
     }
 
     private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), isEditable(milestone, competitionResource));
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), true, milestone.getAssessmentPeriodId());
     }
 
     private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {

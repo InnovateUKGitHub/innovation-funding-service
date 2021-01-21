@@ -61,7 +61,7 @@ public class ManageAssessmentsModelPopulator {
     }
 
     private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), isEditable(milestone, competitionResource));
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), false);
     }
 
     private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {

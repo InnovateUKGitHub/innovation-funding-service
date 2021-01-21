@@ -4,9 +4,11 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.mapper.MilestoneMapper;
+import org.innovateuk.ifs.competition.repository.AssessmentPeriodRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
@@ -21,9 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -55,6 +60,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private AssessmentPeriodRepository assessmentPeriodRepository;
 
     @Override
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
@@ -166,6 +174,32 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         Milestone milestone = new Milestone(type, competition);
         return serviceSuccess(milestoneMapper.mapToResource(milestoneRepository.save(milestone)));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<MilestoneResource>> createAssessmentPeriodMilestones(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId).orElse(null);
+        int max = assessmentPeriodRepository.findAllByCompetitionId(competitionId).stream()
+                .map(AssessmentPeriod::getIndex).mapToInt(v -> v).max().orElse(1);
+
+        AssessmentPeriod assessmentPeriod = new AssessmentPeriod();
+        assessmentPeriod.setCompetition(competition);
+        assessmentPeriod.setIndex(max + 1);
+        assessmentPeriodRepository.save(assessmentPeriod);
+
+        List<Milestone> assessmentPeriodMilestones = new ArrayList<>();
+        Milestone assessorBriefing = new Milestone(MilestoneType.ASSESSOR_BRIEFING, competition);
+        assessorBriefing.setAssessmentPeriod(assessmentPeriod);
+        Milestone assessorAccepts = new Milestone(MilestoneType.ASSESSOR_ACCEPTS, competition);
+        assessorAccepts.setAssessmentPeriod(assessmentPeriod);
+        Milestone assessorDeadline = new Milestone(MilestoneType.ASSESSOR_DEADLINE, competition);
+        assessorDeadline.setAssessmentPeriod(assessmentPeriod);
+        assessmentPeriodMilestones.add(assessorBriefing);
+        assessmentPeriodMilestones.add(assessorAccepts);
+        assessmentPeriodMilestones.add(assessorDeadline);
+
+        return serviceSuccess(newArrayList(milestoneMapper.mapToResource(milestoneRepository.saveAll(assessmentPeriodMilestones))));
     }
 
     @Override

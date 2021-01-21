@@ -62,4 +62,9 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
         return putWithRestResult(milestonesRestURL + "/competition/" + competitionId +
                 "/completion-stage?completionStage=" + completionStage.name(), Void.class);
     }
+
+    @Override
+    public RestResult<Void> addNewAssessmentPeriod(long competitionId) {
+        return postWithRestResult(milestonesRestURL + "/" + competitionId + "/new-assessment-period");
+    }
 }
