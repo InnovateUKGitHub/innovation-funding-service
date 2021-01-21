@@ -1,8 +1,8 @@
-table {
+.vertical-align-top {
+  vertical-align: top !important;
+}
 
-  .cell-align-top {
-    vertical-align: top;
-  }
+table {
 
   .cell-nowrap {
     white-space: nowrap;

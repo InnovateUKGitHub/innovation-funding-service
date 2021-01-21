@@ -104,7 +104,7 @@
                 <div th:if="${#ifsUtil.hasErrorsStartingWith('form', path)}"
                      class="section-status section-incomplete icon-
                      only error-marker"></div>
-                <span class="width-20-percent accordion-header-text govuk-!-margin-right-1"
+                <span class="width-20-percent accordion-header-text govuk-!-margin-right-1 vertical-align-top"
                       th:text="${milestone.month}"
                       th:attr="data-mirror=|[id='__${path}__.month']|"></span>
                 <span class="width-48-percent govuk-accordion__section-button" th:id="|accordion-finances-heading-${id}|"
