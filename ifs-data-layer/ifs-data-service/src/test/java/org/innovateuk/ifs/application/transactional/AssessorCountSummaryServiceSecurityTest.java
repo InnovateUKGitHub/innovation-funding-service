@@ -19,7 +19,7 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
     public void testGetAssessorCountSummariesByCompetitionId() {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(Collections.singletonList(Role.COMP_ADMIN))
+                        .withRoleGlobal(Role.COMP_ADMIN)
                         .build()
         );
         classUnderTest.getAssessorCountSummariesByCompetitionId(1L,  "",0, 0);

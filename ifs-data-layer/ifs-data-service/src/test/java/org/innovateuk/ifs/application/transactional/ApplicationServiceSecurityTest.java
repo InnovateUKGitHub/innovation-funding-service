@@ -17,7 +17,6 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.EnumSet;
 import java.util.function.Consumer;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -75,7 +74,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         long competitionId = 123L;
         long userId = 456L;
         long organisationId = 789L;
-        setLoggedInUser(newUserResource().withId(userId).withRolesGlobal(singletonList(APPLICANT)).build());
+        setLoggedInUser(newUserResource().withId(userId).withRoleGlobal(APPLICANT).build());
         when(competitionLookupStrategy.getCompetitionResource(competitionId)).thenReturn(newCompetitionResource()
                 .withId(competitionId).withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build());
         assertAccessDenied(
@@ -117,7 +116,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         EnumSet<Role> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
         nonApplicantRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+            setLoggedInUser(newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
 
             try {
                 classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L,

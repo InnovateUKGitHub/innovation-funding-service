@@ -44,7 +44,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalCanAccessFinanceChecksAddQuery() {
         Role role = Role.PROJECT_FINANCE;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withProjectState(LIVE).withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
@@ -55,7 +55,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalCanAccessFinanceChecksAddQueryNotFinanceTeam() {
         Role role = Role.COMP_ADMIN;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withProjectState(LIVE).withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
@@ -66,7 +66,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalCanAccessFinanceChecksAddQueryNotInternal() {
         Role role = Role.LEADAPPLICANT;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(2L).build();
         ProjectStatusResource projectStatus = newProjectStatusResource().withBankDetailsStatus(ProjectActivityStates.COMPLETE).withProjectDetailStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
@@ -77,7 +77,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalCanAccessFinanceChecksAddQueryNoFinanceContact() {
         Role role = Role.COMP_ADMIN;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.PARTNER).withOrganisation(2L).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
@@ -86,7 +86,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
     @Test
     public void internalCanAccessFinanceChecksAddQueryNotInOrganisation() {
         Role role = Role.COMP_ADMIN;
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectUserResource projectUser = newProjectUserResource().withRole(Role.FINANCE_CONTACT).withOrganisation(3L).build();
         when(projectServiceMock.getProjectUsersForProject(1L)).thenReturn(singletonList(projectUser));
         assertFalse(rules.internalCanAccessFinanceChecksAddQuery(new ProjectOrganisationCompositeId(1L, 2L), user));
@@ -132,7 +132,7 @@ public class SetupSectionPermissionRulesTest extends BasePermissionRulesTest<Set
                                          TriFunction<SetupSectionsPermissionRules, ProjectCompositeId, UserResource, Boolean> rule) {
         Long projectId = 1L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource user = newUserResource().withRoleGlobal(role).build();
         ProjectStatusResource projectStatus = newProjectStatusResource()
                 .withDocumentsStatus(documentStatus)
                 .withProjectState(LIVE)

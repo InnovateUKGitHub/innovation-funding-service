@@ -49,7 +49,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(role)).build());
+                    newUserResource().withRoleGlobal(role).build());
             Long competitionId = 2L;
 
             assertAccessDenied(() -> classUnderTest.create(), () -> {
@@ -78,7 +78,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testCompAdminAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
 
         Long competitionId = 2L;
         classUnderTest.create();
@@ -96,7 +96,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testProjectFinanceAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         Long competitionId = 2L;
         classUnderTest.create();

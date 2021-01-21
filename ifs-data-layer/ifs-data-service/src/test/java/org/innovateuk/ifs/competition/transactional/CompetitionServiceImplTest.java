@@ -83,7 +83,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Before
     public void setUp(){
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
         setLoggedInUser(userResource);
     }
 
