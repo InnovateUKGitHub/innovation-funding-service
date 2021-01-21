@@ -159,6 +159,9 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
 
         assertThat(result.isSuccess(), equalTo(true));
 
+        ScheduleResponse scheduleResponse = result.getSuccess();
+        assertThat(scheduleResponse.getResponse(), equalTo("Project sent: " + APPLICATION_ID));
+
         verify(grantEndpoint, only()).send(createLambdaMatcher(matchGrant(project)));
 
         // assert that the Project Manager and the Finance Contacts for each Partner Organisation are granted access to
@@ -258,12 +261,19 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
                 serviceFailure(new Error("sync participants failed", HttpStatus.INTERNAL_SERVER_ERROR)));
         when(grantMapper.mapToGrant(project)).thenReturn(grant);
         when(grantProcessService.findOneReadyToSend()).thenReturn(of(process));
+        doNothing().when(grantProcessService).sendFailed(anyLong(), anyString());
 
         ServiceResult<ScheduleResponse> result = service.sendReadyProjects();
-
         assertThat(result.isSuccess(), equalTo(true));
 
+        ScheduleResponse scheduleResponse = result.getSuccess();
+        assertThat(scheduleResponse.getResponse(), equalTo("Project send failed: " + APPLICATION_ID));
+
         verify(crmService, times(1)).syncCrmContact(anyLong());
+        verify(grantProcessService).findOneReadyToSend();
+        verify(grantProcessService).sendFailed(anyLong(), anyString());
+        verifyNoMoreInteractions(grantProcessService);
+        verifyZeroInteractions(grantEndpoint);
     }
 
     private static Predicate<Grant> matchGrant(Project project) {

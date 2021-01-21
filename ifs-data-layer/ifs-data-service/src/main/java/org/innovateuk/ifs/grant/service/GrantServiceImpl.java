@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
@@ -79,20 +78,22 @@ public class GrantServiceImpl implements GrantService {
                 projectRepository.findOneByApplicationId(applicationId)
         );
 
-        syncParticipants(grant)
-                .andOnSuccess(() -> {
-                    grantEndpoint.send(grant)
-                            .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
-                            .andOnSuccess(() -> addLiveProjectsRoleToProjectTeamUsers(projectRepository.findOneByApplicationId(applicationId)))
-                            .andOnFailure((ServiceFailure serviceFailure) ->
-                                    grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
-                })
-                .andOnFailure((ServiceFailure serviceFailure) -> {
-                    grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString());
-                    return serviceSuccess(new ScheduleResponse("Project sent failed: " + applicationId));
-                });
+        ServiceResult<Void> syncParticipantsResult = syncParticipants(grant);
 
-        return serviceSuccess(new ScheduleResponse("Project sent: " + applicationId));
+        ScheduleResponse scheduleResponse;
+        if (syncParticipantsResult.isSuccess()) {
+            grantEndpoint.send(grant)
+                    .andOnSuccess(() -> grantProcessService.sendSucceeded(applicationId))
+                    .andOnSuccess(() -> addLiveProjectsRoleToProjectTeamUsers(projectRepository.findOneByApplicationId(applicationId)))
+                    .andOnFailure((ServiceFailure serviceFailure) ->
+                            grantProcessService.sendFailed(applicationId, serviceFailure.toDisplayString()));
+            scheduleResponse = new ScheduleResponse("Project sent: " + applicationId);
+        } else {
+            grantProcessService.sendFailed(applicationId, syncParticipantsResult.getFailure().toDisplayString());
+            scheduleResponse = new ScheduleResponse("Project send failed: " + applicationId);
+        }
+
+        return serviceSuccess(scheduleResponse);
     }
 
     private ServiceResult<Void> syncParticipants(Grant grant) {
