@@ -20,8 +20,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-@Deprecated
-// Most of this isn't needed - getting in the way of existing spring boot config
 @Configuration
 public class HttpConfig {
 
