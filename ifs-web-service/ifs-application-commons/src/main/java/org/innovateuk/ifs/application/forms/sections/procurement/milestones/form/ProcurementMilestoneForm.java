@@ -25,7 +25,6 @@ public class ProcurementMilestoneForm {
     private String deliverable;
     @WordCount(max = 200, message = "{validation.field.max.word.count}")
     private String successCriteria;
-    @NotNull(message = "{validation.procurement.milestones.payment}")
     private BigInteger payment;
 
     public ProcurementMilestoneForm() {}

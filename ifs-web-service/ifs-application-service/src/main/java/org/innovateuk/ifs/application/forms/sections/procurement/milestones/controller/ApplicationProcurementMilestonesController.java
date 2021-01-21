@@ -102,9 +102,7 @@ public class ApplicationProcurementMilestonesController {
                            @Valid @ModelAttribute("form") ProcurementMilestonesForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
-        if (!validationHandler.hasErrors()) {
-            validator.validate(form, applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess(), validationHandler);
-        }
+        validator.validate(form, applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess(), validationHandler);
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewMilestones(model, form, user, applicationId, organisationId, sectionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
