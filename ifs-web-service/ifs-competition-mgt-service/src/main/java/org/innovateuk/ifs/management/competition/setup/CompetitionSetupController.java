@@ -105,9 +105,6 @@ public class CompetitionSetupController {
     @Autowired
     private FundingLevelPercentageValidator fundingLevelPercentageValidator;
 
-    @Value("${ifs.subsidy.control.enabled:true}")
-    private boolean fundingRuleEnabled;
-
     public static final String SETUP_READY_KEY = "setupReady";
     public static final String READY_TO_OPEN_KEY = "isReadyToOpen";
 
@@ -211,7 +208,7 @@ public class CompetitionSetupController {
             UserResource loggedInUser,
             Model model) {
         if (competitionSetupForm.getFundingRule() == null) {
-            String errorKey = fundingRuleEnabled ? "validation.initialdetailsform.funding.rule.required" : "validation.initialdetailsform.stateaid.required";
+            String errorKey = "validation.initialdetailsform.funding.rule.required";
             validationHandler.addAnyErrors(Arrays.asList(Error.fieldError("fundingRule", null, errorKey)));
         }
 

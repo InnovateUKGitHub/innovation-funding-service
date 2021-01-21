@@ -330,7 +330,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         );
 
         assertEquals(
-                "validation.initialdetailsform.stateaid.required",
+                "Please select a competition funding rule.",
                 bindingResult.getFieldError("fundingRule").getCode()
         );
 
