@@ -331,7 +331,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         assertEquals(
                 "Please select a competition funding rule.",
-                bindingResult.getFieldError("fundingRule").getCode()
+                bindingResult.getFieldError("fundingRule").getDefaultMessage()
         );
 
         verify(competitionSetupRestService, never()).update(competition);
