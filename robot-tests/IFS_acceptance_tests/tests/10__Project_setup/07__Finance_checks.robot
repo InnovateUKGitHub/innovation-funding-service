@@ -549,14 +549,13 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
     Then verify percentage and total                   Overhead costs  £11,886
     And the user should see the text in the element    jQuery = .govuk-accordion__section-heading:contains("Overhead costs") span[data-mirror*='#section-total']  £11,886
     And the user should see the element                jQuery = #accordion-finances-content-2 a:contains("Edit")
-    Then verify total costs of project                 £187,717
+    Then verify total costs of project                 £187,716
 
 Project Finance user can Edit and Save Lead Partner's no overhead costs option
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link    jQuery = #accordion-finances-content-2 a:contains("Edit")
     And the user clicks the button/link     css = [data-target = "overhead-none"] label
-    #Then the user should see the element    jQuery = button span:contains("£0")
     When the user clicks the button/link    css = .govuk-button[name = "save-eligibility"]
     Then the user should see the element    jQuery = span:contains("0%") ~ #accordion-finances-heading-2
     And the user should see the element     jQuery = span:contains("£0") ~ #accordion-finances-heading-2
@@ -687,7 +686,7 @@ Project Finance user can edit and save partner's 20% of labour costs option
     And the user clicks the button/link         css = .govuk-button[name = "save-eligibility"]
     And the user should see the element         jQuery = span:contains("£11,886") ~ #accordion-finances-heading-2
     And the user should see the element         jQuery = #accordion-finances-content-2 a:contains("Edit")
-    Then verify total costs of project          £187,717
+    Then verify total costs of project          £187,716
 
 Project Finance user can edit and save Partner's no overhead costs option
     [Documentation]     INFUND-7577
