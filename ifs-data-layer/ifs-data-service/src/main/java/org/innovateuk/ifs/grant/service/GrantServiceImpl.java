@@ -3,8 +3,6 @@ package org.innovateuk.ifs.grant.service;
 import com.newrelic.api.agent.Trace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -20,7 +18,6 @@ import org.innovateuk.ifs.sil.grant.service.GrantEndpoint;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,21 +94,13 @@ public class GrantServiceImpl implements GrantService {
     }
 
     private ServiceResult<Void> syncParticipants(Grant grant) {
-        try {
-            for (Participant participant : grant.getParticipants()) {
-                 ServiceResult syncCrmContactResults =  crmService.syncCrmContact(participant.getContactId());
+        ServiceResult<Void> syncCrmContactResults = serviceSuccess();
 
-                 if (syncCrmContactResults.isFailure()) {
-                     throw new IFSRuntimeException(
-                             String.format("Sync participants failed for participant id %s", participant.getContactId()));
-                 }
-            }
-
-            return serviceSuccess();
-        } catch (IFSRuntimeException exception) {
-            LOG.error(exception.getMessage(), exception);
-            return ServiceResult.serviceFailure(new Error(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+        for (Participant participant : grant.getParticipants()) {
+            syncCrmContactResults =  syncCrmContactResults.andOnSuccess(() -> crmService.syncCrmContact(participant.getContactId()));
         }
+
+        return syncCrmContactResults;
     }
 
     private ServiceResult<Void> addLiveProjectsRoleToProjectTeamUsers(Project project) {
