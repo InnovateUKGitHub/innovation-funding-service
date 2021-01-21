@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to be an assessor'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessor to competition'" />
     </head>
 
     <body class="govuk-template__body competition-management competition-overview">
@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to invite assessors',linkUrl=@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite to be an assessor',subTitle=${model.competitionName},size='govuk-heading-xl'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessor to competition',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
                 <p class="govuk-heading-m" th:text="|Recipient: ${model.recipient}|">Dave smith</p>
 
