@@ -41,6 +41,7 @@ dependencies {
 
     testCompile "net.sf.opencsv:opencsv:2.3"
     testCompile "com.opencsv:opencsv"
+    testCompile 'org.assertj:assertj-core'
 
 }
 
