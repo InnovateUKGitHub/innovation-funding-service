@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.eligibility.populator;
 
 import org.innovateuk.ifs.application.finance.viewmodel.*;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -54,7 +55,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(appFinanceResource, projectFinanceResource);
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(competition, appFinanceResource, projectFinanceResource);
         ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, eligibilityOverview,
                 projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
         ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, organisation, competition);
@@ -66,29 +67,45 @@ public class ProjectFinanceChangesViewModelPopulator {
                 projectFinanceChangesMilestoneDifferencesViewModel);
     }
 
-    private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(ApplicationFinanceResource appFinanceResource, ProjectFinanceResource projectFinanceResource) {
+    private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource, ProjectFinanceResource projectFinanceResource) {
 
         List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
         CostChangeViewModel vat = null;
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : projectFinanceResource.getFinanceOrganisationDetails().entrySet()) {
             FinanceRowType rowType = entry.getKey();
+            if (rowType == FinanceRowType.OTHER_FUNDING) {
+                continue;
+            }
+
             FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
             FinanceRowCostCategory financeRowAppCostCategory = appFinanceResource.getFinanceOrganisationDetails().get(rowType);
-            CostChangeViewModel costChange = new CostChangeViewModel(rowType.getDisplayName(),
+
+            String section = sectionName(competition, rowType);
+            CostChangeViewModel costChange = new CostChangeViewModel(section,
                     financeRowAppCostCategory.getTotal(),
                     financeRowProjectCostCategory.getTotal());
 
             if (rowType == FinanceRowType.VAT) {
                 vat = costChange;
-            } else {
-                sectionDifferences.add(costChange);
             }
+
+            sectionDifferences.add(costChange);
         }
 
         boolean vatRegistered = appFinanceResource.isVatRegistered();
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, vatRegistered, vat);
         return projectFinanceChangesProjectFinancesViewModel;
+    }
+
+    private String sectionName(CompetitionResource competition, FinanceRowType rowType) {
+        if (FundingType.GRANT == competition.getFundingType() && FinanceRowType.OVERHEADS == rowType) {
+            return "Overhead costs";
+        }
+        if (FinanceRowType.YOUR_FINANCE == rowType) {
+            return "Your finance";
+        }
+        return rowType.getDisplayName();
     }
 
     private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, FinanceCheckEligibilityResource eligibilityOverview, CostChangeViewModel totalProjectCosts) {
