@@ -33,11 +33,11 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
     public String descriptionForSize(OrganisationSize size) {
         switch (size) {
             case SMALL:
-                return "Micro entity or small company";
+                return "Micro or small";
             case MEDIUM:
-                return "Medium-sized company";
+                return "Medium";
             case LARGE:
-                return "Large-sized company";
+                return "Large";
             default:
                 throw new ObjectNotFoundException("Unknown size " + size);
         }
