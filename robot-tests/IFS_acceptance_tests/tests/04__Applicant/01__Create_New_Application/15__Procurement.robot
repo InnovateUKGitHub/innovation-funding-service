@@ -115,7 +115,7 @@ Invite a registered assessor
     And the user clicks the button/link                       link = Invite
     And the user clicks the button/link                       link = Review and send invites
     And the user enters text to a text field                  id = message    This is custom text
-    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invite")
+    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invitation")
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
