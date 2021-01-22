@@ -191,7 +191,7 @@ public class AcceptApplicationInviteServiceImplTest {
         ProcessRole expectedProcessRole = new ProcessRole(
                 user,
                 invite.getTarget().getId(),
-                ProcessRoleType.LEADAPPLICANT,
+                ProcessRoleType.COLLABORATOR,
                 usersCurrentOrganisation.getId()
         );
 
