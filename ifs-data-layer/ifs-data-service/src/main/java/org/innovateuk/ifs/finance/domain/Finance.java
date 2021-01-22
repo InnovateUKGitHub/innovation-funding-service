@@ -177,7 +177,7 @@ public abstract class Finance {
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
         return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum)
-                && (isMatchingFundingRules(grantClaimMaximum));
+                && isMatchingFundingRules(grantClaimMaximum);
     }
 
     private boolean isMatchingFundingRules(GrantClaimMaximum grantClaimMaximum) {
