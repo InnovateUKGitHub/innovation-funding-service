@@ -200,7 +200,7 @@ task syncUser() {
                 commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-user.sh', project.getProperty('email')
             }
         } else {
-            throw new GradleException('Please enter a valid email. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com')
+            throw new GradleException('Please enter comma separated valid emails. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com,troy.ward@gmail.com')
         }
     }
 }
