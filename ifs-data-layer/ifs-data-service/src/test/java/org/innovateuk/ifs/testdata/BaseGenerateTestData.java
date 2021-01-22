@@ -290,12 +290,16 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
+        CompletableFuture<Void> competitionAssessmentPeriodsFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                createAssessmentPeriodsForCompetitions(createCompetitionFutures), taskExecutor);
+
         CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
                                 competitionsFinalisedFuture,
                                 competitionOrganisationConfigFutures,
-                                supporterFutures
+                                supporterFutures,
+                                competitionAssessmentPeriodsFutures
         ).join();
 
         long after = System.currentTimeMillis();
@@ -369,6 +373,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void createCompetitionOrganisationConfigForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         createCompetitionOrganisationConfig(competitions);
+    }
+
+    private void createAssessmentPeriodsForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        createCompetitionAssessmentPeriods(competitions);
     }
 
     private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
@@ -461,6 +470,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitionOrganisationConfig(List<CompetitionData> competitions) {
         competitions.forEach(competitionDataBuilderService::createCompetitionOrganisationConfig);
+    }
+
+    private void createCompetitionAssessmentPeriods(List<CompetitionData> competitions) {
+        competitions.forEach(competitionDataBuilderService::createCompetitionAssessmentPeriods);
     }
 
     private void createPublicContentGroups(List<CompetitionData> competitions) {

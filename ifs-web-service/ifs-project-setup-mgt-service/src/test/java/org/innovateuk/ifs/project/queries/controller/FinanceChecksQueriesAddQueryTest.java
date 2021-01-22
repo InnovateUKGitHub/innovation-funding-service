@@ -6,12 +6,13 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
@@ -46,10 +47,12 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.util.CookieTestUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -79,17 +82,22 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Mock
     private ProjectFinanceService projectFinanceService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     private Long projectId = 3L;
     private Long applicantOrganisationId = 22L;
     private Long projectFinanceId = 45L;
+    private Long competitionId = 6L;
 
     ApplicationResource applicationResource = newApplicationResource().build();
 
-    ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
+    ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).withCompetition(competitionId).build();
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
-    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).build();
+    CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
+    ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(PROJECT_FINANCE_CONTACT).build();
 
     PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
 
@@ -107,6 +115,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
     }
 
     @Test

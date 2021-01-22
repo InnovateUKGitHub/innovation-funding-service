@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
-
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.application.domain.Application;
@@ -27,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -35,8 +35,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.QUERIES_CANNOT_
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -112,12 +112,11 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                         ServiceResult<Long> result = service.create(query);
                         if (result.isSuccess()) {
                             Project project = projectFinance.getProject();
-                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT);
+                            List<ProjectUser> projectUsers = project.getProjectUsersWithRole(PROJECT_FINANCE_CONTACT, PROJECT_MANAGER);
                             List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> Objects.equals(pu.getOrganisation().getId(), projectFinance.getOrganisation().getId()));
-
-                            Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
-                            if (financeContact.isPresent()) {
-                                ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), project);
+                            Set<User> usersToNotify = financeContacts.stream().map(ProjectUser::getUser).collect(Collectors.toSet());
+                            for (User user: usersToNotify) {
+                                ServiceResult<Void> notificationResult = sendNewQueryNotification(user, project);
 
                                 if (!notificationResult.isSuccess()) {
                                     return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
