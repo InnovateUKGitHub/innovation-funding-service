@@ -21,7 +21,9 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -56,7 +58,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(competition, appFinanceResource, projectFinanceResource);
-        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, eligibilityOverview,
+        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, appFinanceResource, eligibilityOverview,
                 projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
         ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, organisation, competition);
 
@@ -108,20 +110,22 @@ public class ProjectFinanceChangesViewModelPopulator {
         return rowType.getDisplayName();
     }
 
-    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, FinanceCheckEligibilityResource eligibilityOverview, CostChangeViewModel totalProjectCosts) {
+    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource, FinanceCheckEligibilityResource eligibilityOverview, CostChangeViewModel totalProjectCosts) {
         if (competition.isProcurement()) {
             return null;
         }
         List<CostChangeViewModel> entries = new ArrayList<>();
         entries.add(totalProjectCosts);
-        entries.add(new CostChangeViewModel("Funding level (%)", eligibilityOverview.getPercentageGrant(), null));
-        entries.add(new CostChangeViewModel("Funding sought (£)", eligibilityOverview.getFundingSought(), null));
-        entries.add(new CostChangeViewModel("Other funding (£)", eligibilityOverview.getOtherPublicSectorFunding(), null));
+
+        entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
+        entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getGrantClaim().getTotal(), eligibilityOverview.getFundingSought()));
+        entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
         if (competition.isKtp()) {
-            entries.add(new CostChangeViewModel("Company contribution (%)", eligibilityOverview.getContributionPercentage(), null));
-            entries.add(new CostChangeViewModel("Company contribution (£)", eligibilityOverview.getContributionToProject(), null));
+            BigDecimal contributionPercentage = appFinanceResource.getTotalContribution().multiply(new BigDecimal("100")).divide(appFinanceResource.getTotal(), RoundingMode.HALF_UP);
+            entries.add(new CostChangeViewModel("Company contribution (%)", contributionPercentage, eligibilityOverview.getContributionPercentage()));
+            entries.add(new CostChangeViewModel("Company contribution (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
         } else {
-            entries.add(new CostChangeViewModel("Contribution to project (£)", eligibilityOverview.getContributionToProject(), null));
+            entries.add(new CostChangeViewModel("Contribution to project (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
         }
         return new ProjectFinanceChangesFinanceSummaryViewModel(entries);
     }
