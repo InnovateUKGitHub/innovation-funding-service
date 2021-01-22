@@ -46,13 +46,13 @@ public class ProjectFinance extends Finance {
         this.project = project;
     }
 
-    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears) {
-        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears);
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project, GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration) {
+        super(organisation, organisationSize, growthTable, employeesAndTurnover, ktpFinancialYears, northernIrelandDeclaration);
         this.project = project;
     }
 
     public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
-        this(organisation, organisationSize, project, null, null, null);
+        this(organisation, organisationSize, project, null, null, null, null);
     }
 
     public Project getProject() {

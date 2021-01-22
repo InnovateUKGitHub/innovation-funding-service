@@ -42,14 +42,15 @@ public abstract class Finance {
     @JoinColumn(name = "ktpFinancialYearsId")
     private KtpFinancialYears ktpFinancialYears;
 
-    private boolean northernIrelandDeclaration;
+    private Boolean northernIrelandDeclaration;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears) {
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears, Boolean northernIrelandDeclaration) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
         this.employeesAndTurnover = employeesAndTurnover;
         this.ktpFinancialYears = ktpFinancialYears;
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
     }
 
     public Finance(Organisation organisation) {
@@ -125,6 +126,14 @@ public abstract class Finance {
         this.ktpFinancialYears = ktpFinancialYears;
     }
 
+    public Boolean getNorthernIrelandDeclaration() {
+        return northernIrelandDeclaration;
+    }
+
+    public void setNorthernIrelandDeclaration(Boolean northernIrelandDeclaration) {
+        this.northernIrelandDeclaration = northernIrelandDeclaration;
+    }
+
     public Competition getCompetition() {
         return getApplication().getCompetition();
     }
@@ -172,7 +181,7 @@ public abstract class Finance {
     }
 
     private boolean isMatchingFundingRules(GrantClaimMaximum grantClaimMaximum) {
-        FundingRules ruleThatApplies = northernIrelandDeclaration && getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL
+        FundingRules ruleThatApplies = northernIrelandDeclaration == Boolean.TRUE && getCompetition().getFundingRules() == FundingRules.SUBSIDY_CONTROL
                 ? FundingRules.STATE_AID
                 : getCompetition().getFundingRules();
         return grantClaimMaximum.getFundingRules() == null || grantClaimMaximum.getFundingRules() == ruleThatApplies;
