@@ -328,7 +328,7 @@ the user invites assessors to assess the ATI competition
     the user should see the element     jQuery = td:contains("${assessor1_to_add}")
     the user should see the element     jQuery = td:contains("${assessor2_to_add}")
     the user clicks the button/link     jQuery = a:contains("Review and send invites")
-    the user clicks the button/link     jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
 
 the assessors accept the invitation to assess the ATI competition
     log in as a different user                            ${assessor1_email}   ${short_password}
