@@ -28,7 +28,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -82,19 +81,17 @@ public class ReviewAndSubmitController {
     public String submitApplication(@PathVariable long applicationId,
                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                     BindingResult bindingResult,
-                                    RedirectAttributes redirectAttributes,
                                     UserResource user,
                                     HttpServletResponse response) {
 
-            ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
-            if (!ableToSubmitApplication(user, application)) {
-                cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-                return  format("redirect:/application/%d", applicationId);
-            }
+        if (!ableToSubmitApplication(user, application)) {
+            cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
+            return  format("redirect:/application/%d", applicationId);
+        }
 
-        redirectAttributes.addFlashAttribute("termsAgreed", true);
-        return format("redirect:/application/%d/confirm-submit", applicationId);
+        return format("redirect:/application/%d/confirm-submit?termsAgreed=true", applicationId);
     }
 
     @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_RETURN_AND_EDIT",
@@ -167,6 +164,7 @@ public class ReviewAndSubmitController {
         if (!TRUE.equals(termsAgreed)) {
             return format("redirect:/application/%d/summary", applicationId);
         }
+        model.addAttribute("termsAgreed", termsAgreed);
         model.addAttribute("applicationId", applicationId);
         return "application-confirm-submit";
     }
