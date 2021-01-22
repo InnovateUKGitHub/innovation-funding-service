@@ -1,7 +1,7 @@
-INSERT INTO assessment_period
+INSERT INTO assessment_period (rank, competition_id)
 SELECT
-1,
-c.id
+1 as rank,
+c.id as competition_id
 FROM competition c
 INNER JOIN milestone m ON c.id = m.competition_id
 WHERE c.always_open IS NULL OR c.always_open = 0 AND m.type = 'ASSESSOR_BRIEFING';
