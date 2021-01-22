@@ -2,10 +2,7 @@ package org.innovateuk.ifs.application.procurement.milestones;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
-import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
-import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
 import java.util.Comparator;
@@ -15,12 +12,6 @@ import java.util.Map;
 import static java.util.stream.Collectors.toMap;
 
 public abstract class AbstractProcurementMilestoneController {
-
-    @Autowired
-    private ProcurementMilestoneFormPopulator formPopulator;
-
-    @Autowired
-    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
 
     protected abstract String getView();
 
@@ -35,8 +26,7 @@ public abstract class AbstractProcurementMilestoneController {
         return getView();
     }
 
-    protected String viewProjectSetupMilestones(Model model, long projectId, long organisationId, UserResource userResource) {
-        ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
+    protected String viewProjectSetupMilestones(Model model, UserResource userResource, ProcurementMilestonesForm form) {
         model.addAttribute("form", form);
         return viewMilestonesPage(model, form, userResource);
     }

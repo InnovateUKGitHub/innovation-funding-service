@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.project.milestones;
 
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
+import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.procurement.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,12 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @Autowired
     private ProjectProcurementMilestoneViewModelPopulator populator;
 
+    @Autowired
+    private ProcurementMilestoneFormPopulator formPopulator;
+
+    @Autowired
+    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
+
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     public String viewMilestones(@PathVariable long projectId,
@@ -27,7 +36,8 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  UserResource userResource,
                                  Model model) {
         model.addAttribute("model", populator.populate(projectId, organisationId, userResource, false));
-        return viewProjectSetupMilestones(model, projectId, organisationId, userResource);
+        ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
+        return viewProjectSetupMilestones(model, userResource, form);
     }
 
     @Override
