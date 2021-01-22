@@ -89,7 +89,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
                 .build();
 
         ProcessRoleResource collaboratorRole = newProcessRoleResource()
-                .withRole(ProcessRoleType.LEADAPPLICANT)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .withOrganisation(collaboratorOrganisation.getId())
                 .withUser(collaborator)
                 .build();
