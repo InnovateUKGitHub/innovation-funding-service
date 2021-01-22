@@ -123,6 +123,9 @@
                                                       th:text="${#temporals.monthNameShort(inProgressView.endDate)}">END MONTH</span>
                                                 <span class="year" th:text="${#temporals.year(inProgressView.endDate)}">END YEAR</span>
                                             </th:block>
+                                            <th:block th:if="${inProgressView.alwaysOpen}">
+                                                <div class="always-open-status"></div>
+                                            </th:block>
                                         </div>
                                         <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
                                             <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
