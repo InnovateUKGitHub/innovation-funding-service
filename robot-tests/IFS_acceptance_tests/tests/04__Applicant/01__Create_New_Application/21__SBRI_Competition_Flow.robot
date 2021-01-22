@@ -41,6 +41,7 @@ ${openSBRICompetitionName}            SBRI type one competition
 ${openSBRICompetitionId}              ${competition_ids["${openSBRICompetitionName}"]}
 &{sbriLeadCredentials}                email=troy.ward@gmail.com     password=${short_password}
 &{sbriPartnerCredentials}             email=eve.smith@gmail.com     password=${short_password}
+&{sbriProjectFinanceCredentials}      email=becky.mason@gmail.com   password=${short_password}
 ${sbriComp654Name}                    The Sustainable Innovation Fund: SBRI phase 1
 ${sbriComp654Id}                      ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}                    Procurement application 1
