@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.config.IfSThymeleafDialect;
+import org.innovateuk.ifs.config.thymeleaf.dialect.IfSThymeleafDialect;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;

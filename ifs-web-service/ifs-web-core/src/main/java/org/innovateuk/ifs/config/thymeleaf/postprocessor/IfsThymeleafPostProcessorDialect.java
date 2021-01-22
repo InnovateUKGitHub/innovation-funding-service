@@ -1,11 +1,13 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.config.thymeleaf.postprocessor;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.thymeleaf.dialect.IPostProcessorDialect;
 import org.thymeleaf.postprocessor.IPostProcessor;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@ConditionalOnProperty()
 public class IfsThymeleafPostProcessorDialect implements IPostProcessorDialect {
 
     @Override

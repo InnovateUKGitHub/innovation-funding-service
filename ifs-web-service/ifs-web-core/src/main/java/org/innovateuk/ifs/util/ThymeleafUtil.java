@@ -2,7 +2,7 @@ package org.innovateuk.ifs.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.config.IfsThymeleafExpressionObjectFactory;
+import org.innovateuk.ifs.config.thymeleaf.IfsThymeleafExpressionObjectFactory;
 import org.springframework.validation.Errors;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.context.IExpressionContext;

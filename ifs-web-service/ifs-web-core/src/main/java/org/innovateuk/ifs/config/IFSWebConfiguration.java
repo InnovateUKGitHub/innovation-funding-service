@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.config;
 
+import org.innovateuk.ifs.config.thymeleaf.dialect.IfSThymeleafDialect;
+import org.innovateuk.ifs.config.thymeleaf.postprocessor.IfsThymeleafPostProcessorDialect;
 import org.innovateuk.ifs.controller.LoggedInUserMethodArgumentResolver;
 import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import org.innovateuk.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
@@ -65,13 +67,6 @@ public class IFSWebConfiguration implements WebMvcConfigurer {
         registry.addFormatter(new RejectionReasonFormatter());
     }
 
-    public IfSThymeleafDialect getIfsThymeleafDialect() {
-        return new IfSThymeleafDialect();
-    }
-
-    public IfsThymeleafPostProcessorDialect getIfsThymeleafPostProcessorDialect() {
-        return new IfsThymeleafPostProcessorDialect();
-    }
 
     @Bean
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {

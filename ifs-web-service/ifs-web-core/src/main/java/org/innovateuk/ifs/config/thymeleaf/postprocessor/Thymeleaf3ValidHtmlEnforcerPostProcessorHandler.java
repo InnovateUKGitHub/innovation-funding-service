@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.config.thymeleaf.postprocessor;
 
 import org.thymeleaf.engine.AbstractTemplateHandler;
 import org.thymeleaf.exceptions.TemplateInputException;
