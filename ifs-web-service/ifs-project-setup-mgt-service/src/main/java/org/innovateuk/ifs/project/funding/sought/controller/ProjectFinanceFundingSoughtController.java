@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.innovateuk.ifs.project.funding.sought.form.*;
 import org.innovateuk.ifs.project.funding.sought.viewmodel.*;
 import javax.validation.Valid;
@@ -58,17 +57,15 @@ public class ProjectFinanceFundingSoughtController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable long projectId,
-                                    Model model,
-                                    RedirectAttributes redirectAttributes) {
+                                    Model model) {
         List<ProjectFinanceResource> finances = projectFinanceRestService.getProjectFinances(projectId).getSuccess();
         Supplier<String> failureView = () -> viewFunding(projectId, finances, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFundingLevels(finances, form));
-            return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                redirectAttributes.addFlashAttribute("showFundingAmountMessage", true);
-                return format("redirect:/project/%d/finance-check-overview", projectId);
-            });
+            return validationHandler.failNowOrSucceedWith(failureView, () ->
+                format("redirect:/project/%d/finance-check-overview?showFundingAmountMessage=true", projectId)
+            );
         });
     }
 

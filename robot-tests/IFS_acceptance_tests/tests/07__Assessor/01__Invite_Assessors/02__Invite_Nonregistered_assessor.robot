@@ -177,4 +177,4 @@ the comp admin logs in and navigate to invite tab
 the internal user send invite
     the user cannot see a validation error in the page
     the user clicks the button/link            jQuery = a:contains("Review and send invites")
-    the user clicks the button/link            jQuery = button:contains("Send invite")
+    the user clicks the button/link            jQuery = button:contains("Send invitation")
