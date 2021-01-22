@@ -118,7 +118,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         entries.add(totalProjectCosts);
 
         entries.add(new CostChangeViewModel("Funding level (%)", appFinanceResource.getGrantClaimPercentage(), eligibilityOverview.getPercentageGrant()));
-        entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getGrantClaim().getTotal(), eligibilityOverview.getFundingSought()));
+        entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
         entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
         if (competition.isKtp()) {
             BigDecimal contributionPercentage = appFinanceResource.getTotalContribution().multiply(new BigDecimal("100")).divide(appFinanceResource.getTotal(), RoundingMode.HALF_UP);
