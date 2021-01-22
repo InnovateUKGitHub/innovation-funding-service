@@ -3,6 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account'"/>
 </head>
+
 <body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -10,6 +11,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to organisations not registered on Companies House',linkClass='link-back',linkUrl=@{/organisation/create/organisation-type/not-registered-on-companies-house}"/>
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -37,7 +40,6 @@
             <input type="hidden" name="organisationTypeId" th:value="${organisationForm.organisationTypeId}" />
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('*{organisationName}')} ? 'govuk-form-group--error'">
-                <!--input type="hidden" name="organisationName" th:value="${organisationForm.organisationName}" /-->
                 <label class="govuk-label govuk-label--s"
                        for="name">
                     Organisation name

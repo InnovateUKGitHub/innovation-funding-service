@@ -11,6 +11,8 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
 
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to Companies House search results',linkClass='link-back',linkUrl=@{/organisation/create/search-organisation-results?{searchTerm}(searchTerm=${organisationForm.getOrganisationSearchName()})}"/>
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisations not registered on Companies House',subTitle='Create an account',size='govuk-heading-l'" />
         <p class="govuk-body">You must register your company on Companies House before you can continue with your application.</p>
