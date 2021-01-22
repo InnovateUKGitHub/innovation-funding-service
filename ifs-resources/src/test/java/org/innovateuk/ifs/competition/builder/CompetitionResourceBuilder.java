@@ -291,6 +291,14 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         }, golTemplates);
     }
 
+    public CompetitionResourceBuilder withAlwaysOpen(Boolean... alwaysOpens) {
+        return withArray((alwaysOpen, competitionResource) -> competitionResource.setAlwaysOpen(alwaysOpen), alwaysOpens);
+    }
+
+    public CompetitionResourceBuilder withCompetitionApplicationConfig(CompetitionApplicationConfigResource... competitionApplicationConfigResources) {
+        return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfigResources);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

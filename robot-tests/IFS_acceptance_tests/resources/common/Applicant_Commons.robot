@@ -399,17 +399,17 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
-    the user selects the radio button           organisationTypeId    radio-${organisationType}
-    the user clicks the button/link             jQuery = .govuk-button:contains("Save and continue")
-    the user should see the element             jQuery = h1:contains("Enter organisation details")
-    the user selects his organisation in Companies House  innovate  INNOVATE LTD
-    the user should be redirected to the correct page    ${SERVER}/registration/register
-    the invited user fills the create account form       liam  smithson
-    the user should see the element                      jQuery = h1:contains("Please verify your email address")
-    the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
-    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    the user clicks the button/link             link = Sign in
-    Logging in and Error Checking               ${email}  ${correct_password}
+    the user selects the radio button                        organisationTypeId    radio-${organisationType}
+    the user clicks the button/link                          jQuery = .govuk-button:contains("Save and continue")
+    the user should see the element                          jQuery = h1:contains("Enter your organisation's details")
+    the user selects his organisation in Companies House     ROYAL  ROYAL MAIL PLC
+    the user should be redirected to the correct page        ${SERVER}/registration/register
+    the invited user fills the create account form           liam  smithson
+    the user should see the element                          jQuery = h1:contains("Please verify your email address")
+    the user reads his email and clicks the link             ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page        ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                          link = Sign in
+    Logging in and Error Checking                            ${email}  ${correct_password}
 
 the applicant adds some content and marks this section as complete
     Set Focus To Element      css = .textarea-wrapped .editor
@@ -453,7 +453,7 @@ logged in user applies to competition public
     the user clicks the button/link     link = Apply with a different organisation
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    Innovate  INNOVATE LTD
+    the user search for organisation name on Companies house    ROYAL  ROYAL MAIL PLC
 
 the user enters organisation details manually on companies house link
     [Arguments]  ${organisationName}
@@ -479,8 +479,12 @@ the user applies to competition and enters organisation type link
     The user clicks the button/link                     link = Continue and create an account
     the user selects the radio button                   organisationTypeId  ${organisationType}
     the user clicks the button/link                     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link     ${organisationName}
-    the user clicks the button/link                     jQuery = button:contains("Save and continue")
+#  TODO should uncommnet on ifs-7224
+#    the user clicks the Not on companies house link     ${organisationName}
+#    the user clicks the button/link                     jQuery = button:contains("Save and continue")
+#  TODO should remove on ifs-7224
+    the user search for organisation name on Companies house   ITV  ${organisationName}
+
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -638,7 +642,7 @@ the lead invites a non-registered user
     Logout as user
     the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user clicks the button/link                     jQuery = .govuk-button:contains("Yes, accept invitation")
-    ...                                             AND    the user provides uk based organisation details     Innovate   INNOVATE LTD
+    ...                                             AND    the user provides uk based organisation details     ROYAL   ROYAL MAIL PLC
     ...                                             AND    the user clicks the button/link                     name = save-organisation
     ...                                             AND    the invited user fills the create account form      ${fName}  ${lName}
     ...                                             AND    the user reads his email and clicks the link        ${partner_email}    Please verify your email address    Once verified you can sign into your account
@@ -730,3 +734,34 @@ the user apply with knowledge base organisation
     the user selects a knowledge based organisation     ${knowledgeBase}  ${completeKBOrganisartionName}
     the user clicks the button/link                     jQuery = button:contains("Confirm")
     the user clicks the button/link                     id = knowledge-base-confirm-organisation-cta
+
+applicant fills in payment milestone
+    [Arguments]  ${milestone}  ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
+    the user selects the option from the drop-down menu     ${months}  css = [id^="${milestone}"] select[id^="milestones"][id$="month"]
+    the user enters text to a text field                    css = [id^="${milestone}"] input[id^="milestones"][id$="description"]         ${description}
+    the user enters text to a text field                    css = [id^="${milestone}"] input[id^="milestones"][id$="payment"]             ${payment}
+    the user enters text to a text field                    css = [id^="${milestone}"] textarea[id^="milestones"][id$="taskOrActivity"]   ${taskOrActivity}
+    the user enters text to a text field                    css = [id^="${milestone}"] textarea[id^="milestones"][id$="deliverable"]      ${deliverable}
+    the user enters text to a text field                    css = [id^="${milestone}"] textarea[id^="milestones"][id$="successCriteria"]  ${successCriteria}
+
+applicant views saved payment milestones
+    [Arguments]   ${month}  ${paymentRequested}  ${description}  ${percentageOfProjectCost}  ${totalPayment}  ${totalPercentage}
+    the user clicks the button/link     link = Your payment milestones
+    the user should see the element     jQuery = div h4:contains("Month completed") ~ div .accordion-header-text:contains("${month}")
+    the user should see the element     jQuery = div h4:contains("Milestone") ~ div button:contains("${description}")
+    the user should see the element     jQuery = div h4:contains("% of project costs") ~ div .finance-total:contains("${percentageOfProjectCost}")
+    the user should see the element     jQuery = div h4:contains("Payment request") ~ div .finance-total:contains("${paymentRequested}")
+    the user should see the element     jQuery = div h3:contains("Total payment requested") ~ h3:contains("${totalPercentage}") ~ h3:contains("${totalPayment}")
+
+applicant views saved payment milestones subsection
+    [Arguments]  ${taskOrActivity}  ${deliverable}  ${sucessCriteria}
+    the user should see the element     jQuery = label:contains("Task or activity") ~ div .govuk-textarea:contains("${taskOrActivity}")
+    the user should see the element     jQuery = label:contains("Deliverable") ~ div .govuk-textarea:contains("${deliverable}")
+    the user should see the element     jQuery = label:contains("Success criteria") ~ div .govuk-textarea:contains("${sucessCriteria}")
+
+applicant views readonly payment milestones subsections
+    [Arguments]  ${taskOrActivity}  ${deliverable}  ${sucessCriteria}
+    the user should see the element     jQuery = dd:contains("${taskOrActivity}")
+    the user should see the element     jQuery = dd:contains("${deliverable}")
+    the user should see the element     jQuery = dd:contains("${sucessCriteria}")
+    the user clicks the button/link     link = Your project finances

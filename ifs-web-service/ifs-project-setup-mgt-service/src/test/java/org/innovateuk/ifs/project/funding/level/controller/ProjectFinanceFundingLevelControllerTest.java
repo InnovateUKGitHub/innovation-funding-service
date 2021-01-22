@@ -156,7 +156,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "60")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "60"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview?showFundingLevelMessage=true", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
@@ -198,7 +198,7 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview?showFundingLevelMessage=true", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
