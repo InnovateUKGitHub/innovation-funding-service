@@ -142,6 +142,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         ktpCompetition = competitionRepository.save(newCompetition()
                 .withId(null)
                 .withFundingType(FundingType.KTP)
+                .withAlwaysOpen(false)
                 .build());
     }
 
