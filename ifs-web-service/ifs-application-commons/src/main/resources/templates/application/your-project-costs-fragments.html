@@ -133,7 +133,7 @@
                     <div>
                         <button type="submit"
                                 data-repeatable-rowcontainer="#labour-costs-table tbody"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear">Add another role
                         </button>
@@ -235,7 +235,7 @@
         </td>
         <td class="govuk-table__cell buttoncolumn alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -672,7 +672,7 @@
                         <p class="alignright">
                             <button type="submit"
                                     data-repeatable-rowcontainer="#procurement-overheads-costs-table tbody"
-                                    name="add_cost"
+                                    name="add_row"
                                     th:value="${financeRowType}"
                                     class="button-clear">Add another overhead
                             </button>
@@ -774,7 +774,7 @@
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -895,7 +895,7 @@
                     <p class="alignright">
                         <button type="submit"
                                 data-repeatable-rowcontainer="#material-costs-table tbody"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear">Add another materials cost
                         </button>
@@ -1032,7 +1032,7 @@
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -1131,7 +1131,7 @@
                 </div>
                 <p class="alignright">
                     <button type="submit"
-                            name="add_cost"
+                            name="add_row"
                             data-repeatable-rowcontainer="#capital-usage"
                             th:value="${financeRowType}"
                             class="button-clear">Add another asset
@@ -1335,7 +1335,7 @@
             />
         </div>
         <button type="submit"
-                th:name="remove_cost"
+                th:name="remove_row"
                 th:value="${id}"
                 class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
         </button>
@@ -1449,7 +1449,7 @@
                 </div>
                 <p class="alignright">
                     <button type="submit"
-                            name="add_cost"
+                            name="add_row"
                             th:value="${financeRowType}"
                             class="button-clear"
                             data-repeatable-rowcontainer="#subcontracting">Add another subcontractor
@@ -1581,7 +1581,7 @@
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </div>
         <button type="submit"
-                th:name="remove_cost"
+                th:name="remove_row"
                 th:value="${id}"
                 class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
         </button>
@@ -1721,7 +1721,7 @@
 
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#travel-costs-table tbody">Add another travel cost
@@ -1823,7 +1823,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -1939,7 +1939,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#other-costs-table tbody">Add another cost
@@ -2013,7 +2013,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -2114,7 +2114,7 @@
                                 <label id="vat-total" class="govuk-heading-m"
                                        data-calculation-fields="#total-cost,0.2"
                                        data-calculation-operations="*"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
+                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getVatTotal())}">£120</label>
                             </div>
                             <div class="govuk-grid-column-one-half alignleft">
                                 <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
@@ -2123,7 +2123,7 @@
                                 <label for="total-cost" class="govuk-heading-m"
                                        data-calculation-fields="#vat-total,#total-cost"
                                        data-calculation-operations="+"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
+                                       th:text="'£' + ${#ifsUtil.formatInteger(form.getProjectVatTotal())}">£120</label>
                             </div>
                         </div>
                     </div>
@@ -2582,7 +2582,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#associate-support-table tbody">Add another cost
@@ -2655,7 +2655,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -2764,7 +2764,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#estate-costs-table tbody">Add another cost
@@ -2839,7 +2839,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -2967,7 +2967,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#ktp-travel-table tbody">Add another cost
@@ -3119,7 +3119,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -3268,7 +3268,7 @@
                     <p class="alignright">
                         <button type="submit"
                                 data-repeatable-rowcontainer="#material-costs-table tbody"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear">Add another consumables cost
                         </button>
@@ -3368,7 +3368,7 @@
         </td>
         <td class="govuk-table__cell alignright buttoncolumn remove">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
@@ -3480,7 +3480,7 @@
                     </table>
                     <p class="alignright">
                         <button type="submit"
-                                name="add_cost"
+                                name="add_row"
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#knowledge-base-table tbody"
@@ -3555,7 +3555,7 @@
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"
-                    th:name="remove_cost"
+                    th:name="remove_row"
                     th:value="${id}"
                     class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
             </button>
