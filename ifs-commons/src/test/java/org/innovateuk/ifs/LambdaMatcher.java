@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<T> {
 
     private final Predicate<T> matcher;
-    private Optional<String> description;
+    private Optional<String> description = Optional.empty();
 
     public LambdaMatcher(Predicate<T> predicate) {
         this.matcher = value -> {

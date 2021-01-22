@@ -118,6 +118,11 @@
     .govuk-accordion {
       border-bottom: 3px solid govuk-colour("black");
 
+      .govuk-accordion__icon {
+        top: 0;
+        margin-top: 20px;
+      }
+
       .govuk-accordion__controls {
         @include media-down(mobile) {
           margin-top: 40px;
