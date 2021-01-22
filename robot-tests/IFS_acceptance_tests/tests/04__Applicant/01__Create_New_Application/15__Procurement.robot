@@ -77,9 +77,12 @@ Applicant fills in payment milestones
 
 Applicant can view payment milestones table when reviewing and submitting application
     [Documentation]  IFS-8958
-    When the user clicks the button/link                       jQuery = a:contains("Review and submit")
-    And the user clicks the button/link                        jQuery = button:contains("Funding breakdown")
-    Then the user should see the element                       jQuery = .govuk-heading-s h3:contains("Payment milestones")
+    When the user clicks the button/link                jQuery = a:contains("Review and submit")
+    And the user clicks the button/link                 jQuery = button:contains("Funding breakdown")
+    Then the user should see the element                jQuery = .govuk-heading-s h3:contains("Payment milestones")
+    ${total_funding}=                                   Get Text   xpath://html/body/div[5]/main/section[3]/div/div[2]/div[2]/section[2]/div[1]/div/table/tbody/tr/td[1]
+    ${payment_milestone_total}=                         Get Text   xpath://html/body/div[5]/main/section[3]/div/div[2]/div[2]/section[2]/div[2]/div/table/tfoot/tr/th[3]
+    Should Be Equal As Strings                          ${total_funding}    ${payment_milestone_total}
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
