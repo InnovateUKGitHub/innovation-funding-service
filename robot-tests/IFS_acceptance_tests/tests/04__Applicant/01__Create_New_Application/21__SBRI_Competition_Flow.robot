@@ -54,7 +54,6 @@ ${totalProjCosts}                     Total project cost
 ${vatRegistered}                      Are you VAT registered
 ${totalWithVAT}                       £265,084
 ${totalWithoutVAT}                    £220,903
-#${initialFunding}                     £262,616
 ${initialFunding}                     £265,084
 ${revisedFunding}                     £218,435
 ${vatTotal}                           £44,181
@@ -85,7 +84,7 @@ Comp admin complete the SBRI milestones
     And the user should see milestones section marked as complete
 
 Project duration validation in application payment milestones if project duration not completed in application details
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given log in as a different user                &{sbriLeadCredentials}
     And the user creates a new sbri application
     When the user clicks the button/link            link = Your project finances
@@ -94,7 +93,7 @@ Project duration validation in application payment milestones if project duratio
     And the user should see the element             link = application details
 
 Applicant can add payment milestones on completing application details with project duration
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link               link = application details
     When the user fills in SBRI Application details     ${sbriMilestonesApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                 link = Your project finances
@@ -104,7 +103,7 @@ Applicant can add payment milestones on completing application details with proj
     And the user should see the element                 id= mark-all-as-complete
 
 Applicant should see project cost banner in payment milestones when the project costs not completed
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                            link = Your project finances
     When the user fills the procurement project costs                Calculate  52,214
     And the user selects the radio button                            vatForm.registered  true
@@ -113,7 +112,7 @@ Applicant should see project cost banner in payment milestones when the project 
     Then the user should see total project costs and banner info
 
 Applicant should not see project cost banner in payment milestones when the project costs completed
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link        link = Your project finances
     And the user clicks the button/link          link = Your project costs
     When the user clicks the button/link         css = label[for="stateAidAgreed"]
@@ -122,13 +121,13 @@ Applicant should not see project cost banner in payment milestones when the proj
     Then the user should not see the element     jQuery = p:contains("Your project costs of £72,839 have not been marked as complete.")
 
 Payment milestones validations: empty fileds
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link           jQuery = button:contains(Open all)
     When the user clicks the button/link            id = mark-all-as-complete
     And the user should see validation messages
 
 Payment milestones validations: payment milestone cost is less than project cost
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user selects the option from the drop-down menu     1  css = select[id^="milestones"][id$="month"]
     And the user enters text to a text field                      css = input[id^="milestones"][id$="payment"]    1000
     And the user enters text to a text field                      css = textarea[id^="milestones"][id$="taskOrActivity"]   Task Or Activity 1
@@ -136,20 +135,20 @@ Payment milestones validations: payment milestone cost is less than project cost
     Then the user should see a field and summary error            Your payment milestones are lower than 100% of your project costs. You must increase your payment requests or adjust your project costs.
 
 Payment milestones validations: payment milestone cost is more than project cost
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     When the user enters text to a text field              css = input[id^="milestones"][id$="payment"]    100000
     And the user clicks the button/link                    id = mark-all-as-complete
     Then the user should see a field and summary error     Your payment milestones exceeds 100% of your project costs. You must lower your payment requests or adjust your project costs.
 
 Applicant adds a first payment milestone
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given applicant fills in payment milestone                  accordion-finances-content  1  Milestone 1  10000   Task Or Activity 1   Deliverable 1   Success Criteria 1
     When the user clicks the button/link                        jQuery = button:contains("Save and return to project finances")
     Then applicant views saved payment milestones               1  £10,000  Milestone 1  13.73%  £10,000  13.73%
     And applicant views saved payment milestones subsection     Task Or Activity 1   Deliverable 1   Success Criteria 1
 
 Applicant adds another payment milestone
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
     And the user clicks the button/link                             jQuery = button:contains("Open all")
     When applicant fills in payment milestone                       accordion-finances-content-unsaved  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
@@ -159,7 +158,7 @@ Applicant adds another payment milestone
     And the user should see the element                             jQuery = li:contains("Your payment milestones") > .task-status-complete
 
 Applicant can edit and remove the payment milestone
-    [Documentation]  IFS-8938
+    [Documentation]  IFS-8938  IFS-8965
     Given the user clicks the button/link           link = Your payment milestones
     When the user clicks the button/link            jQuery = button:contains("Edit your payment milestones")
     And the user clicks the button/link             jQuery = button:contains("Add another project milestone")
