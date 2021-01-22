@@ -21,6 +21,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8942  SBRI Milestones - Edit project duration in project setup
 ...
+...               IFS-8943  SBRI Milestones - Ability to raise queries / notes in project setup
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -30,33 +32,35 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${sbriType1ApplicationTitle}     SBRI type one application
-${sbriType1CompetitionName}      SBRI Type 1 Competition
-${openSBRICompetitionName}       SBRI type one competition
-${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]}
-&{sbriLeadCredentials}           email=troy.ward@gmail.com     password=${short_password}
-&{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
-${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
-${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
-${sbriProjectName}               Procurement application 1
-${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
-${sbriProjectName2}              Procurement application 2
-${sbriProjectId2}                ${project_ids["${sbriProjectName2}"]}
-${sbriApplicationId}             ${application_ids["${sbriProjectName}"]}
-${sbriApplicationId2}            ${application_ids["${sbriProjectName2}"]}
-${yourProjFinanceLink}           your project finances
-${viewFinanceChangesLink}        View changes to finances
-${inclusiveOfVATHeading}         Total project costs inclusive of VAT
-${totalProjCosts}                Total project cost
-${vatRegistered}                 Are you VAT registered
-${totalWithVAT}                  £265,084
-${totalWithoutVAT}               £220,903
-${initialFunding}                £262,616
-${revisedFunding}                £218,435
-${vatTotal}                      £44,181
-${currentAmount}                 Current amount
-${fundingAppliedFor}             Funding applied for
-${totalVAT}                      Total VAT
+${sbriType1ApplicationTitle}        SBRI type one application
+${sbriType1CompetitionName}         SBRI Type 1 Competition
+${openSBRICompetitionName}          SBRI type one competition
+${openSBRICompetitionId}            ${competition_ids["${openSBRICompetitionName}"]}
+&{sbriLeadCredentials}              email=troy.ward@gmail.com     password=${short_password}
+&{sbriPartnerCredentials}           email=eve.smith@gmail.com     password=${short_password}
+&{sbriProjectFinanceCredentials}    email=becky.mason@gmail.com   password=${short_password}
+${sbriComp654Name}                  The Sustainable Innovation Fund: SBRI phase 1
+${sbriComp654Id}                    ${competition_ids["${sbriComp654Name}"]}
+${sbriProjectName}                  Procurement application 1
+${sbriProjectId}                    ${project_ids["${sbriProjectName}"]}
+${sbriProjectName2}                 Procurement application 2
+${sbriProjectId2}                   ${project_ids["${sbriProjectName2}"]}
+${sbriApplicationId}                ${application_ids["${sbriProjectName}"]}
+${sbriApplicationId2}               ${application_ids["${sbriProjectName2}"]}
+${yourProjFinanceLink}              your project finances
+${viewFinanceChangesLink}           View changes to finances
+${inclusiveOfVATHeading}            Total project costs inclusive of VAT
+${totalProjCosts}                   Total project cost
+${vatRegistered}                    Are you VAT registered
+${totalWithVAT}                     £265,084
+${totalWithoutVAT}                  £220,903
+${initialFunding}                   £262,616
+${revisedFunding}                   £218,435
+${vatTotal}                         £44,181
+${currentAmount}                    Current amount
+${fundingAppliedFor}                Funding applied for
+${totalVAT}                         Total VAT
+${payment_query_title}              Payment Milestone Query
 
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
@@ -235,9 +239,30 @@ Internal user viability page
     Then the user should not see the element        css = .table-overview
     [Teardown]  The user clicks the button/link     link = Back to finance checks
 
+Project finance sends a payment milestone query to lead organisation
+    [Documentation]     IFS-8943
+    Given Log in as a different user                                    &{ifs_admin_user_credentials}
+    And the user navigates to the page                                  ${server}/project-setup-management/project/${sbriProjectId}/finance-check/organisation/116/query
+    When the project finance user post a payment milestone query
+    Then the user should see the element                                jQuery = button:contains("${payment_query_title}")
+
+Project lead is able to view pending query on project dashboard
+    [Documentation]     IFS-8943
+    Given Log in as a different user          &{sbriProjectFinanceCredentials}
+    When the user navigates to the page       ${server}/project-setup/project/${sbriProjectId}
+    Then the user should see the element      jQuery = span:contains("Pending query")
+
+Project lead responds to pending queries
+    [Documentation]  IFS-8943
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    When the user clicks the button/link         id = post-new-response-1
+    Then the user responds to the query
+
 Internal user can generate spend profile
     [Documentation]   IFS-8048
-    Given generate spend profile
+    Given Log in as a different user          &{internal_finance_credentials}
+    And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    When generate spend profile
     Then the user should see the element      css = .success-alert
 
 Internal user should not see spend profile section
@@ -332,6 +357,13 @@ the user assign the stakeholder to the SBRI competition
     the user navigates to the page      ${server}/management/competition/setup/${openSBRICompetitionId}/manage-stakeholders
     the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
 
+the project finance user post a payment milestone query
+    the user clicks the button/link                         link = Post a new query
+    the user selects the option from the drop-down menu     Payment milestones      section
+    the user enters text to a text field                    id = queryTitle  ${payment_query_title}
+    the user enters text to a text field                    css = .editor    Payment milestone query
+    the user clicks the button/link                         id = post-query
+
 the user should only see application related key statistics
     the user should not see the element     jQuery = small:contains("Assessors invited")
     the user should not see the element     jQuery = small:contains("Invitations accepted")
@@ -387,6 +419,11 @@ the user should see calculations with VAT
     the user clicks the button/link     link = Back to finance checks
     the user should see the element     jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
     the user clicks the button/link     css = .eligibility-0
+
+the user responds to the query
+    the user enters text to a text field   css = .editor  Responding to query
+    the user clicks the button/link        jQuery = .govuk-button:contains("Post response")
+    the user should see the element        jQuery = p:contains("Your response has been sent and will be reviewed by Innovate UK.")
 
 the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
