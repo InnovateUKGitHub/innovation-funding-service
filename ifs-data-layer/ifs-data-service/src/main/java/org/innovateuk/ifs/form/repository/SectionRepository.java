@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -29,4 +31,6 @@ public interface SectionRepository extends PagingAndSortingRepository<Section, L
     Section findFirstByCompetitionIdAndName(Long competitionId, String sectionName);
 
     List<Section> findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(Long competitionId);
+
+    Optional<Section> findByTypeAndCompetitionId(SectionType type, long competitionId);
 }
