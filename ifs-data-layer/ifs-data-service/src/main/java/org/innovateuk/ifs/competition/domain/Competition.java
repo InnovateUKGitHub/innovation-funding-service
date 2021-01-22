@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -759,14 +760,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isHeukar() {
-        return ofNullable(competitionType)
-                .map(CompetitionType::getName)
-                .map(name -> name.equals(CompetitionTypeEnum.HEUKAR.getText()))
-                .orElse(false);
-    }
-
-    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
@@ -1030,11 +1023,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.golTemplate = golTemplate;
     }
 
-    public Boolean getAlwaysOpen() {
-        return alwaysOpen;
-    }
-
     public void setAlwaysOpen(Boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
+    }
+
+    public boolean isAlwaysOpen() {
+        return BooleanUtils.isTrue(alwaysOpen);
     }
 }

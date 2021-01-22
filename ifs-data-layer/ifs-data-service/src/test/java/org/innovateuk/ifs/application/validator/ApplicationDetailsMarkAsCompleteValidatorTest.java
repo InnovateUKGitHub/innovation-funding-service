@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
@@ -13,7 +14,10 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.util.stream.IntStream;
 
+
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.CompanyAge.PRE_START_UP;
@@ -22,6 +26,8 @@ import static org.innovateuk.ifs.application.resource.CompetitionReferralSource.
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcurementMilestoneBuilder.newApplicationProcurementMilestone;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -208,62 +214,119 @@ public class ApplicationDetailsMarkAsCompleteValidatorTest {
     }
 
     @Test
-    public void valid_applicationDurationExceedsMaxDurationShouldResultInError() {
-        validApplication.setDurationInMonths(21L);
-
-        DataBinder dataBinder = new DataBinder(validApplication);
-        bindingResult = dataBinder.getBindingResult();
-        validator.validate(validApplication, bindingResult);
-
-        assertFalse(simpleFilter(
-                bindingResult.getFieldErrors(),
-                error -> error.getField().equals("durationInMonths")
-                        && error.getDefaultMessage().equals("validation.project.duration.input.invalid")
-                        && (Integer) error.getArguments()[0] == 10
-                        && (Integer) error.getArguments()[1] == 20)
-                .isEmpty());
-    }
-
-    @Test
-    public void valid_applicationDurationBeneathMinDurationShouldResultInError() {
-        validApplication.setDurationInMonths(9L);
-
-        DataBinder dataBinder = new DataBinder(validApplication);
-        bindingResult = dataBinder.getBindingResult();
-        validator.validate(validApplication, bindingResult);
-
-        assertFalse(simpleFilter(
-                bindingResult.getFieldErrors(),
-                error -> error.getField().equals("durationInMonths")
-                        && error.getDefaultMessage().equals("validation.project.duration.input.invalid")
-                        && (Integer) error.getArguments()[0] == 10
-                        && (Integer) error.getArguments()[1] == 20)
-                .isEmpty());
-    }
-
-    @Test
-    public void valid_applicationDurationIsEqualToMaxAndMinDurationShouldNotResultInError() {
-        validApplication.setDurationInMonths(10L);
-        validApplication.setCompetition(newCompetition()
-                .withMinProjectDuration(10)
-                .withResubmission(false)
-                .withMaxProjectDuration(10).build());
-
-        DataBinder dataBinder = new DataBinder(validApplication);
-        bindingResult = dataBinder.getBindingResult();
-        validator.validate(validApplication, bindingResult);
-
-        assertTrue(simpleFilter(
-                bindingResult.getFieldErrors(),
-                error -> error.getField().equals("durationInMonths"))
-                .isEmpty());
-    }
-
-    @Test
     public void supportsApplicationAndSubclasses() {
         assertTrue(validator.supports(Application.class));
         assertTrue(validator.supports(new Application() {
             //empty extension of application;
         }.getClass()));
+    }
+
+    @Test
+    public void testApplicationDurationIsValidatedAgainstMaxMilestone(){
+        Application applicationOverMaxCompetitionDuration = newApplication()
+                // Application states 12 months duration
+                .withDurationInMonths(12l)
+                .withCompetition(newCompetition().withMinProjectDuration(4).withMaxProjectDuration(24).withResubmission(false).build())
+                .withApplicationFinancesList(asList(
+                        newApplicationFinance()
+                                .withMilestones(asList(
+                                        // The max milestone is higher than the application duration
+                                        newApplicationProcurementMilestone().withMonth(13).build())
+                        ).build())
+        ).build();
+        validateApplicationHasError(
+                applicationOverMaxCompetitionDuration,
+                "durationInMonths",
+                "validation.project.duration.must.be.greater.than.milestones");
+    }
+
+    @Test
+    public void testApplicationWhereCompetitionDictatesTheMinimumDuration () {
+        Application applicationWhereCompetitionDictatesTheMinimumDuration = newApplication()
+                // Application states 12 months duration
+                .withDurationInMonths(12l)
+                // The competition min is 24 months
+                .withCompetition(newCompetition().withMinProjectDuration(24).withMaxProjectDuration(36).withResubmission(false).build())
+                .withApplicationFinancesList(asList(
+                        newApplicationFinance()
+                                .withMilestones(asList(
+                                        // The max milestone is less than the competition min of 24 months
+                                        // Therefore it is the competition that dictates the minimum duration of the application.
+                                        newApplicationProcurementMilestone().withMonth(13).build())
+                                ).build())
+                ).build();
+        validateApplicationHasError(
+                applicationWhereCompetitionDictatesTheMinimumDuration,
+                "durationInMonths",
+                "validation.project.duration.input.invalid", new Object[]{24, 36});
+    }
+
+    @Test
+    public void testApplicationWhereMaxMilestoneDictatesTheMinimumDuration () {
+        Application applicationWhereCompetitionDictatesTheMinimumDuration = newApplication()
+                // Application states 12 months duration
+                .withDurationInMonths(12l)
+                // The competition min is 13 months
+                .withCompetition(newCompetition().withMinProjectDuration(13).withMaxProjectDuration(36).withResubmission(false).build())
+                .withApplicationFinancesList(asList(
+                        newApplicationFinance()
+                                .withMilestones(asList(
+                                        // The max milestone is greater than the competition min of 13 months
+                                        // Therefore it is the max milestone that dictates the minimum duration of the application.
+                                        newApplicationProcurementMilestone().withMonth(24).build())
+                                ).build())
+                ).build();
+        validateApplicationHasError(
+                applicationWhereCompetitionDictatesTheMinimumDuration,
+                "durationInMonths",
+                "validation.project.duration.must.be.greater.than.milestones");
+    }
+
+    @Test
+    public void testApplicationDurationIsEqualToMaxAndMinDurationShouldNotResultInError() {
+        Application application = newApplication()
+                .withDurationInMonths(10l)
+                .withCompetition(newCompetition().withMinProjectDuration(10).withMaxProjectDuration(10).withResubmission(false).build())
+                .build();
+        validateApplicationDoesNotHaveError(application, "durationInMonths");
+    }
+
+    @Test
+    public void testApplicationDurationExceedsMaxDurationShouldResultInError() {
+        Application application = newApplication()
+                .withDurationInMonths(21l)
+                .withCompetition(newCompetition().withMinProjectDuration(10).withMaxProjectDuration(20).withResubmission(false).build())
+                .build();
+        validateApplicationHasError(
+                application ,
+                "durationInMonths",
+                "validation.project.duration.input.invalid", new Object[]{10, 20});
+    }
+
+    private void validateApplicationDoesNotHaveError(Application application, String field){
+        DataBinder dataBinder = new DataBinder(application);
+        BindingResult result = dataBinder.getBindingResult();
+        new ApplicationDetailsMarkAsCompleteValidator().validate(application, result);
+        assertTrue(simpleFilter(
+                result.getFieldErrors(),
+                error -> error.getField().equals(field))
+                .isEmpty());
+    }
+
+    private void validateApplicationHasError(Application application, String field, String errorMessage){
+        validateApplicationHasError(application, field, errorMessage, new Object[]{});
+    }
+
+    private void validateApplicationHasError(Application application, String field, String errorMessage, Object[] args){
+        DataBinder dataBinder = new DataBinder(application);
+        BindingResult result = dataBinder.getBindingResult();
+        new ApplicationDetailsMarkAsCompleteValidator().validate(application, result);
+        assertFalse(simpleFilter(
+                result.getFieldErrors(),
+                error -> args.length == error.getArguments().length
+                        && IntStream.range(0, args.length).allMatch(i -> args[i].equals(error.getArguments()[i]))
+                        && error.getField().equals(field)
+                        && error.getDefaultMessage().equals(errorMessage))
+                .isEmpty());
     }
 }

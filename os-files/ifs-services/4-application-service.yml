@@ -47,6 +47,11 @@ items:
                 failureThreshold: 1
               imagePullPolicy: Always
               env:
+                - name: IFS_NEW_ORGANISATION_SEARCH_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: feature-toggle-config
+                      key: IFS_NEW_ORGANISATION_SEARCH_ENABLED
                 - name: SPRING_APPLICATION_JSON
                   valueFrom:
                     configMapKeyRef:

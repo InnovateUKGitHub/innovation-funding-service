@@ -109,7 +109,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean hasAssessmentStage;
     private boolean procurementMilestones;
     private CovidType covidType;
-    private Boolean alwaysOpen;
+    private boolean alwaysOpen;
 
     public CompetitionResource() {
     }
@@ -139,11 +139,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isH2020() {
         return competitionTypeEnum == CompetitionTypeEnum.HORIZON_2020;
-    }
-
-    @JsonIgnore
-    public boolean isHeukar() {
-        return competitionTypeEnum == CompetitionTypeEnum.HEUKAR;
     }
 
     @JsonIgnore
@@ -793,11 +788,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
-    public Boolean getAlwaysOpen() {
+    public boolean isAlwaysOpen() {
         return alwaysOpen;
     }
 
-    public void setAlwaysOpen(Boolean alwaysOpen) {
+    public void setAlwaysOpen(boolean alwaysOpen) {
         this.alwaysOpen = alwaysOpen;
     }
 

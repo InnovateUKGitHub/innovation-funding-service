@@ -91,6 +91,8 @@ public class ProjectDetailsController {
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
+                                     @RequestParam(required = false, defaultValue = "false") boolean displayFinanceReviewerSuccess,
+                                     @RequestParam(required = false, defaultValue = "false") boolean resumedFromOnHold,
                                      UserResource loggedInUser,
                                      boolean isSpendProfileGenerated) {
 
@@ -107,6 +109,8 @@ public class ProjectDetailsController {
                 .map(p -> organisationRestService.getOrganisationById(p.getOrganisation()).getSuccess())
                 .collect(Collectors.toList());
 
+        model.addAttribute("displayFinanceReviewerSuccess", displayFinanceReviewerSuccess);
+        model.addAttribute("resumedFromOnHold", resumedFromOnHold);
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),

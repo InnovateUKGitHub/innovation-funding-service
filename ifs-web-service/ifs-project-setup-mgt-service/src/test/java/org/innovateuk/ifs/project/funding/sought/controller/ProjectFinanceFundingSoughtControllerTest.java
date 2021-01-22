@@ -98,7 +98,7 @@ public class ProjectFinanceFundingSoughtControllerTest extends BaseControllerMoc
                 .param(format("partners[%d].funding", industrialOrganisation), "1000")
                 .param(format("partners[%d].funding", academicOrganisation), "2000"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview?showFundingAmountMessage=true", projectId)))
                 .andReturn();
 
         verify(financeRowRestService).update(academicFinances.getGrantClaim());
