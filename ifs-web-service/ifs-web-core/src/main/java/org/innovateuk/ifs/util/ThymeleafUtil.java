@@ -11,6 +11,9 @@ import org.thymeleaf.spring5.context.SpringContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -75,6 +78,46 @@ public class ThymeleafUtil {
                     .anyMatch(error -> error.getField().startsWith(startsWith));
         }
         return false;
+    }
+
+    /*
+        Format an number to the IFS standard for integers.
+        null                    0
+        1234.567                1,235
+    */
+    public String formatInteger(Object number) {
+        if (number == null) {
+            return "0";
+        }
+        Object rounded = number;
+        if (number instanceof BigDecimal) {
+            rounded = ((BigDecimal) number).setScale(0, RoundingMode.HALF_UP).toBigInteger();
+        }
+        return formatNumber(rounded, new DecimalFormat("#0"));
+    }
+
+    /*
+        Format a number to the IFS standard for decimals.
+        null                    0
+        1234.567                1,234.57
+        1234.560                1,234.6
+        1234.000                1,234
+    */
+    public String formatDecimal(Object number) {
+        if (number == null) {
+            return "0";
+        }
+        Object rounded = number;
+        if (number instanceof BigDecimal) {
+            rounded = ((BigDecimal) number).setScale(2, RoundingMode.HALF_UP);
+        }
+        return formatNumber(rounded, new DecimalFormat("#0.##"));
+    }
+
+    private String formatNumber(Object number, DecimalFormat format) {
+        format.setGroupingUsed(true);
+        format.setGroupingSize(3);
+        return format.format(number);
     }
 
 }
