@@ -4,13 +4,6 @@ apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 apply plugin: 'idea'
 
 buildscript {
-
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-
     repositories {
         jcenter()
     }
