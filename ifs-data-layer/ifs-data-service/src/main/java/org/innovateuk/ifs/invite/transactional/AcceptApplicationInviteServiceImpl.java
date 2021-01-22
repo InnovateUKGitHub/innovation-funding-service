@@ -142,7 +142,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
                     .filter(pr -> pr.getOrganisationId() != null)
                     .noneMatch(pr -> pr.getOrganisationId().equals(organisation.getId()));
 
-        ProcessRole processRole = new ProcessRole(user, application.getId(), ProcessRoleType.LEADAPPLICANT, organisation.getId());
+        ProcessRole processRole = new ProcessRole(user, application.getId(), ProcessRoleType.COLLABORATOR, organisation.getId());
         processRole = processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
 

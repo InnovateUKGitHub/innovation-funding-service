@@ -68,7 +68,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 .stream()
                 .flatMap(x -> x.getCompetition().isKtp()
                         ? x.getProcessRolesByRoles(asSet(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).stream()
-                        : x.getProcessRolesByRoles(asSet(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT)).stream())
+                        : x.getProcessRolesByRoles(asSet(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)).stream())
                 .collect(Collectors.toList());
 
         for (ProcessRole applicant : applicants) {

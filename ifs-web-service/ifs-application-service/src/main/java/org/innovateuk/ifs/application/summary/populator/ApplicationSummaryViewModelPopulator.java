@@ -62,7 +62,7 @@ public class ApplicationSummaryViewModelPopulator {
         OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(application.getLeadOrganisationId()).getSuccess();
         List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         List<OrganisationResource> collaboratorOrganisations = processRoleResources.stream()
-                .filter(pr -> ProcessRoleType.LEADAPPLICANT == pr.getRole())
+                .filter(pr -> ProcessRoleType.COLLABORATOR == pr.getRole())
                 .map(pr -> pr.getOrganisationId())
                 .distinct()
                 .map(orgId -> organisationRestService.getOrganisationById(orgId).getSuccess())
