@@ -61,7 +61,7 @@ public class FinanceTest {
                 .build();
         TestFinance finance = new TestFinance(application);
         finance.setOrganisation(business);
-        finance.setNorthernIrelandDeclaration(null); // null is treated as true.
+        finance.setNorthernIrelandDeclaration(null); // null is treated as false.
         when(competition.isFullyFunded()).thenReturn(false);
 
         assertThat(finance.getMaximumFundingLevel(), is(equalTo(1)));
@@ -83,7 +83,7 @@ public class FinanceTest {
                 .build();
         TestFinance finance = new TestFinance(application);
         finance.setOrganisation(business);
-        finance.setNorthernIrelandDeclaration(null); // null is treated as true.
+        finance.setNorthernIrelandDeclaration(null); // null is treated as false.
         finance.setOrganisationSize(OrganisationSize.LARGE);
         when(competition.isFullyFunded()).thenReturn(false);
 
