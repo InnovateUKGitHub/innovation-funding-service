@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -72,6 +74,8 @@ public class FinanceChecksQueriesController {
     private ProjectService projectService;
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
     @Autowired
     private EncryptedCookieService cookieUtil;
     @Autowired
@@ -309,6 +313,7 @@ public class FinanceChecksQueriesController {
 
     private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments) {
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
@@ -333,7 +338,8 @@ public class FinanceChecksQueriesController {
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
                 project.getApplication(),
-                project.getProjectState().isActive()
+                project.getProjectState().isActive(),
+                competition.isProcurementMilestones()
         );
     }
 

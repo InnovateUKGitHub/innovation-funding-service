@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -312,7 +313,8 @@ public class YourProjectCostsForm {
                 .map(AbstractCostRowForm::getTotal)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO);
+                .orElse(BigDecimal.ZERO)
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     public void recalculateTotals() {

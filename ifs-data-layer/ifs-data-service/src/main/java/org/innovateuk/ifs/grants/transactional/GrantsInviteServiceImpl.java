@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;

@@ -95,7 +95,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).withId(organisationId).build();
 
-    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(singletonList(PROJECT_FINANCE)).build();
+    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRoleGlobal(PROJECT_FINANCE).build();
     UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
 
     ProjectUserResource financeContactProjectUser = newProjectUserResource().withOrganisation(organisationId).withUserName("User1").withUser(financeContactUser.getId()).withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
