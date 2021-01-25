@@ -69,7 +69,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         projectFinanceUser = projectFinanceUser();
         projectPartnerUser = getUserWithRole(PARTNER);
 
-        intruder = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
+        intruder = newUserResource().withId(1993L).withRoleGlobal(PARTNER).build();
         intruder.setId(1993L);
     }
 

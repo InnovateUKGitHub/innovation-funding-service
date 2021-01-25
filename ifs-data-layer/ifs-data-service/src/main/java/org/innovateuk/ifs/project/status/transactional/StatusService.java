@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 

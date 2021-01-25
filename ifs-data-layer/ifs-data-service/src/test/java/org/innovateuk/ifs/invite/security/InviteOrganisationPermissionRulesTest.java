@@ -56,7 +56,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
-        support = newUserResource().withRolesGlobal(Collections.singletonList(SUPPORT)).build();
+        support = newUserResource().withRoleGlobal(SUPPORT).build();
         otherApplicant = newUserResource().build();
 
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT))

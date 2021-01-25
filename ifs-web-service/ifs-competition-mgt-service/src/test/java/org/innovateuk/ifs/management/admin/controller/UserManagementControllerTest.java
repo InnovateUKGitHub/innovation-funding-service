@@ -128,7 +128,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR))
+                .withRoleGlobal(IFS_ADMINISTRATOR)
                 .withStatus(UserStatus.ACTIVE)
                 .build();
 
@@ -157,7 +157,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(role))
+                .withRoleGlobal(role)
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
@@ -179,7 +179,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(role))
+                .withRoleGlobal(role)
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
@@ -208,7 +208,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(role))
+                .withRoleGlobal(role)
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
@@ -230,7 +230,7 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(role))
+                .withRoleGlobal(role)
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));

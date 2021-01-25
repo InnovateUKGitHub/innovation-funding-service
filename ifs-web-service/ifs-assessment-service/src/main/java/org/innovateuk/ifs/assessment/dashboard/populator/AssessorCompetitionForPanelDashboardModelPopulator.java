@@ -14,9 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**

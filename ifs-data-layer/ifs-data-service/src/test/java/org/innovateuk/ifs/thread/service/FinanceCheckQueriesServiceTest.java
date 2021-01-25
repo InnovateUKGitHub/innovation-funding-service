@@ -499,7 +499,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         setLoggedInUser(newUserResource()
                 .withId(loggedInUserId)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE))
+                .withRoleGlobal(Role.PROJECT_FINANCE)
                 .build());
 
         assertNull(queryInDB.getClosedBy());
@@ -518,7 +518,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Long queryId = 1L;
 
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.PROJECT_FINANCE).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -599,7 +599,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.COMP_ADMIN)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.COMP_ADMIN).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -625,7 +625,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void addPostSuperAddPostFails() {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.COMP_ADMIN).build(), null, null, null);
 
         when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.empty());
 
@@ -635,7 +635,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void addPostNoQueryToAddPostTo() {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.COMP_ADMIN).build(), null, null, null);
 
         when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.empty());
 
@@ -646,7 +646,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     public void addPostNoFinanceContact() {
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.PROJECT_FINANCE).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -699,7 +699,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         PostResource post = new PostResource(null, newUserResource()
                 .withId(33L)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE))
+                .withRoleGlobal(Role.PROJECT_FINANCE)
                 .build(), null, null, null);
 
         Post mappedPost = new Post(null, user, null, null, null);

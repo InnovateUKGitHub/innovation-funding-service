@@ -93,7 +93,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     public void stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions() {
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
-        UserResource stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        UserResource stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Competition competition = newCompetition().build();
 
         ProjectResource project = newProjectResource()
@@ -111,7 +111,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     public void competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions() {
 
         User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
-        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
 
         ProjectResource project = newProjectResource()
