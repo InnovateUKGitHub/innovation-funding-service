@@ -20,7 +20,7 @@ public class PaymentMilestoneResource {
         this.paymentMilestoneLastModifiedDate = paymentMilestoneLastModifiedDate;
     }
 
-    public PaymentMilestoneResource(PaymentMilestoneState processState, LocalDate toLocalDate) {
+    public PaymentMilestoneResource(PaymentMilestoneState paymentMilestoneState, LocalDate paymentMilestoneLastModifiedDate) {
         this.paymentMilestoneState = paymentMilestoneState;
         this.paymentMilestoneLastModifiedDate = paymentMilestoneLastModifiedDate;
     }

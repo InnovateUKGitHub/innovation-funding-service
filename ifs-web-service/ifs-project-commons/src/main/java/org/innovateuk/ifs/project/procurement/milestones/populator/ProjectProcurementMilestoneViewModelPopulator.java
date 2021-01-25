@@ -29,8 +29,7 @@ public class ProjectProcurementMilestoneViewModelPopulator {
 
         PaymentMilestoneResource paymentMilestoneResource = financeCheckRestService.getPaymentMilestoneState(projectId, organisationId).getSuccess();
 
-        boolean readOnly = userResource.isInternalUser()
-                && !editMilestones;
+        boolean readOnly = !(userResource.isInternalUser() && editMilestones);
 
         ProjectFinanceResource finance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         return new ProjectProcurementMilestoneViewModel(project,
