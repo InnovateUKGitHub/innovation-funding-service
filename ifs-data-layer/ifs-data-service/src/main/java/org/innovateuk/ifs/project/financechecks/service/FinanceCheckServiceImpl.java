@@ -371,7 +371,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long projectId = projectOrganisationCompositeId.getProjectId();
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
-                        .andOnSuccess(partnerOrganisation -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, partnerOrganisation))
+                        .andOnSuccess(this::getPaymentMilestoneProcess)
+                        .andOnSuccess(process -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process, reason))
         );
     }
 
