@@ -26,6 +26,9 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6368 Loans - Remove Documents
 ...
 ...             IFS-7244 - Loans should not have change funding percentage
+...
+...             IFS-8944 SBRI milestones - Record changes to milestones
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -107,20 +110,24 @@ Funding sought validations
     Then the user should see a field and summary error  Enter the amount of funding sought.
 
 Fund sought changes
-    [Documentation]  IFS-6293  IFS-6298
-    Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
-    When the user clicks the button/link         jQuery = button:contains("Save and return to project finances")
-    Then the user should see the element         jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
-    And the internal user should see the funding changes
+    [Documentation]  IFS-6293  IFS-6298  IFS-8944
+    Given the user enters text to a text field     id = partners[${EMPIRE_LTD_ID}].funding  6000
+    When the user clicks the button/link           jQuery = button:contains("Save and return to project finances")
+    Then the user should see the element           jQuery = h3:contains("Finance summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
+
+Project cost changes
+    [Documentation]  IFS-8944
+    When the user amends other project costs in finances
+    Then the internal user should see the funding changes
     And the external user should see the funding changes
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6369  IFS-6292  IFS-6307  IFS-6298  IFS-6368
-    [Setup]  log in as a different user        &{internal_finance_credentials}
+    [Setup]  log in as a different user               &{internal_finance_credentials}
     Given internal user assign MO to loan project
     And internal user generate SP
-    When the user navigates to the page         ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
-    Then the user should not see the element    jQuery = th:contains("Bank details")
+    When the user navigates to the page               ${server}/project-setup-management/competition/${loan_comp_PS_Id}/status/all
+    Then the user should not see the element          jQuery = th:contains("Bank details")
 
 Applicant checks the generated SP
     [Documentation]  IFS-6369  IFS-6298
@@ -249,15 +256,39 @@ the user selects to change funding sought
     the user clicks the button/link  link = Change funding sought
 
 the internal user should see the funding changes
-    the user navigates to the page    ${eligibility_changes}
-    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+    the user clicks the button/link    link = Review all changes to project finances
+    the user should see the element    jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
+    the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
+    the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
+    the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
+    the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
+    the user should see the element    jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
+    the user should see the element    jQuery = th:contains("Labour") ~ td:contains("3,081")
+    the user should see the element    jQuery = th:contains("Overheads") ~ td:contains("0")
+    the user should see the element    jQuery = th:contains("Materials") ~ td:contains("100,200")
+    the user should see the element    jQuery = th:contains("Capital usage") ~ td:contains("552")
+    the user should see the element    jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
+    the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
+    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
 
 the external user should see the funding changes
-    log in as a different user        &{lead_applicant_credentials}
-    the user navigates to the page    ${loan_PS}/finance-checks/eligibility
-    the user should see the element   jQuery = p:contains("All members of your organisation can access and edit your project")
-    the user clicks the button/link   link = View changes to finances
-    the user should see the element   jQuery = p:contains("Submitted funding sought: £12,000") ~ p:contains("New funding sought: £6,000")
+    log in as a different user         &{lead_applicant_credentials}
+    the user navigates to the page     ${loan_PS}/finance-checks/eligibility
+    the user should see the element    jQuery = p:contains("All members of your organisation can access and edit your project")
+    the user clicks the button/link    link = View changes to finances
+    the user should see the element    jQuery = th:contains("Funding sought (£)") ~ td:contains("12,000") ~ td:contains("6,000") ~ td:contains("- 6000")
+    the user should see the element    jQuery = th:contains("Other funding (£)") ~ td:contains("2,468")
+    the user should see the element    jQuery = th:contains("Contribution to project (£)") ~ td:contains("186,435") ~ td:contains("196,335") ~ td:contains("+ 9900")
+    the user should see the element    jQuery = th:contains("Funding level (%)") ~ td:contains("7") ~ td:contains("4") ~ td:contains("- 3.07")
+    the user should see the element    jQuery = th:contains("Total costs (£)") ~ td:contains("200,903") ~ td:contains("204,803") ~ td:contains("+ 3900")
+    the user should see the element    jQuery = th:contains("Other costs") ~ td:contains("1,100") ~ td:contains("5,000") ~ td:contains("+ 3900")
+    the user should see the element    jQuery = th:contains("Labour") ~ td:contains("3,081")
+    the user should see the element    jQuery = th:contains("Overheads") ~ td:contains("0")
+    the user should see the element    jQuery = th:contains("Materials") ~ td:contains("100,200")
+    the user should see the element    jQuery = th:contains("Capital usage") ~ td:contains("552")
+    the user should see the element    jQuery = th:contains("Subcontracting") ~ td:contains("90,000")
+    the user should see the element    jQuery = th:contains("Travel and subsistence") ~ td:contains("5,970")
+    the user should see the element    jQuery = th:contains("Total project costs") ~ td:contains("£200,903") ~ td:contains("£204,803") ~ td:contains("£3900")
 
 the user marks loan as complete
     [Arguments]  ${status}  ${appl_name}
@@ -308,3 +339,11 @@ the user enters a value over the max funding
     the user clicks the button/link                jQuery = button:contains("Edit your funding")
     the user enters text to a text field           id = amount  65000
     the user clicks the button/link                id = mark-all-as-complete
+
+the user amends other project costs in finances
+    the user navigates to the page           ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility
+    the user expands the section             Other costs
+    the user clicks the button/link          jQuery = #accordion-finances-content-7 a:contains("Edit")
+    the user enters text to a text field     css = #other-costs-table tr:nth-child(1) td:nth-child(2) textarea    some other costs
+    the user enters text to a text field     css = #other-costs-table tr:nth-child(1) td:nth-child(3) input    5000
+    the user clicks the button/link          jQuery = .govuk-button[name = save-eligibility]
