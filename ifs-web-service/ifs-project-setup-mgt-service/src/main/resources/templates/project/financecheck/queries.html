@@ -111,7 +111,7 @@
                      th:aria-labelledby="|accordion-default-heading-${iteration.count}|">
                     <h3 class="govuk-!-margin-0">
                         <span class="govuk-heading-s govuk-!-display-inline">Section: </span>
-                        <span th:text="${#strings.capitalize(querySection)}" class="govuk-body">Section title</span>
+                        <span th:text="${query.sectionType.displayName}" class="govuk-body">Section title</span>
                     </h3>
                     <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                         <div th:class="${iteration.index == 0} ? '' : 'panel'">

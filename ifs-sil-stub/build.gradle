@@ -48,7 +48,6 @@ prepareDockerBaseInput {
     dependsOn ":ifs-security:build"
 }
 
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerBaseInput
 
 buildDocker.inputDir = project.file("$project.buildDir/docker")

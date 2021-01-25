@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.resource;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.identity.Identifiable;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -122,6 +123,10 @@ public enum Role implements Identifiable {
 
     public static List<Role> multiDashboardRoles() {
         return newArrayList(APPLICANT, ASSESSOR, STAKEHOLDER, MONITORING_OFFICER, LIVE_PROJECTS_USER, SUPPORTER);
+    }
+
+    public static boolean containsMultiDashboardRole(Collection<Role> roles){
+        return multiDashboardRoles().stream().anyMatch(role -> roles.contains(role));
     }
 
     public List<String> getAuthorities() {

@@ -109,7 +109,7 @@
                                                data-calculation-format="decimal-percentage"
                                                th:attr="data-calculation-fields=|100,[id='__${path}__.fundingSought'],#total-funding-sought|,
                                                         data-calculation-rawValue=${partner.calculatePercentageTotalGrant(fundingLevel)}"
-                                               th:value="|${#numbers.formatDecimal(partner.calculatePercentageTotalGrant(fundingLevel),1,'DEFAULT',2,'DEFAULT')}%|"/>
+                                               th:value="|${#ifsUtil.formatDecimal(partner.calculatePercentageTotalGrant(fundingLevel))}%|"/>
                                         <span th:text="|${#numbers.formatInteger(partner.calculatePercentageTotalGrant(fundingLevel),1,'DEFAULT')}%|"
                                               th:attr="data-mirror=|[id='__${path}__.percentageOfTotalGrant']|"></span>
                                     </th:block>

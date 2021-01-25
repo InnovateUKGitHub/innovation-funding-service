@@ -226,7 +226,7 @@
                                class="govuk-heading-m alignright"
                                data-calculation-fields="[id*=section-total]"
                                data-calculation-operations="+"
-                               th:value="'£' + ${#numbers.formatInteger(form.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                               th:value="'£' + ${#ifsUtil.formatInteger(form.organisationFinanceTotal)}"/>
 
                     </div>
                 </div>
