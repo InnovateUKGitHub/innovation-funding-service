@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.milestones.controller;
 
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -37,6 +38,12 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @Autowired
     private ProjectProcurementMilestoneViewModelPopulator populator;
 
+    @Autowired
+    private ProjectProcurementMilestoneRestService projectProcurementMilestoneRestService;
+
+    @Autowired
+    private ProcurementMilestoneFormPopulator formPopulator;
+
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     public String viewMilestones(@PathVariable long projectId,
@@ -45,8 +52,13 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  UserResource userResource,
                                  Model model) {
         model.addAttribute("projectProcurementMilestoneApprovalForm", new ProjectProcurementMilestoneApprovalForm());
+        ProcurementMilestonesForm form = formPopulator.populate(projectProcurementMilestoneRestService.getByProjectIdAndOrganisationId(projectId, organisationId).getSuccess());
+        return viewProjectMilestones(projectId, organisationId, editMilestones, userResource, model, form);
+    }
+
+    private String viewProjectMilestones(long projectId, long organisationId, boolean editMilestones, UserResource userResource, Model model, ProcurementMilestonesForm form) {
         model.addAttribute("model", populator.populate(projectId, organisationId, userResource, editMilestones));
-        return viewProjectSetupMilestones(model, projectId, organisationId, userResource);
+        return viewProjectSetupMilestones(model, userResource, form);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -101,6 +113,29 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                         return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });
+    }
+
+    @PostMapping(params = "remove_row")
+    public String removeRowPost(Model model,
+                                UserResource user,
+                                @PathVariable long projectId,
+                                @PathVariable long organisationId,
+                                @ModelAttribute("form") ProcurementMilestonesForm form,
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                @RequestParam("remove_row") String removeId) {
+        validationHandler.addAnyErrors(saver.removeRowFromForm(form, removeId));
+        return viewProjectMilestones(projectId, organisationId, true, user, model, form);
+    }
+
+    @PostMapping(params = "add_row")
+    public String addRowPost(Model model,
+                             UserResource user,
+                             @PathVariable long projectId,
+                             @PathVariable long organisationId,
+                             @ModelAttribute("form") ProcurementMilestonesForm form) {
+        saver.addRowForm(form);
+        return viewProjectMilestones(projectId, organisationId, true, user, model, form);
     }
 
     private Supplier<String> redirectToViewMilestones(long projectId, long organisationId) {
