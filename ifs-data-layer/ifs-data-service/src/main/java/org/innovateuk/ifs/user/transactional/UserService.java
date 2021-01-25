@@ -48,7 +48,7 @@ public interface UserService {
     ServiceResult<ManageUserPageResource> findInactiveExternal(String filter, Pageable pageable);
 
     @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
-    ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<ProcessRoleType> roleTypes, String searchString, SearchCategory searchCategory);
+    ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
     ServiceResult<UserResource> agreeNewTermsAndConditions(long userId);

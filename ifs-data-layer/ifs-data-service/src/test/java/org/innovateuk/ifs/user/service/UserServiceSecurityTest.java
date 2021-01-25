@@ -15,11 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.EnumSet;
+
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceSecurityTest.verifyApplicationRead;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.ProcessRoleType.externalApplicantRoles;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -182,11 +183,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findByProcessRolesAndSearchCriteria() {
-        when(classUnderTestMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory
+        when(classUnderTestMock.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), "%aar%", SearchCategory
                 .NAME))
                 .thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
 
-        classUnderTest.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory.NAME);
+        classUnderTest.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), "%aar%", SearchCategory.NAME);
 
         verify(userRules, times(2))
                 .internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));

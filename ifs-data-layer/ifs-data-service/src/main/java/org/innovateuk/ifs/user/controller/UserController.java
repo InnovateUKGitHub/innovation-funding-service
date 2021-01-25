@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -154,7 +155,7 @@ public class UserController {
     @GetMapping("/find-external-users")
     public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam String searchString,
                                                                         @RequestParam SearchCategory searchCategory) {
-        return userService.findByProcessRolesAndSearchCriteria(ProcessRoleType.externalApplicantRoles(), searchString, searchCategory).toGetResponse();
+        return userService.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory).toGetResponse();
     }
 
     @GetMapping("/find-by-email/{email}/")

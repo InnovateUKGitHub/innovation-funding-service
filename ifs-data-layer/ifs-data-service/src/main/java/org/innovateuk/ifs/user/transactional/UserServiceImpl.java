@@ -356,7 +356,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<ProcessRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
+    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory) {
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";

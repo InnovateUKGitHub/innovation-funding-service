@@ -549,7 +549,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String searchString = null;
         SearchCategory searchCategory = SearchCategory.NAME;
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -566,7 +566,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String searchString = "";
         SearchCategory searchCategory = SearchCategory.NAME;
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -583,7 +583,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String searchString = "a";
         SearchCategory searchCategory = SearchCategory.NAME;
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -600,7 +600,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         String searchString = "          ";
         SearchCategory searchCategory = SearchCategory.NAME;
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -621,7 +621,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(userOrganisationRepositoryMock.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByUserEmailAsc(anyString(), anyString(), anySet())).thenReturn(userOrganisations);
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
@@ -674,7 +674,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(userOrganisationRepositoryMock.findByOrganisationNameLikeAndUserRolesInOrderByUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
@@ -696,7 +696,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(userOrganisationRepositoryMock.findByUserEmailLikeAndUserRolesInOrderByUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());

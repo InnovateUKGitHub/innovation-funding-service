@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
@@ -339,13 +340,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userServiceMock.findByProcessRolesAndSearchCriteria(ProcessRoleType.externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
-        verify(userServiceMock).findByProcessRolesAndSearchCriteria(ProcessRoleType.externalApplicantRoles(), searchString, searchCategory);
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(EnumSet.of(Role.APPLICANT), searchString, searchCategory);
     }
 
     @Test
