@@ -196,10 +196,6 @@ public class ApplicationProcurementMilestonesController extends AbstractProcurem
         return viewMilestonesPage(model, form, user);
     }
 
-        form.reorderMilestones();
-        return VIEW;
-    }
-
     private long getProcessRoleId(long applicationId, long userId) {
         return getProcessRole(applicationId, userId).getId();
     }

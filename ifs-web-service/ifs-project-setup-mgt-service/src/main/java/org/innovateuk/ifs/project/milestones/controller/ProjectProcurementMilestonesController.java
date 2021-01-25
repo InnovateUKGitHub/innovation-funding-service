@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.project.milestones.controller;
 
-import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
-import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
+import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.milestones.form.ProjectProcurementMilestoneApprovalForm;
 import org.innovateuk.ifs.project.milestones.saver.ProjectProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.project.procurement.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
@@ -44,6 +46,11 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @Autowired
     private ProcurementMilestoneFormPopulator formPopulator;
 
+    @Autowired
+    private ProcurementMilestoneFormValidator validator;
+
+    @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
     @GetMapping
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     public String viewMilestones(@PathVariable long projectId,
@@ -86,6 +93,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  ValidationHandler validationHandler,
                                  Model model,
                                  UserResource user) {
+        validator.validate(form, projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess(), validationHandler);
         Supplier<String> failureView = () -> viewMilestones(projectId, organisationId, true, user, model);
         Supplier<String> successView = redirectToFinanceChecks(projectId);
 
@@ -98,6 +106,20 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
             });
         });
     }
+
+//    @PostMapping("auto-save")
+//    public @ResponseBody
+//    JsonNode ajaxAutoSave(UserResource user,
+//                          @PathVariable long projectId,
+//                          @PathVariable long organisationId,
+//                          @RequestParam String field,
+//                          @RequestParam String value) {
+//        Optional<Long> fieldId = saver.autoSave(field, value, projectId, organisationId);
+//        ObjectMapper mapper = new ObjectMapper();
+//        ObjectNode node = mapper.createObjectNode();
+//        fieldId.ifPresent(id -> node.put("fieldId", id));
+//        return node;
+//    }
 
     @PostMapping(params = "remove_row")
     public String removeRowPost(Model model,
