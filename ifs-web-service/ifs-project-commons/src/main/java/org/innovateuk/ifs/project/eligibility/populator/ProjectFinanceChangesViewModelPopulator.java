@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.procurement.milestone.resource.ApplicationProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.resource.ProjectProcurementMilestoneResource;
 import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
@@ -57,7 +58,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(competition, appFinanceResource, projectFinanceResource);
+        ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(competition, organisation, appFinanceResource, projectFinanceResource);
         ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, appFinanceResource, eligibilityOverview,
                 projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
         ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, organisation, competition);
@@ -69,19 +70,22 @@ public class ProjectFinanceChangesViewModelPopulator {
                 projectFinanceChangesMilestoneDifferencesViewModel);
     }
 
-    private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource, ProjectFinanceResource projectFinanceResource) {
+    private ProjectFinanceChangesProjectFinancesViewModel getProjectFinancesViewModel(CompetitionResource competition, OrganisationResource organisation, ApplicationFinanceResource appFinance, ProjectFinanceResource projectFinance) {
 
         List<CostChangeViewModel> sectionDifferences = new ArrayList<>();
         CostChangeViewModel vat = null;
 
-        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : projectFinanceResource.getFinanceOrganisationDetails().entrySet()) {
+        for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : projectFinance.getFinanceOrganisationDetails().entrySet()) {
             FinanceRowType rowType = entry.getKey();
-            if (rowType == FinanceRowType.OTHER_FUNDING) {
+            if (rowType == FinanceRowType.OTHER_FUNDING || rowType == FinanceRowType.GRANT_CLAIM_AMOUNT) {
+                continue;
+            }
+            if (rowType == FinanceRowType.YOUR_FINANCE && !OrganisationTypeEnum.isResearch(organisation.getOrganisationType())) {
                 continue;
             }
 
             FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
-            FinanceRowCostCategory financeRowAppCostCategory = appFinanceResource.getFinanceOrganisationDetails().get(rowType);
+            FinanceRowCostCategory financeRowAppCostCategory = appFinance.getFinanceOrganisationDetails().get(rowType);
 
             String section = sectionName(competition, rowType);
             CostChangeViewModel costChange = new CostChangeViewModel(section,
@@ -95,7 +99,7 @@ public class ProjectFinanceChangesViewModelPopulator {
             sectionDifferences.add(costChange);
         }
 
-        boolean vatRegistered = appFinanceResource.isVatRegistered();
+        boolean vatRegistered = appFinance.isVatRegistered();
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = new ProjectFinanceChangesProjectFinancesViewModel(sectionDifferences, vatRegistered, vat);
         return projectFinanceChangesProjectFinancesViewModel;
     }

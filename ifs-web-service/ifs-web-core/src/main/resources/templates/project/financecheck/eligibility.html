@@ -193,10 +193,10 @@
                             application stage. They include all changes made during the eligibility checks.</p>
                     </th:block>
                 </th:block>
-                    <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
-                        th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                        class="govuk-link"
-                        th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
+                <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
+                    th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                    class="govuk-link"
+                    th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
@@ -241,6 +241,12 @@
             </div>
         </th:block>
         <th:block th:if="${summaryModel.usingJesFinances}">
+
+            <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
+                th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                class="govuk-link"
+                th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
+
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${academicCostForm}"
                   enctype="multipart/form-data">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"
