@@ -67,8 +67,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
@@ -108,7 +107,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findOne() throws Exception {
+    public void findOne() {
 
         Long queryId = 1L;
         Query query = new Query(queryId, null, null, null, null, null);
@@ -123,7 +122,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void findAll() throws Exception {
+    public void findAll() {
 
         Long contextId = 22L;
         Query query1 = new Query(1L, null, null, null, null, null);
@@ -146,7 +145,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void create() throws Exception {
+    public void create() {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -223,11 +222,94 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertEquals(result, Long.valueOf(1L));
 
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+        verifyNoMoreInteractions(notificationServiceMock);
         verify(activityLogService).recordQueryActivityByProjectFinanceId(queryToCreateAsDomain.contextClassPk(), ActivityType.FINANCE_QUERY, result);
     }
 
     @Test
-    public void createNoFinanceContact() throws Exception {
+    public void createSeparateProjectManagerAndFinanceForOrganisation() {
+
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
+        Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
+
+        Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
+
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
+        when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
+
+        User user = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+
+        User user2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+
+        List<ProjectUser> projectUsers = newProjectUser()
+                .withRole(PROJECT_FINANCE_CONTACT, PROJECT_MANAGER)
+                .withUser(user, user2)
+                .withOrganisation(organisation, organisation)
+                .build(2);
+
+        Competition competition = newCompetition()
+                .withName("Competition 1")
+                .build();
+
+        Application application = newApplication()
+                .withName("Application 1")
+                .withCompetition(competition)
+                .build();
+
+        Project project = newProject()
+                .withProjectUsers(projectUsers)
+                .withPartnerOrganisations(newPartnerOrganisation()
+                        .withOrganisation(organisation)
+                        .build(1))
+                .withApplication(application)
+                .build();
+
+        ProjectFinance projectFinance = newProjectFinance()
+                .withProject(project)
+                .withOrganisation(organisation)
+                .build();
+
+        NotificationTarget target1 = new UserNotificationTarget(user.getName(), user.getEmail());
+        NotificationTarget target2 = new UserNotificationTarget(user2.getName(), user2.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "http://ifs-local-dev/project-setup/project/" + project.getId(),
+                "applicationId", project.getApplication().getId(),
+                "competitionName", "Competition 1");
+
+        Notification notification1 = new Notification(systemNotificationSourceMock, target1, FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
+        Notification notification2 = new Notification(systemNotificationSourceMock, target2, FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
+
+        when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
+        when(notificationServiceMock.sendNotificationWithFlush(notification1, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification2, EMAIL)).thenReturn(serviceSuccess());
+
+        Long result = service.create(queryToCreate).getSuccess();
+
+        assertEquals(result, Long.valueOf(1L));
+
+        verify(notificationServiceMock).sendNotificationWithFlush(notification1, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification2, EMAIL);
+        verifyNoMoreInteractions(notificationServiceMock);
+        verify(activityLogService).recordQueryActivityByProjectFinanceId(queryToCreateAsDomain.contextClassPk(), ActivityType.FINANCE_QUERY, result);
+    }
+
+    @Test
+    public void createNoFinanceContact() {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -283,10 +365,12 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
 
         assertTrue(result.getFailure().is(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED)));
+
+        verifyZeroInteractions(notificationServiceMock);
     }
 
     @Test
-    public void createNotificationNotSent() throws Exception {
+    public void createNotificationNotSent() {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -361,7 +445,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void createNoProjectFinance() throws Exception {
+    public void createNoProjectFinance() {
 
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
@@ -380,10 +464,12 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
 
         assertTrue(result.getFailure().is(notFoundError(ProjectFinance.class, 22L)));
+
+        verifyZeroInteractions(notificationServiceMock);
     }
 
     @Test
-    public void closeQueryWhenQueryNotFound() throws Exception {
+    public void closeQueryWhenQueryNotFound() {
 
         Long queryId = 1L;
 
@@ -397,7 +483,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void closeQuerySuccess() throws Exception {
+    public void closeQuerySuccess() {
 
         Long queryId = 1L;
         Long loggedInUserId = 18L;
@@ -413,7 +499,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         setLoggedInUser(newUserResource()
                 .withId(loggedInUserId)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE))
+                .withRoleGlobal(Role.PROJECT_FINANCE)
                 .build());
 
         assertNull(queryInDB.getClosedBy());
@@ -427,12 +513,12 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void addPost() throws Exception {
+    public void addPost() {
 
         Long queryId = 1L;
 
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.PROJECT_FINANCE).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -509,11 +595,11 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void addPostNotFinanceTeam() throws Exception {
+    public void addPostNotFinanceTeam() {
 
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.COMP_ADMIN)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.COMP_ADMIN).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -534,13 +620,12 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(pf));
 
         assertTrue(service.addPost(post, queryId).isSuccess());
-
     }
 
     @Test
-    public void addPostSuperAddPostFails() throws Exception {
+    public void addPostSuperAddPostFails() {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.COMP_ADMIN).build(), null, null, null);
 
         when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.empty());
 
@@ -548,9 +633,9 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void addPostNoQueryToAddPostTo() throws Exception {
+    public void addPostNoQueryToAddPostTo() {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.COMP_ADMIN).build(), null, null, null);
 
         when(queryRepositoryMock.findById(queryId)).thenReturn(Optional.empty());
 
@@ -561,7 +646,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     public void addPostNoFinanceContact() {
         Long queryId = 1L;
         User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRoleGlobal(Role.PROJECT_FINANCE).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -604,7 +689,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void addPostNotificationNotSent() throws Exception {
+    public void addPostNotificationNotSent() {
         Long queryId = 1L;
 
         User user = newUser()
@@ -614,7 +699,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         PostResource post = new PostResource(null, newUserResource()
                 .withId(33L)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE))
+                .withRoleGlobal(Role.PROJECT_FINANCE)
                 .build(), null, null, null);
 
         Post mappedPost = new Post(null, user, null, null, null);

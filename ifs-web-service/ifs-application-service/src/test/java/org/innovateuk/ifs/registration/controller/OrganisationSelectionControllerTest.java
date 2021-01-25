@@ -109,7 +109,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void viewPreviousOrganisations_redirectIfNotApplicant() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.ASSESSOR).build());
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())

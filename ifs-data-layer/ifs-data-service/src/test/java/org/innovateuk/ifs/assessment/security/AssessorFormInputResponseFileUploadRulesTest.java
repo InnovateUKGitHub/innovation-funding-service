@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -43,7 +42,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
     @Test
     public void assessorCanDownloadFilesForApplicationTheyAreAssessing() {
         UserResource assessor = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .withRoleGlobal(Role.ASSESSOR)
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         ProcessRole assessorProcessRole = newProcessRole()
@@ -67,7 +66,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
     @Test
     public void assessorCannotDownloadFilesForApplicationAssessmentTheyHaventAccepted() {
         UserResource assessor = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .withRoleGlobal(Role.ASSESSOR)
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         ProcessRole assessorProcessRole = newProcessRole()
@@ -91,7 +90,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
     @Test
     public void panelAssessorCanDownloadFilesForApplicationTheyAreAssessing() {
         UserResource assessor = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .withRoleGlobal(Role.ASSESSOR)
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         ProcessRole assessorProcessRole = newProcessRole().build();
@@ -108,7 +107,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
     @Test
     public void interviewAssessorCanDownloadFilesForApplicationTheyAreAssessing() {
         UserResource assessor = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .withRoleGlobal(Role.ASSESSOR)
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         ProcessRole assessorProcessRole = newProcessRole().build();
@@ -125,7 +124,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
     @Test
     public void assessorCanNotDownloadFilesForApplicationTheyAreNotAssessing() {
         UserResource assessor = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .withRoleGlobal(Role.ASSESSOR)
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);

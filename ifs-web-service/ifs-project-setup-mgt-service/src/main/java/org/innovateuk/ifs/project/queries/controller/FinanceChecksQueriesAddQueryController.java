@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -68,6 +70,8 @@ public class FinanceChecksQueriesAddQueryController {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationRestService;
     @Autowired
+    private CompetitionRestService competitionRestService;
+    @Autowired
     private EncryptedCookieService cookieUtil;
     @Autowired
     private ProjectFinanceRestService projectFinanceRestService;
@@ -115,7 +119,7 @@ public class FinanceChecksQueriesAddQueryController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             FinanceChecksSectionType section = null;
             for (FinanceChecksSectionType value : FinanceChecksSectionType.values()) {
-                if (value.name().toUpperCase().equals(form.getSection().toUpperCase())) {
+                if (value.name().equals(form.getSection().toUpperCase())) {
                     section = value;
                 }
             }
@@ -237,6 +241,7 @@ public class FinanceChecksQueriesAddQueryController {
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
@@ -260,7 +265,8 @@ public class FinanceChecksQueriesAddQueryController {
                 FinanceChecksQueriesFormConstraints.MAX_TITLE_CHARACTERS,
                 organisationId,
                 FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL,
-                project.getApplication()
+                project.getApplication(),
+                competition.isProcurementMilestones()
         );
     }
 

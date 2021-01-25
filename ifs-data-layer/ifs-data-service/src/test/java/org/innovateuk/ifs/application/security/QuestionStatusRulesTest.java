@@ -108,11 +108,11 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     public void internalUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = newQuestionStatusResource().build();
 
-        UserResource compAdminUser = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
-        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
-        UserResource projectFinanceUser = newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
-        UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
-        UserResource nonInternalUser = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
+        UserResource compAdminUser = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
+        UserResource supportUser = newUserResource().withRoleGlobal(Role.SUPPORT).build();
+        UserResource projectFinanceUser = newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build();
+        UserResource innovationLeadUser = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
+        UserResource nonInternalUser = newUserResource().withRoleGlobal(Role.ASSESSOR).build();
 
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, innovationLeadUser));
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, compAdminUser));
@@ -128,7 +128,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         QuestionStatusResource questionStatusResource = newQuestionStatusResource()
                 .withApplication(newApplicationResource().withId(application.getId()).build())
                 .build();
-        UserResource competitionFinanceUser = newUserResource().withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
 
         when(applicationRepository.findById(questionStatusResource.getApplication())).thenReturn(Optional.of(application));
         when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);

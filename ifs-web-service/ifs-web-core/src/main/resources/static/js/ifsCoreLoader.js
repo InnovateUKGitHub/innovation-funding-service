@@ -49,11 +49,6 @@ IFS.core.loadOrder = {
       IFS.core.tableSorter.init()
     }
   },
-  'finance': {
-    init: function () {
-      IFS.core.repeatableFinanceRows.init()
-    }
-  },
   'finance-row-form': {
     init: function () {
       IFS.core.financeRowForm.init()

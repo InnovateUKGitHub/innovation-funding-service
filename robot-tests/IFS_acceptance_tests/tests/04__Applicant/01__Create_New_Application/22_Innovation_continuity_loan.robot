@@ -3,6 +3,8 @@ Documentation     IFS-8002  New set of T&Cs for innovation continuity loan
 ...
 ...               IFS-8779 Subsidy Control - Create a New Competition - Initial Details
 ...
+...               IFS-9071 Subsidy Control - Update Innovation Continuity Loan T&Cs
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -18,7 +20,7 @@ ${continuityLoanPSCompId}            ${competition_ids["${continuityLoanPSCompNa
 ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplication}"]}
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/summary
-${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
+${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity loan from
 ${continuityLoanT&C'sTitle}          Loans terms and conditions
 ${continuityLoanT&CLink}             Innovation Continuity Loan (opens in a new window)
 ${applicationT&CLink}                Award terms and conditions
@@ -37,7 +39,7 @@ Innovation continuity loan T&C's can be confirmed
 Innovation continuity loan T&C's can be edited
     [Documentation]  IFS-8002
     Given the user clicks the button/link       jQuery = button:contains("Edit")
-    When the user selects the radio button      termsAndConditionsId  32
+    When the user selects the radio button      termsAndConditionsId  43
     And the user clicks the button/link         jQuery = button:contains("Done")
     Then the user should see the element        link = ${continuityLoanT&CLink}
 
@@ -118,7 +120,7 @@ navigate to comp setup of investor comp
     the user clicks the button/link             link = Back to competition details
 
 the user confirmed terms and conditions
-    the user selects the radio button     termsAndConditionsId  32
+    the user selects the radio button     termsAndConditionsId  43
     the user clicks the button/link       jQuery = button:contains("Done")
 
 the user completes the competition setup
