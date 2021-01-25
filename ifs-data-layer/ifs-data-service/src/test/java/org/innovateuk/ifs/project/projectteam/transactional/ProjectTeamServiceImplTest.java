@@ -41,7 +41,6 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -353,7 +352,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(singletonList(Role.APPLICANT))
+                                .withRoleGlobal(Role.APPLICANT)
                                 .build());
 
         User userToRemove = newUser().build();
@@ -386,7 +385,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(Collections.singletonList(Role.APPLICANT))
+                                .withRoleGlobal(Role.APPLICANT)
                                 .build());
 
         User userToRemove = newUser().build();
@@ -416,7 +415,7 @@ public class ProjectTeamServiceImplTest extends BaseServiceUnitTest<ProjectTeamS
         User loggedInUser = newUser().build();
         setLoggedInUser(newUserResource()
                                 .withId(loggedInUser.getId())
-                                .withRolesGlobal(Collections.singletonList(Role.APPLICANT))
+                                .withRoleGlobal(Role.APPLICANT)
                                 .build());
 
         User userToRemove = newUser().build();

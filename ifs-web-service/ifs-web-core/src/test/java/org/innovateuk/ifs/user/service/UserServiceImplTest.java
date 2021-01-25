@@ -122,7 +122,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         roleResource = COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
+                .withRoleGlobal(roleResource)
                 .build();
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));
@@ -136,7 +136,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         roleResource = APPLICANT;
         UserResource userResource = newUserResource()
                 .withId(userId)
-                .withRolesGlobal(singletonList(roleResource))
+                .withRoleGlobal(roleResource)
                 .build();
 
         when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(userResource));

@@ -34,7 +34,6 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
@@ -92,7 +91,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)
@@ -173,7 +172,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetailsKtpCompetition() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(competitionId)

@@ -49,8 +49,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
     @Test
     public void acceptInvite() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR)
-                ).build();
+                .withRoleGlobal(Role.ASSESSOR).build();
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
 
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
@@ -83,8 +82,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
     @Test
     public void acceptInvite_notSameUser() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR)
-                ).build();
+                .withRoleGlobal(Role.ASSESSOR).build();
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
                 .thenReturn(competitionParticipantResource);
@@ -107,8 +105,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
     @Test
     public void acceptInvite_hashNotExists() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(Role.ASSESSOR)
-                ).build();
+                .withRoleGlobal(Role.ASSESSOR).build();
 
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash not exists")).thenReturn
                 (null);

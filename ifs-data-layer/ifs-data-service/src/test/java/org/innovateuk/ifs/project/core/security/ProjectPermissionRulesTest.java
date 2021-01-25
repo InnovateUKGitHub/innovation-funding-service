@@ -76,7 +76,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     public void stakeholdersCanViewProjects() {
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
-        UserResource stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        UserResource stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Competition competition = newCompetition().build();
 
         ProjectResource project = newProjectResource()
@@ -94,7 +94,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     public void competitionFinanceUsersCanViewProjects() {
 
         User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
-        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Competition competition = newCompetition().build();
 
         ProjectResource project = newProjectResource()

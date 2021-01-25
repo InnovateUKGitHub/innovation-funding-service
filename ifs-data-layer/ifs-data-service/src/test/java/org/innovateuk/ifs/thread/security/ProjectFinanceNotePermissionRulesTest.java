@@ -53,7 +53,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     @Before
     public void setUp() throws Exception {
         projectFinanceUserOne = projectFinanceUser();
-        projectFinanceUserTwo = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
+        projectFinanceUserTwo = newUserResource().withId(1993L).withRoleGlobal(Role.PROJECT_FINANCE).build();
         intruder = getUserWithRole(Role.ASSESSOR);
         noteResource = sampleNote();
 

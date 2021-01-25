@@ -387,7 +387,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private Pageable setUpPageable(Role role, String searchString, ApplicationResource applicationResource,
                                    int pageSize) {
 
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(role)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(role).build();
         User user = newUser().withId(userResource.getId()).withRoles(singleton(role)).build();
 
         setLoggedInUser(userResource);

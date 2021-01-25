@@ -145,7 +145,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withFirstName("James")
             .withLastName("Watts")
             .withEmail("james.watts@email.co.uk")
-            .withRolesGlobal(singletonList(Role.APPLICANT))
+            .withRoleGlobal(Role.APPLICANT)
             .withUID("2aerg234-aegaeb-23aer").build();
 
     @Before

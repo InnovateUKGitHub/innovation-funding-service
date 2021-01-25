@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;

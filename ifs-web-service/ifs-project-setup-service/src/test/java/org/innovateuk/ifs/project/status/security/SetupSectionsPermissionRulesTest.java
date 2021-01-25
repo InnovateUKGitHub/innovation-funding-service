@@ -356,7 +356,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void partnerAccess() {
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -383,7 +383,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -409,7 +409,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void financeContactAccess() {
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(APPLICANT).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 

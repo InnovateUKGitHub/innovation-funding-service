@@ -22,7 +22,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
@@ -65,7 +64,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
 
-        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        incorrectPartner = newUserResource().withId(1993L).withRoleGlobal(Role.APPLICANT).build();
         incorrectPartner.setId(1993L);
 
         competition = newCompetition().build();
@@ -134,7 +133,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         UserResource anotherProjectFinanceUser = newUserResource().withId(675L)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
+                .withRoleGlobal(Role.PROJECT_FINANCE).build();
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, anotherProjectFinanceUser));
     }
 

@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -56,7 +55,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
         user = newUserResource().build();
         project = newProjectResource().build();
         Project projectProcessProject = newProject().build();
-        projectFinanceUser = newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
+        projectFinanceUser = newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build();
         partnerProjectUser = newProjectUser().build(1);
         organisationResource = newOrganisationResource().build();
         bankDetailsResource = newBankDetailsResource().withOrganisation(organisationResource.getId()).withProject(project.getId()).build();

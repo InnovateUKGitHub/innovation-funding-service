@@ -277,7 +277,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         User internalUser = newUser().withRoles(singleton(COMP_ADMIN)).build();
         when(userRepository.findById(internalUser.getId())).thenReturn(Optional.of(internalUser));
-        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRoleGlobal(COMP_ADMIN).build());
 
         competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
     }

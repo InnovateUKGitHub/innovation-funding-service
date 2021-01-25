@@ -123,10 +123,10 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
         }
         // Create users with roles
         {
-            ifsAdmin = newUserResource().withRolesGlobal(singletonList(IFS_ADMINISTRATOR)).build();
-            supportUser = newUserResource().withRolesGlobal(singletonList(SUPPORT)).build();
-            innovationLead = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
-            projectFinance = newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build();
+            ifsAdmin = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).build();
+            supportUser = newUserResource().withRoleGlobal(SUPPORT).build();
+            innovationLead = newUserResource().withRoleGlobal(INNOVATION_LEAD).build();
+            projectFinance = newUserResource().withRoleGlobal(PROJECT_FINANCE).build();
         }
     }
 
