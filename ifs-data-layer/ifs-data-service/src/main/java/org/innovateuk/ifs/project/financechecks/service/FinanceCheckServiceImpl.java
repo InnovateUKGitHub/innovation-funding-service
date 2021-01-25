@@ -371,7 +371,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         long projectId = projectOrganisationCompositeId.getProjectId();
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
-                        .andOnSuccess(partnerOrganisation -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, partnerOrganisation))
+                        .andOnSuccess(this::getPaymentMilestoneProcess)
+                        .andOnSuccess(process -> triggerPaymentMilestoneResetWorkflowHandlerEvent(currentUser, process))
         );
     }
 
@@ -388,28 +389,31 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ServiceResult<Void> triggerPaymentMilestoneApprovalWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
         if (paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisation, currentUser)) {
             return serviceSuccess();
-        }  else {
+        } else {
             return serviceFailure(PAYMENT_MILESTONE_CANNOT_BE_APPROVED);
         }
     }
 
-    private ServiceResult<Void> triggerPaymentMilestoneResetWorkflowHandlerEvent(User currentUser, PartnerOrganisation partnerOrganisation) {
-        if (paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisation, currentUser)) {
-            return serviceSuccess();
-        }  else {
-            return serviceFailure(PAYMENT_MILESTONE_CANNOT_BE_RESET);
+    private ServiceResult<Void> triggerPaymentMilestoneResetWorkflowHandlerEvent(User currentUser, PaymentMilestoneProcess paymentMilestoneProcess) {
+        if (paymentMilestoneProcess.getProcessState().isApproved()) {
+            if (paymentMilestoneWorkflowHandler.paymentMilestoneReset(paymentMilestoneProcess.getTarget(), currentUser)) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(PAYMENT_MILESTONE_CANNOT_BE_RESET);
+            }
         }
+        return serviceSuccess();
     }
 
     private PaymentMilestoneState getPaymentMilestoneState(ProjectOrganisationCompositeId projectOrganisationCompositeId, Project project) {
-         if (project.getApplication().getCompetition().isProcurementMilestones()) {
-             long organisationId = projectOrganisationCompositeId.getOrganisationId();
-             long projectId = projectOrganisationCompositeId.getProjectId();
-             PaymentMilestoneProcess process = getPartnerOrganisation(projectId, organisationId)
-                     .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation)).getSuccess();
-             return process.getProcessState();
-         }
-         return null;
+        if (project.getApplication().getCompetition().isProcurementMilestones()) {
+            long organisationId = projectOrganisationCompositeId.getOrganisationId();
+            long projectId = projectOrganisationCompositeId.getProjectId();
+            PaymentMilestoneProcess process = getPartnerOrganisation(projectId, organisationId)
+                    .andOnSuccess(partnerOrganisation -> getPaymentMilestoneProcess(partnerOrganisation)).getSuccess();
+            return process.getProcessState();
+        }
+        return null;
     }
 
     @Override
