@@ -199,7 +199,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     private CompetitionData createApcCompetition(List<String> researchCategory) {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build());
 
         CompetitionData competitionCreation = competitionDataBuilder.
                 createCompetition().

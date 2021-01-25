@@ -90,7 +90,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void setup() {
         competition = newCompetition().withLeadTechnologist().build();
         User innovationLeadOnApp1 = newUser().build();
-        innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
+        innovationLeadOnApplication1 = newUserResource().withRoleGlobal(INNOVATION_LEAD).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
         InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadOnApp1).build();
 
@@ -109,8 +109,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         compAdmin = compAdminUser();
         assessor = assessorUser();
         projectFinance = projectFinanceUser();
-        panelAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
-        interviewAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
+        panelAssessor = newUserResource().withRoleGlobal(ASSESSOR).build();
+        interviewAssessor = newUserResource().withRoleGlobal(ASSESSOR).build();
         kta = ktaUser();
         supporter = supporterUser();
 

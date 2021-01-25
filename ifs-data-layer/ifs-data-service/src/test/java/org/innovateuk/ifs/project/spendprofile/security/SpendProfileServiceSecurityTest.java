@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -45,7 +44,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
 
         asList(Role.values()).forEach(role -> {
             Role roleResource = Role.getByName(role.getName());
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            UserResource userWithRole = newUserResource().withRoleGlobal(roleResource).build();
             setLoggedInUser(userWithRole);
 
             if (role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE || role == SYSTEM_MAINTAINER) {
@@ -143,7 +142,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         List<Role> nonCompAdminRoles = getNonProjectFinanceUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
             try {
                 classUnderTest.approveOrRejectSpendProfile(1L, ApprovalType.APPROVED);
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
@@ -159,7 +158,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         List<Role> nonCompAdminRoles = getNonInternalAdminOrSupportUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRoleGlobal(Role.getByName(role.getName())).build());
             try {
                 classUnderTest.getSpendProfileStatusByProjectId(1L);
                 Assert.fail("Should not have been able to obtain status for spend profile with role " + role.getName());

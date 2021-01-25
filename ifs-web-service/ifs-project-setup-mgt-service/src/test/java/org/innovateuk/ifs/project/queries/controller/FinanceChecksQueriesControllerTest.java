@@ -95,7 +95,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
     private Role financeTeamRole = Role.PROJECT_FINANCE;
-    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(singletonList(financeTeamRole)).build();
+    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRoleGlobal(financeTeamRole).build();
     private UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
     private ProjectUserResource financeContactProjectUser = newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
     private UserResource financeContact2User = newUserResource().withFirstName("C").withLastName("Z").build();
