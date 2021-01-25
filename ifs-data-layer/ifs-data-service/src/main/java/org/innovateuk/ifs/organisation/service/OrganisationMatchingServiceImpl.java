@@ -34,11 +34,29 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
             } else if (OrganisationTypeEnum.isKnowledgeBase(submittedOrganisationResource.getOrganisationTypeEnum())) {
                 return findFirstKnowledgeBaseMatch(submittedOrganisationResource);
             } else {
-                return findFirstCompaniesHouseMatch(submittedOrganisationResource);
+                return findFirstCompaniesHouseMatch(submittedOrganisationResource).flatMap(foundOrg -> compareOrganisation(submittedOrganisationResource,foundOrg));
             }
         }
     }
 
+    /**
+     * Compares organisations on the sic codes, executive officers, name and Incorporation date to test if the stored Companies House details
+     * need to be updated.
+     * @param submittedOrganisationResource
+     * @param foundOrg
+     * @return Optional Organisation empty if the data does not match.
+     */
+    private Optional<Organisation> compareOrganisation(OrganisationResource submittedOrganisationResource,Organisation foundOrg){
+        if (organisationPatternMatcher.stringsMatch(submittedOrganisationResource.getName(), foundOrg.getName()) &&
+                organisationPatternMatcher.sicCodesMatch(submittedOrganisationResource, foundOrg) &&
+                organisationPatternMatcher.executiveOfficersMatch(submittedOrganisationResource, foundOrg) &&
+                organisationPatternMatcher.addressesMatch(submittedOrganisationResource, foundOrg) &&
+                organisationPatternMatcher.matchLocalDate(submittedOrganisationResource.getDateOfIncorporation(), foundOrg.getDateOfIncorporation())) {
+            return Optional.of(foundOrg);
+        } else {
+            return Optional.empty();
+        }
+    }
     private Optional<Organisation> findFirstInternationalMatch(OrganisationResource submittedOrganisationResource) {
         return organisationRepository.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(submittedOrganisationResource.getInternationalRegistrationNumber(), submittedOrganisationResource.getName())
                 .filter(found -> organisationPatternMatcher.organisationTypeMatches(found, submittedOrganisationResource));

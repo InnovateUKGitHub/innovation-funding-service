@@ -27,6 +27,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +39,7 @@ import static java.lang.String.format;
 @Component
 public class OrganisationJourneyEnd {
 
+    public static final String DATE_OF_CREATION = "date_of_creation";
     @Autowired
     private ApplicationRestService applicationRestService;
 
@@ -61,6 +64,8 @@ public class OrganisationJourneyEnd {
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
+    private final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
          updateExistingCompaniesHouseData(organisationId);
         if (user != null) {
@@ -83,6 +88,7 @@ public class OrganisationJourneyEnd {
     }
 
     private void updateOrganisationWithCompaniesHouseData(OrganisationSearchResult org, OrganisationResource orgResource){
+        orgResource.setName(org.getName());
         orgResource.setSicCodes(org.getOrganisationSicCodes());
         orgResource.setExecutiveOfficers(org.getOrganisationExecutiveOfficers());
         List<OrganisationAddressResource> addressList = new ArrayList<>();
@@ -92,7 +98,12 @@ public class OrganisationJourneyEnd {
         organisationAddress.setAddressType(new AddressTypeResource(1L, OrganisationAddressType.REGISTERED.name()));
         addressList.add(organisationAddress);
         orgResource.setAddresses(addressList);
-        organisationRestService.createOrMatch(orgResource);
+        String localDateString = (String) org.getExtraAttributes().get(DATE_OF_CREATION);
+        if (localDateString != null) {
+            orgResource.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
+        }
+
+        OrganisationResource orgresult =  organisationRestService.createOrMatch(orgResource).getSuccess();
     }
 
     private String handleExistingUser(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
