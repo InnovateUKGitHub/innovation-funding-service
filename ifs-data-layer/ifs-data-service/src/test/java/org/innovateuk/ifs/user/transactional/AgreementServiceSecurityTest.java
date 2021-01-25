@@ -5,7 +5,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 public class AgreementServiceSecurityTest extends BaseServiceSecurityTest<AgreementService> {
@@ -17,7 +16,7 @@ public class AgreementServiceSecurityTest extends BaseServiceSecurityTest<Agreem
 
     @Test
     public void getCurrent() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.ASSESSOR).build());
         classUnderTest.getCurrent();
     }
 

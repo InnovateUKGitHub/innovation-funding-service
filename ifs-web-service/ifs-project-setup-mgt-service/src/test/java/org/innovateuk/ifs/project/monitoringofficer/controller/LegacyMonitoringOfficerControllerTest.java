@@ -103,7 +103,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
 
     @Before
     public void logInCompAdminUser() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
     }
 
     @Test
@@ -142,7 +142,7 @@ public class LegacyMonitoringOfficerControllerTest extends BaseControllerMockMVC
     }
 
     private void checkEditableFlagIsSetCorrectlyForSupportUser(String url, boolean post) throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.SUPPORT).build());
         MvcResult result = mockMvc.perform(post ? post(url) : get(url)).andReturn();
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
