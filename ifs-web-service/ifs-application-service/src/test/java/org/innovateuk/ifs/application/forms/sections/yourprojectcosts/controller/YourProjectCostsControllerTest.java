@@ -177,7 +177,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("add_cost", type.name()))
+                .param("add_row", type.name()))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
@@ -192,7 +192,7 @@ public class YourProjectCostsControllerTest extends AbstractAsyncWaitMockMVCTest
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("remove_cost", rowToRemove))
+                .param("remove_row", rowToRemove))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
                 .andExpect(status().isOk());
