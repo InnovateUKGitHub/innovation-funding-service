@@ -283,6 +283,8 @@ MO can now view payment milestones in SBRI application
     ${payment_milestone_total}=              Get Text  jQuery = th:contains("£262616")
     Should Be Equal As Numbers               ${total_funding}    ${payment_milestone_total}
 
+
+
 *** Keywords ***
 The MO user is able to access all of the links
     the user is able to see Project details section
