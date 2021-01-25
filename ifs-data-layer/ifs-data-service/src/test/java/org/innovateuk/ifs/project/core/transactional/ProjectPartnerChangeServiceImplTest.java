@@ -89,7 +89,7 @@ public class ProjectPartnerChangeServiceImplTest extends BaseServiceUnitTest<Pro
 
         service.updateProjectWhenPartnersChange(2L);
 
-        verify(eligibilityWorkflowHandler, times(1)).eligibilityReset(partnerOrganisation, user, null);
+        verify(eligibilityWorkflowHandler, times(1)).eligibilityReset(partnerOrganisation, user, "Partner change");
     }
 
     @Test
