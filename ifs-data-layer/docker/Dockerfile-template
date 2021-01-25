@@ -1,4 +1,4 @@
-FROM innovateuk/app-base-image
+FROM docker-ifs.devops.innovateuk.org/releases/ifs-base-image
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081
