@@ -19,7 +19,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Map;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;

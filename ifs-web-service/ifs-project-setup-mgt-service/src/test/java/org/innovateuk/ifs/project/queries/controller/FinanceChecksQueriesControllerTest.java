@@ -11,6 +11,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
@@ -50,6 +52,7 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
@@ -75,6 +78,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private Long applicantOrganisationId = 22L;
     private Long projectFinanceId = 45L;
     private Long queryId = 1L;
+    private Long competitionId = 9L;
 
     private ApplicationResource applicationResource = newApplicationResource().build();
     private ProjectResource projectResource = newProjectResource()
@@ -82,14 +86,16 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
             .withName("Project1")
             .withApplication(applicationResource)
             .withProjectState(SETUP)
+            .withCompetition(competitionId)
             .build();
+    private CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
 
     private OrganisationResource innovateOrganisationResource = newOrganisationResource().withName("Innovate").withId(innovateOrganisationId).build();
 
     private OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
     private Role financeTeamRole = Role.PROJECT_FINANCE;
-    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(singletonList(financeTeamRole)).build();
+    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRoleGlobal(financeTeamRole).build();
     private UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
     private ProjectUserResource financeContactProjectUser = newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
     private UserResource financeContact2User = newUserResource().withFirstName("C").withLastName("Z").build();
@@ -103,7 +109,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
     @Captor
     private ArgumentCaptor<PostResource> savePostArgumentCaptor;
-
 
     @Mock
     private EncryptedCookieService cookieUtil;
@@ -126,6 +131,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Mock
     private OrganisationRestService organisationRestService;
 
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     private ThreadViewModelPopulator threadViewModelPopulator;
 
     @Before
@@ -144,6 +152,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(organisationRestService.getByUserAndProjectId(financeContactUser.getId(), projectId)).thenReturn(restSuccess(leadOrganisationResource));
         when(userRestService.retrieveUserById(financeContact2User.getId())).thenReturn(restSuccess(financeContact2User));
         when(organisationRestService.getByUserAndProjectId(financeContact2User.getId(), projectId)).thenReturn(restSuccess(leadOrganisationResource));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);

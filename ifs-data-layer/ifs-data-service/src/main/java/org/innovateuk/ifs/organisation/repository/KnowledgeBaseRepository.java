@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.organisation.repository;
 
-import org.innovateuk.ifs.organisation.domain.Academic;
 import org.innovateuk.ifs.organisation.domain.KnowledgeBase;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Optional;
 

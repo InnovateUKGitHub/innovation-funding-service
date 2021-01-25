@@ -1,14 +1,15 @@
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
-tagDocker.onlyIf { !isNamedEnv() }
+buildDocker.enabled = false
+tagDocker.enabled = false
+osStageRemote.enabled = false
+
 tagDocker.tag = mailSinkVersion
 tagDockerLocal.tag = mailSinkVersion
-osStageRemote.onlyIf { !isNamedEnv() }
-osStageRemote.tag = mailSinkVersion
-osStageLocal.tag = mailSinkVersion
 
 createContainer.hostName = "mail"
 createContainer.containerName = "mail"
 createContainer.containerId = "mail"
+createContainer.imageId = "docker-ifs.devops.innovateuk.org/releases/mail-sink:" + mailsinkVersion
 createContainer.portBindings = ['8765:8080', "9876:8143"]
 
 buildscript {

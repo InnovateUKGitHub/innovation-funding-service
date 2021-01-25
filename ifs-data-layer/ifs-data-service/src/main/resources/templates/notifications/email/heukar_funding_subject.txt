@@ -1,1 +1,0 @@
-${applicationId?c}: update about your Horizon Europe UK Application Registration for government-backed funding

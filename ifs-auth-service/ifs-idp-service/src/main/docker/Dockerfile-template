@@ -1,4 +1,4 @@
-FROM innovateuk/openjdk
+FROM docker-ifs.devops.innovateuk.org/releases/openjdk
 EXPOSE 9443
 
 ENV IDPVER="3.3.3"

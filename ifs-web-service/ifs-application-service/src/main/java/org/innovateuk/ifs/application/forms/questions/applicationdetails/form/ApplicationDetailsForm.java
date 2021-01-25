@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.form;
 
-import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompanyAge;
 import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
@@ -34,7 +33,6 @@ public class ApplicationDetailsForm {
     private LocalDate startDate;
 
     @NotNull
-    @Range(min = 1, message = "{validation.project.duration.range.invalid}")
     private Long durationInMonths;
 
     private Boolean resubmission;

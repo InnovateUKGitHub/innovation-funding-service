@@ -21,6 +21,10 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8942  SBRI Milestones - Edit project duration in project setup
 ...
+...               IFS-8965  SBRI Milestones - JS Milestones Page & validation - Application
+...
+...               IFS-8943  SBRI Milestones - Ability to raise queries / notes in project setup
+
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -31,34 +35,37 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${sbriType1ApplicationTitle}     SBRI type one application
-${sbriType1CompetitionName}      SBRI Type 1 Competition
-${openSBRICompetitionName}       SBRI type one competition
-${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]}
-&{sbriLeadCredentials}           email=troy.ward@gmail.com     password=${short_password}
-&{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
-&{sbriMOCredentials}             email=orville.gibbs@gmail.com      password=${short_password}
-${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
-${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
-${sbriProjectName}               Procurement application 1
-${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
-${sbriProjectName2}              Procurement application 2
-${sbriProjectId2}                ${project_ids["${sbriProjectName2}"]}
-${sbriApplicationId}             ${application_ids["${sbriProjectName}"]}
-${sbriApplicationId2}            ${application_ids["${sbriProjectName2}"]}
-${yourProjFinanceLink}           your project finances
-${viewFinanceChangesLink}        View changes to finances
-${inclusiveOfVATHeading}         Total project costs inclusive of VAT
-${totalProjCosts}                Total project cost
-${vatRegistered}                 Are you VAT registered
-${totalWithVAT}                  £265,084
-${totalWithoutVAT}               £220,903
-${initialFunding}                £262,616
-${revisedFunding}                £218,435
-${vatTotal}                      £44,181
-${currentAmount}                 Current amount
-${fundingAppliedFor}             Funding applied for
-${totalVAT}                      Total VAT
+${sbriMilestonesApplicationTitle}     SBRI payment milestones application
+${sbriType1ApplicationTitle}          SBRI type one application
+${sbriType1CompetitionName}           SBRI Type 1 Competition
+${openSBRICompetitionName}            SBRI type one competition
+${openSBRICompetitionId}              ${competition_ids["${openSBRICompetitionName}"]}
+&{sbriLeadCredentials}                email=troy.ward@gmail.com     password=${short_password}
+&{sbriPartnerCredentials}             email=eve.smith@gmail.com     password=${short_password}
+&{sbriProjectFinanceCredentials}      email=becky.mason@gmail.com   password=${short_password}
+${sbriComp654Name}                    The Sustainable Innovation Fund: SBRI phase 1
+${sbriComp654Id}                      ${competition_ids["${sbriComp654Name}"]}
+${sbriProjectName}                    Procurement application 1
+${sbriProjectId}                      ${project_ids["${sbriProjectName}"]}
+${sbriProjectName2}                   Procurement application 2
+${sbriProjectId2}                     ${project_ids["${sbriProjectName2}"]}
+${sbriApplicationId}                  ${application_ids["${sbriProjectName}"]}
+${sbriApplicationId2}                 ${application_ids["${sbriProjectName2}"]}
+${yourProjFinanceLink}                your project finances
+${viewFinanceChangesLink}             View changes to finances
+${inclusiveOfVATHeading}              Total project costs inclusive of VAT
+${totalProjCosts}                     Total project cost
+${vatRegistered}                      Are you VAT registered
+${totalWithVAT}                       £265,084
+${totalWithoutVAT}                    £220,903
+${initialFunding}                     £265,084
+${revisedFunding}                     £218,435
+${vatTotal}                           £44,181
+${currentAmount}                      Current amount
+${fundingAppliedFor}                  Funding applied for
+${totalVAT}                           Total VAT
+${payment_query_title}                Payment Milestone Query
+
 
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
@@ -80,6 +87,90 @@ Comp admin complete the SBRI milestones
     When the user fills in the competition close Milestones
     Then the user should see the correct inputs in the Milestones form
     And the user should see milestones section marked as complete
+
+Project duration validation in application payment milestones if project duration not completed in application details
+    [Documentation]  IFS-8938  IFS-8965
+    Given log in as a different user                &{sbriLeadCredentials}
+    And the user creates a new sbri application
+    When the user clicks the button/link            link = Your project finances
+    And the user clicks the button/link             link = Your payment milestones
+    Then the user should see the element            jQuery = li:contains("provide a project duration")
+    And the user should see the element             link = application details
+
+Applicant can add payment milestones on completing application details with project duration
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user clicks the button/link               link = application details
+    When the user fills in SBRI Application details     ${sbriMilestonesApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user clicks the button/link                 link = Your project finances
+    And the user clicks the button/link                 link = Your payment milestones
+    Then the user should see the element                jQuery = button:contains("Add another project milestone")
+    And the user should see the element                 jQuery = h1:contains("Payment milestones")
+    And the user should see the element                 id= mark-all-as-complete
+
+Applicant should see project cost banner in payment milestones when the project costs not completed
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user clicks the button/link                            link = Your project finances
+    When the user fills the procurement project costs                Calculate  52,214
+    And the user selects the radio button                            vatForm.registered  true
+    And the user clicks the button/link                              link = Your project finances
+    And the user clicks the button/link                              link = Your payment milestones
+    Then the user should see total project costs and banner info
+
+Applicant should not see project cost banner in payment milestones when the project costs completed
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user clicks the button/link        link = Your project finances
+    And the user clicks the button/link          link = Your project costs
+    When the user clicks the button/link         css = label[for="stateAidAgreed"]
+    And the user clicks the button/link          jQuery = button:contains("Mark as complete")
+    And the user clicks the button/link          link = Your payment milestones
+    Then the user should not see the element     jQuery = p:contains("Your project costs of £72,839 have not been marked as complete.")
+
+Payment milestones validations: empty fileds
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user clicks the button/link           jQuery = button:contains(Open all)
+    When the user clicks the button/link            id = mark-all-as-complete
+    And the user should see validation messages
+
+Payment milestones validations: payment milestone cost is less than project cost
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user selects the option from the drop-down menu     1  css = select[id^="milestones"][id$="month"]
+    And the user enters text to a text field                      css = input[id^="milestones"][id$="payment"]    1000
+    And the user enters text to a text field                      css = textarea[id^="milestones"][id$="taskOrActivity"]   Task Or Activity 1
+    When the user clicks the button/link                          id = mark-all-as-complete
+    Then the user should see a field and summary error            Your payment milestones are lower than 100% of your project costs. You must increase your payment requests or adjust your project costs.
+
+Payment milestones validations: payment milestone cost is more than project cost
+    [Documentation]  IFS-8938  IFS-8965
+    When the user enters text to a text field              css = input[id^="milestones"][id$="payment"]    100000
+    And the user clicks the button/link                    id = mark-all-as-complete
+    Then the user should see a field and summary error     Your payment milestones exceeds 100% of your project costs. You must lower your payment requests or adjust your project costs.
+
+Applicant adds a first payment milestone
+    [Documentation]  IFS-8938  IFS-8965
+    Given applicant fills in payment milestone                  accordion-finances-content  1  Milestone 1  10000   Task Or Activity 1   Deliverable 1   Success Criteria 1
+    When the user clicks the button/link                        jQuery = button:contains("Save and return to project finances")
+    Then applicant views saved payment milestones               1  £10,000  Milestone 1  13.73%  £10,000  13.73%
+    And applicant views saved payment milestones subsection     Task Or Activity 1   Deliverable 1   Success Criteria 1
+
+Applicant adds another payment milestone
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user clicks the button/link                           jQuery = button:contains("Add another project milestone")
+    And the user clicks the button/link                             jQuery = button:contains("Open all")
+    When applicant fills in payment milestone                       accordion-finances-content-unsaved  5  Milestone 2  62839   Task Or Activity 2   Deliverable 2   Success Criteria 2
+    And the user clicks the button/link                             id = mark-all-as-complete
+    Then applicant views saved payment milestones                   5  £62,839  Milestone 2  86.27%  £72,839  100%
+    And applicant views readonly payment milestones subsections     Task Or Activity 2   Deliverable 2   Success Criteria 2
+    And the user should see the element                             jQuery = li:contains("Your payment milestones") > .task-status-complete
+
+Applicant can edit and remove the payment milestone
+    [Documentation]  IFS-8938  IFS-8965
+    Given the user clicks the button/link           link = Your payment milestones
+    When the user clicks the button/link            jQuery = button:contains("Edit your payment milestones")
+    And the user clicks the button/link             jQuery = button:contains("Add another project milestone")
+    And the user enters text to a text field        css = [id^="accordion-finances-content-unsaved"] input[id^="milestones"][id$="description"]   Milestone to remove
+    And the user clicks the button/link             jQuery = div[id='accordion-finances'] div:nth-of-type(4) .js-remove-row:contains("Remove")
+    Then the user should not see the element        jQuery = div h4:contains("Milestone") ~ div button:contains("Milestone to remove")
+    [Teardown]  the user clicks the button/link     id = mark-all-as-complete
 
 Awaiting assessment status should not display for SBRI submitted applications
     [Documentation]  IFS-7314
@@ -237,9 +328,30 @@ Internal user viability page
     Then the user should not see the element        css = .table-overview
     [Teardown]  The user clicks the button/link     link = Back to finance checks
 
+Project finance sends a payment milestone query to lead organisation
+    [Documentation]     IFS-8943
+    Given Log in as a different user                                    &{ifs_admin_user_credentials}
+    And the user navigates to the page                                  ${server}/project-setup-management/project/${sbriProjectId}/finance-check/organisation/116/query
+    When the project finance user post a payment milestone query
+    Then the user should see the element                                jQuery = button:contains("${payment_query_title}")
+
+Project lead is able to view pending query on project dashboard
+    [Documentation]     IFS-8943
+    Given Log in as a different user          &{sbriProjectFinanceCredentials}
+    When the user navigates to the page       ${server}/project-setup/project/${sbriProjectId}
+    Then the user should see the element      jQuery = span:contains("Pending query")
+
+Project lead responds to pending queries
+    [Documentation]  IFS-8943
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    When the user clicks the button/link         id = post-new-response-1
+    Then the user responds to the query
+
 Internal user can generate spend profile
     [Documentation]   IFS-8048
-    Given generate spend profile
+    Given Log in as a different user          &{internal_finance_credentials}
+    And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    When generate spend profile
     Then the user should see the element      css = .success-alert
 
 Internal user should not see spend profile section
@@ -334,6 +446,13 @@ the user assign the stakeholder to the SBRI competition
     the user navigates to the page      ${server}/management/competition/setup/${openSBRICompetitionId}/manage-stakeholders
     the user clicks the button/link     jQuery = td:contains("Rayon Kevin") button[type="submit"]
 
+the project finance user post a payment milestone query
+    the user clicks the button/link                         link = Post a new query
+    the user selects the option from the drop-down menu     Payment milestones      section
+    the user enters text to a text field                    id = queryTitle  ${payment_query_title}
+    the user enters text to a text field                    css = .editor    Payment milestone query
+    the user clicks the button/link                         id = post-query
+
 the user should only see application related key statistics
     the user should not see the element     jQuery = small:contains("Assessors invited")
     the user should not see the element     jQuery = small:contains("Invitations accepted")
@@ -381,7 +500,7 @@ the user should see the correct data on finance check page
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
     the user clicks the button/link         link = Back to finance checks
-    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("£218,435")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${totalWithoutVAT}")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
@@ -389,6 +508,11 @@ the user should see calculations with VAT
     the user clicks the button/link     link = Back to finance checks
     the user should see the element     jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor}") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
     the user clicks the button/link     css = .eligibility-0
+
+the user responds to the query
+    the user enters text to a text field   css = .editor  Responding to query
+    the user clicks the button/link        jQuery = .govuk-button:contains("Post response")
+    the user should see the element        jQuery = p:contains("Your response has been sent and will be reviewed by Innovate UK.")
 
 the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
@@ -424,3 +548,34 @@ internal user generates the contract
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send contract to project team")
     the user clicks the button/link    jQuery = button:contains("Send contract")
+
+the user creates a new sbri application
+    the user select the competition and starts application     ${openSBRICompetitionName}
+    the user selects the radio button                          createNewApplication  true      #Yes, I want to create a new application.
+    the user clicks the button/link                            jQuery = .govuk-button:contains("Continue")
+    the user clicks the button/link                            css = .govuk-button[type="submit"]    #Save and continue
+
+the user fills in SBRI Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element                        jQuery = h1:contains("Application details")
+    the user enters text to a text field                   css = [id="name"]  ${appTitle}
+    the user enters text to a text field                   id = startDate  ${tomorrowday}
+    the user enters text to a text field                   css = #application_details-startdate_month  ${month}
+    the user enters text to a text field                   css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field                   css = [id="durationInMonths"]  24
+    the user selects the value from the drop-down menu     INNOVATE_UK_WEBSITE   id = competitionReferralSource
+    the user selects the radio button                      START_UP_ESTABLISHED_FOR_LESS_THAN_A_YEAR   company-age-less-than-one
+    the user selects the value from the drop-down menu     BANKS_AND_INSURANCE   id = companyPrimaryFocus
+    the user can mark the question as complete
+    the user should see the element                        jQuery = li:contains("Application details") > .task-status-complete
+
+the user should see total project costs and banner info
+    the user should see the element     jQuery = p:contains("Your project costs of £72,839 have not been marked as complete.")
+    the user should see the element     jQuery = dt:contains("Total project costs")+ dd:contains("£72,839")
+    the user should see the element     jQuery = span:contains("What should I put as a payment milestone?")
+    the user should see the element     jQuery = p:contains("Enter the milestone and deliverable information. Where appropriate, link with a payment request.")
+
+the user should see validation messages
+    the user should see a field and summary error     Number of months completed must be selected.
+    the user should see a field and summary error     You must state the milestone task or activity.
+    the user should see a field and summary error     You must state the payment requested in pounds (£).

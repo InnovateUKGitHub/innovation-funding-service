@@ -73,11 +73,11 @@ Duration field client side
     [Tags]
     When the user enters text to a text field  id = durationInMonths  0
     And the user clicks the button/link        id = application-question-complete
-    Then the user should see a field and summary error  Enter the total number of months between 1 and 84.
+    Then the user should see a field and summary error  Enter the total number of months between 1 and 36.
 
     When the user enters text to a text field  id = durationInMonths  -1
     And the user clicks the button/link        id = application-question-complete
-    Then the user should see a field and summary error  Enter the total number of months between 1 and 84.
+    Then the user should see a field and summary error  Enter the total number of months between 1 and 36.
 
     When the user enters text to a text field  id = durationInMonths  ${EMPTY}
     Then the user should see a field error     ${empty_field_warning_message}

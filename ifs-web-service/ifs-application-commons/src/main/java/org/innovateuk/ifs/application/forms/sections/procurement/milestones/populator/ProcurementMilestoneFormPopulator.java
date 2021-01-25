@@ -5,21 +5,24 @@ import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form
 import org.innovateuk.ifs.procurement.milestone.resource.ProcurementMilestoneResource;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.Function;
-
-import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 @Component
 public class ProcurementMilestoneFormPopulator {
 
     public <R extends ProcurementMilestoneResource> ProcurementMilestonesForm populate(List<R> resources) {
-        return new ProcurementMilestonesForm(resources.stream()
-                .map(ProcurementMilestoneForm::new)
-                .collect(toLinkedMap(
-                    form -> String.valueOf(form.getId()),
-                    Function.identity()
-        )));
+        Map<String, ProcurementMilestoneForm> map = new LinkedHashMap<>();
+
+        IntStream
+                .range(0, resources.size())
+                .forEach(index -> map.put(
+                        String.valueOf(resources.get(index).getId()),
+                        new ProcurementMilestoneForm(resources.get(index), index)
+            ));
+        return new ProcurementMilestonesForm(map);
     }
 
 

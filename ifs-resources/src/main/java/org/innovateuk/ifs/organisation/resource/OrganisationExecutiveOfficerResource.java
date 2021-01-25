@@ -3,7 +3,6 @@ package org.innovateuk.ifs.organisation.resource;
 import java.util.Objects;
 
 public class OrganisationExecutiveOfficerResource {
-
     private Long id;
     private Long organisation;
     private String name;

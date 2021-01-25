@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -113,7 +114,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 Boolean includeJesForm,
                                                 ApplicationFinanceType applicationFinanceType,
                                                 Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation) {
+                                                Boolean includeYourOrganisation,
+                                                Boolean alwaysOpen) {
 
         return asCompAdmin(data -> {
 
@@ -166,6 +168,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setIncludeYourOrganisationSection(includeYourOrganisation);
                 competition.setFundingType(fundingType);
                 competition.setCompletionStage(completionStage);
+                competition.setAlwaysOpen(alwaysOpen);
             });
         });
     }
@@ -372,9 +375,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage) {
+    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage, Boolean alwaysOpen) {
         return asCompAdmin(data ->
-            Stream.of(MilestoneType.presetValues())
+            Stream.of(BooleanUtils.isTrue(alwaysOpen) ? MilestoneType.alwaysOpenValues() : MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
                     .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                     .forEach(type ->
