@@ -263,7 +263,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form, null, validationHandler, successView, model);
+        return doSaveEligibility(projectId, organisationId, EligibilityState.APPROVED, eligibilityForm, form, validationHandler, successView, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -280,7 +280,12 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, null, form, retractionReason, validationHandler, successView, model);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, null, form, null, null, false);
+
+        RestResult<Void> resetEligibilityResult = financeCheckRestService.resetEligibility(projectId, retractionReason);
+        return validationHandler
+                .addAnyErrors(resetEligibilityResult)
+                .failNowOrSucceedWith(failureView, successView);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -297,7 +302,7 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, eligibilityForm, form, null, validationHandler, successView, model);
+        return doSaveEligibility(projectId, organisationId, EligibilityState.REVIEW, eligibilityForm, form, validationHandler, successView, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -308,13 +313,13 @@ public class FinanceChecksEligibilityController extends AsyncAdaptor {
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
-    private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, String reason, ValidationHandler validationHandler, Supplier<String> successView, Model model) {
+    private String doSaveEligibility(long projectId, long organisationId, EligibilityState eligibility, FinanceChecksEligibilityForm eligibilityForm, YourProjectCostsForm form, ValidationHandler validationHandler, Supplier<String> successView, Model model) {
 
         Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, form, null, null, false);
 
         EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 
-        RestResult<Void> saveEligibilityResult = financeCheckRestService.saveEligibility(projectId, organisationId, eligibility, statusToSend, reason);
+        RestResult<Void> saveEligibilityResult = financeCheckRestService.saveEligibility(projectId, organisationId, eligibility, statusToSend);
         return validationHandler
                 .addAnyErrors(saveEligibilityResult)
                 .failNowOrSucceedWith(failureView, successView);

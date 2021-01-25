@@ -95,12 +95,12 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        RestResult<Void> saveViabilityResult = financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, form.getRetractionReason());
+        RestResult<Void> resetViabilityResult = financeCheckRestService.resetViability(projectId, form.getRetractionReason());
 
         Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, new FinanceChecksViabilityForm());
 
         return validationHandler.
-                addAnyErrors(saveViabilityResult).
+                addAnyErrors(resetViabilityResult).
                 failNowOrSucceedWith(failureView, successView);
     }
 

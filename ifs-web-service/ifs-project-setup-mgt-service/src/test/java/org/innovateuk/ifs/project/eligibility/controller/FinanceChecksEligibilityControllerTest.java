@@ -315,7 +315,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET, null)).
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -326,7 +326,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET, null);
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.UNSET);
 
     }
 
@@ -336,7 +336,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.RED, null)).
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.RED)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -347,14 +347,14 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.RED, null);
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.RED);
 
     }
 
     @Test
     public void testConfirmEligibilityWhenSaveEligibilityReturnsFailure() throws Exception {
 
-        when(financeCheckRestService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.APPROVED, EligibilityRagStatus.RED, null)).
+        when(financeCheckRestService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.APPROVED, EligibilityRagStatus.RED)).
                 thenReturn(restFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
@@ -369,7 +369,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility"));
 
-        verify(financeCheckRestService).saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.APPROVED, EligibilityRagStatus.RED, null);
+        verify(financeCheckRestService).saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.APPROVED, EligibilityRagStatus.RED);
 
     }
 
@@ -379,7 +379,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN, null)).
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -390,7 +390,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN, null);
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
 
     }
 
@@ -400,7 +400,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET, "something")).
+        when(financeCheckRestService.resetEligibility(projectId, "something")).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -410,7 +410,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET, "something");
+        verify(financeCheckRestService).resetEligibility(projectId, "something");
 
     }
 
@@ -420,7 +420,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET, null)).
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -431,7 +431,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET, null);
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.UNSET);
 
     }
 
@@ -441,7 +441,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.RED, null)).
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -452,14 +452,14 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.RED, null);
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.RED);
 
     }
 
     @Test
     public void testSaveAndContinueWhenSaveEligibilityReturnsFailure() throws Exception {
 
-        when(financeCheckRestService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED, null)).
+        when(financeCheckRestService.saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(restFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
@@ -474,7 +474,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility"));
 
-        verify(financeCheckRestService).saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED, null);
+        verify(financeCheckRestService).saveEligibility(project.getId(), industrialOrganisation.getId(), EligibilityState.REVIEW, EligibilityRagStatus.RED);
 
     }
 
@@ -484,7 +484,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.GREEN, null)).
+        when(financeCheckRestService.saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.GREEN)).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -495,7 +495,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractAsyncWaitMoc
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.GREEN, null);
+        verify(financeCheckRestService).saveEligibility(projectId, organisationId, EligibilityState.REVIEW, EligibilityRagStatus.GREEN);
 
     }
 

@@ -54,22 +54,22 @@ public class FinanceCheckController {
     public RestResult<Void> saveViability(@PathVariable("projectId") final Long projectId,
                                           @PathVariable("organisationId") final Long organisationId,
                                           @PathVariable("viability") final ViabilityState viability,
-                                          @PathVariable("viabilityRagStatus") final ViabilityRagStatus viabilityRagStatus,
-                                          @RequestBody(required = false) final StringResource reason) {
+                                          @PathVariable("viabilityRagStatus") final ViabilityRagStatus viabilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        String changeReason = reason == null ? null : reason.getContent();
-        return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus, changeReason).toPostResponse();
+        return financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus).toPostResponse();
     }
 
 
     @PostMapping("/{projectId}/viability/reset")
-    public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId) {
-        return financeCheckService.resetViability(projectId).toPostResponse();
+    public RestResult<Void> resetViability(@PathVariable("projectId") final Long projectId, @RequestBody(required = false) final StringResource reason) {
+        String changeReason = reason == null ? null : reason.getContent();
+        return financeCheckService.resetViability(projectId, changeReason).toPostResponse();
     }
 
     @PostMapping("/{projectId}/eligibility/reset")
-    public RestResult<Void> resetEligibility(@PathVariable("projectId") final Long projectId) {
-        return financeCheckService.resetEligibility(projectId).toPostResponse();
+    public RestResult<Void> resetEligibility(@PathVariable("projectId") final Long projectId, @RequestBody(required = false) final StringResource reason) {
+        String changeReason = reason == null ? null : reason.getContent();
+        return financeCheckService.resetEligibility(projectId, changeReason).toPostResponse();
     }
 
     @PostMapping("/{projectId}/finance-checks/reset")
@@ -89,11 +89,9 @@ public class FinanceCheckController {
     public RestResult<Void> saveEligibility(@PathVariable("projectId") final Long projectId,
                                             @PathVariable("organisationId") final Long organisationId,
                                             @PathVariable("eligibility") final EligibilityState eligibility,
-                                            @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus,
-                                            @RequestBody(required = false) final StringResource reason) {
+                                            @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        String changeReason = reason == null ? null : reason.getContent();
-        return financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus, changeReason).toPostResponse();
+        return financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus).toPostResponse();
     }
 
     @PostMapping("/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}")

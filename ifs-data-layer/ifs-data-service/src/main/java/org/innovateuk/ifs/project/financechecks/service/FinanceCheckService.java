@@ -46,22 +46,22 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "viabilityActivityType")
-    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus, String reason);
+    ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_VIABILITY')")
     @Activity(projectId = "projectId", type = ActivityType.VIABILITY_RESET)
-    ServiceResult<Void> resetViability(Long projectId);
+    ServiceResult<Void> resetViability(Long projectId, String reason);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_ELIGIBILITY')")
     @Activity(projectId = "projectId", type = ActivityType.ELIGIBILITY_RESET)
-    ServiceResult<Void> resetEligibility(Long projectId);
+    ServiceResult<Void> resetEligibility(Long projectId, String reason);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_FINANCE_CHECKS')")
     @Activity(projectId = "projectId", type = ActivityType.FINANCE_CHECKS_RESET)
     ServiceResult<Void> resetFinanceChecks(Long projectId);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default Optional<ActivityType> viabilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus, String reason) {
+    default Optional<ActivityType> viabilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
         return viability == ViabilityState.APPROVED ? Optional.of(ActivityType.VIABILITY_APPROVED) : Optional.empty();
     }
 
@@ -70,10 +70,10 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_ELIGIBILITY')")
     @Activity(projectOrganisationCompositeId = "projectOrganisationCompositeId", dynamicType = "eligibilityActivityType")
-    ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus, String reason);
+    ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
-    default Optional<ActivityType> eligibilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus, String reason) {
+    default Optional<ActivityType> eligibilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
         return eligibility == EligibilityState.APPROVED ? Optional.of(ActivityType.ELIGIBILITY_APPROVED) : Optional.empty();
     }
 

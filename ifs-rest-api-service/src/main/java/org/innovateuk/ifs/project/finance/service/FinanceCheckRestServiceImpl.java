@@ -62,12 +62,19 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     }
 
     @Override
-    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus, String reason) {
+    public RestResult<Void> resetEligibility(Long projectId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/eligibility/reset";
 
-        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
+        StringResource resource = new StringResource(resetReason);
 
-        StringResource resource = new StringResource(reason);
+        return postWithRestResult(postUrl, resource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetViability(Long projectId, String resetReason) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/viability/reset";
+
+        StringResource resource = new StringResource(resetReason);
 
         return postWithRestResult(postUrl, resource, Void.class);
     }
@@ -83,17 +90,6 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
                 "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus, String reason) {
-
-        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
-
-        StringResource resource = new StringResource(reason);
-
-        return postWithRestResult(postUrl, resource, Void.class);
     }
 
     @Override

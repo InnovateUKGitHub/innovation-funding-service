@@ -105,7 +105,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus, null)).thenReturn(serviceSuccess());
+        when(financeCheckService.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus))
                 .andExpect(status().isOk());
@@ -140,7 +140,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus, null)).thenReturn(serviceSuccess());
+        when(financeCheckService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus))
                 .andExpect(status().isOk());

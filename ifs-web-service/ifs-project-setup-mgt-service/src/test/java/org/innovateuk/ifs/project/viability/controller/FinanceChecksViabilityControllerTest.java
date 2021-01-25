@@ -296,7 +296,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         Long projectId = 123L;
         Long organisationId = 456L;
 
-        when(financeCheckRestService.saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, "something")).
+        when(financeCheckRestService.resetViability(projectId, "something")).
                 thenReturn(restSuccess());
 
         mockMvc.perform(
@@ -309,7 +309,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability"));
 
         verifyZeroInteractions(projectFinanceService);
-        verify(financeCheckRestService).saveViability(projectId, organisationId, ViabilityState.REVIEW, ViabilityRagStatus.UNSET, "something");
+        verify(financeCheckRestService).resetViability(projectId, "something");
     }
 
     @Test

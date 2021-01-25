@@ -32,7 +32,7 @@ public class ProjectPartnerChangeServiceImpl extends BaseTransactionalService im
     private void resetProjectFinanceEligibility(long projectId) {
         projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
             long organisationId = projectFinance.getOrganisation().getId();
-            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), null);
+            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess(), "Partner change");
             projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
         });
     }

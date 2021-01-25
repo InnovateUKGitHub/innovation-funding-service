@@ -94,7 +94,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.RED, "reason"),
+        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, ViabilityState.APPROVED, ViabilityRagStatus.RED),
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
@@ -130,7 +130,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.RED, "reason"),
+        assertAccessDenied(() -> classUnderTest.saveEligibility(projectOrganisationCompositeId, EligibilityState.APPROVED, EligibilityRagStatus.RED),
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
