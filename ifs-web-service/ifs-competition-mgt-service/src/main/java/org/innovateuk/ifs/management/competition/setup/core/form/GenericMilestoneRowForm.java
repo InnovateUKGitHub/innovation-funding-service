@@ -34,8 +34,6 @@ public class GenericMilestoneRowForm {
     protected ZonedDateTime date;
     protected boolean editable;
 
-    protected Long assessmentPeriodId;
-
     public GenericMilestoneRowForm() {
     }
 
@@ -43,19 +41,10 @@ public class GenericMilestoneRowForm {
         this(milestoneType, dateTime, true);
     }
 
-    public GenericMilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable, Long assessmentPeriodId) {
-        this.assessmentPeriodId = assessmentPeriodId;
-        extracted(milestoneType, dateTime, editable);
-    }
-
     public GenericMilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable) {
-        extracted(milestoneType, dateTime, editable);
-    }
-
-    private void extracted(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable) {
         this.setMilestoneType(milestoneType);
         this.editable = editable;
-        if (dateTime != null) {
+        if(dateTime != null) {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
@@ -190,9 +179,5 @@ public class GenericMilestoneRowForm {
         } else {
             return null;
         }
-    }
-
-    public Long getAssessmentPeriodId() {
-        return assessmentPeriodId;
     }
 }

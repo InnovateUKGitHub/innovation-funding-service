@@ -23,7 +23,4 @@ public class MilestoneRowForm extends GenericMilestoneRowForm {
         super(milestoneType, dateTime, editable);
     }
 
-    public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable, Long assessmentPeriodId) {
-        super(milestoneType, dateTime, editable, assessmentPeriodId);
-    }
 }

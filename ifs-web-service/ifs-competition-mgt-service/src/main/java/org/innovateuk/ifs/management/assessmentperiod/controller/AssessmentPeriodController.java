@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.assessmentperiod.controller;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -25,9 +27,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
 @RequestMapping("/assessment/competition/{competitionId}/assessment-period")
@@ -68,9 +73,8 @@ public class AssessmentPeriodController {
             value.stream().forEachOrdered(milestone ->
                     milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone, competitionResource))
             );
-            assessmentPeriodId = milestoneFormEntries.getValue(0).getAssessmentPeriodId();
             AssessmentPeriodMilestonesForm milestonesForm = new AssessmentPeriodMilestonesForm();
-            milestonesForm.setAssessmentPeriodId(assessmentPeriodId);
+            milestonesForm.setAssessmentPeriodId(key);
             milestonesForm.setMilestoneEntries(milestoneFormEntries);
             milestonesForms.add(milestonesForm);
         });
@@ -132,9 +136,13 @@ public class AssessmentPeriodController {
             }
         });
 
-        milestoneRestService.updateMilestones(updatedMilestones);
-
-        return redirectToManageAssessment(competitionId);
+        Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
+        Supplier<String> failureView = () -> redirectToManageAssessmentPeriods(competitionId);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<Void> saveResult = milestoneRestService.updateAssessmentPeriodMilestones(updatedMilestones);
+            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, successView);
+        });
     }
 
     @PostMapping(params = "add-assessment-period")
@@ -157,7 +165,7 @@ public class AssessmentPeriodController {
     }
 
     private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), true, milestone.getAssessmentPeriodId());
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), true);
     }
 
     private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {

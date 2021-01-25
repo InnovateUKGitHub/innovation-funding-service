@@ -169,6 +169,23 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     @Transactional
+    public ServiceResult<Void> updateAssessmentPeriodMilestones(List<MilestoneResource> milestones) {
+        ValidationMessages messages = new ValidationMessages();
+        validateCompetitionIdConsistency(milestones);
+        validateDates(milestones);
+
+        // validate assessment period date order
+
+        if (messages.hasErrors()) {
+            return serviceFailure(messages.getErrors());
+        }
+
+        milestoneRepository.saveAll(milestoneMapper.mapToDomain(milestones));
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id).orElse(null);
 

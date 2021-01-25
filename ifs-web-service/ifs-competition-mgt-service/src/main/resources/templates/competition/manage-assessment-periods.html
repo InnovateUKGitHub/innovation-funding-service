@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+     aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+    <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+</div>
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessment periods'"/>
 </head>
@@ -20,7 +25,7 @@
               th:object="${form}"
               method="post">
             <th:block th:each="assessmentPeriod, pStat: ${form.formList}">
-                <input type="text"
+                <input type="hidden"
                        required="required"
                        id="assessmentPeriodId"
                        th:field="${form.formList[__${pStat.index}__].assessmentPeriodId}"
@@ -28,7 +33,7 @@
                 <table class="govuk-table milestones-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col" id="milestone">Milestone</th>
+                        <th class="govuk-table__header" scope="col" id="milestone">Assessment Period</th>
                         <th class="govuk-table__header" scope="col" id="time">Time</th>
                         <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
                         <th class="govuk-table__header" scope="col" id="day">Day</th>
@@ -146,7 +151,6 @@
             <button type="submit"
                     class="govuk-button govuk-!-margin-top-6" name="add-assessment-period">Add
             </button>
-            <!--        </th:block>-->
         </form>
 
 

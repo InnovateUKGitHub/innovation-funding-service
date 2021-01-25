@@ -49,6 +49,11 @@ public class MilestoneController {
         return milestoneService.updateMilestones(milestones).toPutResponse();
     }
 
+    @PutMapping("/assessment-periods")
+    public RestResult<Void> newAssessmentPeriod(@RequestBody final List<MilestoneResource> milestones) {
+        return milestoneService.updateAssessmentPeriodMilestones(milestones).toPutResponse();
+    }
+
     @PostMapping("/{competitionId}/new-assessment-period")
     public RestResult<List<MilestoneResource>> newAssessmentPeriod(@PathVariable final long competitionId) {
         return milestoneService.createAssessmentPeriodMilestones(competitionId).toPostCreateResponse();

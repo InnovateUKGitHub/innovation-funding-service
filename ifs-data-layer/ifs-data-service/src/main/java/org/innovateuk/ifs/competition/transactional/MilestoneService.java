@@ -41,6 +41,11 @@ public interface MilestoneService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UPDATE", securedType = MilestoneResource.class,
+            description = "Only Comp Admins and project finance users are able to save single milestone for the given competitions")
+    ServiceResult<Void> updateAssessmentPeriodMilestones(List<MilestoneResource> milestones);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = MilestoneResource.class,
             description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions")
     ServiceResult<MilestoneResource> create(MilestoneType type, Long id);
 
