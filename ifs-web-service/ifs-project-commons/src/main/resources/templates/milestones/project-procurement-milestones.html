@@ -9,6 +9,8 @@
     </th:block>
 </head>
 <body class="govuk-template__body finance-row-form overheads">
+<th:block th:insert="fragments/modals :: modal-overlay"/>
+
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
@@ -122,6 +124,11 @@
                        class="govuk-button govuk-button--secondary">Notes</a>
                 </div>
             </th:block>
+        </th:block>
+        <th:block th:if="${model.externalUser}">
+            <a class="govuk-button govuk-button--secondary"
+               th:href="@{/project/{projectId}/finance-checks(projectId=${model.projectId})}">
+                Return to finance checks</a>
         </th:block>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

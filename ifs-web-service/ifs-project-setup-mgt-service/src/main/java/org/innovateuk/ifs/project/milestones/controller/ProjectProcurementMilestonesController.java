@@ -87,7 +87,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
                                  Model model,
                                  UserResource user) {
         Supplier<String> failureView = () -> viewMilestones(projectId, organisationId, true, user, model);
-        Supplier<String> successView = redirectToViewMilestones(projectId, organisationId);
+        Supplier<String> successView = redirectToFinanceChecks(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, projectId, organisationId));
@@ -124,6 +124,10 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
 
     private Supplier<String> redirectToViewMilestones(long projectId, long organisationId) {
         return () -> String.format("redirect:/project/%d/finance-check/organisation/%d/procurement-milestones", projectId, organisationId);
+    }
+
+    private Supplier<String> redirectToFinanceChecks(long projectId) {
+        return () -> String.format("redirect:/project/%d/finance-check", projectId);
     }
 
     @Override
