@@ -117,6 +117,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND type(assessment) = Assessment " +
             "LEFT JOIN Application application ON assessment.target.id = application.id  " +
+            "LEFT JOIN AssessmentPeriod assessmentPeriod ON assessmentPeriod.id = application.assessmentPeriod.id " +
             "WHERE " +
             "  assessmentParticipant.competition.id = :compId AND " +
             "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
