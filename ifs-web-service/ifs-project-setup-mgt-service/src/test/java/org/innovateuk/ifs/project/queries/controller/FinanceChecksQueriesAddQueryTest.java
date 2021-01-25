@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
