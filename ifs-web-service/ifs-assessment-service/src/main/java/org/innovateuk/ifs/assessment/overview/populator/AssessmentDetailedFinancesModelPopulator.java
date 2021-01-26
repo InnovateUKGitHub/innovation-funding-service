@@ -26,7 +26,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -141,7 +141,7 @@ public class AssessmentDetailedFinancesModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
-                .filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName()))
+                .filter(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT)
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -16,7 +16,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -128,7 +128,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
     @Test
     public void getAssignableProcessRolesByApplicationIdForLeadApplicant() {
 
-        List<ProcessRole> processRoles = newProcessRole().withRole(Role.LEADAPPLICANT).build(2);
+        List<ProcessRole> processRoles = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).build(2);
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource().build(2);
 
         when(processRoleRepositoryMock.findByApplicationId(1L)).thenReturn(processRoles);
@@ -146,7 +146,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
     @Test
     public void getAssignableProcessRolesByApplicationIdForCollaborator() {
 
-        List<ProcessRole> processRoles = newProcessRole().withRole(Role.COLLABORATOR).build(2);
+        List<ProcessRole> processRoles = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).build(2);
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource().build(2);
 
         when(processRoleRepositoryMock.findByApplicationId(1L)).thenReturn(processRoles);

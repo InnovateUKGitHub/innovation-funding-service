@@ -30,7 +30,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.*;
 import org.mockito.Mock;
 
@@ -400,9 +400,9 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                         (newResearchCategoryResource().build()).withCompetition(competitionId).build()
         );
 
-        Role role1 = Role.LEADAPPLICANT;
-        Role role2 = Role.COLLABORATOR;
-        Role assessorRole = Role.ASSESSOR;
+        ProcessRoleType role1 = ProcessRoleType.LEADAPPLICANT;
+        ProcessRoleType role2 = ProcessRoleType.LEADAPPLICANT;
+        ProcessRoleType assessorRole = ProcessRoleType.ASSESSOR;
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType
                 (businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();

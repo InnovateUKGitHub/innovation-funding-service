@@ -10,6 +10,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
@@ -118,19 +119,19 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectUserResource projectManagerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PROJECT_MANAGER).
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
                 build();
 
         ProjectUserResource leadFinanceContactProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         ProjectUserResource partnerFinanceContactProjectUser = newProjectUserResource().
                 withUser(2L).
                 withOrganisation(partnerOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         projectUsers.add(projectManagerProjectUser);
@@ -199,19 +200,19 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectUserResource projectManagerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PROJECT_MANAGER).
+                withRole(ProjectParticipantRole.PROJECT_MANAGER).
                 build();
 
         ProjectUserResource leadFinanceContactProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         ProjectUserResource partnerFinanceContactProjectUser = newProjectUserResource().
                 withUser(2L).
                 withOrganisation(partnerOrganisation.getId()).
-                withRole(FINANCE_CONTACT).
+                withRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT).
                 build();
 
         projectUsers.add(projectManagerProjectUser);
@@ -272,7 +273,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(ProjectParticipantRole.PROJECT_PARTNER).
                 build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -579,13 +580,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         ProjectUserResource leadPartnerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(ProjectParticipantRole.PROJECT_PARTNER).
                 build();
 
         ProjectUserResource partnerProjectUser = newProjectUserResource().
                 withUser(2L).
                 withOrganisation(partnerOrganisation.getId()).
-                withRole(PARTNER).
+                withRole(ProjectParticipantRole.PROJECT_PARTNER).
                 build();
 
         List<ProjectUserResource> projectUsers = new ArrayList<>();

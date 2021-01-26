@@ -34,6 +34,7 @@ import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
@@ -71,7 +72,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
 
         if (competition.isKtp()) {
             ktaProcessRole = applicationProcessRoles.stream()
-                    .filter(role -> KNOWLEDGE_TRANSFER_ADVISER == role.getRole())
+                    .filter(role -> role.getRole().isKta())
                     .findAny();
 
             if(internalUser && ktaProcessRole.isPresent()) {

@@ -20,6 +20,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -104,7 +105,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         ApplicantResource applicant = newApplicantResource()
                 .withProcessRole(newProcessRoleResource()
                         .withUser(user)
-                        .withRoleName("leadapplicant")
+                        .withRole(ProcessRoleType.LEADAPPLICANT)
                         .build())
                 .withOrganisation(organisation)
                 .build();
