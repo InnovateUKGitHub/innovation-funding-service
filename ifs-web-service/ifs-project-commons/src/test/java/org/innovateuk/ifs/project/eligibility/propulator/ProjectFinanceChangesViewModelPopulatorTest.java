@@ -20,6 +20,8 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +30,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -43,6 +45,7 @@ import static org.innovateuk.ifs.procurement.milestone.builder.ApplicationProcur
 import static org.innovateuk.ifs.procurement.milestone.builder.ProjectProcurementMilestoneResourceBuilder.newProjectProcurementMilestoneResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,6 +72,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
     @Mock
     private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
 
+    @Mock
+    private ProcessRoleRestService processRoleRestService;
+
     private long projectId = 2L;
     private long applicationId = 4L;
     private long organisationId = 3L;
@@ -85,6 +91,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withFinanceOrganisationDetails(financeOrganisationDetails).build();
         when(projectFinanceRestService.getProjectFinance(projectId, organisationId)).thenReturn(restSuccess(projectFinanceResource));
 
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withOrganisation(organisationId).build();
+        when(processRoleRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(processRoleResource)));
+
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withFinanceOrganisationDetails(financeOrganisationDetails).build();
         when(applicationFinanceRestService.getFinanceDetails(applicationId, organisationId)).thenReturn(restSuccess(applicationFinanceResource));
 
@@ -95,12 +104,12 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
     @Test
     public void shouldDetermineNoChangesInMilestones() {
 
-        List<ApplicationProcurementMilestoneResource> applicationMilestones = Arrays.asList(
+        List<ApplicationProcurementMilestoneResource> applicationMilestones = asList(
                 newApplicationProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newApplicationProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build()
         );
 
-        List<ProjectProcurementMilestoneResource> projectMilestones = Arrays.asList(
+        List<ProjectProcurementMilestoneResource> projectMilestones = asList(
                 newProjectProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newProjectProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build()
         );
@@ -120,12 +129,12 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
     @Test
     public void shouldDetermineAdditionInMilestones() {
 
-        List<ApplicationProcurementMilestoneResource> applicationMilestones = Arrays.asList(
+        List<ApplicationProcurementMilestoneResource> applicationMilestones = asList(
                 newApplicationProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newApplicationProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build()
         );
 
-        List<ProjectProcurementMilestoneResource> projectMilestones = Arrays.asList(
+        List<ProjectProcurementMilestoneResource> projectMilestones = asList(
                 newProjectProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newProjectProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build(),
                 newProjectProcurementMilestoneResource().withMonth(3).withDescription("desc3").withPayment(new BigInteger("3000")).build()
@@ -153,12 +162,12 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
     @Test
     public void shouldDetermineRemovalInMilestones() {
 
-        List<ApplicationProcurementMilestoneResource> applicationMilestones = Arrays.asList(
+        List<ApplicationProcurementMilestoneResource> applicationMilestones = asList(
                 newApplicationProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newApplicationProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build()
         );
 
-        List<ProjectProcurementMilestoneResource> projectMilestones = Arrays.asList(
+        List<ProjectProcurementMilestoneResource> projectMilestones = asList(
                 newProjectProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build()
         );
 
@@ -184,12 +193,12 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
     @Test
     public void shouldDetermineChangeInMilestones() {
 
-        List<ApplicationProcurementMilestoneResource> applicationMilestones = Arrays.asList(
+        List<ApplicationProcurementMilestoneResource> applicationMilestones = asList(
                 newApplicationProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newApplicationProcurementMilestoneResource().withMonth(2).withDescription("desc2").withPayment(new BigInteger("2000")).build()
         );
 
-        List<ProjectProcurementMilestoneResource> projectMilestones = Arrays.asList(
+        List<ProjectProcurementMilestoneResource> projectMilestones = asList(
                 newProjectProcurementMilestoneResource().withMonth(1).withDescription("desc1").withPayment(new BigInteger("1000")).build(),
                 newProjectProcurementMilestoneResource().withMonth(3).withDescription("desc2").withPayment(new BigInteger("3000")).build()
 

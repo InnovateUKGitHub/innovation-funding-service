@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class ProjectFinanceChangesProjectFinancesViewModel {
@@ -34,11 +35,18 @@ public class ProjectFinanceChangesProjectFinancesViewModel {
     }
 
     public CostChangeViewModel getTotalProjectCosts() {
-        return entries.stream().reduce((a, b) ->
-            new CostChangeViewModel("Total costs (£)",
-                    a.getApplicationCost().add(b.getApplicationCost()),
-                    a.getProjectCost().add(b.getProjectCost()))
-        ).get();
+        return entries.stream().reduce((a, b) -> {
+                BigDecimal applicationCost;
+                if (a.getApplicationCost() == null || b.getApplicationCost() == null) {
+                    applicationCost = null;
+                } else {
+                    applicationCost = a.getApplicationCost().add(b.getApplicationCost());
+                }
+                BigDecimal projectCost = a.getProjectCost().add(b.getProjectCost());
+            return new CostChangeViewModel("Total costs (£)",
+                    applicationCost,
+                    projectCost);
+        }).get();
     }
 
     public boolean hasChanges() {

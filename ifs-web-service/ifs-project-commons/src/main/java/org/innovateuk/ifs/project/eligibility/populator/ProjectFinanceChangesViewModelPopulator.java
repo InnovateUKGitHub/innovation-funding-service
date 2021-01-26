@@ -19,6 +19,8 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,11 +52,24 @@ public class ProjectFinanceChangesViewModelPopulator {
     @Autowired
     private ApplicationProcurementMilestoneRestService applicationProcurementMilestoneRestService;
 
+    @Autowired
+    private ProcessRoleRestService processRoleRestService;
+
 
     public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project,
                                                                           OrganisationResource organisation) {
         FinanceCheckEligibilityResource eligibilityOverview = financeCheckRestService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId()).getSuccess();
-        ApplicationFinanceResource appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
+        List<ProcessRoleResource> applicationProcessRoles = processRoleRestService.findProcessRole(project.getApplication()).getSuccess();
+        boolean orgPresentOnApplication = applicationProcessRoles.stream().anyMatch(apr ->
+            apr.getOrganisationId() != null && apr.getOrganisationId().equals(organisation.getId())
+        );
+        ApplicationFinanceResource appFinanceResource;
+        if (orgPresentOnApplication) {
+            appFinanceResource = applicationFinanceRestService.getFinanceDetails(project.getApplication(), organisation.getId()).getSuccess();
+        } else {
+            appFinanceResource = new ApplicationFinanceResource();
+        }
+
         ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
@@ -65,6 +80,7 @@ public class ProjectFinanceChangesViewModelPopulator {
 
         return new ProjectFinanceChangesViewModel(isInternal, organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(),
                 competition.isProcurement(),
+                orgPresentOnApplication,
                 projectFinanceChangesFinanceSummaryViewModel,
                 projectFinanceChangesProjectFinancesViewModel,
                 projectFinanceChangesMilestoneDifferencesViewModel);
@@ -86,10 +102,16 @@ public class ProjectFinanceChangesViewModelPopulator {
 
             FinanceRowCostCategory financeRowProjectCostCategory = entry.getValue();
             FinanceRowCostCategory financeRowAppCostCategory = appFinance.getFinanceOrganisationDetails().get(rowType);
+            BigDecimal financeRowAppCostCategoryTotal;
+            if (financeRowAppCostCategory == null) {
+                financeRowAppCostCategoryTotal = null;
+            } else {
+                financeRowAppCostCategoryTotal = financeRowAppCostCategory.getTotal();
+            }
 
             String section = sectionName(competition, rowType);
             CostChangeViewModel costChange = new CostChangeViewModel(section,
-                    financeRowAppCostCategory.getTotal(),
+                    financeRowAppCostCategoryTotal,
                     financeRowProjectCostCategory.getTotal());
 
             if (rowType == FinanceRowType.VAT) {
