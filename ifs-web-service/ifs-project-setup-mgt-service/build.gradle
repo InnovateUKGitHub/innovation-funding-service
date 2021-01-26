@@ -1,19 +1,13 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 buildscript {
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
     ext {
         serverContext = '/project-setup-management'
     }
@@ -83,7 +77,7 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-web-service:ifs-project-commons", configuration: 'testArtifacts')
 
-    testCompile "com.opencsv:opencsv:4.3.2"
+    testCompile "com.opencsv:opencsv"
 }
 
 processResources {

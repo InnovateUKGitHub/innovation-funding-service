@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.monitoring.builder;
 
 import org.innovateuk.ifs.project.core.builder.ProjectParticipantBuilder;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 
 import java.util.List;

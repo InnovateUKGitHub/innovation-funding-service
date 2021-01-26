@@ -127,7 +127,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(defaultExpectedCompetitionSummary));
 
         {
-            UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
+            UserResource userResource = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
 
             setLoggedInUser(userResource);
 
@@ -142,7 +142,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         }
 
         {
-            UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+            UserResource userResource = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
 
             setLoggedInUser(userResource);
 
@@ -539,7 +539,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
     @Test
     public void allApplicationsSupportView() throws Exception {
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.SUPPORT).build();
 
         Long[] ids = {1L, 2L, 3L};
         String[] titles = {"Title 1", "Title 2", "Title 3"};
@@ -594,7 +594,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
     @Test
     public void allApplicationsSupportViewInnovationLead() throws Exception {
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
+        UserResource userResource = newUserResource().withRoleGlobal(Role.INNOVATION_LEAD).build();
 
         Long[] ids = {1L, 2L, 3L};
         String[] titles = {"Title 1", "Title 2", "Title 3"};

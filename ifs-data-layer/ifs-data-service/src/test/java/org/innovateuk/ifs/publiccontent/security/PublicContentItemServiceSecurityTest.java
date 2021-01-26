@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,7 +52,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(Role.getByName(roleType.getName())))
+                        .withRoleGlobal(Role.getByName(roleType.getName()))
                         .build());
         serviceCall.run();
     }

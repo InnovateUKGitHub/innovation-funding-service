@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -18,7 +17,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,8 +44,8 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -536,19 +535,19 @@ public class ApplicationNotificationServiceImplTest {
 
         ProcessRole ktaRole = newProcessRole()
                 .withUser(users.get(0))
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
                 .withApplication(applications.toArray(new Application[0]))
                 .build();
 
         ProcessRole applicantRole = newProcessRole()
                 .withUser(users.get(1))
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(applications.toArray(new Application[0]))
                 .build();
 
         ProcessRole collaboratorRole = newProcessRole()
                 .withUser(users.get(2))
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withApplication(applications.toArray(new Application[0]))
                 .build();
 

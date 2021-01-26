@@ -1,6 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
 group 'innovateuk'
@@ -29,7 +29,7 @@ dependencies {
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-buildDocker.dependsOn ":docker:openjdk:buildDocker"
+
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")

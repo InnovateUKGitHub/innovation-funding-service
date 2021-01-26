@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -69,7 +70,7 @@ public class ApplicationDownloadControllerTest extends AbstractApplicationMockMV
         ApplicationResource app = applications.get(0);
         ProcessRoleResource processRoleResource = newProcessRoleResource()
                 .withId(leadApplicantProcessRoleId)
-                .withRole(Role.LEADAPPLICANT).build();
+                .withRole(ProcessRoleType.LEADAPPLICANT).build();
         MultipartFile file = new MockMultipartFile(fileName, fileName.getBytes());
         ByteArrayResource byteArrayResource = new ByteArrayResource(file.getBytes());
         FileEntryResource fileEntryResource = newFileEntryResource().withMediaType("application/pdf").build();

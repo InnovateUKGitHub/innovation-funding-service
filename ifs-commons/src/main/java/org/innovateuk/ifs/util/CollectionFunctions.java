@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.IntStream;
@@ -36,6 +37,13 @@ public final class CollectionFunctions {
 
     public static <S, T> List<T> flattenLists(Collection<S> toFlatten, Function<S, ? extends Collection<T>> mapper) {
         return toFlatten.stream().filter(Objects::nonNull).map(mapper).flatMap(Collection::stream).collect(toList());
+    }
+
+    public static <T> Predicate<T> distinctByKey(
+            Function<? super T, ?> keyExtractor) {
+
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     /**

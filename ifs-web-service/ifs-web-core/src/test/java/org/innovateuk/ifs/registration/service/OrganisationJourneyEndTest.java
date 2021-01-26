@@ -145,6 +145,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingCollaborator() {
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         long organisationId = 1L;
         long applicationId = 2L;
 
@@ -155,9 +156,6 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
                 .thenReturn(restSuccess(organisation));
         when(companiesHouseRestService.getOrganisationById("1"))
                 .thenReturn(restSuccess(organisationSearchResult));
-
-
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
 
         String inviteHash = "inviteHash";
         ApplicationInviteResource invite = newApplicationInviteResource().withApplication(applicationId).build();

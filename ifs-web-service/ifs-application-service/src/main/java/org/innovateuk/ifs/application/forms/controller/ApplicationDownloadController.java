@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -70,7 +71,7 @@ public class ApplicationDownloadController {
     private ProcessRoleResource impersonateLeadRole(List<ProcessRoleResource> processRoles, UserResource user) {
         if (user.hasRole(Role.MONITORING_OFFICER) || user.hasRole(Role.SUPPORTER)) {
                 return processRoles.stream()
-                        .filter(pr -> pr.getRole().equals(Role.LEADAPPLICANT))
+                        .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
                         .findFirst()
                         .orElseThrow(this::roleNotFound);
         } else {

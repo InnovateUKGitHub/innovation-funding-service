@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.SortedSet;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 @Component
 public class ApplicationTermsPartnerModelPopulator {
@@ -40,7 +40,7 @@ public class ApplicationTermsPartnerModelPopulator {
 
         long leadOrganisationId = userApplicationRoles
                 .stream()
-                .filter(pr -> pr.getRole() == LEADAPPLICANT)
+                .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
                 .findFirst()
                 .map(ProcessRoleResource::getOrganisationId)
                 .orElseThrow(() -> new IFSRuntimeException("Lead organisation not found for application " + application.getId()));

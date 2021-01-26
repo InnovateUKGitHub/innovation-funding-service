@@ -1,19 +1,13 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 buildscript {
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
     ext {
         serverContext = '/management'
     }
@@ -77,7 +71,7 @@ dependencies {
     compile project(':ifs-web-service:ifs-assessment-commons')
     compile project(':ifs-web-service:ifs-project-commons')
 
-    compile 'org.apache.commons:commons-collections4:4.3'
+    compile 'org.apache.commons:commons-collections4'
 
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
@@ -85,9 +79,9 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
-    testCompile "com.opencsv:opencsv:4.3.2"
+    testCompile "com.opencsv:opencsv"
 
-    testCompile 'org.assertj:assertj-core:3.9.0'
+    testCompile 'org.assertj:assertj-core'
 
 }
 

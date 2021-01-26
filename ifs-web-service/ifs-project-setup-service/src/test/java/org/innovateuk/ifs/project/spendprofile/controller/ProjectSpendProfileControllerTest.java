@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -60,8 +60,6 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -316,7 +314,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(1L)
                 .withOrganisation(1L)
-                .withRole(PARTNER)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId)
@@ -660,7 +658,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(1L)
                 .withOrganisation(1L)
-                .withRole(PARTNER)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
                 .build(1);
 
         OrganisationResource organisation = newOrganisationResource().withId(organisationId)
@@ -732,13 +730,13 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         List<ProjectUserResource> projectUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(PARTNER)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
                 .withOrganisation(organisationId)
                 .build(1);
 
         List<ProjectUserResource> leadUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(LEADAPPLICANT)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .withOrganisation(organisationId)
                 .build(1);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -755,7 +753,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileResource spendProfileResource = newSpendProfileResource().build();
 
-        List<Role> roleResources = singletonList(PARTNER);
+        List<Role> roleResources = singletonList(Role.APPLICANT);
 
         loggedInUser.setRoles(roleResources);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
@@ -803,13 +801,13 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         List<ProjectUserResource> projectUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(PARTNER)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
                 .withOrganisation(organisationId)
                 .build(1);
 
         List<ProjectUserResource> leadUserResources = newProjectUserResource()
                 .withUser(1L)
-                .withRole(LEADAPPLICANT)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .withOrganisation(organisationId)
                 .build(1);
         ProjectTeamStatusResource teamStatus = buildProjectTeamStatusResource();
@@ -826,7 +824,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileResource spendProfileResource = newSpendProfileResource().build();
 
-        List<Role> roleResources = singletonList(PARTNER);
+        List<Role> roleResources = singletonList(Role.APPLICANT);
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(organisationId)).thenReturn(partnerOrganisations.get(0));
@@ -960,7 +958,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(1L)
                 .withOrganisation(1L)
-                .withRole(PARTNER)
+                .withRole(ProjectParticipantRole.PROJECT_PARTNER)
                 .build(1);
 
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));

@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
@@ -135,7 +134,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(Role.getByName(roleType.getName())))
+                        .withRoleGlobal(Role.getByName(roleType.getName()))
                         .build());
         serviceCall.run();
     }

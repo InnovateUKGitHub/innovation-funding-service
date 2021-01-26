@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertFalse;
@@ -212,7 +211,8 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
 
     @Test
     public void findOrganisationMatch_knowledgeBaseOrganisationShouldMatchWhenMatchingOrganisationIsFound() {
-        when(organisationRepositoryMock.findByNameOrderById(eq(knowledgeBaseName))).thenReturn(asList(knowledgeBaseOrganisation));
+        when(organisationRepositoryMock.findByNameOrderById(eq(knowledgeBaseName)))
+                .thenReturn(Collections.singletonList(knowledgeBaseOrganisation));
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(knowledgeBaseOrganisationResource);
