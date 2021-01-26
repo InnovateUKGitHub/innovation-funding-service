@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.procurement.milestones;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.AbstractProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.ui.Model;
 
@@ -14,6 +15,8 @@ import static java.util.stream.Collectors.toMap;
 public abstract class AbstractProcurementMilestoneController {
 
     protected abstract String getView();
+
+    protected abstract AbstractProcurementMilestoneFormSaver getSaver();
 
     protected Map<String, ProcurementMilestoneForm> reorderMilestones(Map<String, ProcurementMilestoneForm> map) {
         return map.entrySet().stream()
@@ -31,4 +34,15 @@ public abstract class AbstractProcurementMilestoneController {
         return viewMilestonesPage(model, form, userResource);
     }
 
+
+    protected String addAjaxRow(Model model) {
+        ProcurementMilestonesForm form = new ProcurementMilestonesForm();
+        getSaver().addRowForm(form);
+        Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
+
+        model.addAttribute("form", form);
+        model.addAttribute("id", entry.getKey());
+        model.addAttribute("row", entry.getValue());
+        return "application/procurement-milestones :: ajax-milestone-row";
+    }
 }
