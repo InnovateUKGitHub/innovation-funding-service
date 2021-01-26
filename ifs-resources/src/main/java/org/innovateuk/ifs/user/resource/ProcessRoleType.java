@@ -6,27 +6,23 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Role defines database relations and a model to use client side and server side.
+ * Role defines roles that link an application and user.
  */
 public enum ProcessRoleType implements Identifiable {
 
-    LEADAPPLICANT               ( 1, "leadapplicant",   "Lead Applicant"),
-    COLLABORATOR                ( 2, "collaborator",    "Collaborator"),
-    ASSESSOR                    ( 3, "assessor",        "Assessor"),
-    PANEL_ASSESSOR              (16, "panel_assessor",             "Panel Assessor"),
-    INTERVIEW_ASSESSOR          (17, "interview_assessor",         "Interview Assessor"),
-    INTERVIEW_LEAD_APPLICANT    (18, "interview_lead_applicant",   "Interview Lead Applicant"),
-    KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser"),
-    SUPPORTER                   (24, "supporter",                    "Supporter");
+    LEADAPPLICANT               ( 1),
+    COLLABORATOR                ( 2),
+    ASSESSOR                    ( 3),
+    PANEL_ASSESSOR              (16),
+    INTERVIEW_ASSESSOR          (17),
+    INTERVIEW_LEAD_APPLICANT    (18),
+    KNOWLEDGE_TRANSFER_ADVISER  (23),
+    SUPPORTER                   (24);
 
     final long id;
-    final String name;
-    final String displayName;
 
-    ProcessRoleType(final long id, final String name, final String displayName) {
+    ProcessRoleType(final long id) {
         this.id = id;
-        this.name = name;
-        this.displayName = displayName;
     }
     public static Set<ProcessRoleType> applicantProcessRoles() {
         return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
