@@ -253,10 +253,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     private void setGrantClaimMaximums(CompetitionResource competition) {
         grantClaimMaximumService.revertToDefault(competition.getId()).getSuccess();
 
-        List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess()
-                .stream()
+        List<GrantClaimMaximumResource> maximumsNeedingALevel = grantClaimMaximumService.getGrantClaimMaximumByCompetitionId(competition.getId()).toOptionalIfNotFound().getSuccess()
+                .map(list ->
+                list.stream()
                 .filter(max -> max.getMaximum() == null)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()))
+                .orElse(emptyList());
         IntStream.range(0, maximumsNeedingALevel.size()).forEach(i -> {
             GrantClaimMaximumResource maximum = maximumsNeedingALevel.get(i);
             maximum.setMaximum(10 * i);
