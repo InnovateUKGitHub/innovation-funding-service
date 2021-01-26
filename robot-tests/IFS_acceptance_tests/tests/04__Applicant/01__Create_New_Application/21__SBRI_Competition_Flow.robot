@@ -534,6 +534,7 @@ the data is in the database correctly
 Generate spend profile
     confirm viability                   0
     confirm eligibility                 0
+    confirm milestone                   0
     the user clicks the button/link     css = .generate-spend-profile-main-button
 
 internal user generates the contract
