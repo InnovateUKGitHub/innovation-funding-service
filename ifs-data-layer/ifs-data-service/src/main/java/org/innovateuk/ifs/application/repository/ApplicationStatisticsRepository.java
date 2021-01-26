@@ -61,7 +61,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
 
     String ASSESSOR_FILTER =
             " FROM Application application " +
-                    " JOIN ProcessRole leadRole ON leadRole.applicationId = application.id AND leadRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
+                    " JOIN ProcessRole leadRole ON leadRole.applicationId = application.id AND leadRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT " +
                     " JOIN Organisation lead ON lead.id = leadRole.organisationId " +
                     " LEFT JOIN Assessment assessment ON assessment.target.id = application.id AND type(assessment) = Assessment " +
                     "WHERE application.competition.id = :competitionId " +
@@ -114,7 +114,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             // join on all applications for each invited assessor on the system
-            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
+            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.ASSESSOR " +
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND type(assessment) = Assessment " +
             "LEFT JOIN Application application ON assessment.target.id = application.id  " +
             "LEFT JOIN AssessmentPeriod assessmentPeriod ON assessmentPeriod.id = application.assessmentPeriod.id " +

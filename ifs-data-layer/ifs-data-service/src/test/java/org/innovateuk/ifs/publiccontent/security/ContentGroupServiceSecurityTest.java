@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.util.EnumSet;
 import java.util.function.Supplier;
 
-import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
@@ -89,7 +88,7 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(Role.getByName(roleType.getName()))
+                        .withRoleGlobal(Role.getByName(roleType.getName())
                         )
                         .build());
         serviceCall.run();

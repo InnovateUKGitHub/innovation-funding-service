@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.funding.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;

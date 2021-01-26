@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.core.domain;
+package org.innovateuk.ifs.project.core;
 
 import org.innovateuk.ifs.invite.domain.ParticipantRole;
 

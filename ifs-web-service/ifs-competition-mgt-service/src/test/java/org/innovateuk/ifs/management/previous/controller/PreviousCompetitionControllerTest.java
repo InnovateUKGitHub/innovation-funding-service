@@ -122,7 +122,7 @@ public class PreviousCompetitionControllerTest extends BaseControllerMockMVCTest
     public void markApplicationAsSuccessful() throws Exception {
 
         setLoggedInUser(newUserResource()
-                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withRoleGlobal(Role.IFS_ADMINISTRATOR)
                 .build());
 
         ProjectResource projectResource = newProjectResource()
