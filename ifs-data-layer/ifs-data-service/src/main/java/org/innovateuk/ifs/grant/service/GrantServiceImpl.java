@@ -71,11 +71,11 @@ public class GrantServiceImpl implements GrantService {
         long applicationId = grantProcess.getApplicationId();
         LOG.info("Sending project : " + applicationId);
 
-        Grant grant = grantMapper.mapToGrant(
-                projectRepository.findOneByApplicationId(applicationId)
-        );
+        Project project = projectRepository.findOneByApplicationId(applicationId);
 
-        ServiceResult<Void> syncParticipantsResult = syncParticipants(grant);
+        Grant grant = grantMapper.mapToGrant(project);
+
+        ServiceResult<Void> syncParticipantsResult = syncParticipants(grant, project);
 
         ScheduleResponse scheduleResponse;
         if (syncParticipantsResult.isSuccess()) {
@@ -93,11 +93,12 @@ public class GrantServiceImpl implements GrantService {
         return serviceSuccess(scheduleResponse);
     }
 
-    private ServiceResult<Void> syncParticipants(Grant grant) {
+    private ServiceResult<Void> syncParticipants(Grant grant, Project project) {
         ServiceResult<Void> syncCrmContactResults = serviceSuccess();
 
         for (Participant participant : grant.getParticipants()) {
-            syncCrmContactResults =  syncCrmContactResults.andOnSuccess(() -> crmService.syncCrmContact(participant.getContactId()));
+            syncCrmContactResults =  syncCrmContactResults
+                    .andOnSuccess(() -> crmService.syncCrmContact(participant.getContactId(), project.getId()));
         }
 
         return syncCrmContactResults;

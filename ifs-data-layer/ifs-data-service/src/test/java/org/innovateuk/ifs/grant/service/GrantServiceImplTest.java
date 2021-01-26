@@ -150,7 +150,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         grant.setParticipants(participants);
 
         when(projectRepository.findOneByApplicationId(APPLICATION_ID)).thenReturn(project);
-        when(crmService.syncCrmContact(anyLong())).thenReturn(serviceSuccess());
+        when(crmService.syncCrmContact(anyLong(), anyLong())).thenReturn(serviceSuccess());
         when(grantMapper.mapToGrant(project)).thenReturn(grant);
         when(grantEndpoint.send(grant)).thenReturn(serviceSuccess());
         when(grantProcessService.findOneReadyToSend()).thenReturn(of(process));
@@ -178,7 +178,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         verify(userService).evictUserCache("financeContactOrg1");
         verify(userService).evictUserCache("financeContactOrg2");
         verifyNoMoreInteractions(userService);
-        verify(crmService, times(5)).syncCrmContact(anyLong());
+        verify(crmService, times(5)).syncCrmContact(anyLong(), anyLong());
     }
 
     @Test
@@ -257,7 +257,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         grant.setParticipants(participants);
 
         when(projectRepository.findOneByApplicationId(APPLICATION_ID)).thenReturn(project);
-        when(crmService.syncCrmContact(anyLong())).thenReturn(
+        when(crmService.syncCrmContact(anyLong(), anyLong())).thenReturn(
                 serviceFailure(new Error("sync participants failed", HttpStatus.INTERNAL_SERVER_ERROR)));
         when(grantMapper.mapToGrant(project)).thenReturn(grant);
         when(grantProcessService.findOneReadyToSend()).thenReturn(of(process));
@@ -269,7 +269,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         ScheduleResponse scheduleResponse = result.getSuccess();
         assertThat(scheduleResponse.getResponse(), equalTo("Project send failed: " + APPLICATION_ID));
 
-        verify(crmService, times(1)).syncCrmContact(anyLong());
+        verify(crmService, times(1)).syncCrmContact(anyLong(), anyLong());
         verify(grantProcessService).findOneReadyToSend();
         verify(grantProcessService).sendFailed(anyLong(), anyString());
         verifyNoMoreInteractions(grantProcessService);
