@@ -382,6 +382,8 @@ public class ProjectFinanceChecksController {
                     && projectUser.getOrganisation().equals(organisationId)
         );
 
+        boolean showChangesLink = leadOrganisation && projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(true, projectResource, organisationResource).hasChanges();
+
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
                 lastPostByInternalUserQueryThreads,
@@ -397,7 +399,8 @@ public class ProjectFinanceChecksController {
                 competition.isProcurement(),
                 competition.isProcurementMilestones(),
                 competition.isKtp(),
-                leadOrganisation);
+                leadOrganisation,
+                showChangesLink);
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
