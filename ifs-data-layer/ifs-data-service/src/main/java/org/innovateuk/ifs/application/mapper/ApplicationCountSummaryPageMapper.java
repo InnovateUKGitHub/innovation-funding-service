@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static java.util.Optional.ofNullable;
-
 @Mapper(
         config = GlobalMapperConfig.class
 )

@@ -25,7 +25,7 @@ public class UserRegistrationResourceBuilderTest {
         String expectedPassword = "Passw0rd1357123";
         AddressResource expectedAddress = newAddressResource().build();
         String expectedEmail = "tom@poly.io";
-        List<Role> expectedRoles = asList(Role.COLLABORATOR, Role.APPLICANT);
+        List<Role> expectedRoles = asList(Role.ASSESSOR, Role.APPLICANT);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(expectedTitle)
@@ -58,8 +58,8 @@ public class UserRegistrationResourceBuilderTest {
         AddressResource[] expectedAddresses = newAddressResource().buildArray(2, AddressResource.class);
         String[] expectedEmails = {"tom@poly.io", "geoff@poly.io"};
         List<Role>[] expectedRoles = new List[]{
-                asList(Role.COLLABORATOR, Role.APPLICANT),
-                asList(Role.PARTNER, Role.INNOVATION_LEAD)
+                asList(Role.ASSESSOR, Role.APPLICANT),
+                asList(Role.SUPPORT, Role.INNOVATION_LEAD)
         };
 
         List<UserRegistrationResource> userRegistrationResources = newUserRegistrationResource()

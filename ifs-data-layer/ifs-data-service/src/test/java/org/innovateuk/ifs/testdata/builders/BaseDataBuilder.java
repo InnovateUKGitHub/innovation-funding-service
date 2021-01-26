@@ -97,6 +97,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.*;
@@ -400,7 +401,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccess(), pr -> pr.getRole() == LEADAPPLICANT).get()));
+                        getSuccess(), pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -441,7 +442,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             return processRoleRepository.findByUserAndApplicationId(userRepository.findById(user.getId()).get(),
                     application.getId())
                     .stream()
-                    .filter(x -> x.getRole() == ASSESSOR)
+                    .filter(x -> x.getRole() == ProcessRoleType.ASSESSOR)
                     .findFirst()
                     .get();
         });

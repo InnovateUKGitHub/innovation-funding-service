@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkHasAnyProcessRole;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -132,7 +133,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         ProcessRole processRole = newProcessRole()
                 .withOrganisation(organisation)
-                .withRole(COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .build();
 
         Application application = newApplication()
