@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
@@ -6,14 +6,6 @@ buildDocker.dependsOn prepareDockerInput
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-
-buildscript {
-    ext['thymeleaf.version'] = '3.0.8.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-}
 
 afterEvaluate {
     ext {
@@ -82,7 +74,7 @@ dependencies {
     testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
-    testCompile "com.opencsv:opencsv:4.3.2"
+    testCompile "com.opencsv:opencsv"
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
