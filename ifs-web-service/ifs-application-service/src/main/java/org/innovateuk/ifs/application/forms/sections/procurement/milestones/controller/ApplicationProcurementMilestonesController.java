@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller;
 
-import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.ApplicationProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
+import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -29,7 +28,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -180,15 +178,8 @@ public class ApplicationProcurementMilestonesController extends AbstractProcurem
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
                              @PathVariable long sectionId) {
-        ProcurementMilestonesForm form = new ProcurementMilestonesForm();
-        saver.addRowForm(form);
-        Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
-
-        model.addAttribute("form", form);
         model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
-        model.addAttribute("id", entry.getKey());
-        model.addAttribute("row", entry.getValue());
-        return "application/procurement-milestones :: ajax-milestone-row";
+        return addAjaxRow(model);
     }
 
     private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {
@@ -211,5 +202,10 @@ public class ApplicationProcurementMilestonesController extends AbstractProcurem
     @Override
     protected String getView() {
         return VIEW;
+    }
+
+    @Override
+    public ApplicationProcurementMilestoneFormSaver getSaver() {
+        return saver;
     }
 }

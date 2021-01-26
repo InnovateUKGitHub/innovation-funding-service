@@ -25,6 +25,7 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -50,7 +51,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -84,10 +85,10 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
@@ -183,7 +184,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ProcessRole leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
-                withRole(Role.LEADAPPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -345,12 +346,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ProcessRole partnerProcessRole = newProcessRole().
                 withOrganisationId(partner.getId()).
-                withRole(Role.COLLABORATOR).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 withUser(newUser().build()).
                 build();
 
         ProcessRole ktaRole = newProcessRole().
-                withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).
+                withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).
                 withUser(newUser().build()).
                 build();
 
@@ -653,7 +654,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
-                assertEquals(Role.PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
+                assertEquals(ProjectParticipantRole.PROJECT_PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
 

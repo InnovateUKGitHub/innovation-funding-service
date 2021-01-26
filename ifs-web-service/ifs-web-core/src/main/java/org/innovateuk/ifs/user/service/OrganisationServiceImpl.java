@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -61,8 +61,8 @@ public class OrganisationServiceImpl implements OrganisationService {
         Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName())
-                        || uar.getRoleName().equals(Role.COLLABORATOR.getName()))
+                .filter(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT
+                        || uar.getRole() == ProcessRoleType.COLLABORATOR)
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .collect(Collectors.toCollection(supplier));
     }
@@ -82,7 +82,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Override
     public Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName()))
+                .filter(uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT)
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }

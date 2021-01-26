@@ -25,6 +25,7 @@ import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
 import org.innovateuk.ifs.supporter.resource.SupporterState;
 import org.innovateuk.ifs.supporter.service.SupporterAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -154,7 +155,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withType(SectionType.GENERAL, SectionType.FINANCE, SectionType.KTP_ASSESSMENT)
                 .build(3);
 
-        ProcessRoleResource processRole = newProcessRoleResource().withRole(Role.LEADAPPLICANT).withUser(user).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
 
         Map<Long, BigDecimal> scores = new HashMap<>();
         scores.put(1L, new BigDecimal("9"));
@@ -253,7 +254,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .build(1);
 
         ProcessRoleResource processRole = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER, Role.ASSESSOR)
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER, ProcessRoleType.ASSESSOR)
                 .withUser(user)
                 .build();
 

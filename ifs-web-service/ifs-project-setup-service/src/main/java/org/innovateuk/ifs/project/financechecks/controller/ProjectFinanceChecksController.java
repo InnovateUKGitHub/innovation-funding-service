@@ -21,6 +21,7 @@ import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibility
 import org.innovateuk.ifs.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
 import org.innovateuk.ifs.project.finance.resource.*;
@@ -43,7 +44,6 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -379,7 +379,7 @@ public class ProjectFinanceChecksController {
         List<ThreadViewModel> lastPostByInternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER);
 
         boolean leadOrganisation = projectUserResources.stream().anyMatch(projectUser ->
-            projectUser.getRole().equals(Role.PROJECT_MANAGER.getId())
+            projectUser.getRole() == ProjectParticipantRole.PROJECT_MANAGER
                     && projectUser.getOrganisation().equals(organisationId)
         );
 
