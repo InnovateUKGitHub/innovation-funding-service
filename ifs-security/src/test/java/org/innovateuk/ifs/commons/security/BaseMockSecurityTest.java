@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.util.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -264,7 +263,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
         asList(Role.values()).forEach(role -> {
 
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
+            UserResource userWithRole = newUserResource().withRoleGlobal(role).build();
             setLoggedInUser(userWithRole);
 
             if (supportedRoles.contains(role)) {

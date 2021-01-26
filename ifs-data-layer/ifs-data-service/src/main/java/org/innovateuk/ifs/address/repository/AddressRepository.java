@@ -3,8 +3,6 @@ package org.innovateuk.ifs.address.repository;
 import org.innovateuk.ifs.address.domain.Address;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.Optional;
-
 /**
  * This interface is used to generate Spring Data Repositories.
  * For more info:

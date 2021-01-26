@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
@@ -32,14 +31,14 @@ public class QuestionSetupAddAndRemoveServiceSecurityTest extends BaseServiceSec
 
     @Test
     public void allServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(COMP_ADMIN).build());
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteQuestionInCompetition(1L);
     }
 
     @Test
     public void allServiceFunctionsShouldBeAuthorizedForProjectFinance() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(PROJECT_FINANCE).build());
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteQuestionInCompetition(1L);
     }

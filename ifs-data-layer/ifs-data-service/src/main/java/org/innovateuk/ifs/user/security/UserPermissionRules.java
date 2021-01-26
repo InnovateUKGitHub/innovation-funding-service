@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.disjoint;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -66,11 +66,11 @@ public class UserPermissionRules {
     @Autowired
     private ApplicationSecurityHelper applicationSecurityHelper;
 
-    private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
+    private static List<ProcessRoleType> CONSORTIUM_ROLES = asList(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR);
 
     private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole());
 
-    private static List<Role> ASSESSOR_ROLES = asList(ASSESSOR, PANEL_ASSESSOR, INTERVIEW_ASSESSOR);
+    private static List<ProcessRoleType> ASSESSOR_ROLES = asList(ProcessRoleType.ASSESSOR, ProcessRoleType.PANEL_ASSESSOR, ProcessRoleType.INTERVIEW_ASSESSOR);
 
     private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> ASSESSOR_ROLES.contains(role.getRole());
 
@@ -141,7 +141,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Comp admins and project finance can view assessors")
     public boolean compAdminAndProjectFinanceCanViewAssessors(UserPageResource usersToView, UserResource user) {
-        return usersToView.getContent().stream().allMatch(u -> u.hasAnyRoles(ASSESSOR_ROLES)) &&
+        return usersToView.getContent().stream().allMatch(u -> u.hasRole(ASSESSOR)) &&
                 user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE);
     }
 
