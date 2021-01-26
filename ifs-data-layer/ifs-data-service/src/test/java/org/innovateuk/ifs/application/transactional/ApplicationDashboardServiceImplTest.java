@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.projectteam.domain.PendingPartnerProgress;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +63,7 @@ public class ApplicationDashboardServiceImplTest {
             .build();
     private static final long USER_ID = 1L;
     private User user = newUser().withId(USER_ID).build();
-    private ProcessRole processRole = newProcessRole().withRole(Role.LEADAPPLICANT).withUser(user).build();
+    private ProcessRole processRole = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT).withUser(user).build();
 
     @Test
     public void getApplicantDashboard() {

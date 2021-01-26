@@ -32,7 +32,7 @@ public class UserResourceBuilderTest {
         UserStatus expectedStatus = ACTIVE;
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
-        List<Role> expectedRoles = asList(Role.APPLICANT, Role.COLLABORATOR);
+        List<Role> expectedRoles = asList(Role.APPLICANT, Role.ASSESSOR);
         Long expectedProfileId = 1L;
         Set<Long> expectedTermsAndConditionsIds = new LinkedHashSet<>(asList(1L, 2L));
 
@@ -79,7 +79,7 @@ public class UserResourceBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<List<Role>> expectedRoles = asList( asList(Role.APPLICANT, Role.COLLABORATOR), asList(Role.PARTNER, Role.PROJECT_MANAGER) );
+        List<List<Role>> expectedRoles = asList( asList(Role.APPLICANT, Role.ASSESSOR), asList(Role.SUPPORT, Role.INNOVATION_LEAD) );
         Long[] expectedProfileIds = {1L, 2L};
         Set<Long>[] expectedTermsAndConditionsIds = new Set[] {(new LinkedHashSet<>(asList(1L, 2L))), new
                 LinkedHashSet<>(asList(3L, 4L))

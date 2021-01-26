@@ -2,7 +2,8 @@ package org.innovateuk.ifs.analytics.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -104,7 +105,7 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
     @Test
     public void getApplicationRolesById() throws Exception {
         final long applicationId = 12L;
-        final Role role = Role.LEADAPPLICANT;
+        final ProcessRoleType role = ProcessRoleType.LEADAPPLICANT;
 
         when(googleAnalyticsDataLayerServiceMock.getRolesByApplicationIdForCurrentUser(applicationId))
                 .thenReturn(serviceSuccess(singletonList(role)));
@@ -117,7 +118,7 @@ public class GoogleAnalyticsDataLayerControllerTest extends BaseControllerMockMV
     @Test
     public void getProjectRolesById() throws Exception {
         final long projectId = 112L;
-        final List<Role> roles = asList(Role.PARTNER, Role.PROJECT_MANAGER);
+        final List<ProjectParticipantRole> roles = asList(ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_MANAGER);
 
         when(googleAnalyticsDataLayerServiceMock.getRolesByProjectIdForCurrentUser(projectId))
                 .thenReturn(serviceSuccess(roles));

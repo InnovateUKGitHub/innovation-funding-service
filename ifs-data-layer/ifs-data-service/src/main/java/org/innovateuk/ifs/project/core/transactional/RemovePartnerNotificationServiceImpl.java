@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.core.transactional.RemovePartnerNotificationServiceImpl.Notifications.REMOVE_PROJECT_ORGANISATION;
 
 @Service

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -155,7 +156,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(knowledgeTransferAdvisor);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER).build(1);
 
         when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(true));
@@ -185,7 +186,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(ktaUser);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
                 .build(1);
 
         when(processRoleRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))
@@ -212,7 +213,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(knowledgeTransferAdvisor);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.APPLICANT)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .build(1);
 
         when(processRoleRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId()))
@@ -236,7 +237,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     public void projectSetupHiddenWhenNoProjectsForKTA() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
                 .build(1);
 
         when(processRoleRestService.findProcessRoleByUserId(this.knowledgeTransferAdvisor.getId()))

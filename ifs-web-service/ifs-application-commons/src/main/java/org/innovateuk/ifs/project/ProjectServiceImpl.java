@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -19,7 +20,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -102,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectUserResource> getProjectUsersWithPartnerRole(long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
-        return simpleFilter(projectUsers, pu -> PARTNER.getId() == pu.getRole());
+        return simpleFilter(projectUsers, pu -> ProjectParticipantRole.PROJECT_PARTNER == pu.getRole());
     }
 
     @Override

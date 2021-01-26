@@ -4,7 +4,7 @@ import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 
 import java.util.ArrayList;
