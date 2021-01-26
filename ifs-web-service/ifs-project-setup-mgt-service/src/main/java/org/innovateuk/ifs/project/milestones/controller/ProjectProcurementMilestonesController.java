@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.milestones.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
@@ -24,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -149,8 +151,30 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         return viewProjectMilestones(projectId, organisationId, true, user, model, form);
     }
 
-    private Supplier<String> redirectToViewMilestones(long projectId, long organisationId) {
-        return () -> String.format("redirect:/project/%d/finance-check/organisation/%d/procurement-milestones", projectId, organisationId);
+    @PostMapping("/remove-row/{rowId}")
+    public @ResponseBody
+    JsonNode ajaxRemoveRow(UserResource user,
+                           @PathVariable long projectId,
+                           @PathVariable long organisationId,
+                           @PathVariable String rowId) {
+        saver.removeRow(rowId);
+        return new ObjectMapper().createObjectNode();
+    }
+
+    @PostMapping("/add-row")
+    public String ajaxAddRow(Model model,
+                             UserResource userResource,
+                             @PathVariable long projectId,
+                             @PathVariable long organisationId) {
+        ProcurementMilestonesForm form = new ProcurementMilestonesForm();
+        saver.addRowForm(form);
+        Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
+
+        model.addAttribute("form", form);
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, true));
+        model.addAttribute("id", entry.getKey());
+        model.addAttribute("row", entry.getValue());
+        return "application/procurement-milestones :: ajax-milestone-row";
     }
 
     private Supplier<String> redirectToFinanceChecks(long projectId) {
