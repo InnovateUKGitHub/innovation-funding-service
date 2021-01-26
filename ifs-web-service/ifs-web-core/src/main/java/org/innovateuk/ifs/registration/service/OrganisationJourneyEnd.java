@@ -102,8 +102,7 @@ public class OrganisationJourneyEnd {
         if (localDateString != null) {
             orgResource.setDateOfIncorporation(LocalDate.parse(localDateString, DATE_PATTERN));
         }
-
-        OrganisationResource orgresult =  organisationRestService.createOrMatch(orgResource).getSuccess();
+       organisationRestService.createOrMatch(orgResource);
     }
 
     private String handleExistingUser(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
