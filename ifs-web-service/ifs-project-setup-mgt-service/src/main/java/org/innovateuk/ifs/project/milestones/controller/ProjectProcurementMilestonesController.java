@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.forms.sections.procurement.milestones.popu
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
 import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
@@ -28,6 +29,8 @@ import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones")
+@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
+@SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "project finance can update procurement milestones.")
 public class ProjectProcurementMilestonesController extends AbstractProcurementMilestoneController {
 
     private static final String VIEW = "milestones/project-procurement-milestones";
@@ -55,8 +58,8 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
 
     @Autowired
     private ProjectFinanceRestService projectFinanceRestService;
+
     @GetMapping
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     public String viewMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
                                  @RequestParam(name = "editMilestones", defaultValue = "false") boolean editMilestones,
@@ -72,7 +75,6 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         return viewProjectSetupMilestones(model, userResource, form);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "approve")
     public String approvePaymentMilestones(@PathVariable long projectId,
                                            @PathVariable long organisationId,
