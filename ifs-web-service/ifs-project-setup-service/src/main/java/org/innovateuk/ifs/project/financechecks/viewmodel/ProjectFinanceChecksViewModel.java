@@ -28,6 +28,7 @@ public class ProjectFinanceChecksViewModel {
     private boolean isAcademic;
     private boolean loanCompetition;
     private final boolean procurementCompetition;
+    private final boolean procurementMilestonesCompetition;
     private final boolean ktpCompetition;
     private final boolean leadOrganisation;
 
@@ -44,6 +45,7 @@ public class ProjectFinanceChecksViewModel {
                                          boolean isAcademic,
                                          boolean loanCompetition,
                                          boolean procurementCompetition,
+                                         boolean procurementMilestonesCompetition,
                                          boolean ktpCompetition,
                                          boolean leadOrganisation) {
         this.projectId = project.getId();
@@ -61,6 +63,7 @@ public class ProjectFinanceChecksViewModel {
         this.isAcademic = isAcademic;
         this.loanCompetition = loanCompetition;
         this.procurementCompetition = procurementCompetition;
+        this.procurementMilestonesCompetition = procurementMilestonesCompetition;
         this.ktpCompetition = ktpCompetition;
         this.leadOrganisation = leadOrganisation;
     }
@@ -200,6 +203,10 @@ public class ProjectFinanceChecksViewModel {
 
     public boolean isProcurementCompetition() {
         return procurementCompetition;
+    }
+
+    public boolean isProcurementMilestonesCompetition() {
+        return procurementMilestonesCompetition;
     }
 
     public boolean isKtpCompetition() {

@@ -395,6 +395,7 @@ public class ProjectFinanceChecksController {
                 PROJECT_FINANCE_CHECKS_BASE_URL, competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum()),
                 competition.isLoan(),
                 competition.isProcurement(),
+                competition.isProcurementMilestones(),
                 competition.isKtp(),
                 leadOrganisation);
     }
