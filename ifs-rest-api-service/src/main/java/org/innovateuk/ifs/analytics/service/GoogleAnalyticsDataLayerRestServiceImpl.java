@@ -2,13 +2,15 @@ package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.roleListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleTypeListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectParticipantRoleListType;
 
 @Service
 public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService implements GoogleAnalyticsDataLayerRestService {
@@ -49,16 +51,16 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<List<Role>> getRolesByApplicationId(long applicationId) {
+    public RestResult<List<ProcessRoleType>> getRolesByApplicationId(long applicationId) {
         return getWithRestResult(format("%s/application/%d/user-roles", ANALYTICS_BASE_URL, applicationId),
-                                 roleListType()
+                processRoleTypeListType()
         );
     }
 
     @Override
-    public RestResult<List<Role>> getRolesByProjectId(long projectId) {
+    public RestResult<List<ProjectParticipantRole>> getRolesByProjectId(long projectId) {
         return getWithRestResult(format("%s/project/%d/user-roles", ANALYTICS_BASE_URL, projectId),
-                                 roleListType());
+                projectParticipantRoleListType());
     }
 
     @Override

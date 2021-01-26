@@ -111,7 +111,7 @@ Subcontracting costs should not display in project costs
 Travel and subsistence cost calculations
     [Documentation]  IFS-7790  IFS-8156
     When the user enters T&S costs                                           Supervisor  1  Knowledge Base biweekly travel  30  185
-    And the user clicks the button/link                                      name = add_cost
+    And the user clicks the button/link                                      name = add_row
     And the user enters T&S costs                                            Associate  2  3 trips to Glasgow  3  200
     Then the user should see the right T&S cost summary and total values
 

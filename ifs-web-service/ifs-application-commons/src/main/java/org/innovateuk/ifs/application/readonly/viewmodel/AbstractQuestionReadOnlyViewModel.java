@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -26,7 +26,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();
-        this.lead = data.getUsersProcessRole().map(role -> Role.LEADAPPLICANT == role.getRole()).orElse(false);
+        this.lead = data.getUsersProcessRole().map(role -> ProcessRoleType.LEADAPPLICANT == role.getRole()).orElse(false);
         Optional<QuestionStatusResource> completeStatus = data.getQuestionToQuestionStatus()
                 .get(question.getId())
                 .stream()

@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.controlle
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller.ApplicationProcurementMilestonesController;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.LabourForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
@@ -48,6 +51,7 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 @SecuredBySpring(value = "YOUR_PROJECT_COSTS_APPLICANT", description = "Applicants can all fill out the Your project costs section of the application.")
 public class YourProjectCostsController extends AsyncAdaptor {
     private static final String VIEW = "application/sections/your-project-costs/your-project-costs";
+    private static final Log LOG = LogFactory.getLog(ApplicationProcurementMilestonesController.class);
 
     @Autowired
     private ApplicationYourProjectCostsFormPopulator formPopulator;
@@ -94,7 +98,11 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        @PathVariable long sectionId,
                                        @ModelAttribute("form") YourProjectCostsForm form,
                                        BindingResult bindingResult) {
-        saver.save(form, applicationId, user);
+        try {
+            saver.save(form, applicationId, user);
+        } catch (Exception e) {
+            LOG.error(e);
+        }
         return redirectToYourFinances(applicationId);
     }
 
@@ -132,26 +140,26 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return String.format("redirect:/application/%d/form/your-project-costs/organisation/%d/section/%d", applicationId, organisationId, sectionId);
     }
 
-    @PostMapping(params = "remove_cost")
+    @PostMapping(params = "remove_row")
     public String removeRowPost(Model model,
                                 UserResource user,
                                 @PathVariable long applicationId,
                                 @PathVariable long organisationId,
                                 @PathVariable long sectionId,
                                 @ModelAttribute("form") YourProjectCostsForm form,
-                                @RequestParam("remove_cost") String removeId) {
+                                @RequestParam("remove_row") String removeId) {
         saver.removeRowFromForm(form, removeId);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
     }
 
-    @PostMapping(params = "add_cost")
+    @PostMapping(params = "add_row")
     public String addRowPost(Model model,
                              UserResource user,
                              @PathVariable long applicationId,
                              @PathVariable long organisationId,
                              @PathVariable long sectionId,
                              @ModelAttribute("form") YourProjectCostsForm form,
-                             @RequestParam("add_cost") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
+                             @RequestParam("add_row") FinanceRowType rowType) throws InstantiationException, IllegalAccessException {
 
         saver.addRowForm(form, rowType);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);

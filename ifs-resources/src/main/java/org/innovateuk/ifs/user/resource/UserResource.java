@@ -194,7 +194,7 @@ public class UserResource implements Serializable {
 
     @JsonIgnore
     public boolean isExternalUser() {
-        return CollectionUtils.containsAny(externalApplicantRoles(), roles);
+        return CollectionUtils.containsAny(externalRoles(), roles);
     }
 
     public boolean hasAnyRoles(Role... acceptedRoles) {

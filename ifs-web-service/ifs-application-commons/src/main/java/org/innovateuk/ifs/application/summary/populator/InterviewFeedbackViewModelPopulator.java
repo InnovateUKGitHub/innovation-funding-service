@@ -5,6 +5,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -44,7 +45,7 @@ public class InterviewFeedbackViewModelPopulator {
                 competitionName,
                 responseFilename,
                 feedbackFilename,
-                role.map(ProcessRoleResource::getRole).map(Role::isLeadApplicant).orElse(false),
+                role.map(ProcessRoleResource::getRole).map(ProcessRoleType::isLeadApplicant).orElse(false),
                 isFeedbackReleased,
                 userResource.hasRole(Role.ASSESSOR) || userResource.hasAnyRoles(Role.internalRoles())
         );

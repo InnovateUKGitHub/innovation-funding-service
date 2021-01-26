@@ -41,7 +41,6 @@ afterEvaluate {
 ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 buildDocker.dependsOn prepareDockerInput
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
@@ -200,7 +199,7 @@ task syncUser() {
                 commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-user.sh', project.getProperty('email')
             }
         } else {
-            throw new GradleException('Please enter a valid email. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com')
+            throw new GradleException('Please enter comma separated valid emails. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com,troy.ward@gmail.com')
         }
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isExternalFinanceUser;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 

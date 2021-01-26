@@ -20,6 +20,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -49,7 +50,8 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -157,7 +159,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withCompetitionStatus(CLOSED)
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, ProcessRoleType.ASSESSOR)
                         .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
                         .buildArray(4, ProcessRole.class))
                 .build();
@@ -205,7 +207,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withCompetitionStatus(CLOSED)
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COLLABORATOR, COLLABORATOR, COLLABORATOR, COMP_ADMIN)
+                        .withRole(COLLABORATOR, COLLABORATOR, COLLABORATOR, ProcessRoleType.ASSESSOR)
                         .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
                         .buildArray(4, ProcessRole.class))
                 .build();
@@ -253,7 +255,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, ProcessRoleType.ASSESSOR)
                         .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
                         .buildArray(4, ProcessRole.class))
                 .build();
@@ -303,7 +305,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COMP_ADMIN, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR )
+                        .withRole(ProcessRoleType.ASSESSOR, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR )
                         .withOrganisationId(orgIds)
                         .buildArray(7, ProcessRole.class))
                 .build();

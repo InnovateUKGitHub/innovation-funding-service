@@ -1,13 +1,20 @@
 package org.innovateuk.ifs.application.forms.sections.procurement.milestones.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestoneForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ApplicationProcurementMilestoneViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.ApplicationProcurementMilestoneFormSaver;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.validator.ProcurementMilestoneFormValidator;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.procurement.milestone.service.ApplicationProcurementMilestoneRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -21,12 +28,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
 @Controller
@@ -35,6 +40,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @SecuredBySpring(value = "UPDATE_PROCUREMENT_MILESTONE", description = "Applicants can update procurement milestones.")
 public class ApplicationProcurementMilestonesController {
     private static final String VIEW = "application/sections/procurement-milestones/application-procurement-milestones";
+    private static final Log LOG = LogFactory.getLog(ApplicationProcurementMilestonesController.class);
 
     @Autowired
     private ProcurementMilestoneFormPopulator formPopulator;
@@ -54,6 +60,12 @@ public class ApplicationProcurementMilestonesController {
     @Autowired
     private ApplicationProcurementMilestoneViewModelPopulator viewModelPopulator;
 
+    @Autowired
+    private ProcurementMilestoneFormValidator validator;
+
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser', 'supporter', 'assessor')")
     @SecuredBySpring(value = "VIEW_PROCUREMENT_MILESTONE", description = "Everyone view the milestone page, if they have permissions defined in data layer.")
@@ -71,8 +83,13 @@ public class ApplicationProcurementMilestonesController {
     public String saveMilestones(@PathVariable long applicationId,
                                  @PathVariable long organisationId,
                                  @PathVariable long sectionId,
-                                 @ModelAttribute("form") ProcurementMilestonesForm form) {
-        saver.save(form, applicationId, organisationId).getSuccess();
+                                 @ModelAttribute("form") ProcurementMilestonesForm form,
+                                 BindingResult bindingResult) {
+        try {
+            saver.save(form, applicationId, organisationId).getSuccess();
+        } catch (Exception e) {
+            LOG.error(e);
+        }
         return redirectToYourFinances(applicationId);
     }
 
@@ -85,6 +102,7 @@ public class ApplicationProcurementMilestonesController {
                            @Valid @ModelAttribute("form") ProcurementMilestonesForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler) {
+        validator.validate(form, applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess(), validationHandler);
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewMilestones(model, form, user, applicationId, organisationId, sectionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -128,21 +146,54 @@ public class ApplicationProcurementMilestonesController {
                              @PathVariable long organisationId,
                              @PathVariable long sectionId,
                              @ModelAttribute("form") ProcurementMilestonesForm form) {
-
         saver.addRowForm(form);
         return viewMilestones(model, form, user, applicationId, organisationId, sectionId);
     }
 
-    private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {
-        model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
-        form.setMilestones(reorderMilestones(form.getMilestones()));
-        return VIEW;
+    @PostMapping("auto-save")
+    public @ResponseBody
+    JsonNode ajaxAutoSave(UserResource user,
+                          @PathVariable long applicationId,
+                          @PathVariable long organisationId,
+                          @RequestParam String field,
+                          @RequestParam String value) {
+        Optional<Long> fieldId = saver.autoSave(field, value, applicationId, organisationId);
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        fieldId.ifPresent(id -> node.put("fieldId", id));
+        return node;
     }
 
-    private Map<String, ProcurementMilestoneForm> reorderMilestones(Map<String, ProcurementMilestoneForm> map) {
-        return map.entrySet().stream()
-                .sorted(Comparator.comparing(entry -> entry.getValue().getMonth(), Comparator.nullsLast(Integer::compareTo)))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    @PostMapping("remove-row/{rowId}")
+    public @ResponseBody
+    JsonNode ajaxRemoveRow(UserResource user,
+                           @PathVariable long applicationId,
+                           @PathVariable String rowId) {
+        saver.removeRow(rowId);
+        return new ObjectMapper().createObjectNode();
+    }
+
+    @PostMapping("add-row")
+    public String ajaxAddRow(Model model,
+                             UserResource user,
+                             @PathVariable long applicationId,
+                             @PathVariable long organisationId,
+                             @PathVariable long sectionId) {
+        ProcurementMilestonesForm form = new ProcurementMilestonesForm();
+        saver.addRowForm(form);
+        Map.Entry<String, ProcurementMilestoneForm> entry = form.getMilestones().entrySet().stream().findFirst().get();
+
+        model.addAttribute("form", form);
+        model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
+        model.addAttribute("id", entry.getKey());
+        model.addAttribute("row", entry.getValue());
+        return "application/procurement-milestones :: ajax-milestone-row";
+    }
+
+    private String viewMilestones(Model model, ProcurementMilestonesForm form, UserResource user, long applicationId, long organisationId, long sectionId) {
+        model.addAttribute("model", viewModelPopulator.populate(user, applicationId, organisationId, sectionId));
+        form.reorderMilestones();
+        return VIEW;
     }
 
     private long getProcessRoleId(long applicationId, long userId) {

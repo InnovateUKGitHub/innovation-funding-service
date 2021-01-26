@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceRowsTypesRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;

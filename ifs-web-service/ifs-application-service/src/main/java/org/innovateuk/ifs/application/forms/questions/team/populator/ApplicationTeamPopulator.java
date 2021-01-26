@@ -17,8 +17,8 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -39,7 +39,8 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 
 @Component
 public class ApplicationTeamPopulator {
@@ -103,7 +104,7 @@ public class ApplicationTeamPopulator {
         ApplicationKtaInviteResource ktaInvite = null;
 
         Optional<ProcessRoleResource> kta = processRoles.stream()
-                .filter(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER).findAny();
+                .filter(pr -> pr.getRole().isKta()).findAny();
 
         if (kta.isPresent()) {
             ktaProcessRole = kta.get();

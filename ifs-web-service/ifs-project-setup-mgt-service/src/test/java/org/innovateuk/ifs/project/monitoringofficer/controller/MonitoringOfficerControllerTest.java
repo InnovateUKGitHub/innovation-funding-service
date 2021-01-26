@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -188,7 +187,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         UserResource userResource = newUserResource()
                 .withId(999L)
                 .withEmail("test@test.test")
-                .withRolesGlobal(singletonList(MONITORING_OFFICER))
+                .withRoleGlobal(MONITORING_OFFICER)
                 .build();
         when(userRestService.retrieveUserById(999L)).thenReturn(restSuccess(userResource));
         MonitoringOfficerAssignRoleViewModel viewModel = new MonitoringOfficerAssignRoleViewModel(userResource.getId(),

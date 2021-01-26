@@ -5,7 +5,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -69,7 +69,7 @@ public class OrganisationDetailsModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(final List<ProcessRoleResource> userApplicationRoles, List<OrganisationResource> organisations) {
 
         Optional<ProcessRoleResource> leadApplicantRole =
-                simpleFindFirst(userApplicationRoles, uar -> uar.getRoleName().equals(Role.LEADAPPLICANT.getName()));
+                simpleFindFirst(userApplicationRoles, uar -> uar.getRole() == ProcessRoleType.LEADAPPLICANT);
 
         return leadApplicantRole.flatMap(role -> simpleFindFirst(organisations, org -> org.getId().equals(role.getOrganisationId())));
     }

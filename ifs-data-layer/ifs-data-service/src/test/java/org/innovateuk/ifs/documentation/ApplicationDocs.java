@@ -44,7 +44,8 @@ public class ApplicationDocs {
             fieldWithPath("companyPrimaryFocus").description("Enum indicating the sector of business of the company applying").optional(),
             fieldWithPath("event").description("Event indicating the current status of the application").optional(),
             fieldWithPath("lastStateChangeDate").description("Date when the application state was last modified").optional(),
-            fieldWithPath("fundingDecision").description("The funding decision of the application").optional()
+            fieldWithPath("fundingDecision").description("The funding decision of the application").optional(),
+            fieldWithPath("assessmentPeriodId").description("Assessment period associated").optional(),
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {
@@ -70,5 +71,6 @@ public class ApplicationDocs {
             .withInnovationArea(new InnovationAreaResource())
             .withLeadOrganisationId(1L)
             .withNoInnovationAreaApplicable(false)
-            .withCollaborationLevel(SINGLE_OR_COLLABORATIVE);
+            .withCollaborationLevel(SINGLE_OR_COLLABORATIVE)
+            .withAssessmentPeriod(null);
 }

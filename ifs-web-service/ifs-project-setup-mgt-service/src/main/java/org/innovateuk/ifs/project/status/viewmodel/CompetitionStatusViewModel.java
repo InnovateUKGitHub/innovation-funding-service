@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.status.viewmodel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
-import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.status.viewmodel.BaseCompetitionStatusTableViewModel;
 
 import java.util.List;

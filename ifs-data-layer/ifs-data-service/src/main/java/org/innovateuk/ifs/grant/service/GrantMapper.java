@@ -35,7 +35,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 

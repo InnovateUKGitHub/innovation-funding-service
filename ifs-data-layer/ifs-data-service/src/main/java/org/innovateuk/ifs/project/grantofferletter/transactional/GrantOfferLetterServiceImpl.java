@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.docusign.resource.DocusignRequest.DocusignRequestBuilder.aDocusignRequest;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
