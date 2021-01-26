@@ -209,8 +209,8 @@
 
         </th:block>
 
-        <a th:if="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
-        <a th:unless="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-checks(projectId=${model.projectId})}">Return to finance checks</a>
+        <a th:if="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to Eligibility</a>
+        <a th:unless="${model.internal}" class="govuk-button govuk-button--secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to Eligibility</a>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
