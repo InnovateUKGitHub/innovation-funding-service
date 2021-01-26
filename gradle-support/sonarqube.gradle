@@ -29,7 +29,8 @@ sonarqube {
                 "**/AssessmentInviteServiceImpl.java," +
                 "**/FinanceReviewerServiceImpl.java," +
                 "**/ApplicationFinanceServiceImpl.java," +
-                "**/ReviewInviteServiceImpl.java,"
+                "**/ReviewInviteServiceImpl.java," +
+                "**/*ViewModel.java,"
         property "sonar.java.source", "1.8"
         property "sonar.java.target", "1.8"
     }
