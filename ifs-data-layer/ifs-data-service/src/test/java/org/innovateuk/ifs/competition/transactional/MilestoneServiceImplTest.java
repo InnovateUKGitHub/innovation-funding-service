@@ -45,11 +45,13 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Before
     public void setUp() {
+
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
                         .withId(1L)
                         .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                         .withNonIfs(false)
+                        .withAlwaysOpen(false)
                         .build()));
 
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {

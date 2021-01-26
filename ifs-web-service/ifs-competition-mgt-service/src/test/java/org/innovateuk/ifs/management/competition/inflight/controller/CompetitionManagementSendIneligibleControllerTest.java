@@ -33,8 +33,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,7 +80,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
                 .withCompetition(competitionId)
                 .build();
         List<ProcessRoleResource> processRoles = newProcessRoleResource()
-                .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName())
+                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR)
                 .withUserName("other", leadApplicant, "an other")
                 .withUserId(1L, 2L, 3L)
                 .build(3);

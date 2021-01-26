@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -80,7 +81,7 @@ public class ApplicationPrintPopulatorTest {
                 .build();
 
         ProcessRoleResource assessor = newProcessRoleResource()
-                .withRole(Role.ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .withUser(user)
                 .build();
 
@@ -122,7 +123,7 @@ public class ApplicationPrintPopulatorTest {
                 .build();
 
         List<ProcessRoleResource> kta = newProcessRoleResource()
-                .withRole(Role.ASSESSOR, Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withRole(ProcessRoleType.ASSESSOR, ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)
                 .withUser(user, user)
                 .build(2);
 

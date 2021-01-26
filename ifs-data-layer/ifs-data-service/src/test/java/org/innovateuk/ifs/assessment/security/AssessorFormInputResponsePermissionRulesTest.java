@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -40,7 +40,7 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
 
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
-                .withRole(ASSESSOR)
+                .withRole(ProcessRoleType.ASSESSOR)
                 .build();
 
         assessment = newAssessment().withParticipant(processRole).build();

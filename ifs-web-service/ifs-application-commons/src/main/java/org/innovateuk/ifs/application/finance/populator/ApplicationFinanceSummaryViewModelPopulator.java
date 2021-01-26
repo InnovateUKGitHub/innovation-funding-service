@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {

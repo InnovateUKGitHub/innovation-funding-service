@@ -70,10 +70,15 @@ Applicant fills in project costs with VAT
 
 Applicant fills in payment milestones
     [Documentation]  IFS-8938
-    When Lead applicant completes payment milestones          2  Milestone 1  10000  taskOrActivity 1  deliverable 1  successCriteria 1
-    Then Lead applicant views readonly payment milestones
-    And the user clicks the button/link                       link = Back to application overview
-    And the user should see the element                       jQuery = li:contains("Your project finances") > .task-status-complete
+    Given the user clicks the button/link                           link = Your payment milestones
+    And the user clicks the button/link                             jQuery = button:contains("Open all")
+    When applicant fills in payment milestone                       accordion-finances-content  2  Milestone 1  £72,839  taskOrActivity 1  deliverable 1  successCriteria 1
+    And the user clicks the button/link                             id = mark-all-as-complete
+    Then applicant views saved payment milestones                   2  £72,839  Milestone 1  100%  £72,839  100%
+    And applicant views readonly payment milestones subsections     taskOrActivity 1  deliverable 1  successCriteria 1
+    And the user should see the element                             jQuery = li:contains("Your payment milestones") > .task-status-complete
+    And the user clicks the button/link                             link = Back to application overview
+    And the user should see the element                             jQuery = li:contains("Your project finances") > .task-status-complete
 
 Applicant is shown a validation message when the project duration is less than allowed
     [Documentation]  IFS-8940
@@ -110,7 +115,7 @@ Invite a registered assessor
     And the user clicks the button/link                       link = Invite
     And the user clicks the button/link                       link = Review and send invites
     And the user enters text to a text field                  id = message    This is custom text
-    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invite")
+    And the user clicks the button/link                       jQuery = .govuk-button:contains("Send invitation")
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
@@ -356,29 +361,3 @@ Lead applicant upload the contract
     Log in as a different user         &{RTO_lead_applicant_credentials}
     the user navigates to the page     ${server}/project-setup/project/${ProjectID}
     Applicant uploads the contract
-
-Lead applicant completes payment milestones
-    [Arguments]   ${months}  ${description}  ${payment}  ${taskOrActivity}  ${deliverable}  ${successCriteria}
-    the user clicks the button/link                         link = Your payment milestones
-    the user clicks the button/link                         jQuery = button:contains("Add another project milestone")
-    the user clicks the button/link                         jQuery = button:contains("Open all")
-    the user selects the option from the drop-down menu     ${months}  css = select[id^="milestones"][id$="month"]
-    the user enters text to a text field                    css = input[id^="milestones"][id$="description"]         ${description}
-    the user enters text to a text field                    css = input[id^="milestones"][id$="payment"]             ${payment}
-    the user enters text to a text field                    css = textarea[id^="milestones"][id$="taskOrActivity"]   ${taskOrActivity}
-    the user enters text to a text field                    css = textarea[id^="milestones"][id$="deliverable"]      ${deliverable}
-    the user enters text to a text field                    css = textarea[id^="milestones"][id$="successCriteria"]  ${successCriteria}
-    the user clicks the button/link                         id = mark-all-as-complete
-
-Lead applicant views readonly payment milestones
-    the user clicks the button/link     link = Your payment milestones
-    the user should see the element     jQuery = span:contains("2")
-    the user should see the element     jQuery = span:contains("£10,000")
-    the user should see the element     jQuery = span:contains("14%")
-    the user should see the element     jQuery = button:contains("Milestone 1")
-    the user should see the element     jQuery = h3:contains("Total payment requested")
-    the user should see the element     jQuery = button:contains("Edit your project costs")
-    the user should see the element     jQuery = .govuk-heading-m:contains("14%")
-    the user should see the element     jQuery = .govuk-heading-m:contains("£10,000")
-    the user clicks the button/link     link = Your project finances
-    the user should see the element     jQuery = li:contains("Your payment milestones") > .task-status-complete

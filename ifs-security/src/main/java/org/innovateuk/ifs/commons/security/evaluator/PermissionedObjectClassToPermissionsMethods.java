@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.commons.security.evaluator;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**

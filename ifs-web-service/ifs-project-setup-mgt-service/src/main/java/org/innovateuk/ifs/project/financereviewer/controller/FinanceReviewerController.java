@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -47,16 +46,14 @@ public class FinanceReviewerController {
                                         ValidationHandler validationHandler,
                                         @PathVariable long projectId,
                                         @PathVariable long competitionId,
-                                        Model model,
-                                        RedirectAttributes redirectAttributes) {
+                                        Model model) {
         Supplier<String> failureView = () -> financeReviewer(form, bindingResult, projectId, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(financeReviewerRestService.assignFinanceReviewerToProject(form.getUserId(), projectId));
-            return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                redirectAttributes.addFlashAttribute("displayFinanceReviewerSuccess", true);
-                return String.format("redirect:/competition/%d/project/%d/details", competitionId, projectId);
-            });
+            return validationHandler.failNowOrSucceedWith(failureView, () ->
+                String.format("redirect:/competition/%d/project/%d/details?displayFinanceReviewerSuccess=true", competitionId, projectId)
+            );
         });
     }
 

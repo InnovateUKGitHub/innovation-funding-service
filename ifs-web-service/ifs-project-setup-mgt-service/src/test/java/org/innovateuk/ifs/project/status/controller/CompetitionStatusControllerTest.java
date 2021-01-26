@@ -63,7 +63,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         Long competitionId = 123L;
         String applicationSearchString = "12";
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build());
 
         CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
 
@@ -94,7 +94,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void viewCompetitionStatusPageQueries() throws Exception {
         long competitionId = 123L;
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build());
 
         CompetitionResource competition = newCompetitionResource().withName("comp1").withId(123L).build();
 
@@ -128,7 +128,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void viewPendingSpendProfiles() throws Exception {
         long competitionId = 123L;
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.PROJECT_FINANCE).build());
 
         SpendProfileStatusResource pendingSpendProfile1 = new SpendProfileStatusResource(11L, 1L, "Project Name 1");
         SpendProfileStatusResource pendingSpendProfile2 = new SpendProfileStatusResource(11L, 2L, "Project Name 2");

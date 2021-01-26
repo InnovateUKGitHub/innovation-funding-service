@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSI
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 

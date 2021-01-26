@@ -13,7 +13,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -76,9 +76,9 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             inviteResourceLead = newApplicationInviteResource().withApplication(application.getId()).withUsers(leadApplicant.getId()).build();
             inviteResourceCollab = newApplicationInviteResource().withApplication(application.getId()).withUsers(collaborator.getId()).build();
             when(inviteOrganisationRepository.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
-            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT)).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), ProcessRoleType.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(collaborator.getId(), applicantProcessRoles(), application.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), Role.COLLABORATOR, application.getId(), organisation.getId())).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(collaborator.getId(), COLLABORATOR, application.getId(), organisation.getId())).thenReturn(true);
             when(applicationRepository.findById(invite.getTarget().getId())).thenReturn(Optional.of(application));
         }
 
@@ -89,7 +89,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             final Organisation otherOrganisation = OrganisationBuilder.newOrganisation().build();
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherApplication.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
             when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(otherCollaborator.getId(), applicantProcessRoles(), otherApplication.getId())).thenReturn(newProcessRole().withRole(COLLABORATOR).build());
-            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), Role.COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(true);
+            when(processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(otherCollaborator.getId(), COLLABORATOR, otherApplication.getId(), otherOrganisation.getId())).thenReturn(true);
         }
     }
 

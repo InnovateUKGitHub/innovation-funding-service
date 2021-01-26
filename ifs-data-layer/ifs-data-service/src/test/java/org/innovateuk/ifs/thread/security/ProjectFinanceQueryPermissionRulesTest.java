@@ -22,7 +22,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
@@ -30,7 +29,6 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -60,13 +58,13 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     @Before
     public void setUp() throws Exception {
         projectFinanceUser = projectFinanceUser();
-        partner = getUserWithRole(PARTNER);
+        partner = getUserWithRole(Role.APPLICANT);
         competitionFinanceUser = competitionFinanceUser();
 
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
 
-        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
+        incorrectPartner = newUserResource().withId(1993L).withRoleGlobal(Role.APPLICANT).build();
         incorrectPartner.setId(1993L);
 
         competition = newCompetition().build();
@@ -135,7 +133,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         UserResource anotherProjectFinanceUser = newUserResource().withId(675L)
-                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
+                .withRoleGlobal(Role.PROJECT_FINANCE).build();
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, anotherProjectFinanceUser));
     }
 

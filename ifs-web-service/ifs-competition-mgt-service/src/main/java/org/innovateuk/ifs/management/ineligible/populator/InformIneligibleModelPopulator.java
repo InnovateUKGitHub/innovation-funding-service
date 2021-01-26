@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class InformIneligibleModelPopulator {
 
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(applicationResource.getId()).getSuccess();
         Optional<ProcessRoleResource> leadApplicant = processRoles.stream()
-                .filter(pr -> pr.getRoleName().equals(Role.LEADAPPLICANT.getName()))
+                .filter(pr -> pr.getRole() == ProcessRoleType.LEADAPPLICANT)
                 .findFirst();
 
         if (form.getMessage() == null) {

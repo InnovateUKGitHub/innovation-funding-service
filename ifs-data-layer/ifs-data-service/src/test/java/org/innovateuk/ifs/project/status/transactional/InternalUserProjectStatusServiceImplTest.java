@@ -37,6 +37,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +70,7 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -135,7 +136,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        Role leadApplicantRole = Role.LEADAPPLICANT;
+        ProcessRoleType leadApplicantRole = ProcessRoleType.LEADAPPLICANT;
 
         long userId = 7L;
         User user = newUser().
@@ -197,7 +198,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         User internalUser = newUser().withRoles(singleton(COMP_ADMIN)).build();
         when(userRepository.findById(internalUser.getId())).thenReturn(Optional.of(internalUser));
-        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRoleGlobal(COMP_ADMIN).build());
 
         competition.setProjectStages(EnumSet.allOf(ProjectSetupStage.class).stream().map(stage -> new ProjectStages(competition, stage)).collect(Collectors.toList()));
     }
@@ -269,7 +270,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
         List<ProcessRole> applicantProcessRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.COLLABORATOR)
                 .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())
                 .build(3);
 
@@ -1177,7 +1178,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 .withApplicationState(ApplicationState.APPROVED)
                 .build();
         Organisation organisation = newOrganisation().build();
-        Role role = Role.LEADAPPLICANT;
+        ProcessRoleType role = ProcessRoleType.LEADAPPLICANT;
         ProcessRole processRole = newProcessRole().
                 withRole(role).
                 withApplication(application).
