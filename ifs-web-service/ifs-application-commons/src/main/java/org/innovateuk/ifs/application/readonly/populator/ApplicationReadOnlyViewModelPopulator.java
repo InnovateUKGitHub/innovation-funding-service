@@ -150,7 +150,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {
         boolean isKta = processRoles.stream()
-                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole().isKta());
         return competition.isKtp() && isKta;
     }
 
