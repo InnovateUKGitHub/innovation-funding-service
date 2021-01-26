@@ -107,7 +107,7 @@ Applicant submits the application
 
 Invite a registered assessor
     [Documentation]  IFS-2376
-    Given log in as a different user              &{Comp_admin1_credentials}
+    Given log in as a different user             &{Comp_admin1_credentials}
     When the user clicks the button/link         link = ${comp_name}
     And the user clicks the button/link          link = Invite assessors to assess the competition
     And the user enters text to a text field     id = assessorNameFilter   Paul Plum
