@@ -57,7 +57,7 @@ public class OrganisationPatternMatcher {
         try {
             List<String> sics = submittedOrganisationResource.getSicCodes().stream().map(s -> s.getSicCode()).sorted().collect(Collectors.toList());
             List<String> sicResource= organisation.getSicCodes().stream().map(s -> s.getSicCode()).sorted().collect(Collectors.toList());
-            return  sics.equals(sicResource);
+            return  isEqualCollection(sics,sicResource);
         }
         catch(NullPointerException e) {
             LOG.trace("NPE when checking organisation sic codes match", e);
@@ -81,9 +81,9 @@ public class OrganisationPatternMatcher {
     public boolean executiveOfficersMatch(OrganisationResource submittedOrganisationResource, Organisation foundOrg) {
 
         try {
-            List<String> executiveOfficers = submittedOrganisationResource.getExecutiveOfficers().stream().map(s -> s.getName()).sorted().collect(Collectors.toList());
-            List<String> executiveOfficersResource= foundOrg.getExecutiveOfficers().stream().map(s -> s.getName()).sorted().collect(Collectors.toList());
-            return  executiveOfficers.equals(executiveOfficersResource);
+            List<String> executiveOfficers = submittedOrganisationResource.getExecutiveOfficers().stream().map(s -> s.getName()).collect(Collectors.toList());
+            List<String> executiveOfficersResource= foundOrg.getExecutiveOfficers().stream().map(s -> s.getName()).collect(Collectors.toList());
+            return  isEqualCollection(executiveOfficers,executiveOfficersResource);
         }
         catch(NullPointerException e) {
             LOG.trace("NPE when checking organisation executive offciers match", e);
@@ -92,13 +92,13 @@ public class OrganisationPatternMatcher {
     }
 
     @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
-    public boolean addressesMatch(OrganisationResource submittedOrganisationResource, Organisation foundOrg) {
+    public boolean addressesMatch(final OrganisationResource submittedOrganisationResource, final Organisation foundOrg) {
         List<Address> addresses = submittedOrganisationResource.getAddresses().stream().map( address -> buildAddressFromAddressResource(address.getAddress())).collect(Collectors.toList());
         List<Address> addresses2 = foundOrg.getAddresses().stream().map(OrganisationAddress::getAddress).collect(Collectors.toList());
         return isEqualCollection(addresses,addresses2);
     }
 
-    private Address buildAddressFromAddressResource(AddressResource addressResource){
+    private Address buildAddressFromAddressResource(final AddressResource addressResource){
         Address address = new Address();
         address.setAddressLine1(addressResource.getAddressLine1());
         address.setAddressLine2(addressResource.getAddressLine2());
