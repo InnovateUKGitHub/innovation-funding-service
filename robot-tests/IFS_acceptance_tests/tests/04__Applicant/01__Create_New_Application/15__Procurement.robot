@@ -178,9 +178,9 @@ Project finance completes finance checks then reverts them
     And the internal user approves the viability
     And the internal user approves the eligibility
     And the internal user approves the payment milestones
-    When the internal user reverts the payment milestones
-    And the internal user reverts the eligibility
-    And the internal user reverts the viability
+    When the internal user reverts the payment milestones    #No validation required - Later ticket - TBC
+    And the internal user reverts the eligibility            #No validation required - Later ticket - TBC
+    And the internal user reverts the viability              #No validation required - Later ticket - TBC
 
 Project finance completes all project setup steps
     [Documentation]  IFS-6368  IFS-8947
