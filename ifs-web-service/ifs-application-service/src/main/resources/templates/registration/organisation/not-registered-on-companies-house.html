@@ -15,18 +15,18 @@
               th:with="linkTitle='Back to Companies House search results',linkClass='link-back',linkUrl=@{/organisation/create/search-organisation-results?{searchTerm}(searchTerm=${organisationForm.getOrganisationSearchName()})}"/>
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisations not registered on Companies House',subTitle='Create an account',size='govuk-heading-l'" />
-        <p class="govuk-body">You must register your company on Companies House before you can continue with your application.</p>
-        <p class="govuk-body">
-            <a href="https://www.gov.uk/government/organisations/companies-house" class="govuk-link">Register your company on Companies House (opens a new window)</a>.
+        <p class="govuk-body">You must register your company on Companies House before you can continue with your application.<br>
+            <a href="https://www.gov.uk/government/organisations/companies-house" target="_blank" class="govuk-link govuk-!-margin-0">Register your company on Companies House (opens a new window)</a>.
         </p>
-        <h2 class="govuk-heading-s">Exemptions</h2>
-        <div class="govuk-body">Some organisations do not need to be registered, for example:</div>
+        <h2 class="govuk-heading-s govuk-!-margin-0">Exemptions</h2>
+        <div class="govuk-body govuk-!-margin-0">Some organisations do not need to be registered, for example:</div>
         <ul class="govuk-list govuk-list--bullet">
-            <li>sole traders</li>
-            <li>partnerships</li>
             <li>charities</li>
-            <li>NGOs</li>
             <li>local authorities</li>
+            <li>NGOs</li>
+            <li>partnerships</li>
+            <li>sole traders</li>
+            <li>trusts</li>
         </ul>
         <p class="govuk-body">If your organisation is exempt, you can <a th:href="@{/organisation/create/organisation-type/manually-enter-organisation-details}" class="govuk-link">enter its details manually</a>.</p>
         <th:block th:insert="fragments/layout :: main-content-end" />
