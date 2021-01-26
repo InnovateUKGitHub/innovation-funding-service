@@ -273,17 +273,14 @@ MO can now check the application feedback
 MO can now view payment milestones in SBRI application
     [Documentation]   IFS-8958
     Given the SBRI MO assignee has been changed
-    And Log in as a different user           &{sbri_MO_credentials}
-    When the user navigates to the page      ${server}/project-setup/project/${sbri_project_ID}
-    And the user clicks the button/link      link = view application feedback
-    And the user expands the section         Funding breakdown
-    Then the user should see the element     jQuery = h1:contains("Application overview")
-    And the user should see the element      jQuery = h3:contains("Payment milestones")
-    ${total_funding}=                        Get Text  jQuery = td:contains("£265,084")
-    ${payment_milestone_total}=              Get Text  jQuery = th:contains("£262616")
-    Should Be Equal As Numbers               ${total_funding}    ${payment_milestone_total}
-
-
+    And Log in as a different user                  &{sbri_MO_credentials}
+    When the user navigates to the page             ${server}/project-setup/project/${sbri_project_ID}
+    And the user clicks the button/link             link = view application feedback
+    And the user expands the section                Funding breakdown
+    Then the user should see the element            jQuery = h1:contains("Application overview")
+    And the user should see the element             jQuery = h3:contains("Payment milestones")
+    And the user should see the element             jQuery = td:contains("£265,084")
+    And the user should see the element             jQuery = th:contains("£265084")
 
 *** Keywords ***
 The MO user is able to access all of the links

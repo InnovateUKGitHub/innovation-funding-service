@@ -72,11 +72,6 @@ Applicant fills in project costs with VAT
     And the user fills in the organisation information  ${appl_name}  ${SMALL_ORGANISATION_SIZE}
 
 Applicant fills in payment milestones
-#<<<<<<< HEAD
-#    [Documentation]  IFS-8938  IFS-8958
-#    When Lead applicant completes payment milestones          2  Milestone 1  10000  taskOrActivity 1  deliverable 1  successCriteria 1
-#    Then Lead applicant views readonly payment milestones
-#=======
     [Documentation]  IFS-8938
     Given the user clicks the button/link                           link = Your payment milestones
     And the user clicks the button/link                             jQuery = button:contains("Open all")
@@ -101,17 +96,17 @@ Applicant can edit the project duration before application submission
     Given the user enters text to a text field                id = durationInMonths  3
     When the user clicks the button/link                      id = application-question-complete
     Then the user should see the element                      jQuery = dd:contains("3 months")
-#>>>>>>> development
     And the user clicks the button/link                       link = Back to application overview
 
 Applicant can view payment milestones table when reviewing and submitting application
     [Documentation]  IFS-8958
     When the user clicks the button/link                jQuery = a:contains("Review and submit")
     And the user clicks the button/link                 jQuery = button:contains("Funding breakdown")
-    Then the user should see the element                jQuery = .govuk-heading-s h3:contains("Payment milestones")
-    ${total_funding}=                                   Get Text  jQuery = td:contains("£265,084")
-    ${payment_milestone_total}=                         Get Text  jQuery = th:contains("£262616")
-    Should Be Equal As Numbers                          ${total_funding}    ${payment_milestone_total}
+    And the user clicks the button/link                 jQuery = button:contains("Funding breakdown")
+    And the user should see the element                 jQuery = h1:contains("Application summary")
+    And the user should see the element                 jQuery = h3:contains("Payment milestones")
+    And the user should see the element                 jQuery = td:contains("£72,839")
+    And the user should see the element                 jQuery = th:contains("£72839")
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
