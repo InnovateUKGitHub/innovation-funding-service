@@ -108,7 +108,7 @@ public class FinanceChecksGenerator {
             ktpFinancialYears = ktpFinancialYearsRepository.save(new KtpFinancialYears(ktpFinancialYears));
         }
 
-        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover, ktpFinancialYears);
+        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover, ktpFinancialYears, applicationFinanceForOrganisation.getNorthernIrelandDeclaration());
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
