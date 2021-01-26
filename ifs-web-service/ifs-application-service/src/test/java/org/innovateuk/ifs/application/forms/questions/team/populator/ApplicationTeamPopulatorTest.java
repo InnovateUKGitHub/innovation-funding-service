@@ -13,11 +13,11 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -84,13 +84,13 @@ public class ApplicationTeamPopulatorTest {
                 .build();
 
         ProcessRoleResource leadRole = newProcessRoleResource()
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(leadOrganisation.getId())
                 .withUser(user)
                 .build();
 
         ProcessRoleResource collaboratorRole = newProcessRoleResource()
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .withOrganisation(collboratorOrganisation.getId())
                 .withUser(collaborator)
                 .build();

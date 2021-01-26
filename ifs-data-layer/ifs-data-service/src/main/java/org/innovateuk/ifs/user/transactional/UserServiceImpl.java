@@ -166,7 +166,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<UserResource> assignables = roles.stream()
-                .filter(r -> "leadapplicant".equals(r.getRole().getName()) || "collaborator".equals(r.getRole().getName()))
+                .filter(r -> ProcessRoleType.LEADAPPLICANT == r.getRole() || ProcessRoleType.COLLABORATOR == r.getRole())
                 .map(ProcessRole::getUser)
                 .map(userMapper::mapToResource)
                 .collect(toSet());
@@ -285,18 +285,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private boolean userNotYetVerified(UserResource user) {
         return UserStatus.INACTIVE.equals(user.getStatus())
                 && tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId()).isPresent();
-    }
-
-    private boolean userIsExternalNotOnlyAssessor(UserResource user) {
-        return user
-                .getRoles()
-                .stream()
-                .anyMatch(r -> COLLABORATOR == r ||
-                             APPLICANT == r ||
-                             FINANCE_CONTACT == r ||
-                             LEADAPPLICANT == r ||
-                             PARTNER == r ||
-                             PROJECT_MANAGER == r);
     }
 
     @Override

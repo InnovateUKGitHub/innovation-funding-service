@@ -19,6 +19,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -115,7 +116,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
         OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(organisationId)
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
@@ -171,7 +172,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
         OrganisationResource knowledgeBase = newOrganisationResource().build();
         ProcessRoleResource knowledgeBaseProcessRole = newProcessRoleResource()
                 .withUserId(user.getId())
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(knowledgeBase.getId())
                 .build();
         ApplicationFinanceResource knowledgeBaseFinance = newApplicationFinanceResource()
@@ -182,7 +183,7 @@ public class ApplicationFinanceSummaryViewModelPopulatorTest {
         OrganisationResource partner = newOrganisationResource().build();
         ProcessRoleResource partnerProcessRole = newProcessRoleResource()
                 .withUserId(user.getId())
-                .withRole(Role.PARTNER)
+                .withRole(ProcessRoleType.COLLABORATOR)
                 .withOrganisation(partner.getId())
                 .build();
         ApplicationFinanceResource partnerFinance = newApplicationFinanceResource()

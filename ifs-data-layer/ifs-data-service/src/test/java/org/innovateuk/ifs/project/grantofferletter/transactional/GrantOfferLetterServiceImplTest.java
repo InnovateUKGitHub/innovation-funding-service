@@ -44,7 +44,7 @@ import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,11 +82,11 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
@@ -190,7 +190,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisations.get(0).getId()).
-                withRole(Role.LEADAPPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 withUser(user).
                 build();
 

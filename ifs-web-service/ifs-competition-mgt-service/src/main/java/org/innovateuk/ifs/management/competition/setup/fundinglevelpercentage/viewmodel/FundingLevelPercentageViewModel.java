@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.fundinglevelpercentage.viewmodel;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
@@ -28,19 +27,6 @@ public class FundingLevelPercentageViewModel extends CompetitionSetupViewModel {
 
     public List<OrganisationSize> getSizes() {
         return sizes;
-    }
-
-    public String descriptionForSize(OrganisationSize size) {
-        switch (size) {
-            case SMALL:
-                return "Micro entity or small company";
-            case MEDIUM:
-                return "Medium-sized company";
-            case LARGE:
-                return "Large-sized company";
-            default:
-                throw new ObjectNotFoundException("Unknown size " + size);
-        }
     }
 
     public boolean isShowResetButton() {

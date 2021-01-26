@@ -74,7 +74,7 @@ public interface SupporterAssignmentRepository extends ProcessRepository<Support
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
                     "WHERE application.competition.id = :competitionId " +
                     "AND assignment.participant.id = :userId " +
-                    "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
+                    "AND pr.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT " +
                     "AND assignment.activityState in :states "
     )
     Page<SupporterDashboardApplicationResource> findApplicationsForSupporterCompetitionDashboard(long userId, long competitionId, Collection<SupporterState> states, Pageable pageable);
@@ -94,7 +94,7 @@ public interface SupporterAssignmentRepository extends ProcessRepository<Support
                     "JOIN Organisation organisation on pr.organisationId = organisation.id " +
                     "WHERE application.competition.id = :competitionId " +
                     "AND application.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED " +
-                    "AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
+                    "AND pr.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT " +
                     "AND (str(application.id) LIKE CONCAT('%', :filter, '%')) " +
                     "GROUP BY application.id"
     )

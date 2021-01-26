@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
 import org.innovateuk.ifs.project.financereviewer.domain.FinanceReviewer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;

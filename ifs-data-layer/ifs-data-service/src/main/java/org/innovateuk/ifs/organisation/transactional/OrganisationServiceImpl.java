@@ -16,7 +16,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
         Long leadOrganisationId = roles.stream()
-                .filter(role -> role.getRole().equals(Role.LEADAPPLICANT))
+                .filter(role -> role.getRole().equals(ProcessRoleType.LEADAPPLICANT))
                 .map(role -> role.getOrganisationId())
                 .findAny().orElse(null);
 
