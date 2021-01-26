@@ -5,6 +5,7 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.service.ActivityLogRestService;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogEntryViewModel;
 import org.innovateuk.ifs.project.activitylog.viewmodel.ActivityLogViewModel;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -86,7 +87,7 @@ public class ActivityLogViewModelPopulatorTest {
                 .withOrganisationName(organisationName)
                 .build();
         ProjectUserResource projectUserResource = newProjectUserResource()
-                .withRole(Role.PROJECT_MANAGER)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
                 .withUser(partnerUserId)
                 .withOrganisation(organisationId)
                 .build();

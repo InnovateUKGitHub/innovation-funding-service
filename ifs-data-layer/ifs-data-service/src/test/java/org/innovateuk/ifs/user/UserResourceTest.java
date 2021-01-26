@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -22,7 +21,7 @@ public class UserResourceTest {
                 .withFirstName("James")
                 .withLastName("Watts")
                 .withEmail("james.watts@email.co.uk")
-                .withRolesGlobal(singletonList(Role.APPLICANT))
+                .withRoleGlobal(Role.APPLICANT)
                 .withUID("2aerg234-aegaeb-23aer").build();
         ServiceResult<UserResource> result = serviceSuccess(user);
 

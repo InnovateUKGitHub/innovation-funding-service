@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.competition.domain.AssessmentPeriod;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -18,7 +19,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectToBeCreated;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -83,6 +84,10 @@ public class Application implements ProcessActivity {
 
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=false, fetch = FetchType.LAZY)
     private ApplicationProcess applicationProcess;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="assessment_period_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
 
     private boolean noInnovationAreaApplicable;
 
@@ -245,7 +250,7 @@ public class Application implements ProcessActivity {
                 .collect(toList());
     }
 
-    public List<ProcessRole> getProcessRolesByRoles(Set<Role> roles) {
+    public List<ProcessRole> getProcessRolesByRoles(Set<ProcessRoleType> roles) {
         return this.processRoles.stream()
                 .filter(processRole -> roles.contains(processRole.getRole()))
                 .collect(Collectors.toList());

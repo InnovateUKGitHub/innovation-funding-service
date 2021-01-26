@@ -2,7 +2,8 @@ package org.innovateuk.ifs.analytics.controller;
 
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class GoogleAnalyticsDataLayerController {
     }
 
     @GetMapping("/application/{applicationId}/user-roles")
-    public RestResult<List<Role>> getRolesByApplicationIdForCurrentUser(@PathVariable("applicationId") long applicationId) {
+    public RestResult<List<ProcessRoleType>> getRolesByApplicationIdForCurrentUser(@PathVariable("applicationId") long applicationId) {
         return googleAnalyticsDataLayerService.getRolesByApplicationIdForCurrentUser(applicationId).toGetResponse();
     }
 
@@ -44,7 +45,7 @@ public class GoogleAnalyticsDataLayerController {
     }
 
     @GetMapping("/project/{projectId}/user-roles")
-    public RestResult<List<Role>> getRolesByProjectIdForCurrentUser(@PathVariable("projectId") long projectId) {
+    public RestResult<List<ProjectParticipantRole>> getRolesByProjectIdForCurrentUser(@PathVariable("projectId") long projectId) {
         return googleAnalyticsDataLayerService.getRolesByProjectIdForCurrentUser(projectId).toGetResponse();
     }
 

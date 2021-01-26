@@ -213,7 +213,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             " JOIN Organisation lead " +
             "   ON lead.id = pr.organisationId" +
             PREVIOUS_WHERE_CLAUSE +
-            " AND pr.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT ")
+            " AND pr.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT ")
     List<PreviousApplicationResource> findPrevious(long competitionId);
 
     String PREVIOUS_WHERE_CLAUSE =  " WHERE project.id IS NULL " +
@@ -234,7 +234,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            " LEFT JOIN ProcessRole pr " +
            "    ON app.id = pr.applicationId " +
            "        AND pr.user.id=:userId " +
-           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR, org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER) " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT, org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR, org.innovateuk.ifs.user.resource.ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER) " +
            " LEFT JOIN Project proj " +
            "    ON proj.application.id = app.id " +
            " LEFT JOIN ProjectUser pu " +

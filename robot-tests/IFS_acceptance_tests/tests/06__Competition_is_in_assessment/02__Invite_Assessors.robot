@@ -158,7 +158,7 @@ Bulk resend button is disabled until user selects an assessor
 Bulk resend email updates the invite sent date
     [Documentation]  IFS-1146
     [Tags]
-    Given the user clicks the button/link  jQuery = button:contains("Send invite")
+    Given the user clicks the button/link  jQuery = button:contains("Send invitation")
     Then the user should see the element   jQuery = td:contains("David Peters") ~ td:contains("Invite sent: ${today}")
 
 *** Keywords ***
@@ -194,7 +194,7 @@ the user send invite to assessors
     the user should see the element            jQuery = p:contains("Please visit our online Innovation Funding Service to respond to this request")
     the user should see the client and server side validation for subject
     the user enters text to a text field       css = #subject  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}' @
-    the user clicks the button/link            jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link            jQuery = .govuk-button:contains("Send invitation")
 
 the user should not see invited assessor on inivte and find tab
     the user clicks the button/link           link = Invite

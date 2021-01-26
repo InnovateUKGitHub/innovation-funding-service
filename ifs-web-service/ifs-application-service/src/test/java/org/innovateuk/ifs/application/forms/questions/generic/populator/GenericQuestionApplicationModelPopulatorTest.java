@@ -8,7 +8,7 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -71,7 +71,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                 )
                 .withCurrentApplicant(
                         newApplicantResource()
-                                .withProcessRole(newProcessRoleResource().withRole(Role.LEADAPPLICANT).build())
+                                .withProcessRole(newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build())
                                 .build()
                 )
                 .withCurrentUser(
@@ -215,7 +215,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                 )
                 .withCurrentApplicant(
                         newApplicantResource()
-                                .withProcessRole(newProcessRoleResource().withRole(Role.LEADAPPLICANT).build())
+                                .withProcessRole(newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build())
                                 .build()
                 )
                 .withCurrentUser(

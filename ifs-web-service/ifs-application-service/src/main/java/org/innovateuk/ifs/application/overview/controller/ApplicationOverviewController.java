@@ -22,8 +22,8 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -83,7 +83,7 @@ public class ApplicationOverviewController {
         List<ProcessRoleResource> processRoleResources = processRoleRestService.findProcessRole(applicationId).getSuccess();
         return processRoleResources.stream()
                 .anyMatch(processRole -> processRole.getUser().equals(userId)
-                        && processRole.getRole().equals(KNOWLEDGE_TRANSFER_ADVISER));
+                        && processRole.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {

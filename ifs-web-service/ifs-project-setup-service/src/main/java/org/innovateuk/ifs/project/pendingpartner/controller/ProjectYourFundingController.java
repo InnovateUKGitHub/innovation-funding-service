@@ -144,7 +144,7 @@ public class ProjectYourFundingController {
         return redirectToViewPage(projectId, organisationId);
     }
 
-    @PostMapping(params = {"add_cost", "grantClaimPercentage"})
+    @PostMapping(params = {"add_row", "grantClaimPercentage"})
     public String addFundingRowFormPostPercentage(Model model,
                                         @PathVariable long projectId,
                                         @PathVariable long organisationId,
@@ -153,7 +153,7 @@ public class ProjectYourFundingController {
         saver.addOtherFundingRow(form);
         return viewYourFunding(model, projectId, organisationId);
     }
-    @PostMapping(params = {"add_cost", "amount"})
+    @PostMapping(params = {"add_row", "amount"})
     public String addFundingRowFormPostAmount(Model model,
                                         @PathVariable long projectId,
                                         @PathVariable long organisationId,
@@ -163,23 +163,23 @@ public class ProjectYourFundingController {
         return viewYourFunding(model, projectId, organisationId);
     }
 
-    @PostMapping(params = {"remove_cost", "grantClaimPercentage"})
+    @PostMapping(params = {"remove_row", "grantClaimPercentage"})
     public String removeFundingRowFormPostPercentage(Model model,
                                            @PathVariable long projectId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingPercentageForm form,
-                                           @RequestParam("remove_cost") String costId) {
+                                           @RequestParam("remove_row") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, projectId, organisationId);
     }
 
-    @PostMapping(params = {"remove_cost", "amount"})
+    @PostMapping(params = {"remove_row", "amount"})
     public String removeFundingRowFormPostAmount(Model model,
                                            @PathVariable long projectId,
                                            @PathVariable long organisationId,
                                            @ModelAttribute("form") YourFundingAmountForm form,
-                                           @RequestParam("remove_cost") String costId) {
+                                           @RequestParam("remove_row") String costId) {
 
         saver.removeOtherFundingRowForm(form, costId);
         return viewYourFunding(model, projectId, organisationId);

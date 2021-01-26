@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.BooleanUtils;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -199,6 +200,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "golTemplateId", referencedColumnName = "id")
     private GolTemplate golTemplate;
+
+    private Boolean alwaysOpen;
 
     public Competition() {
         setupComplete = false;
@@ -1018,5 +1021,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setGolTemplate(GolTemplate golTemplate) {
         this.golTemplate = golTemplate;
+    }
+
+    public void setAlwaysOpen(Boolean alwaysOpen) {
+        this.alwaysOpen = alwaysOpen;
+    }
+
+    public boolean isAlwaysOpen() {
+        return BooleanUtils.isTrue(alwaysOpen);
     }
 }

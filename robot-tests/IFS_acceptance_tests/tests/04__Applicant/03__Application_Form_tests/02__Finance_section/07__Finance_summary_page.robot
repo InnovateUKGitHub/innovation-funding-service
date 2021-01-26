@@ -335,7 +335,7 @@ Lead enters a valid research participation value
     run keyword and ignore error without screenshots  the user clicks the button/link  jQuery = .button-clear:contains("Edit")
     the user clicks the button/link                   jQuery = button:contains("Labour")
     the user clicks the button/link                   jQuery = button:contains("Open all")
-    the user should see the element                   name = add_cost
+    the user should see the element                   name = add_row
     the user clicks the button/link                   jQuery = button:contains('Add another role')
     the user should see the element                   css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field              css = #labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input  Test

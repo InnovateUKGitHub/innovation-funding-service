@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewMod
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -42,7 +43,7 @@ public class InterviewFeedbackViewModelPopulatorTest {
     public void testPopulate() {
         long applicationId = 1L;
         UserResource user = newUserResource().withRolesGlobal(asList(Role.APPLICANT)).build();
-        ProcessRoleResource role = newProcessRoleResource().withRole(Role.LEADAPPLICANT).build();
+        ProcessRoleResource role = newProcessRoleResource().withRole(ProcessRoleType.LEADAPPLICANT).build();
         when(interviewResponseRestService.findResponse(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("response").build()));
         when(interviewAssignmentRestService.findFeedback(applicationId)).thenReturn(restSuccess(newFileEntryResource().withName("feedback").build()));
         when(processRoleRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(role));
