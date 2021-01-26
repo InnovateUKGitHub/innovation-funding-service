@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -44,6 +46,8 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private QuestionStatusService questionStatusService;
     @Autowired
     private ApplicationRepository applicationRepository;
+    @Autowired
+    private AssessmentService assessmentService;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -198,6 +202,21 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
+        if (application.getCompetition().isAlwaysOpen()) {
+
+           List<AssessmentResource> assessments =
+                    assessmentService.findByApplicationId(application.getId())
+                            .getSuccess();
+
+            Optional<AssessmentResource> hasAssessment = assessments.stream()
+                    .filter(assessment -> assessment.getApplication().equals(application.getId()))
+                    .findFirst();
+
+            return application.getLeadApplicant().getId().equals(userId) &&
+                    application.getFundingDecision() == null &&
+                    application.isSubmitted() &&
+                    hasAssessment.isPresent();
+        }
         return application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                 application.getFundingDecision() == null &&
