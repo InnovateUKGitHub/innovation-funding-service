@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toCollection;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 @Component
 public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
