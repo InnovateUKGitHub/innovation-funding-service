@@ -190,7 +190,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("add_cost", "true")
+                .param("add_row", "true")
                 .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))
@@ -206,7 +206,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
-                .param("remove_cost", rowToRemove)
+                .param("remove_row", rowToRemove)
                 .param("grantClaimPercentage", "100"))
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name(VIEW))

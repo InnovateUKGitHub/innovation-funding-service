@@ -32,6 +32,20 @@ Once generated these certificates can be found in the appropriate services under
 
     ./gradlew generateCertificates -x test
 
+
+All the services relies on base images, so you need to pull or build base images locally.
+
+Either you can pull released images 
+
+    ./gradlew pullBaseImageNexus -Pnexus_username="XXXXX" -Pnexus_password="XXXXXX"
+
+or build those images locally 
+
+Clone this repo `https://github.com/InnovateUKGitHub/ifs-app-base-image.git`
+and run 
+
+    ./gradlew buildBaseImages
+
 Build and deploy
 
     ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test

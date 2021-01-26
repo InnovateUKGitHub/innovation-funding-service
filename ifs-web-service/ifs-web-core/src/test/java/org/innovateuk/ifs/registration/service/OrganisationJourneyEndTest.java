@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -68,7 +67,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingLead_teamQuestion() {
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         long organisationId = 1L;
         long competitionId = 2L;
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
@@ -88,7 +87,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingLead_noQuestion() {
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         long organisationId = 1L;
         long competitionId = 2L;
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();
@@ -107,7 +106,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingCollaborator() {
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         long organisationId = 1L;
         long applicationId = 2L;
         String inviteHash = "inviteHash";
@@ -128,7 +127,7 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
 
     @Test
     public void completeProcess_existingAssessor() {
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
+        UserResource user = newUserResource().withRoleGlobal(Role.ASSESSOR).build();
         long organisationId = 1L;
         long competitionId = 2L;
         ApplicationResource application = newApplicationResource().withCompetition(competitionId).build();

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.repository;
 
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
@@ -25,7 +25,7 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "FROM Project project " +
             "LEFT JOIN MonitoringOfficer monitoringOfficer " +
             "   ON monitoringOfficer.project.id = project.id " +
-            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.id IS NULL " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES;
@@ -40,12 +40,12 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "FROM Project project " +
             "JOIN ProcessRole processRole " +
             "   ON processRole.applicationId = project.application.id " +
-            "   AND processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
+            "   AND processRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT " +
             "JOIN Organisation organisation " +
             "   ON organisation.id = processRole.organisationId " +
             "JOIN MonitoringOfficer monitoringOfficer " +
             "   ON monitoringOfficer.project.id = project.id " +
-            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.user.id = :userId " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES;

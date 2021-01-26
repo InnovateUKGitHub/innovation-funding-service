@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.form.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
-import org.innovateuk.ifs.commons.mapper.BaseResourceMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;

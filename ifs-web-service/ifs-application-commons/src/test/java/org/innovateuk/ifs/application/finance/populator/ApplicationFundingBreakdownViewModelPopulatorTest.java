@@ -16,6 +16,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -105,7 +106,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         List<OrganisationResource> organisations = Arrays.asList(leadOrganisation, partnerOrganisation);
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(leadOrganisationId)
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
@@ -161,7 +162,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         List<OrganisationResource> organisations = Arrays.asList(leadOrganisation, partnerOrganisation);
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(leadOrganisationId)
                 .build();
         ApplicationFinanceResource applicationFinance = newApplicationFinanceResource()
@@ -223,7 +224,7 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
         List<OrganisationResource> organisations = Arrays.asList(leadOrganisation, partnerOrganisation);
         ProcessRoleResource processRole = newProcessRoleResource()
                 .withUserId(userId)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisation(leadOrganisationId)
                 .build();
         ProjectFinanceResource projectFinance = newProjectFinanceResource()
