@@ -69,6 +69,9 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
         long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
             updateFinancialYearData(dbFinance, projectFinanceResource);
+            if (projectFinanceResource.getNorthernIrelandDeclaration() != null) {
+                dbFinance.setNorthernIrelandDeclaration(projectFinanceResource.getNorthernIrelandDeclaration());
+            }
             return serviceSuccess();
         });
     }

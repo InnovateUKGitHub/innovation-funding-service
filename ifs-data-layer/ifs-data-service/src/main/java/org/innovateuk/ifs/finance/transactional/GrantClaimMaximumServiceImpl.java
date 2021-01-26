@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
@@ -12,17 +13,16 @@ import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.category.domain.ResearchCategory.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -37,6 +37,8 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     @Autowired
     private ResearchCategoryRepository researchCategoryRepository;
+    @Value("${ifs.subsidy.control.northern.ireland.enabled}")
+    private boolean northernIrelandSubsidyControlToggle;
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
@@ -87,6 +89,8 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             List<GrantClaimMaximum> maximums;
             if (competition.getFundingRules() == FundingRules.STATE_AID && !competition.getResearchCategories().isEmpty()) {
                 maximums = getStateAidGrantClaimMaxmimums();
+            } else if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle) {
+                maximums = getDualMaximumsForFundingRules(competition);
             } else {
                 maximums = getBlankGrantClaimMaxmimums();
             }
@@ -99,6 +103,20 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
             });
             return ids;
         });
+    }
+
+    private List<GrantClaimMaximum> getDualMaximumsForFundingRules(Competition competition) {
+        List<GrantClaimMaximum> maximums = new ArrayList<>();
+        boolean subsidyControlAlreadyDefined = competition.getGrantClaimMaximums().stream().anyMatch(max -> max.getFundingRules() == FundingRules.SUBSIDY_CONTROL);
+        if (subsidyControlAlreadyDefined) {
+            competition.getGrantClaimMaximums().stream()
+                    .filter(max -> max.getFundingRules() == FundingRules.SUBSIDY_CONTROL)
+                    .forEach(max -> maximums.add(new GrantClaimMaximum(max.getResearchCategory(), max.getOrganisationSize(), max.getFundingRules(), max.getMaximum())));
+        } else {
+            maximums.addAll(getBlankGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.SUBSIDY_CONTROL)).collect(toList()));
+        }
+        maximums.addAll(getStateAidGrantClaimMaxmimums().stream().map(max -> max.withFundingRules(FundingRules.STATE_AID)).collect(toList()));
+        return maximums;
     }
 
     private List<GrantClaimMaximum> getStateAidGrantClaimMaxmimums() {

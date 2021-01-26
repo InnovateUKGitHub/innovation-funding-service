@@ -37,10 +37,15 @@ public class GrantClaimMaximum {
 
     public GrantClaimMaximum() {}
 
-    public GrantClaimMaximum(ResearchCategory researchCategory, OrganisationSize organisationSize, Integer maximum) {
+    public GrantClaimMaximum(ResearchCategory researchCategory, OrganisationSize organisationSize, FundingRules fundingRules, Integer maximum) {
         this.researchCategory = researchCategory;
         this.organisationSize = organisationSize;
         this.maximum = maximum;
+        this.fundingRules = fundingRules;
+    }
+
+    public GrantClaimMaximum(ResearchCategory researchCategory, OrganisationSize organisationSize, Integer maximum) {
+        this(researchCategory, organisationSize, null, maximum);
     }
 
     public Long getId() {
@@ -81,6 +86,11 @@ public class GrantClaimMaximum {
 
     public void setFundingRules(FundingRules fundingRules) {
         this.fundingRules = fundingRules;
+    }
+
+    public GrantClaimMaximum withFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
+        return this;
     }
 
     public Integer getMaximum() {

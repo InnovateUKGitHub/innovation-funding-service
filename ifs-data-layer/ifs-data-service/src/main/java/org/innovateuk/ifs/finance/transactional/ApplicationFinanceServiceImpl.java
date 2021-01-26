@@ -147,6 +147,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                     if (applicationFinance.getInternationalLocation() != null) {
                         dbFinance.setInternationalLocation(applicationFinance.getInternationalLocation());
                     }
+                    if (applicationFinance.getNorthernIrelandDeclaration() != null) {
+                        dbFinance.setNorthernIrelandDeclaration(applicationFinance.getNorthernIrelandDeclaration());
+                    }
 
                     if (StringUtils.isEmpty(applicationFinance.getJustification())) {
                         dbFinance.setJustification(null);

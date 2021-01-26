@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -657,6 +658,16 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 }
             }
 
+            if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL) {
+                if (organisationName.equals("Northern Irish Ltd.")) {
+                    builder[0] = builder[0]
+                            .withNorthernIrelandDeclaration(true);
+                } else {
+                    builder[0] = builder[0]
+                            .withNorthernIrelandDeclaration(false);
+                }
+
+            }
             return builder[0].withOrganisationSize(SMALL).
                     withLocation();
         };
