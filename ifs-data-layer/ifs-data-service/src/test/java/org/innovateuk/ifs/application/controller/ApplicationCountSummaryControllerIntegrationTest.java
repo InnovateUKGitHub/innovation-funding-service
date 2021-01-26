@@ -12,7 +12,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -98,7 +98,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
                 .withApplication(application)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withOrganisationId(3L)
                 .withUser(userMapper.mapToDomain(getSteveSmith()))
                 .build();

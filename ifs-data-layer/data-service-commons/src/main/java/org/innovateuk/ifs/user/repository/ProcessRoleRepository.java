@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -18,17 +18,17 @@ public interface ProcessRoleRepository extends PagingAndSortingRepository<Proces
     List<ProcessRole> findByUser(User user);
     List<ProcessRole> findByUserId(long userId);
     List<ProcessRole> findByUserAndApplicationId(User user, long applicationId);
-    ProcessRole findByUserIdAndRoleAndApplicationId(long userId, Role role, long applicationId);
-    ProcessRole findOneByUserIdAndRoleInAndApplicationId(long userId, Set<Role> role, long applicationId);
+    ProcessRole findByUserIdAndRoleAndApplicationId(long userId, ProcessRoleType role, long applicationId);
+    ProcessRole findOneByUserIdAndRoleInAndApplicationId(long userId, Set<ProcessRoleType> role, long applicationId);
     List<ProcessRole> findByApplicationId(long applicationId);
-    List<ProcessRole> findByApplicationIdAndRole(long applicationId, Role role);
-    ProcessRole findOneByApplicationIdAndRole(long applicationId, Role role);
+    List<ProcessRole> findByApplicationIdAndRole(long applicationId, ProcessRoleType role);
+    ProcessRole findOneByApplicationIdAndRole(long applicationId, ProcessRoleType role);
     List<ProcessRole> findByApplicationIdAndOrganisationId(long applicationId, long organisationId);
-    boolean existsByUserIdAndRoleInAndApplicationId(long userId, Set<Role> role, long applicationId);
-    boolean existsByUserIdAndRoleAndApplicationIdAndOrganisationId(long userId, Role role, long applicationId, long organisationId);
-    boolean existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(long userId, Set<Role> role, long applicationId, long organisationId);
+    boolean existsByUserIdAndRoleInAndApplicationId(long userId, Set<ProcessRoleType> role, long applicationId);
+    boolean existsByUserIdAndRoleAndApplicationIdAndOrganisationId(long userId, ProcessRoleType role, long applicationId, long organisationId);
+    boolean existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(long userId, Set<ProcessRoleType> role, long applicationId, long organisationId);
     boolean existsByUserIdAndApplicationId(long userId, long applicationId);
-    boolean existsByUserIdAndApplicationIdAndRole(long id, long applicationId, Role role);
+    boolean existsByUserIdAndApplicationIdAndRole(long id, long applicationId, ProcessRoleType role);
     void deleteByApplicationId(long applicationId);
 
     boolean existsByUserIdAndOrganisationId(long userId, long organisationId);

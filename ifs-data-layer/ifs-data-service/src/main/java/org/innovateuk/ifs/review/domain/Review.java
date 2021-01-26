@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -35,7 +35,7 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
     }
 
     public Review(Application application, ReviewParticipant reviewParticipant) {
-        this.participant = new ProcessRole(reviewParticipant.getUser(), application.getId(), Role.PANEL_ASSESSOR);
+        this.participant = new ProcessRole(reviewParticipant.getUser(), application.getId(), ProcessRoleType.PANEL_ASSESSOR);
         this.target = application;
     }
 

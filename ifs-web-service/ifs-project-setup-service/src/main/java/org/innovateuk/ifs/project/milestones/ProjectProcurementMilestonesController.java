@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.milestones;
 
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm;
 import org.innovateuk.ifs.application.forms.sections.procurement.milestones.populator.ProcurementMilestoneFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.procurement.milestones.saver.AbstractProcurementMilestoneFormSaver;
 import org.innovateuk.ifs.application.procurement.milestones.AbstractProcurementMilestoneController;
 import org.innovateuk.ifs.procurement.milestone.service.ProjectProcurementMilestoneRestService;
 import org.innovateuk.ifs.project.procurement.milestones.populator.ProjectProcurementMilestoneViewModelPopulator;
@@ -43,5 +44,11 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @Override
     protected String getView() {
         return VIEW;
+    }
+
+    // not required for applicants in project setup
+    @Override
+    public AbstractProcurementMilestoneFormSaver getSaver() {
+        return null;
     }
 }

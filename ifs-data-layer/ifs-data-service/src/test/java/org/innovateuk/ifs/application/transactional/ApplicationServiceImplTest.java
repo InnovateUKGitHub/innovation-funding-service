@@ -41,6 +41,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -197,7 +198,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         org2 = newOrganisation().withId(345L).build();
         org3 = newOrganisation().withId(456L).build();
 
-        roles = newProcessRole().withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        roles = newProcessRole().withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.LEADAPPLICANT).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
         section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
         comp = newCompetition().withSections(singletonList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
@@ -215,7 +216,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Competition competition = newCompetition().build();
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
-        ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
+        ProcessRole processRole = newProcessRole().withUser(user).withRole(ProcessRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
         ApplicationState applicationState = CREATED;
 
         CompetitionReferralSource competitionReferralSource = BUSINESS_CONTACT;
@@ -254,7 +255,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertNull(createdProcessRole.getId());
             assertEquals(application.getId().longValue(), createdProcessRole.getApplicationId());
             assertEquals(organisation.getId(), createdProcessRole.getOrganisationId());
-            assertEquals(Role.LEADAPPLICANT, createdProcessRole.getRole());
+            assertEquals(ProcessRoleType.LEADAPPLICANT, createdProcessRole.getRole());
             assertEquals(user.getId(), createdProcessRole.getUser().getId());
 
             assertEquals(competitionReferralSource, created.getCompetitionReferralSource());
@@ -293,10 +294,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Organisation organisation1 = newOrganisation().withId(1L).withName("test organisation 1").build();
         Organisation organisation2 = newOrganisation().withId(2L).withName("test organisation 2").build();
 
-        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId(organisation1.getId()).build();
-        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId(organisation1.getId()).build();
-        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId(organisation2.getId()).build();
-        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(Role.APPLICANT).withOrganisationId(organisation2.getId()).build();
+        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(ProcessRoleType.COLLABORATOR).withOrganisationId(organisation1.getId()).build();
+        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(ProcessRoleType.COLLABORATOR).withOrganisationId(organisation1.getId()).build();
+        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(ProcessRoleType.COLLABORATOR).withOrganisationId(organisation2.getId()).build();
+        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(ProcessRoleType.COLLABORATOR).withOrganisationId(organisation2.getId()).build();
 
         when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(testUser1));
         when(userRepositoryMock.findById(2L)).thenReturn(Optional.of(testUser2));

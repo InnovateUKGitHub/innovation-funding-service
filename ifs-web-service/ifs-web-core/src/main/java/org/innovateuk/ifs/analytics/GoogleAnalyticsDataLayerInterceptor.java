@@ -110,9 +110,9 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         if (auth instanceof UserAuthentication) {
             UserAuthentication userAuth = (UserAuthentication) auth;
 
-            List<Role> userRoles = simpleMap(
+            List<String> userRoles = simpleMap(
                     userAuth.getAuthorities(),
-                    authority -> Role.getByName(authority.getAuthority().toLowerCase())
+                    authority -> Role.getByName(authority.getAuthority().toLowerCase()).name()
             );
 
             dataLayer.setUserRoles(userRoles);
@@ -181,9 +181,9 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         }
     }
 
-    private static void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<List<Role>>> f, final long id) {
-        final Optional<List<Role>> roles = f.apply(id).getOptionalSuccessObject();
-        roles.ifPresent(dl::addUserRoles);
+    private static <E extends Enum> void setApplicationOrProjectSpecificRolesFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<List<E>>> f, final long id) {
+        final Optional<List<E>> roles = f.apply(id).getOptionalSuccessObject();
+        roles.ifPresent(list -> list.forEach(role -> dl.addRole(role.name())));
     }
 
     private static long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {

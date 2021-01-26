@@ -366,7 +366,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
 
         // Now assign two of the participants
         for (int i = 0; i < 2; i++) {
-            ProcessRole processRole = processRoleRepository.save(new ProcessRole(users.get(i), application.getId(), Role.ASSESSOR));
+            ProcessRole processRole = processRoleRepository.save(new ProcessRole(users.get(i), application.getId(), ProcessRoleType.ASSESSOR));
 
             Assessment assessment = new Assessment(application, processRole);
             assessment.setProcessState(AssessmentState.ACCEPTED);
@@ -409,7 +409,7 @@ public class AssessmentParticipantRepositoryIntegrationTest extends BaseReposito
         );
 
         // Now assign one of the participants
-        ProcessRole processRole = processRoleRepository.save(new ProcessRole(users.get(0), application.getId(), Role.ASSESSOR));
+        ProcessRole processRole = processRoleRepository.save(new ProcessRole(users.get(0), application.getId(), ProcessRoleType.ASSESSOR));
 
         Assessment assessment = new Assessment(application, processRole);
         assessment.setProcessState(AssessmentState.ACCEPTED);

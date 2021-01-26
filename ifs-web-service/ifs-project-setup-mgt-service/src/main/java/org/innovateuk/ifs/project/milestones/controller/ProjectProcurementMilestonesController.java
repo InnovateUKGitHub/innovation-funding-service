@@ -166,8 +166,23 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
         return viewProjectMilestones(projectId, organisationId, true, user, model, form);
     }
 
-    private Supplier<String> redirectToViewMilestones(long projectId, long organisationId) {
-        return () -> String.format("redirect:/project/%d/finance-check/organisation/%d/procurement-milestones", projectId, organisationId);
+    @PostMapping("/remove-row/{rowId}")
+    public @ResponseBody
+    JsonNode ajaxRemoveRow(UserResource user,
+                           @PathVariable long projectId,
+                           @PathVariable long organisationId,
+                           @PathVariable String rowId) {
+        saver.removeRow(rowId);
+        return new ObjectMapper().createObjectNode();
+    }
+
+    @PostMapping("/add-row")
+    public String ajaxAddRow(Model model,
+                             UserResource userResource,
+                             @PathVariable long projectId,
+                             @PathVariable long organisationId) {
+        model.addAttribute("model", populator.populate(projectId, organisationId, userResource, true));
+        return addAjaxRow(model);
     }
 
     private Supplier<String> redirectToFinanceChecks(long projectId) {
@@ -177,5 +192,10 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @Override
     protected String getView() {
         return VIEW;
+    }
+
+    @Override
+    public ProjectProcurementMilestoneFormSaver getSaver() {
+        return saver;
     }
 }

@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 @Component
 public class ApplicationPrintPopulator {
@@ -68,7 +67,7 @@ public class ApplicationPrintPopulator {
     private boolean ktpUserCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
         List<ProcessRoleResource> processRoles = processRoleRestService.findProcessRole(application.getId()).getSuccess();
         boolean isKta = processRoles.stream()
-                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole().isKta());
 
         return isKta
                 && competition.isKtp()
