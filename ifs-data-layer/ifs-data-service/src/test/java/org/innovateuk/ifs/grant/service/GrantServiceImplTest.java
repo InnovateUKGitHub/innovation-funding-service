@@ -98,7 +98,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
 
         ProjectUser financeContactOrg1 = newProjectUser()
                 .withRole(PROJECT_FINANCE_CONTACT)
-                .withUser(newUser().withUid("financeContactOrg1").build())
+                .withUser(user)
                 .withOrganisation(organisation1)
                 .build();
 
@@ -126,7 +126,7 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         List<Participant> participants = projectUsers.stream()
                 .map(projectUser -> {
                     Participant participant = new Participant();
-                    participant.setContactId(projectUser.getId());
+                    participant.setContactId(projectUser.getUser().getId());
                     return participant;
                 }).collect(Collectors.toList());
 
@@ -175,10 +175,9 @@ public class GrantServiceImplTest extends BaseServiceUnitTest<GrantServiceImpl> 
         assertFalse(normalPartnerOrg2.getUser().hasRole(Role.LIVE_PROJECTS_USER));
 
         verify(userService).evictUserCache("uid");
-        verify(userService).evictUserCache("financeContactOrg1");
         verify(userService).evictUserCache("financeContactOrg2");
         verifyNoMoreInteractions(userService);
-        verify(crmService, times(5)).syncCrmContact(anyLong(), anyLong());
+        verify(crmService, times(4)).syncCrmContact(anyLong(), anyLong());
     }
 
     @Test

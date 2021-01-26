@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -96,9 +97,14 @@ public class GrantServiceImpl implements GrantService {
     private ServiceResult<Void> syncParticipants(Grant grant, Project project) {
         ServiceResult<Void> syncCrmContactResults = serviceSuccess();
 
-        for (Participant participant : grant.getParticipants()) {
+        List<Long> contacts = grant.getParticipants().stream()
+                .map(Participant::getContactId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        for (Long contact : contacts) {
             syncCrmContactResults =  syncCrmContactResults
-                    .andOnSuccess(() -> crmService.syncCrmContact(participant.getContactId(), project.getId()));
+                    .andOnSuccess(() -> crmService.syncCrmContact(contact, project.getId()));
         }
 
         return syncCrmContactResults;
