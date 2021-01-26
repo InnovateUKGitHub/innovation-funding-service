@@ -6,6 +6,7 @@ import org.innovateuk.ifs.login.viewmodel.DashboardPanel;
 import org.innovateuk.ifs.login.viewmodel.DashboardSelectionViewModel;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
@@ -99,7 +100,7 @@ public class HomeController {
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
         boolean shouldShowApplicantPanel = processRoleResources.stream()
                 .map(ProcessRoleResource::getRole)
-                .anyMatch(Role::isKta);
+                .anyMatch(ProcessRoleType::isKta);
 
         if (isMonitoringOfficer) {
             dashboardRoles.add(MONITORING_OFFICER);

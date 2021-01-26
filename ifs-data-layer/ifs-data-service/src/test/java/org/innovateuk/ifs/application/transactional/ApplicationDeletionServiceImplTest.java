@@ -17,12 +17,11 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -101,12 +100,12 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         ProcessRole leadRole = newProcessRole()
                 .withApplication(application)
                 .withUser(user)
-                .withRole(Role.LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .build();
         ProcessRole inactiveRole = newProcessRole()
                 .withApplication(application)
                 .withUser(newUser().withStatus(UserStatus.INACTIVE).build())
-                .withRole(Role.COLLABORATOR)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .build();
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());

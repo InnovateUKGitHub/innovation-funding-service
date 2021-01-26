@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -88,7 +89,7 @@ public class ProjectTeamViewModelPopulatorTest {
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(123L, 456L, 123L, 456L)
                 .withOrganisation(partnerOne.getId(), partnerTwo.getId(), partnerOne.getId(), partnerTwo.getId())
-                .withRole(11L, 10L, 10L, 9L)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER, ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_PARTNER, ProjectParticipantRole.PROJECT_FINANCE_CONTACT)
                 .build(4);
         List<OrganisationResource> projectOrgs = asList(partnerOne, partnerTwo);
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().

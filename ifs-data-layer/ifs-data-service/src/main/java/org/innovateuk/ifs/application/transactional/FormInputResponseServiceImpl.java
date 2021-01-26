@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 

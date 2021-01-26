@@ -39,7 +39,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void checkAccessToMonitoringOfficerSectionHappyPath() {
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(newUserResource().withRoleGlobal(COMP_ADMIN).build()));
 
         verifyInteractions(
                 SetupProgressChecker::canAccessMonitoringOfficer
@@ -91,7 +91,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void innovationLeadUserCanAccessIfMonitoringOfficerSubmitted() {
-        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(INNOVATION_LEAD)).build();
+        UserResource supportUser = newUserResource().withRoleGlobal(INNOVATION_LEAD).build();
 
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
@@ -174,7 +174,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void checkAccessToSpendProfileSectionHappyPath() {
         when(setupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(false);
-        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(newUserResource().withRoleGlobal(COMP_ADMIN).build()));
         verifyInteractions(
                 SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isSpendProfileSubmitted

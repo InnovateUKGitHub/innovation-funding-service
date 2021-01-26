@@ -77,7 +77,7 @@ Invite the KTA to assess the KTP competition
     Given the user selects the checkbox       assessor-row-1
     And the user clicks the button/link       id = add-selected-assessors-to-invite-list-button
     When the user clicks the button/link      id = review-and-send-assessor-invites-button
-    And the user clicks the button/link       jQuery = button:contains("Send invite")
+    And the user clicks the button/link       jQuery = button:contains("Send invitation")
     Then the user should see the element      link = Amy Colin
 
 Assessor accept the inviation to assess the KTP competition
@@ -450,7 +450,7 @@ Invite KTA to assess the competition
     ...                              ELSE     the user selects the checkbox     assessor-row-1
     the user clicks the button/link                          id = add-selected-assessors-to-invite-list-button
     the user clicks the button/link                          id = review-and-send-assessor-invites-button
-    the user clicks the button/link                          jQuery = button:contains("Send invite")
+    the user clicks the button/link                          jQuery = button:contains("Send invitation")
     KTA accepts the invitation to assess the application     ${competitionName}  ${email}   ${short_password}
     Log in as a different user                               &{ifs_admin_user_credentials}
     the user navigates to the page                           ${server}/management/assessment/competition/${competitionID}/applications

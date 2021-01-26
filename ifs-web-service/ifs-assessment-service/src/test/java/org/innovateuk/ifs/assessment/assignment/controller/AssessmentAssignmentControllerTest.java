@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.assignment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
@@ -12,6 +11,8 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static java.lang.String.format;
 import static java.util.Collections.nCopies;
@@ -43,7 +47,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.ProcessRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -106,7 +111,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                         leadOrganisation.getId(),
                         collaboratorOrganisation2.getId(),
                         otherOrganisation.getId())
-                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ASSESSOR)
+                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ProcessRoleType.ASSESSOR)
                 .build(4);
 
         partners = new TreeSet<>(comparingLong(OrganisationResource::getId));

@@ -1,0 +1,21 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${name}
+
+We invite you to assess applications for the competition:
+${competitionId}: ${competitionName}
+
+We recognise your expertise and would greatly appreciate your comments on the scientific and business merit of the applications.
+
+This is an open-ended competition and its applications will be assessed in different batches before the competition closes.
+
+We will notify you with dates of the assessment periods when we assign applications to you.
+
+Please sign into the Innovation Funding Service ${inviteUrl} to respond to this invitation.
+
+${customTextPlain}
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

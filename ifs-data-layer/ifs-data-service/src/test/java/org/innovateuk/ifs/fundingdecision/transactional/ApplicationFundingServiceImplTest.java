@@ -24,8 +24,8 @@ import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -33,7 +33,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.MapFunctions;
@@ -160,6 +160,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Application application1 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
         Application application2 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
         Application application3 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
+        Application application4 = newApplication().withActivityState(ApplicationState.SUBMITTED).withCompetition(competition).build();
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -168,8 +169,8 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
                 withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant, inactiveapplicant).
-                withApplication(application1, application2, application3, application3).
-                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR).
+                withApplication(application1, application2, application3, application4).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.LEADAPPLICANT).
                 build(4);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
@@ -247,7 +248,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
                 withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant).
                 withApplication(application1, application2, application3).
-                withRole(Role.LEADAPPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT).
                 build(3);
 
         AverageAssessorScore averageAssessorScore1 = new AverageAssessorScore(application1, BigDecimal.valueOf(90));
@@ -325,16 +326,16 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         // add some collaborators into the mix - they should receive Notifications, and applicants who should not
         User application1LeadApplicant = newUser().build();
         User application1Collaborator = newUser().build();
-        User application1Applicant = newUser().build();
+        User application1Assessor = newUser().build();
         User application2LeadApplicant = newUser().build();
         User application2Collaborator = newUser().build();
-        User application2Applicant = newUser().build();
+        User application2Assessor = newUser().build();
 
 
         List<ProcessRole> allProcessRoles = newProcessRole().
-                withUser(application1LeadApplicant, application1Collaborator, application1Applicant, application2LeadApplicant, application2Collaborator, application2Applicant).
+                withUser(application1LeadApplicant, application1Collaborator, application1Assessor, application2LeadApplicant, application2Collaborator, application2Assessor).
                 withApplication(application1, application1, application1, application2, application2, application2).
-                withRole(Role.LEADAPPLICANT, Role.COLLABORATOR, Role.APPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR, Role.APPLICANT).
+                withRole(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.ASSESSOR, ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR, ProcessRoleType.ASSESSOR).
                 build(6);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());

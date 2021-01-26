@@ -194,7 +194,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void downloadAsInternalUser() throws Exception {
         Role.internalRoles().forEach(role -> {
             try {
-                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
+                setLoggedInUser(newUserResource().withRoleGlobal(role).build());
                 Long formInputId = 35L;
                 long applicationId = 2L;
                 long competitionId = 3L;
