@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -20,8 +21,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,7 +51,7 @@ public class FinanceContactControllerTest extends BaseControllerMockMVCTest<Fina
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(111L, 222L)
                 .withOrganisation(organisationId, organisationId)
-                .withRole(PROJECT_MANAGER, PARTNER)
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER, ProjectParticipantRole.PROJECT_PARTNER)
                 .build(2);
         CompetitionResource competitionResource = newCompetitionResource().build();
         setLoggedInUser(newUserResource().withId(222L).build());

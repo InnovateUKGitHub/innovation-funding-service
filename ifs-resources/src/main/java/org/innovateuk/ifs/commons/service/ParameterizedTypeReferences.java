@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.supporter.resource.AssessorDashboardState;
 import org.innovateuk.ifs.supporter.resource.SupporterDashboardCompetitionResource;
 import org.innovateuk.ifs.supporter.resource.SupporterAssignmentResource;
@@ -116,6 +117,14 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<Role>> roleListType() {
         return new ParameterizedTypeReference<List<Role>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ProcessRoleType>> processRoleTypeListType() {
+        return new ParameterizedTypeReference<List<ProcessRoleType>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ProjectParticipantRole>> projectParticipantRoleListType() {
+        return new ParameterizedTypeReference<List<ProjectParticipantRole>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserResource>> userListType() {

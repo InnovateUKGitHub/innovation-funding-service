@@ -3,7 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.HashSet;
@@ -24,29 +24,28 @@ public final class SecurityRuleUtil {
     public static boolean checkProcessRole(final UserResource user,
                                            final Long applicationId,
                                            final Long organisationId,
-                                           final Role userRoleType,
+                                           final ProcessRoleType userRoleType,
                                            final ProcessRoleRepository processRoleRepository) {
-        final Role role = Role.getByName(userRoleType.getName());
-        return processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(user.getId(), role, applicationId, organisationId);
+        return processRoleRepository.existsByUserIdAndRoleAndApplicationIdAndOrganisationId(user.getId(), userRoleType, applicationId, organisationId);
     }
 
     public static boolean checkHasAnyProcessRole(final UserResource user,
                                                  final Long applicationId,
                                                  final Long organisationId,
                                                  final ProcessRoleRepository processRoleRepository,
-                                                 final Role... roles) {
+                                                 final ProcessRoleType... roles) {
         return processRoleRepository.existsByUserIdAndRoleInAndApplicationIdAndOrganisationId(user.getId(), new HashSet<>(asList(roles)), applicationId, organisationId);
     }
 
     public static boolean checkHasAnyProcessRole(final UserResource user,
                                                  final Long applicationId,
                                                  final ProcessRoleRepository processRoleRepository,
-                                                 final Role... roles) {
+                                                 final ProcessRoleType... roles) {
         return processRoleRepository.existsByUserIdAndRoleInAndApplicationId(user.getId(), new HashSet<>(asList(roles)), applicationId);
     }
 
-    public static boolean checkProcessRole(final UserResource user, final long applicationId, Role userRoleType, final ProcessRoleRepository processRoleRepository) {
-        return user.getId() != null && processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, Role.getByName(userRoleType.getName()));
+    public static boolean checkProcessRole(final UserResource user, final long applicationId, ProcessRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
+        return user.getId() != null && processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, userRoleType);
     }
 
     public static boolean checkHasAnyProcessRole(final UserResource user,

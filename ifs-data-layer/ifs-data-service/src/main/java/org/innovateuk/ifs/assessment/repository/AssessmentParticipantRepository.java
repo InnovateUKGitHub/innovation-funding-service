@@ -218,7 +218,7 @@ public interface AssessmentParticipantRepository extends CompetitionParticipantR
     String AVAILABLE_ASSESSOR_QUERY = "FROM AssessmentParticipant assessmentParticipant " +
             "JOIN User user ON user.id = assessmentParticipant.user.id " +
             "LEFT JOIN user.roleProfileStatuses roleStatuses " +
-            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.Role.ASSESSOR " +
+            "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id AND processRole.role = org.innovateuk.ifs.user.resource.ProcessRoleType.ASSESSOR " +
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id AND type(assessment) = Assessment " +
             "LEFT JOIN Application application ON assessment.target = application " +
             "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +

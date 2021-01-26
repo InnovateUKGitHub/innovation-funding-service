@@ -17,6 +17,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.*;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
@@ -47,7 +48,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -80,19 +81,19 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.core.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -103,7 +104,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     private Application application;
     private Competition competition;
-    private Role partnerRole;
+    private ProjectParticipantRole partnerRole;
     private User user;
     private List<PartnerOrganisation> partnerOrganisation;
     private List<ProjectUserResource> projectUserResources;
@@ -183,7 +184,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ProcessRole leadApplicantProcessRole = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(LEADAPPLICANT)
+                .withRole(ProcessRoleType.LEADAPPLICANT)
                 .withUser(user)
                 .build();
 
@@ -224,7 +225,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         this.organisation = organisation;
         this.organisation.setOrganisationType(businessOrganisationType);
 
-        partnerRole = FINANCE_CONTACT;
+        partnerRole = PROJECT_FINANCE_CONTACT;
 
         partnerOrganisation = newPartnerOrganisation()
                 .withOrganisation(this.organisation)
@@ -262,7 +263,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         projectUserResources = newProjectUserResource()
                 .withProject(p.getId())
                 .withOrganisation(this.organisation.getId())
-                .withRole(partnerRole.getId())
+                .withRole(partnerRole)
                 .withRoleName(PROJECT_PARTNER.getName())
                 .build(1);
 
@@ -365,7 +366,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         ApplicationFinanceResource applicationFinanceResource2 = newApplicationFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).withOrganisation(organisations.get(2).getId()).build();
         when(applicationFinanceMapper.mapToResource(applicationFinances.get(2))).thenReturn(applicationFinanceResource2);
 
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(project.getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole).withRoleName(PROJECT_PARTNER.getName()).build(3);
 
         when(projectUserMapper.mapToResource(projectUsers.get(0))).thenReturn(puResource.get(0));
         when(projectUserMapper.mapToResource(projectUsers.get(1))).thenReturn(puResource.get(1));
@@ -538,7 +539,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUserResource> puResource = newProjectUserResource()
                 .withProject(project.getId())
                 .withOrganisation(organisation.getId())
-                .withRole(partnerRole.getId())
+                .withRole(partnerRole)
                 .withRoleName(PROJECT_PARTNER.getName())
                 .build(1);
 
@@ -597,7 +598,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUserResource> puResource = newProjectUserResource()
                 .withProject(p.getId())
                 .withOrganisation(organisation.getId())
-                .withRole(partnerRole.getId())
+                .withRole(partnerRole)
                 .withRoleName(PROJECT_PARTNER.getName())
                 .build(1);
 
@@ -648,7 +649,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newProjectUserInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(false).build(1);
         Project p = spy(newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).withProjectProcess(projectProcess).build());
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         when(p.getLeadOrganisation()).thenReturn(Optional.of(newPartnerOrganisation().build()));
 
@@ -693,7 +694,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(user).withOrganisation(organisation).withInvite(newProjectUserInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(organisation).withLeadOrganisation(true).build(1);
         Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(ZonedDateTime.now()).withProjectProcess(projectProcess).build();
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
+        List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(organisation.getId()).withRole(partnerRole).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         when(projectRepository.findById(p.getId())).thenReturn(Optional.of(p));
         when(projectUserRepository.findByProjectId(p.getId())).thenReturn(pu);
