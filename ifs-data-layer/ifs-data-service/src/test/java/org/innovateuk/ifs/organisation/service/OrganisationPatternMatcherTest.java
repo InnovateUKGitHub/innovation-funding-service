@@ -119,7 +119,6 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
         assertFalse(service.sicCodesMatch(organisationResource, organisation));
     }
 
-
     private Organisation getOrganisationWithExecs() {
         Organisation organisation = newOrganisation().withId(1L).build();
         List<ExecutiveOfficer> officer = new ArrayList<>();
