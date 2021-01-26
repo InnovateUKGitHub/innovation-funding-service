@@ -45,15 +45,30 @@
                <ul id="org-results" class="govuk-list govuk-!-margin-0">
                     <li class="type-company" th:each="(organisation, iteration : ${organisationForm.organisationSearchResults})">
                        <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
+                          <th:block th:if="${organisation.inactiveCompanyToDisplay == 'ACTIVE'}">
                            <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
                                     title="View organisation"
                                     th:text="${organisation.name}"
                                      class="govuk-link">
                            </a>
+                           </th:block>
+                         <th:block th:if="${organisation.inactiveCompanyToDisplay == 'NOTACTIVE'}">
+                             <div class="govuk-grid-row govuk-!-margin-bottom-0">
+                                 <div class="govuk-grid-column-one-third govuk-!-margin-bottom-0">
+                                     <p class="govuk-body meta crumbtrail govuk-!-margin-bottom-0" th:text="${organisation.name}"></p>
+                                 </div>
+                             </div>
+                             <th:block th:unless="${organisationForm.research}">
+                                    <div class="govuk-hint meta crumbtrail govuk-!-margin-top-0 govuk-!-margin-bottom-0" th:text="${organisation.extraAttributes.description}"></div>
+                                 <div class="govuk-body govuk-!-margin-top-0 govuk-!-margin-bottom-0" th:text="${organisation.location}"></div>
+                             </th:block>
+                           </th:block>
                        </h3>
                        <th:block th:unless="${organisationForm.research}">
-                        <p class="govuk-body meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
-                        <p class="govuk-body" th:text="${organisation.location}"></p>
+                           <th:block th:if="${organisation.inactiveCompanyToDisplay == 'ACTIVE'}">
+                                <p class="govuk-body meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
+                                <p class="govuk-body" th:text="${organisation.location}"></p>
+                           </th:block>
                        </th:block>
                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-3 govuk-!-margin-bottom-3"/>
                    </li>

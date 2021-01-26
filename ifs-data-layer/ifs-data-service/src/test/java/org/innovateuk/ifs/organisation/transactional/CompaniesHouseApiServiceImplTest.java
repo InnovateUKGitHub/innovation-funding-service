@@ -64,7 +64,7 @@ public class CompaniesHouseApiServiceImplTest {
 		searchByIndexVariables = new HashMap<>();
 		searchByIndexVariables.put("items_per_page", 10);
 		searchByIndexVariables.put("q", defaultSearchString);
-		searchByIndexVariables.put("start_index", 3);
+		searchByIndexVariables.put("start_index", 1);
 
 
 		getCompanyDirectorsUrlPath = "baseurl/company/123/officers?items_per_page={items_per_page}&register_type={register_type}";
@@ -100,9 +100,10 @@ public class CompaniesHouseApiServiceImplTest {
 	@Test
 	public void searchOrganisationsByIndex() {
 		ReflectionTestUtils.setField(service, "isImprovedSearchEnabled", true);
-        int indexPostion = 3;
+		int indexPostion = 3;
+		searchByIndexVariables.put("start_index", indexPostion);
 
-		Map<String, Object> orgSearchResultMapByIndex = searchResultMapByIndex(indexPostion);
+		Map<String, Object> orgSearchResultMapByIndex = improvedSearchResultMap(indexPostion);
 		JsonNode resultNode = new ObjectMapper().valueToTree(asMap("items", asList(orgSearchResultMapByIndex)));
 		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
 		when(adapter.restGetEntity(searchByIndexUrlPath, JsonNode.class, searchByIndexVariables)).thenReturn(response);
@@ -123,6 +124,44 @@ public class CompaniesHouseApiServiceImplTest {
 	}
 
 	@Test
+	public void searchCompanyResultShouldFilterDissolvedCompany() {
+		ReflectionTestUtils.setField(service, "isImprovedSearchEnabled", true);
+		int indexPostion = 1;
+
+		Map<String, Object> orgSearchResultMapByIndex = improvedSearchResultMap(indexPostion);
+		JsonNode resultNode = new ObjectMapper().valueToTree(asMap("items", asList(orgSearchResultMapByIndex)));
+		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
+		when(adapter.restGetEntity(searchByIndexUrlPath, JsonNode.class, searchByIndexVariables)).thenReturn(response);
+
+		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations(defaultSearchString,indexPostion);
+
+		verify(adapter).restGetEntity(searchByIndexUrlPath, JsonNode.class, searchByIndexVariables);
+		assertEquals(1, result.getSuccess().size());
+		assertEquals("dissolved", result.getSuccess().get(0).getOrganisationStatus());
+		assertEquals("NOTACTIVE", result.getSuccess().get(0).getInactiveCompanyToDisplay());
+	}
+
+	@Test
+	public void searchCompanyResultShouldFilterClosedCompany() {
+		ReflectionTestUtils.setField(service, "isImprovedSearchEnabled", true);
+		int indexPostion = 2;
+		searchByIndexVariables.put("start_index", indexPostion);
+
+		Map<String, Object> orgSearchResultMapByIndex = improvedSearchResultMap(indexPostion);
+		JsonNode resultNode = new ObjectMapper().valueToTree(asMap("items", asList(orgSearchResultMapByIndex)));
+		ResponseEntity<JsonNode> response = new ResponseEntity<JsonNode>(resultNode, HttpStatus.OK);
+		when(adapter.restGetEntity(searchByIndexUrlPath, JsonNode.class, searchByIndexVariables)).thenReturn(response);
+
+		ServiceResult<List<OrganisationSearchResult>> result = service.searchOrganisations(defaultSearchString,indexPostion);
+
+		verify(adapter).restGetEntity(searchByIndexUrlPath, JsonNode.class, searchByIndexVariables);
+		assertTrue(result.isSuccess());
+		assertEquals(1, result.getSuccess().size());
+		assertEquals("closed", result.getSuccess().get(0).getOrganisationStatus());
+		assertEquals("NOTACTIVE", result.getSuccess().get(0).getInactiveCompanyToDisplay());
+	}
+
+    @Test
 	public void searchOrganisationsNullAddressLine() {
 		ReflectionTestUtils.setField(service, "isImprovedSearchEnabled", false);
 		Map<String, Object> companyResultMap = companyResultMap();
@@ -315,15 +354,17 @@ public class CompaniesHouseApiServiceImplTest {
 				"company_number", "1234",
 				"address", addressMap());
 	}
-	private Map<String, Object> searchResultMapByIndex(int indexPosition) {
+	private Map<String, Object> improvedSearchResultMap(int indexPosition) {
 		Map<Integer, Map<String, Object>> indexedSearchResultMap = new HashMap<>();
 		indexedSearchResultMap.put(1, asMap("company_number", "1234",
 				"title", "company name",
+				"company_status", "dissolved",
 				"company_number", "1234",
 				"address", addressMap()));
 		indexedSearchResultMap.put(2, asMap("company_number", "4567",
 				"title", "company name1",
 				"company_number", "4567",
+				"company_status", "closed",
 				"address", addressMap()));
 		indexedSearchResultMap.put(3, asMap("company_number", "8910",
 				"title", "company name2",
@@ -337,7 +378,7 @@ public class CompaniesHouseApiServiceImplTest {
 		return indexedSearchResultMap.get(indexPosition);
 
 	}
-	
+
 	private Map<String, Object> companyMap() {
 		return asMap("company_number", "1234",
 				"company_name", "company name",

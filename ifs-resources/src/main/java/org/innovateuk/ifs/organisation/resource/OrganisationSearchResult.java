@@ -22,6 +22,8 @@ public class OrganisationSearchResult implements Serializable{
     private List<OrganisationSicCodeResource> organisationSicCodes;
     private List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficers;
     private Map<String, Object> extraAttributes;
+    private String organisationStatus;
+    private String inactiveCompanyToDisplay;
 
     public OrganisationSearchResult(String id, String name) {
         this.name = name;
@@ -87,11 +89,27 @@ public class OrganisationSearchResult implements Serializable{
         this.organisationExecutiveOfficers = organisationExecutiveOfficers;
     }
 
+    public String getOrganisationStatus() {
+        return organisationStatus;
+    }
+
+    public void setOrganisationStatus(String organisationStatus) {
+        this.organisationStatus = organisationStatus;
+    }
+
     public Map<String, Object> getExtraAttributes() {
         return extraAttributes;
     }
 
     public void setExtraAttributes(Map<String, Object> extraAttributes) {
         this.extraAttributes = extraAttributes;
+    }
+
+    public String getInactiveCompanyToDisplay() {
+        return inactiveCompanyToDisplay;
+    }
+
+    public void setInactiveCompanyToDisplay(String inactiveCompanyToDisplay) {
+        this.inactiveCompanyToDisplay = inactiveCompanyToDisplay;
     }
 }

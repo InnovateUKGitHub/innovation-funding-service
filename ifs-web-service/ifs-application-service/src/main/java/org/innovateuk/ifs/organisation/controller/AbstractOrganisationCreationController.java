@@ -55,8 +55,7 @@ public abstract class AbstractOrganisationCreationController {
 
     private static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
     protected static final int  SEARCH_ITEMS_MAX = 10;
-    protected static final int  SEARCH_MAX_DSIPLAY = 1000;
-    protected static final int  SEARCH_TOTAL_PAGES = 100;
+    protected static final int  SEARCH_MAX_DSIPLAY = 400;
     protected static final int DEFAULT_PAGE_NUMBER_VALUE = 1;
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
