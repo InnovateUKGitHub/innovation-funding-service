@@ -23,6 +23,8 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8940 SBRI Milestones - Edit project duration in application
 ...
+...             IFS-8947 SBRI Milestones - Reset finances
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -170,7 +172,7 @@ Applicant completes project setup details
     And the user enters bank details
 
 Project finance completes all project setup steps
-    [Documentation]  IFS-6368
+    [Documentation]  IFS-6368  IFS-8947
     [Setup]  log in as a different user        &{internal_finance_credentials}
     Given internal user assign MO to loan project
     And internal user approve bank details

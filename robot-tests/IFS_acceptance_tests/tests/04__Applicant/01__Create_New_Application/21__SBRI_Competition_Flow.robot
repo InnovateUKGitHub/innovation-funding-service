@@ -25,6 +25,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8943  SBRI Milestones - Ability to raise queries / notes in project setup
 ...
+...               IFS-8947  SBRI Milestones - Reset finances
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -346,7 +348,7 @@ Project lead responds to pending queries
     Then the user responds to the query
 
 Internal user can generate spend profile
-    [Documentation]   IFS-8048
+    [Documentation]   IFS-8048  IFS-8947
     Given Log in as a different user          &{internal_finance_credentials}
     And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     When generate spend profile
