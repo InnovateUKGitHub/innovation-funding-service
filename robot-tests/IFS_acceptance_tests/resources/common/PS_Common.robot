@@ -825,20 +825,20 @@ confirm eligibility
 
 confirm milestone
     [Arguments]  ${milestone}
-    the user clicks the button/link          jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Review")
-    the user selects the checkbox            approve-milestones
-    the user clicks the button/link          css = #confirm-button
-    the user clicks the button/link          jQuery = div:nth-child(5) button:contains("Approve payment milestones")
-    the user clicks the button/link          link = Return to finance checks
+    the user clicks the button/link     jQuery = table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Review")
+    the user selects the checkbox       approve-milestones
+    the user clicks the button/link     css = #confirm-button
+    the user clicks the button/link     jQuery = div:nth-child(5) button:contains("Approve payment milestones")
+    the user clicks the button/link     link = Return to finance checks
 
 the internal user approve the contract
     [Arguments]  ${projectID}
-    log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user selects the radio button   APPROVED  acceptGOL
-    the user clicks the button/link     id = submit-button
-    the user clicks the button/link     id = accept-signed-gol
-    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+    log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button     APPROVED  acceptGOL
+    the user clicks the button/link       id = submit-button
+    the user clicks the button/link       id = accept-signed-gol
+    the user should see the element       jQuery = .success-alert h2:contains("These documents have been approved.")
 
 organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
