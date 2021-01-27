@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @EnableCircuitBreaker
 @PropertySource(value = { "classpath:/application.properties", "classpath:/surveyservice.properties" })
-@SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
+@SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class Application extends SpringBootServletInitializer {
 
