@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -68,8 +67,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
                 .flatMap(x -> x.getCompetition().isKtp()
-                        ? x.getProcessRolesByRoles(asSet(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).stream()
-                        : x.getProcessRolesByRoles(asSet(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)).stream())
+                        ? x.getProcessRolesByRoles(ImmutableSet.of(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).stream()
+                        : x.getProcessRolesByRoles(ImmutableSet.of(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)).stream())
                 .collect(Collectors.toList());
 
         for (ProcessRole applicant : applicants) {

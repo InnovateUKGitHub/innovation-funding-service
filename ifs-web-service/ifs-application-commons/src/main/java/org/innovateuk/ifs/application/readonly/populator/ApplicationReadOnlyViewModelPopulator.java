@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toCollection;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
 public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
