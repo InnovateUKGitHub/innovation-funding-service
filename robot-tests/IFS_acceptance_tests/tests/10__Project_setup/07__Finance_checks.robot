@@ -87,6 +87,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               IFS-8695 Amending the project duration date doesn't reflect the change in other screens
 ...
+...               IFS-8944 SBRI milestones - Record changes to milestones
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -273,32 +275,40 @@ Project finance can see finance breakdown for different categories
     And the user should see the text in the element    css = .table-overflow tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,796
 
 IFS Admin user can review Lead partner's finance changes page before the revisions made
-    [Documentation]    INFUND-4837, IFS-603
+    [Documentation]    INFUND-4837, IFS-603  IFS-8944
     [Tags]  HappyPath
-    [Setup]  log in as a different user                &{ifs_admin_user_credentials}
-    Given the user navigates to the page               ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link               css = a.eligibility-0
-    And the user clicks the button/link                link = Review all changes to project finances
+    [Setup]  log in as a different user                               &{ifs_admin_user_credentials}
+    Given the user navigates to the page                              ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user clicks the button/link                              css = a.eligibility-0
+    And the user clicks the button/link                               link = Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    Then the categories are verified for Project finances section    1    £200,903    30.00%    57,803    2,468    140,632
+    Then the categories are verified for Project finances section     1  200,903    30    57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   0     0      0    0      0       0        0
-    And the user should see the text in the element    css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    And the user should see the text in the element    css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
-    And the user clicks the button/link                jQuery = a:contains("Return to eligibility")
+    And the categories are verified for section changes               1  £200,903   3,081     0      100,200    552      90,000       5,970        1,100
+    And the user clicks the button/link                               jQuery = a:contains("Return to Eligibility")
 
 IFS Admin user can review partner's finances before the revisions made
-    [Documentation]    INFUND-4837, IFS-603
+    [Documentation]    INFUND-4837, IFS-603  IFS-8944
     [Tags]  HappyPath
-    Given the user clicks the button/link              link = Back to finance checks
-    When the user clicks the button/link               css = a.eligibility-2
-    Then the user clicks the button/link               link = Review all changes to project finances
+    Given the user clicks the button/link                            link = Back to finance checks
+    When the user clicks the button/link                             css = a.eligibility-2
+    Then the user clicks the button/link                             link = Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Project finances section   1   £200,903   30.00%     57,803    2,468    140,632
+    And the categories are verified for Project finances section     1   200,903   30     57,803    2,468    140,632
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   0     0      0    0      0       0        0
-    And the user should see the text in the element    css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    And the user should see the text in the element    css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
+    And the categories are verified for section changes              1   £200,903   3,081     0      100,200    552      90,000       5,970        1,100
+    And the user clicks the button/link                              jQuery = a:contains("Return to Eligibility")
+
+IFS Admin user can review academic partner's finances before the revisions made
+    [Documentation]    INFUND-4837, IFS-603  IFS-8944
+    [Tags]  HappyPath
+    Given the user clicks the button/link                            link = Back to finance checks
+    When the user clicks the button/link                             css = a.eligibility-1
+    Then the user clicks the button/link                             link = Review all changes to project finances
+    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Project finances section     1   990   100     990    0    0
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    And the categories are verified for section changes              1   £990   286   154     66      0    0      44       440
 
 Lead Partner can review the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -621,12 +631,8 @@ Proj Finance is able to see the Finances amended
     [Documentation]  INFUND-8501
     [Tags]
     Given log in as a different user      &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
-    Then the user clicks the button/link  link = View changes to finances
-    When the user should see the element  css = #project-finance-changes-total
-    Then the user should see the element  css = #project-finance-changes-section
-    And the user should see the element   css = #project-finance-changes-submitted
-    When the user should see the element  jQuery = h2:contains("Changes from submitted finances")
+    And the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    When the user clicks the button/link  link = View changes to finances
     Then the user should see the finance values amended by internal user
 
 Project finance user can see updated finance overview after lead changes to eligibility
@@ -834,161 +840,175 @@ Project finance user can view updated finances summary for the consortium
     And The Total Calculation For Finances Summary Are Verified    1   £356,468   102,634    4,936     248,898
 
 Project finance user can view Lead Partner's changes to finances
-    [Documentation]    INFUND-4837
+    [Documentation]    INFUND-4837  IFS-8944
     [Tags]
-    Given the user clicks the button/link      link = Back to finance checks
-    When the user clicks the button/link       css = a.eligibility-0
-    And the user clicks the button/link        link = View changes to finances
-    # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    Then the categories are verified for Project finances section   1   £177,784   30.00%     50,867    2,468     124,449
-    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        9,650
+    Given the user clicks the button/link                                            link = Back to finance checks
+    When the user clicks the button/link                                             css = a.eligibility-0
+    And the user clicks the button/link                                              link = View changes to finances
+    # the below figures are listed as:                                               RowNumber   TotalCosts   Funding level (%)   FundingSought   OtherPublicSectorFunding   ContributionToProject
+    Then the categories are verified for Project finances section                    2           177,784      ${empty}            50,867          ${empty}                   124,449
+    # the below figures are listed as:                                               RowNumber   Total costs   Labour   Overheads   Materials   CapitalUsage   Subcontracting   TravelandSubsistence   OtherCosts
+    And the categories are verified for section changes                              2           £177,784      59,430   1,954       80,000      5,050          10,600           10,000                 10,750
+    And the user should see the variance finance summary and project cost values
 
-#1.materials section
-Project finance user can view Lead partner's changes for Materials
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change    Materials
-    And the revised categories are verified for specified Section          Change    Materials    1    Cost per item    10020    8000
-    And the revised cost is verified for the specified section             Change    Materials    2   -20,200
+##1.materials section
+#Project finance user can view Lead partner's changes for Materials
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change    Materials
+#    And the revised categories are verified for specified Section          Change    Materials    1    Cost per item    10020    8000
+#    And the revised cost is verified for the specified section             Change    Materials    2   -20,200
 
-#2.overheads section
-Project finance user can view Lead partner's changes for Overheads
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change    Overheads
-    And the revised categories are verified for specified Section          Change    Overheads    0   Amount    ${empty}    1954
-    And the revised cost is verified for the specified section             Change    Overheads    1   0
+##2.overheads section
+#Project finance user can view Lead partner's changes for Overheads
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change    Overheads
+#    And the revised categories are verified for specified Section          Change    Overheads    0   Amount    ${empty}    1954
+#    And the revised cost is verified for the specified section             Change    Overheads    1   0
 
-#3.capital usage section
-Project finance user can view Lead partner's changes for capital usage
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change    Capital usage
-    And the revised categories are verified for specified Section          Change    Capital usage    0   New or existing     Existing    Existing
-    And the revised categories are verified for specified Section          Change    Capital usage    1   Depreciation period   12    12
-    And the revised categories are verified for specified Section          Change    Capital usage    2   Net present value   2120    10600
-    And the revised categories are verified for specified Section          Change    Capital usage    3   Residual value    1200    500
-    And the revised categories are verified for specified Section          Change    Capital usage    4   Utilisation    60    50
-    And the revised categories are verified for specified Section          Change    Capital usage    5   Net cost    552.00    5050.00
-    And the revised cost is verified for the specified section             Change    Capital usage    6   4,498
+##3.capital usage section
+#Project finance user can view Lead partner's changes for capital usage
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change    Capital usage
+#    And the revised categories are verified for specified Section          Change    Capital usage    0   New or existing     Existing    Existing
+#    And the revised categories are verified for specified Section          Change    Capital usage    1   Depreciation period   12    12
+#    And the revised categories are verified for specified Section          Change    Capital usage    2   Net present value   2120    10600
+#    And the revised categories are verified for specified Section          Change    Capital usage    3   Residual value    1200    500
+#    And the revised categories are verified for specified Section          Change    Capital usage    4   Utilisation    60    50
+#    And the revised categories are verified for specified Section          Change    Capital usage    5   Net cost    552.00    5050.00
+#    And the revised cost is verified for the specified section             Change    Capital usage    6   4,498
 
-#4.other costs section
-Project finance user can view Lead partner's changes for other costs
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change  Other costs
-    And the revised categories are verified for specified Section          Change  Other costs  0  Total  1100  5000
-    And the revised cost is verified for the specified section             Change  Other costs  1  3,900
+##4.other costs section
+#Project finance user can view Lead partner's changes for other costs
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change  Other costs
+#    And the revised categories are verified for specified Section          Change  Other costs  0  Total  1100  5000
+#    And the revised cost is verified for the specified section             Change  Other costs  1  3,900
 
-#5.Travel and subsistence section
-Project finance user can view Lead partner's changes for Travel and subsistence
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change  Travel and subsistence
-    And the revised categories are verified for specified Section          Change  Travel and subsistence  0  Number of times  15  10
-    And the revised categories are verified for specified Section          Change  Travel and subsistence  1  Cost each  398  1000
-    And the revised cost is verified for the specified section             Change  Travel and subsistence  2  4,030
+##5.Travel and subsistence section
+#Project finance user can view Lead partner's changes for Travel and subsistence
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change  Travel and subsistence
+#    And the revised categories are verified for specified Section          Change  Travel and subsistence  0  Number of times  15  10
+#    And the revised categories are verified for specified Section          Change  Travel and subsistence  1  Cost each  398  1000
+#    And the revised cost is verified for the specified section             Change  Travel and subsistence  2  4,030
 
-#6.Subcontracting section
-Project finance user can view Lead partner's changes for Subcontracting
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change  Subcontracting
-    And the revised categories are verified for specified Section          Change  Subcontracting  1  Role  To develop stuff  Develop
-    And the revised categories are verified for specified Section          Change  Subcontracting  2  Cost  90000  10600
-    And the revised cost is verified for the specified section             Change  Subcontracting  3  -79,400
+##6.Subcontracting section
+#Project finance user can view Lead partner's changes for Subcontracting
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change  Subcontracting
+#    And the revised categories are verified for specified Section          Change  Subcontracting  1  Role  To develop stuff  Develop
+#    And the revised categories are verified for specified Section          Change  Subcontracting  2  Cost  90000  10600
+#    And the revised cost is verified for the specified section             Change  Subcontracting  3  -79,400
 
-#7. Labour section
-Project finance user can view Lead partner's changes for Labour
-    [Documentation]    INFUND-4837
-    [Tags]
-    Given the user clicks the button/link                                  link = Eligibility
-    When the user clicks the button/link                                   link = View changes to finances
-    Then the user verifies the action and section for revised finances     Change  Labour
-    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
-    And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
-    And the revised cost is verified for the specified section             Change  Labour  2  52,000
-    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -23,119
-    And the user clicks the button/link                                    jQuery = a:contains("Return to eligibility")
+##7. Labour section
+#Project finance user can view Lead partner's changes for Labour
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Given the user clicks the button/link                                  link = Eligibility
+#    When the user clicks the button/link                                   link = View changes to finances
+#    Then the user verifies the action and section for revised finances     Change  Labour
+#    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
+#    And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
+#    And the revised cost is verified for the specified section             Change  Labour  2  52,000
+#    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+#    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -23,119
+#    And the user clicks the button/link                                    jQuery = a:contains("Return to eligibility")
 
 Project finance user can view Partner's changes to finances
-    [Documentation]    INFUND-4837
+    [Documentation]    INFUND-4837  IFS-8944
     [Tags]
-    Given the user clicks the button/link       link = Back to finance checks
-    When the user clicks the button/link        css = a.eligibility-2
-    And the user clicks the button/link        link = View changes to finances
-    When the categories are verified for Project finances section       1   £177,784    30.00%     50,867    2,468     124,449
-    Then the categories are verified for Section changes                1   56,349     1,954     -20,200   4,498     -79,400     4,030    9,650
+    Given the user clicks the button/link                                            link = Eligibility
+    And the user clicks the button/link                                              link = Back to finance checks
+    When the user clicks the button/link                                             css = a.eligibility-2
+    And the user clicks the button/link                                              link = View changes to finances
+    Then the categories are verified for Project finances section                    2  177,784  ${empty}  50,867  ${empty}  124,449
+    And the categories are verified for section changes                              2  £177,784  59,430  1,954  80,000  5,050  10,600  10,000  10,750
+    And the user should see the variance finance summary and project cost values
+
+Project finance user can view academic partner's changes to finances
+    [Documentation]    INFUND-4837  IFS-8944
+    [Tags]
+    Given the user clicks the button/link                                                     link = Eligibility
+    And the user clicks the button/link                                                       link = Back to finance checks
+    When the user clicks the button/link                                                      css = a.eligibility-1
+    And the user clicks the button/link                                                       link = View changes to finances
+    Then the categories are verified for Project finances section                             2  900  ${empty}  900  ${empty}  ${empty}
+    And the categories are verified for section changes                                       2  £900  300  100  100  ${empty}  ${empty}  100  300
+    And the user should see the academic variance finance summary and project cost values
 
 #1.materials section
-Project finance user can view partner's changes for Materials
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change    Materials
-    And the revised categories are verified for specified Section          Change    Materials    1    Cost per item    10020    8000
-    And the revised cost is verified for the specified section             Change    Materials    2   -20,200
+#Project finance user can view partner's changes for Materials
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change    Materials
+#    And the revised categories are verified for specified Section          Change    Materials    1    Cost per item    10020    8000
+#    And the revised cost is verified for the specified section             Change    Materials    2   -20,200
 
-#2.overheads section
-Project finance user can view Partner's changes Overheads
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change    Overheads
-    And the revised categories are verified for specified Section          Change    Overheads    0   Amount    ${empty}    1954
-    And the revised cost is verified for the specified section             Change    Overheads    1   0
+##2.overheads section
+#Project finance user can view Partner's changes Overheads
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change    Overheads
+#    And the revised categories are verified for specified Section          Change    Overheads    0   Amount    ${empty}    1954
+#    And the revised cost is verified for the specified section             Change    Overheads    1   0
 
-#3.capital usage section
-Project finance user can view partner's revised changes for capital usage
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change    Capital usage
-    And the revised categories are verified for specified Section          Change    Capital usage    0   New or existing     Existing    Existing
-    And the revised categories are verified for specified Section          Change    Capital usage    1   Depreciation period   12    12
-    And the revised categories are verified for specified Section          Change    Capital usage    2   Net present value   2120    10600
-    And the revised categories are verified for specified Section          Change    Capital usage    3   Residual value    1200    500
-    And the revised categories are verified for specified Section          Change    Capital usage    4   Utilisation    60    50
-    And the revised categories are verified for specified Section          Change    Capital usage    5   Net cost    552.00    5050.00
-    And the revised cost is verified for the specified section             Change    Capital usage    6   4,498
+##3.capital usage section
+#Project finance user can view partner's revised changes for capital usage
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change    Capital usage
+#    And the revised categories are verified for specified Section          Change    Capital usage    0   New or existing     Existing    Existing
+#    And the revised categories are verified for specified Section          Change    Capital usage    1   Depreciation period   12    12
+#    And the revised categories are verified for specified Section          Change    Capital usage    2   Net present value   2120    10600
+#    And the revised categories are verified for specified Section          Change    Capital usage    3   Residual value    1200    500
+#    And the revised categories are verified for specified Section          Change    Capital usage    4   Utilisation    60    50
+#    And the revised categories are verified for specified Section          Change    Capital usage    5   Net cost    552.00    5050.00
+#    And the revised cost is verified for the specified section             Change    Capital usage    6   4,498
 
-#4.other costs section
-Project finance user can view partner's revised changes other costs
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change  Other costs
-    And the revised categories are verified for specified Section          Change  Other costs  0  Total  1100  5000
-    And the revised cost is verified for the specified section             Change  Other costs  1  3,900
+##4.other costs section
+#Project finance user can view partner's revised changes other costs
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change  Other costs
+#    And the revised categories are verified for specified Section          Change  Other costs  0  Total  1100  5000
+#    And the revised cost is verified for the specified section             Change  Other costs  1  3,900
 
-#5.Travel and subsistence section
-Project finance user can view partner's revised changes for travel and subsistence
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change  Travel and subsistence
-    And the revised categories are verified for specified Section          Change  Travel and subsistence  0  Number of times  15  10
-    And the revised categories are verified for specified Section          Change  Travel and subsistence  1  Cost each  398  1000
-    And the revised cost is verified for the specified section             Change  Travel and subsistence  2  4,030
+##5.Travel and subsistence section
+#Project finance user can view partner's revised changes for travel and subsistence
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change  Travel and subsistence
+#    And the revised categories are verified for specified Section          Change  Travel and subsistence  0  Number of times  15  10
+#    And the revised categories are verified for specified Section          Change  Travel and subsistence  1  Cost each  398  1000
+#    And the revised cost is verified for the specified section             Change  Travel and subsistence  2  4,030
 
-#6.Subcontracting section
-Project finance user can view partner's revised changes for Subcontracting
-    [Documentation]    INFUND-4837
-    [Tags]
-    Then the user verifies the action and section for revised finances     Change  Subcontracting
-    And the revised categories are verified for specified Section          Change  Subcontracting  1  Role  To develop stuff  Develop
-    And the revised categories are verified for specified Section          Change  Subcontracting  2  Cost  90000  10600
-    And the revised cost is verified for the specified section             Change  Subcontracting  3  -79,400
+##6.Subcontracting section
+#Project finance user can view partner's revised changes for Subcontracting
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Then the user verifies the action and section for revised finances     Change  Subcontracting
+#    And the revised categories are verified for specified Section          Change  Subcontracting  1  Role  To develop stuff  Develop
+#    And the revised categories are verified for specified Section          Change  Subcontracting  2  Cost  90000  10600
+#    And the revised cost is verified for the specified section             Change  Subcontracting  3  -79,400
 
 #7. Labour section
-Project finance user can view partner's revised changes for Labour
-    [Documentation]    INFUND-4837
-    [Tags]
-    Given the user clicks the button/link                                  link = Eligibility
-    When the user clicks the button/link                                   link = View changes to finances
-    Then the user verifies the action and section for revised finances     Change  Labour
-    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
-    And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
-    And the revised cost is verified for the specified section             Change  Labour  2  52,000
-    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
-    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -23,119
+#Project finance user can view partner's revised changes for Labour
+#    [Documentation]    INFUND-4837
+#    [Tags]
+#    Given the user clicks the button/link                                  link = Eligibility
+#    When the user clicks the button/link                                   link = View changes to finances
+#    Then the user verifies the action and section for revised finances     Change  Labour
+#    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
+#    And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
+#    And the revised cost is verified for the specified section             Change  Labour  2  52,000
+#    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
+#    And the user should see the text in the element                        css = .project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -23,119
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -1044,7 +1064,6 @@ Lead Partner can view finance checks page
 Lead partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-#    When the user clicks the button/link    link = finances
     When the user clicks the button/link    link = review your project finances
     Then the user should see the element    jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £10,750
@@ -1085,7 +1104,6 @@ Non Lead Partner can view finance checks page
 Non Lead-Partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-#    When the user clicks the button/link    link = finances
     When the user clicks the button/link    link = review your project finances
     Then the user should see the element    jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £10,750
@@ -1360,23 +1378,24 @@ all the categories are verified
 
 # the below figures are listed as:     RowNumber   TotalCosts    Funding level (%)     FundingSought 	OtherPublicSectorFunding    ContributionToProject
 the categories are verified for Project finances section
-    [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
-    the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}
-    the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${percentage_grant}
-    the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${funding_sought}
-    the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${other_public_sector_funding}
-    the user should see the text in the element     jQuery = h2:contains("Project finances") + * tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${contribution_to_project}
+    [Arguments]  ${rowNumber}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
+    the user should see the element     jQuery = h2:contains("Finance summary") + * th:contains("Total costs (£)") ~ td:nth-of-type(${rowNumber}):contains("${total_costs}")
+    the user should see the element     jQuery = h2:contains("Finance summary") + * th:contains("Funding level (%)") ~ td:nth-of-type(${rowNumber}):contains("${percentage_grant}")
+    the user should see the element     jQuery = h2:contains("Finance summary") + * th:contains("Funding sought (£)") ~ td:nth-of-type(${rowNumber}):contains("${funding_sought}")
+    the user should see the element     jQuery = h2:contains("Finance summary") + * th:contains("Other funding (£)") ~ td:nth-of-type(${rowNumber}):contains("${other_public_sector_funding}")
+    the user should see the element     jQuery = h2:contains("Finance summary") + * th:contains("Contribution to project (£)") ~ td:nth-of-type(${rowNumber}):contains("${contribution_to_project}")
 
-# the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+# the below figures are listed as:      Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
 the categories are verified for section changes
-    [Arguments]  ${row_number}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${labour}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${overheads}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${materials}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${capital_usage}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${sub_contracting}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)   ${travel_and_subsistence}
-    the user should see the text in the element     jQuery = h2:contains("Section changes") + div tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)   ${other_costs}
+    [Arguments]  ${rowNumber}  ${total_costs}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Labour") ~ td:nth-of-type(${rowNumber}):contains("${labour}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Overhead costs") ~ td:nth-of-type(${rowNumber}):contains("${overheads}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Materials") ~ td:nth-of-type(${rowNumber}):contains("${materials}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Capital usag") ~ td:nth-of-type(${rowNumber}):contains("${capital_usage}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Subcontracting") ~ td:nth-of-type(${rowNumber}):contains("${sub_contracting}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Travel and subsistence") ~ td:nth-of-type(${rowNumber}):contains("${travel_and_subsistence}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Other costs") ~ td:nth-of-type(${rowNumber}):contains("${other_costs}")
+    the user should see the element     jQuery = h2:contains("Project finances") + * th:contains("Total project costs") ~ td:nth-of-type(${rowNumber}):contains("${total_costs}")
 
 the user verifies the action and section for revised finances
     [Arguments]  ${action}  ${section}
@@ -1412,14 +1431,26 @@ the user verifies the financial sub-totals for external version under the Detail
     the user should see the element     jQuery = span:contains("${other_costs}") + button:contains("Other costs")
 
 the user should see the finance values amended by internal user
-    the user should see the element  jQuery = #project-finance-changes-submitted tr:contains("Gross") td:contains("120000")
-    the user should see the element  jQuery = #project-finance-changes-submitted tr:contains("Amount") td:contains("1954")
-    the user should see the element  jQuery = #project-finance-changes-submitted tr:contains("Net cost") td:contains("552.00") + td:contains("5050.00")
-    the user should see the element  jQuery = #project-finance-changes-submitted tr:contains("Overall") th:contains("23,119")
+    # the below figures are listed as:                           RowNumber   TotalCosts   Funding level (%)   FundingSought   OtherPublicSectorFunding   ContributionToProject
+    the categories are verified for Project finances section     2           177,784      ${empty}            50,867          ${empty}                    124,449
+    # the below figures are listed as:                           RowNumber   Total cost   Labour   Overheads   Materials   CapitalUsage   Subcontracting   TravelandSubsistence   OtherCosts
+    the categories are verified for section changes              2           £177,784     59,430    1,954      80,000      5,050          10,600           10,000                 10,750
 
 check finance checks status on dashboard
     [Arguments]  ${selector}  ${status}
-    the user clicks the button/link    link = ${FUNDERS_PANEL_APPLICATION_1_TITLE}
-    the user should see the element    link = Finance checks
+    the user clicks the button/link     link = ${FUNDERS_PANEL_APPLICATION_1_TITLE}
+    the user should see the element     link = Finance checks
     the user should see the element     jQuery = ul li.${selector}:nth-of-type(6):contains("We will review your financial information.")
     the user should see the element     jQuery = ul li.${selector}:nth-of-type(6):contains(${status})
+
+the user should see the variance finance summary and project cost values
+    # the below figures are listed as:                           RowNumber   TotalCosts   Funding level (%)   FundingSought   OtherPublicSectorFunding   ContributionToProject
+    the categories are verified for Project finances section     3           - 23119      ${empty}            - 6935.7          ${empty}                    - 16183.3
+    # the below figures are listed as:                           RowNumber   Total cost   Labour     Overheads   Materials   CapitalUsage   Subcontracting   TravelandSubsistence   OtherCosts
+    the categories are verified for section changes              3           - £23119     + 56349    + 1954      - 20200     + 4498         - 79400          + 4030                 + 9650
+
+the user should see the academic variance finance summary and project cost values
+    # the below figures are listed as:                           RowNumber   TotalCosts   Funding level (%)   FundingSought   OtherPublicSectorFunding   ContributionToProject
+    the categories are verified for Project finances section     3           - 90         ${empty}            - 90            ${empty}                   ${empty}
+    # the below figures are listed as:                           RowNumber   Total cost   Labour     Overheads   Materials   CapitalUsage   Subcontracting   TravelandSubsistence   OtherCosts
+    the categories are verified for section changes              3           - £90        + 14       - 54        + 34        ${empty}       ${empty}         + 56                   - 140
