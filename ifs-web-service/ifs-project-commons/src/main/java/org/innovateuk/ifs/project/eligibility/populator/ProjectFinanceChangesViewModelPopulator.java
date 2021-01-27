@@ -139,7 +139,7 @@ public class ProjectFinanceChangesViewModelPopulator {
         if (FundingType.LOAN == fundingType) {
             return FinanceRowType.GRANT_CLAIM_AMOUNT == rowType;
         }
-        return FinanceRowType.OTHER_FUNDING == rowType;
+        return Arrays.asList(FinanceRowType.FINANCE, FinanceRowType.OTHER_FUNDING).contains(rowType);
     }
 
     private String sectionName(CompetitionResource competition, FinanceRowType rowType) {
