@@ -23,6 +23,7 @@ import org.innovateuk.ifs.project.core.repository.PendingPartnerProgressReposito
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.ProjectPartnerChangeService;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 import org.innovateuk.ifs.project.invite.repository.ProjectPartnerInviteRepository;
@@ -101,6 +102,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
+
+    @Autowired
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -221,17 +225,22 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                             organisation.getId());
 
 
-
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
 
                                     Competition competition = project.getApplication().getCompetition();
+
+                                    if (competition.isProcurement()) {
+                                        paymentMilestoneWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
+                                    }
+
                                     if (competition.applicantNotRequiredForViabilityChecks(organisation.getOrganisationTypeEnum())) {
                                         viabilityWorkflowHandler.viabilityNotApplicable(partnerOrganisation, null);
                                     }
-                                    if(competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())){
+                                    if (competition.applicantNotRequiredForEligibilityChecks(organisation.getOrganisationTypeEnum())) {
                                         eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, null);
                                     }
+
                                     invite.open();
 
                                     activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);

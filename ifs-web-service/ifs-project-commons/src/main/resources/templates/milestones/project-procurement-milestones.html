@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="form" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.form.ProcurementMilestonesForm"*/-->
+<!--/*@thymesVar id="model" type="org.innovateuk.ifs.application.forms.sections.procurement.milestones.viewmodel.ApplicationProcurementMilestonesViewModel"*/-->
+<head>
+    <th:block
+        th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Payment milestones - ${applicationName}|"/>
+    </th:block>
+</head>
+<body class="govuk-template__body finance-row-form overheads">
+<th:block th:insert="fragments/modals :: modal-overlay"/>
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Payment milestones',subTitle=${model.applicationName},size='govuk-heading-xl'"/>
+
+        <th:block th:if="${model.showBanner}">
+            <div class="success-alert">
+                <p class="govuk-body">Your payment milestones has been approved by <span
+                    th:text="${model.paymentMilestoneResource.name}"/>, <span
+                    th:text="${#temporals.format(model.paymentMilestoneResource.paymentMilestoneLastModifiedDate, 'd MMMM yyyy')}"/>
+                </p>
+            </div>
+        </th:block>
+
+        <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
+                              data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
+        <form th:object="${form}"
+              th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              enctype="multipart/form-data"
+              novalidate="novalidate"
+              method="POST"
+              th:attr="data-autosave=@{__${#ifsUtil.formPostUri(#httpServletRequest)}__/auto-save},
+                       data-row-operation-url=@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <button class="hidden-save" name="save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+            <input type="hidden" id="cacheTest" value=""/>
+
+
+            <th:block th:insert="application/procurement-milestones :: milestones-form(${form}, ${model})"/>
+
+            <button type="submit" th:unless="${model.readOnly}"
+                    name="save"
+                    class="govuk-!-margin-top-6 govuk-button">
+                Save and return to payment milestone check
+            </button>
+        </form>
+
+        <div class="form-footer" th:unless="${model.readOnly}">
+            <div class="form-footer__actions">
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='false')}"
+                   id="cancel" type="submit" name="cancel" class="button-clear" value="true">
+                    Cancel changes
+                </a>
+            </div>
+        </div>
+        <th:block th:unless="${model.externalUser}">
+            <div class="form-footer" th:if="${model.readOnly}">
+                <div class="form-footer__actions">
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='true')}"
+                       id="edit" type="submit" name="edit" class="button-clear" value="true">
+                        Edit payment milestones
+                    </a>
+                </div>
+            </div>
+
+            <form th:if="${model.canApprove}" class="govuk-!-margin-top-6"
+                  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+                  th:object="${projectProcurementMilestoneApprovalForm}">
+
+                <h2 class="govuk-heading-m">Approve Payment milestones</h2>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="approve-milestones"
+                                   class="govuk-checkboxes__input"
+                                   type="checkbox"
+                                   th:field="*{confirmMilestoneChecked}"
+                                   data-switches-button-status="#confirm-button"/>
+                            <label for="approve-milestones"
+                                   class="govuk-label govuk-checkboxes__label"
+                                   th:text="${'I confirm these payment milestones are eligible and i have agreed any changes with the organisation.'}">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    name="approve"
+                    data-js-modal="modal-confirm-payment-milestone"
+                    class="govuk-button"
+                    id="confirm-button">Approve payment milestones
+                </button>
+                <th:block th:insert="fragments/modals :: modal-confirm-payment-milestone (${model})"/>
+            </form>
+            <th:block th:if="${model.readOnly}">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+                <a class="govuk-button govuk-button--secondary"
+                   th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">
+                    Return to finance checks</a>
+
+                <div class="govuk-!-margin-top-6">
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
+                       class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                       class="govuk-button govuk-button--secondary">Notes</a>
+                </div>
+            </th:block>
+        </th:block>
+        <th:block th:if="${model.externalUser}">
+            <a class="govuk-button govuk-button--secondary"
+               th:href="@{/project/{projectId}/finance-checks(projectId=${model.projectId})}">
+                Return to finance checks</a>
+        </th:block>
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+</body>
+</html>

@@ -46,4 +46,53 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/eligibility";
         return getWithRestResult(url, FinanceCheckEligibilityResource.class);
     }
+
+    @Override
+    public RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/eligibility", EligibilityResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, EligibilityState eligibility, EligibilityRagStatus eligibilityRagStatus) {
+
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveViability(Long projectId, Long organisationId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {
+
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> approvePaymentMilestoneState(Long projectId, Long organisationId) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/milestones/approve";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetPaymentMilestoneState(Long projectId, Long organisationId) {
+        String postUrl = FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/milestones/reset";
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<PaymentMilestoneResource> getPaymentMilestoneState(Long projectId, Long organisationId) {
+        return getWithRestResult(FinanceCheckURIs.BASE_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/milestones/state", PaymentMilestoneResource.class);
+    }
 }

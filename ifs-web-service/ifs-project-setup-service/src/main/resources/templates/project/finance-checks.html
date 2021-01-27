@@ -48,7 +48,11 @@
                     th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                     class="govuk-link">review your project finances</a>
                     and <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
-                               class="govuk-link">your project finance overview</a>.
+                               class="govuk-link">your project finance overview</a>
+                    <th:block th:if="${model.paymentMilestonesLink}">
+                    and
+                    <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                       class="govuk-link">your payment milestones</a>.</th:block>
                 </p>
             </th:block>
             <th:block th:if="${model.loanCompetition}">
@@ -63,32 +67,29 @@
 
         </th:block>
         <th:block th:unless="${model.isApproved()}">
-
             <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
                 <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                 class="govuk-link">project finance overview</a>.</p>
-            <th:block th:unless="${model.ktpCompetition && !model.leadOrganisation}">
-                <p class="govuk-body">Innovate UK is reviewing:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>
-                        <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
-                           class="govuk-link">your project finances</a>
-                    </li>
-                    <li th:if="${model.procurementMilestonesCompetition}">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                           class="govuk-link">payment milestones</a>
-                    </li>
-                </ul>
 
-                <p class="govuk-body" th:if="${model.showChangesLink}">You can <a class="govuk-link"
-                    th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${model.projectId})}">view any changes to finances</a></p>
 
-                <p class="govuk-body" th:unless="${model.loanCompetition OR model.procurementCompetition}">
-                    You can also <a
+
+            Innovate UK is reviewing:
+
+
+            <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
+                <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
+                   class="govuk-link">your project finances</a>
+                <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
+                and you can also <a
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                     class="govuk-link">view the project finance overview</a>.
-                </p>
-            </th:block>
+                </th:block>
+                <th:block th:if="${model.paymentMilestonesLink}">
+
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId}, organisationId=${model.organisationId})}"
+                   class="govuk-link">payment milestones</a>
+                </th:block>
+            </p>
         </th:block>
 
         <th:block th:unless="${model.noQueries()}">

@@ -109,7 +109,7 @@ public class ProcurementMilestoneForm {
                 .divide(new BigDecimal(totalCosts), 2, RoundingMode.HALF_UP);
     }
 
-    public void copyToResource(ApplicationProcurementMilestoneResource resource) {
+    public <R extends ProcurementMilestoneResource> void copyToResource(R resource) {
         resource.setId(id);
         resource.setMonth(month);
         resource.setDescription(description);

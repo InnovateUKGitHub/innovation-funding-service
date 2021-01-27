@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.finance.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.finance.resource.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -35,62 +34,6 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         RestResult<List<ProjectFinanceResource>> result = service.getProjectFinances(projectId);
 
         assertEquals(results, result.getSuccess());
-    }
-
-    @Test
-    public void getViability() {
-
-        ViabilityResource viability = new ViabilityResource(ViabilityState.APPROVED, ViabilityRagStatus.GREEN);
-
-        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", ViabilityResource.class, viability);
-
-        RestResult<ViabilityResource> results = service.getViability(123L, 456L);
-
-        assertEquals(ViabilityState.APPROVED, results.getSuccess().getViability());
-        assertEquals(ViabilityRagStatus.GREEN, results.getSuccess().getViabilityRagStatus());
-    }
-
-    @Test
-    public void saveViability() {
-
-        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" +
-                ViabilityState.APPROVED.name() + "/" + ViabilityRagStatus.RED.name();
-
-        setupPostWithRestResultExpectations(postUrl, OK);
-
-        RestResult<Void> result = service.saveViability(123L, 456L, ViabilityState.APPROVED, ViabilityRagStatus.RED);
-
-        assertTrue(result.isSuccess());
-
-        setupPostWithRestResultVerifications(postUrl, Void.class);
-    }
-
-    @Test
-    public void getEligibility() {
-
-        EligibilityResource eligibility = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
-
-        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/eligibility", EligibilityResource.class, eligibility);
-
-        RestResult<EligibilityResource> results = service.getEligibility(123L, 456L);
-
-        assertEquals(EligibilityState.APPROVED, results.getSuccess().getEligibility());
-        assertEquals(EligibilityRagStatus.GREEN, results.getSuccess().getEligibilityRagStatus());
-    }
-
-    @Test
-    public void saveEligibility() {
-
-        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/eligibility/" +
-                EligibilityState.APPROVED.name() + "/" + EligibilityRagStatus.RED.name();
-
-        setupPostWithRestResultExpectations(postUrl, OK);
-
-        RestResult<Void> result = service.saveEligibility(123L, 456L, EligibilityState.APPROVED, EligibilityRagStatus.RED);
-
-        assertTrue(result.isSuccess());
-
-        setupPostWithRestResultVerifications(postUrl, Void.class);
     }
 
     @Test

@@ -14,6 +14,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder;
@@ -23,13 +24,11 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
-import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
-import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
+import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.PaymentMilestoneWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
 import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
@@ -64,6 +63,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
@@ -77,6 +77,8 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.form.resource.SectionType.PAYMENT_MILESTONES;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -122,6 +124,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Mock
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Mock
+    private PaymentMilestoneWorkflowHandler paymentMilestoneWorkflowHandler;
 
     @Mock
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -192,7 +197,11 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Test
     public void getFinanceCheckSummary(){
-        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
+        Competition competition = newCompetition()
+                .withSections(Arrays.asList(section))
+                .withFundingType(PROCUREMENT).withMaxResearchRatio(2).build();
+
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
@@ -235,6 +244,14 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(1), ViabilityState.NOT_APPLICABLE));
         when(viabilityWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new ViabilityProcess(projectFinanceUser, partnerOrganisations.get(2), ViabilityState.REVIEW));
 
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisations.get(0))).thenReturn(new PaymentMilestoneProcess(projectFinanceUser, partnerOrganisations.get(0), PaymentMilestoneState.REVIEW));
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisations.get(1))).thenReturn(new PaymentMilestoneProcess(projectFinanceUser, partnerOrganisations.get(1), PaymentMilestoneState.REVIEW));
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisations.get(2))).thenReturn(new PaymentMilestoneProcess(projectFinanceUser, partnerOrganisations.get(2), PaymentMilestoneState.REVIEW));
+
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisations.get(0), projectFinanceUser)).thenReturn(true);
+
         ProjectFinance projectFinanceInDB1 = new ProjectFinance();
         projectFinanceInDB1.setViabilityStatus(ViabilityRagStatus.AMBER);
         when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(Optional.of(projectFinanceInDB1));
@@ -256,6 +273,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -269,16 +287,19 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
         assertEquals(ViabilityState.NOT_APPLICABLE, organisation1Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation1Results.getViabilityRagStatus());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation1Results.getPaymentMilestoneState());
         assertFalse(organisation1Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
         assertEquals(ViabilityState.APPROVED, organisation2Results.getViability());
         assertEquals(ViabilityRagStatus.AMBER, organisation2Results.getViabilityRagStatus());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation2Results.getPaymentMilestoneState());
         assertTrue(organisation2Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(ViabilityState.REVIEW, organisation3Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation3Results.getViabilityRagStatus());
+        assertEquals(PaymentMilestoneState.REVIEW, organisation3Results.getPaymentMilestoneState());
         assertFalse(organisation3Results.isAwaitingResponse());
     }
 
@@ -1286,6 +1307,96 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertGetEligibilityResults(result.getSuccess(), EligibilityState.APPROVED, EligibilityRagStatus.GREEN,
                 null, null, null);
+    }
+
+    @Test
+    public void approvePaymentMilestoneState() {
+        Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
+        Competition competition = newCompetition()
+                .withSections(Arrays.asList(section))
+                .withFundingType(PROCUREMENT).build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
+
+        User user = newUser().withId(1l).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
+
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneApproved(partnerOrganisationInDB, user)).thenReturn(true);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ServiceResult<Void> result = service.approvePaymentMilestoneState(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void resetPaymentMilestoneState() {
+        Section section = newSection().withSectionType(PAYMENT_MILESTONES).build();
+        Competition competition = newCompetition()
+                .withSections(Arrays.asList(section))
+                .withFundingType(PROCUREMENT).build();
+
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
+
+        User user = newUser().withId(1l).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
+
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(paymentMilestoneWorkflowHandler.paymentMilestoneReset(partnerOrganisationInDB, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.resetPaymentMilestoneState(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getPaymentMilestone() {
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
+        Project project = newProject().withApplication(application).build();
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation()
+                .withProject(project)
+                .withOrganisation(newOrganisation()
+                        .withOrganisationType(BUSINESS)
+                        .build())
+                .build();
+
+        User user = newUser().withId(1l).build();
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        PaymentMilestoneProcess paymentMilestoneProcess = new PaymentMilestoneProcess(user, partnerOrganisationInDB, PaymentMilestoneState.REVIEW);
+
+        when(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(paymentMilestoneWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(paymentMilestoneProcess);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ServiceResult<PaymentMilestoneResource> result = service.getPaymentMilestone(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
     }
 
     private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,

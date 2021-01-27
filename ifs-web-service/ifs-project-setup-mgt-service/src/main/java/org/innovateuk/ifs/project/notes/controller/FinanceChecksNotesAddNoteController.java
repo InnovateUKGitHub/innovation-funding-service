@@ -1,22 +1,16 @@
 package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
@@ -39,6 +33,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -72,7 +73,7 @@ public class FinanceChecksNotesAddNoteController {
     private EncryptedCookieService cookieUtil;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceService;
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -119,7 +120,7 @@ public class FinanceChecksNotesAddNoteController {
 
                 ValidationMessages validationMessages = new ValidationMessages(bindingResult);
 
-                ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+                ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId).getSuccess();
 
                 List<AttachmentResource> attachmentResources = new ArrayList<>();
                 List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);

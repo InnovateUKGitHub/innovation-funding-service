@@ -15,7 +15,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.eligibility.form.FinanceChecksEligibilityForm;
@@ -25,10 +24,9 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.core.ProjectParticipantRole;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectAcademicCostFormPopulator;
 import org.innovateuk.ifs.project.eligibility.populator.ProjectFinanceChangesViewModelPopulator;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.populator.FinanceChecksEligibilityProjectCostsFormPopulator;
@@ -104,10 +102,13 @@ public class ProjectFinanceChecksController {
     private ApplicationService applicationService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private ProjectFinanceRestService projectFinanceRestService;
 
     @Autowired
     private FinanceCheckService financeCheckService;
+
+    @Autowired
+    private FinanceCheckRestService financeCheckRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -140,7 +141,7 @@ public class ProjectFinanceChecksController {
 
         long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
-        model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null, loggedInUser));
+        model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, null, null));
 
         return "project/finance-checks";
     }
@@ -159,7 +160,7 @@ public class ProjectFinanceChecksController {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         attachments.forEach(financeCheckService::deleteFile);
         saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId, queryId);
-        model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, attachments, queryId, loggedInUser));
+        model.addAttribute("model", buildFinanceChecksLandingPage(projectComposite, attachments, queryId));
         model.addAttribute(FORM_ATTR, new FinanceChecksQueryResponseForm());
         return "project/finance-checks";
     }
@@ -182,14 +183,14 @@ public class ProjectFinanceChecksController {
 
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
-            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId, loggedInUser);
+            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
             model.addAttribute(FORM_ATTR, form);
             return "project/finance-checks";
         };
 
         Supplier<String> saveFailureView = () -> {
-            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, null, null, loggedInUser);
+            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, null, null);
             model.addAttribute("model", viewModel);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             model.addAttribute(FORM_ATTR, null);
@@ -238,7 +239,7 @@ public class ProjectFinanceChecksController {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Supplier<String> view = () -> {
-            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId, loggedInUser);
+            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
@@ -255,7 +256,7 @@ public class ProjectFinanceChecksController {
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
             });
 
-            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId, loggedInUser);
+            ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
             return result;
         });
@@ -308,7 +309,7 @@ public class ProjectFinanceChecksController {
         }
         saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
 
-        ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId, loggedInUser);
+        ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
         return "project/finance-checks";
@@ -357,7 +358,7 @@ public class ProjectFinanceChecksController {
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
-    private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId, UserResource loggedInUser) {
+    private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
 
         Long projectId = compositeId.getProjectId();
         Long organisationId = compositeId.getOrganisationId();
@@ -397,9 +398,9 @@ public class ProjectFinanceChecksController {
                 PROJECT_FINANCE_CHECKS_BASE_URL, competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum()),
                 competition.isLoan(),
                 competition.isProcurement(),
-                competition.isProcurementMilestones(),
                 competition.isKtp(),
                 leadOrganisation,
+                competition.isProcurementMilestones(),
                 showChangesLink);
     }
 
@@ -410,7 +411,7 @@ public class ProjectFinanceChecksController {
 
     private Map<ThreadState, List<ThreadViewModel>> getGroupedQueries(Long projectId, Long organisationId) {
 
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+        ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
 
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
@@ -463,7 +464,7 @@ public class ProjectFinanceChecksController {
 
     private String doViewEligibility(ApplicationResource application, ProjectResource project, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model) {
 
-        EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
+        EligibilityResource eligibility = financeCheckRestService.getEligibility(project.getId(), organisation.getId()).getSuccess();
 
         FinanceChecksEligibilityForm eligibilityForm = getEligibilityForm(eligibility);
 
@@ -473,7 +474,7 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(project.getId());
+        List<ProjectFinanceResource> projectFinances = projectFinanceRestService.getProjectFinances(project.getId()).getSuccess();
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {

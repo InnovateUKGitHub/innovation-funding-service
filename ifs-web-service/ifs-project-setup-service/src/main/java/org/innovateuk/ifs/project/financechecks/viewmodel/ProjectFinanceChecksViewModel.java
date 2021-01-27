@@ -28,9 +28,9 @@ public class ProjectFinanceChecksViewModel {
     private boolean isAcademic;
     private boolean loanCompetition;
     private final boolean procurementCompetition;
-    private final boolean procurementMilestonesCompetition;
     private final boolean ktpCompetition;
     private final boolean leadOrganisation;
+    private final boolean paymentMilestonesLink;
     private final boolean showChangesLink;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
@@ -46,9 +46,9 @@ public class ProjectFinanceChecksViewModel {
                                          boolean isAcademic,
                                          boolean loanCompetition,
                                          boolean procurementCompetition,
-                                         boolean procurementMilestonesCompetition,
                                          boolean ktpCompetition,
                                          boolean leadOrganisation,
+                                         boolean paymentMilestonesLink,
                                          boolean showChangesLink) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
@@ -65,9 +65,9 @@ public class ProjectFinanceChecksViewModel {
         this.isAcademic = isAcademic;
         this.loanCompetition = loanCompetition;
         this.procurementCompetition = procurementCompetition;
-        this.procurementMilestonesCompetition = procurementMilestonesCompetition;
         this.ktpCompetition = ktpCompetition;
         this.leadOrganisation = leadOrganisation;
+        this.paymentMilestonesLink = paymentMilestonesLink;
         this.showChangesLink = showChangesLink;
     }
 
@@ -208,16 +208,16 @@ public class ProjectFinanceChecksViewModel {
         return procurementCompetition;
     }
 
-    public boolean isProcurementMilestonesCompetition() {
-        return procurementMilestonesCompetition;
-    }
-
     public boolean isKtpCompetition() {
         return ktpCompetition;
     }
 
     public boolean isLeadOrganisation() {
         return leadOrganisation;
+    }
+
+    public boolean isPaymentMilestonesLink() {
+        return paymentMilestonesLink;
     }
 
     public boolean isShowChangesLink() {

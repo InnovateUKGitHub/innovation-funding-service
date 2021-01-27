@@ -189,7 +189,7 @@ public class FinanceCheckSummaryResource {
 
     @JsonIgnore
     public boolean isFinanceChecksAllApproved() {
-        return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
+        return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired() && isPaymentMilestoneAllApprovedOrNotRequired();
     }
 
     private boolean isViabilityAllApprovedOrNotRequired() {
@@ -210,11 +210,24 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
     }
 
+    private boolean isPaymentMilestoneAllApprovedOrNotRequired() {
+        return partnerStatusResources.stream()
+                .filter(status -> status.getPaymentMilestoneState() != null)
+                .allMatch(org -> PaymentMilestoneState.APPROVED == org.getPaymentMilestoneState());
+    }
+
     public boolean isAllEligibilityAndViabilityInReview() {
         return partnerStatusResources
                 .stream()
                 .allMatch(partner ->
                         partner.getViability().isInReviewOrNotApplicable() && partner.getEligibility().isInReviewOrNotApplicable());
+    }
+
+    public boolean isAllEligibilityAndViabilityApproved() {
+        return partnerStatusResources
+                .stream()
+                .allMatch(partner ->
+                        partner.getViability().isApprovedOrNotApplicable() && partner.getEligibility().isApprovedOrNotApplicable());
     }
 
     public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
