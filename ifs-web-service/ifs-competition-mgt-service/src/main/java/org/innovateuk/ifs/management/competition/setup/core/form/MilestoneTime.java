@@ -12,7 +12,7 @@ public enum MilestoneTime {
     NINE_AM("9:00 am", 9),
     TEN_AM("10:00 am", 10),
     ELEVEN_AM("11:00 am", 11),
-    TWELVE_PM("12:00 pm", 12),
+    TWELVE_PM("Midday", 12),
     ONE_PM("1:00 pm", 13),
     TWO_PM("2:00 pm", 14),
     THREE_PM("3:00 pm", 15),

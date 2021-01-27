@@ -134,7 +134,8 @@
                                 th:text="${#temporals.format(milestoneEntry.value.date, 'dd/MM/yyyy')}">
                                 01/01/2021
                             </td>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" th:classappend="${!milestoneEntry.value.editable} ? 'past-date'">
+
                             </td>
                             <td class="govuk-table__cell">
                             </td>

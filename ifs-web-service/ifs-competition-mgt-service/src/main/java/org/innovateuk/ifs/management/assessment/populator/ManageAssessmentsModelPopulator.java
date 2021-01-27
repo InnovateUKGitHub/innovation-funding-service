@@ -50,7 +50,7 @@ public class ManageAssessmentsModelPopulator {
         assessmentPeriods.forEach((key, value) -> {
             LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
             value.stream().forEachOrdered(milestone ->
-                    milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone, competition))
+                    milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone))
             );
             MilestonesForm milestonesForm = new MilestonesForm();
             milestonesForm.setMilestoneEntries(milestoneFormEntries);
@@ -60,12 +60,12 @@ public class ManageAssessmentsModelPopulator {
         return new ManageAssessmentsViewModel(competition, keyStatistics, milestonesForms);
     }
 
-    private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), false);
+    private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone) {
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), isEditable(milestone));
     }
 
-    private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return !competitionResource.isSetupAndLive() || milestone.getDate().isAfter(ZonedDateTime.now());
+    private boolean isEditable(MilestoneResource milestone) {
+        return milestone.getDate().isAfter(ZonedDateTime.now());
     }
 
 }
