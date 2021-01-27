@@ -3,8 +3,6 @@ package org.innovateuk.ifs.category.repository;
 import org.innovateuk.ifs.category.domain.Category;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
-
 
 /**
  * This interface is used to generate Spring Data Repositories.

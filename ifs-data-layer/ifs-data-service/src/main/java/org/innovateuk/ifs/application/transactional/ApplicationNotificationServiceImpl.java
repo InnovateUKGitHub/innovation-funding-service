@@ -10,8 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,12 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.stream.Collectors.toList;
-
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -71,8 +68,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES)
                 .stream()
                 .flatMap(x -> x.getCompetition().isKtp()
-                        ? x.getProcessRolesByRoles(ImmutableSet.of(Role.KNOWLEDGE_TRANSFER_ADVISER)).stream()
-                        : x.getProcessRolesByRoles(ImmutableSet.of(Role.LEADAPPLICANT, Role.COLLABORATOR)).stream())
+                        ? x.getProcessRolesByRoles(asSet(ProcessRoleType.KNOWLEDGE_TRANSFER_ADVISER)).stream()
+                        : x.getProcessRolesByRoles(asSet(ProcessRoleType.LEADAPPLICANT, ProcessRoleType.COLLABORATOR)).stream())
                 .collect(Collectors.toList());
 
         for (ProcessRole applicant : applicants) {

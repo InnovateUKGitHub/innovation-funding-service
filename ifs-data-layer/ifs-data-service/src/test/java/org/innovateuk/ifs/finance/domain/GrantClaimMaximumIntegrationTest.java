@@ -199,7 +199,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     private CompetitionData createApcCompetition(List<String> researchCategory) {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build());
 
         CompetitionData competitionCreation = competitionDataBuilder.
                 createCompetition().
@@ -216,9 +216,9 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         "CCCC", "16014", false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
-                        true, STANDARD, true, true).
+                        true, STANDARD, true, true, false).
                 withApplicationFormFromTemplate().
-                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP).
+                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP, false).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
                 withBriefingDate(addDays(1)).
                 withSubmissionDate(addDays(2)).

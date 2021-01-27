@@ -2,6 +2,8 @@ package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.ProjectParticipantRole;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -27,11 +29,11 @@ public interface GoogleAnalyticsDataLayerService {
 
     @SecuredBySpring(value = "READ", description = "Any authenticated user can see their roles on an application")
     @PreAuthorize("isAuthenticated()")
-    ServiceResult<List<Role>> getRolesByApplicationIdForCurrentUser(long applicationId);
+    ServiceResult<List<ProcessRoleType>> getRolesByApplicationIdForCurrentUser(long applicationId);
 
     @SecuredBySpring(value = "READ", description = "Any authenticated user can see their roles on a project")
     @PreAuthorize("isAuthenticated()")
-    ServiceResult<List<Role>> getRolesByProjectIdForCurrentUser(long projectId);
+    ServiceResult<List<ProjectParticipantRole>> getRolesByProjectIdForCurrentUser(long projectId);
 
     @SecuredBySpring(value = "READ", description = "Any authenticated user can see the corresponding application id for a project")
     @PreAuthorize("isAuthenticated()")

@@ -7,7 +7,8 @@ import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
 /**
- * A {@link Competition} Milestone, with or without a preset date.
+ * Represents a {@link Competition} Milestone, with or without a preset date.
+ * {@link Milestone}s may have an assessment period {@link AssessmentPeriod} attached to them.
  */
 @Entity
 public class Milestone {
@@ -23,6 +24,10 @@ public class Milestone {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="parent_id", referencedColumnName="id")
+    private AssessmentPeriod assessmentPeriod;
 
     private Milestone() {
     }
@@ -43,6 +48,18 @@ public class Milestone {
         this.type = type;
         this.date = date;
         this.competition = competition;
+    }
+
+    public Milestone(MilestoneType type, ZonedDateTime date, Competition competition, AssessmentPeriod assessmentPeriod) {
+        if (type == null) { throw new IllegalArgumentException("type cannot be null"); }
+        if (competition == null) { throw new IllegalArgumentException("competition cannot be null"); }
+        if (assessmentPeriod == null) { throw new IllegalArgumentException("assessment period cannot be null"); }
+        if (date == null) { throw new IllegalArgumentException("date cannot be null"); }
+
+        this.type = type;
+        this.date = date;
+        this.competition = competition;
+        this.assessmentPeriod = assessmentPeriod;
     }
 
     public Long getId() {
@@ -75,6 +92,14 @@ public class Milestone {
 
     public void setDate(ZonedDateTime date) {
         this.date = date;
+    }
+
+    public AssessmentPeriod getAssessmentPeriod() {
+        return assessmentPeriod;
+    }
+
+    public void setAssessmentPeriod(AssessmentPeriod assessmentPeriod) {
+        this.assessmentPeriod = assessmentPeriod;
     }
 
     public boolean isSet() {

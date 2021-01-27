@@ -7,6 +7,7 @@ bootJar.enabled=false
 jar.enabled=true
 
 buildscript {
+
     repositories {
         jcenter()
     }
@@ -27,7 +28,6 @@ artifacts {
 }
 
 dependencies {
-
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.plugin:spring-plugin-core"

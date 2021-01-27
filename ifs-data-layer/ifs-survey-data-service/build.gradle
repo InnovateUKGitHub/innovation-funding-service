@@ -67,7 +67,6 @@ ext {
 }
 
 buildDocker.dependsOn prepareDockerInput
-buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"

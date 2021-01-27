@@ -3,8 +3,6 @@ package org.innovateuk.ifs.finance.resource.cost;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static java.util.Optional.ofNullable;
-
 
 /**
  * {@code AdditionalCompanyCost} implements {@link FinanceRowItem}

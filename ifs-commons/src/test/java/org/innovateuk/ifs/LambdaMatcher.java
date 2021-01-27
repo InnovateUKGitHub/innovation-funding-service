@@ -19,16 +19,24 @@ import static org.mockito.ArgumentMatchers.argThat;
 public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<T> {
 
     private final Predicate<T> matcher;
-    private final Optional<String> description;
+    private Optional<String> description = Optional.empty();
 
-    public LambdaMatcher(Predicate<T> matcher) {
-        this(matcher, null);
+    public LambdaMatcher(Predicate<T> predicate) {
+        this.matcher = value -> {
+
+            if (value == null) {
+                return false;
+            }
+
+            try {
+                return predicate.test(value);
+            } catch (AssertionError e) {
+                this.description = Optional.of(e.getMessage());
+                return false;
+            }
+        };
     }
 
-    public LambdaMatcher(Predicate<T> matcher, String description) {
-        this.matcher = matcher;
-        this.description = Optional.ofNullable(description);
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -42,11 +50,7 @@ public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<
     }
 
     public static <T> LambdaMatcher<T> lambdaMatches(Predicate<T> predicate) {
-        return new LambdaMatcher(wrapPredicateWithNullCheck(predicate));
-    }
-
-    public static <T> LambdaMatcher<T> lambdaMatches(Predicate<T> predicate, String description) {
-        return new LambdaMatcher(predicate, description);
+        return new LambdaMatcher(predicate);
     }
 
     /**
@@ -74,21 +78,5 @@ public class LambdaMatcher<T> extends BaseMatcher<T> implements ArgumentMatcher<
             consumer.accept(argument);
             return true;
         }));
-    }
-
-
-    private static <T> Predicate<T> wrapPredicateWithNullCheck(Predicate<T> predicate) {
-        return value -> {
-
-            if (value == null) {
-                return false;
-            }
-
-            try {
-                return predicate.test(value);
-            } catch (AssertionError e) {
-                return false;
-            }
-        };
     }
 }

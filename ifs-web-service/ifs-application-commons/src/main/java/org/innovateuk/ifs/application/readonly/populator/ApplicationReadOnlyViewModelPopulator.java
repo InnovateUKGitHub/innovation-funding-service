@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toCollection;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 @Component
 public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
@@ -150,7 +150,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     private boolean shouldDisplayKtpApplicationFeedback(CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {
         boolean isKta = processRoles.stream()
-                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER);
+                .anyMatch(pr -> pr.getUser().equals(user.getId()) && pr.getRole().isKta());
         return competition.isKtp() && isKta;
     }
 

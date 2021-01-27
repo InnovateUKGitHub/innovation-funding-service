@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.domain;
 
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
 import javax.persistence.*;
@@ -28,6 +29,9 @@ public class GrantClaimMaximum {
 
     @Column(name = "organisation_size_id")
     private OrganisationSize organisationSize;
+
+    @Enumerated(EnumType.STRING)
+    private FundingRules fundingRules;
 
     private Integer maximum;
 
@@ -69,6 +73,14 @@ public class GrantClaimMaximum {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public FundingRules getFundingRules() {
+        return fundingRules;
+    }
+
+    public void setFundingRules(FundingRules fundingRules) {
+        this.fundingRules = fundingRules;
     }
 
     public Integer getMaximum() {

@@ -16,7 +16,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
@@ -29,7 +28,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
     @Before
     public void setUp() {
-        systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)).build();
+        systemMaintenanceUser = newUserResource().withRoleGlobal(Role.SYSTEM_MAINTAINER).build();
         clearUniqueIds();
     }
 

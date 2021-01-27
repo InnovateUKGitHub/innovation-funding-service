@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteBuilder.newApplicationKtaInvite;
@@ -90,7 +89,7 @@ public class ApplicationKtaInviteServiceImplTest {
                 .withApplication(123L).build();
         when(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).thenReturn(Optional.empty());
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
+        UserResource user = newUserResource().withRoleGlobal(Role.APPLICANT).build();
         when(userService.findByEmail("testemail@example.com")).thenReturn(serviceSuccess(user));
 
         // when
@@ -110,7 +109,7 @@ public class ApplicationKtaInviteServiceImplTest {
                 .withApplication(123L).build();
         when(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).thenReturn(Optional.empty());
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER)).build();
+        UserResource user = newUserResource().withRoleGlobal(Role.KNOWLEDGE_TRANSFER_ADVISER).build();
         when(userService.findByEmail("testemail@example.com")).thenReturn(serviceSuccess(user));
 
         when(applicationInviteNotificationService.inviteKta(any())).thenAnswer(invocation -> serviceSuccess());

@@ -7,8 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.populator.*;
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationsForm;
-import org.innovateuk.ifs.management.funding.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

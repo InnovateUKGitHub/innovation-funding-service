@@ -21,6 +21,8 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-8729 ATI Assessor 'doesn't have the right permissions' to access appendices
 ...
+...               IFS-7723 Improvement to company search results
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -201,13 +203,13 @@ MO can see application summary page for the ATI application in project setup bef
     And the user should see the element                        jQuery = h1:contains("Application overview")
 
 Internal user add new partner orgnisation after moving competition to project setup
-    [Documentation]  IFS-6725
+    [Documentation]  IFS-6725  IFS-7723
     [Setup]  Requesting Project ID of this Project
     Given Log in as a different user                             &{internal_finance_credentials}
     And moving competition to Project Setup                      ${competitionId}
     When the user navigates to the page                          ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
     And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
-    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  innovate  INNOVATE LTD  ${atiApplicationID}  ${ATIapplicationTitle}
+    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  ROYAL  ROYAL MAIL PLC  ${atiApplicationID}  ${ATIapplicationTitle}
 
 New partner orgination checks for funding level guidance
     [Documentation]  IFS-6725
@@ -326,7 +328,7 @@ the user invites assessors to assess the ATI competition
     the user should see the element     jQuery = td:contains("${assessor1_to_add}")
     the user should see the element     jQuery = td:contains("${assessor2_to_add}")
     the user clicks the button/link     jQuery = a:contains("Review and send invites")
-    the user clicks the button/link     jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link     jQuery = .govuk-button:contains("Send invitation")
 
 the assessors accept the invitation to assess the ATI competition
     log in as a different user                            ${assessor1_email}   ${short_password}
