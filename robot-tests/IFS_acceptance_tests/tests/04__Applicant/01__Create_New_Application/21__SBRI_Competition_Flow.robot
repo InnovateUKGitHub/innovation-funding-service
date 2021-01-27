@@ -24,7 +24,6 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...               IFS-8965  SBRI Milestones - JS Milestones Page & validation - Application
 ...
 ...               IFS-8943  SBRI Milestones - Ability to raise queries / notes in project setup
-
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -65,7 +64,6 @@ ${currentAmount}                      Current amount
 ${fundingAppliedFor}                  Funding applied for
 ${totalVAT}                           Total VAT
 ${payment_query_title}                Payment Milestone Query
-
 
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option

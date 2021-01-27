@@ -21,10 +21,9 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 ...             IFS-8938 SBRI Milestones - Non JS Milestones Page - Application
 ...
-...             IFS-8958  SBRI Milestones - Application overview / summary
+...             IFS-8958 SBRI Milestones - Application overview / summary
 ...
 ...             IFS-8940 SBRI Milestones - Edit project duration in application
-...
 ...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
@@ -100,13 +99,10 @@ Applicant can edit the project duration before application submission
 
 Applicant can view payment milestones table when reviewing and submitting application
     [Documentation]  IFS-8958
-    When the user clicks the button/link                jQuery = a:contains("Review and submit")
-    And the user clicks the button/link                 jQuery = button:contains("Funding breakdown")
-    And the user clicks the button/link                 jQuery = button:contains("Funding breakdown")
-    And the user should see the element                 jQuery = h1:contains("Application summary")
-    And the user should see the element                 jQuery = h3:contains("Payment milestones")
-    And the user should see the element                 jQuery = td:contains("£72,839")
-    And the user should see the element                 jQuery = th:contains("£72839")
+    Given the user clicks the button/link                                   jQuery = a:contains("Review and submit")
+    And the user should see the element                                     jQuery = h1:contains("Application summary")
+    When the user clicks the button/link                                    jQuery = .govuk-accordion__section-heading button:contains("Funding breakdown")
+    Then the payment milestone table is visible in application summary
 
 Applicant submits the application
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7596
@@ -252,6 +248,12 @@ the user should see all procurement finance subsections complete
     the user should see the element  css = li:nth-of-type(1) .task-status-complete
     the user should see the element  css = li:nth-of-type(2) .task-status-complete
     the user should see the element  css = li:nth-of-type(3) .task-status-complete
+
+the payment milestone table is visible in application summary
+    the user expands the section                Funding breakdown
+    the user should see the element             jQuery = h1:contains("Application summary")
+    the user should see the element             jQuery = h3:contains("Payment milestones") + * tfoot:contains("£72839") th:contains("100%")
+    the user should see the element             jQuery = h3:contains("Project cost breakdown") + * td:contains("£72,839")
 
 the applicant submits the procurement application
     the user clicks the button/link                             link = Review and submit
