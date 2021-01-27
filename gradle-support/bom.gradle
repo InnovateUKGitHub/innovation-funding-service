@@ -62,13 +62,6 @@ dependencies {
         }
     }
 
-    // This is tech debt captured in another ticket
-    implementation('org.thymeleaf:thymeleaf-spring5') {
-        version {
-            strictly '3.0.8.RELEASE'
-        }
-    }
-
     implementation('javax.validation:validation-api') {
         version {
             strictly '2.0.1.Final'
