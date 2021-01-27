@@ -195,7 +195,7 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     }
 
     @Override
-    public ProjectProcurementMilestoneFormSaver getSaver() {
+    protected ProjectProcurementMilestoneFormSaver getSaver() {
         return saver;
     }
 }
