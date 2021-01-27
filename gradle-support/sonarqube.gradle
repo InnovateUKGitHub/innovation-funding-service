@@ -29,7 +29,8 @@ sonarqube {
                 "**/AssessmentInviteServiceImpl.java," +
                 "**/FinanceReviewerServiceImpl.java," +
                 "**/ApplicationFinanceServiceImpl.java," +
-                "**/ReviewInviteServiceImpl.java," +
+                "**/ReviewInviteServiceImpl.java,"
+        property "sonar.coverage.exclusions",
                 "**/*ViewModel.java," +
                 "**/*Resource.java,"
         property "sonar.java.source", "1.8"
