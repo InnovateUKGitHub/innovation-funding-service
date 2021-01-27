@@ -203,24 +203,27 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
 
     private boolean showReopenLinkVisible(Application application, long userId) {
         if (application.getCompetition().isAlwaysOpen()) {
-
-           List<AssessmentResource> assessments =
-                    assessmentService.findByApplicationId(application.getId())
-                            .getSuccess();
-
-            Optional<AssessmentResource> hasAssessment = assessments.stream()
-                    .filter(assessment -> assessment.getApplication().equals(application.getId()))
-                    .findFirst();
-
-            return application.getLeadApplicant().getId().equals(userId) &&
-                    application.getFundingDecision() == null &&
-                    application.isSubmitted() &&
-                    hasAssessment.isPresent();
+            return isAlwaysOpenApplicationInAssessment(application, userId);
         }
         return application.getLeadApplicant().getId().equals(userId) &&
                 CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                 application.getFundingDecision() == null &&
                 application.isSubmitted();
+    }
+
+    private boolean isAlwaysOpenApplicationInAssessment(Application application, long userId) {
+        List<AssessmentResource> assessments =
+                 assessmentService.findByApplicationId(application.getId())
+                         .getSuccess();
+
+        Optional<AssessmentResource> hasAssessment = assessments.stream()
+                .filter(assessment -> assessment.getApplication().equals(application.getId()))
+                .findFirst();
+
+        return application.getLeadApplicant().getId().equals(userId) &&
+                application.getFundingDecision() == null &&
+                application.isSubmitted() &&
+                !hasAssessment.isPresent();
     }
 
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {
