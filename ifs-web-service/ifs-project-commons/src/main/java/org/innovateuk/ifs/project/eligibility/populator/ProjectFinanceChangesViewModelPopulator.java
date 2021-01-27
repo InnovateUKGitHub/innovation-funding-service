@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,11 +71,13 @@ public class ProjectFinanceChangesViewModelPopulator {
             appFinanceResource = new ApplicationFinanceResource();
         }
 
+        boolean isLead = applicationProcessRoles.stream().anyMatch(apr -> organisation.getId().equals(apr.getOrganisationId()) && apr.getRole() == ProcessRoleType.LEADAPPLICANT);
+
         ProjectFinanceResource projectFinanceResource = projectFinanceRestService.getProjectFinance(project.getId(), organisation.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
         ProjectFinanceChangesProjectFinancesViewModel projectFinanceChangesProjectFinancesViewModel = getProjectFinancesViewModel(competition, organisation, appFinanceResource, projectFinanceResource);
-        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, appFinanceResource, eligibilityOverview,
+        ProjectFinanceChangesFinanceSummaryViewModel projectFinanceChangesFinanceSummaryViewModel = getFinanceSummaryViewModel(competition, appFinanceResource, eligibilityOverview, isLead,
                 projectFinanceChangesProjectFinancesViewModel.getTotalProjectCosts());
         ProjectFinanceChangesMilestoneDifferencesViewModel projectFinanceChangesMilestoneDifferencesViewModel = getMilestoneDifferencesViewModel(project, organisation, competition);
 
@@ -130,13 +133,16 @@ public class ProjectFinanceChangesViewModelPopulator {
         if (FundingType.GRANT == competition.getFundingType() && FinanceRowType.OVERHEADS == rowType) {
             return "Overhead costs";
         }
+        if (FinanceRowType.PROCUREMENT_OVERHEADS == rowType) {
+            return "Overhead costs";
+        }
         if (FinanceRowType.YOUR_FINANCE == rowType) {
             return "Your finance";
         }
         return rowType.getDisplayName();
     }
 
-    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource, FinanceCheckEligibilityResource eligibilityOverview, CostChangeViewModel totalProjectCosts) {
+    private ProjectFinanceChangesFinanceSummaryViewModel getFinanceSummaryViewModel(CompetitionResource competition, ApplicationFinanceResource appFinanceResource, FinanceCheckEligibilityResource eligibilityOverview, boolean isLead, CostChangeViewModel totalProjectCosts) {
         if (competition.isProcurement()) {
             return null;
         }
@@ -147,9 +153,14 @@ public class ProjectFinanceChangesViewModelPopulator {
         entries.add(new CostChangeViewModel("Funding sought (£)", appFinanceResource.getTotalFundingSought(), eligibilityOverview.getFundingSought()));
         entries.add(new CostChangeViewModel("Other funding (£)", appFinanceResource.getTotalOtherFunding(), eligibilityOverview.getOtherPublicSectorFunding()));
         if (competition.isKtp()) {
-            BigDecimal contributionPercentage = appFinanceResource.getTotalContribution().multiply(new BigDecimal("100")).divide(appFinanceResource.getTotal(), RoundingMode.HALF_UP);
-            entries.add(new CostChangeViewModel("Company contribution (%)", contributionPercentage, eligibilityOverview.getContributionPercentage()));
-            entries.add(new CostChangeViewModel("Company contribution (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
+            if (isLead) {
+                entries.add(new CostChangeViewModel("Company contribution (%)", BigDecimal.ZERO, BigDecimal.ZERO));
+                entries.add(new CostChangeViewModel("Company contribution (£)", BigDecimal.ZERO, BigDecimal.ZERO));
+            } else {
+                BigDecimal contributionPercentage = appFinanceResource.getTotalContribution().multiply(new BigDecimal("100")).divide(appFinanceResource.getTotal(), RoundingMode.HALF_UP);
+                entries.add(new CostChangeViewModel("Company contribution (%)", contributionPercentage, eligibilityOverview.getContributionPercentage()));
+                entries.add(new CostChangeViewModel("Company contribution (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
+            }
         } else {
             entries.add(new CostChangeViewModel("Contribution to project (£)", appFinanceResource.getTotalContribution(), eligibilityOverview.getContributionToProject()));
         }
