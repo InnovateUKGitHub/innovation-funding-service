@@ -70,12 +70,6 @@
             <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
                 <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                 class="govuk-link">project finance overview</a>.</p>
-
-
-
-            Innovate UK is reviewing:
-
-
             <p class="govuk-body" th:unless="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing
                 <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                    class="govuk-link">your project finances</a>
