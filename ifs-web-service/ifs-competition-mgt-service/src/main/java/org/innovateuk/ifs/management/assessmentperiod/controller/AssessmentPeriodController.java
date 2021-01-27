@@ -68,10 +68,9 @@ public class AssessmentPeriodController {
 
         List<AssessmentPeriodMilestonesForm> milestonesForms = new ArrayList<>();
         existingAssessmentPeriods.forEach((key, value) -> {
-            Long assessmentPeriodId;
             LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
             value.stream().forEachOrdered(milestone ->
-                    milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone, competitionResource))
+                    milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
             );
             AssessmentPeriodMilestonesForm milestonesForm = new AssessmentPeriodMilestonesForm();
             milestonesForm.setAssessmentPeriodId(key);
@@ -118,7 +117,9 @@ public class AssessmentPeriodController {
 
         // group the existing by id and match? Or just push straight?
         List<MilestoneResource> updatedMilestones = new ArrayList<>();
-        existingMilestones.forEach(existingMilestone -> {
+        existingMilestones.stream()
+                .filter(this::isEditable)
+                .forEach(existingMilestone -> {
 
             MilestoneRowForm milestoneWithUpdate = formMilestones.get(existingMilestone.getAssessmentPeriodId())
                     .stream().filter(e -> e.getMilestoneType().equals(existingMilestone.getType())).findFirst().orElse(null);
@@ -137,7 +138,12 @@ public class AssessmentPeriodController {
         });
 
         Supplier<String> successView = () -> redirectToManageAssessment(competitionId);
-        Supplier<String> failureView = () -> redirectToManageAssessmentPeriods(competitionId);
+        Supplier<String> failureView = () -> {
+//            model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
+//            return "competition/manage-assessment-periods";
+
+            return manageAssessmentPeriods(form, competitionId, model);
+        };
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             RestResult<Void> saveResult = milestoneRestService.updateAssessmentPeriodMilestones(updatedMilestones);
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
@@ -164,12 +170,12 @@ public class AssessmentPeriodController {
         return format("redirect:/assessment/competition/%s/assessment-period", competitionId);
     }
 
-    private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), true);
+    private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone) {
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate(), isEditable(milestone));
     }
 
-    private boolean isEditable(MilestoneResource milestone, CompetitionResource competitionResource) {
-        return !competitionResource.isSetupAndLive() || milestone.getDate().isAfter(ZonedDateTime.now());
+    private boolean isEditable(MilestoneResource milestone) {
+        return milestone.getDate().isAfter(ZonedDateTime.now());
     }
 
 }

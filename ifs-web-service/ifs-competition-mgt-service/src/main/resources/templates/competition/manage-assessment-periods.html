@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
-<div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
-     aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-    <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
-</div>
+
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessment periods'"/>
 </head>
@@ -17,6 +13,12 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Competition', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"/>
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+         aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+    </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
@@ -101,6 +103,7 @@
                                    th:value="${milestoneEntry.value.day}"
                                    th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].day}"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
+                                   th:readonly="${milestoneEntry.value.readonly}"
                             />
                         </td>
                         <td class="govuk-table__cell month">
@@ -119,6 +122,7 @@
                                    th:value="${milestoneEntry.value.month}"
                                    th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].month}"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
+                                   th:readonly="${milestoneEntry.value.readonly}"
                             />
                         </td>
                         <td class="govuk-table__cell year">
@@ -136,6 +140,7 @@
                                    th:value="${milestoneEntry.value.year}"
                                    th:field="${form.formList[__${pStat.index}__].milestoneEntries[__${milestoneEntry.key}__].year}"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
+                                   th:readonly="${milestoneEntry.value.readonly}"
                             />
                         </td>
                     </tr>

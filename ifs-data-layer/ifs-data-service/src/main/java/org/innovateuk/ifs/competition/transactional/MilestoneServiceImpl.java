@@ -23,8 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -171,10 +170,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Transactional
     public ServiceResult<Void> updateAssessmentPeriodMilestones(List<MilestoneResource> milestones) {
         ValidationMessages messages = new ValidationMessages();
-        validateCompetitionIdConsistency(milestones);
-        validateDates(milestones);
+        messages.addAll(validateCompetitionIdConsistency(milestones));
 
-        // validate assessment period date order
+//        messages.addAll(validateDates(milestones));
+        messages.addAll(validateAssessmentPeriodDateOrder(milestones));
 
         if (messages.hasErrors()) {
             return serviceFailure(messages.getErrors());
@@ -182,6 +181,32 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
         milestoneRepository.saveAll(milestoneMapper.mapToDomain(milestones));
         return serviceSuccess();
+    }
+
+    private ValidationMessages validateAssessmentPeriodDateOrder(List<MilestoneResource> milestoneResources) {
+        ValidationMessages vm = new ValidationMessages();
+
+        milestoneResources.stream()
+                .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId))
+                .values()
+                .forEach(assessmentPeriodMilestones -> {
+                    assessmentPeriodMilestones.sort(comparing(MilestoneResource::getType));
+                    validatePresetMilestonesSequentialOrder(vm, assessmentPeriodMilestones);
+                });
+
+        return vm;
+    }
+
+    private void validatePresetMilestonesSequentialOrder(ValidationMessages vm, List<MilestoneResource> milestones) {
+        for (int i = 1; i < milestones.size(); i++) {
+            MilestoneResource previous = milestones.get(i - 1);
+            MilestoneResource current = milestones.get(i);
+
+            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
+                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
+            }
+        }
     }
 
     @Override
@@ -314,15 +339,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         // preset milestones must be in the correct order
         List<MilestoneResource> presetMilestones = simpleFilter(milestones, milestoneResource -> milestoneResource.getType().isPresetDate());
 
-        for (int i = 1; i < presetMilestones.size(); i++) {
-            MilestoneResource previous = presetMilestones.get(i - 1);
-            MilestoneResource current = presetMilestones.get(i);
-
-            if (current.getDate() != null && previous.getDate() != null && previous.getDate().isAfter(current.getDate())) {
-                Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
-                vm.addError(error);
-            }
-        }
+        validatePresetMilestonesSequentialOrder(vm, presetMilestones);
 
         return vm;
     }
