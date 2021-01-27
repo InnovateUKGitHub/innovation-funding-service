@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.file.resource;
 
+import com.google.common.collect.Sets;
+
 import java.util.Set;
 
 import static com.google.common.collect.Sets.union;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.joining;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 public enum FileTypeCategory {
     SPREADSHEET("spreadsheet",
@@ -59,18 +60,21 @@ public enum FileTypeCategory {
         private MimeTypes() {}
         public static final Set<String> PDF = singleton("application/pdf");
 
-        private static final Set<String> MS_SPREADSHEET = asSet("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        private static final Set<String> MS_SPREADSHEET =
+                Sets.newHashSet("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         private static final Set<String> OPEN_SPREADSHEET = singleton("application/vnd.oasis.opendocument.spreadsheet");
 
-        private static final Set<String> MS_DOCUMENT =  asSet("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        private static final Set<String> MS_DOCUMENT =
+                Sets.newHashSet("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         private static final Set<String> OPEN_DOCUMENT = singleton("application/vnd.oasis.opendocument.text");
     }
 
     public static class FileExtensions {
-        private FileExtensions() {}
-        public static final Set<String> PDF = singleton(".pdf");
 
-        private static final Set<String> SPREADSHEET = asSet(".ods", ".xls", ".xlsx");
-        private static final Set<String> DOCUMENT =  asSet(".odt", ".doc", ".docx");
+        private FileExtensions() {}
+
+        public static final Set<String> PDF = singleton(".pdf");
+        private static final Set<String> SPREADSHEET = Sets.newHashSet(".ods", ".xls", ".xlsx");
+        private static final Set<String> DOCUMENT =  Sets.newHashSet(".odt", ".doc", ".docx");
     }
 }
