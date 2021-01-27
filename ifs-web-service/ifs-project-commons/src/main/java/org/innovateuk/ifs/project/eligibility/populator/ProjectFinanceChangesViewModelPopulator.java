@@ -93,7 +93,7 @@ public class ProjectFinanceChangesViewModelPopulator {
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> entry : projectFinance.getFinanceOrganisationDetails().entrySet()) {
             FinanceRowType rowType = entry.getKey();
-            if (rowType == FinanceRowType.OTHER_FUNDING || rowType == FinanceRowType.GRANT_CLAIM_AMOUNT) {
+            if (Arrays.asList(FinanceRowType.OTHER_FUNDING, FinanceRowType.GRANT_CLAIM_AMOUNT, FinanceRowType.FINANCE).contains(rowType)) {
                 continue;
             }
             if (rowType == FinanceRowType.YOUR_FINANCE && !OrganisationTypeEnum.isResearch(organisation.getOrganisationType())) {
