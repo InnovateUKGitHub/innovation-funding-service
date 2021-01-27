@@ -33,12 +33,10 @@ public class IfsThymeleafConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass(IfsThymeleafPostProcessorDialect.class)
     @Profile("debug")
     protected static class IfsThymeleafPostProcessorDialectConfiguration {
 
         @Bean
-        @ConditionalOnMissingBean
         public IDialect ifsThymeleafPostProcessorDialect() {
             return new IfsThymeleafPostProcessorDialect();
         }
