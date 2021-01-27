@@ -4,6 +4,5 @@ version project.version
 apply plugin: 'idea'
 
 ext {
-    pactDir = file('ifs-data-service/build/pacts')
     javaLanguageLevel = 1.8
 }
