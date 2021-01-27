@@ -13,4 +13,7 @@ public class ProjectFinanceChangesFinanceSummaryViewModel {
         return entries;
     }
 
+    public boolean hasChanges() {
+        return entries.stream().anyMatch(entry -> entry.isProjectCostDifferent());
+    }
 }
