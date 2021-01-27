@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot-new.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 
 bootJar.enabled=false
@@ -28,12 +28,12 @@ dependencies {
     compile "org.apache.tika:tika-parsers:1.22"
     // Exclusions and upgrades of tika dependencies to fix whitesource issues.
     configurations.compile.exclude(group: 'org.quartz-scheduler', module: 'quartz')
-    compile ("org.apache.commons:commons-compress:1.19") {
+    compile ("org.apache.commons:commons-compress") {
         force = true
     }
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
 
-    testCompile "com.h2database:h2:1.4.196"
+    testCompile "com.h2database:h2"
 }
