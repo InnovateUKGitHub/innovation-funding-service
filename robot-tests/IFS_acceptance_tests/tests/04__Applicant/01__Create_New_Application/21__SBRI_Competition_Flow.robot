@@ -25,6 +25,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-8943  SBRI Milestones - Ability to raise queries / notes in project setup
 ...
+...               IFS-8941  SBRI Milestones - Edit milestones in project setup
+...
 ...               IFS-8947  SBRI Milestones - Reset finances
 ...
 Suite Setup       Custom Suite Setup
@@ -348,7 +350,7 @@ Project lead responds to pending queries
     Then the user responds to the query
 
 Internal user can generate spend profile
-    [Documentation]   IFS-8048  IFS-8947
+    [Documentation]   IFS-8048
     Given Log in as a different user          &{internal_finance_credentials}
     And the user navigates to the page        ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     When generate spend profile
@@ -397,6 +399,13 @@ External user can upload the contract
      Given applicant uploads the contract
      When the internal user approve the contract     ${sbriProjectId2}
      Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
+
+Internal user can edit payment milestone in project setup
+     [Documentation]  IFS-8941
+     Given log in as a different user                       &{internal_finance_credentials}
+     And the user navigates to the page                     ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+     When the user edits the payment milestone
+     Then the internal user approves payment milestone
 
 *** Keywords ***
 Custom Suite Setup
@@ -580,3 +589,11 @@ the user should see validation messages
     the user should see a field and summary error     Number of months completed must be selected.
     the user should see a field and summary error     You must state the milestone task or activity.
     the user should see a field and summary error     You must state the payment requested in pounds (£).
+
+the user edits the payment milestone
+     the user clicks the button/link                        jQuery = tr:nth-child(1) td:nth-child(6) a:contains("Approved")
+     the user clicks the button/link                        id = edit
+     the user clicks the button/link                        jQuery = button:contains("Open all")
+     the user enters multiple strings into a text field     id = milestones[1].taskOrActivity    w${SPACE}    10
+     the user clicks the button/link                        jQuery = button:contains("Save and return to payment milestone check")
+     the user navigates to the page                         ${server}/project-setup-management/project/${sbriProjectId}/finance-check
