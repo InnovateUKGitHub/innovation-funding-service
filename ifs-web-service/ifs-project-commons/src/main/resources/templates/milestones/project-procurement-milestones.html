@@ -20,7 +20,7 @@
     <th:block th:if="${model.externalUser}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Back to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${model.projectId})}"/>
     <th:block th:unless="${model.externalUser}" th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+              th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 

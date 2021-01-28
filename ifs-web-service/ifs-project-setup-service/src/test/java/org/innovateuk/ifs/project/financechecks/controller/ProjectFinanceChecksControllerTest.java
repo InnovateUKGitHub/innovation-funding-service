@@ -186,7 +186,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -224,7 +224,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
         when(projectFinanceRestService.getProjectFinances(project.getId())).thenReturn(restSuccess(emptyList()));
 
-        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-check")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -248,7 +248,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(formPopulator.populateForm(project.getId(), industrialOrganisation.getId())).thenReturn(new YourProjectCostsForm());
         when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(anyBoolean(), any(), any())).thenReturn(new ProjectFinanceChangesViewModel());
 
-        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility")).
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andExpect(model().attribute("model", instanceOf(FinanceChecksProjectCostsViewModel.class))).
@@ -281,8 +281,8 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(projectService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         ProjectFinanceChangesViewModel viewModel = mock(ProjectFinanceChangesViewModel.class);
-        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, industrialOrganisation)).thenReturn(viewModel);
-        mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility/changes"))
+        when(projectFinanceChangesViewModelPopulator.getProjectFinanceChangesViewModel(false, project, industrialOrganisation, getLoggedInUser().getId())).thenReturn(viewModel);
+        mockMvc.perform(get("/project/" + project.getId() + "/finance-check/eligibility/changes"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/financecheck/eligibility-changes"))
                 .andExpect(model().attribute("model", viewModel))
