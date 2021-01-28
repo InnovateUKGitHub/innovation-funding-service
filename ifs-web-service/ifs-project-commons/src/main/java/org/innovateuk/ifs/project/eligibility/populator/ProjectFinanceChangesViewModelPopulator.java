@@ -131,7 +131,7 @@ public class ProjectFinanceChangesViewModelPopulator {
 
     private boolean shouldSkipRow(FinanceRowType rowType, FundingType fundingType) {
         if (FundingType.KTP == fundingType) {
-            return Arrays.asList(FinanceRowType.FINANCE, FinanceRowType.PREVIOUS_FUNDING).contains(rowType);
+            return Arrays.asList(FinanceRowType.FINANCE, FinanceRowType.PREVIOUS_FUNDING, FinanceRowType.ADDITIONAL_COMPANY_COSTS).contains(rowType);
         }
         if (FundingType.PROCUREMENT == fundingType) {
             return Arrays.asList(FinanceRowType.FINANCE, FinanceRowType.OTHER_FUNDING).contains(rowType);
