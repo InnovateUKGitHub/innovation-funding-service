@@ -108,8 +108,8 @@ public class FinanceSummaryTableViewModelPopulator {
     public FinanceSummaryTableViewModel populateAllOrganisations(ApplicationResource application, CompetitionResource competition, List<ProcessRoleResource> processRoles, UserResource user) {
         Optional<ProcessRoleResource> currentApplicantRole = getCurrentUsersRole(processRoles, user);
 
-        boolean open = application.isOpen() && competition.isOpen() && currentApplicantRole.isPresent();
-        boolean readonly = !open;
+        boolean open = application.isOpen() && competition.isOpen();
+        boolean readonly = !(open && currentApplicantRole.isPresent());
 
         Map<Long, ApplicationFinanceResource> finances = applicationFinanceRestService.getFinanceTotals(application.getId()).getSuccess()
                 .stream().collect(toMap(ApplicationFinanceResource::getOrganisation, Function.identity()));
@@ -118,9 +118,9 @@ public class FinanceSummaryTableViewModelPopulator {
 
         final Map<Long, Set<Long>> completedSections;
         final BigDecimal maximumFundingSought;
-        if (!readonly) {
-            completedSections = sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId()).getSuccess();
+        if (open) {
             maximumFundingSought = competitionApplicationConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess().getMaximumFundingSought();
+            completedSections = sectionStatusRestService.getCompletedSectionsByApplication(application.getId()).getSuccess();
         } else {
             completedSections = new HashMap<>();
             maximumFundingSought = null;

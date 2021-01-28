@@ -72,7 +72,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
         Map<Long, Set<Long>> expectedResult = new HashMap<>();
         setupGetWithRestResultExpectations(expectedUrl, mapOfLongToLongsSetType(), expectedResult);
 
-        RestResult<Map<Long, Set<Long>>> result = service.getCompletedSectionsByOrganisation(applicationId);
+        RestResult<Map<Long, Set<Long>>> result = service.getCompletedSectionsByApplication(applicationId);
 
         assertEquals(expectedResult, result.getSuccess());
     }

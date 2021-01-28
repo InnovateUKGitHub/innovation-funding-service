@@ -19,7 +19,7 @@ public class SectionStatusController {
     @Autowired
     private SectionStatusService sectionStatusService;
 
-    @GetMapping("/get-completed-sections-by-organisation/{applicationId}")
+    @GetMapping({"/get-completed-sections-by-organisation/{applicationId}", "/get-completed-sections-by-application/{applicationId}"})
     public RestResult<Map<Long, Set<Long>>> getCompletedSectionsMap(@PathVariable("applicationId") final long applicationId) {
         return sectionStatusService.getCompletedSections(applicationId).toGetResponse();
     }
