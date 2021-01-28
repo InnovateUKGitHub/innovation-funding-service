@@ -63,13 +63,13 @@ public class CompetitionSetupFundingLevelPercentageController {
         if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle) {
             CompetitionSetupViewModel viewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, FUNDING_LEVEL_PERCENTAGE);
             if (viewModel.getGeneral().isEditable()) {
-                return format("redirect:/competition/setup/%d/section/%s/fundingRule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath(), competition.getFundingRules().name());
+                return format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath(), competition.getFundingRules().name());
             }
         }
         return view(model, competition, loggedInUser, null);
     }
 
-    @GetMapping("/fundingRule/{fundingRules}")
+    @GetMapping("/funding-rule/{fundingRules}")
     public String fundingLevelPercentage(Model model,
                                          @PathVariable long competitionId,
                                          @PathVariable FundingRules fundingRules,
@@ -97,7 +97,7 @@ public class CompetitionSetupFundingLevelPercentageController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    @PostMapping("/fundingRule/{fundingRules}")
+    @PostMapping("/funding-rule/{fundingRules}")
     public String submitFundingRulesPercentages(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) FundingLevelPercentageForm competitionSetupForm,
                                                  BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
@@ -117,7 +117,7 @@ public class CompetitionSetupFundingLevelPercentageController {
                         :
                         validationHandler.addAnyErrors(updater.saveSection(competition, competitionSetupForm))
                                 .failNowOrSucceedWith(failureView, () ->
-                                        format("redirect:/competition/setup/%d/section/%s/fundingRule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPath(), STATE_AID.name()));
+                                        format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPath(), STATE_AID.name()));
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
@@ -132,7 +132,7 @@ public class CompetitionSetupFundingLevelPercentageController {
         CompetitionSetupViewModel viewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, FUNDING_LEVEL_PERCENTAGE);
         FundingLevelPercentageFormPopulator populator = (FundingLevelPercentageFormPopulator) competitionSetupService.getSectionFormPopulator(FUNDING_LEVEL_PERCENTAGE);
         CompetitionSetupForm form;
-        if (viewModel.getGeneral().isEditable()) {
+        if (fundingRules != null && viewModel.getGeneral().isEditable()) {
             form = populator.populateForm(competition, fundingRules);
         } else {
             form = populator.populateForm(competition);
