@@ -6,8 +6,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -19,9 +21,9 @@ import static org.springframework.http.MediaType.parseMediaType;
  * Repository Integration tests for Form Inputs.
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-@EnableAutoConfiguration
-@EntityScan(basePackages = "org.innovateuk.ifs.file.domain")
+@DataJpaTest(excludeAutoConfiguration = FlywayAutoConfiguration.class)
+@EnableJpaRepositories(basePackageClasses = {FileEntryRepository.class})
+@EntityScan(basePackageClasses = {FileEntry.class})
 public class FileEntryRepositoryIntegrationTest  {
 
     @Autowired
