@@ -126,7 +126,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        Pageable pageable = PageRequest.of(0, 20, new org.springframework.data.domain.Sort(ASC, "user.firstName", "user.lastName"));
+        Pageable pageable = PageRequest.of(0, 20, org.springframework.data.domain.Sort.by(ASC, "user.firstName", "user.lastName"));
         Page<ApplicationAvailableAssessorResource> result = new PageImpl<ApplicationAvailableAssessorResource>(Collections.emptyList(), pageable, 0);
         String assessorNameFilter = "";
 

@@ -1329,7 +1329,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<User> expectedPage = new PageImpl<>(assessors, pageable, 2L);
 
@@ -1362,7 +1362,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         long innovationAreaId = 10L;
         String assessorFilter = "";
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
@@ -1388,7 +1388,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         int pageSize = 20;
         String assessorFilter = "";
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
@@ -1861,7 +1861,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withEmail(testEmail1, testEmail2)
                 .build(2);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 
@@ -1917,7 +1917,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withCompetitionId(competition.getId())
                 .build(2);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         List<AssessmentInvite> pagedResult = newAssessmentInvite()
                 .withId(1L,2L)
@@ -2039,7 +2039,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withEmail(testEmail1, testEmail2)
                 .build(2);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         Page<AssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
 

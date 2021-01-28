@@ -61,7 +61,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "firstName"));
 
         when(reviewInviteServiceMock.getAvailableAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
@@ -115,7 +115,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         when(reviewInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
@@ -281,7 +281,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
         long competitionId = 1L;
         List<ParticipantStatus> status = singletonList(PENDING);
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         List<AssessorInviteOverviewResource> content = newAssessorInviteOverviewResource().build(2);
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()

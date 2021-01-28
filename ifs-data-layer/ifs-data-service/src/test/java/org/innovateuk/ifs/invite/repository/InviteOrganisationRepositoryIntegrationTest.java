@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.repository;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
@@ -132,7 +134,7 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
         assertThat(repository.findFirstByOrganisationIdAndInvitesApplicationId(organisation1.getId(), application1.getId()))
                 .isPresent()
                 .get()
-                .extracting("id")
+                .extracting("id",  as(InstanceOfAssertFactories.LIST))
                 .containsAnyOf(inviteOrganisation.getId(), inviteOrgApplication1Org1.getId(), inviteOrgApplication1Org2.getId());
 
     }

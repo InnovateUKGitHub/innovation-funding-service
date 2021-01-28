@@ -55,7 +55,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
     public void getInterviewAcceptedAssessors() throws Exception {
         long competitionId = 1L;
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "invite.name"));
 
         List<InterviewAcceptedAssessorsResource> content = newInterviewAcceptedAssessorsResource().build(2);
 
@@ -96,7 +96,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         long competitionId = 1L;
         long userId = 2L;
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "target.id"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "target.id"));
 
         List<InterviewApplicationResource> content = newInterviewApplicationResource().build(2);
 
@@ -164,7 +164,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
         long competitionId = 1L;
         long userId = 2L;
 
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "target.id"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "target.id"));
 
         List<InterviewApplicationResource> content = newInterviewApplicationResource().build(2);
 

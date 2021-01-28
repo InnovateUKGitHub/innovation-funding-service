@@ -98,7 +98,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
     @Test
     public void getAvailableApplications() throws Exception {
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         when(interviewAssignmentServiceMock.getAvailableApplications(competitionId, pageable)).thenReturn(serviceSuccess(availableApplicationPageResourceBuilder.build()));
 
@@ -129,7 +129,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
     @Test
     public void getStagedApplications() throws Exception {
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         when(interviewAssignmentServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentCreatedInvitePageResourceBuilder.build()));
 
@@ -160,7 +160,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
 
     @Test
     public void getAssignedApplications() throws Exception {
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by(ASC, "name"));
 
         when(interviewAssignmentServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentAssignedPageResourceBuilder.build()));
 

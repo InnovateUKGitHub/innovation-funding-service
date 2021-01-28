@@ -51,7 +51,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .withContent(newInterviewAcceptedAssessorsResource().build(2))
                 .build();
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "invite.email"));
 
         when(interviewAllocationServiceMock.getInterviewAcceptedAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
@@ -77,7 +77,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .withContent(newInterviewApplicationResource().build(2))
                 .build();
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "target.id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "target.id"));
 
         when(interviewAllocationServiceMock.getAllocatedApplications(competitionId, userId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));
@@ -121,7 +121,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .withContent(newInterviewApplicationResource().build(2))
                 .build();
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "target.id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "target.id"));
 
         when(interviewAllocationServiceMock.getUnallocatedApplications(competitionId, userId, pageable))
                 .thenReturn(serviceSuccess(expectedPageResource));

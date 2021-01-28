@@ -73,7 +73,7 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
                 .withSize(30)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "id"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "id"));
 
         when(interviewAssignmentServiceMock.getAvailableApplications(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedAvailableApplications));
@@ -103,7 +103,7 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
                 .withSize(30)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "id"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "id"));
 
         when(interviewAssignmentServiceMock.getStagedApplications(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedStagedApplications));

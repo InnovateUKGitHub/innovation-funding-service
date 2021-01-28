@@ -68,7 +68,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withSize(30)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(DESC, "lastName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(DESC, "lastName"));
 
         when(interviewInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
@@ -98,7 +98,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withSize(30)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "user.firstName", "user.lastName"));
 
         when(interviewInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
@@ -140,7 +140,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "email"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "email"));
 
         when(interviewInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
@@ -170,7 +170,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "name"));
 
         when(interviewInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
@@ -296,7 +296,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "invite.email"));
 
         when(interviewInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
                 .thenReturn(serviceSuccess(expectedPageResource));

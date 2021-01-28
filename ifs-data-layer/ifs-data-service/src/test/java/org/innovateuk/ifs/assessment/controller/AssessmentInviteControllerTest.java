@@ -403,7 +403,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(30)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(DESC, "lastName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(DESC, "lastName"));
 
         when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorNameFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
@@ -453,7 +453,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(30)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName", "lastName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName", "lastName"));
 
         when(assessmentInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable, assessorNameFilter))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
@@ -482,7 +482,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "email"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "email"));
 
         when(assessmentInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
@@ -512,7 +512,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "name"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "name"));
 
         when(assessmentInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
@@ -536,7 +536,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "invite.email"));
 
         when(assessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, status, compliant, assessorName))
                 .thenReturn(serviceSuccess(expectedPageResource));
@@ -563,7 +563,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         Optional<Boolean> compliant = empty();
         Optional<String> assessorName = of("");
 
-        Pageable pageable = PageRequest.of(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "invite.name"));
 
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
                 .withContent(newAssessorInviteOverviewResource().build(2))

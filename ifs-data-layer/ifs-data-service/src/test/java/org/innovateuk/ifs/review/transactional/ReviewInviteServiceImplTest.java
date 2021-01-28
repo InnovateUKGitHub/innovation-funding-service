@@ -258,7 +258,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
@@ -287,7 +287,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         int page = 0;
         int pageSize = 20;
 
-        Pageable pageable = PageRequest.of(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(ASC, "firstName"));
 
         Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
