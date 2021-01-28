@@ -78,8 +78,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     static {
         Map<String, Sort> applicationSortFieldMap = new HashMap<>();
-        applicationSortFieldMap.put("id", new Sort(ASC, "id"));
-        applicationSortFieldMap.put("name", new Sort(ASC, "name", "id"));
+        applicationSortFieldMap.put("id", Sort.by(ASC, "id"));
+        applicationSortFieldMap.put("name", Sort.by(ASC, "name", "id"));
 
         APPLICATION_SORT_FIELD_MAP = Collections.unmodifiableMap(applicationSortFieldMap);
     }

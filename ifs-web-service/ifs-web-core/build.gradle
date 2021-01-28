@@ -31,7 +31,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity5"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.springframework.plugin:spring-plugin-core"
+    compile "org.springframework.boot:spring-boot-starter-validation"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
 

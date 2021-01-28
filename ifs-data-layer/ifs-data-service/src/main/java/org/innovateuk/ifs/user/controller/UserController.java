@@ -39,10 +39,11 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 @RequestMapping("/user")
 public class UserController {
 
-    public static final Sort DEFAULT_USER_SORT = new Sort(
+    public static final Sort DEFAULT_USER_SORT = Sort.by(
             new Sort.Order(Sort.Direction.ASC, "firstName"),
             new Sort.Order(Sort.Direction.ASC, "lastName")
     );
+
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
     private static final String DEFAULT_PAGE_NUMBER = "0";

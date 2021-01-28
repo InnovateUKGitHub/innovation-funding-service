@@ -49,7 +49,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "org.innovateuk.ifs.application.resource.ApplicationState.APPROVED," +
             "org.innovateuk.ifs.application.resource.ApplicationState.REJECTED)";
 
-    Sort SORT_BY_FIRSTNAME = new Sort("user.firstName");
+    Sort SORT_BY_FIRSTNAME = Sort.by("user.firstName");
 
     String APPLICATION_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationProcess.activityState IN :states) " +

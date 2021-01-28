@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class RoleProfileStatusController {
 
-    public static final Sort DEFAULT_SORT = new Sort(
+    public static final Sort DEFAULT_SORT = Sort.by(
             new Sort.Order(Sort.Direction.ASC, "user.firstName"),
             new Sort.Order(Sort.Direction.ASC, "user.lastName")
     );

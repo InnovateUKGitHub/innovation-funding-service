@@ -56,6 +56,11 @@ public class ThreadsafeModel implements Model {
     }
 
     @Override
+    public Object getAttribute(String attributeName) {
+        return withReadLock(() -> model.getAttribute(attributeName));
+    }
+
+    @Override
     public Map<String, Object> asMap() {
         return withReadLock(() -> model.asMap());
     }

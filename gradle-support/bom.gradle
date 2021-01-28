@@ -1,7 +1,7 @@
 
 ext {
-    bomSpringBootVersion = '2.0.9.RELEASE'
-    bomSpringCloudVersion = 'Finchley.RELEASE'
+    bomSpringBootVersion = '2.3.8.RELEASE'
+    bomSpringCloudVersion = 'Hoxton.SR9'
 }
 
 dependencies {
@@ -30,7 +30,7 @@ dependencies {
     implementation('com.google.guava:guava') {
         version {
             // Tika wants this one
-            strictly '28.0-jre'
+            strictly '29.0-jre'
         }
     }
 

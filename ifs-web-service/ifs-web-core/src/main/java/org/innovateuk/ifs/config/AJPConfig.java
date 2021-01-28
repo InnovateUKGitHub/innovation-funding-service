@@ -37,7 +37,6 @@ public class AJPConfig {
             if(tomcatAjpEnabled) {
 
                 Connector ajpConnector = new Connector("AJP/1.3");
-                ajpConnector.setProtocol("AJP/1.3");
                 ajpConnector.setPort(ajpPort);
                 ajpConnector.setSecure(false);
                 ajpConnector.setAllowTrace(false);
