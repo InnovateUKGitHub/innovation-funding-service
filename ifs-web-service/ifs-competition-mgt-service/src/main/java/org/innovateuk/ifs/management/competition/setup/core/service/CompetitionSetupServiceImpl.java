@@ -128,14 +128,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     @Override
-    public CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
-                                                   CompetitionSetupSection section) {
+    public CompetitionSetupFormPopulator getSectionFormPopulator(CompetitionSetupSection section) {
         CompetitionSetupFormPopulator populator = formPopulators.get(section);
         if (populator == null) {
             LOG.error("unable to populate form for section " + section);
             throw new IllegalArgumentException();
         }
-        return populator.populateForm(competitionResource);
+        return populator;
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.FundingRules;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -63,7 +65,7 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
                 .collect(toList()))
                 .andOnSuccess(() -> {
                     if (researchCategories.size() != competition.getResearchCategories().size()) {
-                        return handleMissingResearchCategoriesFromTableForm(competition);
+                        return handleMissingResearchCategoriesFromTableForm(competition, form.getMaximums().get(0).get(0).getFundingRules());
                     } else {
                         return serviceSuccess();
                     }
@@ -76,12 +78,14 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
         grantClaimMaximumResource.setId(maximumForm.getGrantClaimMaximumId());
         grantClaimMaximumResource.setOrganisationSize(maximumForm.getOrganisationSize());
         grantClaimMaximumResource.setResearchCategory(researchCategories.get(maximumForm.getCategoryId()));
+        grantClaimMaximumResource.setFundingRules(maximumForm.getFundingRules());
         return grantClaimMaximumRestService.save(grantClaimMaximumResource).toServiceResult();
     }
 
     private ServiceResult<Void> saveSingleValue(FundingLevelMaximumForm form, CompetitionResource competition) {
         return aggregate(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess()
                 .stream()
+                .filter(max -> Objects.equals(max.getFundingRules(), form.getFundingRules()))
                 .map(max -> {
                     max.setMaximum(form.getMaximum());
                     return grantClaimMaximumRestService.save(max).toServiceResult();
@@ -90,10 +94,11 @@ public class FundingLevelPercentageSectionUpdater extends AbstractSectionUpdater
                 .andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Void> handleMissingResearchCategoriesFromTableForm(CompetitionResource competition) {
+    private ServiceResult<Void> handleMissingResearchCategoriesFromTableForm(CompetitionResource competition, FundingRules fundingRules) {
         return aggregate(grantClaimMaximumRestService.getGrantClaimMaximumByCompetitionId(competition.getId()).getSuccess()
                 .stream()
                 .filter(max -> !competition.getResearchCategories().contains(max.getResearchCategory().getId()))
+                .filter(max -> max.getFundingRules() == fundingRules)
                 .map(max -> {
                     max.setMaximum(0);
                     return grantClaimMaximumRestService.save(max).toServiceResult();

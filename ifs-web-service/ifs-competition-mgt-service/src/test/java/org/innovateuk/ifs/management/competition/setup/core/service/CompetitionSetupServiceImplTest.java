@@ -158,11 +158,9 @@ public class CompetitionSetupServiceImplTest {
 
         service.setCompetitionSetupFormPopulators(asList(matchingPopulator, otherPopulator));
 
-        CompetitionSetupForm result = service.getSectionFormData(competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
+        CompetitionSetupFormPopulator result = service.getSectionFormPopulator(CompetitionSetupSection.ADDITIONAL_INFO);
 
-        assertEquals(matchingForm, result);
-        verify(matchingPopulator).populateForm(competitionResource);
-        verify(otherPopulator, never()).populateForm(competitionResource);
+        assertEquals(matchingPopulator, result);
     }
 
     @Test

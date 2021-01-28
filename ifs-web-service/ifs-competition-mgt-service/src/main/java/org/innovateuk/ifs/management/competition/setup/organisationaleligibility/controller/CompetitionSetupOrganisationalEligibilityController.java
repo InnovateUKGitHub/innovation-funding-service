@@ -73,7 +73,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         }
 
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, ORGANISATIONAL_ELIGIBILITY));
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, ORGANISATIONAL_ELIGIBILITY));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormPopulator(ORGANISATIONAL_ELIGIBILITY).populateForm(competition));
 
         return "competition/setup";
     }
