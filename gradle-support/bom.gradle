@@ -6,7 +6,9 @@ ext {
 
 dependencies {
 
-    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
+    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}"){
+        exclude group: 'org.flywaydb', module: 'flyway-core'
+    }
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
 
     implementation('org.apache.commons:commons-text') {
@@ -24,6 +26,12 @@ dependencies {
     implementation('commons-io:commons-io') {
         version {
             strictly '2.6'
+        }
+    }
+
+    implementation('org.flywaydb:flyway-core') {
+        version {
+            strictly '5.2.4'
         }
     }
 
