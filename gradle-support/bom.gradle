@@ -6,9 +6,7 @@ ext {
 
 dependencies {
 
-    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}") {
-        exclude group: 'org.thymeleaf', module: 'thymeleaf-spring5'
-    }
+    implementation enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${bomSpringBootVersion}")
     implementation enforcedPlatform("org.springframework.cloud:spring-cloud-dependencies:${bomSpringCloudVersion}")
 
     implementation('org.apache.commons:commons-text') {
