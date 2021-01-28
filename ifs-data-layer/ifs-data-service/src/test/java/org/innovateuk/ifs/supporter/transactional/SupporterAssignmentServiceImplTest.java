@@ -3,16 +3,16 @@ package org.innovateuk.ifs.supporter.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
-import org.innovateuk.ifs.supporter.mapper.SupporterAssignmentMapper;
-import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
-import org.innovateuk.ifs.supporter.resource.*;
-import org.innovateuk.ifs.supporter.workflow.SupporterAssignmentWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.supporter.domain.SupporterAssignment;
+import org.innovateuk.ifs.supporter.mapper.SupporterAssignmentMapper;
+import org.innovateuk.ifs.supporter.repository.SupporterAssignmentRepository;
+import org.innovateuk.ifs.supporter.resource.*;
+import org.innovateuk.ifs.supporter.workflow.SupporterAssignmentWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
@@ -23,19 +23,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.supporter.domain.builder.SupporterAssignmentBuilder.newSupporterAssignment;
-import static org.innovateuk.ifs.supporter.domain.builder.SupporterOutcomeBuilder.newSupporterOutcome;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.organisation.builder.SimpleOrganisationBuilder.newSimpleOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.supporter.domain.builder.SupporterAssignmentBuilder.newSupporterAssignment;
+import static org.innovateuk.ifs.supporter.domain.builder.SupporterOutcomeBuilder.newSupporterOutcome;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -99,6 +101,46 @@ public class SupporterAssignmentServiceImplTest extends BaseServiceUnitTest<Supp
         assertThat(result.getSuccess().getComments(), equalTo("Terrible"));
         assertThat(result.getSuccess().getState(), equalTo(SupporterState.REJECTED));
         assertThat(result.isSuccess(), equalTo(true));
+    }
+
+    @Test
+    public void getAssignmentByApplicationId() {
+        long userId = 1L;
+        long applicationId = 2l;
+        SupporterAssignment supporterAssignment = newSupporterAssignment()
+                .withProcessState(SupporterState.REJECTED)
+                .withSupporterOutcome(newSupporterOutcome()
+                        .withComment("Terrible")
+                        .build()
+                )
+                .build();
+        SupporterAssignmentResource resource = new SupporterAssignmentResource();
+        resource.setAssignmentId(supporterAssignment.getId());
+        resource.setComments(supporterAssignment.getSupporterOutcome().getComment());
+        resource.setState(supporterAssignment.getProcessState());
+
+        when(supporterAssignmentRepository.findByTargetId(applicationId)).thenReturn(singletonList(supporterAssignment));
+        when(supporterAssignmentMapper.mapToResource(supporterAssignment)).thenReturn(resource);
+
+        ServiceResult<List<SupporterAssignmentResource>> result = service.getAssignmentsByApplicationId(applicationId);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        assertThat(result.getSuccess().size(), equalTo(1));
+        assertThat(result.getSuccess().get(0).getAssignmentId(), equalTo(supporterAssignment.getId()));
+        assertThat(result.getSuccess().get(0).getComments(), equalTo("Terrible"));
+        assertThat(result.getSuccess().get(0).getState(), equalTo(SupporterState.REJECTED));
+        assertThat(result.isSuccess(), equalTo(true));
+    }
+
+    @Test
+    public void getAssignmentByApplicationIdWithoutSupporter() {
+        long userId = 1L;
+        long applicationId = 2l;
+        when(supporterAssignmentRepository.findByTargetId(applicationId)).thenReturn(Collections.emptyList());
+        ServiceResult<List<SupporterAssignmentResource>> result = service.getAssignmentsByApplicationId(applicationId);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        assertThat(result.getSuccess().size(), equalTo(0));
     }
 
     @Test
