@@ -18,7 +18,7 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     private final boolean externalUser;
     private final boolean showChangesLink;
 
-    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser) {
+    public ProjectProcurementMilestoneViewModel(ProjectResource project, long organisationId, ProjectFinanceResource finance, String financesUrl, boolean readOnly, PaymentMilestoneResource paymentMilestoneResource, boolean eligibilityAndViabilityApproved, boolean externalUser, boolean showChangesLink) {
         super(project.getDurationInMonths(), finance);
         this.applicationId = project.getApplication();
         this.organisationId = organisationId;
