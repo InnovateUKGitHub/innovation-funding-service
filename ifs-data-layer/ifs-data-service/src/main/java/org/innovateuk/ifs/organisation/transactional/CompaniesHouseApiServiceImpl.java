@@ -10,7 +10,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationExecutiveOfficerResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSicCodeResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,11 +64,6 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     private static final String START_INDEX_KEY = "start_index";
 
     private static final String EMPTY_NAME_STRING = " ";
-
-    private static final String INACTIVE_ORGANISATION_STRING = "NOTACTIVE";
-
-    private static final String ACTIVE_ORGANISATION_STRING = "ACTIVE";
-
 
     @Autowired
     @Qualifier("companieshouse_adaptor")
@@ -171,10 +165,9 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
     private OrganisationSearchResult getOrganisationBasicDetailsFromSearchResults(JsonNode organisationNode) {
         String organisationName = organisationNode.path("title").asText();
         String registrationNumber = organisationNode.path("company_number").asText();
-        String organisatioStatus = organisationNode.path("company_status").asText();
+        String organisationStatus = organisationNode.path("company_status").asText();
         OrganisationSearchResult orgSearchResult = new OrganisationSearchResult(registrationNumber, organisationName);
-        orgSearchResult.setOrganisationStatus(organisatioStatus);
-        orgSearchResult.setInactiveCompanyToDisplay(isInvalidOrganisationToDisplay(organisatioStatus));
+        orgSearchResult.setOrganisationStatus(organisationStatus);
         return orgSearchResult;
     }
 
@@ -185,15 +178,6 @@ public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
         extras.put("description", jsonNode.path("description").asText());
         return extras;
     }
-
-    private String isInvalidOrganisationToDisplay(String organisationStatus) {
-        if (OrganisationStatusEnum.isOrganisationInvalidSatus(organisationStatus)) {
-            return INACTIVE_ORGANISATION_STRING;
-        }
-        return ACTIVE_ORGANISATION_STRING;
-    }
-
-
     private OrganisationSearchResult organisationProfileMapper(JsonNode jsonNode) {
         AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
         ObjectMapper mapper = new ObjectMapper();

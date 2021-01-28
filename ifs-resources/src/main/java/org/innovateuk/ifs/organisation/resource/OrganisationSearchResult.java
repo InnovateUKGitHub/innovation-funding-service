@@ -23,7 +23,6 @@ public class OrganisationSearchResult implements Serializable{
     private List<OrganisationExecutiveOfficerResource> organisationExecutiveOfficers;
     private Map<String, Object> extraAttributes;
     private String organisationStatus;
-    private String inactiveCompanyToDisplay;
 
     public OrganisationSearchResult(String id, String name) {
         this.name = name;
@@ -89,14 +88,6 @@ public class OrganisationSearchResult implements Serializable{
         this.organisationExecutiveOfficers = organisationExecutiveOfficers;
     }
 
-    public String getOrganisationStatus() {
-        return organisationStatus;
-    }
-
-    public void setOrganisationStatus(String organisationStatus) {
-        this.organisationStatus = organisationStatus;
-    }
-
     public Map<String, Object> getExtraAttributes() {
         return extraAttributes;
     }
@@ -105,11 +96,19 @@ public class OrganisationSearchResult implements Serializable{
         this.extraAttributes = extraAttributes;
     }
 
-    public String getInactiveCompanyToDisplay() {
-        return inactiveCompanyToDisplay;
+    public String getOrganisationStatus() {
+        return organisationStatus;
     }
 
-    public void setInactiveCompanyToDisplay(String inactiveCompanyToDisplay) {
-        this.inactiveCompanyToDisplay = inactiveCompanyToDisplay;
+    public void setOrganisationStatus(String organisationStatus) {
+        this.organisationStatus = organisationStatus;
+    }
+
+    @JsonIgnore
+    public Boolean isOrganisationValidToDisplay() {
+        if (organisationStatus !=null && !organisationStatus.isEmpty() && OrganisationStatusEnum.isOrganisationInvalidSatus(organisationStatus)) {
+            return false;
+        }
+       return true;
     }
 }

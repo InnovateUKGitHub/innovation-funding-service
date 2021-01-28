@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -30,7 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @ConditionalOnProperty(name = "ifs.data.companies.house.lookup.enabled", havingValue = "false")
 public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
     protected static final int  INDEX_POSITION = 0;
-    private static final String TOTAL_SEARCH_RESULTS = "11";
+    private static final String TOTAL_SEARCH_RESULTS = "14";
 
     @Value("${ifs.new.organisation.search.enabled}")
     private boolean isImprovedSearchEnabled = false;
@@ -60,11 +57,11 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     private List<OrganisationSearchResult> getFirstPageSearchResults() {
         return asList(getAmadeus(), getASOS(), getAVIVA(), getBBC(), getCineWorld(), getFirstGroupPlc(),
-                getITV(), getRoyalMail(), getSAGA(), getTesco());
+                getITV(), getRoyalMail(), getSAGA(), getTescoAqua());
     }
 
     private List<OrganisationSearchResult> getSecondPageSearchResults() {
-        return asList(getVirginMoney());
+        return asList( getTesco(), getUniace(), getWorth(), getVirginMoney());
 
     }
 
@@ -189,6 +186,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "02276684",
                 "AMADEUS IT SERVICES UK LIMITED",
                 "Business",
+                "active",
                 "1988-07-13",
                 "02276684 - Incorporated on 13 July 1988",
                 asList("62020","63990","79909"),
@@ -204,6 +202,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "04006623",
                 "ASOS PLC",
                 "plc",
+                "active",
                 "2000-06-02",
                 "04006623 - Incorporated on 2 June 2000",
                  asList("70100"),
@@ -220,6 +219,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "02468686",
                 "Aviva Plc",
                 "plc",
+                "active",
                 "1990-02-09",
                 "02468686 - Incorporated on 9 February 1990",
                 asList("70100"), asList("BLANC, Amanda Jayne", "CROSS, Patricia Anne","CULMER, Mark George","FLYNN, Patrick Gerard","JOSHI, Mohit",
@@ -236,10 +236,11 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "07520089",
                 "BBC AND CO LIMITED",
                 "ltd",
+                "active",
                 "2011-02-07",
                 "07520089 - Incorporated on 7 February 2011",
-                asList("69201","69202","69203"),
-                asList("BATE, Philip Henry"));
+                 asList("69201","69202","69203"),
+                 asList("BATE, Philip Henry"));
     }
 
     private OrganisationSearchResult getCineWorld() {
@@ -252,6 +253,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "04081830",
                 "CINEWORLD LIMITED",
                 "ltd",
+                "active",
                 "1995-03-16",
                 "04081830 - Incorporated on 16 March 1995",
                 asList("74909"),
@@ -268,9 +270,10 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "FIRSTGROUP PLC",
                 "plc",
                 "1995-03-31",
+                "active",
                 "SC157176 - Incorporated on 31 March 1995",
-                asList("49100", "49319"),
-                asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
+                 asList("49100", "49319"),
+                 asList("GREEN, Anthony Charles","GREGORY, Matthew","GUNNING, Stephen William Lawrence","MANGOLD, Ryan Dirk",
                         "MARTIN, David Robert","ROBBIE, David Andrew"));
        }
 
@@ -284,6 +287,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "04967001",
                 "ITV PLC",
                 "plc",
+                "active",
                 "2003-11-18",
                 "04967001 - Incorporated on 18 November 2003",
                 asList("82990"),
@@ -302,6 +306,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "08680755",
                 "ROYAL MAIL PLC",
                 "plc",
+                "active",
                 "2013-09-06",
                 "08680755 - Incorporated on 6 September 2013",
                  asList("64209"),
@@ -318,13 +323,29 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "08804263",
                 "SAGA PLC",
                 "plc",
+                "active",
                 "2013-12-05",
                 "08804263 - Incorporated on 5 December 2013",
                  asList("70100"),
                 asList("EISENSCHIMMEL, Eva Kristina","HOPES, Julie","HOSKIN, Gareth John","NI-CHIONNA, Orna Gabrielle",
                         "QUIN, James","SUTHERLAND, Euan Angus","WILLIAMS, Gareth"));
     }
-
+    private OrganisationSearchResult getTescoAqua() {
+        return buildDummyOrganisationSearchResult("More London Place",
+                "",
+                "",
+                "London",
+                "",
+                "SE1 2AF",
+                "05888959",
+                "TESCO AQUA (FINCO1) LIMITED",
+                "ltd",
+                "liquidation",
+                "2006-07-27",
+                "05888959 - Incorporated on 27 July 2006 - Liquidation",
+                Collections.emptyList(),
+                Collections.emptyList());
+    }
 
     private OrganisationSearchResult getTesco() {
         return buildDummyOrganisationSearchResult("Kestrel Way",
@@ -336,12 +357,29 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "00445790",
                 "TESCO PLC",
                 "plc",
+                "active",
                 "1947-11-27",
                 "00445790 - Incorporated on 27 November 1947",
                 asList("47110"),
-                asList("BETHELL, Melissa","GILLILAND, Stewart Charles","GOLSBY, Stephen William","GROTE, Byron Elmer","MURPHY, Ken",
-                        "OLSSON, Anders Bertil Mikael","OPPENHEIMER, Deanna Watson"));
+                asList("BETHELL, Melissa", "GILLILAND, Stewart Charles", "GOLSBY, Stephen William", "GROTE, Byron Elmer", "MURPHY, Ken",
+                        "OLSSON, Anders Bertil Mikael", "OPPENHEIMER, Deanna Watson"));
+    }
 
+    private OrganisationSearchResult getUniace() {
+        return buildDummyOrganisationSearchResult("Maygrove Road",
+                "",
+                "",
+                "London",
+                "",
+                "NW6 2EP",
+                "00445790",
+                "UNIACE LIMITED",
+                "ltd",
+                "dissolved",
+                "2017-03-07",
+                "09400267 - Dissolved on  7 March 2017",
+                 Collections.emptyList(),
+                 Collections.emptyList());
     }
 
     private OrganisationSearchResult getVirginMoney() {
@@ -354,11 +392,29 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                 "09595911",
                 "VIRGIN MONEY UK PLC",
                 "plc",
+                "active",
                 "2015-05-18",
                 "09595911 - Incorporated on 18 May 2015",
                 asList("70100"),
                 asList("COBY, Paul Jonathan","DUFFY, David Joseph","GOPALAN, Geeta","POPE, Darren Scott","STIRLING, Amy Elizabeth",
                           "WADE, Timothy Cardwell"));
+    }
+
+    private OrganisationSearchResult getWorth() {
+        return buildDummyOrganisationSearchResult(" 29 Harley Street London",
+                "",
+                "",
+                "London",
+                "",
+                "W1G 9QR",
+                "05337108",
+                "WORTH LTD",
+                "ltd",
+                "dissolved",
+                "2013-12-17",
+                "05337108 - Dissolved on 17 December 2013",
+                Collections.emptyList(),
+                Collections.emptyList());
     }
     private OrganisationSearchResult buildDummyResult(String addressLine1,
                                                       String addressLine2,
@@ -396,6 +452,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
                                                                         String id,
                                                                         String name,
                                                                         String companyType,
+                                                                        String companyStatus,
                                                                         String dateOfCreation,
                                                                         String description,
                                                                         List<String> sicCodes,
@@ -411,6 +468,7 @@ public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
         OrganisationSearchResult org = new OrganisationSearchResult(id, name);
         org.setOrganisationSicCodes(getSicCodes(sicCodes));
         org.setOrganisationAddress(address);
+        org.setOrganisationStatus(companyStatus);
         org.setOrganisationExecutiveOfficers(getDirectors(directors));
 
         Map<String, Object> extras = new HashMap<>();
