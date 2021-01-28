@@ -242,6 +242,11 @@
         <th:block th:if="${summaryModel.usingJesFinances}">
 
             <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
+                th:if="${summaryModel.externalView}"
+                th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
+                class="govuk-link">View changes to finances</a>
+                <a
+                th:unless="${summaryModel.externalView}"
                 th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
                 class="govuk-link">View changes to finances</a></p>
 
