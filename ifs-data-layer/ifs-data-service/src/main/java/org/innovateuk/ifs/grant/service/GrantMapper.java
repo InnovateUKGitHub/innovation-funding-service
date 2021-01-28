@@ -207,6 +207,7 @@ class GrantMapper {
             Period p = new Period();
             p.setMonth(i);
             p.setValue(0L);
+            periods.add(p);
         }
         subcontracting.setPeriods(periods);
 
