@@ -18,7 +18,7 @@
     <th:block th:insert="fragments/layout :: phase-banner"/>
 
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Your project finances',linkClass='link-back',linkUrl=${model.financesUrl}"/>
+              th:with="linkTitle='Return to finance checks',linkClass='link-back',linkUrl=${model.financesUrl}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -45,6 +45,17 @@
 
         <!--/*th:attr="data-autosave=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}/auto-save(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})},
                               data-row-operation-url=@{/application/{applicationId}/form/your-project-costs/organisation/{organisationId}/section/{sectionId}(applicationId=${model.applicationId},organisationId=${model.organisationId},sectionId=${model.sectionId})}"*/-->
+
+        <p th:if="${model.externalUser}" class="govuk-body">These are your project finances. Only your organisation can
+            see this level of detail. Your designated project manager will be the main contact for queries. You will be
+            consulted before any changes are approved. Changes that result from discussions with Innovate UK will be
+            reflected here.</p>
+        <th:block th:unless="${model.externalUser}"><p class="govuk-body">These milestones were initially submitted at
+            the application stage. The organisation will be able to see all saved changes.</p>
+            <p class="govuk-body">All potential changes must be discussed with the organisation. You can do this by
+                raising queries through the Innovation Funding Service.</p>
+        </th:block>
+
         <form th:object="${form}"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               enctype="multipart/form-data"
@@ -74,7 +85,7 @@
             </div>
         </div>
         <th:block th:unless="${model.externalUser}">
-            <div class="form-footer" th:if="${model.readOnly}">
+            <div class="form-footer" th:if="${model.canEdit()}">
                 <div class="form-footer__actions">
                     <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/procurement-milestones(projectId=${model.projectId},organisationId=${model.organisationId}, editMilestones='true')}"
                        id="edit" type="submit" name="edit" class="button-clear" value="true">

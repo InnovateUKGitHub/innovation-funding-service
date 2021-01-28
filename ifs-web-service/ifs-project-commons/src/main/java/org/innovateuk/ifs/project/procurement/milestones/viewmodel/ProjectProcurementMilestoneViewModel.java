@@ -80,4 +80,9 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     public boolean getShowBanner() {
         return this.isApproved();
     }
+
+    public boolean canEdit() {
+        return this.isReadOnly() && !isApproved();
+    }
+
 }
