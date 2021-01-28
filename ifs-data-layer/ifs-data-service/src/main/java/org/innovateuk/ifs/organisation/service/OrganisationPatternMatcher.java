@@ -65,17 +65,6 @@ public class OrganisationPatternMatcher {
         }
     }
 
-    @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
-    public boolean stringsMatch(String name, String name1) {
-
-        try {
-            return  name.equals(name1);
-        }
-        catch(NullPointerException e) {
-            LOG.trace("NPE when checking organisation names codes match", e);
-            return false;
-        }
-    }
 
     @NotSecured(value = "Is a 'static' comparison function", mustBeSecuredByOtherServices = false)
     public boolean executiveOfficersMatch(OrganisationResource submittedOrganisationResource, Organisation foundOrg) {

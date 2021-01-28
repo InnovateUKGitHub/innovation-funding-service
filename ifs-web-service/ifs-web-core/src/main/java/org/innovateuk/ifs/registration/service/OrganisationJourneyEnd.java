@@ -67,8 +67,9 @@ public class OrganisationJourneyEnd {
     private final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public String completeProcess(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
-         updateExistingCompaniesHouseData(organisationId);
+
         if (user != null) {
+            updateExistingCompaniesHouseData(organisationId);
             return handleExistingUser(request, response, user, organisationId);
         } else {
             registrationCookieService.saveToOrganisationIdCookie(organisationId, response);
@@ -88,7 +89,6 @@ public class OrganisationJourneyEnd {
     }
 
     private void updateOrganisationWithCompaniesHouseData(OrganisationSearchResult org, OrganisationResource orgResource){
-        orgResource.setName(org.getName());
         orgResource.setSicCodes(org.getOrganisationSicCodes());
         orgResource.setExecutiveOfficers(org.getOrganisationExecutiveOfficers());
         List<OrganisationAddressResource> addressList = new ArrayList<>();

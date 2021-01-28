@@ -47,8 +47,7 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
      * @return Optional Organisation empty if the data does not match.
      */
     private Optional<Organisation> compareOrganisation(OrganisationResource submittedOrganisationResource,Organisation foundOrg){
-        if (organisationPatternMatcher.stringsMatch(submittedOrganisationResource.getName(), foundOrg.getName()) &&
-                organisationPatternMatcher.sicCodesMatch(submittedOrganisationResource, foundOrg) &&
+        if (organisationPatternMatcher.sicCodesMatch(submittedOrganisationResource, foundOrg) &&
                 organisationPatternMatcher.executiveOfficersMatch(submittedOrganisationResource, foundOrg) &&
                 organisationPatternMatcher.addressesMatch(submittedOrganisationResource, foundOrg) &&
                 organisationPatternMatcher.matchLocalDate(submittedOrganisationResource.getDateOfIncorporation(), foundOrg.getDateOfIncorporation())) {

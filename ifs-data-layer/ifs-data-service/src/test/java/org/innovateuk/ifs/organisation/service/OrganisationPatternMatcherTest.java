@@ -90,12 +90,6 @@ public class OrganisationPatternMatcherTest extends BaseServiceUnitTest<Organisa
     }
 
     @Test
-    public void organisationTypeMatches_TestStrings() throws Exception {
-        assertTrue(service.stringsMatch("Hello", "Hello"));
-        assertFalse(service.stringsMatch("hello", "Hello"));
-    }
-
-    @Test
     public void organisationTypeMatches_TestExecutiveOfficers() throws Exception {
 
         final  Organisation organisation = getOrganisationWithExecs();
