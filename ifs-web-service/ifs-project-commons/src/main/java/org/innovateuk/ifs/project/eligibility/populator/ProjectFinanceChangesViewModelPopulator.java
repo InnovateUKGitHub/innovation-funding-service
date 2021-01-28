@@ -119,9 +119,9 @@ public class ProjectFinanceChangesViewModelPopulator {
 
             if (rowType == FinanceRowType.VAT) {
                 vat = costChange;
+            } else {
+                sectionDifferences.add(costChange);
             }
-
-            sectionDifferences.add(costChange);
         }
 
         boolean vatRegistered = appFinance.isVatRegistered();
