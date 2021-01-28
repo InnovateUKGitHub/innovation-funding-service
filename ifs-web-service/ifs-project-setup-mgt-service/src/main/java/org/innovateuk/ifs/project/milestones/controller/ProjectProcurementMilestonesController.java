@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -93,13 +94,13 @@ public class ProjectProcurementMilestonesController extends AbstractProcurementM
     @PostMapping(params = "save")
     public String saveMilestones(@PathVariable long projectId,
                                  @PathVariable long organisationId,
-                                 @ModelAttribute("form") ProcurementMilestonesForm form,
+                                 @Valid @ModelAttribute("form") ProcurementMilestonesForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
                                  UserResource user) {
         validator.validate(form, projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess(), validationHandler);
-        Supplier<String> failureView = () -> viewMilestones(projectId, organisationId, true, user, model);
+        Supplier<String> failureView = () -> viewProjectMilestones(projectId, organisationId, true, user, model,form);
         Supplier<String> successView = redirectToFinanceChecks(projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
