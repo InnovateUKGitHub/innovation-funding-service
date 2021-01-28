@@ -195,8 +195,7 @@
                 </th:block>
                 <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
                     th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                    class="govuk-link"
-                    th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
+                    class="govuk-link">View changes to finances</a></p>
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
@@ -244,8 +243,7 @@
 
             <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
                 th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                class="govuk-link"
-                th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
+                class="govuk-link">View changes to finances</a></p>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${academicCostForm}"
                   enctype="multipart/form-data">
