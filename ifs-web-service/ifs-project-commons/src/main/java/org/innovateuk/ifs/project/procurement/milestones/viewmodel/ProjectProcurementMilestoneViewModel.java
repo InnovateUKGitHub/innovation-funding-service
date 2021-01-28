@@ -96,4 +96,8 @@ public class ProjectProcurementMilestoneViewModel extends AbstractProcurementMil
     public boolean isShowResetMessage() {
         return PaymentMilestoneState.REVIEW == this.paymentMilestoneResource.getPaymentMilestoneState() && paymentMilestoneResource.getPaymentMilestoneInternalUserLastName() != null;
     }
+
+    public boolean canEdit() {
+        return this.isReadOnly() && !isApproved();
+    }
 }
