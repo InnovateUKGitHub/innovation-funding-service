@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessme
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 
 import java.util.List;
@@ -28,11 +29,11 @@ public class ManageAssessmentsViewModel {
     private final int assessmentsStarted;
     private final int assessmentsCompleted;
     private final boolean alwaysOpen;
-    private final List<MilestonesForm> assessmentPeriods;
+    private final List<AssessmentPeriodForm> assessmentPeriods;
 
     public ManageAssessmentsViewModel(CompetitionResource competition,
                                       CompetitionInAssessmentKeyAssessmentStatisticsResource keyStatistics,
-                                      List<MilestonesForm> assessmentPeriods) {
+                                      List<AssessmentPeriodForm> assessmentPeriods) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.inAssessment = competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;
@@ -116,7 +117,7 @@ public class ManageAssessmentsViewModel {
         return alwaysOpen;
     }
 
-    public List<MilestonesForm> getAssessmentPeriods() {
+    public List<AssessmentPeriodForm> getAssessmentPeriods() {
         return assessmentPeriods;
     }
 }

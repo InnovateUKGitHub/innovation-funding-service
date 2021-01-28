@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsR
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewModel;
+import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 import org.innovateuk.ifs.management.assessmentperiod.service.AssessmentPeriodService;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class ManageAssessmentsModelPopulator {
                 competitionKeyAssessmentStatisticsRestService.getInAssessmentKeyStatisticsByCompetition
                         (competitionId).getSuccess();
 
-        List<MilestonesForm> milestonesForms = assessmentPeriodService.getAssessmentPeriodsForOverview(competitionId);
+        List<AssessmentPeriodForm> milestonesForms = assessmentPeriodService.getAssessmentPeriodMilestonesForms(competitionId);
 
         return new ManageAssessmentsViewModel(competition, keyStatistics, milestonesForms);
     }

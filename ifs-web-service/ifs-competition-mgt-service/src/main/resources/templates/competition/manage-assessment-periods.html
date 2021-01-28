@@ -25,6 +25,8 @@
                   th:with="pageTitle='Manage assessment period', size='govuk-heading-xl'"/>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${form}"
+              th:attr="data-competition=${model.competitionId}"
+              data-section="milestones"
               method="post">
             <th:block th:each="assessmentPeriod, pStat: ${form.formList}">
                 <input type="hidden"
@@ -48,14 +50,25 @@
                         th:if="${milestoneEntry.value.milestoneType.presetDate}"
                         class="govuk-table__row date-group form-group-row"
                         data-future-date=""
-                        th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
+                        th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription() + ': Please enter a valid date.'},
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
                         <th class="govuk-table__header" scope="row">
                             <legend class="govuk-!-padding-left-3" th:id="${'milestone-' + milestoneEntry.key}"
                                     th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
                         </th>
                         <td class="govuk-table__cell time">
-
+                            <select th:if="${milestoneEntry.value.timeOption}"
+                                    th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                    aria-labelledby="time"
+                                    class="govuk-select"
+                                    required="required"
+                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                    th:readonly="${!milestoneEntry.value.readonly}">
+                                <option
+                                    th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"
+                                    th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}"
+                                    th:selected="${time == milestoneEntry.value.time}"></option>
+                            </select>
                             <input type="hidden"
                                    required="required"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"

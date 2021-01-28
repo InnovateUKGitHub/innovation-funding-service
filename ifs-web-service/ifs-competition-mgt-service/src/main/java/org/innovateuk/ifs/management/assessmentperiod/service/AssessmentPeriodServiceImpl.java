@@ -23,40 +23,6 @@ public class AssessmentPeriodServiceImpl implements AssessmentPeriodService {
     private MilestoneRestService milestoneRestService;
 
     @Override
-    public List<MilestonesForm> getAssessmentPeriodsForOverview(long competitionId) {
-        Map<Long, List<MilestoneResource>> assessmentPeriodMap =
-                milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
-                        .stream()
-                        .filter(milestone -> milestone.getAssessmentPeriodId() != null)
-                        .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
-
-        List<MilestonesForm> milestonesForms = new ArrayList<>();
-        assessmentPeriodMap.forEach((key, value) -> {
-            LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
-            value.stream().forEachOrdered(milestone ->
-                    milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
-            );
-            MilestonesForm milestonesForm = new MilestonesForm();
-            milestonesForm.setMilestoneEntries(milestoneFormEntries);
-            milestonesForms.add(milestonesForm);
-        });
-        return milestonesForms;
-    }
-
-    private String getName(MilestoneResource milestone) {
-        switch (milestone.getType()) {
-            case ASSESSOR_BRIEFING:
-                return "1. Assessor briefing";
-            case ASSESSOR_ACCEPTS:
-                return "2. Acceptance deadline";
-            case ASSESSOR_DEADLINE:
-                return "3. Assessment deadline";
-        }
-        return milestone.getType().name();
-    }
-
-
-    @Override
     public List<AssessmentPeriodForm> getAssessmentPeriodMilestonesForms(long competitionId) {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
         Map<Long, List<MilestoneResource>> existingAssessmentPeriods = milestones
@@ -64,10 +30,15 @@ public class AssessmentPeriodServiceImpl implements AssessmentPeriodService {
                 .filter(milestone -> milestone.getAssessmentPeriodId() != null)
                 .collect(Collectors.groupingBy(MilestoneResource::getAssessmentPeriodId));
 
+        List<AssessmentPeriodForm> milestonesForms = assembleAssessmentPeriodForms(existingAssessmentPeriods);
+        return milestonesForms;
+    }
+
+    private List<AssessmentPeriodForm> assembleAssessmentPeriodForms(Map<Long, List<MilestoneResource>> existingAssessmentPeriods) {
         List<AssessmentPeriodForm> milestonesForms = new ArrayList<>();
         existingAssessmentPeriods.forEach((key, value) -> {
             LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
-            value.stream().forEachOrdered(milestone ->
+            value.forEach(milestone ->
                     milestoneFormEntries.put(milestone.getType().getMilestoneDescription(), populateMilestoneFormEntries(milestone))
             );
             AssessmentPeriodForm milestonesForm = new AssessmentPeriodForm();
@@ -88,10 +59,7 @@ public class AssessmentPeriodServiceImpl implements AssessmentPeriodService {
 
     @Override
     public List<MilestoneResource> extractMilestoneResourcesFromForm(ManageAssessmentPeriodsForm form, long competitionId) {
-        List<MilestoneResource> existingMilestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
-                .stream()
-                .filter(this::isOfAssessmentPeriodMilestoneType)
-                .collect(Collectors.toList());
+        List<MilestoneResource> existingMilestones = getExistingAssessmentPeriodMilestoneResources(competitionId);
 
         Map<Long, Collection<MilestoneRowForm>> formMilestones = new HashMap<>();
         form.getFormList().forEach(assessmentPeriodForm -> {
@@ -99,7 +67,6 @@ public class AssessmentPeriodServiceImpl implements AssessmentPeriodService {
             formMilestones.put(assessmentPeriodId, assessmentPeriodForm.getMilestoneEntries().values());
         });
 
-        // group the existing by id and match? Or just push straight?
         List<MilestoneResource> updatedMilestones = new ArrayList<>();
         existingMilestones.stream()
                 .filter(this::isEditable)
@@ -124,6 +91,13 @@ public class AssessmentPeriodServiceImpl implements AssessmentPeriodService {
                     }
                 });
         return updatedMilestones;
+    }
+
+    private List<MilestoneResource> getExistingAssessmentPeriodMilestoneResources(long competitionId) {
+        return milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess()
+                .stream()
+                .filter(this::isOfAssessmentPeriodMilestoneType)
+                .collect(Collectors.toList());
     }
 
     private boolean isOfAssessmentPeriodMilestoneType(MilestoneResource existingMilestone) {

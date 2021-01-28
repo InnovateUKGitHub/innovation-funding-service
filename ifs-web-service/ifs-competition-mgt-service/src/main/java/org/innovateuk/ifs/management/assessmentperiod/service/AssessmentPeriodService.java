@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface AssessmentPeriodService {
 
-    List<MilestonesForm> getAssessmentPeriodsForOverview(long competitionId);
-
     List<AssessmentPeriodForm> getAssessmentPeriodMilestonesForms(long competitionId);
 
     List<MilestoneResource> extractMilestoneResourcesFromForm(ManageAssessmentPeriodsForm form, long competitionId);
