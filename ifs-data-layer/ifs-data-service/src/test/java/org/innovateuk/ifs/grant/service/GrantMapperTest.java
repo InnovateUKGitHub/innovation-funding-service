@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -202,9 +205,9 @@ public class GrantMapperTest {
     @Parameters
     public static Collection<Parameter> parameters() {
         return asList(
-                newParameter("basic", newProject()),
-                newParameter("single", newProject()).duration(1).expectedOverheads(10L),
-                newParameter("no subcontracting", newProject()).withoutSubcontracting()
+                newParameter("basic", newProject()).fundingType(FundingType.GRANT),
+                newParameter("single", newProject()).fundingType(FundingType.GRANT).duration(1).expectedOverheads(10L),
+                newParameter("no subcontracting", newProject()).fundingType(FundingType.KTP).withoutSubcontracting()
         );
     }
 
@@ -226,6 +229,7 @@ public class GrantMapperTest {
         private int value = 10;
         private List<Long> expectedOverheads = Collections.singletonList(120L);
         private List<Long> expectedOverheadRates = Collections.singletonList(50L);
+        private FundingType fundingType;
 
         private Parameter projectBuilder(ProjectBuilder projectBuilder) {
             this.projectBuilder = projectBuilder;
@@ -282,6 +286,11 @@ public class GrantMapperTest {
 
         private List<Long> expectedOverheadRates() {
             return expectedOverheadRates;
+        }
+
+        private Parameter fundingType(FundingType fundingType) {
+            this.fundingType = fundingType;
+            return this;
         }
 
         private String publicDescription() {
@@ -391,7 +400,7 @@ public class GrantMapperTest {
                         newApplication()
                                 .withId(applicationId)
                                 .withCompetition(
-                                        newCompetition().withId(competitionId).build())
+                                        newCompetition().withId(competitionId).withFundingType(fundingType).build())
                                 .build())
                     .withProjectUsers(projectUsers)
                     .withProjectMonitoringOfficer(projectMonitoringOfficer)

@@ -3,12 +3,14 @@ package org.innovateuk.ifs.grant.service;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -45,7 +47,6 @@ class GrantMapper {
     private static final String NO_PROJECT_SUMMARY = "no project summary";
     private static final String NO_PUBLIC_DESCRIPTION = "no public description";
     private static final String ACADEMIC_ORGANISATION_SIZE_VALUE = "ACADEMIC";
-    public static final String SUBCONTRACTING = "Subcontracting";
 
     private static final Map<Role, String> IFS_ROLES_TO_LIVE_ROLE_NAMES = asMap(
             PROJECT_FINANCE_CONTACT.name(), "Finance contact",
@@ -176,6 +177,8 @@ class GrantMapper {
     }
 
     private static List<Forecast> forecastsForFinanceContact(SpendProfile spendProfile) {
+        Competition competition = spendProfile.getProject().getApplication().getCompetition();
+
         List<Forecast> forecasts = spendProfile.getSpendProfileFigures()
                 .getCosts().stream()
                 .sorted(Comparator.comparing(GrantMapper::getFullCostCategoryName))
@@ -184,21 +187,20 @@ class GrantMapper {
                 .map(GrantMapper::toForecast)
                 .collect(Collectors.toList());
 
-        if (forecasts.stream().anyMatch(f -> SUBCONTRACTING.equals(f.getCostCategory()))) {
-            return forecasts;
+        if (competition.isKtp()) {
+            long months = spendProfile.getProject().getDurationInMonths();
+            Forecast subcontractingForecast = subcontractingForecast(months);
+
+            forecasts.add(subcontractingForecast);
         }
 
-        long months = spendProfile.getProject().getDurationInMonths();
-        Forecast subcontractingForecast = subcontractingForecast(months);
-
-        forecasts.add(subcontractingForecast);
         return forecasts;
     }
 
     private static Forecast subcontractingForecast(long months) {
         Forecast subcontracting = new Forecast();
         subcontracting.setCost(0);
-        subcontracting.setCostCategory(SUBCONTRACTING);
+        subcontracting.setCostCategory(FinanceRowType.SUBCONTRACTING_COSTS.getDisplayName());
 
         List<Period> periods = new ArrayList<>();
         for(int i = 0; i < months; i++) {
@@ -207,6 +209,7 @@ class GrantMapper {
             p.setValue(0L);
         }
         subcontracting.setPeriods(periods);
+
         return subcontracting;
     }
 
