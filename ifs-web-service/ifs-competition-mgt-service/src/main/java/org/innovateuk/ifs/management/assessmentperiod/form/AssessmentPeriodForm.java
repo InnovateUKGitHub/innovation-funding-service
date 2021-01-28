@@ -1,36 +1,30 @@
 package org.innovateuk.ifs.management.assessmentperiod.form;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class AssessmentPeriodForm extends BaseBindingResultTarget {
 
-    List<AssessmentPeriodMilestonesForm> formList;
+    private Long assessmentPeriodId;
+    LinkedMap<String, MilestoneRowForm> milestoneEntries;
 
-    public List<AssessmentPeriodMilestonesForm> getFormList() {
-        return formList;
+    public void setMilestoneEntries(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
+        this.milestoneEntries = milestoneEntries;
     }
 
-    public void setFormList(List<AssessmentPeriodMilestonesForm> formList) {
-        this.formList = formList;
+    public Map<String, MilestoneRowForm> getMilestoneEntries() {
+        return milestoneEntries;
     }
 
-    public void addNewAssessmentPeriod(AssessmentPeriodMilestonesForm formToAdd) {
-        if(formList == null){
-            this.formList = new ArrayList<>();
-        }
-        this.formList.add(formToAdd);
+    public Long getAssessmentPeriodId() {
+        return assessmentPeriodId;
     }
 
-    public void addExistingAssessmentPeriods(List<AssessmentPeriodMilestonesForm> existingAssessmentPeriods) {
-        if (this.formList == null) {
-            this.formList = new ArrayList<>();
-        }
-
-        this.formList.addAll(existingAssessmentPeriods);
+    public void setAssessmentPeriodId(Long assessmentPeriodId) {
+        this.assessmentPeriodId = assessmentPeriodId;
     }
 
 }
-

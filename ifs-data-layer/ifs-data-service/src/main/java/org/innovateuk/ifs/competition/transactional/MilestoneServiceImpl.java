@@ -172,7 +172,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages messages = new ValidationMessages();
         messages.addAll(validateCompetitionIdConsistency(milestones));
 
-//        messages.addAll(validateDates(milestones));
+        messages.addAll(validateDates(milestones));
         messages.addAll(validateAssessmentPeriodDateOrder(milestones));
 
         if (messages.hasErrors()) {
@@ -223,7 +223,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<List<MilestoneResource>> createAssessmentPeriodMilestones(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId).orElse(null);
         int max = assessmentPeriodRepository.findAllByCompetitionId(competitionId).stream()
-                .map(AssessmentPeriod::getIndex).mapToInt(v -> v).max().orElse(1);
+                .map(AssessmentPeriod::getIndex)
+                .mapToInt(v -> v).max()
+                .orElse(1);
 
         AssessmentPeriod assessmentPeriod = new AssessmentPeriod();
         assessmentPeriod.setCompetition(competition);

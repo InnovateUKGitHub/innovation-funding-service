@@ -113,13 +113,13 @@
                             th:if="${milestoneEntry.value.milestoneType.presetDate}"
                             class="govuk-table__row date-group form-group-row"
                             data-future-date="">
-                            <th class="govuk-table__header" scope="row">
-                                <legend th:id="${'milestone-' + (rowIStat.index + 1)}"
-                                        th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"/>
-                            </th>
+                            <td class="govuk-table__header govuk-!-font-weight-regular" scope="row">
+                                <legend class="govuk-!-padding-left-3" th:id="${'milestone-' + (rowIStat.index + 1)}"
+                                        th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
+                            </td>
                             <td class="govuk-table__cell time">
-                                <th:block th:if="${milestoneEntry.value.middayTime}">
-                                    12:00 pm
+                                <th:block th:if="${milestoneEntry.value.middayTime}" th:unless="${milestoneEntry.value.date} == null">
+                                   Midday
                                     <input type="hidden"
                                            data-time="12"
                                            th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
@@ -130,9 +130,12 @@
                             <td class="govuk-table__cell js-addWeekDay"
                                 th:id="'milestoneWeekdayEntry-' + ${milestoneEntry.key}"
                                 th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                            <td class="govuk-table__cell date"
+                            <td class="govuk-table__cell date" th:unless="${milestoneEntry.value.date} == null"
                                 th:text="${#temporals.format(milestoneEntry.value.date, 'dd/MM/yyyy')}">
                                 01/01/2021
+                            </td>
+                            <td class="govuk-table__cell date" th:if="${milestoneEntry.value.date} == null">
+                                -
                             </td>
                             <td class="govuk-table__cell" th:classappend="${!milestoneEntry.value.editable} ? 'past-date'">
 

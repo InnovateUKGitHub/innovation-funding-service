@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.assessmentperiod.model;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.assessmentperiod.form.AssessmentPeriodForm;
 
 public class ManageAssessmentPeriodsViewModel {
 

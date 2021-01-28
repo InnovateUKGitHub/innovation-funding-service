@@ -10,6 +10,8 @@ import org.innovateuk.ifs.management.assessment.viewmodel.ManageAssessmentsViewM
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
+
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.when;
@@ -48,7 +50,7 @@ public class AssessmentsControllerTest extends BaseControllerMockMVCTest<Assessm
                 .withAssessmentsSubmitted(expectedAssessmentsSubmitted)
                 .build();
 
-        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
+        ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource, Collections.emptyList());
 
         when(manageAssessmentsModelPopulatorMock.populateModel(competitionResource.getId())).thenReturn(expectedModel);
 

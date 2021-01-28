@@ -109,13 +109,14 @@
                             </li>
                             <li th:unless="${model.readOnly}">
                                 <a class="disabled govuk-link" aria-disabled="true"
+                                   th:unless="${model.alwaysOpen}"
                                    th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
-                                or !model.alwaysOpen}">
+                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
                                     Manage assessments
                                 </a>
                                 <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
+                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
+                                or model.alwaysOpen}"
                                    th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
                                    class="govuk-link">
                                     Manage assessments

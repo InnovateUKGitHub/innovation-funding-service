@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Competition', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"/>
+              th:with="linkTitle='Back to manage assessments', linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"/>
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
          aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
@@ -35,7 +35,7 @@
                 <table class="govuk-table milestones-table">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col" id="milestone">Assessment Period</th>
+                        <th class="govuk-table__header" scope="col" id="milestone" th:text="'Assessment Period ' + ${pStat.index + 1}">Assessment Period</th>
                         <th class="govuk-table__header" scope="col" id="time">Time</th>
                         <th class="govuk-table__header" scope="col" id="weekday">Weekday</th>
                         <th class="govuk-table__header" scope="col" id="day">Day</th>
@@ -51,8 +51,8 @@
                         th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': Please enter a valid date.'},
                                data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}">
                         <th class="govuk-table__header" scope="row">
-                            <legend th:id="${'milestone-' + milestoneEntry.key}"
-                                    th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"/>
+                            <legend class="govuk-!-padding-left-3" th:id="${'milestone-' + milestoneEntry.key}"
+                                    th:text="${milestoneEntry.value.milestoneType.getAlwaysOpenDescription()}"/>
                         </th>
                         <td class="govuk-table__cell time">
 
@@ -64,16 +64,6 @@
                             <input type="hidden"
                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
                                    th:value="${milestoneEntry.value.editable}"/>
-<!--                            <select th:if="${milestoneEntry.value.timeOption}"-->
-<!--                                    th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"-->
-<!--                                    aria-labelledby="time"-->
-<!--                                    class="govuk-select"-->
-<!--                                    required="required"-->
-<!--                                    th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'">-->
-<!--                                <option th:each="time : ${T(org.innovateuk.ifs.management.competition.setup.core.form.MilestoneTime).values()}"-->
-<!--                                        th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}"-->
-<!--                                        th:selected="${time == milestoneEntry.value.time}"></option>-->
-<!--                            </select>-->
                             <th:block th:if="${milestoneEntry.value.middayTime}">
                                 Midday
                                 <input type="hidden"
@@ -149,14 +139,14 @@
 
             </th:block>
 
+            <button type="submit"
+                    class="button-clear govuk-!-margin-bottom-6 float-right" name="add-assessment-period">+ add new assessment period
+            </button>
 
             <button type="submit"
                     class="govuk-button govuk-!-margin-top-6">Save and return to manage assessments
             </button>
-            <button type="submit"
-                    class="govuk-button govuk-!-margin-top-6" name="add-assessment-period">Add
-            </button>
-        </form>
+       </form>
 
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
