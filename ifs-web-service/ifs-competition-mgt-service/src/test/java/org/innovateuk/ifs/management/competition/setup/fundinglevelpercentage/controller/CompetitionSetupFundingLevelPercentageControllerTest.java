@@ -94,7 +94,7 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
 
         mockMvc.perform(get(URL, COMPETITION_ID))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-level-percentage/funding-rule/%s", COMPETITION_ID, FundingRules.SUBSIDY_CONTROL.name())));
+                .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-level-percentage/funding-rule/%s", COMPETITION_ID, FundingRules.SUBSIDY_CONTROL.toUrl())));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
         CompetitionSetupForm form = mock(CompetitionSetupForm.class);
         when(formPopulator.populateForm(competition, STATE_AID)).thenReturn(form);
 
-        mockMvc.perform(get(URL + "/funding-rule/" + STATE_AID.name(), COMPETITION_ID))
+        mockMvc.perform(get(URL + "/funding-rule/" + STATE_AID.toUrl(), COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
                 .andExpect(MockMvcResultMatchers.model().attribute("model", viewModel))
@@ -165,10 +165,10 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(updater.saveSection(eq(competition), any())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL + "/funding-rule/" + SUBSIDY_CONTROL.name(), COMPETITION_ID)
+        mockMvc.perform(post(URL + "/funding-rule/" + SUBSIDY_CONTROL.toUrl(), COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-level-percentage/funding-rule/%s", COMPETITION_ID, STATE_AID)));
+                .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-level-percentage/funding-rule/%s", COMPETITION_ID, STATE_AID.toUrl())));
 
         verify(fundingLevelPercentageValidator).validate(any(), any());
     }
@@ -181,7 +181,7 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSection(any(), eq(competition), eq(FUNDING_LEVEL_PERCENTAGE))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL + "/funding-rule/" + STATE_AID.name(), COMPETITION_ID)
+        mockMvc.perform(post(URL + "/funding-rule/" + STATE_AID.toUrl(), COMPETITION_ID)
                 .param("maximum[0][0].maximum", "50"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(String.format("/competition/setup/%d/section/funding-level-percentage", COMPETITION_ID)));

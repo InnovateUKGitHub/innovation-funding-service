@@ -63,7 +63,7 @@ public class CompetitionSetupFundingLevelPercentageController {
         if (competition.getFundingRules() == FundingRules.SUBSIDY_CONTROL && northernIrelandSubsidyControlToggle) {
             CompetitionSetupViewModel viewModel = competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, FUNDING_LEVEL_PERCENTAGE);
             if (viewModel.getGeneral().isEditable()) {
-                return format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath(), competition.getFundingRules().name());
+                return format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPostMarkCompletePath(), competition.getFundingRules().toUrl());
             }
         }
         return view(model, competition, loggedInUser, null);
@@ -117,7 +117,7 @@ public class CompetitionSetupFundingLevelPercentageController {
                         :
                         validationHandler.addAnyErrors(updater.saveSection(competition, competitionSetupForm))
                                 .failNowOrSucceedWith(failureView, () ->
-                                        format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPath(), STATE_AID.name()));
+                                        format("redirect:/competition/setup/%d/section/%s/funding-rule/%s", competition.getId(), FUNDING_LEVEL_PERCENTAGE.getPath(), STATE_AID.toUrl()));
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
