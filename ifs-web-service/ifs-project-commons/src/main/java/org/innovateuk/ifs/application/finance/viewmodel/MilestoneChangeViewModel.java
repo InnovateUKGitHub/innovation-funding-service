@@ -71,6 +71,10 @@ public class MilestoneChangeViewModel {
         return MilestoneChangeType.REMOVED == type;
     }
 
+    public boolean isSame() {
+        return MilestoneChangeType.SAME == type;
+    }
+
     public String getMonthVariance() {
         if (type == MilestoneChangeType.REMOVED) {
             return "Deleted";
@@ -79,9 +83,12 @@ public class MilestoneChangeViewModel {
             return "Added";
         }
         int change = monthUpdated - monthSubmitted;
-        String direction = (change > 0) ? "+" : "-";
+        if (change == 0) {
+            return "";
+        }
+        String direction = (change > 0) ? "+ " : "- ";
 
-        return direction + " " + change;
+        return direction + Math.abs(change);
     }
 
     public String getPaymentVariance() {
@@ -107,7 +114,7 @@ public class MilestoneChangeViewModel {
 
 
     public enum MilestoneChangeType {
-        ADDED, REMOVED, UPDATED;
+        SAME, ADDED, REMOVED, UPDATED;
     }
 }
 

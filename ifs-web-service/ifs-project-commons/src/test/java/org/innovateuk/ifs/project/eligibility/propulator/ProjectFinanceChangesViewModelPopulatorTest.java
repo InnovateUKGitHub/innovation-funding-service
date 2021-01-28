@@ -123,7 +123,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
 
-        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).isEmpty();
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(2);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences().get(0).isSame()).isTrue();
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences().get(1).isSame()).isTrue();
     }
 
     @Test
@@ -149,8 +151,10 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
 
-        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(1);
-        MilestoneChangeViewModel diff = result.getMilestoneDifferences().getMilestoneDifferences().get(0);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(3);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences().get(0).isSame()).isTrue();
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences().get(1).isSame()).isTrue();
+        MilestoneChangeViewModel diff = result.getMilestoneDifferences().getMilestoneDifferences().get(2);
         assertThat(diff.getDescription()).isEqualTo("desc3");
         assertThat(diff.getPaymentSubmitted()).isZero();
         assertThat(diff.getPaymentUpdated()).isEqualTo(new BigInteger("3000"));
@@ -180,8 +184,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
 
-        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(1);
-        MilestoneChangeViewModel diff = result.getMilestoneDifferences().getMilestoneDifferences().get(0);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(2);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences().get(0).isSame()).isTrue();
+        MilestoneChangeViewModel diff = result.getMilestoneDifferences().getMilestoneDifferences().get(1);
         assertThat(diff.getDescription()).isEqualTo("desc2");
         assertThat(diff.getPaymentSubmitted()).isEqualTo(new BigInteger("2000"));
         assertThat(diff.getPaymentUpdated()).isZero();
@@ -213,8 +218,9 @@ public class ProjectFinanceChangesViewModelPopulatorTest {
 
         ProjectFinanceChangesViewModel result = populator.getProjectFinanceChangesViewModel(true, project, organisation);
 
-        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(1);
-        MilestoneChangeViewModel diff = result.getMilestoneDifferences().getMilestoneDifferences().get(0);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences()).hasSize(2);
+        assertThat(result.getMilestoneDifferences().getMilestoneDifferences().get(0).isSame()).isTrue();
+        MilestoneChangeViewModel diff = result.getMilestoneDifferences().getMilestoneDifferences().get(1);
         assertThat(diff.getDescription()).isEqualTo("desc2");
         assertThat(diff.getPaymentSubmitted()).isEqualTo(new BigInteger("2000"));
         assertThat(diff.getPaymentUpdated()).isEqualTo(new BigInteger("3000"));

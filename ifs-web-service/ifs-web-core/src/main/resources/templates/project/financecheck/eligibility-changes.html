@@ -173,26 +173,26 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__cell" scope="row" th:text="${milestoneDiff.description}" rowspan="2"/>
                         <td class="govuk-table__cell">Month completed</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.monthSubmitted}">
-                            0
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:text="${milestoneDiff.monthSubmitted}" />
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.monthUpdated}">
-                          0
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:unless="${milestoneDiff.same OR (milestoneDiff.monthUpdated == milestoneDiff.monthSubmitted)}" th:text="${milestoneDiff.monthUpdated}" />
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.monthVariance}">
-                            0
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:unless="${milestoneDiff.same}" th:text="${milestoneDiff.monthVariance}" />
                         </td>
                     </tr>
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">Payment requested (&pound;)</td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(milestoneDiff.paymentSubmitted,1,'DEFAULT',0,'DEFAULT')}">
-                            0
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:text="${#numbers.formatDecimal(milestoneDiff.paymentSubmitted,1,'DEFAULT',0,'DEFAULT')}" />
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatDecimal(milestoneDiff.paymentUpdated,1,'DEFAULT',0,'DEFAULT')}">
-                            0
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <th:block th:unless="${milestoneDiff.same}" th:text="${#numbers.formatDecimal(milestoneDiff.paymentUpdated,1,'DEFAULT',0,'DEFAULT')}" />
                         </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${milestoneDiff.paymentVariance}">
-                            0
+                        <td class="govuk-table__cell govuk-table__cell--numeric" >
+                            <th:block th:unless="${milestoneDiff.same}" th:text="${milestoneDiff.paymentVariance}" />
                         </td>
                     </tr>
                 </th:block>

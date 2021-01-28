@@ -245,7 +245,39 @@ public class ProjectFinanceChangesViewModelPopulator {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        return Stream.concat(Stream.concat(added.stream(), removed.stream()), updated.stream()).collect(Collectors.toList());
+        List<MilestoneChangeViewModel> same = applicationMilestones.stream()
+                .map(appMilestone -> {
+                    Optional<ProjectProcurementMilestoneResource> unchangedProjectMilestone = projectMilestones.stream()
+                            .filter(projectMilestone -> appMilestone.getDescription().equals(projectMilestone.getDescription())
+                                    && appMilestone.getMonth().equals(projectMilestone.getMonth()) && appMilestone.getPayment().equals(projectMilestone.getPayment())).findAny();
+                    if (unchangedProjectMilestone.isPresent()) {
+                        MilestoneChangeViewModel diff = new MilestoneChangeViewModel();
+                        diff.setType(MilestoneChangeViewModel.MilestoneChangeType.SAME);
+                        diff.setDescription(appMilestone.getDescription());
+                        diff.setMonthSubmitted(appMilestone.getMonth());
+                        diff.setPaymentSubmitted(appMilestone.getPayment());
+                        return diff;
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        return Stream.concat(Stream.concat(added.stream(), removed.stream()), Stream.concat(updated.stream(), same.stream()))
+                .sorted((a, b) -> {
+                    if (a.getMonthSubmitted() != 0) {
+                        if (b.getMonthSubmitted() != 0) {
+                            return a.getMonthSubmitted().compareTo(b.getMonthSubmitted());
+                        }
+                        return a.getMonthSubmitted().compareTo(b.getMonthUpdated());
+                    }
+                    if (b.getMonthUpdated() != 0) {
+                        return a.getMonthUpdated().compareTo(b.getMonthUpdated());
+                    }
+                    return 1;
+                })
+                .collect(Collectors.toList());
     }
 
 }
