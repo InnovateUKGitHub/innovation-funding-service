@@ -152,7 +152,7 @@
                     discussed with your Project Manager.</p>
                 <p class="govuk-body"><a
                     th:if="${summaryModel.showChangesLink}"
-                    th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
+                    th:href="@{/project/{projectId}/finance-check/eligibility/changes(projectId=${summaryModel.projectId})}"
                     class="govuk-link">View changes to finances</a></p>
             </th:block>
 
@@ -243,7 +243,7 @@
 
             <p class="govuk-body" th:if="${summaryModel.showChangesLink}"><a
                 th:if="${summaryModel.externalView}"
-                th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}"
+                th:href="@{/project/{projectId}/finance-check/eligibility/changes(projectId=${summaryModel.projectId})}"
                 class="govuk-link">View changes to finances</a>
                 <a
                 th:unless="${summaryModel.externalView}"

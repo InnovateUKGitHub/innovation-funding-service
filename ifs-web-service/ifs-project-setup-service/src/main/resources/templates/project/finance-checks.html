@@ -80,7 +80,7 @@
                     </li>
                 </ul>
                 <p th:if="${model.showChangesLink}" class="govuk-body">You can <a class="govuk-link"
-                    th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${model.projectId})}">view any changes to finances</a></p>
+                    th:href="@{/project/{projectId}/finance-check/eligibility/changes(projectId=${model.projectId})}">view any changes to finances</a></p>
             </th:block>
             <th:block th:unless="${model.procurementCompetition}">
                 <p class="govuk-body" th:if="${model.ktpCompetition && !model.leadOrganisation}">We are reviewing the project finances. You can view the
