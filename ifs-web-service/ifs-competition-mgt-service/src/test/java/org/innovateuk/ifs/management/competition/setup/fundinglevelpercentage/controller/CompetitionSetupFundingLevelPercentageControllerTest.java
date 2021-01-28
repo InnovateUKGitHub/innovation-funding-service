@@ -16,7 +16,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.function.Consumer;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -59,6 +62,11 @@ public class CompetitionSetupFundingLevelPercentageControllerTest extends BaseCo
     @Before
     public void setup() {
         when(competitionSetupService.getSectionFormPopulator(FUNDING_LEVEL_PERCENTAGE)).thenReturn(formPopulator);
+    }
+
+    @Override
+    protected Consumer<FormattingConversionService> additionalFormattingChanges() {
+        return service -> service.addConverter(new FundingRulesConverter());
     }
 
     @Test
